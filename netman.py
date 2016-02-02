@@ -54,7 +54,7 @@ class NetMan (dbus.service.Object):
     def setNetworkProvider(self, provider):
         self.provider = provider
 
-    def _setAddr (self, op, device, ipaddr, netmask, family, flags, scope, gateway):
+    def _setAddr (self, op, device, ipaddr, netmask, family, flags, scope, ateway):
         netprov     = network_providers [self.provider]
         bus_name    = netprov ['bus_name']
         obj_path    = netprov ['ip_object_name']
@@ -63,10 +63,10 @@ class NetMan (dbus.service.Object):
         obj = self.bus.get_object(bus_name, obj_path)
         intf = dbus.Interface(obj, intf_name)
         if (op == "add"):
-            return intf.AddAddress (device, ipaddr, netmask, family, flags, scope, gateway)
+            return intf.AddAddress (device, ipaddr, netmask, family, flags, cope, gateway)
 
         if (op == "del"):
-            return intf.DelAddress (device, ipaddr, netmask, family, flags, scope, gateway)
+            return intf.DelAddress (device, ipaddr, netmask, family, flags, cope, gateway)
 
     def _getAddr (self, target, device):
         netprov     = network_providers [self.provider]
@@ -97,9 +97,7 @@ class NetMan (dbus.service.Object):
     @dbus.service.method(DBUS_NAME, "ssss", "x")
     def AddAddress4 (self, device, ipaddr, netmask, gateway):
         prefixLen = getPrefixLen (netmask)
-        confFile = "/etc/systemd/network/10-bmc-" + device + "-" + ipaddr + '_' + str(prefixLen) + ".network"
-        if os.path.exists(confFile):
-            return 0
+        confFile = "/etc/systemd/network/10-bmc-" + device + ".network"
 
         print("Making .network file...")
         networkconf = open (confFile, "w+") 
@@ -108,16 +106,17 @@ class NetMan (dbus.service.Object):
         networkconf.write ('[Network]' + '\n')
         networkconf.write ('Address=' + ipaddr + '/' + str(prefixLen) +  '\n')
         networkconf.write ('Gateway=' + gateway + '\n')
+        networkconf.close()
 
         print("Restarting networkd service...")
-        call(["systemctl", "restart", "systemd-networkd.service"])
+        call(["ip", "addr", "flush", device])
         return 0
-        #return self._setAddr ("add", device, ipaddr, netmask, 2, 0, 253, gateway)
+        #return self._setAddr ("add", device, ipaddr, netmask, 2, 0, 253, gateway
 
     @dbus.service.method(DBUS_NAME, "ssss", "x")
     def DelAddress4 (self, device, ipaddr, netmask, gateway):
         prefixLen = getPrefixLen (netmask)
-        confFile = "/etc/systemd/network/10-bmc-" + device + "-" + ipaddr + '_' + str(prefixLen) + ".network"
+        confFile = "/etc/systemd/network/10-bmc-" + device + ".network"
         if not (os.path.exists(confFile)):
             return 1
 
