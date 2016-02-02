@@ -20,14 +20,16 @@ network_providers = {
 		'bus_name' : 'org.freedesktop.network1',
 		'ip_object_name' : '/org/freedesktop/network1/network/default',
 		'hw_object_name' : '/org/freedesktop/network1/link/_31',
-		'interface_name' : 'org.freedesktop.network1.Network',
+		'ip_if_name' : 'org.freedesktop.network1.Network',
+		'hw_if_name' : 'org.freedesktop.network1.Link',
 		'method' : 'org.freedesktop.network1.Network.SetAddr'
 	},
 	'NetworkManager' : {
 		'bus_name' : 'org.freedesktop.NetworkManager',
 		'ip_object_name' : '/org/freedesktop/NetworkManager',
 		'hw_object_name' : '/org/freedesktop/NetworkManager',
-		'interface_name' : 'org.freedesktop.NetworkManager',
+		'ip_if_name' : 'org.freedesktop.NetworkManager',
+		'hw_if_name' : 'org.freedesktop.NetworkManager',
 		'method' : 'org.freedesktop.NetworkManager' # FIXME: 
 	},	
 }
@@ -58,7 +60,7 @@ class NetMan (dbus.service.Object):
         netprov     = network_providers [self.provider]
         bus_name    = netprov ['bus_name']
         obj_path    = netprov ['ip_object_name']
-        intf_name   = netprov ['interface_name']
+        intf_name   = netprov ['ip_if_name']
 
         obj = self.bus.get_object(bus_name, obj_path)
         intf = dbus.Interface(obj, intf_name)
@@ -73,14 +75,14 @@ class NetMan (dbus.service.Object):
         bus_name    = netprov ['bus_name']
 
         if (target == "ip"):
-            intf_name   = 'org.freedesktop.network1.Network'
+            intf_name   = netprov ['ip_if_name'] #'org.freedesktop.network1.Network'
             obj_path    = netprov ['ip_object_name']
             obj = self.bus.get_object(bus_name, obj_path)
             intf = dbus.Interface(obj, intf_name)
             return intf.GetAddress (device)
 
         if (target == "mac"):
-            intf_name   = 'org.freedesktop.network1.Link'
+            intf_name   = netprov ['hw_if_name'] #'org.freedesktop.network1.Link'
             obj_path    = netprov ['hw_object_name']
             obj = self.bus.get_object(bus_name, obj_path)
             intf = dbus.Interface(obj, intf_name)
@@ -88,16 +90,35 @@ class NetMan (dbus.service.Object):
             print mac
             return mac
 
-
-
     @dbus.service.method(DBUS_NAME, "", "")
     def test(self):
         print("TEST")
 
+    @dbus.service.method(DBUS_NAME, "s", "x")
+    def EnableDHCP (self, device):
+        confFile = "/etc/systemd/network/10-bmc-" + device + "-" + "dhcp.network"
+        if os.path.exists(confFile):
+            return 0
+
+        print("Making .network file...")
+        networkconf = open (confFile, "w+") 
+        networkconf.write ('[Match]'+ '\n')
+        networkconf.write ('Name=' + (device) + '\n')
+        networkconf.write ('[Network]' + '\n')
+        networkconf.write ('DHCP=yes')
+        networkconf.close ()
+
+        print("Restarting networkd service...")
+        call(["systemctl", "restart", "systemd-networkd.service"])
+        return 0
+        #return self._setAddr ("add", device, ipaddr, netmask, 2, 0, 253, gateway)
+
     @dbus.service.method(DBUS_NAME, "ssss", "x")
     def AddAddress4 (self, device, ipaddr, netmask, gateway):
         prefixLen = getPrefixLen (netmask)
-        confFile = "/etc/systemd/network/10-bmc-" + device + ".network"
+        confFile = "/etc/systemd/network/10-bmc-" + device + "-" + ipaddr + '_' + str(prefixLen) + ".network"
+        if os.path.exists(confFile):
+            return 0
 
         print("Making .network file...")
         networkconf = open (confFile, "w+") 
@@ -116,7 +137,7 @@ class NetMan (dbus.service.Object):
     @dbus.service.method(DBUS_NAME, "ssss", "x")
     def DelAddress4 (self, device, ipaddr, netmask, gateway):
         prefixLen = getPrefixLen (netmask)
-        confFile = "/etc/systemd/network/10-bmc-" + device + ".network"
+        confFile = "/etc/systemd/network/10-bmc-" + device + "-" + ipaddr + '_' + str(prefixLen) + ".network"
         if not (os.path.exists(confFile)):
             return 1
 
@@ -131,6 +152,17 @@ class NetMan (dbus.service.Object):
     @dbus.service.method(DBUS_NAME, "s", "s")
     def GetHwAddress (self, device):
         return self._getAddr ("mac", device)
+
+    @dbus.service.method(DBUS_NAME, "ss", "s")
+    def SetHwAddress (self, device, mac):
+        netprov     = network_providers [self.provider]
+        bus_name    = netprov ['bus_name']
+        obj_path    = netprov ['hw_object_name']
+        intf_name   = netprov ['hw_if_name']
+
+        obj = self.bus.get_object(bus_name, obj_path)
+        intf = dbus.Interface(obj, intf_name)
+        return intf.SetAddress (device, mac)
 
 def main():
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
