@@ -54,7 +54,7 @@ class NetMan (dbus.service.Object):
     def setNetworkProvider(self, provider):
         self.provider = provider
 
-    def _setAddr (self, op, device, ipaddr, netmask, family, flags, scope, ateway):
+    def _setAddr (self, op, device, ipaddr, netmask, family, flags, scope, gateway):
         netprov     = network_providers [self.provider]
         bus_name    = netprov ['bus_name']
         obj_path    = netprov ['ip_object_name']
@@ -63,10 +63,10 @@ class NetMan (dbus.service.Object):
         obj = self.bus.get_object(bus_name, obj_path)
         intf = dbus.Interface(obj, intf_name)
         if (op == "add"):
-            return intf.AddAddress (device, ipaddr, netmask, family, flags, cope, gateway)
+            return intf.AddAddress (device, ipaddr, netmask, family, flags, scope, gateway)
 
         if (op == "del"):
-            return intf.DelAddress (device, ipaddr, netmask, family, flags, cope, gateway)
+            return intf.DelAddress (device, ipaddr, netmask, family, flags, scope, gateway)
 
     def _getAddr (self, target, device):
         netprov     = network_providers [self.provider]
