@@ -16,25 +16,25 @@ DBUS_NAME = 'org.openbmc.NetworkManager'
 OBJ_NAME = '/org/openbmc/NetworkManager/Interface'
 
 network_providers = {
-	'networkd' : { 
-		'bus_name' : 'org.freedesktop.network1',
-		'ip_object_name' : '/org/freedesktop/network1/network/default',
-		'hw_object_name' : '/org/freedesktop/network1/link/_31',
-		'interface_name' : 'org.freedesktop.network1.Network',
-		'method' : 'org.freedesktop.network1.Network.SetAddr'
-	},
-	'NetworkManager' : {
-		'bus_name' : 'org.freedesktop.NetworkManager',
-		'ip_object_name' : '/org/freedesktop/NetworkManager',
-		'hw_object_name' : '/org/freedesktop/NetworkManager',
-		'interface_name' : 'org.freedesktop.NetworkManager',
-		'method' : 'org.freedesktop.NetworkManager' # FIXME: 
-	},	
+    'networkd' : { 
+        'bus_name' : 'org.freedesktop.network1',
+        'ip_object_name' : '/org/freedesktop/network1/network/default',
+        'hw_object_name' : '/org/freedesktop/network1/link/_31',
+        'interface_name' : 'org.freedesktop.network1.Network',
+        'method' : 'org.freedesktop.network1.Network.SetAddr'
+    },
+    'NetworkManager' : {
+        'bus_name' : 'org.freedesktop.NetworkManager',
+        'ip_object_name' : '/org/freedesktop/NetworkManager',
+        'hw_object_name' : '/org/freedesktop/NetworkManager',
+        'interface_name' : 'org.freedesktop.NetworkManager',
+        'method' : 'org.freedesktop.NetworkManager' # FIXME: 
+    },  
 }
 
 def getPrefixLen(mask):
-	prefixLen = sum([bin(int(x)).count('1') for x in mask.split('.')])
-	return prefixLen
+    prefixLen = sum([bin(int(x)).count('1') for x in mask.split('.')])
+    return prefixLen
 
 class IfAddr ():
     def __init__ (self, family, scope, flags, prefixlen, addr, gw):
@@ -132,6 +132,11 @@ class NetMan (dbus.service.Object):
     def GetHwAddress (self, device):
         return self._getAddr ("mac", device)
 
+    @dbus.service.method(DBUS_NAME, "s", "i")
+    def SetHwAddress (self, mac):
+        rc = subprocess.call(["fw_setenv", "ethaddr", mac])
+        return rc
+
 def main():
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
     bus = dbus.SystemBus()
@@ -144,3 +149,4 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
+
