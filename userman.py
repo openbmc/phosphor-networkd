@@ -38,12 +38,12 @@ OBJ_NAME_USER = '/org/openbmc/UserManager/User'
 '''
 
 userman_providers = {
-	'pam' : { 
-		'adduser' : 'user add',
-	},
-	'ldap' : {
-		'adduser' : 'ldap command to add user',
-	},	
+    'pam' : { 
+        'adduser' : 'user add',
+    },
+    'ldap' : {
+        'adduser' : 'ldap command to add user',
+    },  
 }
 
 class UserManGroups (dbus.service.Object):
@@ -207,7 +207,7 @@ class UserManUser (dbus.service.Object):
     def Passwd (self, username, passwd):
         if not username : return 1
         
-        users = self.UserList ()
+        users = Usersobj.UserList ()
         if username not in users : return 1
 
         cmd = "passwd" + " " + username
@@ -218,7 +218,7 @@ class UserManUser (dbus.service.Object):
         proc.sendline (passwd)
 
         proc.wait()
-        return r
+        return 0
 
 def main():
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
@@ -246,3 +246,4 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
+
