@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
-from subprocess import call
+from subprocess import call, Popen, PIPE
 import sys
 import subprocess
 import dbus
 import string
+import socket
+import re
 import os
 import fcntl
 import glib
@@ -56,38 +58,81 @@ class NetMan (dbus.service.Object):
     def setNetworkProvider(self, provider):
         self.provider = provider
 
-    def _setAddr (self, op, device, ipaddr, netmask, family, flags, scope, gateway):
-        netprov     = network_providers [self.provider]
-        bus_name    = netprov ['bus_name']
-        obj_path    = netprov ['ip_object_name']
-        intf_name   = netprov ['ip_if_name']
+    def _isvaliddev(self, device):
+        devices = os.listdir ("/sys/class/net")
+        if not device in devices : return False
+        else: return True
 
-        obj = self.bus.get_object(bus_name, obj_path)
-        intf = dbus.Interface(obj, intf_name)
-        if (op == "add"):
-            return intf.AddAddress (device, ipaddr, netmask, family, flags, scope, gateway)
+    def _ishwdev (self, device):
+        f = open ("/sys/class/net/"+device+"/type")
+        type = f.read()
+        return False if (int(type) ==  772) else True
 
-        if (op == "del"):
-            return intf.DelAddress (device, ipaddr, netmask, family, flags, scope, gateway)
+    def _isvalidmask (self, mask):
+        for x in mask.split('.'):
+            try:
+                y = int(x)
+            except:
+                return False
+            if y > 255: return False
+        return mask.count('.') == 3
+
+    def _isvalidmac(self, mac):
+        macre = '([a-fA-F0-9]{2}[:|\-]?){6}'
+        if re.compile(macre).search(mac) : return True
+        else: return False
+
+    def _isvalidip(self, family, ipaddr):
+        if family == socket.AF_INET:
+            try:
+                socket.inet_pton(socket.AF_INET, ipaddr)
+            except AttributeError:  # no inet_pton here, sorry
+                try:
+                    socket.inet_aton(ipaddr)
+                except socket.error:
+                    return False
+                return ipaddr.count('.') == 3
+            except socket.error:  # not a valid address
+                return False
+
+            return True
+
+        elif family == socket.AF_INET6:
+            try:
+                socket.inet_pton(socket.AF_INET6, ipaddr)
+            except socket.error:  # not a valid address
+                return False
+            return True
+
+        else: return False
 
     def _getAddr (self, target, device):
         netprov     = network_providers [self.provider]
         bus_name    = netprov ['bus_name']
 
         if (target == "ip"):
-            intf_name   = netprov ['ip_if_name'] #'org.freedesktop.network1.Network'
-            obj_path    = netprov ['ip_object_name']
-            obj = self.bus.get_object(bus_name, obj_path)
-            intf = dbus.Interface(obj, intf_name)
-            return intf.GetAddress (device)
+            ipaddr = ""
+            defgw = ""
+            prefixlen = "0"
+
+            proc = subprocess.Popen(["ip", "addr", "show", "dev", device], stdout=PIPE)
+            procout = proc.communicate()
+            if procout: 
+                ipout = procout[0].splitlines()[2].strip()
+                ipaddr,prefixlen = ipout.split ()[1].split("/")
+
+            proc = subprocess.Popen(["ip", "route", "show", "dev", device, "default", "0.0.0.0/0"], stdout=PIPE)
+            procout = proc.communicate()
+            if procout[0]:
+                ipout = procout[0].splitlines()[0].strip()
+                defgw = ipout.split ()[2]
+
+            return 2, int(prefixlen), ipaddr, defgw
 
         if (target == "mac"):
-            intf_name   = netprov ['hw_if_name'] #'org.freedesktop.network1.Link'
-            obj_path    = netprov ['hw_object_name']
-            obj = self.bus.get_object(bus_name, obj_path)
-            intf = dbus.Interface(obj, intf_name)
-            mac = intf.GetAddress (device)
-            print mac
+            proc = subprocess.Popen(["ip", "link", "show", "dev", device], stdout=PIPE)
+            ipout = proc.communicate()[0].splitlines()[1].strip()
+            mac = ipout.split ()[1]
             return mac
 
     @dbus.service.method(DBUS_NAME, "", "")
@@ -96,12 +141,16 @@ class NetMan (dbus.service.Object):
 
     @dbus.service.method(DBUS_NAME, "s", "x")
     def EnableDHCP (self, device):
-        confFile = "/etc/systemd/network/10-bmc-" + device + ".network"
-        if os.path.exists(confFile):
-            return 0
+        if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
+
+        confFile = "/etc/systemd/network/00-bmc-" + device + ".network"
 
         print("Making .network file...")
-        networkconf = open (confFile, "w+") 
+        try:
+            networkconf = open (confFile, "w+") 
+        except IOError:
+            raise IOError, "Failed to open " + confFile
+            
         networkconf.write ('[Match]'+ '\n')
         networkconf.write ('Name=' + (device) + '\n')
         networkconf.write ('[Network]' + '\n')
@@ -109,18 +158,28 @@ class NetMan (dbus.service.Object):
         networkconf.close ()
 
         print("Restarting networkd service...")
-        call(["ip", "addr", "flush", device])
-        call(["systemctl", "restart", "systemd-networkd.service"])
-        return 0
-        #return self._setAddr ("add", device, ipaddr, netmask, 2, 0, 253, gateway)
+        rc = call(["ip", "addr", "flush", device])
+        rc = call(["systemctl", "restart", "systemd-networkd.service"])
+        return rc
 
     @dbus.service.method(DBUS_NAME, "ssss", "x")
-    def AddAddress4 (self, device, ipaddr, netmask, gateway):
+    def SetAddress4 (self, device, ipaddr, netmask, gateway):
+        if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
+        if not self._isvalidip (socket.AF_INET, ipaddr) : raise ValueError, "Malformed IP Address"
+        if not self._isvalidip (socket.AF_INET, gateway) : raise ValueError, "Malformed GW Address"
+        if not self._isvalidmask (netmask) : raise ValueError, "Invalid Mask"
+
         prefixLen = getPrefixLen (netmask)
-        confFile = "/etc/systemd/network/10-bmc-" + device + ".network"
+        if prefixLen == 0: raise ValueError, "Invalid Mask"
+
+        confFile = "/etc/systemd/network/00-bmc-" + device + ".network"
 
         print("Making .network file...")
-        networkconf = open (confFile, "w+") 
+        try:
+            networkconf = open (confFile, "w+") 
+        except IOError:
+            raise IOError, "Failed to open " + confFile
+
         networkconf.write ('[Match]'+ '\n')
         networkconf.write ('Name=' + (device) + '\n')
         networkconf.write ('[Network]' + '\n')
@@ -129,32 +188,35 @@ class NetMan (dbus.service.Object):
         networkconf.close()
 
         print("Restarting networkd service...")
-        call(["ip", "addr", "flush", device])
-        return 0
-        #return self._setAddr ("add", device, ipaddr, netmask, 2, 0, 253, gateway
+        rc = call(["ip", "addr", "flush", device])
+        rc = call(["systemctl", "restart", "systemd-networkd.service"])
+        return rc
 
-    @dbus.service.method(DBUS_NAME, "ssss", "x")
-    def DelAddress4 (self, device, ipaddr, netmask, gateway):
-        prefixLen = getPrefixLen (netmask)
-        confFile = "/etc/systemd/network/10-bmc-" + device + ".network"
-        if not (os.path.exists(confFile)):
-            return 1
-
-        self._setAddr ("del", device, ipaddr, netmask, 2, 0, 253, gateway)
-        os.remove (confFile)
-        return  0;
-
-    @dbus.service.method(DBUS_NAME, "s", "a(iyyus)s")
+    #family, prefixlen, ip, defgw
+    @dbus.service.method(DBUS_NAME, "s", "iyss")
     def GetAddress4 (self, device):
+        if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
         return self._getAddr ("ip", device)
 
     @dbus.service.method(DBUS_NAME, "s", "s")
     def GetHwAddress (self, device):
+        if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
         return self._getAddr ("mac", device)
 
-    @dbus.service.method(DBUS_NAME, "s", "i")
-    def SetHwAddress (self, mac):
+    @dbus.service.method(DBUS_NAME, "ss", "i")
+    def SetHwAddress (self, device, mac):
+        if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
+        if not self._ishwdev (device) : raise ValueError, "Not a Hardware Device"
+        if not self._isvalidmac (mac) : raise ValueError, "Malformed MAC address"
+
         rc = subprocess.call(["fw_setenv", "ethaddr", mac])
+
+        print("Restarting networkd service...")
+        rc = call(["ip", "link", "set", "dev", device, "down"])
+        rc = call(["ip", "link", "set", "dev", device, "address", mac])
+        rc = call(["ip", "link", "set", "dev", device, "up"])
+
+        rc = call(["systemctl", "restart", "systemd-networkd.service"])
         return rc
 
 def main():

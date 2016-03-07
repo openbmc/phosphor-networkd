@@ -61,23 +61,23 @@ class UserManGroups (dbus.service.Object):
 
     @dbus.service.method(INTF_NAME, "s", "x")
     def GroupAddUsr (self, groupname):
-        if not groupname : return 1
+        if not groupname : raise ValueError("Invalid Groupname")
 
         groups = self.GroupListAll ()
-        if groupname in groups: return 1
+        if groupname in groups: raise ValueError("Group ", groupname, " Exists")
 
         r = call (["addgroup", groupname])
         return r
 
-    @dbus.service.method(INTF_NAME, "s", "x")
+    #@dbus.service.method(INTF_NAME, "s", "x")
     def GroupAddSys (self, groupname):
-        if not groupname : return 1
+        if not groupname : raise ValueError("Invalid Groupname")
 
         groups = self.GroupListAll ()
-        if groupname in groups: return 1
+        if groupname in groups: raise ValueError("Group ", groupname, " Exists")
 
         r = call (["addgroup", "-S", groupname])
-        return 0
+        return r
 
     @dbus.service.method(INTF_NAME, "", "as")
     def GroupListUsr (self):
@@ -121,10 +121,10 @@ class UserManGroup (dbus.service.Object):
 
     @dbus.service.method(INTF_NAME, "", "x")
     def GroupDel (self, groupname):
-        if not groupname : return 1
+        if not groupname : raise ValueError("Invalid Groupname")
 
         groups = Groupsobj.GroupListAll ()
-        if groupname not in groups: return 1
+        if groupname not in groups: raise ValueError("No such Group: ", groupname)
 
         r = call (["delgroup", groupname])
         return r
@@ -144,14 +144,14 @@ class UserManUsers (dbus.service.Object):
 
     @dbus.service.method(INTF_NAME, "ssss", "x")
     def UserAdd (self, gecos, username, groupname, passwd):
-        if not username: return 1
+        if not username : raise ValueError("Invalid Username")
 
-        users = self.UserList ()
-        if username in users : return 1
+        users = self.UserListAll ()
+        if username in users : raise ValueError("User ", username, " Exists")
 
         if groupname:
             groups = Groupsobj.GroupListAll ()
-            if groupname not in groups: return 1
+            if groupname not in groups: raise ValueError("No such Group: ", groupname)
 
         opts = ""
         if gecos: opts = " -g " + '"' + gecos + '"'
@@ -167,8 +167,8 @@ class UserManUsers (dbus.service.Object):
         proc.expect (['New password: ', 'Retype password: '])
         proc.sendline (passwd)
 
-        proc.wait()
-        return 0
+        r = proc.wait()
+        return r
 
     @dbus.service.method(INTF_NAME, "", "as")
     def UserList (self):
@@ -178,6 +178,14 @@ class UserManUsers (dbus.service.Object):
                 userParams = usent.split (":")
                 if (int(userParams[2]) >= 1000 and int(userParams[2]) != 65534):
                     userList.append(userParams[0])
+        return userList
+
+    def UserListAll (self):
+        userList = []
+        with open("/etc/passwd", "r") as f:
+            for usent in f:
+                userParams = usent.split (":")
+                userList.append(userParams[0])
         return userList
 
 class UserManUser (dbus.service.Object):
@@ -195,20 +203,20 @@ class UserManUser (dbus.service.Object):
 
     @dbus.service.method(INTF_NAME, "s", "x")
     def UserDel (self, username):
-        if not username : return 1
+        if not username : raise ValueError("Invalid Username")
 
         users = Usersobj.UserList ()
-        if username not in users : return 1
+        if username not in users : raise ValueError("No such User: ", username)
 
         r = call (["deluser", username])
         return r
 
     @dbus.service.method(INTF_NAME, "ss", "x")
     def Passwd (self, username, passwd):
-        if not username : return 1
+        if not username : raise ValueError("Invalid Username")
         
         users = Usersobj.UserList ()
-        if username not in users : return 1
+        if username not in users : raise ValueError("No such User: ", username)
 
         cmd = "passwd" + " " + username
         proc = pexpect.spawn (cmd)
