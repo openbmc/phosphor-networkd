@@ -192,6 +192,32 @@ class NetMan (dbus.service.Object):
         rc = call(["systemctl", "restart", "systemd-networkd.service"])
         return rc
 
+    @dbus.service.method(DBUS_NAME, "s", "s")
+    def GetAddressType (self, device):
+        if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
+
+        confFile = "/etc/systemd/network/00-bmc-" + device + ".network"
+        if not os.path.exists(confFile): 
+            print "Config file (%s) not found !" % confFile
+            netprov     = network_providers [self.provider]
+            bus_name    = netprov ['bus_name']
+            obj_name    = netprov ['ip_object_name']
+            o = self.bus.get_object(bus_name, obj_name, introspect=False)
+            i = dbus.Interface(o, 'org.freedesktop.DBus.Properties')
+            f = i.Get (netprov ['ip_if_name'], "SourcePath")
+            print "Using default networkd config file (%s)" % f
+            confFile = f
+
+        with open(confFile, "r") as f:
+            for line in f:
+                config = line.split ("=")
+                if (len (config) < 2) : continue
+                if config [0].upper() == "DHCP":
+                    v = config[1].strip().upper()
+                    if (v=="YES" or v=="IPV4" or v=="IPV6"):
+                        return "DHCP"
+        return "STATIC"
+
     #family, prefixlen, ip, defgw
     @dbus.service.method(DBUS_NAME, "s", "iyss")
     def GetAddress4 (self, device):
