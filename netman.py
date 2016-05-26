@@ -245,6 +245,42 @@ class NetMan (dbus.service.Object):
         rc = call(["systemctl", "restart", "systemd-networkd.service"])
         return rc
 
+    #string of nameservers
+    @dbus.service.method(DBUS_NAME,"s", "s")
+    def SetNameServers (self, nameservers):
+        dns_entry = nameservers.split()
+        fail_msg = ''
+        dhcp_auto = False
+        file_opened = False
+        if len(dns_entry) > 0:
+            for dns in dns_entry:
+                if not self._isvalidip (socket.AF_INET, dns):
+                    if dns == "DHCP_AUTO=":
+                        #This DNS is supplied by DHCP.
+                        dhcp_auto = True
+                    else:
+                        print "Malformed DNS Address [" + dns + "]"
+                        fail_msg = fail_msg + '[' + dns + ']'
+                else:
+                    #Only over write on a first valid input
+                    if file_opened == False:
+                        resolv_conf = open("/etc/resolv.conf",'w')
+                        file_opened = True
+                        if dhcp_auto == True:
+                            resolv_conf.write("### Generated automatically via DHCP ###\n")
+                        else:
+                            resolv_conf.write("### Generated manually via dbus settings ###\n")
+                    dns_ip = 'nameserver ' + dns + '\n'
+                    resolv_conf.write(dns_ip)
+            if file_opened == True:
+                resolv_conf.close()
+        else:
+            raise ValueError, "Invalid DNS entry"
+        if len(fail_msg) > 0:
+            return 'Failures encountered processing' + fail_msg
+        else:
+            return "DNS entries updated Successfully"
+
 def main():
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
     bus = dbus.SystemBus()
