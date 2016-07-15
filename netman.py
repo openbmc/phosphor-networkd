@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from subprocess import call, Popen, PIPE
+from IPy import IP
 import sys
 import subprocess
 import dbus
@@ -82,29 +83,56 @@ class NetMan (dbus.service.Object):
         if re.compile(macre).search(mac) : return True
         else: return False
 
-    def _isvalidip(self, family, ipaddr):
-        if family == socket.AF_INET:
-            try:
-                socket.inet_pton(socket.AF_INET, ipaddr)
-            except AttributeError:  # no inet_pton here, sorry
-                try:
-                    socket.inet_aton(ipaddr)
-                except socket.error:
-                    return False
-                return ipaddr.count('.') == 3
-            except socket.error:  # not a valid address
-                return False
+    def _isvalidipv4(self, ipstr, netmask)
+        ip_parts = ipstr.split(".")
+        if len(ip_parts) != 4:
+            return "Malformed"
 
-            return True
+        first, second, third, fourth = [int(part) for part in ip_parts]
+        if first == 0 and second == 0 and third == 0 and fourth == 0:
+            return "Invalid" 	# "this" network disallowed
+        if first == 169 and second == 254:
+            return "Link Local"
+        if first >= 224:
+            return "Invalid"	# class D multicast and class E disallowed
+        if first == 192 and second == 88 and third == 99:
+            return "Invalid"	# ipv6 relay
 
-        elif family == socket.AF_INET6:
-            try:
-                socket.inet_pton(socket.AF_INET6, ipaddr)
-            except socket.error:  # not a valid address
-                return False
-            return True
+        # check validity against netmask
+        if netmask != '0':
+            ip_bin = (first << 24) + (second << 16) + (third << 8) + fourth
+            mask_parts = netmask.split(".")
+            if len(mask_parts) == 4:	# long form netmask
+                mask_bin = (int(mask_parts[0]) << 24) + (int(mask_parts[1]) << 16) + (int(mask_parts[2]) << 8) + int(mask_parts[3])
+            elif netmask.count(".") == 0:	# short form netmask
+                mask_bin = 0xffffffff ^ (1 << 32 - int(netmask)) - 1
+            else:
+                return "Malformed"	# bad netmask
 
-        else: return False
+            if ip_bin & ~mask_bin == 0:
+                return "Invalid"	# disallowed by this netmask
+            if ip_bin | mask_bin == 0xFFFFFFFF:
+                return "Invalid"	# disallowed by this netmask
+
+        return "Valid"
+
+
+    def _isvalidip(self, ipaddr, netmask = '0'):
+        try:
+            ip = IP(ipaddr)
+        except ValueError:
+            return "Malformed"
+
+        ipstr = ip.strNormal(0)
+        ipstr_masked = ip.strNormal(2)
+        if ipstr_masked.count("/") != 0 and netmask == '0':
+            netmask = ipstr_masked.split("/")[1]
+
+        if ip.version() == 4:	# additional checks for ipv4
+            return self._isvalidipv4(ipstr, netmask)
+        # TODO: openbmc/openbmc#496
+
+        return "Valid"
 
     def _getAddr (self, target, device):
         netprov     = network_providers [self.provider]
@@ -165,12 +193,13 @@ class NetMan (dbus.service.Object):
     @dbus.service.method(DBUS_NAME, "ssss", "x")
     def SetAddress4 (self, device, ipaddr, netmask, gateway):
         if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
-        if not self._isvalidip (socket.AF_INET, ipaddr) : raise ValueError, "Malformed IP Address"
-        if not self._isvalidip (socket.AF_INET, gateway) : raise ValueError, "Malformed GW Address"
         if not self._isvalidmask (netmask) : raise ValueError, "Invalid Mask"
-
         prefixLen = getPrefixLen (netmask)
         if prefixLen == 0: raise ValueError, "Invalid Mask"
+        valid = self._isvalidip (ipaddr, netmask)
+        if valid != "Valid": raise ValueError, valid + " IP Address"
+        valid = self._isvalidip (gateway)
+        if valid != "Valid": raise ValueError, valid + " IP Address"
 
         confFile = "/etc/systemd/network/00-bmc-" + device + ".network"
 
@@ -254,12 +283,13 @@ class NetMan (dbus.service.Object):
         file_opened = False
         if len(dns_entry) > 0:
             for dns in dns_entry:
-                if not self._isvalidip (socket.AF_INET, dns):
+                valid = self._isvalidip (dns)
+                if valid != "Valid":
                     if dns == "DHCP_AUTO=":
                         #This DNS is supplied by DHCP.
                         dhcp_auto = True
                     else:
-                        print "Malformed DNS Address [" + dns + "]"
+                        print valid + " DNS Address [" + dns + "]"
                         fail_msg = fail_msg + '[' + dns + ']'
                 else:
                     #Only over write on a first valid input
