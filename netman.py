@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from subprocess import call, Popen, PIPE
+from IPy import IP
 import sys
 import subprocess
 import dbus
@@ -82,29 +83,45 @@ class NetMan (dbus.service.Object):
         if re.compile(macre).search(mac) : return True
         else: return False
 
-    def _isvalidip(self, family, ipaddr):
-        if family == socket.AF_INET:
-            try:
-                socket.inet_pton(socket.AF_INET, ipaddr)
-            except AttributeError:  # no inet_pton here, sorry
-                try:
-                    socket.inet_aton(ipaddr)
-                except socket.error:
-                    return False
-                return ipaddr.count('.') == 3
-            except socket.error:  # not a valid address
-                return False
+    def _isvalidip(self, ipaddr, netmask = '0'):
+	try:
+	    ip = IP(ipaddr)
+	except ValueError:
+	    return False
 
-            return True
+	ipstr = ip.strNormal(0)
 
-        elif family == socket.AF_INET6:
-            try:
-                socket.inet_pton(socket.AF_INET6, ipaddr)
-            except socket.error:  # not a valid address
-                return False
-            return True
+	if ip.version() == 4:	# no special considerations for ipv6 now
+	    ip_parts = ipstr.split(".")
+	    if len(ip_parts) != 4:
+		return False
 
-        else: return False
+	    first, second, third, fourth = [int(part) for part in ip_parts]
+	    if first == 0 and second == 0 and third == 0 and fourth == 0:
+		return False 	# "this" network disallowed
+	    if first >= 224:
+		return False	# class D multicast and class E disallowed
+	    if first == 192 and second == 88 and third == 99:
+		return False	# ipv6 relay
+	    if fourth == 0 or fourth == 255:	# possibly invalid, check mask
+		ipstr_masked = ip.strNormal(1)
+		if ipstr_masked.count("/") == 0:
+		    if netmask == '0':
+			return True	# no netmask available
+
+		    try:
+			maskedip = IP(ipaddr + "/" + netmask, make_net=True)
+		    except:
+			return False	# must be bad netmask
+
+		    ipstr_masked = maskedip.strNormal(1)
+
+		parts = ipstr_masked.split("/")
+		mask_bin = int(parts[1])
+		if mask_bin >= 24:
+		    return False	# no .0 or .255 is valid
+
+	return True
 
     def _getAddr (self, target, device):
         netprov     = network_providers [self.provider]
@@ -165,8 +182,8 @@ class NetMan (dbus.service.Object):
     @dbus.service.method(DBUS_NAME, "ssss", "x")
     def SetAddress4 (self, device, ipaddr, netmask, gateway):
         if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
-        if not self._isvalidip (socket.AF_INET, ipaddr) : raise ValueError, "Malformed IP Address"
-        if not self._isvalidip (socket.AF_INET, gateway) : raise ValueError, "Malformed GW Address"
+        if not self._isvalidip (ipaddr, netmask) : raise ValueError, "Malformed IP Address"
+        if not self._isvalidip (gateway) : raise ValueError, "Malformed GW Address"
         if not self._isvalidmask (netmask) : raise ValueError, "Invalid Mask"
 
         prefixLen = getPrefixLen (netmask)
@@ -254,7 +271,7 @@ class NetMan (dbus.service.Object):
         file_opened = False
         if len(dns_entry) > 0:
             for dns in dns_entry:
-                if not self._isvalidip (socket.AF_INET, dns):
+                if not self._isvalidip (dns):
                     if dns == "DHCP_AUTO=":
                         #This DNS is supplied by DHCP.
                         dhcp_auto = True
