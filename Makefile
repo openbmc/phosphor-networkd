@@ -5,7 +5,7 @@ EXE_OBJ = $(EXE).o
 
 INSTALLED_EXE += $(EXE)
 
-CFLAGS += -Wall -Wno-unused-result
+CFLAGS += -Wall -Werror -Wno-unused-result
 
 INC_FLAG += $(shell pkg-config --cflags --libs libsystemd) -I. -O2
 LIB_FLAG += $(shell pkg-config  --libs libsystemd)
