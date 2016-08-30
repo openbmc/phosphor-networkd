@@ -14,6 +14,8 @@ import glib
 import gobject
 import dbus.service
 import dbus.mainloop.glib
+from ConfigParser import SafeConfigParser
+import glob
 
 DBUS_NAME = 'org.openbmc.NetworkManager'
 OBJ_NAME = '/org/openbmc/NetworkManager/Interface'
@@ -40,6 +42,36 @@ network_providers = {
 def getPrefixLen(mask):
     prefixLen = sum([bin(int(x)).count('1') for x in mask.split('.')])
     return prefixLen
+
+# Enable / Disable the UseDHCP setting in .network file
+def modifyNetConfig(confFile, usentp):
+    parser = SafeConfigParser()
+    parser.optionxform = str
+    parser.read(confFile)
+    sections = parser.sections()
+
+    if "Match" not in sections:
+        raise NameError, "[Match] section not found"
+
+    interface = parser.get('Match', 'Name')
+    if interface == '':
+        raise NameError, "Invalid interface"
+
+    if "DHCP" not in sections:
+        parser.add_section("DHCP")
+    if usentp.lower() == "yes":
+        parser.set('DHCP', 'UseNTP', "true")
+    elif usentp.lower() == "no":
+        parser.set('DHCP', 'UseNTP', "false")
+
+    print "Updating" + confFile + '\n'
+    with open(confFile, 'wb') as configfile:
+        parser.write(configfile)
+
+    rc = call(["ip", "addr", "flush", interface])
+    rc = call(["systemctl", "restart", "systemd-networkd.service"])
+    rc = call(["systemctl", "try-restart", "systemd-timesyncd.service"])
+    return rc
 
 class IfAddr ():
     def __init__ (self, family, scope, flags, prefixlen, addr, gw):
@@ -166,6 +198,46 @@ class NetMan (dbus.service.Object):
     @dbus.service.method(DBUS_NAME, "", "")
     def test(self):
         print("TEST")
+
+    @dbus.service.method(DBUS_NAME, "sas", "x")
+    def SetNtpServer (self, device, ntpservers):
+        if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
+
+        # Convert the array into space separated value string
+        ntp_ip = " ".join(ntpservers)
+        if not ntp_ip : raise ValueError, "Invalid Data"
+
+        confFile = "/etc/systemd/network/00-bmc-" + device + ".network"
+
+        parser = SafeConfigParser()
+        parser.optionxform = str
+        parser.read(confFile)
+        sections = parser.sections()
+        if "Match" not in sections:
+            raise NameError, "[Match] section not found"
+
+        interface = parser.get('Match', 'Name')
+        if interface != device:
+            raise ValueError, "Device [" + device + "] Not Configured"
+
+        if "Network" not in sections:
+            raise NameError, "[Network] section not found"
+
+        parser.set('Network', 'NTP', ntp_ip)
+        print "Updating " + confFile + '\n'
+        with open(confFile, 'wb') as configfile:
+            parser.write(configfile)
+        rc = call(["ip", "addr", "flush", device])
+        rc = call(["systemctl", "restart", "systemd-networkd.service"])
+        rc = call(["systemctl", "try-restart", "systemd-timesyncd.service"])
+        return rc
+
+    @dbus.service.method(DBUS_NAME, "s", "x")
+    def UpdateUseNtpField (self, usentp):
+        filelist = glob.glob("/etc/systemd/network/*.network")
+        for configfile in filelist:
+            modifyNetConfig(configfile,usentp)
+        return 0
 
     @dbus.service.method(DBUS_NAME, "s", "x")
     def EnableDHCP (self, device):
