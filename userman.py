@@ -161,14 +161,18 @@ class UserManUsers (dbus.service.Object):
         else:
             cmd = "adduser "  + opts + " " + username
 
+        prompts = ['New password: ', 'Retype password: ', 'Re-enter new password: ']
         proc = pexpect.spawn (cmd)
-        proc.expect (['New password: ', 'Retype password: '])
+        proc.expect (prompts)
         proc.sendline (passwd)
-        proc.expect (['New password: ', 'Retype password: '])
+        proc.expect (prompts)
         proc.sendline (passwd)
 
+        if proc.expect(prompts + [pexpect.EOF]) != len(prompts):
+            proc.sendline (passwd)
+
         r = proc.wait()
-        return r
+        return r if r else 0
 
     @dbus.service.method(INTF_NAME, "", "as")
     def UserList (self):
