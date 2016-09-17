@@ -157,9 +157,9 @@ class UserManUsers (dbus.service.Object):
         if gecos: opts = " -g " + '"' + gecos + '"'
 
         if groupname:
-            cmd = "adduser "  + opts + " " + " -G " + groupname + " " + username
+            cmd = "adduser "  + opts + " " + " -G " + groupname + " " + "-s /bin/sh" + " " + username
         else:
-            cmd = "adduser "  + opts + " " + username
+            cmd = "adduser "  + opts + " " + "-s /bin/sh" + " " + username
 
         prompts = ['New password: ', 'Retype password: ', 'Re-enter new password: ']
         proc = pexpect.spawn (cmd)
@@ -223,14 +223,18 @@ class UserManUser (dbus.service.Object):
         if username not in users : raise ValueError("No such User: ", username)
 
         cmd = "passwd" + " " + username
+        prompts = ['New password: ', 'Retype password: ', 'Re-enter new password: ']
         proc = pexpect.spawn (cmd)
-        proc.expect (['New password: ', 'Retype password: '])
+        proc.expect (prompts)
         proc.sendline (passwd)
-        proc.expect (['New password: ', 'Retype password: '])
+        proc.expect (prompts)
         proc.sendline (passwd)
 
-        proc.wait()
-        return 0
+        if proc.expect(prompts + [pexpect.EOF]) != len(prompts):
+            proc.sendline (passwd)
+
+        r = proc.wait()
+        return r if r else 0
 
 def main():
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
