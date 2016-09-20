@@ -38,12 +38,12 @@ OBJ_NAME_USER = '/org/openbmc/UserManager/User'
 '''
 
 userman_providers = {
-    'pam' : { 
+    'pam' : {
         'adduser' : 'user add',
     },
     'ldap' : {
         'adduser' : 'ldap command to add user',
-    },  
+    },
 }
 
 class UserManGroups (dbus.service.Object):
@@ -218,7 +218,7 @@ class UserManUser (dbus.service.Object):
     @dbus.service.method(INTF_NAME, "ss", "x")
     def Passwd (self, username, passwd):
         if not username : raise ValueError("Invalid Username")
-        
+
         users = Usersobj.UserList ()
         if username not in users : raise ValueError("No such User: ", username)
 
