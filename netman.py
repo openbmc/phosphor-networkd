@@ -17,8 +17,14 @@ import dbus.mainloop.glib
 from ConfigParser import SafeConfigParser
 import glob
 
+#MAC address mask for locally administered.
+MAC_LOCAL_ADMIN_MASK = 0x20000000000
+
 DBUS_NAME = 'org.openbmc.NetworkManager'
 OBJ_NAME = '/org/openbmc/NetworkManager/Interface'
+
+INV_DBUS_NAME = 'org.openbmc.Inventory'
+INV_INTF_NAME = 'org.openbmc.InventoryItem'
 
 network_providers = {
     'networkd' : { 
@@ -72,6 +78,79 @@ def modifyNetConfig(confFile, usentp):
     rc = call(["systemctl", "restart", "systemd-networkd.service"])
     rc = call(["systemctl", "try-restart", "systemd-timesyncd.service"])
     return rc
+
+# Get the inventory dbus path based on the requested fru
+def get_inv_obj_path(fru_type, fru_name):
+
+    inventory_file = os.path.join(sys.prefix, 'share',
+                                  'inventory', 'inventory.json')
+    if os.path.exists(inventory_file):
+        import json
+        with open(inventory_file, 'r') as f:
+            try:
+                inv = json.load(f)
+            except ValueError:
+                print "Invalid JSON detected in " + inventory_file
+            else:
+                FRUS = inv
+    else:
+        try:
+            import obmc_system_config as System
+            FRUS = System.FRU_INSTANCES
+        except ImportError:
+            pass
+
+    for f in FRUS.keys():
+        import obmc.inventory
+        if (FRUS[f]['fru_type'] == fru_type and f.endswith(fru_name)):
+            return  f.replace("<inventory_root>", obmc.inventory.INVENTORY_ROOT)
+
+def readFRUInfofromConf():
+    conf_file = os.path.join('/etc', 'network-manager.ini')
+
+    fru_type = 'DAUGHTER_CARD'
+    fru_name = 'io_board'
+    prop = 'Custom Field 2'
+
+    if os.path.exists(conf_file):
+        parser = SafeConfigParser()
+        parser.optionxform = str
+        parser.read(conf_file)
+        sections = parser.sections()
+
+        if "mac_inventory_loc" not in sections:
+            raise NameError, "[mac_inventory_loc] section not found"
+
+        fru_type = parser.get('mac_inventory_loc', 'fru_type')
+        if fru_type == '':
+            raise NameError, "Invalid fru type"
+
+        fru_name = parser.get('mac_inventory_loc', 'fru_name')
+        if fru_name == '':
+            raise NameError, "Invalid fru name"
+
+        prop = parser.get('mac_inventory_loc', 'property')
+        if prop == '':
+            raise NameError, "Invalid property"
+
+    return [fru_type,fru_name,prop]
+
+# Get Mac address from the inevntory
+def get_mac_from_inventory():
+    inv_mac = ""
+    bus = dbus.SystemBus()
+    try:
+        fru_info = readFRUInfofromConf()
+        inv_obj_path = get_inv_obj_path(fru_info[0], fru_info[1])
+        inv_obj = bus.get_object(INV_DBUS_NAME, inv_obj_path)
+
+        # Get the value of the requested inventory property
+        dbus_method = inv_obj.get_dbus_method("Get", dbus.PROPERTIES_IFACE)
+        inv_mac = dbus_method(INV_INTF_NAME, fru_info[2])
+    except:
+        pass
+    return inv_mac
+
 
 class IfAddr ():
     def __init__ (self, family, scope, flags, prefixlen, addr, gw):
@@ -335,6 +414,18 @@ class NetMan (dbus.service.Object):
         if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
         if not self._ishwdev (device) : raise ValueError, "Not a Hardware Device"
         if not self._isvalidmac (mac) : raise ValueError, "Malformed MAC address"
+
+        int_mac = int(mac.replace(":", ""), 16)
+        print "Mac=[%s]" % mac
+
+        # raise error if incoming mac is neither local admin
+        # nor same as the inventory mac.
+
+        if not int_mac & MAC_LOCAL_ADMIN_MASK:
+            int_inv_mac = int(get_mac_from_inventory(), 16)
+            if int_inv_mac != int_mac:
+                raise ValueError, "Given MAC address is neither a local Admin type \
+                                   nor in the ineventory"
 
         rc = subprocess.call(["fw_setenv", "ethaddr", mac])
 
