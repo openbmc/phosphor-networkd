@@ -17,6 +17,9 @@ import dbus.mainloop.glib
 from ConfigParser import SafeConfigParser
 import glob
 
+#MAC address mask for locally administered.
+MAC_LOCAL_ADMIN_MASK = 0x20000000000
+BROADCAST_MAC = 0xFFFFFFFFFFFF
 DBUS_NAME = 'org.openbmc.NetworkManager'
 OBJ_NAME = '/org/openbmc/NetworkManager/Interface'
 
@@ -73,6 +76,45 @@ def modifyNetConfig(confFile, usentp):
     rc = call(["systemctl", "try-restart", "systemd-timesyncd.service"])
     return rc
 
+
+def read_mac_provider_info():
+    conf_file = os.path.join('/etc', 'network-manager.conf')
+    if not os.path.exists(conf_file):
+        raise IOError("Could not find %s" % conf_file)
+
+    parser = SafeConfigParser()
+    parser.optionxform = str
+    parser.read(conf_file)
+    sections = parser.sections()
+
+    path = parser.get('mac_loc', 'path')
+    if not path:
+        raise ValueError("Empty path")
+
+    bus_name = parser.get('mac_loc', 'bus')
+    if not bus_name:
+        raise ValueError("Empty bus-name")
+
+    intf = parser.get('mac_loc', 'interface')
+    if not intf:
+        raise ValueError("Empty intf-name")
+
+    prop = parser.get('mac_loc', 'property')
+    if not prop:
+        raise ValueError("Empty prop-name")
+
+    return bus_name, path, intf, prop
+
+
+# Get Mac address from the eeprom
+def get_mac_from_eeprom():
+    bus = dbus.SystemBus()
+    bus_name, path, intf, prop = read_mac_provider_info()
+    obj = bus.get_object(bus_name, path)
+    dbus_method = obj.get_dbus_method("Get", dbus.PROPERTIES_IFACE)
+    return dbus_method(intf, prop)
+
+
 class IfAddr ():
     def __init__ (self, family, scope, flags, prefixlen, addr, gw):
         self.family     = family
@@ -110,10 +152,22 @@ class NetMan (dbus.service.Object):
             if y > 255: return False
         return mask.count('.') == 3
 
-    def _isvalidmac(self, mac):
+    def validatemac(self, mac):
         macre = '([a-fA-F0-9]{2}[:|\-]?){6}'
-        if re.compile(macre).search(mac) : return True
-        else: return False
+        if re.compile(macre).search(mac) is None:
+            raise ValueError("Malformed MAC address")
+
+        # Don't allow Broadcast or global unique mac
+        int_mac = int(mac.replace(":", ""), 16)
+        if not (int_mac ^ BROADCAST_MAC):
+            raise ValueError("Given Mac is BroadCast Mac Address")
+
+        if not int_mac & MAC_LOCAL_ADMIN_MASK:
+            int_eep_mac = int(get_mac_from_eeprom(), 16)
+            if int_eep_mac != int_mac:
+                raise ValueError("Given MAC address is neither a local Admin type \
+                                   nor is same as in eeprom")
+
 
     def _isvalidipv4(self, ipstr, netmask):
         ip_parts = ipstr.split(".")
@@ -334,7 +388,8 @@ class NetMan (dbus.service.Object):
     def SetHwAddress (self, device, mac):
         if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
         if not self._ishwdev (device) : raise ValueError, "Not a Hardware Device"
-        if not self._isvalidmac (mac) : raise ValueError, "Malformed MAC address"
+
+        self.validatemac(mac)
 
         rc = subprocess.call(["fw_setenv", "ethaddr", mac])
 
