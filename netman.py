@@ -17,6 +17,9 @@ import dbus.mainloop.glib
 from ConfigParser import SafeConfigParser
 import glob
 
+#MAC address mask for locally administered.
+MAC_LOCAL_ADMIN_MASK = 0x20000000000
+BROADCAST_MAC = 0xFFFFFFFFFFFF
 DBUS_NAME = 'org.openbmc.NetworkManager'
 OBJ_NAME = '/org/openbmc/NetworkManager/Interface'
 
@@ -73,6 +76,50 @@ def modifyNetConfig(confFile, usentp):
     rc = call(["systemctl", "try-restart", "systemd-timesyncd.service"])
     return rc
 
+
+def read_mac_provider_info():
+
+    conf_file = os.path.join('/etc', 'network-manager.ini')
+    if not os.path.exists(conf_file):
+        raise IOError, "Conf File doesn't exist"
+
+    parser = SafeConfigParser()
+    parser.optionxform = str
+    parser.read(conf_file)
+    sections = parser.sections()
+
+    if "mac_loc" not in sections:
+        raise NameError, "[mac_loc] section not found"
+
+    path = parser.get('mac_loc', 'path')
+    if path == '':
+        raise ValueError, "Invalid path"
+
+    bus_name = parser.get('mac_loc', 'bus')
+    if bus_name == '':
+        raise ValueError, "Invalid bus"
+
+    intf = parser.get('mac_loc', 'interface')
+    if intf == '':
+        raise ValueError, "Invalid interface"
+
+    prop = parser.get('mac_loc', 'property')
+    if prop == '':
+        raise ValueError, "Invalid property"
+
+    return [bus_name, path, intf, prop]
+
+# Get Mac address from the eeprom
+def get_mac_from_eeprom():
+    mac = ""
+    bus = dbus.SystemBus()
+    prov_info = read_mac_provider_info()
+    obj = bus.get_object(prov_info[0], prov_info[1])
+    dbus_method = obj.get_dbus_method("Get", dbus.PROPERTIES_IFACE)
+    mac = dbus_method(prov_info[2], prov_info[3])
+    return mac
+
+
 class IfAddr ():
     def __init__ (self, family, scope, flags, prefixlen, addr, gw):
         self.family     = family
@@ -112,8 +159,21 @@ class NetMan (dbus.service.Object):
 
     def _isvalidmac(self, mac):
         macre = '([a-fA-F0-9]{2}[:|\-]?){6}'
-        if re.compile(macre).search(mac) : return True
-        else: return False
+        if re.compile(macre).search(mac) is None:
+            return False
+
+        #Don't allow Broadcast or global unique mac
+        int_mac = int(mac.replace(":", ""), 16)
+        if not (int_mac ^ BROADCAST_MAC):
+            raise ValueError, "Given Mac is BroadCast Mac Address"
+
+        if not int_mac & MAC_LOCAL_ADMIN_MASK:
+            int_eep_mac = int(get_mac_from_eeprom(), 16)
+            if int_eep_mac != int_mac:
+                raise ValueError, "Given MAC address is neither a local Admin type \
+                                   nor is same as in eeprom"
+        return True
+
 
     def _isvalidipv4(self, ipstr, netmask):
         ip_parts = ipstr.split(".")
