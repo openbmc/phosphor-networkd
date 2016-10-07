@@ -17,8 +17,16 @@ import dbus.mainloop.glib
 from ConfigParser import SafeConfigParser
 import glob
 
+#MAC address mask for locally administered.
+MAC_LOCAL_ADMIN_MASK = 0x20000000000
+
 DBUS_NAME = 'org.openbmc.NetworkManager'
 OBJ_NAME = '/org/openbmc/NetworkManager/Interface'
+
+INV_DBUS_NAME = 'org.openbmc.Inventory'
+INV_INTF_NAME = 'org.openbmc.InventoryItem'
+PROP_INTF_NAME = 'org.freedesktop.DBus.Properties'
+PROP_NAME = 'Custom Field 2'
 
 network_providers = {
     'networkd' : { 
@@ -72,6 +80,35 @@ def modifyNetConfig(confFile, usentp):
     rc = call(["systemctl", "restart", "systemd-networkd.service"])
     rc = call(["systemctl", "try-restart", "systemd-timesyncd.service"])
     return rc
+
+# Get the inventory dbus path based on the requested fru
+def get_inv_obj_path(fru_type, fru_name):
+    import obmc_system_config as System
+    FRUS = System.FRU_INSTANCES
+    obj_path = ''
+    for f in FRUS.keys():
+        import obmc.inventory
+        if (FRUS[f]['fru_type'] == fru_type and f.endswith(fru_name)):
+            obj_path = f.replace("<inventory_root>", obmc.inventory.INVENTORY_ROOT)
+    return obj_path
+
+
+# Get the inventory property value
+def get_inv_value(obj, prop_name):
+    value = ''
+    dbus_method = obj.get_dbus_method("Get", PROP_INTF_NAME)
+    value = dbus_method(INV_INTF_NAME, PROP_NAME)
+    return value
+
+# Get Mac address from the inevntory
+def get_mac_from_inventory():
+    bus = dbus.SystemBus()
+    inv_obj_path = get_inv_obj_path('DAUGHTER_CARD', 'io_board')
+    inv_obj = bus.get_object(INV_DBUS_NAME, inv_obj_path)
+    # Get the value of the requested inventory property
+    inv_value = get_inv_value(inv_obj, PROP_NAME)
+    return inv_value
+
 
 class IfAddr ():
     def __init__ (self, family, scope, flags, prefixlen, addr, gw):
@@ -335,6 +372,16 @@ class NetMan (dbus.service.Object):
         if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
         if not self._ishwdev (device) : raise ValueError, "Not a Hardware Device"
         if not self._isvalidmac (mac) : raise ValueError, "Malformed MAC address"
+
+        int_mac = int(mac.replace(":", ""), 16)
+
+        # raise error if incoming mac is neither local admin
+        # nor same as the inventory mac.
+
+        if not int_mac & MAC_LOCALLY_ADMIN_MASK:
+            int_inv_mac = int(get_mac_from_inventory(), 16)
+            if int_inv_mac != int_mac:
+                raise ValueError, "Given MAC address is not a local Admin type"
 
         rc = subprocess.call(["fw_setenv", "ethaddr", mac])
 
