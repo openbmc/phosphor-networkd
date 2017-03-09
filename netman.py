@@ -309,6 +309,8 @@ class NetMan (dbus.service.Object):
         networkconf.write ('Name=' + (device) + '\n')
         networkconf.write ('[Network]' + '\n')
         networkconf.write ('DHCP=yes')
+        networkconf.write ('[DHCP]' + '\n')
+        networkconf.write ('ClientIdentifier=mac' + '\n')
         networkconf.close ()
 
         print("Restarting networkd service...")
