@@ -308,7 +308,7 @@ class NetMan (dbus.service.Object):
         networkconf.write ('[Match]'+ '\n')
         networkconf.write ('Name=' + (device) + '\n')
         networkconf.write ('[Network]' + '\n')
-        networkconf.write ('DHCP=yes')
+        networkconf.write ('DHCP=yes' + '\n')
         networkconf.write ('[DHCP]' + '\n')
         networkconf.write ('ClientIdentifier=mac' + '\n')
         networkconf.close ()
