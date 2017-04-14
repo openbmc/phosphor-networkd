@@ -4,8 +4,10 @@
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
 
 #include <sdbusplus/bus.hpp>
+#include <ifaddrs.h>
 
 #include <list>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -30,6 +32,18 @@ struct AddrInfo {
     short addrType;
     std::string ipaddress;
 };
+
+using Addr_t = ifaddrs*;
+
+struct AddrDeleter
+{
+    void operator()(Addr_t ptr) const
+    {
+        freeifaddrs(ptr);
+    }
+};
+
+using AddrPtr = std::unique_ptr<ifaddrs, AddrDeleter>;
 
 using AddrList = std::list<AddrInfo>;
 using IntfAddrMap = std::map<IntfName, AddrList>;
