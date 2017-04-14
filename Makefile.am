@@ -1,3 +1,7 @@
+# Build these headers, don't install them
+nobase_nodist_include_HEADERS = \
+	xyz/openbmc_project/Network/VLAN/Create/server.hpp
+
 sbin_PROGRAMS = netman_watch_dns phosphor-network-manager
 
 
@@ -11,7 +15,17 @@ noinst_HEADERS = \
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
-		network_manager_main.cpp
+		network_manager_main.cpp \
+		xyz/openbmc_project/Network/VLAN/Create/server.cpp
+
+CLEANFILES = \
+		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
+		xyz/openbmc_project/Network/VLAN/Create/server.hpp
+
+BUILT_SOURCES = \
+		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
+		xyz/openbmc_project/Network/VLAN/Create/server.hpp
+
 
 phosphor_network_manager_LDFLAGS = \
 		$(SYSTEMD_LIBS) \
@@ -22,3 +36,11 @@ phosphor_network_manager_CXXFLAGS = \
 		$(SYSTEMD_CFLAGS) \
 		$(SDBUSPLUS_CFLAGS) \
 		$(PHOSPHOR_DBUS_INTERFACES_CFLAGS)
+
+xyz/openbmc_project/Network/VLAN/Create/server.cpp: xyz/openbmc_project/Network/VLAN/Create.interface.yaml xyz/openbmc_project/Network/VLAN/Create/server.hpp
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-cpp xyz.openbmc_project.Network.VLAN.Create > $@
+
+xyz/openbmc_project/Network/VLAN/Create/server.hpp: xyz/openbmc_project/Network/VLAN/Create.interface.yaml
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.VLAN.Create > $@
