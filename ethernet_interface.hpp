@@ -18,8 +18,8 @@ template <typename T>
 using ServerObject = typename sdbusplus::server::object::object<T>;
 
 using EthernetIface =
-    sdbusplus::server::object::object<
-    sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface>;
+    sdbusplus::server::object::object <
+    sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface >;
 
 } // namespace details
 
@@ -51,8 +51,7 @@ class EthernetInterface : public details::EthernetIface
          *  @param[in] dhcpEnabled - is dhcp enabled(true/false).
          */
         EthernetInterface(sdbusplus::bus::bus& bus,
-                          const char* objPath,
-                          const std::string& intfName,
+                          const std::string& objPath,
                           bool dhcpEnabled);
 
 
