@@ -1,0 +1,10 @@
+description: >
+methods:
+    - name: VLANInterface
+      description: >
+          Create VLANInterface Object.
+      parameters:
+        - name: Id
+          type: uint16
+          description: >
+              VLAN Identifier.
