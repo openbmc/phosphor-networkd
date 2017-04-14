@@ -14,6 +14,7 @@ noinst_HEADERS = \
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
+		network_manager.hpp \
 		network_manager_main.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 
