@@ -11,6 +11,7 @@ netman_watch_dns_CFLAGS = $(SYSTEMD_CFLAGS)
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.hpp \
 		ethernet_interface.cpp \
+		network_manager.hpp \
 		network_manager_main.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 
