@@ -10,7 +10,8 @@ netman_watch_dns_LDFLAGS = $(SYSTEMD_LIBS)
 netman_watch_dns_CFLAGS = $(SYSTEMD_CFLAGS)
 
 noinst_HEADERS = \
-		ethernet_interface.hpp
+		ethernet_interface.hpp \
+		network_manager.hpp
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
