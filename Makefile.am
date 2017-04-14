@@ -8,6 +8,7 @@ noinst_HEADERS = \
 		ethernet_interface.hpp
 
 phosphor_network_manager_SOURCES = \
+		ethernet_interface.cpp \
 		network_manager_main.cpp
 
 phosphor_network_manager_LDFLAGS = \
