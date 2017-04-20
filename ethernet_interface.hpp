@@ -1,33 +1,34 @@
 #pragma once
 
+#include "ipaddress.hpp"
+#include "types.hpp"
+
 #include "xyz/openbmc_project/Network/EthernetInterface/server.hpp"
+#include "xyz/openbmc_project/Network/IPAddress/Create/server.hpp"
+#include "xyz/openbmc_project/Network/IPProtocol/server.hpp"
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 
-#include <iostream>
 #include <string>
 
 namespace phosphor
 {
 namespace network
 {
-namespace details
-{
 
-template <typename T>
-using ServerObject = typename sdbusplus::server::object::object<T>;
+using Ifaces =
+    sdbusplus::server::object::object <
+    sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface,
+    sdbusplus::xyz::openbmc_project::Network::IPAddress::server::Create >;
 
-using EthernetIface =
-    sdbusplus::server::object::object<
-    sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface>;
+using IPProtocol = sdbusplus::xyz::openbmc_project::Network::server::IPProtocol;
 
-} // namespace details
 
 using LinkSpeed = uint16_t;
 using DuplexMode = uint8_t;
 using Autoneg = uint8_t;
-using InterfaceInfo = std::tuple<LinkSpeed,DuplexMode,Autoneg>;
+using InterfaceInfo = std::tuple<LinkSpeed, DuplexMode, Autoneg>;
 
 
 /** @class EthernetInterface
@@ -35,7 +36,7 @@ using InterfaceInfo = std::tuple<LinkSpeed,DuplexMode,Autoneg>;
  *  @details A concrete implementation for the
  *  xyz.openbmc_project.Network.EthernetInterface DBus API.
  */
-class EthernetInterface : public details::EthernetIface
+class EthernetInterface : public Ifaces
 {
     public:
         EthernetInterface() = delete;
@@ -53,10 +54,26 @@ class EthernetInterface : public details::EthernetIface
          */
         EthernetInterface(sdbusplus::bus::bus& bus,
                           const char* objPath,
-                          std::string intfName,
-                          bool dhcpEnabled);
+                          const std::string& intfName,
+                          bool dhcpEnabled,
+                          const AddrList& addrs);
 
+        /** @brief Function to create ipaddress dbus object.
+         *  @param[in] addressType - Type of ip address.
+         *  @param[in] ipaddress- IP adress.
+         *  @param[in] prefixLength - Length of prefix.
+         *  @param[in] gateway - Gateway ip address.
+         */
 
+        void iP(uint16_t addressType,
+                const std::string ipaddress,
+                uint8_t prefixLength,
+                const std::string gateway) override;
+
+        /** @brief delete the dbus object of the given ipaddress.
+         */
+
+        void deleteObject(const std::string& ipaddress);
 
     private:
 
@@ -71,6 +88,28 @@ class EthernetInterface : public details::EthernetIface
          */
 
         std::string getMACAddress() const;
+
+        /** @brief construct the ip address dbus object path.
+         *  @param[in] addressType - Type of ip address.
+         *  @return path of the address object.
+         */
+
+        std::string getAddressObjectPath(IPProtocol::Protocol addressType) const;
+
+        /** @brief get the ipadress count for a specific type on this interface.
+         *  @param[in] addressType - Type of ip address.
+         *  @return count of ipaddreses for the incoming type.
+         */
+
+        int getAddressCount(IPProtocol::Protocol addressType) const;
+
+
+        /** @brief Persistent sdbusplus DBus bus connection. */
+        sdbusplus::bus::bus& busNetwork;
+
+        /** @brief Persistent map of IPAddress dbus objects and their names */
+        std::map<std::string, std::unique_ptr<IPAddress>> addrs;
+
 
 };
 
