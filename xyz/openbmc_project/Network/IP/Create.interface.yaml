@@ -1,0 +1,22 @@
+description: >
+methods:
+    - name: IP
+      description: >
+          Create ipaddress object.
+      parameters:
+        - name: addressType
+          type: uint16
+          description: >
+              Address type.
+        - name: address
+          type: string
+          description: >
+              IP Address.
+        - name: prefixLength
+          type: byte
+          description: >
+              Prefix Length.
+        - name: gateway
+          type: string
+          description: >
+              Gateway Address.
