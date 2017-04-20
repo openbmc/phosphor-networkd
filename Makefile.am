@@ -1,6 +1,7 @@
 # Build these headers, don't install them
 nobase_nodist_include_HEADERS = \
-	xyz/openbmc_project/Network/VLAN/Create/server.hpp
+	xyz/openbmc_project/Network/VLAN/Create/server.hpp \
+	xyz/openbmc_project/Network/IP/Create/server.hpp
 
 sbin_PROGRAMS = netman_watch_dns phosphor-network-manager
 
@@ -19,15 +20,21 @@ phosphor_network_manager_SOURCES = \
 		ipaddress.cpp \
 		network_manager.cpp \
 		network_manager_main.cpp \
-		xyz/openbmc_project/Network/VLAN/Create/server.cpp
+		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
+		xyz/openbmc_project/Network/IP/Create/server.cpp
 
 CLEANFILES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
-		xyz/openbmc_project/Network/VLAN/Create/server.hpp
+		xyz/openbmc_project/Network/VLAN/Create/server.hpp \
+		xyz/openbmc_project/Network/IP/Create/server.cpp \
+		xyz/openbmc_project/Network/IP/Create/server.hpp
+
 
 BUILT_SOURCES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
-		xyz/openbmc_project/Network/VLAN/Create/server.hpp
+		xyz/openbmc_project/Network/VLAN/Create/server.hpp \
+		xyz/openbmc_project/Network/IP/Create/server.cpp \
+		xyz/openbmc_project/Network/IP/Create/server.hpp
 
 
 phosphor_network_manager_LDFLAGS = \
@@ -47,3 +54,12 @@ xyz/openbmc_project/Network/VLAN/Create/server.cpp: xyz/openbmc_project/Network/
 xyz/openbmc_project/Network/VLAN/Create/server.hpp: xyz/openbmc_project/Network/VLAN/Create.interface.yaml
 	@mkdir -p `dirname $@`
 	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.VLAN.Create > $@
+
+xyz/openbmc_project/Network/IP/Create/server.cpp: xyz/openbmc_project/Network/IP/Create.interface.yaml xyz/openbmc_project/Network/IP/Create/server.hpp
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-cpp xyz.openbmc_project.Network.IP.Create > $@
+
+xyz/openbmc_project/Network/IP/Create/server.hpp: xyz/openbmc_project/Network/IP/Create.interface.yaml
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.IP.Create > $@
+
