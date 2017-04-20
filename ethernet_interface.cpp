@@ -137,5 +137,11 @@ std::string EthernetInterface::getMACAddress() const
     }
     return macAddress;
 }
+
+void EthernetInterface::deleteObject(const std::string& ipaddress)
+{
+     //NOTE:- will be implemented in next commit.
+}
+
 }//namespace network
 }//namespace phosphor
