@@ -1,0 +1,29 @@
+description: >
+methods:
+    - name: IP
+      description: >
+          Create ipaddress object.
+      parameters:
+        - name: ProtocolType
+          type: enum[self.Protocol]
+          description: >
+              protocol type can be IPv4 or IPv6 etc.
+        - name: Address
+          type: string
+          description: >
+              IP Address.
+        - name: PrefixLength
+          type: byte
+          description: >
+              Prefix Length.
+        - name: Gateway
+          type: string
+          description: >
+              Gateway Address.
+enumerations:
+    - name: Protocol
+      description: >
+          Possible IP protocol types.
+      values:
+        - name: IPv4
+        - name: IPv6
