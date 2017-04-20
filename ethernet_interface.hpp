@@ -54,6 +54,10 @@ class EthernetInterface : public details::EthernetIface
                           const std::string& objPath,
                           bool dhcpEnabled);
 
+        /** @brief delete the dbus object of the given ipaddress.
+         */
+
+        void deleteObject(const std::string& ipaddress);
 
 
     private:
