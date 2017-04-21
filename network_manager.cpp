@@ -120,6 +120,13 @@ IntfAddrMap Manager::getInterfaceAddrs() const
           
                 //TODO: convert v6 mask into cidr
 
+                inet_ntop(ifa->ifa_addr->sa_family,
+                          &(((struct sockaddr_in6*)(ifa->ifa_netmask))->sin6_addr),
+                          subnetMask,
+                          sizeof(subnetMask));
+          
+                //TODO: convert v6 mask into cidr
+
             }
 
             info.addrType = ifa->ifa_addr->sa_family;
