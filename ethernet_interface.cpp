@@ -1,7 +1,10 @@
+#include "config.h"
+#include "ipaddress.hpp"
 #include "ethernet_interface.hpp"
 
 #include <phosphor-logging/log.hpp>
 
+#include <arpa/inet.h>
 #include <linux/ethtool.h>
 #include <net/if.h>
 #include <linux/sockios.h>
@@ -9,6 +12,9 @@
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <unistd.h>
+
+#include <string>
+#include <algorithm>
 
 namespace phosphor
 {
@@ -22,16 +28,53 @@ constexpr size_t SIZE_BUFF = 512;
 
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
-                                     bool dhcpEnabled) :
-    details::EthernetIface(bus, objPath.c_str(), true)
+                                     bool dhcpEnabled,
+                                     const AddrList& addrs) :
+                                     Ifaces(bus, objPath.c_str(), true),
+                                     bus(bus)
 {
     auto intfName = objPath.substr(objPath.rfind("/") + 1);
     interfaceName(intfName);
     dHCPEnabled(dhcpEnabled);
     mACAddress(getMACAddress());
+    std::string gateway;
+
+    IPProtocol::Protocol addressType = IPProtocol::Protocol::IPv4;
+
+    for (auto addr : addrs)
+    {
+        if (addr.addrType == AF_INET6)
+        {
+            addressType = IPProtocol::Protocol::IPv6;
+        }
+
+        std::string ipAddressobjectPath = getAddressObjectPath(addressType);
+        this->addrs.emplace(std::make_pair(addr.ipaddress, std::make_unique <
+                                           phosphor::network::IPAddress >
+                                           (bus, ipAddressobjectPath.c_str(),
+                                           *this, addressType, addr.ipaddress,
+                                            addr.prefix, gateway)));
+    }
     // Emit deferred signal.
     this->emit_object_added();
 }
+
+void EthernetInterface::iP(uint16_t addressType,
+                           std::string ipaddress,
+                           uint16_t prefixLength,
+                           std::string gateway)
+{
+
+    std::string objectPath = getAddressObjectPath((IPProtocol::Protocol)
+                             addressType);
+    this->addrs.emplace(std::make_pair(ipaddress, std::make_unique <
+                                       phosphor::network::IPAddress >
+                                       (bus, objectPath.c_str(),
+                                       *this,
+                                       (IPProtocol::Protocol)addressType,
+                                       ipaddress, prefixLength, gateway)));
+}
+
 
 /*
 Note: We don't have support for  ethtool now
@@ -39,6 +82,7 @@ will enable this code once we bring the ethtool
 in the image.
 TODO: https://github.com/openbmc/openbmc/issues/1484
 */
+
 InterfaceInfo EthernetInterface::getInterfaceInfo() const
 {
     int sock{-1};
@@ -138,9 +182,40 @@ std::string EthernetInterface::getMACAddress() const
     return macAddress;
 }
 
+int EthernetInterface::getAddressCount(IPProtocol::Protocol addressType) const
+{
+    int count = 0;
+
+    std::for_each(addrs.cbegin(), addrs.cend(),
+                  [&count,addressType](const auto & addr)
+    {
+        if (addr.second->type() == addressType)
+        {
+            count += 1;
+        }
+    });
+
+    return count;
+}
+
 void EthernetInterface::deleteObject(const std::string& ipaddress)
 {
-     //NOTE:- will be implemented in next commit.
+    this->addrs.erase(addrs.find(ipaddress));
+}
+
+std::string EthernetInterface::getAddressObjectPath(IPProtocol::Protocol
+                                                    addressType) const
+{
+    std::string type = (addressType == IPProtocol::Protocol::IPv4 ?
+                        "ipv4" : "ipv6");
+
+    std::string objectPath = std::string(OBJ_NETWORK) + "/" +
+                             interfaceName() + "/" +
+                             type + "/" +
+                             std::to_string(getAddressCount(addressType));
+
+    return objectPath;
+
 }
 
 }//namespace network
