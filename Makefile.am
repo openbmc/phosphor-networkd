@@ -17,6 +17,7 @@ phosphor_network_manager_SOURCES = \
 		network_manager.hpp \
 		network_manager.cpp \
 		network_manager_main.cpp \
+		types.hpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 		xyz/openbmc_project/Network/IP/Create/server.cpp
 
