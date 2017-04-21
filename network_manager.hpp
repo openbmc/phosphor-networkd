@@ -1,13 +1,10 @@
 #pragma once
 
 #include "ethernet_interface.hpp"
+#include "types.hpp"
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
 
 #include <sdbusplus/bus.hpp>
-
-#include <list>
-#include <string>
-#include <vector>
 
 namespace phosphor
 {
@@ -31,8 +28,6 @@ struct AddrInfo {
     std::string ipaddress;
 };
 
-using AddrList = std::list<AddrInfo>;
-using IntfAddrMap = std::map<IntfName, AddrList>;
 
 } // namespace details
 
@@ -61,7 +56,12 @@ class Manager : public details::VLANCreateIface
         /** @brief Get all the interfaces from the system.
          *  @returns list of interface names.
          */
-        details::IntfAddrMap getInterfaceAndaddrs() const;
+        IntfAddrMap getInterfaceAddrs() const;
+
+
+        /** @brief converts the given subnet into prefix notation **/
+        uint8_t toCidr(char* subnetMask) const;
+
 
         /** @brief Persistent map of EthernetInterface dbus objects and their names */
         std::map<IntfName, std::unique_ptr<EthernetInterface>> interfaces;
