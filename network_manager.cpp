@@ -19,7 +19,7 @@ using namespace phosphor::logging;
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
     details::VLANCreateIface(bus, objPath, true)
 {
-    auto interfaceInfoList = getInterfaceAndaddrs();
+    auto interfaceInfoList = getInterfaceAddrs();
 
     for( const auto& intfInfo : interfaceInfoList )
     {
@@ -30,18 +30,18 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
                                  std::make_unique<
                                  phosphor::network::EthernetInterface >
                                  (bus, objectPath.c_str(),
-                                 false)));
+                                 false,intfInfo.second)));
     }
 }
 
-void Manager::vLAN(details::IntfName interfaceName, uint16_t id)
+void Manager::vLAN(IntfName interfaceName, uint16_t id)
 {
 }
 
-details::IntfAddrMap Manager::getInterfaceAndaddrs() const
+IntfAddrMap Manager::getInterfaceAddrs() const
 {
-    details::IntfAddrMap intfMap;
-    details::AddrList addrList;
+    IntfAddrMap intfMap;
+    AddrList addrList;
     struct ifaddrs* ifaddr;
     // attempt to fill struct with ifaddrs
     if (getifaddrs(&ifaddr) == -1)
@@ -86,28 +86,28 @@ details::IntfAddrMap Manager::getInterfaceAndaddrs() const
                 addrList.clear();
             }
             intfName = ifa->ifa_name;
-            details::AddrInfo info;
-            char tmp[INET6_ADDRSTRLEN] = { 0 };
+            AddrInfo info;
+            char ip[INET6_ADDRSTRLEN] = { 0 };
 
             if (ifa->ifa_addr->sa_family == AF_INET)
             {
 
                 inet_ntop(ifa->ifa_addr->sa_family,
                           &(((struct sockaddr_in*)(ifa->ifa_addr))->sin_addr),
-                          tmp,
-                          sizeof(tmp));
+                          ip,
+                          sizeof(ip));
             }
             else
             {
                 inet_ntop(ifa->ifa_addr->sa_family,
                           &(((struct sockaddr_in6*)(ifa->ifa_addr))->sin6_addr),
-                          tmp,
-                          sizeof(tmp));
+                          ip,
+                          sizeof(ip));
 
             }
 
             info.addrType = ifa->ifa_addr->sa_family;
-            info.ipaddress = tmp;
+            info.ipaddress = ip;
             addrList.emplace_back(info);
         }
     }
