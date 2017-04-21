@@ -24,7 +24,7 @@ using CustomUniquePtr = std::unique_ptr<T, std::function<void(T*)>>;
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
     details::VLANCreateIface(bus, objPath, true)
 {
-    auto interfaceInfoList = getInterfaceAndaddrs();
+    auto interfaceInfoList = getInterfaceAddrs();
 
 
     std::for_each(interfaceInfoList.cbegin(), interfaceInfoList.cend(),
@@ -33,24 +33,24 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
         std::string  objectPath = std::string(OBJ_NETWORK) + "/" + intfInfo.first;
 
         this->interfaces.emplace(std::make_pair(
-                                 intfInfo.first,
-                                 std::make_unique<
-                                 phosphor::network::EthernetInterface >
-                                 (bus, objectPath.c_str(), intfInfo.first,
-                                 false)));
+                                     intfInfo.first,
+                                     std::make_unique <
+                                     phosphor::network::EthernetInterface >
+                                     (bus, objectPath.c_str(), intfInfo.first,
+                                      false,intfInfo.second)));
 
     });
 
 }
 
-void Manager::vLAN(details::IntfName interfaceName, uint16_t id)
+void Manager::vLAN(IntfName interfaceName, uint16_t id)
 {
 }
 
-details::IntfAddrMap Manager::getInterfaceAndaddrs() const
+IntfAddrMap Manager::getInterfaceAddrs() const
 {
-    details::IntfAddrMap intfMap;
-    details::AddrList addrList;
+    IntfAddrMap intfMap;
+    AddrList addrList;
     struct ifaddrs* ifaddr;
     // attempt to fill struct with ifaddrs
     if (getifaddrs(&ifaddr) == -1)
@@ -98,28 +98,28 @@ details::IntfAddrMap Manager::getInterfaceAndaddrs() const
                 addrList.clear();
             }
             intfName = ifa->ifa_name;
-            details::AddrInfo info;
-            char tmp[INET6_ADDRSTRLEN] = { 0 };
+            AddrInfo info;
+            char ip[INET6_ADDRSTRLEN] = { 0 };
 
             if (ifa->ifa_addr->sa_family == AF_INET)
             {
 
                 inet_ntop(ifa->ifa_addr->sa_family,
                           &(((struct sockaddr_in*)(ifa->ifa_addr))->sin_addr),
-                          tmp,
-                          sizeof(tmp));
+                          ip,
+                          sizeof(ip));
             }
             else
             {
                 inet_ntop(ifa->ifa_addr->sa_family,
                           &(((struct sockaddr_in6*)(ifa->ifa_addr))->sin6_addr),
-                          tmp,
-                          sizeof(tmp));
+                          ip,
+                          sizeof(ip));
 
             }
 
             info.addrType = ifa->ifa_addr->sa_family;
-            info.ipaddress = tmp;
+            info.ipaddress = ip;
             addrList.emplace_back(info);
         }
     }
