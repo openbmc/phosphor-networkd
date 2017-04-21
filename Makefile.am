@@ -13,7 +13,8 @@ netman_watch_dns_CFLAGS = $(SYSTEMD_CFLAGS)
 noinst_HEADERS = \
 		ethernet_interface.hpp \
 		network_manager.hpp \
-		ipaddress.hpp
+		ipaddress.hpp \
+		types.hpp
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
@@ -40,7 +41,8 @@ BUILT_SOURCES = \
 phosphor_network_manager_LDFLAGS = \
 		$(SYSTEMD_LIBS) \
 		$(SDBUSPLUS_LIBS) \
-		$(PHOSPHOR_DBUS_INTERFACES_LIBS)
+		$(PHOSPHOR_DBUS_INTERFACES_LIBS) \
+		-lstdc++fs
 
 phosphor_network_manager_CXXFLAGS = \
 		$(SYSTEMD_CFLAGS) \
