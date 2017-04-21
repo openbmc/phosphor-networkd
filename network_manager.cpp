@@ -4,7 +4,10 @@
 #include <phosphor-logging/log.hpp>
 
 #include <algorithm>
+#include <bitset>
 #include <experimental/filesystem>
+#include <map>
+
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <net/if.h>
@@ -23,18 +26,21 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
 {
     auto interfaceInfoList = getInterfaceAddrs();
 
-    for( const auto& intfInfo : interfaceInfoList )
+    for (const auto& intfInfo : interfaceInfoList)
+
     {
 
         fs::path objectPath = std::string(OBJ_NETWORK);
         objectPath /= intfInfo.first;
 
         this->interfaces.emplace(std::make_pair(
-                                 intfInfo.first,
-                                 std::make_unique<
-                                 phosphor::network::EthernetInterface >
-                                 (bus, objectPath.c_str(),
-                                 false,intfInfo.second)));
+                                     intfInfo.first,
+                                     std::make_unique<
+                                     phosphor::network::EthernetInterface>
+                                     (bus,
+                                      objectPath.string(),
+                                      false,
+                                      intfInfo.second)));
     }
 }
 
@@ -92,6 +98,8 @@ IntfAddrMap Manager::getInterfaceAddrs() const
             intfName = ifa->ifa_name;
             AddrInfo info;
             char ip[INET6_ADDRSTRLEN] = { 0 };
+            char subnetMask[INET6_ADDRSTRLEN] = { 0 };
+            uint16_t prefix = { 0 };
 
             if (ifa->ifa_addr->sa_family == AF_INET)
             {
@@ -100,6 +108,14 @@ IntfAddrMap Manager::getInterfaceAddrs() const
                           &(((struct sockaddr_in*)(ifa->ifa_addr))->sin_addr),
                           ip,
                           sizeof(ip));
+
+                inet_ntop(ifa->ifa_addr->sa_family,
+                          &(((struct sockaddr_in*)(ifa->ifa_netmask))->sin_addr),
+                          subnetMask,
+                          sizeof(subnetMask));
+
+                prefix = toCidr(subnetMask);
+
             }
             else
             {
@@ -108,15 +124,49 @@ IntfAddrMap Manager::getInterfaceAddrs() const
                           ip,
                           sizeof(ip));
 
+                inet_ntop(ifa->ifa_addr->sa_family,
+                          &(((struct sockaddr_in6*)(ifa->ifa_netmask))->sin6_addr),
+                          subnetMask,
+                          sizeof(subnetMask));
+
+                //TODO: convert v6 mask into cidr
+
             }
 
             info.addrType = ifa->ifa_addr->sa_family;
             info.ipaddress = ip;
+            info.prefix = prefix;
             addrList.emplace_back(info);
         }
     }
     intfMap.emplace(intfName, addrList);
     return intfMap;
+}
+
+uint8_t Manager::toCidr(const char* subnetMask) const
+{
+    uint32_t buff;
+
+    auto rc = inet_pton(AF_INET, subnetMask, &buff);
+    if (rc <= 0)
+    {
+        log<level::ERR>("inet_pton failed:",
+                         entry("Mask=%s", subnetMask));
+        return 0;
+    }
+
+    buff = be32toh(buff);
+    // total no of bits - total no of leading zero == total no of ones
+    if (((sizeof(buff)*4) - (__builtin_ctz(buff))) == __builtin_popcount(buff))
+    {
+        return __builtin_popcount(buff);
+    }
+    else
+    {
+        log<level::ERR>("Invalid Mask",
+                         entry("Mask=%s", subnetMask));
+        return 0;
+    }
 }
 }//namespace network
 }//namespace phosphor

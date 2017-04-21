@@ -29,7 +29,8 @@ using VLANCreateIface =
 
 using IntfName = std::string;
 
-struct AddrInfo {
+struct AddrInfo
+{
     short addrType;
     std::string ipaddress;
 };
@@ -77,6 +78,9 @@ class Manager : public details::VLANCreateIface
          *  @returns list of interface names.
          */
         IntfAddrMap getInterfaceAddrs() const;
+
+        /** @brief converts the given subnet into prefix notation **/
+        uint8_t toCidr(const char* subnetMask) const;
 
         /** @brief Persistent map of EthernetInterface dbus objects and their names */
         std::map<IntfName, std::unique_ptr<EthernetInterface>> interfaces;
