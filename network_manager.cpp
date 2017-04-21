@@ -100,6 +100,8 @@ IntfAddrMap Manager::getInterfaceAddrs() const
             intfName = ifa->ifa_name;
             AddrInfo info;
             char ip[INET6_ADDRSTRLEN] = { 0 };
+            char subnetMask[INET6_ADDRSTRLEN] = { 0 };
+            uint16_t prefix = { 0 };
 
             if (ifa->ifa_addr->sa_family == AF_INET)
             {
@@ -108,6 +110,14 @@ IntfAddrMap Manager::getInterfaceAddrs() const
                           &(((struct sockaddr_in*)(ifa->ifa_addr))->sin_addr),
                           ip,
                           sizeof(ip));
+
+                inet_ntop(ifa->ifa_addr->sa_family,
+                          &(((struct sockaddr_in*)(ifa->ifa_netmask))->sin_addr),
+                          subnetMask,
+                          sizeof(subnetMask));
+
+                prefix = toCidr(subnetMask);
+
             }
             else
             {
@@ -116,15 +126,77 @@ IntfAddrMap Manager::getInterfaceAddrs() const
                           ip,
                           sizeof(ip));
 
+                inet_ntop(ifa->ifa_addr->sa_family,
+                          &(((struct sockaddr_in6*)(ifa->ifa_netmask))->sin6_addr),
+                          subnetMask,
+                          sizeof(subnetMask));
+          
+                //TODO: convert v6 mask into cidr
+
             }
 
             info.addrType = ifa->ifa_addr->sa_family;
             info.ipaddress = ip;
+            info.prefix = prefix;
             addrList.emplace_back(info);
         }
     }
     intfMap.emplace(intfName, addrList);
     return intfMap;
+}
+
+uint8_t Manager::toCidr(char* subnetMask) const
+{
+    uint8_t netmask_cidr;
+    int ipbytes[4];
+
+    netmask_cidr = 0;
+    sscanf(subnetMask, "%d.%d.%d.%d", &ipbytes[0], &ipbytes[1], &ipbytes[2],
+           &ipbytes[3]);
+
+    for (int i = 0; i < 4; i++)
+    {
+        switch (ipbytes[i])
+        {
+            case 0x80:
+                netmask_cidr += 1;
+                break;
+
+            case 0xC0:
+                netmask_cidr += 2;
+                break;
+
+            case 0xE0:
+                netmask_cidr += 3;
+                break;
+
+            case 0xF0:
+                netmask_cidr += 4;
+                break;
+
+            case 0xF8:
+                netmask_cidr += 5;
+                break;
+
+            case 0xFC:
+                netmask_cidr += 6;
+                break;
+
+            case 0xFE:
+                netmask_cidr += 7;
+                break;
+
+            case 0xFF:
+                netmask_cidr += 8;
+                break;
+
+            default:
+                return netmask_cidr;
+                break;
+        }
+    }
+
+    return netmask_cidr;
 }
 }//namespace network
 }//namespace phosphor
