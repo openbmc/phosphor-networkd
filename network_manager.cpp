@@ -4,6 +4,7 @@
 #include <phosphor-logging/log.hpp>
 
 #include <algorithm>
+#include <map>
 
 #include <arpa/inet.h>
 #include <dirent.h>
@@ -29,7 +30,7 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
                                  intfInfo.first,
                                  std::make_unique<
                                  phosphor::network::EthernetInterface >
-                                 (bus, objectPath.c_str(),
+                                 (bus, objectPath,
                                  false,intfInfo.second)));
     }
 }
@@ -88,6 +89,8 @@ IntfAddrMap Manager::getInterfaceAddrs() const
             intfName = ifa->ifa_name;
             AddrInfo info;
             char ip[INET6_ADDRSTRLEN] = { 0 };
+            char subnetMask[INET6_ADDRSTRLEN] = { 0 };
+            uint16_t prefix = { 0 };
 
             if (ifa->ifa_addr->sa_family == AF_INET)
             {
@@ -96,6 +99,13 @@ IntfAddrMap Manager::getInterfaceAddrs() const
                           &(((struct sockaddr_in*)(ifa->ifa_addr))->sin_addr),
                           ip,
                           sizeof(ip));
+
+                inet_ntop(ifa->ifa_addr->sa_family,
+                          &(((struct sockaddr_in*)(ifa->ifa_netmask))->sin_addr),
+                          subnetMask,
+                          sizeof(subnetMask));
+
+                prefix = toCidr(subnetMask);
             }
             else
             {
@@ -104,15 +114,48 @@ IntfAddrMap Manager::getInterfaceAddrs() const
                           ip,
                           sizeof(ip));
 
+                inet_ntop(ifa->ifa_addr->sa_family,
+                          &(((struct sockaddr_in6*)(ifa->ifa_netmask))->sin6_addr),
+                          subnetMask,
+                          sizeof(subnetMask));
+
+                //TODO: convert v6 mask into cidr
+
             }
 
             info.addrType = ifa->ifa_addr->sa_family;
             info.ipaddress = ip;
+            info.prefix = prefix;
             addrList.emplace_back(info);
         }
     }
     intfMap.emplace(intfName, addrList);
     return intfMap;
+}
+
+uint8_t Manager::toCidr(const char* subnetMask) const
+{
+    uint8_t netmask_cidr = 0;
+    int ipbytes[4];
+
+    sscanf(subnetMask, "%d.%d.%d.%d", &ipbytes[0], &ipbytes[1], &ipbytes[2],
+           &ipbytes[3]);
+
+    std::map<int,int>maskCidrmap = {{0x80,1},{0xC0,2},
+                                    {0xE0,3},{0xF0,4},
+                                    {0xF8,5},{0xFC,6},
+                                    {0xFE,7},{0xFF,8}};
+
+    for (int i = 0; i < 4; i++)
+    {
+        auto tmp = maskCidrmap[ipbytes[i]];
+        if(!tmp)
+        {
+            return 0;
+        }
+        netmask_cidr += tmp;
+    }
+    return netmask_cidr;
 }
 }//namespace network
 }//namespace phosphor
