@@ -80,7 +80,10 @@ class Manager : public details::VLANCreateIface
         IntfAddrMap getInterfaceAddrs() const;
 
         /** @brief converts the given subnet into prefix notation **/
-        uint8_t toCidr(const char* subnetMask) const;
+        uint8_t toCidr(int addressFamily, const char* subnetMask) const;
+
+        /** @brief converts the given V6 subnet into prefix notation **/
+        uint8_t toV6Cidr(const std::string& subnetMask) const;
 
         /** @brief Persistent map of EthernetInterface dbus objects and their names */
         std::map<IntfName, std::unique_ptr<EthernetInterface>> interfaces;
