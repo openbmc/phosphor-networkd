@@ -114,8 +114,6 @@ IntfAddrMap Manager::getInterfaceAddrs() const
                           subnetMask,
                           sizeof(subnetMask));
 
-                prefix = toCidr(subnetMask);
-
             }
             else
             {
@@ -143,11 +141,15 @@ IntfAddrMap Manager::getInterfaceAddrs() const
     return intfMap;
 }
 
-uint8_t Manager::toCidr(const char* subnetMask) const
+uint8_t Manager::toCidr(int addressFamily, const char* subnetMask) const
 {
+    if (addressFamily == AF_INET6)
+    {
+        return toV6Cidr(std::string(subnetMask));
+    }
     uint32_t buff;
 
-    auto rc = inet_pton(AF_INET, subnetMask, &buff);
+    auto rc = inet_pton(addressFamily, subnetMask, &buff);
     if (rc <= 0)
     {
         log<level::ERR>("inet_pton failed:",
@@ -157,7 +159,7 @@ uint8_t Manager::toCidr(const char* subnetMask) const
 
     buff = be32toh(buff);
     // total no of bits - total no of leading zero == total no of ones
-    if (((sizeof(buff)*4) - (__builtin_ctz(buff))) == __builtin_popcount(buff))
+    if (((sizeof(buff) * 4) - (__builtin_ctz(buff))) == __builtin_popcount(buff))
     {
         return __builtin_popcount(buff);
     }
@@ -168,5 +170,66 @@ uint8_t Manager::toCidr(const char* subnetMask) const
         return 0;
     }
 }
+
+uint8_t Manager::toV6Cidr(const std::string& subnetMask) const
+{
+    uint8_t pos = 0;
+    uint8_t prevPos = 0;
+    uint8_t cidr = 0;
+    int buff;
+    do
+    {
+        //subnet mask look like ffff:ffff::
+        // or ffff:c000::
+        pos =  subnetMask.find(":", prevPos);
+        if (pos == std::string::npos)
+        {
+            break;
+        }
+
+        auto str = subnetMask.substr(prevPos, (pos - prevPos));
+        prevPos = pos + 1;
+
+        // String length is 0
+        if (!str.length())
+        {
+            return cidr;
+        }
+        //converts it into number.
+        if (sscanf(str.c_str(), "%x", &buff) <= 0)
+        {
+            log<level::ERR>("Invalid Mask",
+                             entry("Mask=%s", subnetMask));
+
+            return 0;
+        }
+        // convert the number into bitset
+        // and check for how many ones are there.
+        // if we don't have all the ones then make
+        // sure that all the ones should be left justify.
+
+        std::bitset<16>set(buff);
+        if (!set.all())
+        {
+            for (uint8_t i = 0 ; i < (16 - set.count()) ; i--)
+            {
+                if (set[i])
+                {
+                    log<level::ERR>("Invalid Mask",
+                                    entry("Mask=%s", subnetMask));
+                    return 0;
+                }
+
+            }
+            cidr += set.count();
+            return cidr;
+        }
+        cidr += 16;
+    }
+    while (1);
+
+    return cidr;
+}
+
 }//namespace network
 }//namespace phosphor
