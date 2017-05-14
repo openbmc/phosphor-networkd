@@ -77,6 +77,10 @@ AC_ARG_VAR(OBJ_NETWORK, [The network manager DBus object path])
 AS_IF([test "x$OBJ_NETWORK" == "x"], [OBJ_NETWORK="/xyz/openbmc_project/network"])
 AC_DEFINE_UNQUOTED([OBJ_NETWORK], ["$OBJ_NETWORK"], [The network manager DBus object path])
 
+AC_ARG_VAR(NETWORK_CONF_DIR, [Network configuration directory])
+AS_IF([test "x$NETWORK_CONF_DIR" == "x"], [NETWORK_CONF_DIR="/etc/systemd/network"])
+AC_DEFINE_UNQUOTED([NETWORK_CONF_DIR], ["$NETWORK_CONF_DIR"], [Network configuration directory])
+
 # Create configured output.
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
