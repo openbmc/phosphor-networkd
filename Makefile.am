@@ -11,12 +11,14 @@ netman_watch_dns_LDFLAGS = $(SYSTEMD_LIBS)
 netman_watch_dns_CFLAGS = $(SYSTEMD_CFLAGS)
 
 noinst_HEADERS = \
+		config_parser.hpp \
 		ethernet_interface.hpp \
 		network_manager.hpp \
 		ipaddress.hpp \
 		types.hpp
 
 phosphor_network_manager_SOURCES = \
+		config_parser.cpp \
 		ethernet_interface.cpp \
 		ipaddress.cpp \
 		network_manager.cpp \
