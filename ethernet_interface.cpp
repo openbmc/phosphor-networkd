@@ -1,4 +1,5 @@
 #include "config.h"
+#include "config_parser.hpp"
 #include "ipaddress.hpp"
 #include "ethernet_interface.hpp"
 
@@ -83,6 +84,7 @@ void EthernetInterface::iP(IP::Protocol protType,
                                        ipaddress,
                                        prefixLength,
                                        gateway)));
+
 }
 
 
