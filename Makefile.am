@@ -1,7 +1,8 @@
 # Build these headers, don't install them
 nobase_nodist_include_HEADERS = \
 	xyz/openbmc_project/Network/VLAN/Create/server.hpp \
-	xyz/openbmc_project/Network/IP/Create/server.hpp
+	xyz/openbmc_project/Network/IP/Create/server.hpp \
+	xyz/openbmc_project/Network/Common/error.hpp
 
 sbin_PROGRAMS = netman_watch_dns phosphor-network-manager
 
@@ -24,20 +25,25 @@ phosphor_network_manager_SOURCES = \
 		network_manager.cpp \
 		network_manager_main.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
-		xyz/openbmc_project/Network/IP/Create/server.cpp
+		xyz/openbmc_project/Network/IP/Create/server.cpp \
+		xyz/openbmc_project/Network/Common/error.cpp
 
 CLEANFILES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.hpp \
 		xyz/openbmc_project/Network/IP/Create/server.cpp \
-		xyz/openbmc_project/Network/IP/Create/server.hpp
+		xyz/openbmc_project/Network/IP/Create/server.hpp \
+		xyz/openbmc_project/Network/Common/error.cpp \
+		xyz/openbmc_project/Network/Common/error.hpp
 
 
 BUILT_SOURCES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.hpp \
 		xyz/openbmc_project/Network/IP/Create/server.cpp \
-		xyz/openbmc_project/Network/IP/Create/server.hpp
+		xyz/openbmc_project/Network/IP/Create/server.hpp \
+		xyz/openbmc_project/Network/Common/error.hpp \
+		xyz/openbmc_project/Network/Common/error.cpp
 
 
 phosphor_network_manager_LDFLAGS = \
@@ -67,3 +73,10 @@ xyz/openbmc_project/Network/IP/Create/server.hpp: xyz/openbmc_project/Network/IP
 	@mkdir -p `dirname $@`
 	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.IP.Create > $@
 	sed -i '5i #include \"xyz\/openbmc_project\/Network\/IP\/server.hpp\"' $@
+xyz/openbmc_project/Network/Common/error.hpp: xyz/openbmc_project/Network/Common.errors.yaml
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(srcdir) error exception-header xyz.openbmc_project.Network.Common > $@
+
+xyz/openbmc_project/Network/Common/error.cpp: xyz/openbmc_project/Network/Common.errors.yaml
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(srcdir) error exception-cpp xyz.openbmc_project.Network.Common > $@
