@@ -66,3 +66,11 @@ xyz/openbmc_project/Network/IP/Create/server.hpp: xyz/openbmc_project/Network/IP
 	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.IP.Create > $@
 	sed -i '5i #include \"xyz\/openbmc_project\/Network\/IP\/server.hpp\"' $@
 
+xyz/openbmc_project/Network/Common/error.hpp: ${top_srcdir}/xyz/openbmc_project/Network/Common.errors.yaml
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(top_srcdir) error exception-header xyz.openbmc_project.Network.Common > $@
+
+xyz/openbmc_project/Network/Common/error.cpp: ${top_srcdir}/xyz/openbmc_project/Network/Common.errors.yaml
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(top_srcdir) error exception-cpp xyz.openbmc_project.Network.Common > $@
+
