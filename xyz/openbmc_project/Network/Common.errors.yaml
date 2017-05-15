@@ -1,0 +1,2 @@
+- name: SystemCallFailure
+  description: System call failed.
