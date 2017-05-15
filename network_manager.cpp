@@ -1,8 +1,10 @@
 #include "config.h"
 #include "network_manager.hpp"
 #include "network_config.hpp"
+#include "xyz/openbmc_project/Common/error.hpp"
 
 #include <phosphor-logging/log.hpp>
+#include <phosphor-logging/elog-errors.hpp>
 
 #include <algorithm>
 #include <bitset>
@@ -106,15 +108,15 @@ IntfAddrMap Manager::getInterfaceAddrs() const
     IntfAddrMap intfMap;
     AddrList addrList;
     struct ifaddrs* ifaddr;
+
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
     // attempt to fill struct with ifaddrs
     if (getifaddrs(&ifaddr) == -1)
     {
-        log<level::ERR>("getifaddrs failed:",
-                         entry("ERRNO=%s", strerror(errno)));
-
-        //TODO: openbmc/openbmc#1462 <create the error log>
-
-        return intfMap;
+        auto error = errno;
+        log<level::ERR>("Error occurred during the getifaddrs call",
+                        entry("ERRNO=%s", strerror(error)));
+        elog<InternalFailure>();
     }
 
     details::AddrPtr ifaddrPtr(ifaddr);

@@ -32,13 +32,11 @@ CLEANFILES = \
 		xyz/openbmc_project/Network/IP/Create/server.cpp \
 		xyz/openbmc_project/Network/IP/Create/server.hpp
 
-
 BUILT_SOURCES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.hpp \
 		xyz/openbmc_project/Network/IP/Create/server.cpp \
 		xyz/openbmc_project/Network/IP/Create/server.hpp
-
 
 phosphor_network_manager_LDFLAGS = \
 		$(SYSTEMD_LIBS) \
