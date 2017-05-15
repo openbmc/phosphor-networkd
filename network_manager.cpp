@@ -1,5 +1,6 @@
 #include "config.h"
 #include "network_manager.hpp"
+#include "elog-errors.hpp"
 
 #include <phosphor-logging/log.hpp>
 
@@ -53,15 +54,15 @@ IntfAddrMap Manager::getInterfaceAddrs() const
     IntfAddrMap intfMap;
     AddrList addrList;
     struct ifaddrs* ifaddr;
+
+    using namespace phosphor::logging::xyz::openbmc_project::Network::Common;
+
     // attempt to fill struct with ifaddrs
     if (getifaddrs(&ifaddr) == -1)
     {
-        log<level::ERR>("getifaddrs failed:",
-                         entry("ERRNO=%s", strerror(errno)));
-
-        //TODO: openbmc/openbmc#1462 <create the error log>
-
-        return intfMap;
+        elog<SystemCallFailure>(
+            SystemCallFailure::API("getifaddrs"),
+            SystemCallFailure::ERRNO(errno));
     }
 
     details::AddrPtr ifaddrPtr(ifaddr);

@@ -1,0 +1,6 @@
+- name: SystemCallFailure
+  meta:
+    - str: "API=%s"
+      type: string
+    - str: "ERRNO=%d"
+      type: int32
