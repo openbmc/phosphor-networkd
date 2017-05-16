@@ -82,3 +82,5 @@ xyz/openbmc_project/Network/Common/error.hpp: xyz/openbmc_project/Network/Common
 xyz/openbmc_project/Network/Common/error.cpp: xyz/openbmc_project/Network/Common.errors.yaml
 	@mkdir -p `dirname $@`
 	$(SDBUSPLUSPLUS) -r $(srcdir) error exception-cpp xyz.openbmc_project.Network.Common > $@
+
+SUBDIRS = test
