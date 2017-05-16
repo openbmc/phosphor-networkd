@@ -76,3 +76,4 @@ xyz/openbmc_project/Network/Common/error.cpp: ${top_srcdir}/xyz/openbmc_project/
 	@mkdir -p `dirname $@`
 	$(SDBUSPLUSPLUS) -r $(top_srcdir) error exception-cpp xyz.openbmc_project.Network.Common > $@
 
+SUBDIRS = test
