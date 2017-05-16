@@ -82,5 +82,5 @@ AS_IF([test "x$NETWORK_CONF_DIR" == "x"], [NETWORK_CONF_DIR="/etc/systemd/networ
 AC_DEFINE_UNQUOTED([NETWORK_CONF_DIR], ["$NETWORK_CONF_DIR"], [Network configuration directory])
 
 # Create configured output.
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile test/Makefile])
 AC_OUTPUT
