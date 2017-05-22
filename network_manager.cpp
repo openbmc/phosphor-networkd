@@ -19,7 +19,8 @@ using namespace phosphor::logging;
 namespace fs = std::experimental::filesystem;
 
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
-    details::VLANCreateIface(bus, objPath, true)
+    details::VLANCreateIface(bus, objPath, true),
+    ResetInherit(bus, objPath)
 {
     auto interfaceInfoList = getInterfaceAddrs();
 
@@ -40,6 +41,12 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
 
 void Manager::vLAN(IntfName interfaceName, uint16_t id)
 {
+}
+
+void Manager::reset()
+{
+    // probably not the correct way to do this
+    system("rm /etc/systemd/network/*.network");
 }
 
 IntfAddrMap Manager::getInterfaceAddrs() const
