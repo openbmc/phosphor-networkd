@@ -2,6 +2,7 @@
 
 #include "ethernet_interface.hpp"
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
+#include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
 
 #include <sdbusplus/bus.hpp>
 #include <ifaddrs.h>
@@ -10,6 +11,9 @@
 #include <memory>
 #include <string>
 #include <vector>
+
+using ResetInherit = sdbusplus::server::object::object<
+    sdbusplus::xyz::openbmc_project::Common::server::FactoryReset>;
 
 namespace phosphor
 {
@@ -53,16 +57,9 @@ using IntfAddrMap = std::map<IntfName, AddrList>;
 /** @class Manager
  *  @brief OpenBMC network manager implementation.
  */
-class Manager : public details::VLANCreateIface
+class Manager : public details::VLANCreateIface, public ResetInherit
 {
     public:
-        Manager() = delete;
-        Manager(const Manager&) = delete;
-        Manager& operator=(const Manager&) = delete;
-        Manager(Manager&&) = delete;
-        Manager& operator=(Manager&&) = delete;
-        virtual ~Manager() = default;
-
         /** @brief Constructor to put object onto bus at a dbus path.
          *  @param[in] bus - Bus to attach to.
          *  @param[in] objPath - Path to attach at.
@@ -79,6 +76,9 @@ class Manager : public details::VLANCreateIface
 
         /** @brief Persistent map of EthernetInterface dbus objects and their names */
         std::map<details::IntfName, std::unique_ptr<EthernetInterface>> interfaces;
+
+        /** @brief BMC network reset - resets network configuration for BMC. */
+        void reset() override;
 
 };
 

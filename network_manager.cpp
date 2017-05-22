@@ -16,8 +16,9 @@ namespace network
 {
 using namespace phosphor::logging;
 
-Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
-    details::VLANCreateIface(bus, objPath, true)
+Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath) :
+    details::VLANCreateIface(bus, objPath, true),
+    ResetInherit(bus, objPath)
 {
     auto interfaceInfoList = getInterfaceAndaddrs();
 
@@ -36,6 +37,12 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
 
 void Manager::vLAN(details::IntfName interfaceName, uint16_t id)
 {
+}
+
+void Manager::reset()
+{
+    // probably not the correct way to do this
+    system("rm /etc/systemd/network/*.network");
 }
 
 details::IntfAddrMap Manager::getInterfaceAndaddrs() const
