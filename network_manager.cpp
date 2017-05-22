@@ -9,6 +9,8 @@
 #include <dirent.h>
 #include <net/if.h>
 
+#include <string>
+#include <fstream>
 
 namespace phosphor
 {
@@ -40,6 +42,39 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
 
 void Manager::vLAN(IntfName interfaceName, uint16_t id)
 {
+}
+
+void Manager::reset()
+{
+    const std::string networkConfig = "/etc/systemd/network";
+    std::ofstream filestream;
+
+    if(fs::is_directory(networkConfig))
+    {
+        for(auto& file : fs::directory_iterator(networkConfig))
+        {
+            std::string filename = file.path().filename().c_str();
+
+            if(filename.substr(filename.find_last_of(".") + 1) == "network")
+            {
+                filestream.open(file.path());
+
+                filestream << "[Match]\n" << "Name=" <<
+                        filename.substr(0, filename.size() - 8).c_str() <<
+                        "\n[Network]\n" << "DHCP=true\n";
+
+                filestream.close();
+            }
+        }
+
+        log<level::INFO>("Network factory reset completed.");
+    }
+    else
+    {
+        log<level::ERR>("Network configuration directory not found!");
+    }
+
+    return;
 }
 
 IntfAddrMap Manager::getInterfaceAddrs() const
