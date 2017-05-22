@@ -1,5 +1,6 @@
 #include "config.h"
 #include "network_manager.hpp"
+#include "network_config.hpp"
 
 #include <phosphor-logging/log.hpp>
 
@@ -12,6 +13,7 @@
 #include <dirent.h>
 #include <net/if.h>
 
+#include <string>
 
 namespace phosphor
 {
@@ -46,6 +48,57 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
 
 void Manager::vLAN(IntfName interfaceName, uint16_t id)
 {
+}
+
+void Manager::reset()
+{
+    const std::string networkConfig = "/etc/systemd/network/";
+    bool filesExist, interfacesMapped = false;
+
+    if(fs::is_directory(networkConfig))
+    {
+        for(auto& file : fs::directory_iterator(networkConfig))
+        {
+            std::string filename = file.path().filename().c_str();
+
+            if(filename.substr(filename.find_last_of(".") + 1) == "network")
+            {
+                fs::remove(file.path());
+                filesExist = true;
+            }
+        }
+
+        if(!filesExist)
+        {
+            log<level::INFO>("No existing network configuration was found.");
+        }
+
+        for (auto& intf : interfaces)
+        {
+            std::string filename = networkConfig + "00-bmc-" + intf.first +
+                    ".network";
+
+            bmc::writeDHCPDefault(filename, intf.first);
+            interfacesMapped = true;
+        }
+
+        if(interfacesMapped)
+        {
+            log<level::INFO>("Network configuration reset to DHCP.");
+        }
+        else
+        {
+            log<level::ERR>("No network interfaces are mapped.");
+            // TODO: openbmc/openbmc#1721 - Log ResetFailed error here.
+        }
+    }
+    else
+    {
+        log<level::ERR>("Network configuration directory not found!");
+        // TODO: openbmc/openbmc#1721 - Log ResetFailed error here.
+    }
+
+    return;
 }
 
 IntfAddrMap Manager::getInterfaceAddrs() const

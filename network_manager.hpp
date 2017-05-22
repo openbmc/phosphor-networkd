@@ -3,6 +3,7 @@
 #include "ethernet_interface.hpp"
 #include "types.hpp"
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
+#include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
 
 #include <sdbusplus/bus.hpp>
 #include <ifaddrs.h>
@@ -20,12 +21,12 @@ namespace network
 namespace details
 {
 
-template <typename T>
-using ServerObject = typename sdbusplus::server::object::object<T>;
+template <typename T, typename U>
+using ServerObject = typename sdbusplus::server::object::object<T, U>;
 
-using VLANCreateIface =
-    details::ServerObject<sdbusplus::xyz::openbmc_project::
-    Network::VLAN::server::Create>;
+using VLANCreateIface = details::ServerObject<
+    sdbusplus::xyz::openbmc_project::Network::VLAN::server::Create,
+    sdbusplus::xyz::openbmc_project::Common::server::FactoryReset>;
 
 using IntfName = std::string;
 
@@ -84,6 +85,9 @@ class Manager : public details::VLANCreateIface
 
         /** @brief Persistent map of EthernetInterface dbus objects and their names */
         std::map<IntfName, std::unique_ptr<EthernetInterface>> interfaces;
+
+        /** @brief BMC network reset - resets network configuration for BMC. */
+        void reset() override;
 
 };
 
