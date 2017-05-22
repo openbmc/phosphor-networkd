@@ -9,6 +9,9 @@
 #include <dirent.h>
 #include <net/if.h>
 
+#include <regex>
+#include <string>
+#include <fstream>
 
 namespace phosphor
 {
@@ -19,7 +22,8 @@ using namespace phosphor::logging;
 namespace fs = std::experimental::filesystem;
 
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
-    details::VLANCreateIface(bus, objPath, true)
+    details::VLANCreateIface(bus, objPath, true),
+    ResetInherit(bus, objPath)
 {
     auto interfaceInfoList = getInterfaceAddrs();
 
@@ -40,6 +44,43 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
 
 void Manager::vLAN(IntfName interfaceName, uint16_t id)
 {
+}
+
+void Manager::reset()
+{
+    const std::string networkConfig = "/tmp/mtritz";
+    const std::regex extension("\\.network$");
+    std::ofstream filestream;
+
+    if(fs::is_directory(networkConfig))
+    {
+        for(auto& file : fs::directory_iterator(networkConfig))
+        {
+            std::cmatch match;
+            auto path = file.path();
+            std::regex_search(path.c_str(), match, extension);
+
+            if(!match.empty())
+            {
+                filestream.open(path);
+                std::string intfName = path.filename().c_str();
+
+                filestream << "[Match]\n" << "Name=" <<
+                        intfName.substr(0, intfName.size() - 8).c_str() <<
+                        "\n[Network]\n" << "DHCP=true";
+
+                filestream.close();
+            }
+        }
+
+        log<level::INFO>("Network factory reset completed.");
+    }
+    else
+    {
+        log<level::ERR>("Network configuration directory not found!");
+    }
+
+    return;
 }
 
 IntfAddrMap Manager::getInterfaceAddrs() const
