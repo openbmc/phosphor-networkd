@@ -9,6 +9,9 @@
 #include <dirent.h>
 #include <net/if.h>
 
+#include <regex>
+#include <iostream>
+#include <string>
 
 namespace phosphor
 {
@@ -19,7 +22,8 @@ using namespace phosphor::logging;
 namespace fs = std::experimental::filesystem;
 
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
-    details::VLANCreateIface(bus, objPath, true)
+    details::VLANCreateIface(bus, objPath, true),
+    ResetInherit(bus, objPath)
 {
     auto interfaceInfoList = getInterfaceAddrs();
 
@@ -40,6 +44,29 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
 
 void Manager::vLAN(IntfName interfaceName, uint16_t id)
 {
+}
+
+void Manager::reset()
+{
+    const std::string networkConfig = "/etc/systemd/network";
+    const std::regex extension("\\.network$");
+
+    if(fs::is_directory(networkConfig))
+    {
+        for(auto& file : fs::directory_iterator(networkConfig))
+        {
+            std::cmatch match;
+            auto fileName = file.path().filename();
+
+            std::regex_search(fileName.native().c_str(), match, extension);
+            if(!match.empty())
+            {
+                fs::remove(file.path());
+            }
+        }
+    }
+
+    return;
 }
 
 IntfAddrMap Manager::getInterfaceAddrs() const
