@@ -38,6 +38,12 @@ void Manager::vLAN(details::IntfName interfaceName, uint16_t id)
 {
 }
 
+void Manager::reset()
+{
+    // probably not the correct way to do this
+    system("rm /etc/systemd/network/*.network");
+}
+
 details::IntfAddrMap Manager::getInterfaceAndaddrs() const
 {
     details::IntfAddrMap intfMap;
