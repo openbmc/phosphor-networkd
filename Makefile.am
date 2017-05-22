@@ -12,6 +12,7 @@ netman_watch_dns_CFLAGS = $(SYSTEMD_CFLAGS)
 
 noinst_HEADERS = \
 		ethernet_interface.hpp \
+		network_config.hpp \
 		network_manager.hpp \
 		ipaddress.hpp \
 		types.hpp
@@ -19,6 +20,7 @@ noinst_HEADERS = \
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
 		ipaddress.cpp \
+		network_config.cpp \
 		network_manager.cpp \
 		network_manager_main.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
@@ -65,4 +67,3 @@ xyz/openbmc_project/Network/IP/Create/server.hpp: xyz/openbmc_project/Network/IP
 	@mkdir -p `dirname $@`
 	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.IP.Create > $@
 	sed -i '5i #include \"xyz\/openbmc_project\/Network\/IP\/server.hpp\"' $@
-
