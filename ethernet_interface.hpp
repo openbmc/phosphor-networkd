@@ -90,18 +90,29 @@ class EthernetInterface : public Ifaces
 
         /** @brief construct the ip address dbus object path.
          *  @param[in] addressType - Type of ip address.
+         *  @param[in] ipaddress - IP address.
+         *  @param[in] prefixLength - Length of prefix.
+         *  @param[in] gateway - Gateway addess.
+
          *  @return path of the address object.
          */
 
-        std::string getAddressObjectPath(IP::Protocol addressType) const;
+        std::string getAddressObjectPath(IP::Protocol addressType,
+                                         const std::string& ipaddress,
+                                         uint8_t prefixLength,
+                                         const std::string& gateway) const;
 
-        /** @brief get the ipadress count for a specific type on this interface.
-         *  @param[in] addressType - Type of ip address.
-         *  @return count of ipaddreses for the incoming type.
+        /** @brief generates the id by doing hash of ipaddress,
+         *  prefixlength and the gateway.
+         *  @param[in] ipaddress - IP address.
+         *  @param[in] prefixLength - Length of prefix.
+         *  @param[in] gateway - Gateway addess.
+         *  @return hash string.
          */
 
-        size_t getAddressCount(IP::Protocol addressType) const;
-
+        std::string generateId(const std::string& ipaddress,
+                               uint8_t prefixLength,
+                               const std::string& gateway) const;
 
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;
