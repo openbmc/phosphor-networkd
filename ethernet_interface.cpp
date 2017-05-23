@@ -15,6 +15,7 @@
 
 #include <string>
 #include <algorithm>
+#include <sstream>
 #include <experimental/filesystem>
 
 namespace phosphor
@@ -49,7 +50,10 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
             addressType = IP::Protocol::IPv6;
         }
 
-        std::string ipAddressObjectPath = getAddressObjectPath(addressType);
+        std::string ipAddressObjectPath = generateObjectPath(addressType,
+                                                             addr.ipaddress,
+                                                             addr.prefix,
+                                                             gateway);
         this->addrs.emplace(
                 std::make_pair(
                         addr.ipaddress,
@@ -71,9 +75,10 @@ void EthernetInterface::iP(IP::Protocol protType,
                            uint8_t prefixLength,
                            std::string gateway)
 {
-
-    IP::Protocol protocolType  = protType;
-    std::string objectPath = getAddressObjectPath(protocolType);
+    std::string objectPath = generateObjectPath(protType,
+                                                ipaddress,
+                                                prefixLength,
+                                                gateway);
 
     this->addrs.emplace(
             std::make_pair(ipaddress,
@@ -81,7 +86,7 @@ void EthernetInterface::iP(IP::Protocol protType,
                                 bus,
                                 objectPath.c_str(),
                                 *this,
-                                protocolType,
+                                protType,
                                 ipaddress,
                                 prefixLength,
                                 gateway)));
@@ -194,20 +199,19 @@ std::string EthernetInterface::getMACAddress() const
     return macAddress;
 }
 
-size_t EthernetInterface::getAddressCount(IP::Protocol addressType) const
+std::string EthernetInterface::generateId(const std::string& ipaddress,
+                                          uint8_t prefixLength,
+                                          const std::string& gateway)
 {
-    size_t count = 0;
+    std::stringstream hexId;
+    std::string hashString = ipaddress;
+    hashString += std::to_string(prefixLength);
+    hashString += gateway;
 
-    std::for_each(addrs.cbegin(), addrs.cend(),
-                  [&count,addressType](const auto & addr)
-    {
-        if (addr.second->type() == addressType)
-        {
-            count += 1;
-        }
-    });
-
-    return count;
+    // Only want 8 hex digits.
+    hexId << std::hex << ((std::hash<std::string> {}(
+                              hashString)) & 0xFFFFFFFF);
+    return hexId.str();
 }
 
 void EthernetInterface::deleteObject(const std::string& ipaddress)
@@ -215,10 +219,11 @@ void EthernetInterface::deleteObject(const std::string& ipaddress)
     this->addrs.erase(addrs.find(ipaddress));
 }
 
-std::string EthernetInterface::getAddressObjectPath(IP::Protocol
-                                                    addressType) const
+std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
+                                                  const std::string& ipaddress,
+                                                  uint8_t prefixLength,
+                                                  const std::string& gateway) const
 {
-
     std::string type = convertForMessage(addressType);
     type = type.substr(type.rfind('.')+1);
     std::transform(type.begin(), type.end(), type.begin(), ::tolower);
@@ -227,7 +232,7 @@ std::string EthernetInterface::getAddressObjectPath(IP::Protocol
     objectPath /= std::string(OBJ_NETWORK);
     objectPath /= interfaceName();
     objectPath /= type;
-    objectPath /= std::to_string(getAddressCount(addressType));
+    objectPath /= generateId(ipaddress,prefixLength,gateway);
     return objectPath.string();
 
 }
