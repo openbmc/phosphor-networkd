@@ -5,10 +5,16 @@ TESTS = $(check_PROGRAMS)
 check_PROGRAMS = test
 
 test_SOURCES = \
-	TestConfigParser.cpp
+	TestConfigParser.cpp \
+	TestUtil.cpp
 
 test_CPPFLAGS = -Igtest $(GTEST_CPPFLAGS) $(AM_CPPFLAGS)
 test_CXXFLAGS = $(PTHREAD_CFLAGS)
-test_LDFLAGS = -lgtest_main -lgtest $(PTHREAD_LIBS) $(OESDK_TESTCASE_FLAGS)
-test_LDADD = $(top_builddir)/config_parser.cpp
-test_LDFLAGS += $(SYSTEMD_LIBS)
+
+test_LDFLAGS =	-lgtest_main -lgtest -lstdc++fs \
+				$(OESDK_TESTCASE_FLAGS) \
+				$(SYSTEMD_LIBS) \
+				$(SDBUSPLUS_LIBS)
+
+test_LDADD = $(top_builddir)/config_parser.cpp \
+			$(top_builddir)/util.cpp
