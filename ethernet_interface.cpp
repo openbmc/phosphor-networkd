@@ -1,6 +1,7 @@
 #include "config.h"
 #include "ipaddress.hpp"
 #include "ethernet_interface.hpp"
+#include "network_manager.hpp"
 
 #include <phosphor-logging/log.hpp>
 
@@ -30,9 +31,11 @@ constexpr size_t SIZE_BUFF = 512;
 
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
-                                     bool dhcpEnabled) :
+                                     bool dhcpEnabled,
+                                     Manager& parent) :
                                      Ifaces(bus, objPath.c_str(), true),
-                                     bus(bus)
+                                     bus(bus),
+                                     manager(parent)
 
 {
     auto intfName = objPath.substr(objPath.rfind("/") + 1);
@@ -99,6 +102,8 @@ void EthernetInterface::iP(IP::Protocol protType,
                                 origin,
                                 prefixLength,
                                 gateway)));
+
+    manager.writeToConfigurationFile();
 }
 
 
@@ -232,6 +237,7 @@ void EthernetInterface::deleteObject(const std::string& ipaddress)
          return;
     }
     this->addrs.erase(it);
+    manager.writeToConfigurationFile();
 }
 
 std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
