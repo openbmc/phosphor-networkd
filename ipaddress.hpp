@@ -44,6 +44,7 @@ class IPAddress : public IPIfaces
          *  @param[in] parent - Parent object.
          *  @param[in] type - ipaddress type(v4/v6).
          *  @param[in] ipAddress - ipadress.
+         *  @param[in] origin - origin of ipaddress(dhcp/static/SLAAC/LinkLocal).
          *  @param[in] prefixLength - Length of prefix.
          *  @param[in] gateway - gateway address.
          */
@@ -52,6 +53,7 @@ class IPAddress : public IPIfaces
                   EthernetInterface& parent,
                   IP::Protocol type,
                   const std::string& ipAddress,
+                  IP::AddressOrigin origin,
                   uint8_t prefixLength,
                   const std::string& gateway);
 

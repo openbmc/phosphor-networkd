@@ -24,12 +24,11 @@ using Ifaces =
 
 using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 
-
 using LinkSpeed = uint16_t;
 using DuplexMode = uint8_t;
 using Autoneg = uint8_t;
 using InterfaceInfo = std::tuple<LinkSpeed, DuplexMode, Autoneg>;
-
+using AddressMap = std::map<std::string, std::shared_ptr<IPAddress>>;
 
 /** @class EthernetInterface
  *  @brief OpenBMC Ethernet Interface implementation.
@@ -49,17 +48,15 @@ class EthernetInterface : public Ifaces
         /** @brief Constructor to put object onto bus at a dbus path.
          *  @param[in] bus - Bus to attach to.
          *  @param[in] objPath - Path to attach at.
-         *  @param[in] intfName - name of the ethernet interface.
          *  @param[in] dhcpEnabled - is dhcp enabled(true/false).
          */
         EthernetInterface(sdbusplus::bus::bus& bus,
                           const std::string& objPath,
-                          bool dhcpEnabled,
-                          const AddrList& addrs);
+                          bool dhcpEnabled);
 
         /** @brief Function to create ipaddress dbus object.
          *  @param[in] addressType - Type of ip address.
-         *  @param[in] ipaddress- IP adress.
+         *  @param[in] ipaddress- IP address.
          *  @param[in] prefixLength - Length of prefix.
          *  @param[in] gateway - Gateway ip address.
          */
@@ -69,11 +66,21 @@ class EthernetInterface : public Ifaces
                 uint8_t prefixLength,
                 std::string gateway) override;
 
-        /** @brief delete the dbus object of the given ipaddress.
+        /* @brief delete the dbus object of the given ipaddress.
+         * @param[in] ipaddress - IP address.
          */
-
         void deleteObject(const std::string& ipaddress);
 
+        /* @brief creates the dbus object given in the address list.
+         * @param[in] addrs - address list for which dbus objects needs
+         *                    to create.
+         */
+        void setAddressList(const AddrList& addrs);
+
+        /* @brief Gets all the ip addresses.
+         * @returns the list of ipaddress.
+         */
+        const AddressMap& getAddresses() const { return addrs; }
 
     private:
 
@@ -119,8 +126,7 @@ class EthernetInterface : public Ifaces
         sdbusplus::bus::bus& bus;
 
         /** @brief Persistent map of IPAddress dbus objects and their names */
-        std::map<std::string, std::unique_ptr<IPAddress>> addrs;
-
+        AddressMap addrs;
 
 };
 
