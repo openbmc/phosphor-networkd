@@ -73,6 +73,10 @@ class Manager : public details::VLANCreateIface
 
         void vLAN(IntfName interfaceName, uint16_t id) override;
 
+        /** @brief write the network conf file with the in memory objects.
+         */
+        void writeToConfigurationFile();
+
         /** @brief Fetch the interface and the ipaddress details
          *         from the system and create the ethernet interraces
          *         dbus object.
@@ -85,6 +89,10 @@ class Manager : public details::VLANCreateIface
          *  @returns list of interface names.
          */
         IntfAddrMap getInterfaceAddrs() const;
+
+        /** @brief Restart the systemd networkd
+         */
+        void restartSystemdNetworkd();
  
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;

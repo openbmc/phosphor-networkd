@@ -1,4 +1,5 @@
 #include "config.h"
+#include "config_parser.hpp"
 #include "network_manager.hpp"
 #include "elog-errors.hpp"
 
@@ -42,11 +43,11 @@ void Manager::createInterfaces()
         this->interfaces.emplace(std::make_pair(
                                      intfInfo.first,
                                      std::make_unique<
-                                     phosphor::network::EthernetInterface>
-                                     (bus,
-                                      objPath.string(),
-                                      false,
-                                      *this)));
+                                         phosphor::network::EthernetInterface>
+                                             (bus,
+                                              objPath.string(),
+                                              false,
+                                              *this)));
 
         interfaces[intfInfo.first]->setAddressList(intfInfo.second);
     }
@@ -144,6 +145,65 @@ IntfAddrMap Manager::getInterfaceAddrs() const
     }
     intfMap.emplace(intfName, addrList);
     return intfMap;
+}
+
+void Manager::writeToConfigurationFile()
+{
+    // write all the static ip address in the systemd-network conf file
+
+    using namespace std::string_literals;
+    using AddressOrigin =
+        sdbusplus::xyz::openbmc_project::Network::server::IP::AddressOrigin;
+    namespace fs = std::experimental::filesystem;
+
+    std::for_each(interfaces.cbegin(), interfaces.cend(),
+                  [](const auto& intf)
+    {
+
+        fs::path confPath {NETWORK_CONF_DIR};
+        std::string fileName = "00-bmc-"s + intf.first + ".network"s;
+        confPath /= fileName;
+
+        //config::Parser parser(confPath.c_str(), config::Parser::Mode::WRITE);
+        config::Parser parser("/tmp/eth0.network", config::Parser::Mode::WRITE);
+
+        parser.setValue("Match", "Name", intf.first);
+
+        auto addrs = intf.second->getAddresses();
+
+        std::for_each(addrs.cbegin(), addrs.cend(),
+                      [&parser](const auto & addr)
+        {
+            if (addr.second->origin() == AddressOrigin::Static)
+            {
+                std::string address = addr.second->address() + "/" + std::to_string(
+                                          addr.second->prefixLength());
+                parser.setValue("Network", "Address", address);
+                parser.setValue("Network", "Gateway", addr.second->gateway());
+            }
+        });
+        parser.writeToFile();
+    });
+
+    restartSystemdNetworkd();
+}
+
+void  Manager::restartSystemdNetworkd()
+{
+    // Creating a mount point to access squashfs image.
+    constexpr auto systemdNetworkdService = "systemd-networkd.service";
+
+    auto method = bus.new_method_call(
+                      SYSTEMD_BUSNAME,
+                      SYSTEMD_PATH,
+                      SYSTEMD_INTERFACE,
+                      "RestartUnit");
+
+    method.append(systemdNetworkdService,
+                  "replace");
+
+    bus.call_noreply(method);
+
 }
 
 }//namespace network
