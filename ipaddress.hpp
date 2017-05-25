@@ -52,6 +52,7 @@ class IPAddress : public IPIfaces
                   EthernetInterface& parent,
                   IP::Protocol type,
                   const std::string& ipAddress,
+                  IP::AddressOrigin origin,
                   uint8_t prefixLength,
                   const std::string& gateway);
 

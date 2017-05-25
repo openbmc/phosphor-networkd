@@ -24,12 +24,13 @@ using Ifaces =
 
 using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 
+class Manager; // forward declaration of network manager.
 
 using LinkSpeed = uint16_t;
 using DuplexMode = uint8_t;
 using Autoneg = uint8_t;
 using InterfaceInfo = std::tuple<LinkSpeed, DuplexMode, Autoneg>;
-
+using AddressMap = std::map<std::string, std::shared_ptr<IPAddress>>;
 
 /** @class EthernetInterface
  *  @brief OpenBMC Ethernet Interface implementation.
@@ -55,7 +56,7 @@ class EthernetInterface : public Ifaces
         EthernetInterface(sdbusplus::bus::bus& bus,
                           const std::string& objPath,
                           bool dhcpEnabled,
-                          const AddrList& addrs);
+                          Manager& parent);
 
         /** @brief Function to create ipaddress dbus object.
          *  @param[in] addressType - Type of ip address.
@@ -74,6 +75,9 @@ class EthernetInterface : public Ifaces
 
         void deleteObject(const std::string& ipaddress);
 
+        void setAddressList(const AddrList& addrs);
+
+        const AddressMap& getAddresses() const { return addrs; }
 
     private:
 
@@ -118,8 +122,10 @@ class EthernetInterface : public Ifaces
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;
 
+        Manager& manager;
+
         /** @brief Persistent map of IPAddress dbus objects and their names */
-        std::map<std::string, std::unique_ptr<IPAddress>> addrs;
+        AddressMap addrs;
 
 
 };

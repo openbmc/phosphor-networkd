@@ -12,6 +12,8 @@ int main(int argc, char *argv[])
 
     phosphor::network::Manager manager(bus, OBJ_NETWORK);
 
+    manager.createInterfaces();
+
     bus.request_name(BUSNAME_NETWORK);
 
     while(true)
