@@ -23,6 +23,7 @@ using Ifaces =
         sdbusplus::xyz::openbmc_project::Network::IP::server::Create>;
 
 using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
+class Manager; // forward declaration of network manager.
 
 using LinkSpeed = uint16_t;
 using DuplexMode = uint8_t;
@@ -49,10 +50,12 @@ class EthernetInterface : public Ifaces
          *  @param[in] bus - Bus to attach to.
          *  @param[in] objPath - Path to attach at.
          *  @param[in] dhcpEnabled - is dhcp enabled(true/false).
+         *  @param[in] parent - parent object.
          */
         EthernetInterface(sdbusplus::bus::bus& bus,
                           const std::string& objPath,
-                          bool dhcpEnabled);
+                          bool dhcpEnabled,
+                          Manager& parent);
 
         /** @brief Function to create ipaddress dbus object.
          *  @param[in] addressType - Type of ip address.
@@ -124,6 +127,9 @@ class EthernetInterface : public Ifaces
 
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;
+
+        /** @brief Network Manager object. */
+        Manager& manager;
 
         /** @brief Persistent map of IPAddress dbus objects and their names */
         AddressMap addrs;
