@@ -1,6 +1,7 @@
 #include "config.h"
 #include "ipaddress.hpp"
 #include "ethernet_interface.hpp"
+#include "network_manager.hpp"
 
 #include <phosphor-logging/log.hpp>
 
@@ -236,6 +237,7 @@ void EthernetInterface::deleteObject(const std::string& ipaddress)
          return;
     }
     this->addrs.erase(it);
+    manager.writeToConfigurationFile();
 }
 
 std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
