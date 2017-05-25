@@ -30,18 +30,25 @@ constexpr size_t SIZE_BUFF = 512;
 
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
-                                     bool dhcpEnabled,
-                                     const AddrList& addrs) :
+                                     bool dhcpEnabled) :
                                      Ifaces(bus, objPath.c_str(), true),
                                      bus(bus)
+
 {
     auto intfName = objPath.substr(objPath.rfind("/") + 1);
     interfaceName(intfName);
     dHCPEnabled(dhcpEnabled);
     mACAddress(getMACAddress());
+    // Emit deferred signal.
+    this->emit_object_added();
+}
+
+void EthernetInterface::setAddressList(const AddrList& addrs)
+{
     std::string gateway;
 
     IP::Protocol addressType = IP::Protocol::IPv4;
+    IP::AddressOrigin origin = IP::AddressOrigin::Static;
 
     for (auto addr : addrs)
     {
@@ -63,11 +70,10 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                         *this,
                         addressType,
                         addr.ipaddress,
+                        origin,
                         addr.prefix,
                         gateway)));
     }
-    // Emit deferred signal.
-    this->emit_object_added();
 }
 
 void EthernetInterface::iP(IP::Protocol protType,
@@ -75,6 +81,8 @@ void EthernetInterface::iP(IP::Protocol protType,
                            uint8_t prefixLength,
                            std::string gateway)
 {
+    IP::AddressOrigin origin = IP::AddressOrigin::Static;
+
     std::string objectPath = generateObjectPath(protType,
                                                 ipaddress,
                                                 prefixLength,
@@ -88,6 +96,7 @@ void EthernetInterface::iP(IP::Protocol protType,
                                 *this,
                                 protType,
                                 ipaddress,
+                                origin,
                                 prefixLength,
                                 gateway)));
 }
@@ -216,7 +225,13 @@ std::string EthernetInterface::generateId(const std::string& ipaddress,
 
 void EthernetInterface::deleteObject(const std::string& ipaddress)
 {
-    this->addrs.erase(addrs.find(ipaddress));
+    auto it = addrs.find(ipaddress);
+    if( it == addrs.end())
+    {
+         log<level::ERR>("DeleteObject:Unable to find the object.");
+         return;
+    }
+    this->addrs.erase(it);
 }
 
 std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
@@ -225,14 +240,14 @@ std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
                                                   const std::string& gateway) const
 {
     std::string type = convertForMessage(addressType);
-    type = type.substr(type.rfind('.')+1);
+    type = type.substr(type.rfind('.') + 1);
     std::transform(type.begin(), type.end(), type.begin(), ::tolower);
 
     std::experimental::filesystem::path objectPath;
     objectPath /= std::string(OBJ_NETWORK);
     objectPath /= interfaceName();
     objectPath /= type;
-    objectPath /= generateId(ipaddress,prefixLength,gateway);
+    objectPath /= generateId(ipaddress, prefixLength, gateway);
     return objectPath.string();
 
 }
