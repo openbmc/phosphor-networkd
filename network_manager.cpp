@@ -105,9 +105,9 @@ void Manager::reset()
 
 IntfAddrMap Manager::getInterfaceAddrs() const
 {
-    IntfAddrMap intfMap;
-    AddrList addrList;
-    struct ifaddrs* ifaddr;
+    IntfAddrMap intfMap{};
+    AddrList addrList{};
+    struct ifaddrs* ifaddr = nullptr;
 
     using namespace sdbusplus::xyz::openbmc_project::Common::Error;
     // attempt to fill struct with ifaddrs
@@ -122,7 +122,7 @@ IntfAddrMap Manager::getInterfaceAddrs() const
     details::AddrPtr ifaddrPtr(ifaddr);
     ifaddr = nullptr;
 
-    std::string intfName;
+    std::string intfName{};
 
     for (ifaddrs* ifa = ifaddrPtr.get(); ifa != nullptr; ifa = ifa->ifa_next)
     {
@@ -151,7 +151,7 @@ IntfAddrMap Manager::getInterfaceAddrs() const
                 addrList.clear();
             }
             intfName = ifa->ifa_name;
-            AddrInfo info;
+            AddrInfo info{};
             char ip[INET6_ADDRSTRLEN] = { 0 };
             char subnetMask[INET6_ADDRSTRLEN] = { 0 };
 
@@ -185,105 +185,12 @@ IntfAddrMap Manager::getInterfaceAddrs() const
 
             info.addrType = ifa->ifa_addr->sa_family;
             info.ipaddress = ip;
-
-            info.prefix = toCidr(info.addrType, subnetMask);
-
+            info.prefix = toCidr(info.addrType, std::string(subnetMask));
             addrList.emplace_back(info);
         }
     }
     intfMap.emplace(intfName, addrList);
     return intfMap;
-}
-
-uint8_t Manager::toCidr(int addressFamily, const std::string& subnetMask) const
-{
-    uint32_t buff = 0;
-
-    if (addressFamily == AF_INET6)
-    {
-        return toV6Cidr(std::string(subnetMask));
-    }
-
-    auto rc = inet_pton(addressFamily, subnetMask.c_str(), &buff);
-    if (rc <= 0)
-    {
-        log<level::ERR>("inet_pton failed:",
-                         entry("SUBNETMASK=%s", subnetMask.c_str()));
-    }
-
-    buff = be32toh(buff);
-    // total no of bits - total no of leading zero == total no of ones
-    if (((sizeof(buff) * 8) - (__builtin_ctz(buff))) == __builtin_popcount(buff))
-    {
-        return __builtin_popcount(buff);
-    }
-    else
-    {
-        log<level::ERR>("Invalid Mask",
-                         entry("SUBNETMASK=%s", subnetMask.c_str()));
-        return 0;
-    }
-}
-
-uint8_t Manager::toV6Cidr(const std::string& subnetMask) const
-{
-    uint8_t pos {};
-    uint8_t prevPos {};
-    uint8_t cidr {};
-    uint16_t buff {};
-
-    log<level::INFO>("toV6Cidr called with",
-                     entry("SUBNETMASK=%s", subnetMask));
-    do
-    {
-        //subnet mask look like ffff:ffff::
-        // or ffff:c000::
-        pos =  subnetMask.find(":", prevPos);
-        if (pos == std::string::npos)
-        {
-            return cidr;
-        }
-
-        auto str = subnetMask.substr(prevPos, (pos - prevPos));
-        prevPos = pos + 1;
-
-        // String length is 0
-        if (!str.length())
-        {
-            return cidr;
-        }
-        //converts it into number.
-        if (sscanf(str.c_str(), "%hx", &buff) <= 0)
-        {
-            log<level::ERR>("Invalid SubnetMask",
-                             entry("SUBNETMASK=%s", subnetMask));
-
-            return 0;
-        }
-
-        // convert the number into bitset
-        // and check for how many ones are there.
-        // if we don't have all the ones then make
-        // sure that all the ones should be left justify.
-
-        if (__builtin_popcount(buff) != 16)
-        {
-            if (((sizeof(buff) * 8) - (__builtin_ctz(buff))) != __builtin_popcount(buff))
-            {
-                log<level::ERR>("Invalid SubnetMask",
-                                 entry("SUBNETMASK=%s", subnetMask));
-
-                return 0;
-            }
-            cidr += __builtin_popcount(buff);
-            return cidr;
-        }
-        cidr += 16;
-
-    }
-    while (1);
-
-    return cidr;
 }
 
 }//namespace network
