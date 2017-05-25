@@ -73,14 +73,27 @@ class Manager : public details::VLANCreateIface
 
         void vLAN(IntfName interfaceName, uint16_t id) override;
 
+        /** @brief Fetch the interface and the ipaddress details
+         *         from the system and create the ethernet interraces
+         *         dbus object.
+         */
+        void createInterfaces();
+
+
     private:
         /** @brief Get all the interfaces from the system.
          *  @returns list of interface names.
          */
         IntfAddrMap getInterfaceAddrs() const;
 
+        /** @brief Persistent sdbusplus DBus bus connection. */
+        sdbusplus::bus::bus& bus;
+
         /** @brief Persistent map of EthernetInterface dbus objects and their names */
         std::map<IntfName, std::unique_ptr<EthernetInterface>> interfaces;
+
+        /** @brief Path of Object. */
+        std::string objectPath;
 
 };
 
