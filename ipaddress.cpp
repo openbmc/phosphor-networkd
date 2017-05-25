@@ -15,6 +15,7 @@ IPAddress::IPAddress(sdbusplus::bus::bus& bus,
           EthernetInterface& parent,
           IP::Protocol type,
           const std::string& ipaddress,
+          IP::AddressOrigin origin,
           uint8_t prefixLength,
           const std::string& gateway):
           IPIfaces(bus, objPath, true),
@@ -24,6 +25,8 @@ IPAddress::IPAddress(sdbusplus::bus::bus& bus,
    this->prefixLength(prefixLength);
    this->gateway(gateway);
    this->type(type);
+   this->origin(origin);
+
    // Emit deferred signal.
    emit_object_added();
 }
