@@ -23,25 +23,32 @@ using namespace phosphor::logging;
 namespace fs = std::experimental::filesystem;
 
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
-    details::VLANCreateIface(bus, objPath, true)
+    details::VLANCreateIface(bus, objPath, true),
+    bus(bus),
+    objectPath(objPath)
 {
+}
+
+void Manager::createInterfaces()
+{
+
     auto interfaceInfoList = getInterfaceAddrs();
 
     for (const auto& intfInfo : interfaceInfoList)
-
     {
-
-        fs::path objectPath = std::string(OBJ_NETWORK);
-        objectPath /= intfInfo.first;
+        fs::path objPath = objectPath;
+        objPath /= intfInfo.first;
 
         this->interfaces.emplace(std::make_pair(
                                      intfInfo.first,
                                      std::make_unique<
                                      phosphor::network::EthernetInterface>
                                      (bus,
-                                      objectPath.string(),
+                                      objPath.string(),
                                       false,
-                                      intfInfo.second)));
+                                      *this)));
+
+        interfaces[intfInfo.first]->setAddressList(intfInfo.second);
     }
 }
 
