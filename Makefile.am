@@ -16,7 +16,8 @@ noinst_HEADERS = \
 		network_config.hpp \
 		network_manager.hpp \
 		ipaddress.hpp \
-		types.hpp
+		types.hpp \
+		util.hpp
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
@@ -26,7 +27,8 @@ phosphor_network_manager_SOURCES = \
 		network_manager_main.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 		xyz/openbmc_project/Network/IP/Create/server.cpp \
-		xyz/openbmc_project/Network/Common/error.cpp
+		xyz/openbmc_project/Network/Common/error.cpp \
+		util.cpp
 
 CLEANFILES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
