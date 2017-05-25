@@ -2,6 +2,7 @@
 
 #include "ipaddress.hpp"
 #include "types.hpp"
+#include "util.hpp"
 
 #include "xyz/openbmc_project/Network/EthernetInterface/server.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
