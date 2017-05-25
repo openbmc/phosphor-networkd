@@ -52,6 +52,8 @@ using IntfAddrMap = std::map<IntfName, AddrList>;
 
 } // namespace details
 
+class TestNetworkManager; //forward declaration
+
 /** @class Manager
  *  @brief OpenBMC network manager implementation.
  */
@@ -102,6 +104,8 @@ class Manager : public details::VLANCreateIface
 
         /** @brief Path of Object. */
         std::string objectPath;
+
+        friend class TestNetworkManager;
 
 };
 
