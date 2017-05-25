@@ -15,7 +15,8 @@ noinst_HEADERS = \
 		ethernet_interface.hpp \
 		network_manager.hpp \
 		ipaddress.hpp \
-		types.hpp
+		types.hpp \
+		util.hpp
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
