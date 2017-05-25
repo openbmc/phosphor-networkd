@@ -8,6 +8,7 @@
 #include <bitset>
 #include <experimental/filesystem>
 #include <map>
+#include <fstream>
 
 #include <arpa/inet.h>
 #include <dirent.h>
@@ -45,7 +46,8 @@ void Manager::createInterfaces()
                                      phosphor::network::EthernetInterface>
                                      (bus,
                                       objPath.string(),
-                                      false)));
+                                      false,
+                                      *this)));
 
         interfaces[intfInfo.first]->setAddressList(intfInfo.second);
     }
@@ -143,6 +145,65 @@ IntfAddrMap Manager::getInterfaceAddrs() const
     }
     intfMap.emplace(intfName, addrList);
     return intfMap;
+}
+
+void Manager::writeToConfigurationFile()
+{
+    // write all the static ip address in the systemd-network conf file
+
+    using namespace std::string_literals;
+    using AddressOrigin =
+        sdbusplus::xyz::openbmc_project::Network::server::IP::AddressOrigin;
+    namespace fs = std::experimental::filesystem;
+
+    for (const auto& intf : interfaces)
+    {
+
+        fs::path confPath {NETWORK_CONF_DIR};
+        std::string fileName = "00-bmc-"s + intf.first + ".network"s;
+        confPath /= fileName;
+        std::fstream stream;
+        stream.open(confPath.c_str(), std::fstream::out);
+
+        // Write the device
+        stream << "[" << "Match" << "]\n";
+        stream << "Name=" << intf.first << "\n";
+
+        auto addrs = intf.second->getAddresses();
+
+        // write the network section
+        stream << "[" << "Network" << "]\n";
+        for (const auto& addr : addrs)
+        {
+            if (addr.second->origin() == AddressOrigin::Static)
+            {
+                std::string address = addr.second->address() + "/" + std::to_string(
+                                          addr.second->prefixLength());
+
+                stream << "Address=" << address << "\n";
+                stream << "Gateway=" << addr.second->gateway() << "\n";
+
+            }
+        }
+        stream.close();
+    }
+    restartSystemdNetworkd();
+}
+
+void  Manager::restartSystemdNetworkd()
+{
+    constexpr auto systemdNetworkdService = "systemd-networkd.service";
+
+    auto method = bus.new_method_call(
+                      SYSTEMD_BUSNAME,
+                      SYSTEMD_PATH,
+                      SYSTEMD_INTERFACE,
+                      "RestartUnit");
+
+    method.append(systemdNetworkdService,
+                  "replace");
+
+    bus.call_noreply(method);
 }
 
 }//namespace network
