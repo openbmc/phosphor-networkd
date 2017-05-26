@@ -25,6 +25,9 @@ using Ifaces =
 using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 class Manager; // forward declaration of network manager.
 
+class Manager; // forward declaration of network manager.
+class TestEthernetInterface;
+
 using LinkSpeed = uint16_t;
 using DuplexMode = uint8_t;
 using Autoneg = uint8_t;
@@ -134,6 +137,10 @@ class EthernetInterface : public Ifaces
         /** @brief Persistent map of IPAddress dbus objects and their names */
         AddressMap addrs;
 
+        /** @brief Dbus object path */
+        std::string objPath;
+
+        friend class TestEthernetInterface;
 };
 
 } // namespace network
