@@ -7,7 +7,8 @@ check_PROGRAMS = test
 test_SOURCES = \
 	test_util.cpp \
 	mock_syscall.cpp \
-	test_network_manager.cpp
+	test_network_manager.cpp \
+	test_ethernet_interface.cpp
 
 test_CPPFLAGS = -Igtest $(GTEST_CPPFLAGS) $(AM_CPPFLAGS)
 test_CXXFLAGS = $(PTHREAD_CFLAGS)
