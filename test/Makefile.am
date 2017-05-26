@@ -8,7 +8,8 @@ test_SOURCES = \
 	TestConfigParser.cpp \
 	TestUtil.cpp \
 	mock_syscall.cpp \
-	TestNetworkManager.cpp
+	TestNetworkManager.cpp \
+	TestEthernetInterface.cpp
 
 test_CPPFLAGS = -Igtest $(GTEST_CPPFLAGS) $(AM_CPPFLAGS)
 test_CXXFLAGS = $(PTHREAD_CFLAGS)
