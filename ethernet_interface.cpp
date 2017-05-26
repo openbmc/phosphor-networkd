@@ -18,7 +18,7 @@
 #include <algorithm>
 #include <sstream>
 #include <experimental/filesystem>
-
+#include <iostream>
 namespace phosphor
 {
 namespace network
@@ -35,7 +35,8 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      Manager& parent) :
                                      Ifaces(bus, objPath.c_str(), true),
                                      bus(bus),
-                                     manager(parent)
+                                     manager(parent),
+                                     objPath(objPath)
 
 {
     auto intfName = objPath.substr(objPath.rfind("/") + 1);
@@ -250,8 +251,7 @@ std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
     std::transform(type.begin(), type.end(), type.begin(), ::tolower);
 
     std::experimental::filesystem::path objectPath;
-    objectPath /= std::string(OBJ_NETWORK);
-    objectPath /= interfaceName();
+    objectPath /= objPath;
     objectPath /= type;
     objectPath /= generateId(ipaddress, prefixLength, gateway);
     return objectPath.string();
