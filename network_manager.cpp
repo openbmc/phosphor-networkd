@@ -1,5 +1,6 @@
 #include "config.h"
 #include "network_manager.hpp"
+#include "routing_table.hpp"
 #include "elog-errors.hpp"
 
 #include <phosphor-logging/log.hpp>
@@ -13,7 +14,6 @@
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <net/if.h>
-
 
 namespace phosphor
 {
@@ -188,7 +188,30 @@ void Manager::writeToConfigurationFile()
             }
         });
 
-        stream.close();
+        // Write the default gateway
+        route::Table routingTable;
+        stream << "Gateway=" << routingTable.getDefaultGateway() << "\n";
+
+        // write Route section
+        std::for_each(addrs.cbegin(), addrs.cend(),
+                      [&stream](const auto & addr)
+        {
+            if (addr.second->origin() == AddressOrigin::Static)
+            {
+                if (addr.second->gateway() != "" && addr.second->gateway() != "0.0.0.0")
+                {
+                    stream << "[" << "Route" << "]\n";
+                    stream << "Gateway=" << addr.second->gateway() << "\n";
+                    int addressType = addr.second->type() == IP::Protocol::IPv4 ? AF_INET :
+                                      AF_INET6;
+                    std::string network = getNetwork(addressType, addr.second->address(),
+                                                     addr.second->prefixLength());
+                    stream << "Destination=" << network << "\n";
+                }
+            }
+        });
+
+    stream.close();
 
     });
     restartSystemdNetworkd();
