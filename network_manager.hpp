@@ -85,7 +85,10 @@ class Manager : public details::VLANCreateIface
          */
         void createInterfaces();
 
-
+        /** TODO: would remove it once we implement the system
+         *  conf dbus object
+         */
+        std::string defaultGateway; // default gateway
     private:
         /** @brief Get all the interfaces from the system.
          *  @returns list of interface names.

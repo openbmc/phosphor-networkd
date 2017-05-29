@@ -185,6 +185,30 @@ void Manager::writeToConfigurationFile()
 
             }
         }
+
+        stream << "Gateway=" << this->defaultGateway << "\n";
+        stream << "[" << "Route" << "]\n";
+        for(const auto& addr : addrs)
+        {
+            if (addr.second->origin() == AddressOrigin::Static)
+            {
+                int addressFamily = addr.second->type() == IP::Protocol::IPv4 ? AF_INET : AF_INET6;
+                std::string destination = getNetwork(
+                                                    addressFamily,
+                                                    addr.second->address(),
+                                                    addr.second->prefixLength());
+
+                if (addr.second->gateway() != "0.0.0.0" ||
+                    addr.second->gateway() != "")
+                {
+
+                    stream << "Gateway=" << addr.second->gateway() << "\n";
+                    stream << "Destination=" << destination << "\n";
+                }
+
+            }
+        }
+
         stream.close();
     }
     restartSystemdNetworkd();
