@@ -24,6 +24,7 @@ test_LDADD = $(top_builddir)/config_parser.cpp \
 			$(top_builddir)/ethernet_interface.cpp \
 			$(top_builddir)/network_manager.cpp \
 			$(top_builddir)/ipaddress.cpp \
+			$(top_builddir)/routing_table.cpp \
 			$(top_builddir)/util.cpp \
 			$(top_builddir)/xyz/openbmc_project/Network/VLAN/Create/phosphor_network_manager-server.o \
 			$(top_builddir)/xyz/openbmc_project/Network/IP/Create/phosphor_network_manager-server.o
