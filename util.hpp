@@ -27,6 +27,15 @@ std::string toMask(int addressFamily, uint8_t prefix);
  */
 bool isLinkLocal(const std::string& address);
 
+/* @brief gets the network section of the ip adress.
+ * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
+ * @param[in] ipaddress - IP address.
+ * @param[in] prefix - prefix length.
+ * @returns network section of the ipaddress.
+ */
+std::string getNetwork(int addressFamily, const std::string& ipaddress,
+                       uint8_t prefix);
+
 } //namespace network
 
 class Descriptor
@@ -40,7 +49,7 @@ class Descriptor
         Descriptor(const Descriptor&) = delete;
         Descriptor& operator=(const Descriptor&) = delete;
         Descriptor(Descriptor&&) = delete;
-        Descriptor& operator=(Descriptor&&) = delete;
+        Descriptor& operator=(Descriptor &&) = delete;
 
         Descriptor(int fd) : fd(fd) {}
 
