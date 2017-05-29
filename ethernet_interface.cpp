@@ -2,6 +2,7 @@
 #include "ipaddress.hpp"
 #include "ethernet_interface.hpp"
 #include "network_manager.hpp"
+#include "routing_table.hpp"
 
 #include <phosphor-logging/log.hpp>
 
@@ -52,18 +53,28 @@ void EthernetInterface::setAddressList(const AddrList& addrs)
 
     IP::Protocol addressType = IP::Protocol::IPv4;
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
-
+    route::Table routingTable;
     for (auto addr : addrs)
     {
         if (addr.addrType == AF_INET6)
         {
             addressType = IP::Protocol::IPv6;
         }
+        if (dHCPEnabled())
+        {
+            origin = IP::AddressOrigin::DHCP;
+        }
+        else if (isLinkLocal(addr.ipaddress))
+        {
+            origin = IP::AddressOrigin::LinkLocal;
+        }
+        gateway = routingTable.getGateway(addr.addrType, addr.ipaddress, addr.prefix);
 
         std::string ipAddressObjectPath = generateObjectPath(addressType,
                                                              addr.ipaddress,
                                                              addr.prefix,
                                                              gateway);
+
         this->addrs.emplace(
                 std::make_pair(
                     addr.ipaddress,
@@ -77,6 +88,10 @@ void EthernetInterface::setAddressList(const AddrList& addrs)
                         addr.prefix,
                         gateway)));
     }
+
+    // TODO:- will move the default gateway to conf object
+    // once we implement that.
+    manager.defaultGateway = routingTable.getDefaultGateway();
 }
 
 void EthernetInterface::iP(IP::Protocol protType,
@@ -84,6 +99,12 @@ void EthernetInterface::iP(IP::Protocol protType,
                            uint8_t prefixLength,
                            std::string gateway)
 {
+
+    if (dHCPEnabled())
+    {
+        return;
+    }
+
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
 
     std::string objectPath = generateObjectPath(protType,
@@ -224,17 +245,17 @@ std::string EthernetInterface::generateId(const std::string& ipaddress,
 
     // Only want 8 hex digits.
     hexId << std::hex << ((std::hash<std::string> {}(
-                              hashString)) & 0xFFFFFFFF);
+                               hashString)) & 0xFFFFFFFF);
     return hexId.str();
 }
 
 void EthernetInterface::deleteObject(const std::string& ipaddress)
 {
     auto it = addrs.find(ipaddress);
-    if( it == addrs.end())
+    if (it == addrs.end())
     {
-         log<level::ERR>("DeleteObject:Unable to find the object.");
-         return;
+        log<level::ERR>("DeleteObject:Unable to find the object.");
+        return;
     }
     this->addrs.erase(it);
     manager.writeToConfigurationFile();
