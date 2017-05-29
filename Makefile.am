@@ -44,11 +44,13 @@ phosphor_network_manager_LDFLAGS = \
 		$(SYSTEMD_LIBS) \
 		$(SDBUSPLUS_LIBS) \
 		$(PHOSPHOR_DBUS_INTERFACES_LIBS) \
+		$(PHOSPHOR_LOGGING_LIBS) \
 		-lstdc++fs
 
 phosphor_network_manager_CXXFLAGS = \
 		$(SYSTEMD_CFLAGS) \
 		$(SDBUSPLUS_CFLAGS) \
+		$(PHOSPHOR_LOGGING_CFLAGS) \
 		$(PHOSPHOR_DBUS_INTERFACES_CFLAGS)
 
 xyz/openbmc_project/Network/VLAN/Create/server.cpp: xyz/openbmc_project/Network/VLAN/Create.interface.yaml xyz/openbmc_project/Network/VLAN/Create/server.hpp

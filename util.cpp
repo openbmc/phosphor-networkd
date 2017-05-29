@@ -1,12 +1,15 @@
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <net/if.h>
+#include "xyz/openbmc_project/Common/error.hpp"
+
+#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/elog-errors.hpp>
 
 #include <iostream>
 #include <list>
 #include <string>
 #include <algorithm>
-#include <phosphor-logging/log.hpp>
 
 namespace phosphor
 {
@@ -16,6 +19,7 @@ namespace
 {
 
 using namespace phosphor::logging;
+using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 uint8_t toV6Cidr(const std::string& subnetMask)
 {
@@ -89,7 +93,7 @@ uint8_t toCidr(int addressFamily, const std::string& subnetMask)
     if (rc <= 0)
     {
         log<level::ERR>("inet_pton failed:",
-                         entry("SUBNETMASK=%s", subnetMask));
+                        entry("SUBNETMASK=%s", subnetMask));
         return 0;
     }
 
@@ -102,7 +106,7 @@ uint8_t toCidr(int addressFamily, const std::string& subnetMask)
     else
     {
         log<level::ERR>("Invalid Mask",
-                         entry("SUBNETMASK=%s", subnetMask));
+                        entry("SUBNETMASK=%s", subnetMask));
         return 0;
     }
 }
@@ -130,6 +134,64 @@ std::string toMask(int addressFamily, uint8_t prefix)
     struct in_addr netmask;
     netmask.s_addr = htonl(mask);
     return inet_ntoa(netmask);
+}
+
+std::string getNetworkID(int addressFamily, const std::string& ipaddress,
+                       uint8_t prefix)
+{
+    unsigned char* pntMask = nullptr;
+    unsigned char* pntNetwork = nullptr;
+    int bit {};
+    int offset {};
+    struct in6_addr netmask {};
+    const u_char maskbit[] = {0x00, 0x80, 0xc0, 0xe0, 0xf0,
+                              0xf8, 0xfc, 0xfe, 0xff
+                             };
+
+    pntMask = reinterpret_cast<unsigned char*>(&netmask);
+
+    offset = prefix / 8;
+    bit = prefix % 8;
+
+    while (offset--)
+    {
+        *pntMask++ = 0xff;
+    }
+
+    if (bit)
+    {
+        *pntMask = maskbit[bit];
+    }
+
+    // convert ipaddres string into network address
+    struct in6_addr ipaddressNetwork;
+    if (inet_pton(addressFamily, ipaddress.c_str(), &ipaddressNetwork) <= 0)
+    {
+        log<level::ERR>("inet_pton failure",
+            entry("IPADDRESS=%s",ipaddress.c_str()));
+        report<InternalFailure>();
+
+        return "";
+    }
+
+    // Now bit wise and gets you the network address
+    pntMask = reinterpret_cast<unsigned char*>(&netmask);
+    pntNetwork = reinterpret_cast<unsigned char*>(&ipaddressNetwork);
+
+    for (int i = 0; i < 16 ; i++)
+    {
+        pntNetwork[i] = pntNetwork[i] & pntMask[i];
+    }
+
+    //convert the network address into string fomat.
+    char networkString[INET6_ADDRSTRLEN] = { 0 };
+    if (inet_ntop(addressFamily, &ipaddressNetwork, networkString,
+                  INET6_ADDRSTRLEN) == NULL)
+    {
+        log<level::ERR>("inet_ntop failure");
+        report<InternalFailure>();
+    }
+    return networkString;
 }
 
 bool isLinkLocal(const std::string& address)
