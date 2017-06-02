@@ -147,7 +147,7 @@ uint8_t Manager::toCidr(const char* subnetMask) const
 {
     uint32_t buff = 0;
 
-    auto rc = inet_pton(AF_INET, subnetMask, &buff);
+    auto rc = inet_pton(AF_INET, subnetMask.c_str(), &buff);
     if (rc <= 0)
     {
         log<level::ERR>("inet_pton failed:",
