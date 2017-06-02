@@ -55,16 +55,16 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                                              addr.prefix,
                                                              gateway);
         this->addrs.emplace(
-                std::make_pair(
-                        addr.ipaddress,
-                        std::make_unique<phosphor::network::IPAddress>(
-                            bus,
-                            ipAddressObjectPath.c_str(),
-                            *this,
-                            addressType,
-                            addr.ipaddress,
-                            addr.prefix,
-                            gateway)));
+            std::make_pair(
+                addr.ipaddress,
+                std::make_unique<phosphor::network::IPAddress>(
+                    bus,
+                    ipAddressObjectPath.c_str(),
+                    *this,
+                    addressType,
+                    addr.ipaddress,
+                    addr.prefix,
+                    gateway)));
     }
     // Emit deferred signal.
     this->emit_object_added();

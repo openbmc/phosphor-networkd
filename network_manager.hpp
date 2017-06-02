@@ -79,7 +79,10 @@ class Manager : public details::VLANCreateIface
          */
         IntfAddrMap getInterfaceAddrs() const;
 
-        /** @brief converts the given subnet into prefix notation **/
+        /** @brief converts the given subnet into prefix notation
+         *  @param[in] subnetMask - Subnet Mask.
+         *  @returns prefix length.
+         */
         uint8_t toCidr(const char* subnetMask) const;
 
         /** @brief Persistent map of EthernetInterface dbus objects and their names */
