@@ -1,7 +1,6 @@
 #pragma once
 
 #include <asm/types.h>
-#include <sys/user.h>
 #include <sys/socket.h>
 #include <linux/netlink.h>
 
@@ -16,7 +15,7 @@ namespace network
 {
 namespace route
 {
-constexpr auto BUFSIZE = PAGE_SIZE;
+constexpr auto BUFSIZE = 4096;
 
 struct Entry
 {
