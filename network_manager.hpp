@@ -7,6 +7,7 @@
 #include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
 
 #include <sdbusplus/bus.hpp>
+#include <sdbusplus/bus/match.hpp>
 #include <ifaddrs.h>
 
 #include <list>
@@ -117,6 +118,18 @@ class Manager : public details::VLANCreateIface
         /** @brief BMC network reset - resets network configuration for BMC. */
         void reset() override;
 
+        /** @brief Notification whenever the property gets changed
+         *  @param[in] key - Property name.
+         */
+        void propertyChanged(const std::string& key);
+
+        /* @brief call back handler on property change */
+        static int onPropertyChanged(sd_bus_message* msg,
+                                     void* userData,
+                                     sd_bus_error*
+                                     retError);
+
+
         /** @brief read the DHCP value from the configuration file
          *  @param[in] intf - Interface name.
          */
@@ -130,6 +143,8 @@ class Manager : public details::VLANCreateIface
 
         /** @brief Network Configuration directory. */
         fs::path confDir;
+
+        std::vector<std::unique_ptr<sdbusplus::server::match::match>>changeList;
 
         friend class TestNetworkManager;
 

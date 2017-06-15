@@ -43,6 +43,7 @@ void Manager::createInterfaces()
 {
     //clear all the interfaces first
     interfaces.clear();
+    changeList.clear();
 
     auto interfaceInfoList = getInterfaceAddrs();
 
@@ -64,6 +65,30 @@ void Manager::createInterfaces()
 
         interfaces[intfInfo.first]->setAddressList(intfInfo.second);
     }
+
+    // After creation of interface objects
+    // register for property changed.
+
+    for (const auto& intfInfo : interfaceInfoList)
+    {
+        fs::path objPath = objectPath;
+        objPath /= intfInfo.first;
+
+        // registering the call back for property changed signal
+        interfaces[intfInfo.first]->setAddressList(intfInfo.second);
+        std::string matchPropertyChange =
+            "type='signal',interface='org.freedesktop.DBus.Properties',\
+            member='PropertiesChanged',";
+        matchPropertyChange += std::string("path='") + objPath.string() + "'";
+
+        changeList.emplace_back(std::make_unique<sdbusplus::server::match::match>(
+                                    bus,
+                                    matchPropertyChange.c_str(),
+                                    onPropertyChanged,
+                                    this));
+
+    }
+
 }
 
 void Manager::createChildObjects()
@@ -323,6 +348,36 @@ void  Manager::restartSystemdNetworkd()
                   "replace");
 
     bus.call_noreply(method);
+}
+
+void Manager::propertyChanged(const std::string& key)
+{
+    if (key == "DHCPEnabled")
+    {
+        writeToConfigurationFile();
+        sleep(1);// 1 sec sleep so that dhcp negotiation
+                 // have happened
+        createChildObjects();
+    }
+}
+
+int Manager::onPropertyChanged(sd_bus_message* msg,
+                               void* userData,
+                               sd_bus_error* retError)
+{
+    using properties = std::map < std::string,
+          sdbusplus::message::variant<int, bool, std::string >>;
+    auto m = sdbusplus::message::message(msg);
+    // message type: sa{sv}as
+    std::string ignore;
+    properties props;
+    m.read(ignore, props);
+    for (const auto & item : props)
+    {
+        static_cast<Manager*>(userData)->propertyChanged(
+            item.first);
+    }
+    return 0;
 }
 
 bool Manager::getDHCPValue(const std::string& intf)
