@@ -8,7 +8,8 @@ test_SOURCES = \
 	test_util.cpp \
 	mock_syscall.cpp \
 	test_network_manager.cpp \
-	test_ethernet_interface.cpp
+	test_ethernet_interface.cpp \
+	test_config_parser.cpp
 
 test_CPPFLAGS = -Igtest $(GTEST_CPPFLAGS) $(AM_CPPFLAGS)
 
@@ -32,5 +33,6 @@ test_LDADD = $(top_builddir)/ethernet_interface.cpp \
 			$(top_builddir)/routing_table.cpp \
 			$(top_builddir)/util.cpp \
 			$(top_builddir)/system_configuration.cpp \
+			$(top_builddir)/config_parser.cpp \
 			$(top_builddir)/xyz/openbmc_project/Network/VLAN/Create/phosphor_network_manager-server.o \
 			$(top_builddir)/xyz/openbmc_project/Network/IP/Create/phosphor_network_manager-server.o
