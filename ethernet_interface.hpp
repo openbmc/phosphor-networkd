@@ -25,7 +25,6 @@ using Ifaces =
 using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 class Manager; // forward declaration of network manager.
 
-class Manager; // forward declaration of network manager.
 class TestEthernetInterface;
 
 using LinkSpeed = uint16_t;

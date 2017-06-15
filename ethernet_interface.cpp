@@ -89,11 +89,6 @@ void EthernetInterface::setAddressList(const AddrList& addrs)
                         gateway)));
     }
 
-    // TODO:- will move the default gateway to conf object
-    // once we implement that.
-
-    // TODO: openbmc/openbmc#1295
-    manager.defaultGateway = routingTable.getDefaultGateway();
 }
 
 void EthernetInterface::iP(IP::Protocol protType,
@@ -104,6 +99,8 @@ void EthernetInterface::iP(IP::Protocol protType,
 
     if (dHCPEnabled())
     {
+        log<level::INFO>("DHCP enabled on the interface"),
+                        entry("INTERFACE=%s",interfaceName());
         return;
     }
 
@@ -277,7 +274,6 @@ std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
     objectPath /= type;
     objectPath /= generateId(ipaddress, prefixLength, gateway);
     return objectPath.string();
-
 }
 
 }//namespace network
