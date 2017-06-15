@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     phosphor::network::Manager manager(bus, OBJ_NETWORK);
 
-    manager.createInterfaces();
+    manager.createChildObjects();
 
     bus.request_name(BUSNAME_NETWORK);
 

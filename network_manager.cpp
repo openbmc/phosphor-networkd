@@ -8,7 +8,6 @@
 
 #include <algorithm>
 #include <bitset>
-#include <experimental/filesystem>
 #include <map>
 #include <fstream>
 
@@ -24,17 +23,25 @@ namespace network
 {
 
 using namespace phosphor::logging;
-namespace fs = std::experimental::filesystem;
+using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
     details::VLANCreateIface(bus, objPath, true),
     bus(bus),
     objectPath(objPath)
 {
+    confDir = NETWORK_CONF_DIR;
+}
+
+void Manager::setConfDir(const std::string& dirName)
+{
+    confDir = dirName;
 }
 
 void Manager::createInterfaces()
 {
+    //clear all the interfaces first
+    interfaces.clear();
 
     auto interfaceInfoList = getInterfaceAddrs();
 
@@ -54,6 +61,18 @@ void Manager::createInterfaces()
 
         interfaces[intfInfo.first]->setAddressList(intfInfo.second);
     }
+}
+
+void Manager::createChildObjects()
+{
+    // creates the ethernet interface dbus object.
+    createInterfaces();
+    // create the system conf object.
+    fs::path objPath = objectPath;
+    objPath /= "conf";
+    systemConfPtr = std::make_unique<phosphor::network::SystemConfiguration>(
+                        bus, objPath.string(), *this);
+
 }
 
 void Manager::vLAN(IntfName interfaceName, uint16_t id)
@@ -216,7 +235,7 @@ void Manager::writeToConfigurationFile()
     for (const auto& intf : interfaces)
     {
 
-        fs::path confPath {NETWORK_CONF_DIR};
+        fs::path confPath = confDir;
         std::string fileName = "00-bmc-"s + intf.first + ".network"s;
         confPath /= fileName;
         std::fstream stream;
@@ -238,12 +257,16 @@ void Manager::writeToConfigurationFile()
                                           addr.second->prefixLength());
 
                 stream << "Address=" << address << "\n";
-                stream << "Gateway=" << addr.second->gateway() << "\n";
+                if (addr.second->gateway() != "0.0.0.0" &&
+                    addr.second->gateway() != "")
+                {
+                    stream << "Gateway=" << addr.second->gateway() << "\n";
+                }
 
             }
         }
-
-        stream << "Gateway=" << this->defaultGateway << "\n";
+        stream << "Gateway=" << systemConfPtr->defaultGateway() << "\n";
+        // write the route section
         stream << "[" << "Route" << "]\n";
         for(const auto& addr : addrs)
         {
@@ -255,8 +278,10 @@ void Manager::writeToConfigurationFile()
                                             addr.second->address(),
                                             addr.second->prefixLength());
 
-                if (addr.second->gateway() != "0.0.0.0" ||
-                    addr.second->gateway() != "")
+                if (addr.second->gateway() != "0.0.0.0" &&
+                    addr.second->gateway() != "" &&
+                    destination != "0.0.0.0" &&
+                    destination != "")
                 {
 
                     stream << "Gateway=" << addr.second->gateway() << "\n";
