@@ -23,6 +23,10 @@ using Ifaces =
         sdbusplus::xyz::openbmc_project::Network::IP::server::Create>;
 
 using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
+
+using EthernetInterfaceIntf =
+    sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface;
+
 class Manager; // forward declaration of network manager.
 
 class TestEthernetInterface;
@@ -76,16 +80,21 @@ class EthernetInterface : public Ifaces
          */
         void deleteObject(const std::string& ipaddress);
 
-        /* @brief creates the dbus object given in the address list.
+        /* @brief creates the dbus object(IPaddres) given in the address list.
          * @param[in] addrs - address list for which dbus objects needs
          *                    to create.
          */
-        void setAddressList(const AddrList& addrs);
+        void createIPAddressObjects();
 
         /* @brief Gets all the ip addresses.
          * @returns the list of ipaddress.
          */
         const AddressMap& getAddresses() const { return addrs; }
+
+        /** Set value of DHCPEnabled */
+        bool dHCPEnabled(bool value) override;
+
+        using EthernetInterfaceIntf::dHCPEnabled;
 
     private:
 

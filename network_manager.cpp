@@ -63,8 +63,8 @@ void Manager::createInterfaces()
                                       dhcp,
                                       *this)));
 
-        interfaces[intfInfo.first]->setAddressList(intfInfo.second);
     }
+
 }
 
 void Manager::createChildObjects()
