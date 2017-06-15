@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ethernet_interface.hpp"
+#include "system_configuration.hpp"
 #include "types.hpp"
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
 #include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
@@ -12,12 +13,14 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <experimental/filesystem>
 
 namespace phosphor
 {
 namespace network
 {
 
+namespace fs = std::experimental::filesystem;
 namespace details
 {
 
@@ -86,11 +89,15 @@ class Manager : public details::VLANCreateIface
          */
         void createInterfaces();
 
-        /** TODO: would remove it once we implement the system
-         *  conf dbus object.
-         *  openbmc/openbmc#1295
+        /** @brief create child interface object and the system conf object.
          */
-        std::string defaultGateway; // default gateway
+        void createChildObjects();
+
+        /** @brief sets the network conf directory.
+         *  @param[in] dirName - Absolute path of the directory.
+         */
+        void setConfDir(const fs::path& dir);
+
     private:
         /** @brief Get all the interfaces from the system.
          *  @returns list of interface names.
@@ -112,6 +119,12 @@ class Manager : public details::VLANCreateIface
 
         /** @brief Path of Object. */
         std::string objectPath;
+
+        /** @brief pointer to system conf object. */
+        std::unique_ptr<SystemConfiguration> systemConf = nullptr;
+
+        /** @brief Network Configuration directory. */
+        fs::path confDir;
 
         friend class TestNetworkManager;
 
