@@ -43,14 +43,17 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     interfaceName(intfName);
     dHCPEnabled(dhcpEnabled);
     mACAddress(getMACAddress());
+    createIPAddressObjects();
     // Emit deferred signal.
     this->emit_object_added();
 }
 
-void EthernetInterface::setAddressList(const AddrList& addrs)
+void EthernetInterface::createIPAddressObjects()
 {
     std::string gateway;
+    addrs.clear();
 
+    auto addrs = getInterfaceAddrs()[interfaceName()];
     IP::Protocol addressType = IP::Protocol::IPv4;
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
     route::Table routingTable;
@@ -274,6 +277,18 @@ std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
     objectPath /= type;
     objectPath /= generateId(ipaddress, prefixLength, gateway);
     return objectPath.string();
+}
+
+bool EthernetInterface::dHCPEnabled(bool value)
+{
+    EthernetInterfaceIntf::dHCPEnabled(value);
+    if (value == true)
+    {
+        manager.writeToConfigurationFile();
+        sleep(1); // DHCP renegotiation
+        createIPAddressObjects();
+    }
+    return value;
 }
 
 }//namespace network
