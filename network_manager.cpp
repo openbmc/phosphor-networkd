@@ -1,4 +1,5 @@
 #include "config.h"
+#include "config_parser.hpp"
 #include "network_manager.hpp"
 #include "network_config.hpp"
 #include "xyz/openbmc_project/Common/error.hpp"
@@ -50,13 +51,15 @@ void Manager::createInterfaces()
         fs::path objPath = objectPath;
         objPath /= intfInfo.first;
 
+        auto dhcp = getDHCPValue(intfInfo.first);
+
         this->interfaces.emplace(std::make_pair(
                                      intfInfo.first,
                                      std::make_unique<
                                      phosphor::network::EthernetInterface>
                                      (bus,
                                       objPath.string(),
-                                      false,
+                                      dhcp,
                                       *this)));
 
         interfaces[intfInfo.first]->setAddressList(intfInfo.second);
@@ -136,7 +139,6 @@ IntfAddrMap Manager::getInterfaceAddrs() const
     AddrList addrList{};
     struct ifaddrs* ifaddr = nullptr;
 
-    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
     // attempt to fill struct with ifaddrs
     if (getifaddrs(&ifaddr) == -1)
     {
@@ -249,6 +251,17 @@ void Manager::writeToConfigurationFile()
 
         // write the network section
         stream << "[" << "Network" << "]\n";
+        // DHCP
+        if (intf.second->dHCPEnabled() == true)
+        {
+            stream << "DHCP=true\n";
+            // write the dhcp section
+            stream << "[DHCP]\n";
+            stream << "ClientIdentifier=mac\n";
+            stream.close();
+            continue;
+        }
+        // Static
         for (const auto& addr : addrs)
         {
             if (addr.second->origin() == AddressOrigin::Static)
@@ -310,6 +323,32 @@ void  Manager::restartSystemdNetworkd()
                   "replace");
 
     bus.call_noreply(method);
+}
+
+bool Manager::getDHCPValue(const std::string& intf)
+{
+    bool dhcp = false;
+    // Get the interface mode value from systemd conf
+    using namespace std::string_literals;
+    fs::path confPath = confDir;
+    std::string fileName = "00-bmc-"s + intf + ".network"s;
+    confPath /= fileName;
+
+    try
+    {
+        config::Parser parser(confPath.string());
+        auto values = parser.getValues("Network","DHCP");
+        // There will be only single value for DHCP key.
+        if (values[0] == "true")
+        {
+            dhcp = true;
+        }
+    }
+    catch (InternalFailure& e)
+    {
+        commit<InternalFailure>();
+    }
+    return dhcp;
 }
 
 }//namespace network

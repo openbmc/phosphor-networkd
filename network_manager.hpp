@@ -117,6 +117,11 @@ class Manager : public details::VLANCreateIface
         /** @brief BMC network reset - resets network configuration for BMC. */
         void reset() override;
 
+        /** @brief read the DHCP value from the configuration file
+         *  @param[in] intf - Interface name.
+         */
+        bool getDHCPValue(const std::string& intf);
+
         /** @brief Path of Object. */
         std::string objectPath;
 
