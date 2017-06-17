@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unistd.h>
+#include "types.hpp"
 
 namespace phosphor
 {
@@ -35,6 +36,11 @@ bool isLinkLocal(const std::string& address);
  */
 std::string getNetworkID(int addressFamily, const std::string& ipaddress,
                          uint8_t prefix);
+
+/** @brief Get all the interfaces from the system.
+ *  @returns list of interface names.
+ */
+IntfAddrMap getInterfaceAddrs();
 
 } //namespace network
 

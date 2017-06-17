@@ -2,12 +2,10 @@
 
 #include "ethernet_interface.hpp"
 #include "system_configuration.hpp"
-#include "types.hpp"
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
 #include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
 
 #include <sdbusplus/bus.hpp>
-#include <ifaddrs.h>
 
 #include <list>
 #include <memory>
@@ -30,29 +28,6 @@ using ServerObject = typename sdbusplus::server::object::object<T, U>;
 using VLANCreateIface = details::ServerObject<
     sdbusplus::xyz::openbmc_project::Network::VLAN::server::Create,
     sdbusplus::xyz::openbmc_project::Common::server::FactoryReset>;
-
-using IntfName = std::string;
-
-struct AddrInfo
-{
-    short addrType;
-    std::string ipaddress;
-};
-
-using Addr_t = ifaddrs*;
-
-struct AddrDeleter
-{
-    void operator()(Addr_t ptr) const
-    {
-        freeifaddrs(ptr);
-    }
-};
-
-using AddrPtr = std::unique_ptr<ifaddrs, AddrDeleter>;
-
-using AddrList = std::list<AddrInfo>;
-using IntfAddrMap = std::map<IntfName, AddrList>;
 
 } // namespace details
 
@@ -99,10 +74,6 @@ class Manager : public details::VLANCreateIface
         void setConfDir(const fs::path& dir);
 
     private:
-        /** @brief Get all the interfaces from the system.
-         *  @returns list of interface names.
-         */
-        IntfAddrMap getInterfaceAddrs() const;
 
         /** @brief Restart the systemd networkd
          */
