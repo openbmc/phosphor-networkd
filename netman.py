@@ -16,15 +16,19 @@ import dbus.service
 import dbus.mainloop.glib
 from ConfigParser import SafeConfigParser
 import glob
+import obmc.mapper
 
 #MAC address mask for locally administered.
 MAC_LOCAL_ADMIN_MASK = 0x20000000000
 BROADCAST_MAC = 0xFFFFFFFFFFFF
 DBUS_NAME = 'org.openbmc.NetworkManager'
 OBJ_NAME = '/org/openbmc/NetworkManager/Interface'
+INV_INTF_NAME = 'xyz.openbmc_project.Inventory.Item.NetworkInterface'
+INVENTORY_ROOT = '/xyz/openbmc_project/inventory'
+MAC_PROPERTY = 'MACAddress'
 
 network_providers = {
-    'networkd' : { 
+    'networkd' : {
         'bus_name' : 'org.freedesktop.network1',
         'ip_object_name' : '/org/freedesktop/network1/network/default',
         'hw_object_name' : '/org/freedesktop/network1/link/_31',
@@ -77,43 +81,32 @@ def modifyNetConfig(confFile, usentp):
     return rc
 
 
-def read_mac_provider_info():
-    conf_file = os.path.join('/etc', 'network-manager.conf')
-    if not os.path.exists(conf_file):
-        raise IOError("Could not find %s" % conf_file)
-
-    parser = SafeConfigParser()
-    parser.optionxform = str
-    parser.read(conf_file)
-    sections = parser.sections()
-
-    path = parser.get('mac_loc', 'path')
-    if not path:
-        raise ValueError("Empty path")
-
-    bus_name = parser.get('mac_loc', 'bus')
-    if not bus_name:
-        raise ValueError("Empty bus-name")
-
-    intf = parser.get('mac_loc', 'interface')
-    if not intf:
-        raise ValueError("Empty intf-name")
-
-    prop = parser.get('mac_loc', 'property')
-    if not prop:
-        raise ValueError("Empty prop-name")
-
-    return bus_name, path, intf, prop
-
-
 # Get Mac address from the eeprom
 def get_mac_from_eeprom():
     bus = dbus.SystemBus()
-    bus_name, path, intf, prop = read_mac_provider_info()
-    obj = bus.get_object(bus_name, path)
-    dbus_method = obj.get_dbus_method("Get", dbus.PROPERTIES_IFACE)
-    return dbus_method(intf, prop)
+    mapper = obmc.mapper.Mapper(bus)
 
+    # Get the inventory subtree, limited
+    # to objects that implement NetworkInterface.
+    for path, info in \
+        mapper.get_subtree(
+            path=INVENTORY_ROOT,
+            interfaces=[INV_INTF_NAME]).iteritems():
+            # Find a NetworkInterface with 'bmc' in the path.
+            if 'bmc' not in path:
+                continue
+
+            # Only expecting a single service to implement
+            # NetworkInterface.  Get the service connection
+            # from the mapper response
+            conn = info.keys()[0]
+
+            # Get the inventory object implementing NetworkInterface.
+            obj = bus.get_object(conn, path)
+
+            # Get the MAC address
+            mproxy = obj.get_dbus_method('Get', dbus.PROPERTIES_IFACE)
+            return mproxy(INV_INTF_NAME, MAC_PROPERTY)
 
 class IfAddr ():
     def __init__ (self, family, scope, flags, prefixlen, addr, gw):
@@ -163,9 +156,11 @@ class NetMan (dbus.service.Object):
             raise ValueError("Given Mac is BroadCast Mac Address")
 
         if not int_mac & MAC_LOCAL_ADMIN_MASK:
-            int_eep_mac = int(get_mac_from_eeprom(), 16)
-            if int_eep_mac != int_mac:
-                raise ValueError("Given MAC address is neither a local Admin type \
+            eep_mac = get_mac_from_eeprom()
+            if eep_mac:
+                int_eep_mac = int(eep_mac, 16)
+                if int_eep_mac != int_mac:
+                    raise ValueError("Given MAC address is neither a local Admin type \
                                    nor is same as in eeprom")
 
 
