@@ -16,12 +16,17 @@ import dbus.service
 import dbus.mainloop.glib
 from ConfigParser import SafeConfigParser
 import glob
+import obmc.mapper
 
 #MAC address mask for locally administered.
 MAC_LOCAL_ADMIN_MASK = 0x20000000000
 BROADCAST_MAC = 0xFFFFFFFFFFFF
 DBUS_NAME = 'org.openbmc.NetworkManager'
 OBJ_NAME = '/org/openbmc/NetworkManager/Interface'
+INV_DBUS_NAME = 'xyz.openbmc_project.Inventory.Manager'
+INV_INTF_NAME = 'xyz.openbmc_project.Inventory.Item.NetworkInterface'
+INVENTORY_ROOT = '/xyz/openbmc_project/inventory'
+MAC_PROPERTY = 'MACAddress'
 
 network_providers = {
     'networkd' : { 
@@ -77,42 +82,21 @@ def modifyNetConfig(confFile, usentp):
     return rc
 
 
-def read_mac_provider_info():
-    conf_file = os.path.join('/etc', 'network-manager.conf')
-    if not os.path.exists(conf_file):
-        raise IOError("Could not find %s" % conf_file)
-
-    parser = SafeConfigParser()
-    parser.optionxform = str
-    parser.read(conf_file)
-    sections = parser.sections()
-
-    path = parser.get('mac_loc', 'path')
-    if not path:
-        raise ValueError("Empty path")
-
-    bus_name = parser.get('mac_loc', 'bus')
-    if not bus_name:
-        raise ValueError("Empty bus-name")
-
-    intf = parser.get('mac_loc', 'interface')
-    if not intf:
-        raise ValueError("Empty intf-name")
-
-    prop = parser.get('mac_loc', 'property')
-    if not prop:
-        raise ValueError("Empty prop-name")
-
-    return bus_name, path, intf, prop
-
-
 # Get Mac address from the eeprom
 def get_mac_from_eeprom():
+    path = ''
     bus = dbus.SystemBus()
-    bus_name, path, intf, prop = read_mac_provider_info()
-    obj = bus.get_object(bus_name, path)
-    dbus_method = obj.get_dbus_method("Get", dbus.PROPERTIES_IFACE)
-    return dbus_method(intf, prop)
+    mapper = obmc.mapper.Mapper(bus)
+    for obj_path, connection in \
+        mapper.get_subtree(
+            path=INVENTORY_ROOT).iteritems():
+        if INV_INTF_NAME in str(connection):
+            path = obj_path
+
+    obj = bus.get_object(INV_DBUS_NAME, path)
+    if obj 
+        dbus_method = obj.get_dbus_method("Get", dbus.PROPERTIES_IFACE)
+        return dbus_method(INV_INTF_NAME, MAC_PROPERTY)
 
 
 class IfAddr ():
