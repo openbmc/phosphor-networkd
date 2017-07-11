@@ -218,23 +218,7 @@ void Manager::writeToConfigurationFile()
 
         stream.close();
     }
-    restartSystemdNetworkd();
-}
-
-void  Manager::restartSystemdNetworkd()
-{
-    constexpr auto systemdNetworkdService = "systemd-networkd.service";
-
-    auto method = bus.new_method_call(
-                      SYSTEMD_BUSNAME,
-                      SYSTEMD_PATH,
-                      SYSTEMD_INTERFACE,
-                      "RestartUnit");
-
-    method.append(systemdNetworkdService,
-                  "replace");
-
-    bus.call_noreply(method);
+    restartSystemdUnit("systemd-networkd.service");
 }
 
 bool Manager::getDHCPValue(const std::string& intf)

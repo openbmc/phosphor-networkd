@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "types.hpp"
 
+
 namespace phosphor
 {
 namespace network
@@ -41,6 +42,12 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
  *  @returns list of interface names.
  */
 IntfAddrMap getInterfaceAddrs();
+
+/** @brief Restart the systemd unit
+ *  @param[in] unit - systemd unit name which needs to be
+ *                    restarted.
+ */
+void restartSystemdUnit(const std::string& unit);
 
 } //namespace network
 

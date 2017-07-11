@@ -1,4 +1,7 @@
+#include "config.h"
 #include "util.hpp"
+
+#include <sdbusplus/bus.hpp>
 #include "xyz/openbmc_project/Common/error.hpp"
 
 #include <phosphor-logging/log.hpp>
@@ -292,6 +295,21 @@ IntfAddrMap getInterfaceAddrs()
     intfMap.emplace(intfName, addrList);
     return intfMap;
 }
+
+void restartSystemdUnit(const std::string& unit)
+{
+    auto bus = sdbusplus::bus::new_default();
+    auto method = bus.new_method_call(
+                      SYSTEMD_BUSNAME,
+                      SYSTEMD_PATH,
+                      SYSTEMD_INTERFACE,
+                      "RestartUnit");
+
+    method.append(unit, "replace");
+    bus.call_noreply(method);
+}
+
+
 
 }//namespace network
 }//namespace phosphor
