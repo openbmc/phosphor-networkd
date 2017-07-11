@@ -76,6 +76,10 @@ void Manager::createChildObjects()
     objPath /= "config";
     systemConf = std::make_unique<phosphor::network::SystemConfiguration>(
                         bus, objPath.string(), *this);
+    // create the dhcp conf object.
+    objPath /= "dhcp";
+    dhcpConf = std::make_unique<phosphor::network::dhcp::Configuration>(
+                        bus, objPath.string(), *this);
 
 }
 
