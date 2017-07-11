@@ -1,7 +1,10 @@
 #pragma once
 
 #include <unistd.h>
+
+#include "config.h"
 #include "types.hpp"
+#include <sdbusplus/bus.hpp>
 
 namespace phosphor
 {
@@ -41,6 +44,24 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
  *  @returns list of interface names.
  */
 IntfAddrMap getInterfaceAddrs();
+
+/** @brief Restart the systemd unit
+ *  @param[in] unit - systemd unit name which needs to be
+ *                    restarted.
+ */
+inline void restartSystemdUnit(const std::string& unit)
+{
+    auto bus = sdbusplus::bus::new_default();
+    auto method = bus.new_method_call(
+                      SYSTEMD_BUSNAME,
+                      SYSTEMD_PATH,
+                      SYSTEMD_INTERFACE,
+                      "RestartUnit");
+
+    method.append(unit, "replace");
+    bus.call_noreply(method);
+
+}
 
 } //namespace network
 

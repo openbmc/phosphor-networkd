@@ -75,10 +75,6 @@ class Manager : public details::VLANCreateIface
 
     private:
 
-        /** @brief Restart the systemd networkd
-         */
-        void restartSystemdNetworkd();
-
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;
 
