@@ -2,9 +2,9 @@
 
 #include "ethernet_interface.hpp"
 #include "system_configuration.hpp"
-#include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
+#include "dhcp_configuration.hpp"
+#include <xyz/openbmc_project/Network/VLAN/Create/server.hpp>
 #include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
-
 #include <sdbusplus/bus.hpp>
 
 #include <list>
@@ -100,6 +100,9 @@ class Manager : public details::VLANCreateIface
 
         /** @brief pointer to system conf object. */
         std::unique_ptr<SystemConfiguration> systemConf = nullptr;
+
+        /** @brief pointer to dhcp conf object. */
+        std::unique_ptr<dhcp::Configuration> dhcpConf = nullptr;
 
         /** @brief Network Configuration directory. */
         fs::path confDir;
