@@ -73,11 +73,13 @@ class Manager : public details::VLANCreateIface
          */
         void setConfDir(const fs::path& dir);
 
-    private:
-
-        /** @brief Restart the systemd networkd
+        /** @brief Restart the systemd unit
+         *  @param[in] unit - systemd unit name which needs to be
+         *                    restarted.
          */
-        void restartSystemdNetworkd();
+        void restartSystemdUnit(const std::string& unit);
+
+    private:
 
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;

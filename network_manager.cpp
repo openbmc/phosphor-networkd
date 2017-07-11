@@ -218,22 +218,18 @@ void Manager::writeToConfigurationFile()
 
         stream.close();
     }
-    restartSystemdNetworkd();
+    restartSystemdUnit("systemd-networkd.service");
 }
 
-void  Manager::restartSystemdNetworkd()
+void Manager::restartSystemdUnit(const std::string& unitName)
 {
-    constexpr auto systemdNetworkdService = "systemd-networkd.service";
-
     auto method = bus.new_method_call(
                       SYSTEMD_BUSNAME,
                       SYSTEMD_PATH,
                       SYSTEMD_INTERFACE,
                       "RestartUnit");
 
-    method.append(systemdNetworkdService,
-                  "replace");
-
+    method.append(unitName, "replace");
     bus.call_noreply(method);
 }
 
