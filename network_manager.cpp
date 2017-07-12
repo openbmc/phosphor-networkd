@@ -170,13 +170,13 @@ void Manager::writeToConfigurationFile()
         // DHCP
         if (intf.second->dHCPEnabled() == true)
         {
-            stream << "DHCP=true\n";
-            // write the dhcp section
-            stream << "[DHCP]\n";
-            stream << "ClientIdentifier=mac\n";
+            // write the dhcp section if interface is
+            // configured as dhcp.
+            writeDHCPSection(stream);
             stream.close();
             continue;
         }
+
         // Static
         for (const auto& addr : addrs)
         {
@@ -235,6 +235,27 @@ void Manager::restartSystemdUnit(const std::string& unit)
 
     method.append(unit, "replace");
     bus.call_noreply(method);
+}
+
+void Manager::writeDHCPSection(std::fstream& stream)
+{
+    using namespace std::string_literals;
+    stream << "DHCP=true\n";
+    // write the dhcp section
+    stream << "[DHCP]\n";
+
+    // Hardcoding the client identifier to mac, to address below issue
+    // https://github.com/openbmc/openbmc/issues/1280
+    stream << "ClientIdentifier=mac\n";
+
+    auto value = dhcpConf->dNS() ? "true"s : "false"s;
+    stream << "UseDNS="s + value + "\n";
+
+    value = dhcpConf->nTP() ? "true"s : "false"s;
+    stream << "UseNTP="s + value + "\n";
+
+    value = dhcpConf->hostName() ? "true"s : "false"s;
+    stream << "UseHostname="s + value + "\n";
 }
 
 bool Manager::getDHCPValue(const std::string& intf)
