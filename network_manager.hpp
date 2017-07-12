@@ -81,6 +81,9 @@ class Manager : public details::VLANCreateIface
 
     private:
 
+        /** @brief write the dhcp section **/
+        void writeDHCPSection(std::fstream& stream);
+
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;
 
