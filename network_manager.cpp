@@ -170,13 +170,13 @@ void Manager::writeToConfigurationFile()
         // DHCP
         if (intf.second->dHCPEnabled() == true)
         {
-            stream << "DHCP=true\n";
-            // write the dhcp section
-            stream << "[DHCP]\n";
-            stream << "ClientIdentifier=mac\n";
+            // write the dhcp section if interface is
+            // configured as dhcp.
+            writeDHCPSection(stream);
             stream.close();
             continue;
         }
+
         // Static
         for (const auto& addr : addrs)
         {
@@ -223,6 +223,22 @@ void Manager::writeToConfigurationFile()
         stream.close();
     }
     restartSystemdUnit("systemd-networkd.service");
+}
+
+void Manager::writeDHCPSection(std::fstream& stream)
+{
+    using namespace std::string_literals;
+    stream << "DHCP=true\n";
+    // write the dhcp section
+    stream << "[DHCP]\n";
+    stream << "ClientIdentifier=mac\n";
+    auto value = dhcpConf->dNS() == true ? "true"s : "false"s;
+    stream << "UseDNS="s + value + "\n";
+    value = dhcpConf->nTP() == true ? "true"s : "false"s;
+    stream << "UseNTP="s + value + "\n";
+    value = dhcpConf->hostName() == true ? "true"s : "false"s;
+    stream << "UseHostname="s + value + "\n";
+
 }
 
 void Manager::restartSystemdUnit(const std::string& unitName)
