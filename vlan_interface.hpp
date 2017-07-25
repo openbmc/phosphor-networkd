@@ -55,7 +55,7 @@ class VlanInterface : public VlanIfaces, public EthernetInterface
 
         /** @brief Delete this d-bus object.
          */
-        void delete_() override {};
+        void delete_() override;
 
         /** @brief writes the device configuration.
                    systemd reads this configuration file

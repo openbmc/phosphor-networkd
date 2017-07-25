@@ -32,6 +32,7 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
         parentInterface(intf)
 {
     id(vlanID);
+    confDir = parentInterface.confDir;
     //Emit deferred signal.
     VlanIfaces::emit_object_added();
 }
@@ -70,6 +71,11 @@ void VlanInterface::writeDeviceFile()
     stream << "[VLAN]" << "\n";
     stream << "Id=" << id() << "\n";
     stream.close();
+}
+
+void VlanInterface::delete_()
+{
+    parentInterface.deleteVLANObject(EthernetInterface::interfaceName());
 }
 
 }//namespace network
