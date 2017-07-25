@@ -11,6 +11,8 @@ test_SOURCES = \
 	test_config_parser.cpp
 #   TODO will enable this later \
 #	test_ethernet_interface.cpp
+	test_config_parser.cpp \
+	test_vlan_interface.cpp
 
 test_CPPFLAGS = -Igtest $(GTEST_CPPFLAGS) $(AM_CPPFLAGS)
 
