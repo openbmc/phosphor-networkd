@@ -1,6 +1,7 @@
 #include "config.h"
 #include "ipaddress.hpp"
 #include "ethernet_interface.hpp"
+#include "vlan_interface.hpp"
 #include "network_manager.hpp"
 #include "routing_table.hpp"
 
@@ -290,5 +291,20 @@ bool EthernetInterface::dHCPEnabled(bool value)
     return value;
 }
 
+void EthernetInterface::createVLAN(uint8_t vlanID)
+{
+    std::string path = objPath;
+    path += "." + std::to_string(vlanID);
+
+    this->vlanInterfaces.emplace(
+    std::make_pair(vlanInterfaceName,
+                   std::make_unique<phosphor::network::VlanInterface>(
+                       bus,
+                       path.c_str(),
+                       EthernetInterfaceIntf::dHCPEnabled(),
+                       vlanID,
+                       manager)));
+
+}
 }//namespace network
 }//namespace phosphor
