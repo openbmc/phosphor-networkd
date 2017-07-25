@@ -7,8 +7,8 @@
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
-
 #include <string>
+#include "ethernet_interface.hpp"
 
 namespace phosphor
 {
