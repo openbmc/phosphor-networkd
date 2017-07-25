@@ -2,6 +2,8 @@
 
 #include "xyz/openbmc_project/Network/IP/server.hpp"
 #include "xyz/openbmc_project/Object/Delete/server.hpp"
+#include "vlan_interface.hpp"
+#include "ethernet_interface.hpp"
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
@@ -19,8 +21,6 @@ using IPIfaces =
         sdbusplus::xyz::openbmc_project::Object::server::Delete>;
 
 using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
-
-class EthernetInterface;
 
 /** @class IPAddress
  *  @brief OpenBMC IPAddress implementation.
