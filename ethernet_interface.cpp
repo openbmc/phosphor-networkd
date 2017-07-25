@@ -33,7 +33,8 @@ constexpr size_t SIZE_BUFF = 512;
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
                                      bool dhcpEnabled,
-                                     Manager& parent) :
+                                     Manager& parent,
+                                     bool emitSignal) :
                                      Ifaces(bus, objPath.c_str(), true),
                                      bus(bus),
                                      manager(parent),
@@ -45,7 +46,10 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     mACAddress(getMACAddress());
     createIPAddressObjects();
     // Emit deferred signal.
-    this->emit_object_added();
+    if (emitSignal)
+    {
+        this->emit_object_added();
+    }
 }
 
 void EthernetInterface::createIPAddressObjects()

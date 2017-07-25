@@ -59,11 +59,14 @@ class EthernetInterface : public Ifaces
          *  @param[in] objPath - Path to attach at.
          *  @param[in] dhcpEnabled - is dhcp enabled(true/false).
          *  @param[in] parent - parent object.
+         *  @param[in] emitSignal - true if the object added signal needs to be
+         *                          send.
          */
         EthernetInterface(sdbusplus::bus::bus& bus,
                           const std::string& objPath,
                           bool dhcpEnabled,
-                          Manager& parent);
+                          Manager& parent,
+                          bool emitSignal = true);
 
         /** @brief Function to create ipaddress dbus object.
          *  @param[in] addressType - Type of ip address.
@@ -98,7 +101,7 @@ class EthernetInterface : public Ifaces
 
         using EthernetInterfaceIntf::dHCPEnabled;
 
-    private:
+    protected:
 
         /** @brief get the info of the ethernet interface.
          *  @return tuple having the link speed,autonegotiation,duplexmode .
