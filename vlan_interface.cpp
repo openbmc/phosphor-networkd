@@ -33,6 +33,7 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
         vlanID(vlanID),
         parentInterface(intf)
 {
+    confDir = parentInterface.confDir;
     // Emit deferred signal.
     DeleteIface::emit_object_added();
 }
@@ -40,7 +41,7 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
 void VlanInterface::writeDeviceFile()
 {
     using namespace std::string_literals;
-    fs::path confPath = NETWORK_CONF_DIR;
+    fs::path confPath = confDir;
     std::string fileName = interfaceName() + ".netdev"s;
     confPath /= fileName;
     std::fstream stream;
@@ -61,6 +62,7 @@ void VlanInterface::writeDeviceFile()
 
 void VlanInterface::delete_()
 {
+    parentInterface.deleteVLANObject(interfaceName());
 }
 
 }//namespace network
