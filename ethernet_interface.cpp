@@ -1,6 +1,7 @@
 #include "config.h"
 #include "ipaddress.hpp"
 #include "ethernet_interface.hpp"
+#include "vlan_interface.hpp"
 #include "network_manager.hpp"
 #include "routing_table.hpp"
 
@@ -34,16 +35,18 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
                                      bool dhcpEnabled,
                                      Manager& parent) :
-                                     Ifaces(bus, objPath.c_str(), true),
-                                     bus(bus),
-                                     manager(parent),
-                                     objPath(objPath)
+    Ifaces(bus, objPath.c_str(), true),
+    bus(bus),
+    manager(parent),
+    objPath(objPath)
 {
     auto intfName = objPath.substr(objPath.rfind("/") + 1);
+    std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
-    dHCPEnabled(dhcpEnabled);
+    EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
     mACAddress(getMACAddress());
-    createIPAddressObjects();
+    confDir = NETWORK_CONF_DIR;
+   
     // Emit deferred signal.
     this->emit_object_added();
 }
@@ -54,9 +57,11 @@ void EthernetInterface::createIPAddressObjects()
     addrs.clear();
 
     auto addrs = getInterfaceAddrs()[interfaceName()];
+
     IP::Protocol addressType = IP::Protocol::IPv4;
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
     route::Table routingTable;
+
     for (auto addr : addrs)
     {
         if (addr.addrType == AF_INET6)
@@ -81,7 +86,7 @@ void EthernetInterface::createIPAddressObjects()
         this->addrs.emplace(
                 std::make_pair(
                     addr.ipaddress,
-                    std::make_unique<phosphor::network::IPAddress>(
+                    std::make_shared<phosphor::network::IPAddress>(
                         bus,
                         ipAddressObjectPath.c_str(),
                         *this,
@@ -116,7 +121,7 @@ void EthernetInterface::iP(IP::Protocol protType,
 
     this->addrs.emplace(
             std::make_pair(ipaddress,
-                           std::make_unique<phosphor::network::IPAddress>(
+                           std::make_shared<phosphor::network::IPAddress>(
                                 bus,
                                 objectPath.c_str(),
                                 *this,
@@ -281,8 +286,13 @@ std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
 
 bool EthernetInterface::dHCPEnabled(bool value)
 {
+    if (value == EthernetInterfaceIntf::dHCPEnabled())
+    {
+        return value;
+    }
+
     EthernetInterfaceIntf::dHCPEnabled(value);
-    if (value == true)
+    if (value)
     {
         manager.writeToConfigurationFile();
         createIPAddressObjects();
@@ -290,5 +300,29 @@ bool EthernetInterface::dHCPEnabled(bool value)
     return value;
 }
 
+void EthernetInterface::createVLAN(uint16_t vlanID)
+{
+    std::string vlanInterfaceName = interfaceName() + "." +
+                                    std::to_string(vlanID);
+    std::string path = objPath;
+    path += "_" + std::to_string(vlanID);
+
+    auto vlanIntf = std::make_shared<phosphor::network::VlanInterface>(
+                        bus,
+                        path.c_str(),
+                        EthernetInterfaceIntf::dHCPEnabled(),
+                        vlanID,
+                        *this,
+                        manager);
+
+    // write the device file for the vlan interface.
+    vlanIntf->writeDeviceFile();
+
+    this->vlanInterfaces.emplace(
+        std::make_pair(vlanInterfaceName, vlanIntf));
+    // write the new vlan device entry to the configuration(network) file.
+    manager.writeToConfigurationFile();
+
+}
 }//namespace network
 }//namespace phosphor

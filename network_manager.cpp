@@ -85,6 +85,9 @@ void Manager::createChildObjects()
 
 void Manager::vLAN(IntfName interfaceName, uint16_t id)
 {
+   auto& intf = interfaces[interfaceName];
+   intf->createVLAN(id);
+   writeToConfigurationFile();
 }
 
 void Manager::reset()
@@ -194,6 +197,7 @@ void Manager::writeToConfigurationFile()
 
             }
         }
+
         stream << "Gateway=" << systemConf->defaultGateway() << "\n";
         // write the route section
         stream << "[" << "Route" << "]\n";
@@ -212,7 +216,6 @@ void Manager::writeToConfigurationFile()
                     destination != "0.0.0.0" &&
                     destination != "")
                 {
-
                     stream << "Gateway=" << addr.second->gateway() << "\n";
                     stream << "Destination=" << destination << "\n";
                 }
