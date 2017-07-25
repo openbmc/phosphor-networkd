@@ -114,24 +114,14 @@ void Manager::vLAN(IntfName interfaceName, uint16_t id)
 void Manager::reset()
 {
     const std::string networkConfig = "/etc/systemd/network/";
-    bool filesExist, interfacesMapped = false;
+    bool interfacesMapped = false;
 
     if(fs::is_directory(networkConfig))
     {
         for(auto& file : fs::directory_iterator(networkConfig))
         {
             std::string filename = file.path().filename().c_str();
-
-            if(filename.substr(filename.find_last_of(".") + 1) == "network")
-            {
-                fs::remove(file.path());
-                filesExist = true;
-            }
-        }
-
-        if(!filesExist)
-        {
-            log<level::INFO>("No existing network configuration was found.");
+            fs::remove(file.path());
         }
 
         for (auto& intf : interfaces)
