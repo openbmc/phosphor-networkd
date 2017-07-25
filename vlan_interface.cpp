@@ -26,14 +26,14 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
                              uint32_t vlanID,
                              EthernetInterface& intf,
                              Manager& parent ) :
-        VlanIntfObject(bus, objPath.c_str(), true),
+        Interfaces(bus, objPath.c_str(), true),
         EthernetInterface(bus, objPath, dhcpEnabled, parent, false),
         parentInterface(intf)
 {
     id(vlanID);
     VlanIface::interfaceName(EthernetInterface::interfaceName());
 
-    VlanIntfObject::emit_object_added();
+    Interfaces::emit_object_added();
 }
 
 void VlanInterface::writeDeviceFile()
@@ -62,6 +62,11 @@ void VlanInterface::writeDeviceFile()
     stream << "[VLAN]" << "\n";
     stream << "Id=" << id() << "\n";
     stream.close();
+}
+
+void VlanInterface::delete_()
+{
+    parentInterface.deleteVLANObject(EthernetInterface::interfaceName());
 }
 
 }//namespace network
