@@ -63,6 +63,12 @@ inline void restartSystemdUnit(const std::string& unit)
 
 }
 
+/** @brief Delete the given interface.
+ *  @param[in] intf - interface name.
+ */
+void deleteInterface(const std::string& intf);
+
+
 } //namespace network
 
 class Descriptor

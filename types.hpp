@@ -12,6 +12,17 @@ namespace phosphor
 {
 namespace network
 {
+namespace systemd
+{
+namespace config
+{
+
+constexpr auto networkFilePrefix = "00-bmc-";
+constexpr auto networkFileSuffix = ".network";
+constexpr auto deviceFileSuffix = ".netdev";
+
+}// namespace config
+}// namespace systemd
 
 using IntfName = std::string;
 
