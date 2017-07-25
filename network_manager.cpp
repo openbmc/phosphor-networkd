@@ -127,31 +127,22 @@ void Manager::vLAN(IntfName interfaceName, uint32_t id)
 
 void Manager::reset()
 {
-    const std::string networkConfig = "/etc/systemd/network/";
-    bool filesExist, interfacesMapped = false;
+    const std::string networkConfig = confDir.string();
+    bool interfacesMapped = false;
 
     if(fs::is_directory(networkConfig))
     {
         for(auto& file : fs::directory_iterator(networkConfig))
         {
-            std::string filename = file.path().filename().c_str();
-
-            if(filename.substr(filename.find_last_of(".") + 1) == "network")
-            {
-                fs::remove(file.path());
-                filesExist = true;
-            }
-        }
-
-        if(!filesExist)
-        {
-            log<level::INFO>("No existing network configuration was found.");
+            fs::remove(file.path());
         }
 
         for (auto& intf : interfaces)
         {
-            std::string filename = networkConfig + "00-bmc-" + intf.first +
-                    ".network";
+            std::string filename = networkConfig +
+                                   systemd::config::networkFilePrefix +
+                                   intf.first +
+                                   systemd::config::networkFileSuffix;
 
             bmc::writeDHCPDefault(filename, intf.first);
             interfacesMapped = true;
