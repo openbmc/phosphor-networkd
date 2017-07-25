@@ -20,7 +20,8 @@ noinst_HEADERS = \
 		routing_table.hpp \
 		config_parser.hpp \
 		system_configuration.hpp \
-		dhcp_configuration.hpp
+		dhcp_configuration.hpp \
+        vlan_interface.hpp
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
@@ -34,7 +35,8 @@ phosphor_network_manager_SOURCES = \
 		util.cpp \
 		routing_table.cpp \
 		config_parser.cpp \
-		dhcp_configuration.cpp
+		dhcp_configuration.cpp \
+        vlan_interface.cpp
 
 CLEANFILES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
