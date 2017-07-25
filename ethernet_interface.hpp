@@ -12,6 +12,7 @@
 #include <sdbusplus/server/object.hpp>
 
 #include <string>
+#include <experimental/filesystem>
 
 namespace phosphor
 {
@@ -29,15 +30,22 @@ using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 using EthernetInterfaceIntf =
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface;
 
+namespace fs = std::experimental::filesystem;
+
 class Manager; // forward declaration of network manager.
 
 class TestEthernetInterface;
 
+class VlanInterface;
+
 using LinkSpeed = uint16_t;
 using DuplexMode = uint8_t;
 using Autoneg = uint8_t;
+using VLANID = uint32_t;
+using InterfaceName = std::string;
 using InterfaceInfo = std::tuple<LinkSpeed, DuplexMode, Autoneg>;
 using AddressMap = std::map<std::string, std::shared_ptr<IPAddress>>;
+using VlanInterfaceMap = std::map<InterfaceName, std::shared_ptr<VlanInterface>>;
 
 /** @class EthernetInterface
  *  @brief OpenBMC Ethernet Interface implementation.
@@ -110,9 +118,18 @@ class EthernetInterface : public Ifaces
         /** Set value of DHCPEnabled */
         bool dHCPEnabled(bool value) override;
 
-        using EthernetInterfaceIntf::dHCPEnabled;
+        /** @brief create Vlan interface.
+         *  @param[in] vlanID- VLAN identifier.
+         */
+        void createVLAN(VLANID vlanID);
 
-    private:
+        using EthernetInterfaceIntf::dHCPEnabled;
+        using EthernetInterfaceIntf::interfaceName;
+
+        /** @brief Network Configuration directory. */
+        fs::path confDir;
+
+    protected:
 
         /** @brief get the info of the ethernet interface.
          *  @return tuple having the link speed,autonegotiation,duplexmode .
@@ -160,6 +177,9 @@ class EthernetInterface : public Ifaces
 
         /** @brief Persistent map of IPAddress dbus objects and their names */
         AddressMap addrs;
+
+        /** @brief Persistent map of VLAN interface dbus objects and their names */
+        VlanInterfaceMap vlanInterfaces;
 
         /** @brief Dbus object path */
         std::string objPath;
