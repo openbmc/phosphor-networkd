@@ -13,6 +13,10 @@ namespace phosphor
 namespace network
 {
 
+constexpr auto filePrefix = "00-bmc-";
+constexpr auto networkFileSuffix = ".network";
+constexpr auto deviceFileSuffix = ".netdev";
+
 using IntfName = std::string;
 
 struct AddrInfo {

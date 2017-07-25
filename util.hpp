@@ -5,11 +5,24 @@
 #include "config.h"
 #include "types.hpp"
 #include <sdbusplus/bus.hpp>
+#include <systemd/sd-event.h>
 
 namespace phosphor
 {
 namespace network
 {
+
+/* Need a custom deleter for freeing up sd_event */
+struct EventDeleter
+{
+    void operator()(sd_event* event) const
+    {
+        event = sd_event_unref(event);
+    }
+};
+
+using EventPtr = std::unique_ptr<sd_event, EventDeleter>;
+
 
 /* @brief converts the given subnet into prefix notation.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
@@ -62,6 +75,12 @@ inline void restartSystemdUnit(const std::string& unit)
     bus.call_noreply(method);
 
 }
+
+/** @brief Delete the given interface.
+ *  @param[in] intf - interface name.
+ */
+void deleteInterface(const std::string& intf);
+
 
 } //namespace network
 
