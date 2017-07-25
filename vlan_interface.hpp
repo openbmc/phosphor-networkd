@@ -19,14 +19,16 @@ class EthernetInterface;
 class Manager;
 
 
+using DeleteIface = sdbusplus::xyz::openbmc_project::Object::server::Delete;
 using VlanIface = sdbusplus::xyz::openbmc_project::Network::server::VLAN;
-using VlanIntfObject =  sdbusplus::server::object::object<VlanIface>;
+using Interfaces =
+        sdbusplus::server::object::object<DeleteIface, VlanIface>;
 
 /** @class VlanInterface
  *  @brief OpenBMC vlan Interface implementation.
  *  @details A concrete implementation for the vlan interface
  */
-class VlanInterface : public VlanIntfObject, public EthernetInterface
+class VlanInterface : public Interfaces, public EthernetInterface
 {
     public:
         VlanInterface() = delete;
@@ -50,6 +52,10 @@ class VlanInterface : public VlanIntfObject, public EthernetInterface
                       uint32_t vlanID,
                       EthernetInterface& intf,
                       Manager& manager);
+
+        /** @brief Delete this d-bus object.
+         */
+        void delete_() override;
 
         /** @brief writes the device configuration.
                    systemd reads this configuration file

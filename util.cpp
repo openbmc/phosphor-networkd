@@ -294,5 +294,28 @@ IntfAddrMap getInterfaceAddrs()
     return intfMap;
 }
 
+void system(const char* cmd)
+{
+    pid_t pid = fork();
+    if(pid == 0)
+    {
+        execl("/bin/sh", "sh", "-c" , cmd, nullptr);
+        auto error = errno;
+        log<level::ERR>("Couldn't execute the shell",
+                        entry("ERRNO=%d", error),
+                        entry("COMMAND=%s",cmd));
+       elog<InternalFailure>();
+    }
+    else if (pid < 0)
+    {
+        auto error = errno;
+        log<level::ERR>("Error occurred during fork",
+                        entry("ERRNO=%d", error),
+                        entry("COMMAND=%s",cmd));
+        elog<InternalFailure>();
+    }
+
+}
+
 }//namespace network
 }//namespace phosphor

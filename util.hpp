@@ -63,6 +63,13 @@ inline void restartSystemdUnit(const std::string& unit)
 
 }
 
+/** @brief Execute the given command.
+ *  @param[in] cmd - command which needs to run
+ *                   on the shell.
+ */
+void system(const char* cmd);
+
+
 } //namespace network
 
 class Descriptor
