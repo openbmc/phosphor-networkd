@@ -10,8 +10,8 @@
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
-
 #include <string>
+#include <experimental/filesystem>
 
 namespace phosphor
 {
@@ -28,6 +28,8 @@ using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 
 using EthernetInterfaceIntf =
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface;
+
+namespace fs = std::experimental::filesystem;
 
 class Manager; // forward declaration of network manager.
 
@@ -84,6 +86,12 @@ class EthernetInterface : public Ifaces
          * @param[in] ipaddress - IP address.
          */
         void deleteObject(const std::string& ipaddress);
+
+        /* @brief delete the vlan dbus object of the given interface.
+         *        Also deletes the device file and the network file.
+         * @param[in] interface - VLAN Interface.
+         */
+        void deleteVLANObject(const std::string& interface);
 
         /* @brief creates the dbus object(IPaddres) given in the address list.
          * @param[in] addrs - address list for which dbus objects needs
