@@ -8,10 +8,9 @@ test_SOURCES = \
 	test_util.cpp \
 	mock_syscall.cpp \
 	test_network_manager.cpp \
-	test_config_parser.cpp
-#    #TODO openbmc/openbmc#2084 \
-#    Disable due to test case failure
-#	test_ethernet_interface.cpp
+	test_ethernet_interface.cpp \
+	test_config_parser.cpp \
+	test_vlan_interface.cpp
 
 test_CPPFLAGS = -Igtest $(GTEST_CPPFLAGS) $(AM_CPPFLAGS)
 
