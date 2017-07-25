@@ -18,6 +18,9 @@ namespace phosphor
 namespace network
 {
 
+using SystemConfPtr = std::shared_ptr<SystemConfiguration>;
+using DHCPConfPtr = std::shared_ptr<dhcp::Configuration>;
+
 namespace fs = std::experimental::filesystem;
 namespace details
 {
@@ -73,10 +76,17 @@ class Manager : public details::VLANCreateIface
          */
         void setConfDir(const fs::path& dir);
 
-    private:
+        /** @brief gets the system conf object.
+         *
+         */
+        SystemConfPtr getSystemConf() { return systemConf; }
 
-        /** @brief write the dhcp section **/
-        void writeDHCPSection(std::fstream& stream);
+        /** @brief gets the dhcp conf object.
+         *
+         */
+        DHCPConfPtr getDHCPConf() { return dhcpConf; }
+
+    private:
 
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;
@@ -96,10 +106,10 @@ class Manager : public details::VLANCreateIface
         std::string objectPath;
 
         /** @brief pointer to system conf object. */
-        std::unique_ptr<SystemConfiguration> systemConf = nullptr;
+        SystemConfPtr systemConf = nullptr;
 
         /** @brief pointer to dhcp conf object. */
-        std::unique_ptr<dhcp::Configuration> dhcpConf = nullptr;
+        DHCPConfPtr dhcpConf = nullptr;
 
         /** @brief Network Configuration directory. */
         fs::path confDir;
