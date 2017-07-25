@@ -26,7 +26,7 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
                              uint32_t vlanID,
                              EthernetInterface& intf,
                              Manager& parent ) :
-        VlanIntfObject(bus, objPath.c_str(), true),
+        Interfaces(bus, objPath.c_str(), true),
         EthernetInterface(bus, objPath, parent),
         parentInterface(intf)
 {
@@ -38,7 +38,7 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
     dHCPEnabled(parentInterface.dHCPEnabled());
     mACAddress(parentInterface.mACAddress());
 
-    VlanIntfObject::emit_object_added();
+    Interfaces::emit_object_added();
 }
 
 void VlanInterface::writeDeviceFile()
@@ -67,6 +67,11 @@ void VlanInterface::writeDeviceFile()
     stream << "[VLAN]" << "\n";
     stream << "Id=" << id() << "\n";
     stream.close();
+}
+
+void VlanInterface::delete_()
+{
+    parentInterface.deleteVLANObject(EthernetInterface::interfaceName());
 }
 
 }//namespace network
