@@ -12,6 +12,8 @@ test_SOURCES = \
 #   TODO will enable this later \
 #    TODO https://github.com/openbmc/openbmc/issues/2084 
 #	test_ethernet_interface.cpp
+	test_config_parser.cpp \
+	test_vlan_interface.cpp
 
 test_CPPFLAGS = -Igtest $(GTEST_CPPFLAGS) $(AM_CPPFLAGS)
 
