@@ -1,5 +1,6 @@
 #include "network_manager.hpp"
 #include "mock_syscall.hpp"
+#include "ipaddress.hpp"
 
 #include <gtest/gtest.h>
 #include <sdbusplus/bus.hpp>
