@@ -75,6 +75,10 @@ class Manager : public details::VLANCreateIface
          */
         void setConfDir(const fs::path& dir);
 
+        /** @brief gets the network conf directory.
+         */
+        fs::path getConfDir() { return confDir; }
+
     private:
 
         /** @brief write the dhcp section **/
