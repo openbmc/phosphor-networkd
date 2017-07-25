@@ -1,25 +1,29 @@
 #include "config.h"
-#include "ipaddress.hpp"
 #include "ethernet_interface.hpp"
-#include "vlan_interface.hpp"
+#include "ipaddress.hpp"
 #include "network_manager.hpp"
 #include "routing_table.hpp"
+#include "vlan_interface.hpp"
+#include "xyz/openbmc_project/Common/error.hpp"
 
+#include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 
 #include <arpa/inet.h>
 #include <linux/ethtool.h>
-#include <net/if.h>
 #include <linux/sockios.h>
+#include <net/if.h>
 #include <netinet/in.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include <string>
+
 #include <algorithm>
-#include <sstream>
 #include <experimental/filesystem>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 namespace phosphor
 {
@@ -27,6 +31,8 @@ namespace network
 {
 
 using namespace phosphor::logging;
+using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
 constexpr auto MAC_ADDRESS_FORMAT = "%02X:%02X:%02X:%02X:%02X:%02X";
 constexpr size_t SIZE_MAC = 18;
 constexpr size_t SIZE_BUFF = 512;
@@ -37,7 +43,6 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      Manager& parent,
                                      bool emitSignal) :
                                      Ifaces(bus, objPath.c_str(), true),
-                                     confDir(NETWORK_CONF_DIR),
                                      bus(bus),
                                      manager(parent),
                                      objPath(objPath)
@@ -121,7 +126,6 @@ void EthernetInterface::iP(IP::Protocol protType,
                                                 ipaddress,
                                                 prefixLength,
                                                 gateway);
-
     this->addrs.emplace(
                 std::move(ipaddress),
                 std::make_shared<phosphor::network::IPAddress>(
@@ -134,7 +138,7 @@ void EthernetInterface::iP(IP::Protocol protType,
                         prefixLength,
                         gateway));
 
-    manager.writeToConfigurationFile();
+    writeConfigurationFile();
 }
 
 
@@ -268,7 +272,7 @@ void EthernetInterface::deleteObject(const std::string& ipaddress)
         return;
     }
     this->addrs.erase(it);
-    manager.writeToConfigurationFile();
+    writeConfigurationFile();
 }
 
 std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
@@ -297,7 +301,7 @@ bool EthernetInterface::dHCPEnabled(bool value)
     EthernetInterfaceIntf::dHCPEnabled(value);
     if (value)
     {
-        manager.writeToConfigurationFile();
+        writeConfigurationFile();
         createIPAddressObjects();
     }
     return value;
@@ -325,8 +329,125 @@ void EthernetInterface::createVLAN(VlanId id)
     this->vlanInterfaces.emplace(std::move(vlanInterfaceName),
                                  std::move(vlanIntf));
     // write the new vlan device entry to the configuration(network) file.
-    manager.writeToConfigurationFile();
-
+    writeConfigurationFile();
 }
+
+// Need to merge the below function with the code which writes the
+// config file during factory reset.
+// TODO openbmc/openbmc#1751
+
+void EthernetInterface::writeConfigurationFile()
+{
+    // write all the static ip address in the systemd-network conf file
+
+    using namespace std::string_literals;
+    using AddressOrigin =
+        sdbusplus::xyz::openbmc_project::Network::server::IP::AddressOrigin;
+    namespace fs = std::experimental::filesystem;
+    fs::path confPath = manager.getConfDir();
+
+    std::string fileName = "00-bmc-"s + interfaceName() + ".network"s;
+    confPath /= fileName;
+    std::fstream stream;
+
+    stream.open(confPath.c_str(), std::fstream::out);
+    if (!stream.is_open())
+    {
+        log<level::ERR>("Unable to open the file",
+                        entry("FILE=%s", confPath.c_str()));
+        elog<InternalFailure>();
+    }
+
+    // Write the device
+    stream << "[" << "Match" << "]\n";
+    stream << "Name=" << interfaceName() << "\n";
+
+    auto addrs = getAddresses();
+
+    // write the network section
+    stream << "[" << "Network" << "]\n";
+    // DHCP
+    if (dHCPEnabled() == true)
+    {
+        // write the dhcp section if interface is
+        // configured as dhcp.
+        writeDHCPSection(stream);
+        stream.close();
+        return;
+    }
+    // Add the Vlan entry
+    for(const auto& intf: vlanInterfaces)
+    {
+        stream << "VLAN=" << intf.second->EthernetInterface::interfaceName() << "\n";
+    }
+
+    // Static
+    for (const auto& addr : addrs)
+    {
+        if (addr.second->origin() == AddressOrigin::Static)
+        {
+            std::string address = addr.second->address() + "/" + std::to_string(
+                                      addr.second->prefixLength());
+
+            stream << "Address=" << address << "\n";
+         }
+    }
+
+    if (manager.getSystemConf())
+    {
+        stream << "Gateway=" << manager.getSystemConf()->defaultGateway()
+            << "\n";
+    }
+    // write the route section
+    stream << "[" << "Route" << "]\n";
+    for(const auto& addr : addrs)
+    {
+        if (addr.second->origin() == AddressOrigin::Static)
+        {
+            int addressFamily = addr.second->type() == IP::Protocol::IPv4 ? AF_INET : AF_INET6;
+            std::string destination = getNetworkID(
+                    addressFamily,
+                    addr.second->address(),
+                    addr.second->prefixLength());
+
+            if (addr.second->gateway() != "0.0.0.0" &&
+                addr.second->gateway() != "" &&
+                destination != "0.0.0.0" &&
+                destination != "")
+            {
+                stream << "Gateway=" << addr.second->gateway() << "\n";
+                stream << "Destination=" << destination << "\n";
+            }
+
+        }
+    }
+
+    stream.close();
+    restartSystemdUnit("systemd-networkd.service");
+}
+
+void EthernetInterface::writeDHCPSection(std::fstream& stream)
+{
+    using namespace std::string_literals;
+    stream << "DHCP=true\n";
+    // write the dhcp section
+    stream << "[DHCP]\n";
+
+    // Hardcoding the client identifier to mac, to address below issue
+    // https://github.com/openbmc/openbmc/issues/1280
+    stream << "ClientIdentifier=mac\n";
+    if (manager.getDHCPConf())
+    {
+        auto value = manager.getDHCPConf()->dNSEnabled() ? "true"s : "false"s;
+        stream << "UseDNS="s + value + "\n";
+
+        value = manager.getDHCPConf()->nTPEnabled() ? "true"s : "false"s;
+        stream << "UseNTP="s + value + "\n";
+
+        value = manager.getDHCPConf()->hostNameEnabled() ? "true"s : "false"s;
+        stream << "UseHostname="s + value + "\n";
+    }
+}
+
 }//namespace network
 }//namespace phosphor
