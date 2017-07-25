@@ -75,20 +75,19 @@ void Manager::createChildObjects()
     // create the system conf object.
     fs::path objPath = objectPath;
     objPath /= "config";
-    systemConf = std::make_unique<phosphor::network::SystemConfiguration>(
+    systemConf = std::make_shared<phosphor::network::SystemConfiguration>(
                         bus, objPath.string(), *this);
     // create the dhcp conf object.
     objPath /= "dhcp";
-    dhcpConf = std::make_unique<phosphor::network::dhcp::Configuration>(
+    dhcpConf = std::make_shared<phosphor::network::dhcp::Configuration>(
                         bus, objPath.string(), *this);
 
 }
 
 void Manager::vLAN(IntfName interfaceName, uint32_t id)
 {
-   auto& intf = interfaces[interfaceName];
-   intf->createVLAN(id);
-   writeToConfigurationFile();
+    auto& intf = interfaces[interfaceName];
+    intf->createVLAN(id);
 }
 
 void Manager::reset()
@@ -149,105 +148,11 @@ void Manager::writeToConfigurationFile()
 {
     // write all the static ip address in the systemd-network conf file
 
-    using namespace std::string_literals;
-    using AddressOrigin =
-        sdbusplus::xyz::openbmc_project::Network::server::IP::AddressOrigin;
-    namespace fs = std::experimental::filesystem;
-
     for (const auto& intf : interfaces)
     {
+        intf.second->writeConfigurationFile();
 
-        fs::path confPath = confDir;
-        std::string fileName = "00-bmc-"s + intf.first + ".network"s;
-        confPath /= fileName;
-        std::fstream stream;
-        stream.open(confPath.c_str(), std::fstream::out);
-
-        // Write the device
-        stream << "[" << "Match" << "]\n";
-        stream << "Name=" << intf.first << "\n";
-
-        auto addrs = intf.second->getAddresses();
-
-        // write the network section
-        stream << "[" << "Network" << "]\n";
-        // DHCP
-        if (intf.second->dHCPEnabled() == true)
-        {
-            // write the dhcp section if interface is
-            // configured as dhcp.
-            writeDHCPSection(stream);
-            stream.close();
-            continue;
-        }
-
-        // Static
-        for (const auto& addr : addrs)
-        {
-            if (addr.second->origin() == AddressOrigin::Static)
-            {
-                std::string address = addr.second->address() + "/" + std::to_string(
-                                          addr.second->prefixLength());
-
-                stream << "Address=" << address << "\n";
-                if (addr.second->gateway() != "0.0.0.0" &&
-                    addr.second->gateway() != "")
-                {
-                    stream << "Gateway=" << addr.second->gateway() << "\n";
-                }
-
-            }
-        }
-
-        stream << "Gateway=" << systemConf->defaultGateway() << "\n";
-        // write the route section
-        stream << "[" << "Route" << "]\n";
-        for(const auto& addr : addrs)
-        {
-            if (addr.second->origin() == AddressOrigin::Static)
-            {
-                int addressFamily = addr.second->type() == IP::Protocol::IPv4 ? AF_INET : AF_INET6;
-                std::string destination = getNetworkID(
-                                            addressFamily,
-                                            addr.second->address(),
-                                            addr.second->prefixLength());
-
-                if (addr.second->gateway() != "0.0.0.0" &&
-                    addr.second->gateway() != "" &&
-                    destination != "0.0.0.0" &&
-                    destination != "")
-                {
-                    stream << "Gateway=" << addr.second->gateway() << "\n";
-                    stream << "Destination=" << destination << "\n";
-                }
-
-            }
-        }
-
-        stream.close();
     }
-    restartSystemdUnit("systemd-networkd.service");
-}
-
-void Manager::writeDHCPSection(std::fstream& stream)
-{
-    using namespace std::string_literals;
-    stream << "DHCP=true\n";
-    // write the dhcp section
-    stream << "[DHCP]\n";
-
-    // Hardcoding the client identifier to mac, to address below issue
-    // https://github.com/openbmc/openbmc/issues/1280
-    stream << "ClientIdentifier=mac\n";
-
-    auto value = dhcpConf->dNSEnabled() ? "true"s : "false"s;
-    stream << "UseDNS="s + value + "\n";
-
-    value = dhcpConf->nTPEnabled() ? "true"s : "false"s;
-    stream << "UseNTP="s + value + "\n";
-
-    value = dhcpConf->hostNameEnabled() ? "true"s : "false"s;
-    stream << "UseHostname="s + value + "\n";
 }
 
 bool Manager::getDHCPValue(const std::string& intf)
