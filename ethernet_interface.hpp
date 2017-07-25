@@ -10,7 +10,6 @@
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
-
 #include <string>
 #include <experimental/filesystem>
 
@@ -103,6 +102,12 @@ class EthernetInterface : public Ifaces
          * @param[in] ipaddress - IP address.
          */
         void deleteObject(const std::string& ipaddress);
+
+        /* @brief delete the vlan dbus object of the given interface.
+         *        Also deletes the device file and the network file.
+         * @param[in] interface - VLAN Interface.
+         */
+        void deleteVLANObject(const std::string& interface);
 
         /* @brief creates the dbus object(IPaddres) given in the address list.
          * @param[in] addrs - address list for which dbus objects needs
