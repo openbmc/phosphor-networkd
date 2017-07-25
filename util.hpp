@@ -5,6 +5,7 @@
 #include "config.h"
 #include "types.hpp"
 #include <sdbusplus/bus.hpp>
+#include <systemd/sd-event.h>
 
 namespace phosphor
 {
@@ -62,6 +63,12 @@ inline void restartSystemdUnit(const std::string& unit)
     bus.call_noreply(method);
 
 }
+
+/** @brief Delete the given interface.
+ *  @param[in] intf - interface name.
+ */
+void deleteInterface(const std::string& intf);
+
 
 } //namespace network
 

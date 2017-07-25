@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <net/if.h>
+#include <sys/wait.h>
 
 #include <iostream>
 #include <list>
@@ -18,6 +19,7 @@ namespace phosphor
 {
 namespace network
 {
+
 namespace
 {
 
@@ -52,7 +54,7 @@ uint8_t toV6Cidr(const std::string& subnetMask)
         if (sscanf(str.c_str(), "%hx", &buff) <= 0)
         {
             log<level::ERR>("Invalid Mask",
-                             entry("SUBNETMASK=%s", subnetMask));
+                            entry("SUBNETMASK=%s", subnetMask));
 
             return 0;
         }
@@ -140,7 +142,7 @@ std::string toMask(int addressFamily, uint8_t prefix)
 }
 
 std::string getNetworkID(int addressFamily, const std::string& ipaddress,
-                       uint8_t prefix)
+                         uint8_t prefix)
 {
     unsigned char* pntMask = nullptr;
     unsigned char* pntNetwork = nullptr;
@@ -171,7 +173,7 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
     if (inet_pton(addressFamily, ipaddress.c_str(), &ipaddressNetwork) <= 0)
     {
         log<level::ERR>("inet_pton failure",
-            entry("IPADDRESS=%s",ipaddress.c_str()));
+                        entry("IPADDRESS=%s", ipaddress.c_str()));
         report<InternalFailure>();
 
         return "";
@@ -202,13 +204,13 @@ bool isLinkLocal(const std::string& address)
     std::string linklocal = "fe80";
     return std::mismatch(linklocal.begin(), linklocal.end(),
                          address.begin()).first == linklocal.end() ?
-                            true : false;
+           true : false;
 }
 
 IntfAddrMap getInterfaceAddrs()
 {
-    IntfAddrMap intfMap{};
-    AddrList addrList{};
+    IntfAddrMap intfMap {};
+    AddrList addrList {};
     struct ifaddrs* ifaddr = nullptr;
 
     // attempt to fill struct with ifaddrs
@@ -223,7 +225,7 @@ IntfAddrMap getInterfaceAddrs()
     AddrPtr ifaddrPtr(ifaddr);
     ifaddr = nullptr;
 
-    std::string intfName{};
+    std::string intfName {};
 
     for (ifaddrs* ifa = ifaddrPtr.get(); ifa != nullptr; ifa = ifa->ifa_next)
     {
@@ -252,7 +254,7 @@ IntfAddrMap getInterfaceAddrs()
                 addrList.clear();
             }
             intfName = ifa->ifa_name;
-            AddrInfo info{};
+            AddrInfo info {};
             char ip[INET6_ADDRSTRLEN] = { 0 };
             char subnetMask[INET6_ADDRSTRLEN] = { 0 };
 
@@ -292,6 +294,49 @@ IntfAddrMap getInterfaceAddrs()
     }
     intfMap.emplace(intfName, addrList);
     return intfMap;
+}
+
+void deleteInterface(const std::string& intf)
+{
+    pid_t pid = fork();
+    int status {};
+
+    if (pid == 0)
+    {
+
+        execl("/sbin/ip", "ip", "link", "delete", "dev", intf.c_str(), nullptr);
+        auto error = errno;
+        log<level::ERR>("Couldn't delete the device",
+                        entry("ERRNO=%d", error),
+                        entry("INTF=%s", intf.c_str()));
+        elog<InternalFailure>();
+    }
+    else if (pid < 0)
+    {
+        auto error = errno;
+        log<level::ERR>("Error occurred during fork",
+                        entry("ERRNO=%d", error));
+        elog<InternalFailure>();
+    }
+    else if (pid > 0)
+    {
+        while (waitpid(pid, &status, 0) == -1)
+        {
+            if (errno != EINTR)
+            {   /* Error other than EINTR */
+                status = -1;
+                break;
+            }
+        }
+
+        if(status < 0)
+        {
+            log<level::ERR>("Unable to delete the interface",
+                             entry("INTF=%s", intf.c_str(),
+                             entry("STATUS=%d", status)));
+            elog<InternalFailure>();
+        }
+    }
 }
 
 }//namespace network

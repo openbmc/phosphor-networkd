@@ -271,6 +271,53 @@ void EthernetInterface::deleteObject(const std::string& ipaddress)
     writeConfigurationFile();
 }
 
+void EthernetInterface::deleteVLANObject(const std::string& interface)
+{
+    using namespace std::string_literals;
+
+    auto it = vlanInterfaces.find(interface);
+    if (it == vlanInterfaces.end())
+    {
+        log<level::ERR>("DeleteVLANObject:Unable to find the object",
+                         entry("INTERFACE=%s",interface.c_str()));
+        return;
+    }
+
+    fs::path networkFile = confDir;
+    networkFile /= filePrefix + interface + networkFileSuffix;
+
+    fs::path deviceFile = confDir;
+    deviceFile /= interface + deviceFileSuffix;
+
+    // delete the vlan network file
+    if (fs::is_regular_file(networkFile))
+    {
+        fs::remove(networkFile);
+    }
+
+    // delete the vlan device file
+    if (fs::is_regular_file(deviceFile))
+    {
+        fs::remove(deviceFile);
+    }
+    // delete the interface
+    vlanInterfaces.erase(it);
+    // restart the systemd-networkd
+
+    restartSystemdUnit("systemd-networkd.service");
+
+    // TODO  systemd doesn't delete the virtual network interface
+    // even after deleting all the related configuartion.
+    try
+    {
+        deleteInterface(interface);
+    }
+    catch (InternalFailure& e)
+    {
+        commit<InternalFailure>();
+    }
+}
+
 std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
                                                   const std::string& ipaddress,
                                                   uint8_t prefixLength,
@@ -381,7 +428,7 @@ void EthernetInterface::writeConfigurationFile()
         elog<InternalFailure>();
     }
 
-    std::string fileName = "00-bmc-"s + interfaceName() + ".network"s;
+    std::string fileName = filePrefix + interfaceName() + networkFileSuffix;
     confPath /= fileName;
     std::fstream stream;
 
