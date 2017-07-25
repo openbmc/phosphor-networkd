@@ -107,11 +107,17 @@ class EthernetInterface : public Ifaces
          */
         void createVLAN(uint16_t vlanID);
 
+        /** @brief write the network conf file with the in-memory objects.
+         */
+        void writeConfigurationFile();
+
+
         using EthernetInterfaceIntf::dHCPEnabled;
         using EthernetInterfaceIntf::interfaceName;
 
         /** @brief Network Configuration directory. */
         fs::path confDir;
+
     protected:
 
         /** @brief get the info of the ethernet interface.
@@ -152,6 +158,9 @@ class EthernetInterface : public Ifaces
                                       uint8_t prefixLength,
                                       const std::string& gateway);
 
+        /** @brief write the dhcp section **/
+        void writeDHCPSection(std::fstream& stream);;
+
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;
 
@@ -166,6 +175,8 @@ class EthernetInterface : public Ifaces
 
         /** @brief Dbus object path */
         std::string objPath;
+
+ 
 
         friend class TestEthernetInterface;
 };
