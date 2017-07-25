@@ -265,6 +265,30 @@ void EthernetInterface::deleteObject(const std::string& ipaddress)
     writeConfigurationFile();
 }
 
+void EthernetInterface::deleteVLANObject(const std::string& interface)
+{
+    using namespace std::string_literals;
+
+    auto it = vlanInterfaces.find(interface);
+    if (it == vlanInterfaces.end())
+    {
+        log<level::ERR>("DeleteVLANObject:Unable to find the object",
+                         entry("INTERFACE=%s",interface.c_str()));
+        return;
+    }
+
+    std::string networkFile = "00-bmc-"s + interfaceName() + ".network"s;
+    std::string deviceFile = interfaceName() + ".netdev"s;
+    // delete the vlan network file
+    fs::remove(networkFile);
+    // delete the vlan device file
+    fs::remove(deviceFile);
+    // delete the interface
+    vlanInterfaces.erase(it);
+    // restart the systemd-networkd
+    restartSystemdUnit("systemd-networkd.service");
+}
+
 std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
                                                   const std::string& ipaddress,
                                                   uint8_t prefixLength,
@@ -294,6 +318,7 @@ bool EthernetInterface::dHCPEnabled(bool value)
 
 void EthernetInterface::createVLAN(uint8_t vlanID)
 {
+    std::string vlanInterfaceName = interfaceName() + std::to_string(vlanID);
     std::string path = objPath;
     path += "." + std::to_string(vlanID);
 
