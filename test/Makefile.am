@@ -13,6 +13,8 @@ test_SOURCES = \
 #    #TODO openbmc/openbmc#2084
 #    Disable due to test case failure
 #	test_ethernet_interface.cpp
+	test_config_parser.cpp \
+	test_vlan_interface.cpp
 
 test_CPPFLAGS = -Igtest $(GTEST_CPPFLAGS) $(AM_CPPFLAGS)
 
