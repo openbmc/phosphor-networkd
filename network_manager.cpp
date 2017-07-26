@@ -51,18 +51,42 @@ void Manager::createInterfaces()
     for (const auto& intfInfo : interfaceInfoList)
     {
         fs::path objPath = objectPath;
+        auto index = intfInfo.first.find(".");
+        std::string interface;
+        std::string vlanid;
+
+        uint32_t vlanInt;
+        // interface can be of vlan type or normal ethernet interface.
+        // vlan interface looks like "interface.vlanid",so here by looking
+        // at the interface name we decide that we need
+        // to create the vlaninterface or normal physical interface.
+        if (index != std::string::npos)
+        {
+            //it is vlan interface
+            interface = intfInfo.first.substr(0, index);
+            vlanid = intfInfo.first.substr(index + 1);
+            vlanInt = std::stoul(vlanid.c_str(), nullptr ,10);
+
+            auto& intf = interfaces[interface];
+            intf->loadVLAN(vlanInt);
+            return;
+        }
+        // normal ethernet inetrface
         objPath /= intfInfo.first;
 
         auto dhcp = getDHCPValue(intfInfo.first);
 
+        auto intf =  std::make_shared<phosphor::network::EthernetInterface>(
+                         bus,
+                         objPath.string(),
+                         dhcp,
+                         *this);
+
+
+        intf->createIPAddressObjects();
+
         this->interfaces.emplace(std::make_pair(
-                                     intfInfo.first,
-                                     std::make_unique<
-                                     phosphor::network::EthernetInterface>
-                                     (bus,
-                                      objPath.string(),
-                                      dhcp,
-                                      *this)));
+                                     intfInfo.first, intf));
 
     }
 
