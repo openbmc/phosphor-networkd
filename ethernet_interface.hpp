@@ -107,16 +107,22 @@ class EthernetInterface : public Ifaces
          */
         void createVLAN(uint16_t vlanID);
 
+        /** @brief load the vlan info from the system
+         *         and creates the ip address dbus objects.
+         *  @param[in] vlanID- VLAN identifier.
+         */
+        void loadVLAN(uint16_t vlanID);
+
         /** @brief write the network conf file with the in-memory objects.
          */
         void writeConfigurationFile();
 
 
-        using EthernetInterfaceIntf::dHCPEnabled;
-        using EthernetInterfaceIntf::interfaceName;
-
         /** @brief Network Configuration directory. */
         fs::path confDir;
+
+        using EthernetInterfaceIntf::dHCPEnabled;
+        using EthernetInterfaceIntf::interfaceName;
 
     protected:
 

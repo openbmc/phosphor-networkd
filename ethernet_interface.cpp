@@ -47,7 +47,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
     mACAddress(getMACAddress());
     confDir = NETWORK_CONF_DIR;
-   
+
     // Emit deferred signal.
     this->emit_object_added();
 }
@@ -296,8 +296,40 @@ bool EthernetInterface::dHCPEnabled(bool value)
     {
         writeConfigurationFile();
         createIPAddressObjects();
+
+        // Enable DHCP on all the VLAN interfaces
+        for (const auto& intf : vlanInterfaces)
+        {
+            intf.second->dHCPEnabled(value);
+            intf.second->writeConfigurationFile();
+            intf.second->createIPAddressObjects();
+        }
     }
+
     return value;
+}
+
+void EthernetInterface::loadVLAN(uint16_t vlanID)
+{
+    std::string vlanInterfaceName = interfaceName() + "." +
+                                    std::to_string(vlanID);
+    std::string path = objPath;
+    path += "_" + std::to_string(vlanID);
+
+    auto vlanIntf = std::make_shared<phosphor::network::VlanInterface>(
+                        bus,
+                        path.c_str(),
+                        EthernetInterfaceIntf::dHCPEnabled(),
+                        vlanID,
+                        *this,
+                        manager);
+
+   // Fetch the ip address from the system
+   // and create the dbus object.
+    vlanIntf->createIPAddressObjects();
+
+    this->vlanInterfaces.emplace(
+        std::make_pair(vlanInterfaceName, vlanIntf));
 }
 
 void EthernetInterface::createVLAN(uint16_t vlanID)
