@@ -9,6 +9,6 @@ methods:
           description: >
               Name of the interface.
         - name: Id
-          type: uint16
+          type: uint32
           description: >
               VLAN Identifier.

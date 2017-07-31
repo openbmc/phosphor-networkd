@@ -52,7 +52,7 @@ class Manager : public details::VLANCreateIface
          */
         Manager(sdbusplus::bus::bus& bus, const char* objPath);
 
-        void vLAN(IntfName interfaceName, uint16_t id) override;
+        void vLAN(IntfName interfaceName, uint32_t id) override;
 
         /** @brief write the network conf file with the in-memory objects.
          */
