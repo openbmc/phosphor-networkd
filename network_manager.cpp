@@ -83,7 +83,7 @@ void Manager::createChildObjects()
 
 }
 
-void Manager::vLAN(IntfName interfaceName, uint16_t id)
+void Manager::vLAN(IntfName interfaceName, uint32_t id)
 {
 }
 
