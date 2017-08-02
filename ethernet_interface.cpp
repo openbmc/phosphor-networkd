@@ -79,9 +79,8 @@ void EthernetInterface::createIPAddressObjects()
                                                              gateway);
 
         this->addrs.emplace(
-                std::make_pair(
-                    addr.ipaddress,
-                    std::make_unique<phosphor::network::IPAddress>(
+                    std::move(addr.ipaddress),
+                    std::make_shared<phosphor::network::IPAddress>(
                         bus,
                         ipAddressObjectPath.c_str(),
                         *this,
@@ -89,7 +88,7 @@ void EthernetInterface::createIPAddressObjects()
                         addr.ipaddress,
                         origin,
                         addr.prefix,
-                        gateway)));
+                        gateway));
     }
 
 }
@@ -115,16 +114,16 @@ void EthernetInterface::iP(IP::Protocol protType,
                                                 gateway);
 
     this->addrs.emplace(
-            std::make_pair(ipaddress,
-                           std::make_unique<phosphor::network::IPAddress>(
-                                bus,
-                                objectPath.c_str(),
-                                *this,
-                                protType,
-                                ipaddress,
-                                origin,
-                                prefixLength,
-                                gateway)));
+                std::move(ipaddress),
+                std::make_shared<phosphor::network::IPAddress>(
+                        bus,
+                        objectPath.c_str(),
+                        *this,
+                        protType,
+                        ipaddress,
+                        origin,
+                        prefixLength,
+                        gateway));
 
     manager.writeToConfigurationFile();
 }
