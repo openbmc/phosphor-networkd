@@ -78,17 +78,21 @@ void Parser::setValue(const std::string& section, const std::string& key,
                       const std::string& value)
 {
     KeyValues values;
-    try
+    auto it = sections.find(section);
+    if (it != sections.end())
     {
-        values = getSection(section);
+        values = std::move(it->second);
     }
-    catch (InternalFailure& e)
-    {
-        // don't commit the error.
+    values.insert(std::make_pair(key, value));
 
+    if (it != sections.end())
+    {
+        it->second = std::move(values);
     }
-    values.emplace(key, value);
-    sections.emplace(section, values);
+    else
+    {
+        sections.insert(std::make_pair(section, std::move(values)));
+    }
 }
 
 #if 0
