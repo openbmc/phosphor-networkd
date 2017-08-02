@@ -267,7 +267,7 @@ bool Manager::getDHCPValue(const std::string& intf)
     }
     catch (InternalFailure& e)
     {
-        commit<InternalFailure>();
+       log<level::INFO>("Exception occured during getting of DHCP value");
     }
     return dhcp;
 }
