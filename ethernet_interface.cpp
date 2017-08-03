@@ -57,7 +57,7 @@ void EthernetInterface::createIPAddressObjects()
     IP::Protocol addressType = IP::Protocol::IPv4;
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
     route::Table routingTable;
-    for (auto addr : addrs)
+    for (auto& addr : addrs)
     {
         if (addr.addrType == AF_INET6)
         {
