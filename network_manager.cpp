@@ -27,17 +27,30 @@ namespace network
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath):
+Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath,
+                 const std::string& path):
     details::VLANCreateIface(bus, objPath, true),
     bus(bus),
     objectPath(objPath)
 {
-    confDir = NETWORK_CONF_DIR;
+    fs::path confDir(path);
+    setConfDir(confDir);
 }
 
 void Manager::setConfDir(const fs::path& dir)
 {
     confDir = dir;
+
+    if (!fs::exists(confDir))
+    {
+        if (!fs::create_directories(confDir))
+        {
+            log<level::ERR>("Unable to create the network conf dir",
+                            entry("DIR=%s", confDir.c_str()));
+            elog<InternalFailure>();
+        }
+    }
+
 }
 
 void Manager::createInterfaces()

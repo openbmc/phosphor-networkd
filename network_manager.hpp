@@ -49,8 +49,10 @@ class Manager : public details::VLANCreateIface
         /** @brief Constructor to put object onto bus at a dbus path.
          *  @param[in] bus - Bus to attach to.
          *  @param[in] objPath - Path to attach at.
+         *  @param[in] dir - Network Configuration directory path.
          */
-        Manager(sdbusplus::bus::bus& bus, const char* objPath);
+        Manager(sdbusplus::bus::bus& bus, const char* objPath,
+                const std::string& dir);
 
         void vLAN(IntfName interfaceName, uint32_t id) override;
 
@@ -72,6 +74,10 @@ class Manager : public details::VLANCreateIface
          *  @param[in] dirName - Absolute path of the directory.
          */
         void setConfDir(const fs::path& dir);
+
+        /** @brief gets the network conf directory.
+         */
+        fs::path getConfDir() { return confDir; }
 
     private:
 
