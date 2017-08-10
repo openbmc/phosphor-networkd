@@ -23,7 +23,7 @@ class TestEthernetInterface : public testing::Test
         EthernetInterface interface;
         TestEthernetInterface()
             : bus(sdbusplus::bus::new_default()),
-              manager(bus, "/xyz/openbmc_test/network"),
+              manager(bus, "/xyz/openbmc_test/network", "/tmp/"),
               interface(bus, "/xyz/openbmc_test/network/test0", false, manager)
 
         {
