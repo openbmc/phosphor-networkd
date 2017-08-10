@@ -30,6 +30,9 @@ constexpr auto MAC_ADDRESS_FORMAT = "%02X:%02X:%02X:%02X:%02X:%02X";
 constexpr size_t SIZE_MAC = 18;
 constexpr size_t SIZE_BUFF = 512;
 
+constexpr auto localAdminMask = 0x200000000000;
+constexpr auto broadcastMac = 0xFFFFFFFFFFFF;
+
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
                                      bool dhcpEnabled,
@@ -42,7 +45,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     auto intfName = objPath.substr(objPath.rfind("/") + 1);
     interfaceName(intfName);
     dHCPEnabled(dhcpEnabled);
-    mACAddress(getMACAddress());
+    MacInterfaceIntf::mACAddress(getMACAddress());
     createIPAddressObjects();
     // Emit deferred signal.
     this->emit_object_added();
@@ -287,6 +290,32 @@ bool EthernetInterface::dHCPEnabled(bool value)
         manager.writeToConfigurationFile();
         createIPAddressObjects();
     }
+    return value;
+}
+
+std::string EthernetInterface::mACAddress(std::string value)
+{
+    // check for local Admin  MAC
+    auto intMac = getIntMacAddress(value);
+
+    if(!(intMac & localAdminMask))
+        return MacInterfaceIntf::mACAddress();
+
+    if(intMac & broadcastMac)
+        return MacInterfaceIntf::mACAddress();
+
+    auto eepRomMac = "";//getMacfromEEPROM();
+
+    auto invMac = getIntMacAddress(eepRomMac);
+    if(invMac == intMac)
+        return MacInterfaceIntf::mACAddress();
+
+    // set it ot the env variable
+    // fw_setenv
+    // need to verify that after setting it to
+    // systemdconf do we need to call fw_setenv
+
+    MacInterfaceIntf::mACAddress(value);
     return value;
 }
 
