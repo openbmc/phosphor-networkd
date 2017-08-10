@@ -28,6 +28,8 @@ using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 
 using EthernetInterfaceIntf =
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface;
+using MacInterfaceIntf =
+    sdbusplus::xyz::openbmc_project::Network::server::MACAddress;
 
 class Manager; // forward declaration of network manager.
 
@@ -96,7 +98,10 @@ class EthernetInterface : public Ifaces
         /** Set value of DHCPEnabled */
         bool dHCPEnabled(bool value) override;
 
+        std::string mACAddress(std::string value) override;
+
         using EthernetInterfaceIntf::dHCPEnabled;
+        using MacInterfaceIntf::mACAddress;
 
     private:
 

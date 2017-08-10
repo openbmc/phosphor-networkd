@@ -5,11 +5,15 @@
 #include "config.h"
 #include "types.hpp"
 #include <sdbusplus/bus.hpp>
+#include <regex>
 
 namespace phosphor
 {
 namespace network
 {
+
+constexpr auto macRegex = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
+constexpr auto macLocalAdminMask = 0x20;
 
 /* @brief converts the given subnet into prefix notation.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
@@ -61,6 +65,29 @@ inline void restartSystemdUnit(const std::string& unit)
     method.append(unit, "replace");
     bus.call_noreply(method);
 
+}
+
+inline bool validateMac(const std::string value)
+{
+    bool matched = false;
+    std::regex regexToCheck(macRegex);
+    matched = std::regex_search(value, regexToCheck);
+    return matched;
+}
+
+inline uint64_t getIntMacAddress(const std::string& value)
+{
+    unsigned char mac[6];
+
+    sscanf(value.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
+           mac + 0, mac + 1, mac + 2, mac + 3, mac + 4, mac + 5);
+    return
+        uint64_t(mac[0]) << 40 |
+        uint64_t(mac[1]) << 32 |
+        uint64_t(mac[2]) << 24 |
+        uint64_t(mac[3]) << 16 |
+        uint64_t(mac[4]) << 8 |
+        uint64_t(mac[5]);
 }
 
 } //namespace network
