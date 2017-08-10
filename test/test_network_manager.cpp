@@ -10,12 +10,17 @@
 #include <net/if.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <stdlib.h>
+
 #include <exception>
+#include <experimental/filesystem>
 
 namespace phosphor
 {
 namespace network
 {
+
+namespace fs = std::experimental::filesystem;
 
 class TestNetworkManager : public testing::Test
 {
@@ -23,12 +28,27 @@ class TestNetworkManager : public testing::Test
 
         sdbusplus::bus::bus bus;
         Manager manager;
-
+        std::string confDir;
         TestNetworkManager()
             : bus(sdbusplus::bus::new_default()),
-              manager(bus, "xyz/openbmc_test/abc")
+              manager(bus, "/xyz/openbmc_test/abc", "/tmp")
         {
+            setConfDir();
+        }
 
+        ~TestNetworkManager()
+        {
+            if(confDir != "")
+            {
+                fs::remove_all(confDir);
+            }
+        }
+
+        void setConfDir()
+        {
+            char tmp[] = "/tmp/NetworkManager.XXXXXX";
+            confDir = mkdtemp(tmp);
+            manager.setConfDir(confDir);
         }
 
         void createInterfaces()

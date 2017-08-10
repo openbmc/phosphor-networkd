@@ -4,9 +4,11 @@
 #include <gtest/gtest.h>
 #include <sdbusplus/bus.hpp>
 
+#include <arpa/inet.h>
 #include <net/if.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
+#include <stdlib.h>
+
 #include <exception>
 
 namespace phosphor
@@ -21,14 +23,32 @@ class TestEthernetInterface : public testing::Test
         sdbusplus::bus::bus bus;
         Manager manager;
         EthernetInterface interface;
+        std::string confDir;
         TestEthernetInterface()
             : bus(sdbusplus::bus::new_default()),
-              manager(bus, "/xyz/openbmc_test/network"),
+              manager(bus, "/xyz/openbmc_test/network", "/tmp/"),
               interface(bus, "/xyz/openbmc_test/network/test0", false, manager)
 
         {
+            setConfDir();
 
         }
+
+        void setConfDir()
+        {
+            char tmp[] = "/tmp/EthernetInterface.XXXXXX";
+            confDir = mkdtemp(tmp);
+            manager.setConfDir(confDir);
+        }
+
+        ~TestEthernetInterface()
+        {
+            if(confDir != "")
+            {
+                fs::remove_all(confDir);
+            }
+        }
+
 
         int countIPObjects()
         {
