@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     // Add sdbusplus Object Manager for the 'root' path of the network manager.
     sdbusplus::server::manager::manager objManager(bus, OBJ_NETWORK);
 
-    phosphor::network::Manager manager(bus, OBJ_NETWORK);
+    phosphor::network::Manager manager(bus, OBJ_NETWORK, NETWORK_CONF_DIR);
 
     manager.createChildObjects();
 
