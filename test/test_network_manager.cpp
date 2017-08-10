@@ -26,7 +26,7 @@ class TestNetworkManager : public testing::Test
 
         TestNetworkManager()
             : bus(sdbusplus::bus::new_default()),
-              manager(bus, "xyz/openbmc_test/abc")
+              manager(bus, "xyz/openbmc_test/abc", "/tmp/")
         {
 
         }
