@@ -68,6 +68,11 @@ inline void restartSystemdUnit(const std::string& unit)
  */
 void deleteInterface(const std::string& intf);
 
+/** @brief read the DHCP value from the configuration file
+ *  @param[in] confDir - Network configuration directory.
+ *  @param[in] intf - Interface name.
+ */
+bool getDHCPValue(const std::string& confDir, const std::string& intf);
 
 } //namespace network
 
