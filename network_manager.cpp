@@ -77,7 +77,7 @@ void Manager::createInterfaces()
             uint32_t vlanInt = std::stoul(vlanid);
 
             interfaces[interface]->loadVLAN(vlanInt);
-            return;
+            continue;
         }
         // normal ethernet inetrface
         objPath /= intfInfo.first;

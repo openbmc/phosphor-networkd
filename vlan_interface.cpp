@@ -32,6 +32,7 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
 {
     id(vlanID);
     VlanIface::interfaceName(EthernetInterface::interfaceName());
+    mACAddress(parentInterface.mACAddress());
 
     Interfaces::emit_object_added();
 }
