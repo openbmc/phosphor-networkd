@@ -1,5 +1,4 @@
 #include "config.h"
-#include "config_parser.hpp"
 #include "util.hpp"
 #include "network_manager.hpp"
 #include "network_config.hpp"
@@ -83,7 +82,7 @@ void Manager::createInterfaces()
         // normal ethernet inetrface
         objPath /= intfInfo.first;
 
-        auto dhcp = getDHCPValue(intfInfo.first);
+        auto dhcp = getDHCPValue(confDir, intfInfo.first);
 
         auto intf =  std::make_shared<phosphor::network::EthernetInterface>(
                          bus,
@@ -176,32 +175,6 @@ void Manager::writeToConfigurationFile()
         intf.second->writeConfigurationFile();
 
     }
-}
-
-bool Manager::getDHCPValue(const std::string& intf)
-{
-    bool dhcp = false;
-    // Get the interface mode value from systemd conf
-    using namespace std::string_literals;
-    fs::path confPath = confDir;
-    std::string fileName = "00-bmc-"s + intf + ".network"s;
-    confPath /= fileName;
-
-    try
-    {
-        config::Parser parser(confPath.string());
-        auto values = parser.getValues("Network","DHCP");
-        // There will be only single value for DHCP key.
-        if (values[0] == "true")
-        {
-            dhcp = true;
-        }
-    }
-    catch (InternalFailure& e)
-    {
-       log<level::INFO>("Exception occured during getting of DHCP value");
-    }
-    return dhcp;
 }
 
 }//namespace network
