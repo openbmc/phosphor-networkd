@@ -140,10 +140,11 @@ class EthernetInterface : public Ifaces
         InterfaceInfo getInterfaceInfo() const;
 
         /** @brief get the mac address of the interface.
+         *  @param[in] interfaceName - Network interface name.
          *  @return macaddress on success
          */
 
-        std::string getMACAddress() const;
+        std::string getMACAddress(const std::string& interfaceName) const;
 
         /** @brief construct the ip address dbus object path.
          *  @param[in] addressType - Type of ip address.

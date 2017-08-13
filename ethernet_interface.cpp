@@ -33,7 +33,7 @@ namespace network
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-constexpr auto MAC_ADDRESS_FORMAT = "%02X:%02X:%02X:%02X:%02X:%02X";
+constexpr auto MAC_ADDRESS_FORMAT = "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx";
 constexpr size_t SIZE_MAC = 18;
 constexpr size_t SIZE_BUFF = 512;
 
@@ -51,7 +51,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
     dHCPEnabled(dhcpEnabled);
-    mACAddress(getMACAddress());
+    mACAddress(getMACAddress(intfName));
 
     // Emit deferred signal.
     if (emitSignal)
@@ -196,12 +196,11 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
  *  @return macaddress on success
  */
 
-std::string EthernetInterface::getMACAddress() const
+std::string EthernetInterface::getMACAddress(
+        const std::string& interfaceName) const
 {
-    struct ifreq ifr;
-    struct ifconf ifc;
-    char buf[SIZE_BUFF];
-    char macAddress[SIZE_MAC] = "";
+    struct ifreq ifr{};
+    char macAddress[SIZE_MAC] {};
 
     int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
     if (sock < 0)
@@ -211,40 +210,19 @@ std::string EthernetInterface::getMACAddress() const
         return macAddress;
     }
 
-    ifc.ifc_len = sizeof(buf);
-    ifc.ifc_buf = buf;
-    if (ioctl(sock, SIOCGIFCONF, &ifc) < 0)
+    strcpy(ifr.ifr_name, interfaceName.c_str());
+    if (ioctl(sock, SIOCGIFHWADDR, &ifr) != 0)
     {
-        log<level::ERR>("ioctl failed for SIOCGIFCONF:",
-                        entry("ERROR=%s", strerror(errno)));
+        log<level::ERR>("ioctl failed for SIOCGIFHWADDR:",
+                entry("ERROR=%s", strerror(errno)));
         return macAddress;
     }
 
-    struct ifreq* it = ifc.ifc_req;
-    const struct ifreq* const end = it + (ifc.ifc_len / sizeof(struct ifreq));
+    snprintf(macAddress, SIZE_MAC, MAC_ADDRESS_FORMAT,
+            ifr.ifr_hwaddr.sa_data[0], ifr.ifr_hwaddr.sa_data[1],
+            ifr.ifr_hwaddr.sa_data[2], ifr.ifr_hwaddr.sa_data[3],
+            ifr.ifr_hwaddr.sa_data[4], ifr.ifr_hwaddr.sa_data[5]);
 
-    for (; it != end; ++it)
-    {
-        if (interfaceName() == it->ifr_name)
-        {
-            break;
-        }
-    }
-    if (interfaceName() == it->ifr_name)
-    {
-        strcpy(ifr.ifr_name, it->ifr_name);
-        if (ioctl(sock, SIOCGIFHWADDR, &ifr) != 0)
-        {
-            log<level::ERR>("ioctl failed for SIOCGIFHWADDR:",
-                            entry("ERROR=%s", strerror(errno)));
-            return macAddress;
-        }
-
-        snprintf(macAddress, SIZE_MAC, MAC_ADDRESS_FORMAT,
-                 ifr.ifr_hwaddr.sa_data[0], ifr.ifr_hwaddr.sa_data[1],
-                 ifr.ifr_hwaddr.sa_data[2], ifr.ifr_hwaddr.sa_data[3],
-                 ifr.ifr_hwaddr.sa_data[4], ifr.ifr_hwaddr.sa_data[5]);
-    }
     return macAddress;
 }
 
