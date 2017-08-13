@@ -353,7 +353,6 @@ bool EthernetInterface::dHCPEnabled(bool value)
     {
         writeConfigurationFile();
         createIPAddressObjects();
-
     }
 
     return value;
@@ -366,10 +365,13 @@ void EthernetInterface::loadVLAN(VlanId id)
     std::string path = objPath;
     path += "_" + std::to_string(id);
 
+    auto dhcpEnabled = getDHCPValue(manager.getConfDir().string(),
+                                    vlanInterfaceName);
+
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
                         bus,
                         path.c_str(),
-                        EthernetInterfaceIntf::dHCPEnabled(),
+                        dhcpEnabled,
                         id,
                         *this,
                         manager);
@@ -405,6 +407,9 @@ void EthernetInterface::createVLAN(VlanId id)
                                  std::move(vlanIntf));
     // write the new vlan device entry to the configuration(network) file.
     writeConfigurationFile();
+    // After creation of vlan interface,it gets the ipv6 address automatically
+    // so create the ip address object for that.
+    createIPAddressObjects();
 }
 
 // Need to merge the below function with the code which writes the
