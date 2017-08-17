@@ -22,14 +22,14 @@ class Manager;
 
 using DeleteIface = sdbusplus::xyz::openbmc_project::Object::server::Delete;
 using VlanIface = sdbusplus::xyz::openbmc_project::Network::server::VLAN;
-using Interfaces =
-        sdbusplus::server::object::object<DeleteIface, VlanIface>;
 
 /** @class VlanInterface
  *  @brief OpenBMC vlan Interface implementation.
  *  @details A concrete implementation for the vlan interface
  */
-class VlanInterface : public Interfaces, public EthernetInterface
+class VlanInterface : public VlanIface,
+                      public DeleteIface,
+                      public EthernetInterface
 {
     public:
         VlanInterface() = delete;
