@@ -51,7 +51,15 @@ class Configuration : public Iface
                       Manager& parent) :
             Iface(bus, objPath.c_str()),
             bus(bus),
-            manager(parent){}
+            manager(parent)
+        {
+            // systemd default behaviour is following fields should be
+            // enabled by default.
+
+            ConfigIntf::dNSEnabled(true);
+            ConfigIntf::nTPEnabled(true);
+            ConfigIntf::hostNameEnabled(true);
+        }
 
         /** @brief If true then DNS servers received from the DHCP server
          *         will be used and take precedence over any statically
