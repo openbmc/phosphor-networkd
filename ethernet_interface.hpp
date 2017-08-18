@@ -27,6 +27,8 @@ using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 
 using EthernetInterfaceIntf =
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface;
+using MacAddressIntf =
+    sdbusplus::xyz::openbmc_project::Network::server::MACAddress;
 
 namespace fs = std::experimental::filesystem;
 
@@ -113,6 +115,11 @@ class EthernetInterface : public Ifaces
         /** Set value of DHCPEnabled */
         bool dHCPEnabled(bool value) override;
 
+        /** @brief sets the MAC address.
+         *  @param[in] value - MAC address which needs to be set on the system.
+         */
+        std::string mACAddress(std::string value) override;
+
         /** @brief create Vlan interface.
          *  @param[in] id- VLAN identifier.
          */
@@ -130,6 +137,7 @@ class EthernetInterface : public Ifaces
 
         using EthernetInterfaceIntf::dHCPEnabled;
         using EthernetInterfaceIntf::interfaceName;
+        using MacAddressIntf::mACAddress;
 
     protected:
 
@@ -174,6 +182,9 @@ class EthernetInterface : public Ifaces
 
         /** @brief write the dhcp section **/
         void writeDHCPSection(std::fstream& stream);;
+
+        /** @brief gets the MAC address from the VPD.**/
+        std::string getMACAddressfromVPD();
 
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;
