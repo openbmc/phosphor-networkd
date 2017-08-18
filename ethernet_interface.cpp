@@ -33,10 +33,6 @@ namespace network
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-constexpr auto MAC_ADDRESS_FORMAT = "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx";
-constexpr size_t SIZE_MAC = 18;
-constexpr size_t SIZE_BUFF = 512;
-
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
                                      bool dhcpEnabled,
@@ -51,7 +47,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
     EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
-    mACAddress(getMACAddress(intfName));
+    MacAddressIntf::mACAddress(getMACAddress(intfName));
 
     // Emit deferred signal.
     if (emitSignal)
@@ -200,7 +196,7 @@ std::string EthernetInterface::getMACAddress(
         const std::string& interfaceName) const
 {
     struct ifreq ifr{};
-    char macAddress[SIZE_MAC] {};
+    char macAddress[mac_address::size] {};
 
     int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
     if (sock < 0)
@@ -218,7 +214,7 @@ std::string EthernetInterface::getMACAddress(
         return macAddress;
     }
 
-    snprintf(macAddress, SIZE_MAC, MAC_ADDRESS_FORMAT,
+    snprintf(macAddress, mac_address::size, mac_address::format,
             ifr.ifr_hwaddr.sa_data[0], ifr.ifr_hwaddr.sa_data[1],
             ifr.ifr_hwaddr.sa_data[2], ifr.ifr_hwaddr.sa_data[3],
             ifr.ifr_hwaddr.sa_data[4], ifr.ifr_hwaddr.sa_data[5]);
@@ -508,6 +504,69 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
         value = manager.getDHCPConf()->hostNameEnabled() ? "true"s : "false"s;
         stream << "UseHostname="s + value + "\n";
     }
+}
+
+std::string EthernetInterface::mACAddress(std::string value)
+{
+    if (!mac_address::validate(value))
+    {
+        log<level::DEBUG>("MACAddress is not valid.",
+                          entry("MAC=%s", value.c_str()));
+        return MacAddressIntf::mACAddress();
+    }
+
+    // check whether MAC is broadcast mac.
+    auto intMac = mac_address::internal::convertToInt(value);
+
+    if (!(intMac ^ mac_address::broadcastMac))
+    {
+        log<level::DEBUG>("MACAddress is a broadcast mac.",
+                          entry("MAC=%s", value.c_str()));
+        return MacAddressIntf::mACAddress();
+    }
+
+    // Allow the mac to be set if one of the condition is true.
+    //   1) Incoming Mac is of local admin type.
+    //      or
+    //   2) Incoming mac is same as eeprom Mac.
+
+    if (!(intMac & mac_address::localAdminMask))
+    {
+        try
+        {
+            auto inventoryMac = mac_address::getfromInventory(bus);
+            auto intInventoryMac = mac_address::internal::convertToInt(inventoryMac);
+
+            if (intInventoryMac != intMac)
+            {
+                log<level::DEBUG>("Given MAC address is neither a local Admin \
+                                   type nor is same as in inventory");
+                return MacAddressIntf::mACAddress();
+            }
+        }
+        catch(InternalFailure& e)
+        {
+            log<level::DEBUG>("Exception occured during getting of MAC \
+                               address from Inventory");
+            return  MacAddressIntf::mACAddress();
+        }
+    }
+
+    execute("/sbin/fw_setenv", "fw_setenv", "ethaddr", value.c_str());
+    execute("/sbin/ip", "ip", "link", "set", "dev", "eth0", "down");
+    execute("/sbin/ip", "ip", "link", "set", "dev", "eth0", "address",
+            value.c_str());
+
+    execute("/sbin/ip", "ip", "link", "set", "dev", "eth0", "up");
+
+    auto mac = MacAddressIntf::mACAddress(std::move(value));
+    //update all the vlan interfaces
+    for(const auto& intf: vlanInterfaces)
+    {
+        intf.second->updateMacAddress();
+    }
+    return mac;
+
 }
 
 }//namespace network
