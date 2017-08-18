@@ -50,7 +50,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     auto intfName = objPath.substr(objPath.rfind("/") + 1);
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
-    dHCPEnabled(dhcpEnabled);
+    EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
     mACAddress(getMACAddress(intfName));
 
     // Emit deferred signal.
