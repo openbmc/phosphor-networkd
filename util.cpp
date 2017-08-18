@@ -364,11 +364,152 @@ bool getDHCPValue(const std::string& confDir, const std::string& intf)
     }
     catch (InternalFailure& e)
     {
-       log<level::INFO>("Exception occured during getting of DHCP value");
+        log<level::INFO>("Exception occured during getting of DHCP value");
     }
     return dhcp;
 }
 
+namespace internal
+{
 
+void executeCommandinChildProcess(const char* path, char** args)
+{
+    using namespace std::string_literals;
+    pid_t pid = fork();
+    int status {};
+
+    if (pid == 0)
+    {
+        execv(path, args);
+        auto error = errno;
+        // create the command from var args.
+        std::string command = path + " "s;
+
+        for(int i = 0; args[i]; i++)
+        {
+             command += args[i] + " "s;
+        }
+
+        log<level::ERR>("Couldn't exceute the command",
+                        entry("ERRNO=%d", error),
+                        entry("CMD=%s", command.c_str()));
+        elog<InternalFailure>();
+    }
+    else if (pid < 0)
+    {
+        auto error = errno;
+        log<level::ERR>("Error occurred during fork",
+                        entry("ERRNO=%d", error));
+        elog<InternalFailure>();
+    }
+    else if (pid > 0)
+    {
+        while (waitpid(pid, &status, 0) == -1)
+        {
+            if (errno != EINTR)
+            {   //Error other than EINTR
+                status = -1;
+                break;
+            }
+        }
+
+        if(status < 0)
+        {
+            std::string command = path + " "s;
+            for(int i = 0; args[i]; i++)
+            {
+                command += args[i] + " "s;
+            }
+
+            log<level::ERR>("Unable to execute the command",
+                            entry("CMD=%s", command.c_str(),
+                            entry("STATUS=%d", status)));
+            elog<InternalFailure>();
+        }
+    }
+
+}
+} //namespace internal
+
+namespace mac_address
+{
+
+constexpr auto mapperBus = "xyz.openbmc_project.ObjectMapper";
+constexpr auto mapperObj = "/xyz/openbmc_project/object_mapper";
+constexpr auto mapperIntf = "xyz.openbmc_project.ObjectMapper";
+constexpr auto propIntf = "org.freedesktop.DBus.Properties";
+constexpr auto methodGet = "Get";
+
+using DbusObjectPath = std::string;
+using DbusService = std::string;
+using DbusInterface = std::string;
+using ObjectTree = std::map<DbusObjectPath,
+                            std::map<DbusService, std::vector<DbusInterface>>>;
+
+constexpr auto invBus = "xyz.openbmc_project.Inventory.Manager";
+constexpr auto invNetworkIntf =
+        "xyz.openbmc_project.Inventory.Item.NetworkInterface";
+constexpr auto invRoot = "/xyz/openbmc_project/inventory";
+
+std::string getfromInventory(sdbusplus::bus::bus& bus)
+{
+    std::vector<DbusInterface> interfaces;
+    interfaces.emplace_back(invNetworkIntf);
+
+    auto depth = 0;
+
+    auto mapperCall = bus.new_method_call(mapperBus,
+                                          mapperObj,
+                                          mapperIntf,
+                                          "GetSubTree");
+
+    mapperCall.append(invRoot, depth, interfaces);
+
+    auto mapperReply = bus.call(mapperCall);
+    if (mapperReply.is_method_error())
+    {
+        log<level::ERR>("Error in mapper call");
+        elog<InternalFailure>();
+    }
+
+    ObjectTree objectTree;
+    mapperReply.read(objectTree);
+
+    if (objectTree.empty())
+    {
+        log<level::ERR>("No Object has implemented the interface",
+                        entry("INTERFACE=%s", invNetworkIntf));
+        elog<InternalFailure>();
+    }
+
+    // It is expected that only one object have impelmented this interface.
+
+    auto objPath = objectTree.begin()->first;
+    auto service = objectTree.begin()->second.begin()->first;
+
+    sdbusplus::message::variant<std::string> value;
+
+    auto method = bus.new_method_call(
+                      service.c_str(),
+                      objPath.c_str(),
+                      propIntf,
+                      methodGet);
+
+    method.append(invNetworkIntf, "MACAddress");
+
+    auto reply = bus.call(method);
+    if (reply.is_method_error())
+    {
+         log<level::ERR>("Failed to get MACAddress",
+                        entry("PATH=%s", objPath.c_str()),
+                        entry("INTERFACE=%s", invNetworkIntf));
+        elog<InternalFailure>();
+    }
+
+    reply.read(value);
+    return value.get<std::string>();
+}
+
+}//namespace mac_address
 }//namespace network
 }//namespace phosphor
