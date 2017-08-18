@@ -33,9 +33,24 @@ namespace network
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-constexpr auto MAC_ADDRESS_FORMAT = "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx";
-constexpr size_t SIZE_MAC = 18;
-constexpr size_t SIZE_BUFF = 512;
+constexpr auto mapperBus = "xyz.openbmc_project.ObjectMapper";
+constexpr auto mapperObj = "/xyz/openbmc_project/object_mapper";
+constexpr auto mapperIntf = "xyz.openbmc_project.ObjectMapper";
+constexpr auto propIntf = "org.freedesktop.DBus.Properties";
+constexpr auto methodGet = "Get";
+
+using DbusObjectPath = std::string;
+using DbusService = std::string;
+using DbusInterface = std::string;
+using ObjectTree = std::map<DbusObjectPath,
+                                  std::map<DbusService, std::vector<DbusInterface>>>;
+
+using Value = sdbusplus::message::variant<std::string>;
+
+constexpr auto invBus = "xyz.openbmc_project.Inventory.Manager";
+constexpr auto invNetworkIntf =
+        "xyz.openbmc_project.Inventory.Item.NetworkInterface";
+constexpr auto invRoot = "/xyz/openbmc_project/inventory";
 
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
@@ -51,7 +66,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
     EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
-    mACAddress(getMACAddress(intfName));
+    MacAddressIntf::mACAddress(getMACAddress(intfName));
 
     // Emit deferred signal.
     if (emitSignal)
@@ -200,7 +215,7 @@ std::string EthernetInterface::getMACAddress(
         const std::string& interfaceName) const
 {
     struct ifreq ifr{};
-    char macAddress[SIZE_MAC] {};
+    char macAddress[sizeMAC] {};
 
     int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
     if (sock < 0)
@@ -218,7 +233,7 @@ std::string EthernetInterface::getMACAddress(
         return macAddress;
     }
 
-    snprintf(macAddress, SIZE_MAC, MAC_ADDRESS_FORMAT,
+    snprintf(macAddress, sizeMAC, macAddressFormat,
             ifr.ifr_hwaddr.sa_data[0], ifr.ifr_hwaddr.sa_data[1],
             ifr.ifr_hwaddr.sa_data[2], ifr.ifr_hwaddr.sa_data[3],
             ifr.ifr_hwaddr.sa_data[4], ifr.ifr_hwaddr.sa_data[5]);
@@ -507,6 +522,111 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
         value = manager.getDHCPConf()->hostNameEnabled() ? "true"s : "false"s;
         stream << "UseHostname="s + value + "\n";
     }
+}
+
+std::string EthernetInterface::mACAddress(std::string value)
+{
+    if (!validateMAC(value))
+    {
+        log<level::DEBUG>("MACAddress is not valid.",
+                          entry("MAC=%s", value.c_str()));
+        return MacAddressIntf::mACAddress();
+    }
+    // check for local Admin  MAC
+    auto intMac = getIntMacAddress(value);
+
+    if (!(intMac & localAdminMask))
+    {
+        log<level::DEBUG>("MACAddress is not a local admin mac.",
+                          entry("MAC=%s", value.c_str()));
+
+        return MacAddressIntf::mACAddress();
+    }
+
+    if (!(intMac ^ broadcastMac))
+    {
+        log<level::DEBUG>("MACAddress is a broadcast mac.",
+                          entry("MAC=%s", value.c_str()));
+        return MacAddressIntf::mACAddress();
+    }
+
+    auto eepRomMac = getMACAddressfromVPD();
+    auto invMac = getIntMacAddress(std::move(eepRomMac));
+
+    if (invMac == intMac)
+    {
+        log<level::DEBUG>("MACAddress is same as VPD mac.");
+        return MacAddressIntf::mACAddress();
+    }
+
+    execute("/sbin/fw_setenv", "fw_setenv", "ethaddr", value.c_str());
+    execute("/sbin/ip", "ip", "link", "set", "dev", "eth0", "down");
+    execute("/sbin/ip", "ip", "link", "set", "dev", "eth0", "address",
+            value.c_str());
+
+    execute("/sbin/ip", "ip", "link", "set", "dev", "eth0", "up");
+
+    auto mac = MacAddressIntf::mACAddress(std::move(value));
+    return mac;
+
+}
+
+std::string EthernetInterface::getMACAddressfromVPD()
+{
+    std::vector<DbusInterface> interfaces;
+    interfaces.emplace_back(invNetworkIntf);
+
+    auto depth = 0;
+
+    auto mapperCall = bus.new_method_call(mapperBus,
+                                          mapperObj,
+                                          mapperIntf,
+                                          "GetSubTree");
+
+    mapperCall.append(invRoot, depth, interfaces);
+
+    auto mapperReply = bus.call(mapperCall);
+    if (mapperReply.is_method_error())
+    {
+        log<level::ERR>("Error in mapper call");
+        elog<InternalFailure>();
+    }
+
+    ObjectTree objectTree;
+    mapperReply.read(objectTree);
+
+    if (objectTree.empty())
+    {
+        log<level::ERR>("No Object has impelmented the interface",
+                        entry("INTERFACE=%s", invNetworkIntf));
+        elog<InternalFailure>();
+    }
+
+    auto objPath = std::move(objectTree.begin()->first);
+    auto service = std::move(objectTree.begin()->second.begin()->first);
+
+    Value value;
+
+    auto method = bus.new_method_call(
+                      service.c_str(),
+                      objPath.c_str(),
+                      propIntf,
+                      methodGet);
+
+    method.append(invNetworkIntf, "MACAddress");
+
+    auto reply = bus.call(method);
+
+    if (reply.is_method_error())
+    {
+         log<level::ERR>("Failed to get MACAddress",
+                        entry("PATH=%s", objPath.c_str()),
+                        entry("INTERFACE=%s", invNetworkIntf));
+        elog<InternalFailure>();
+    }
+
+    reply.read(value);
+    return value.get<std::string>();
 }
 
 }//namespace network
