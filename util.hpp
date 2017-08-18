@@ -5,11 +5,19 @@
 #include "config.h"
 #include "types.hpp"
 #include <sdbusplus/bus.hpp>
+#include <regex>
 
 namespace phosphor
 {
 namespace network
 {
+
+constexpr auto macRegex = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
+constexpr auto localAdminMask = 0x020000000000;
+constexpr auto broadcastMac = 0xFFFFFFFFFFFF;
+
+constexpr auto macAddressFormat = "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx";
+constexpr size_t sizeMAC = 18;
 
 /* @brief converts the given subnet into prefix notation.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
@@ -73,6 +81,71 @@ void deleteInterface(const std::string& intf);
  *  @param[in] intf - Interface name.
  */
 bool getDHCPValue(const std::string& confDir, const std::string& intf);
+
+/** @brief validate the mac address
+ *  @param[in] value - MAC address.
+ *  @returns true if validate otherwise false.
+ */
+
+inline bool validateMAC(const std::string& value)
+{
+    bool matched = false;
+    std::regex regexToCheck(macRegex);
+    matched = std::regex_search(value, regexToCheck);
+    return matched;
+}
+
+/** @brief Converts the given mac address into unsigned 64 bit integer
+ *  @param[in] value - MAC address.
+ *  @returns converted unsigned 64 bit number.
+ */
+inline uint64_t getIntMacAddress(const std::string& value)
+{
+    unsigned char mac[6];
+
+    sscanf(value.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
+           mac + 0, mac + 1, mac + 2, mac + 3, mac + 4, mac + 5);
+    return
+        uint64_t(mac[0]) << 40 |
+        uint64_t(mac[1]) << 32 |
+        uint64_t(mac[2]) << 24 |
+        uint64_t(mac[3]) << 16 |
+        uint64_t(mac[4]) << 8 |
+        uint64_t(mac[5]);
+}
+
+namespace internal
+{
+
+/* template argument unpacker helper */
+template<typename Arg>
+Arg getArg(Arg&& arg)
+{
+    return arg;
+}
+
+/* @brief runs the given command in in its own process.
+ * @param[in] path - path of the binary file which needs to be execeuted.
+ * @param[in] args - arguments of the command.
+ */
+void executeCommandinChildProcess(char* path, char** args);
+
+} // namespace internal
+
+/* @brief runs the given command in in its own process.
+ * @param[in] arg0 -path of the binary file which needs to be execeuted.
+ * @param[in] tArgs - arguments of the command.
+ */
+template<typename Arg0, typename... ArgTypes>
+void execute(Arg0 &&arg0, ArgTypes&&... tArgs)
+{
+    using namespace std::string_literals;
+    using expandType = char*[];
+
+    expandType args = { const_cast<char*>(internal::getArg(tArgs))..., nullptr};
+
+    internal::executeCommandinChildProcess(const_cast<char*>(arg0), args);
+}
 
 } //namespace network
 
