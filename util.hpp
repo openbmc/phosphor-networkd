@@ -5,11 +5,60 @@
 #include "config.h"
 #include "types.hpp"
 #include <sdbusplus/bus.hpp>
+#include <regex>
 
 namespace phosphor
 {
 namespace network
 {
+namespace mac_address
+{
+
+constexpr auto regex = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
+constexpr auto localAdminMask = 0x020000000000;
+constexpr auto broadcastMac = 0xFFFFFFFFFFFF;
+
+constexpr auto format = "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx";
+constexpr size_t size = 18;
+
+/** @brief validate the mac address
+ *  @param[in] value - MAC address.
+ *  @returns true if validate otherwise false.
+ */
+inline bool validate(const std::string& value)
+{
+    std::regex regexToCheck(regex);
+    return std::regex_search(value, regexToCheck);
+}
+
+/** @brief gets the MAC address from the Inventory.
+ *  @param[in] bus - DBUS Bus Object.
+ */
+std::string getfromInventory(sdbusplus::bus::bus& bus);
+
+namespace internal
+{
+/** @brief Converts the given mac address into unsigned 64 bit integer
+ *  @param[in] value - MAC address.
+ *  @returns converted unsigned 64 bit number.
+ */
+inline uint64_t convertToInt(const std::string& value)
+{
+    unsigned char mac[6];
+
+    sscanf(value.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
+           mac + 0, mac + 1, mac + 2, mac + 3, mac + 4, mac + 5);
+    return
+        static_cast<uint64_t>(mac[0]) << 40 |
+        static_cast<uint64_t>(mac[1]) << 32 |
+        static_cast<uint64_t>(mac[2]) << 24 |
+        static_cast<uint64_t>(mac[3]) << 16 |
+        static_cast<uint64_t>(mac[4]) << 8 |
+        static_cast<uint64_t>(mac[5]);
+}
+
+}//namespace internal
+}//namespace mac_address
 
 /* @brief converts the given subnet into prefix notation.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
@@ -73,6 +122,38 @@ void deleteInterface(const std::string& intf);
  *  @param[in] intf - Interface name.
  */
 bool getDHCPValue(const std::string& confDir, const std::string& intf);
+
+namespace internal
+{
+
+/* template argument unpacker helper */
+template<typename Arg>
+Arg getArg(Arg&& arg)
+{
+    return arg;
+}
+
+/* @brief runs the given command in child process.
+ * @param[in] path - path of the binary file which needs to be execeuted.
+ * @param[in] args - arguments of the command.
+ */
+void executeCommandinChildProcess(const char* path, char** args);
+
+} // namespace internal
+
+/* @brief runs the given command in child process.
+ * @param[in] path -path of the binary file which needs to be execeuted.
+ * @param[in] tArgs - arguments of the command.
+ */
+template<typename... ArgTypes>
+void execute(const char* path, ArgTypes&&... tArgs)
+{
+    using expandType = char*[];
+
+    expandType args = { const_cast<char*>(internal::getArg(tArgs))..., nullptr};
+
+    internal::executeCommandinChildProcess(path, args);
+}
 
 } //namespace network
 
