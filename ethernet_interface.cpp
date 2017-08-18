@@ -50,7 +50,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     auto intfName = objPath.substr(objPath.rfind("/") + 1);
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
-    dHCPEnabled(dhcpEnabled);
+    EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
     mACAddress(getMACAddress(intfName));
 
     // Emit deferred signal.
@@ -490,6 +490,7 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
 {
     using namespace std::string_literals;
     stream << "DHCP=true\n";
+    stream << "LinkLocalAddressing=yes\n";
     // write the dhcp section
     stream << "[DHCP]\n";
 
