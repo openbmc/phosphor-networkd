@@ -30,6 +30,8 @@ using EthernetInterfaceIntf =
 using MacAddressIntf =
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress;
 
+using NameServerList = std::vector<std::string>;
+
 namespace fs = std::experimental::filesystem;
 
 class Manager; // forward declaration of network manager.
@@ -120,6 +122,12 @@ class EthernetInterface : public Ifaces
          */
         std::string mACAddress(std::string value) override;
 
+        /** @brief sets the DNS/nameservers.
+         *  @param[in] value - vector of DNS servers.
+         */
+
+        NameServerList nameservers(NameServerList value) override;
+
         /** @brief create Vlan interface.
          *  @param[in] id- VLAN identifier.
          */
@@ -185,6 +193,16 @@ class EthernetInterface : public Ifaces
 
         /** @brief gets the MAC address from the VPD.**/
         std::string getMACAddressfromVPD();
+
+        /** @brief write the resolv conf file with the given dns list.
+         *  @param[in] dnsList - DNS server list which needs to be written.
+         */
+        void writeResolveConf(const NameServerList& dnsList);
+
+        /** @brief get the name server details from the network conf
+         *
+         */
+        NameServerList getNameServerFromConf();
 
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;

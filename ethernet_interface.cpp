@@ -1,4 +1,5 @@
 #include "config.h"
+#include "config_parser.hpp"
 #include "ethernet_interface.hpp"
 #include "ipaddress.hpp"
 #include "network_manager.hpp"
@@ -38,6 +39,7 @@ constexpr auto mapperObj = "/xyz/openbmc_project/object_mapper";
 constexpr auto mapperIntf = "xyz.openbmc_project.ObjectMapper";
 constexpr auto propIntf = "org.freedesktop.DBus.Properties";
 constexpr auto methodGet = "Get";
+constexpr auto resolveConf = "/etc/resolv.conf";
 
 using DbusObjectPath = std::string;
 using DbusService = std::string;
@@ -67,6 +69,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     interfaceName(intfName);
     EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
     MacAddressIntf::mACAddress(getMACAddress(intfName));
+    EthernetInterfaceIntf::nameservers(getNameServerFromConf());
 
     // Emit deferred signal.
     if (emitSignal)
@@ -351,6 +354,62 @@ bool EthernetInterface::dHCPEnabled(bool value)
     return value;
 }
 
+NameServerList EthernetInterface::nameservers(NameServerList value)
+{
+
+    EthernetInterfaceIntf::nameservers(value);
+
+    writeConfigurationFile();
+    // Currently we don't have systemd-resolved enabled
+    // in the openbmc.Once we update the network conf file,
+    // it should be read by systemd-resolved.service.
+
+    // The other reason to write the resolv conf is,
+    // We don't want to restart the networkd for nameserver change.
+    // as restarting of systemd-networkd takes more then 2 sec
+    writeResolveConf(value);
+
+    return EthernetInterfaceIntf::nameservers();
+}
+
+NameServerList EthernetInterface::getNameServerFromConf()
+{
+    fs::path confPath = manager.getConfDir();
+
+    std::string fileName = systemd::config::networkFilePrefix + interfaceName() +
+                           systemd::config::networkFileSuffix;
+    confPath /= fileName;
+    NameServerList servers;
+    try
+    {
+        config::Parser parser(confPath.string());
+        servers = parser.getValues("Network", "DNS");
+    }
+    catch (InternalFailure& e)
+    {
+        log<level::INFO>("Exception occured during getting of DHCP value");
+    }
+    return servers;
+
+}
+
+void EthernetInterface::writeResolveConf(const NameServerList& dnsList)
+{
+    std::fstream stream;
+    stream.open(resolveConf, std::fstream::out);
+    if (!stream.is_open())
+    {
+        log<level::ERR>("Unable to open the file",
+                        entry("FILE=%s", resolveConf));
+        elog<InternalFailure>();
+    }
+    stream << "### Generated manually via dbus settings ###";
+    for(const auto& server : dnsList)
+    {
+        stream << "nameserver " << server << "\n";
+    }
+}
+
 void EthernetInterface::loadVLAN(VlanId id)
 {
     std::string vlanInterfaceName = interfaceName() + "." +
@@ -454,6 +513,12 @@ void EthernetInterface::writeConfigurationFile()
     for(const auto& intf: vlanInterfaces)
     {
         stream << "VLAN=" << intf.second->EthernetInterface::interfaceName() << "\n";
+    }
+
+    //Add the DNS entry
+    for(const auto& dns: EthernetInterfaceIntf::nameservers())
+    {
+         stream << "DNS=" << dns << "\n";
     }
 
     // Static
