@@ -1,4 +1,5 @@
 #include "config.h"
+#include "config_parser.hpp"
 #include "ethernet_interface.hpp"
 #include "ipaddress.hpp"
 #include "network_manager.hpp"
@@ -48,7 +49,8 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     interfaceName(intfName);
     EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
     MacAddressIntf::mACAddress(getMACAddress(intfName));
-
+    EthernetInterfaceIntf::nameservers(getNameServerFromConf());
+    resolvConfFile = etcResolvConf;
     // Emit deferred signal.
     if (emitSignal)
     {
@@ -329,6 +331,62 @@ bool EthernetInterface::dHCPEnabled(bool value)
     return value;
 }
 
+ServerList EthernetInterface::nameservers(ServerList value)
+{
+
+    EthernetInterfaceIntf::nameservers(value);
+
+    writeConfigurationFile();
+    // Currently we don't have systemd-resolved enabled
+    // in the openbmc.Once we update the network conf file,
+    // it should be read by systemd-resolved.service.
+
+    // The other reason to write the resolv conf is,
+    // We don't want to restart the networkd for nameserver change.
+    // as restarting of systemd-networkd takes more then 2 sec
+    writeResolveConf(value);
+
+    return EthernetInterfaceIntf::nameservers();
+}
+
+ServerList EthernetInterface::getNameServerFromConf()
+{
+    fs::path confPath = manager.getConfDir();
+
+    std::string fileName = systemd::config::networkFilePrefix + interfaceName() +
+                           systemd::config::networkFileSuffix;
+    confPath /= fileName;
+    ServerList servers;
+    try
+    {
+        config::Parser parser(confPath.string());
+        servers = parser.getValues("Network", "DNS");
+    }
+    catch (InternalFailure& e)
+    {
+        log<level::INFO>("Exception occured during getting of DHCP value");
+    }
+    return servers;
+
+}
+
+void EthernetInterface::writeResolveConf(const ServerList& dnsList)
+{
+    std::fstream stream;
+    stream.open(resolvConfFile.c_str(), std::fstream::out);
+    if (!stream.is_open())
+    {
+        log<level::ERR>("Unable to open the file",
+                        entry("FILE=%s", resolvConfFile.c_str()));
+        elog<InternalFailure>();
+    }
+    stream << "### Generated manually via dbus settings ###";
+    for(const auto& server : dnsList)
+    {
+        stream << "nameserver " << server << "\n";
+    }
+}
+
 void EthernetInterface::loadVLAN(VlanId id)
 {
     std::string vlanInterfaceName = interfaceName() + "." +
@@ -436,6 +494,12 @@ void EthernetInterface::writeConfigurationFile()
         stream.close();
         restartSystemdUnit("systemd-networkd.service");
         return;
+    }
+
+    //Add the DNS entry
+    for(const auto& dns: EthernetInterfaceIntf::nameservers())
+    {
+         stream << "DNS=" << dns << "\n";
     }
 
     // Static
