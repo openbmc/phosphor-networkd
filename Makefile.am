@@ -3,12 +3,17 @@ nobase_nodist_include_HEADERS = \
 	xyz/openbmc_project/Network/VLAN/Create/server.hpp \
 	xyz/openbmc_project/Network/IP/Create/server.hpp
 
-sbin_PROGRAMS = netman_watch_dns phosphor-network-manager
+sbin_PROGRAMS = phosphor-network-manager phosphor-dns-updater
 
+phosphor_dns_updater_SOURCES = watch.cpp dns_updater.cpp
+phosphor_dns_updater_LDFLAGS = $(SYSTEMD_LIBS) \
+		$(PHOSPHOR_DBUS_INTERFACES_LIBS) \
+		$(PHOSPHOR_LOGGING_LIBS) \
+		-lstdc++fs
 
-netman_watch_dns_SOURCES = netman_watch_dns.c
-netman_watch_dns_LDFLAGS = $(SYSTEMD_LIBS)
-netman_watch_dns_CFLAGS = $(SYSTEMD_CFLAGS)
+phosphor_dns_updater_CFLAGS = $(SYSTEMD_CFLAGS) \
+		$(PHOSPHOR_DBUS_INTERFACES_CFLAGS) \
+		$(PHOSPHOR_LOGGING_CFLAGS)
 
 noinst_HEADERS = \
 		ethernet_interface.hpp \
@@ -21,7 +26,9 @@ noinst_HEADERS = \
 		config_parser.hpp \
 		system_configuration.hpp \
 		dhcp_configuration.hpp \
-        vlan_interface.hpp
+        vlan_interface.hpp \
+		watch.hpp \
+		dns_updater.hpp
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
