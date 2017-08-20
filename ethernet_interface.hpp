@@ -130,6 +130,11 @@ class EthernetInterface : public Ifaces
          */
         ServerList nTPServers(ServerList value) override;
 
+        /** @brief sets the DNS/nameservers.
+         *  @param[in] value - vector of DNS servers.
+         */
+        ServerList nameservers(ServerList value) override;
+
         /** @brief create Vlan interface.
          *  @param[in] id- VLAN identifier.
          */
@@ -152,6 +157,9 @@ class EthernetInterface : public Ifaces
         using EthernetInterfaceIntf::dHCPEnabled;
         using EthernetInterfaceIntf::interfaceName;
         using MacAddressIntf::mACAddress;
+
+        /** @brief Absolute path of the resolv conf file */
+        static constexpr auto resolvConfFile = "/etc/resolv.conf";
 
     protected:
         /** @brief get the info of the ethernet interface.
@@ -204,6 +212,18 @@ class EthernetInterface : public Ifaces
          *
          */
         ServerList getNTPServersFromConf();
+
+        /** @brief write the DNS entries to resolver file.
+         *  @param[in] dnsList - DNS server list which needs to be written.
+         *  @param[in] file    - File to write the name server entries to.
+         */
+        void writeDNSEntries(const ServerList& dnsList,
+                             const std::string& file);
+
+        /** @brief get the name server details from the network conf
+         *
+         */
+        ServerList getNameServerFromConf();
 
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;
