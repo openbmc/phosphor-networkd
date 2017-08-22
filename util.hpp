@@ -60,6 +60,9 @@ inline uint64_t convertToInt(const std::string& value)
 }//namespace internal
 }//namespace mac_address
 
+constexpr auto networkdService = "systemd-networkd.service";
+constexpr auto timeSynchdService = "systemd-timesyncd.service";
+
 /* @brief converts the given subnet into prefix notation.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
  * @param[in] mask - Subnet Mask.
