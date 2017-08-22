@@ -50,6 +50,8 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
     MacAddressIntf::mACAddress(getMACAddress(intfName));
     EthernetInterfaceIntf::nameservers(getNameServerFromConf());
+    EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
+
     resolvConfFile = etcResolvConf;
     // Emit deferred signal.
     if (emitSignal)
@@ -286,7 +288,7 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
     vlanInterfaces.erase(it);
     // restart the systemd-networkd
 
-    restartSystemdUnit("systemd-networkd.service");
+    restartSystemdUnit(networkdService);
 
     // TODO  systemd doesn't delete the virtual network interface
     // even after deleting all the related configuartion.
@@ -385,6 +387,37 @@ void EthernetInterface::writeResolveConf(const ServerList& dnsList)
     {
         stream << "nameserver " << server << "\n";
     }
+}
+
+ServerList EthernetInterface::nTPServers(ServerList servers)
+{
+    auto ntpServers =  EthernetInterfaceIntf::nTPServers(servers);
+
+    writeConfigurationFile();
+
+    restartSystemdUnit(timeSynchdService);
+
+    return ntpServers;
+}
+
+ServerList EthernetInterface::getNTPServersFromConf()
+{
+    fs::path confPath = manager.getConfDir();
+
+    std::string fileName = systemd::config::networkFilePrefix + interfaceName() +
+                           systemd::config::networkFileSuffix;
+    confPath /= fileName;
+    ServerList servers;
+    try
+    {
+        config::Parser parser(confPath.string());
+        servers = parser.getValues("Network", "NTP");
+    }
+    catch (InternalFailure& e)
+    {
+        log<level::INFO>("Exception occured during getting of DHCP value");
+    }
+    return servers;
 }
 
 void EthernetInterface::loadVLAN(VlanId id)
@@ -500,6 +533,12 @@ void EthernetInterface::writeConfigurationFile()
     for(const auto& dns: EthernetInterfaceIntf::nameservers())
     {
          stream << "DNS=" << dns << "\n";
+    }
+
+    //Add the NTP server
+    for(const auto& ntp: EthernetInterfaceIntf::nTPServers())
+    {
+         stream << "NTP=" << ntp << "\n";
     }
 
     // Static
