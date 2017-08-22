@@ -20,6 +20,9 @@ constexpr auto broadcastMac = 0xFFFFFFFFFFFF;
 constexpr auto macAddressFormat = "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx";
 constexpr size_t sizeMAC = 18;
 
+constexpr auto networkdService = "systemd-networkd.service";
+constexpr auto timeSynchdService = "systemd-timesyncd.service";
+
 /* @brief converts the given subnet into prefix notation.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
  * @param[in] mask - Subnet Mask.

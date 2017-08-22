@@ -127,6 +127,11 @@ class EthernetInterface : public Ifaces
          */
         ServerList nameservers(ServerList value) override;
 
+        /** @brief sets the NTP servers.
+         *  @param[in] value - vector of NTP servers.
+         */
+        ServerList nTPServers(ServerList value) override;
+
         /** @brief create Vlan interface.
          *  @param[in] id- VLAN identifier.
          */
@@ -205,6 +210,11 @@ class EthernetInterface : public Ifaces
          *
          */
         ServerList getNameServerFromConf();
+
+        /** @brief get the NTP server list from the network conf
+         *
+         */
+        ServerList getNTPServersFromConf();
 
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;
