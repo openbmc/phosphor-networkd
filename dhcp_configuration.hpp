@@ -11,9 +11,6 @@ namespace phosphor
 namespace network
 {
 
-constexpr auto networkdService = "systemd-networkd.service";
-constexpr auto timeSynchdService = "systemd-timesyncd.service";
-
 class Manager; // forward declaration of network manager.
 
 namespace dhcp

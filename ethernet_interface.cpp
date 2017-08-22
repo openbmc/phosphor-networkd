@@ -1,4 +1,5 @@
 #include "config.h"
+#include "config_parser.hpp"
 #include "ethernet_interface.hpp"
 #include "ipaddress.hpp"
 #include "network_manager.hpp"
@@ -48,7 +49,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     interfaceName(intfName);
     EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
     MacAddressIntf::mACAddress(getMACAddress(intfName));
-
+    EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
     // Emit deferred signal.
     if (emitSignal)
     {
@@ -381,6 +382,36 @@ void EthernetInterface::createVLAN(VlanId id)
     manager.writeToConfigurationFile();
 }
 
+ServerList EthernetInterface::getNTPServersFromConf()
+{
+    fs::path confPath = manager.getConfDir();
+
+    std::string fileName = systemd::config::networkFilePrefix + interfaceName() +
+                           systemd::config::networkFileSuffix;
+    confPath /= fileName;
+    ServerList servers;
+    try
+    {
+        config::Parser parser(confPath.string());
+        servers = parser.getValues("Network", "NTP");
+    }
+    catch (InternalFailure& e)
+    {
+        log<level::INFO>("Unable to find the NTP server configuration.");
+    }
+    return servers;
+}
+
+ServerList EthernetInterface::nTPServers(ServerList servers)
+{
+    auto ntpServers =  EthernetInterfaceIntf::nTPServers(servers);
+
+    writeConfigurationFile();
+    // timesynchd reads the NTP server configuration from the
+    // network file.
+    restartSystemdUnit(timeSynchdService);
+    return ntpServers;
+}
 // Need to merge the below function with the code which writes the
 // config file during factory reset.
 // TODO openbmc/openbmc#1751
@@ -441,6 +472,12 @@ void EthernetInterface::writeConfigurationFile()
         writeDHCPSection(stream);
         stream.close();
         return;
+    }
+
+    //Add the NTP server
+    for(const auto& ntp: EthernetInterfaceIntf::nTPServers())
+    {
+         stream << "NTP=" << ntp << "\n";
     }
 
     // Static

@@ -32,6 +32,8 @@ using EthernetInterfaceIntf =
 using MacAddressIntf =
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress;
 
+using ServerList = std::vector<std::string>;
+
 namespace fs = std::experimental::filesystem;
 
 class Manager; // forward declaration of network manager.
@@ -123,6 +125,11 @@ class EthernetInterface : public Ifaces
          */
         std::string mACAddress(std::string value) override;
 
+        /** @brief sets the NTP servers.
+         *  @param[in] value - vector of NTP servers.
+         */
+        ServerList nTPServers(ServerList value) override;
+
         /** @brief create Vlan interface.
          *  @param[in] id- VLAN identifier.
          */
@@ -192,6 +199,11 @@ class EthernetInterface : public Ifaces
 
         /** @brief write the dhcp section **/
         void writeDHCPSection(std::fstream& stream);;
+
+        /** @brief get the NTP server list from the network conf
+         *
+         */
+        ServerList getNTPServersFromConf();
 
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;
