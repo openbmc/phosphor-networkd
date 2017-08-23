@@ -1,3 +1,4 @@
+#include "config_parser.hpp"
 #include "network_manager.hpp"
 #include "mock_syscall.hpp"
 #include "ipaddress.hpp"
@@ -11,6 +12,7 @@
 #include <stdlib.h>
 
 #include <exception>
+#include <fstream>
 
 namespace phosphor
 {
@@ -32,7 +34,6 @@ class TestEthernetInterface : public testing::Test
 
         {
             setConfDir();
-
         }
 
         void setConfDir()
@@ -166,6 +167,17 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
     EXPECT_EQ(expectedObjectPath, getObjectPath(ipaddress,
                                                 prefix,
                                                 gateway));
+}
+
+TEST_F(TestEthernetInterface, addNTPServers)
+{
+    ServerList servers = {"10.1.1.1","10.2.2.2","10.3.3.3"};
+    interface.nTPServers(servers);
+    fs::path filePath = confDir;
+    filePath /= "00-bmc-test0.network";
+    config::Parser parser(filePath.string());
+    auto values = parser.getValues("Network", "NTP");
+    EXPECT_EQ(servers , values);
 }
 
 }// namespce network
