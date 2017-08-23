@@ -104,6 +104,27 @@ class TestEthernetInterface : public testing::Test
 
         }
 
+        // Validates if the DNS entries have been correctly processed
+        void validateResolvFile(ServerList values)
+        {
+            // Check whether the entries has been written to resolv.conf
+            fs::path resolvFile = confDir;
+            resolvFile /= "resolv.conf";
+
+            // Passed in "value" is what is read from the config file
+            interface.writeDNSEntries(values, resolvFile);
+            std::string expectedServers = "### Generated manually via dbus settings ###";
+            expectedServers +=
+                "nameserver 9.1.1.1nameserver 9.2.2.2nameserver 9.3.3.3";
+
+            std::string actualServers{};
+            std::fstream stream(resolvFile.string().c_str(), std::fstream::in);
+            for (std::string line; std::getline(stream, line);)
+            {
+                actualServers += line;
+            }
+            EXPECT_EQ(expectedServers , actualServers);
+        }
 };
 
 TEST_F(TestEthernetInterface, NoIPaddress)
@@ -167,6 +188,19 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
     EXPECT_EQ(expectedObjectPath, getObjectPath(ipaddress,
                                                 prefix,
                                                 gateway));
+}
+
+TEST_F(TestEthernetInterface, addNameServers)
+{
+    ServerList servers = {"9.1.1.1","9.2.2.2","9.3.3.3"};
+    interface.nameservers(servers);
+    fs::path filePath = confDir;
+    filePath /= "00-bmc-test0.network";
+    config::Parser parser(filePath.string());
+    auto values = parser.getValues("Network", "DNS");
+    EXPECT_EQ(servers , values);
+
+    validateResolvFile(values);
 }
 
 TEST_F(TestEthernetInterface, addNTPServers)
