@@ -323,11 +323,8 @@ bool EthernetInterface::dHCPEnabled(bool value)
     }
 
     EthernetInterfaceIntf::dHCPEnabled(value);
-    if (value)
-    {
-        writeConfigurationFile();
-        createIPAddressObjects();
-    }
+    writeConfigurationFile();
+    createIPAddressObjects();
 
     return value;
 }
@@ -422,7 +419,14 @@ void EthernetInterface::writeConfigurationFile()
 
     // write the network section
     stream << "[" << "Network" << "]\n";
-    stream << "LinkLocalAddressing=yes\n";
+
+    // Add the VLAN entry
+    for (const auto& intf: vlanInterfaces)
+    {
+        stream << "VLAN=" << intf.second->EthernetInterface::interfaceName()
+            << "\n";
+    }
+
     // DHCP
     if (dHCPEnabled() == true)
     {
@@ -430,12 +434,8 @@ void EthernetInterface::writeConfigurationFile()
         // configured as dhcp.
         writeDHCPSection(stream);
         stream.close();
+        restartSystemdUnit("systemd-networkd.service");
         return;
-    }
-    // Add the Vlan entry
-    for(const auto& intf: vlanInterfaces)
-    {
-        stream << "VLAN=" << intf.second->EthernetInterface::interfaceName() << "\n";
     }
 
     // Static
