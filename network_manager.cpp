@@ -135,12 +135,13 @@ void Manager::reset()
 
         for (auto& intf : interfaces)
         {
-            std::string filename = networkConfig +
-                                   systemd::config::networkFilePrefix +
-                                   intf.first +
-                                   systemd::config::networkFileSuffix;
+            auto fileName = systemd::config::networkFilePrefix + intf.first +
+                            systemd::config::networkFileSuffix;
 
-            bmc::writeDHCPDefault(filename, intf.first);
+            fs::path  filePath = networkConfig;
+            filePath /= fileName;
+
+            bmc::writeDHCPDefault(filePath.string(), intf.first);
             interfacesMapped = true;
         }
 
