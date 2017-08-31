@@ -152,13 +152,13 @@ void Manager::reset()
         else
         {
             log<level::ERR>("No network interfaces are mapped.");
-            // TODO: openbmc/openbmc#1721 - Log ResetFailed error here.
+            report<ResetFailed>();
         }
     }
     else
     {
         log<level::ERR>("Network configuration directory not found!");
-        // TODO: openbmc/openbmc#1721 - Log ResetFailed error here.
+        report<ResetFailed>();
     }
 
     return;
