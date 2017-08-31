@@ -26,6 +26,7 @@ namespace network
 
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+using namespace sdbusplus::xyz::openbmc_project::Common::FactoryReset::Error;
 
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath,
                  const std::string& path):
@@ -152,13 +153,13 @@ void Manager::reset()
         else
         {
             log<level::ERR>("No network interfaces are mapped.");
-            // TODO: openbmc/openbmc#1721 - Log ResetFailed error here.
+            elog<Failed>();
         }
     }
     else
     {
         log<level::ERR>("Network configuration directory not found!");
-        // TODO: openbmc/openbmc#1721 - Log ResetFailed error here.
+        elog<Failed>();
     }
 
     return;
