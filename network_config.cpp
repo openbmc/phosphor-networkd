@@ -16,7 +16,7 @@ namespace bmc
 
         filestream.open(filename);
         filestream << "[Match]\nName=" << interface <<
-                "\n[Network]\nDHCP=true\nLinkLocalAddressing=yes\n"
+                "\n[Network]\nDHCP=true\n"
                 "[DHCP]\nClientIdentifier=mac\n";
         filestream.close();
     }
