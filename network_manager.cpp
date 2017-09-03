@@ -29,7 +29,7 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath,
                  const std::string& path):
-    details::VLANCreateIface(bus, objPath, true),
+    details::Ifaces(bus, objPath, true),
     bus(bus),
     objectPath(objPath)
 {
@@ -162,6 +162,12 @@ void Manager::reset()
     }
 
     return;
+}
+
+void Manager::refresh()
+{
+    log<level::INFO>("Refresh the DBUS Onjects");
+    createInterfaces();
 }
 
 // Need to merge the below function with the code which writes the

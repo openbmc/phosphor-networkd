@@ -6,6 +6,7 @@
 #include "vlan_interface.hpp"
 
 #include <xyz/openbmc_project/Network/VLAN/Create/server.hpp>
+#include <xyz/openbmc_project/Network/Internal/Refresh/server.hpp>
 #include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
 #include <sdbusplus/bus.hpp>
 
@@ -27,11 +28,9 @@ namespace fs = std::experimental::filesystem;
 namespace details
 {
 
-template <typename T, typename U>
-using ServerObject = typename sdbusplus::server::object::object<T, U>;
-
-using VLANCreateIface = details::ServerObject<
+using Ifaces = sdbusplus::server::object::object<
     sdbusplus::xyz::openbmc_project::Network::VLAN::server::Create,
+    sdbusplus::xyz::openbmc_project::Network::Internal::server::Refresh,
     sdbusplus::xyz::openbmc_project::Common::server::FactoryReset>;
 
 } // namespace details
@@ -41,7 +40,7 @@ class TestNetworkManager; //forward declaration
 /** @class Manager
  *  @brief OpenBMC network manager implementation.
  */
-class Manager : public details::VLANCreateIface
+class Manager : public details::Ifaces
 {
     public:
         Manager() = delete;
@@ -104,6 +103,11 @@ class Manager : public details::VLANCreateIface
 
         /** @brief BMC network reset - resets network configuration for BMC. */
         void reset() override;
+
+        /** @brief recreate all the virtual interfaces and all the IP Dbus
+         *         objects.
+         */
+        void refresh() override;
 
         /** @brief Path of Object. */
         std::string objectPath;
