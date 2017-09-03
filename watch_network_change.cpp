@@ -1,4 +1,11 @@
+#include "config.h"
 #include "rtnetlink_server.hpp"
+#include "timer.hpp"
+
+#include <chrono>
+#include <functional>
+#include <memory>
+
 #include <netinet/in.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
@@ -9,8 +16,13 @@ namespace phosphor
 {
 namespace network
 {
+
+std::unique_ptr<phosphor::network::Timer> timer = nullptr;
+
 namespace rtnetlink
 {
+
+
 /* Call Back for the sd event loop */
 static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
                         void* userdata)
@@ -29,8 +41,18 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
             if (netLinkHeader->nlmsg_type == RTM_NEWADDR ||
                 netLinkHeader->nlmsg_type == RTM_DELADDR)
             {
-                // TODO delete the below trace in later commit.
-                std::cout << "Address Changed\n";
+                // starting the timer here to make sure that we don't want
+                // multiple dbus calls for an interface as interface may have
+                // more then one IP.
+                if (timer->isExpired())
+                {
+                    using namespace std::chrono;
+                    auto time = duration_cast<microseconds>(
+                            std::chrono::milliseconds(NETWORK_CHANGE_TIMEOUT_MSEC));
+                    // if start timer throws exception then let the application
+                    // crash
+                    timer->startTimer(time);
+                }
 
             } //end if
 
@@ -42,12 +64,24 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
 }
 
 } // namespace rtnetlink
+
+void timerCallback()
+{
+    // Call the dbus method of network manager to refresh its interfaces.
+    // will delete later in the next commit.
+    std::cout << "Refresh network manager interfaces\n";
+
+}
+
 } // namespace network
 } // namespace phosphor
 
 int main(int argc, char* argv[])
 {
+    std::function<void()> func(std::bind(&phosphor::network::timerCallback));
+    phosphor::network::timer = std::make_unique<phosphor::network::Timer>(func);
+
     phosphor::network::rtnetlink::Server svr(
-            phosphor::network::rtnetlink::eventHandler);
+                        phosphor::network::rtnetlink::eventHandler);
     return svr.run();
 }
