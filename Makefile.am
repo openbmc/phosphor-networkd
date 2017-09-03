@@ -5,7 +5,6 @@ nobase_nodist_include_HEADERS = \
 
 sbin_PROGRAMS = netman_watch_dns phosphor-network-manager
 
-
 netman_watch_dns_SOURCES = netman_watch_dns.c
 netman_watch_dns_LDFLAGS = $(SYSTEMD_LIBS)
 netman_watch_dns_CFLAGS = $(SYSTEMD_CFLAGS)
@@ -21,7 +20,8 @@ noinst_HEADERS = \
 		config_parser.hpp \
 		system_configuration.hpp \
 		dhcp_configuration.hpp \
-        vlan_interface.hpp
+		vlan_interface.hpp \
+		rtnetlink_server.hpp
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
@@ -36,7 +36,8 @@ phosphor_network_manager_SOURCES = \
 		routing_table.cpp \
 		config_parser.cpp \
 		dhcp_configuration.cpp \
-        vlan_interface.cpp
+        vlan_interface.cpp \
+		rtnetlink_server.cpp
 
 CLEANFILES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
