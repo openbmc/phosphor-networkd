@@ -38,4 +38,5 @@ test_LDADD = $(top_builddir)/ethernet_interface.o \
 			$(top_builddir)/config_parser.o \
 			$(top_builddir)/vlan_interface.o \
 			$(top_builddir)/xyz/openbmc_project/Network/VLAN/Create/phosphor_network_manager-server.o \
-			$(top_builddir)/xyz/openbmc_project/Network/IP/Create/phosphor_network_manager-server.o
+			$(top_builddir)/xyz/openbmc_project/Network/IP/Create/phosphor_network_manager-server.o \
+			$(top_builddir)/xyz/openbmc_project/Network/Internal/Refresh/phosphor_network_manager-server.o

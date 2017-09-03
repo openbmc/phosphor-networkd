@@ -1,7 +1,8 @@
 # Build these headers, don't install them
 nobase_nodist_include_HEADERS = \
 	xyz/openbmc_project/Network/VLAN/Create/server.hpp \
-	xyz/openbmc_project/Network/IP/Create/server.hpp
+	xyz/openbmc_project/Network/IP/Create/server.hpp \
+	xyz/openbmc_project/Network/Internal/Refresh/server.hpp
 
 sbin_PROGRAMS = netman_watch_dns phosphor-network-manager watch-network-change
 
@@ -48,6 +49,7 @@ phosphor_network_manager_SOURCES = \
 		system_configuration.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 		xyz/openbmc_project/Network/IP/Create/server.cpp \
+		xyz/openbmc_project/Network/Internal/Refresh/server.cpp \
 		util.cpp \
 		routing_table.cpp \
 		config_parser.cpp \
@@ -58,13 +60,15 @@ CLEANFILES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.hpp \
 		xyz/openbmc_project/Network/IP/Create/server.cpp \
-		xyz/openbmc_project/Network/IP/Create/server.hpp
+		xyz/openbmc_project/Network/IP/Create/server.hpp \
+		xyz/openbmc_project/Network/Internal/Refresh/server.hpp
 
 BUILT_SOURCES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.hpp \
 		xyz/openbmc_project/Network/IP/Create/server.cpp \
-		xyz/openbmc_project/Network/IP/Create/server.hpp
+		xyz/openbmc_project/Network/IP/Create/server.hpp \
+		xyz/openbmc_project/Network/Internal/Refresh/server.hpp
 
 phosphor_network_manager_LDFLAGS = \
 		$(SYSTEMD_LIBS) \
@@ -95,5 +99,13 @@ xyz/openbmc_project/Network/IP/Create/server.hpp: xyz/openbmc_project/Network/IP
 	@mkdir -p `dirname $@`
 	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.IP.Create > $@
 	sed -i '5i #include \"xyz\/openbmc_project\/Network\/IP\/server.hpp\"' $@
+
+xyz/openbmc_project/Network/Internal/Refresh/server.cpp: xyz/openbmc_project/Network/Internal/Refresh.interface.yaml xyz/openbmc_project/Network/Internal/Refresh/server.hpp
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-cpp xyz.openbmc_project.Network.Internal.Refresh > $@
+
+xyz/openbmc_project/Network/Internal/Refresh/server.hpp: xyz/openbmc_project/Network/Internal/Refresh.interface.yaml
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.Internal.Refresh > $@
 
 SUBDIRS = test
