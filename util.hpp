@@ -11,6 +11,7 @@ namespace phosphor
 {
 namespace network
 {
+
 namespace mac_address
 {
 
