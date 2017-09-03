@@ -165,6 +165,27 @@ class Descriptor
 
         Descriptor(int fd) : fd(fd) {}
 
+        /* @brief sets the internal file descriptor with the given descriptor
+         *        and closes the old descriptor.
+         * @param[in] descriptor - File/Socket descriptor.
+         */
+        void set(int descriptor)
+        {
+            // same descriptor given
+            if (fd == descriptor)
+            {
+               return;
+            }
+
+            // close the old descriptor
+            if (fd >= 0)
+            {
+                close(fd);
+            }
+
+            fd = descriptor;
+        }
+
         ~Descriptor()
         {
             if (fd >= 0)
