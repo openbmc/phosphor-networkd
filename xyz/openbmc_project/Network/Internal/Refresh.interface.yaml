@@ -1,0 +1,7 @@
+description: >
+    Implement to refresh all the network interfaces.
+methods:
+    - name: Refresh
+      description: >
+          Clear all the virtual network interfaces and IP dbus objects
+          and recreate them.
