@@ -21,7 +21,8 @@ noinst_HEADERS = \
 		system_configuration.hpp \
 		dhcp_configuration.hpp \
 		vlan_interface.hpp \
-		rtnetlink_server.hpp
+		rtnetlink_server.hpp \
+		timer.hpp
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
@@ -37,7 +38,8 @@ phosphor_network_manager_SOURCES = \
 		config_parser.cpp \
 		dhcp_configuration.cpp \
         vlan_interface.cpp \
-		rtnetlink_server.cpp
+		rtnetlink_server.cpp \
+		timer.cpp
 
 CLEANFILES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
