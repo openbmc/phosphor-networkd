@@ -172,6 +172,16 @@ class Descriptor
 
         Descriptor(int fd) : fd(fd) {}
 
+        void setFD(int descriptor)
+        {
+            if(fd)
+            {
+                close(fd);
+            }
+
+            fd = descriptor;
+        }
+
         ~Descriptor()
         {
             if (fd >= 0)
