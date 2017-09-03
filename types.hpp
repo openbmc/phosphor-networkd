@@ -8,6 +8,8 @@
 #include <map>
 #include <memory>
 
+#include <systemd/sd-event.h>
+
 namespace phosphor
 {
 namespace network
@@ -44,6 +46,18 @@ struct AddrDeleter
 
 using AddrPtr = std::unique_ptr<ifaddrs, AddrDeleter>;
 
+/* Need a custom deleter for freeing up sd_event */
+struct EventDeleter
+{
+    void operator()(sd_event* event) const
+    {
+        event = sd_event_unref(event);
+    }
+};
+using EventPtr = std::unique_ptr<sd_event, EventDeleter>;
+
+template<typename T>
+using UniquePtr = std::unique_ptr<T, std::function<void(T*)>>;
 
 using AddrList = std::list<AddrInfo>;
 using IntfAddrMap = std::map<IntfName, AddrList>;
