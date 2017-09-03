@@ -7,16 +7,18 @@ sbin_PROGRAMS = netman_watch_dns phosphor-network-manager watch-network-change
 
 watch_network_change_SOURCES = \
 		rtnetlink_server.cpp \
-		watch_network_change.cpp
+		watch_network_change.cpp \
+		timer.cpp
 
 watch_network_change_LDFLAGS = \
 		$(SYSTEMD_LIBS) \
-		$(PHOSPHOR_LOGGING_LIBS)
+		$(PHOSPHOR_LOGGING_LIBS) \
+		$(PHOSPHOR_DBUS_INTERFACES_LIBS)
 
 watch_network_change_CFLAGS = \
 		$(SYSTEMD_CFLAGS) \
-		$(PHOSPHOR_LOGGING_CFLAGS)
-
+		$(PHOSPHOR_LOGGING_CFLAGS) \
+		$(PHOSPHOR_DBUS_INTERFACES_CFLAGS)
 
 netman_watch_dns_SOURCES = netman_watch_dns.c
 netman_watch_dns_LDFLAGS = $(SYSTEMD_LIBS)
@@ -34,7 +36,8 @@ noinst_HEADERS = \
 		system_configuration.hpp \
 		dhcp_configuration.hpp \
         vlan_interface.hpp \
-		rtnetlink_server.hpp
+		rtnetlink_server.hpp \
+		timer.hpp
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \

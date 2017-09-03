@@ -81,6 +81,10 @@ AC_ARG_VAR(NETWORK_CONF_DIR, [Network configuration directory])
 AS_IF([test "x$NETWORK_CONF_DIR" == "x"], [NETWORK_CONF_DIR="/etc/systemd/network"])
 AC_DEFINE_UNQUOTED([NETWORK_CONF_DIR], ["$NETWORK_CONF_DIR"], [Network configuration directory])
 
+AC_ARG_VAR(NETWORK_CHANGE_TIMEOUT, [Timeout(ms) for refresh the network interfaces])
+AS_IF([test "x$NETWORK_CHANGE_TIMEOUT" == "x"], [NETWORK_CHANGE_TIMEOUT=500])
+AC_DEFINE_UNQUOTED([NETWORK_CHANGE_TIMEOUT], [$NETWORK_CHANGE_TIMEOUT],[Timeout(ms) for refresh the network interfaces])
+
 AC_DEFINE(SYSTEMD_BUSNAME, "org.freedesktop.systemd1", [systemd busname.])
 AC_DEFINE(SYSTEMD_PATH, "/org/freedesktop/systemd1", [systemd path.])
 AC_DEFINE(SYSTEMD_INTERFACE, "org.freedesktop.systemd1.Manager", [systemd interface.])
