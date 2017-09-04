@@ -1,10 +1,17 @@
 #include "config.h"
 #include "rtnetlink_server.hpp"
 #include "timer.hpp"
+#include "types.hpp"
+#include "xyz/openbmc_project/Common/error.hpp"
 
 #include <chrono>
 #include <functional>
 #include <memory>
+
+#include <phosphor-logging/elog-errors.hpp>
+#include <phosphor-logging/log.hpp>
+
+#include <sdbusplus/bus.hpp>
 
 #include <netinet/in.h>
 #include <linux/netlink.h>
@@ -17,6 +24,11 @@ namespace network
 {
 
 std::unique_ptr<phosphor::network::Timer> timer = nullptr;
+sdbusplus::bus::bus bus = sdbusplus::bus::new_default();
+
+constexpr auto service = "xyz.openbmc_project.Network";
+constexpr auto root = "/xyz/openbmc_project/network";
+constexpr auto refreshInterface = "xyz.openbmc_project.Network.Internal.Refresh";
 
 namespace rtnetlink
 {
@@ -48,9 +60,10 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
                     // if start timer throws exception then let the application
                     // crash
                     timer->startTimer(time);
-                }
 
-            } //end if
+                } // end if
+
+            } // end if
 
         } // end for
 
@@ -63,9 +76,28 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
 
 void timerCallback()
 {
-    // Call the dbus method of network manager to refresh its interfaces.
-    // will delete later in the next commit.
+    using namespace phosphor::logging;
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
     std::cout << "Refresh network manager interfaces\n";
+
+    auto busMethod = bus.new_method_call(
+            service,
+            root,
+            refreshInterface,
+            "Refresh");
+
+    auto reply = bus.call(busMethod);
+
+    if (reply.is_method_error())
+    {
+        std::cout << "Failed to exsceute the method\n";
+        log<level::ERR>("Failed to execute method",
+                        entry("METHOD=%s", "Refresh"),
+                        entry("PATH=%s", root),
+                        entry("INTERFACE=%s", refreshInterface));
+        elog<InternalFailure>();
+    }
 
 }
 
@@ -74,10 +106,13 @@ void timerCallback()
 
 int main(int argc, char* argv[])
 {
-    std::function<void()> func(std::bind(&phosphor::network::timerCallback));
-    phosphor::network::timer = std::make_unique<phosphor::network::Timer>(func);
+    std::function<void()> func(
+            std::bind(&phosphor::network::timerCallback));
+
+    phosphor::network::timer =
+        std::make_unique<phosphor::network::Timer>(func);
 
     phosphor::network::rtnetlink::Server svr(
-                        phosphor::network::rtnetlink::eventHandler);
+            phosphor::network::rtnetlink::eventHandler);
     return svr.run();
 }
