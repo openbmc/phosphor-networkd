@@ -324,8 +324,6 @@ bool EthernetInterface::dHCPEnabled(bool value)
 
     EthernetInterfaceIntf::dHCPEnabled(value);
     writeConfigurationFile();
-    createIPAddressObjects();
-
     return value;
 }
 
@@ -373,15 +371,12 @@ void EthernetInterface::createVLAN(VlanId id)
 
     // write the device file for the vlan interface.
     vlanIntf->writeDeviceFile();
+    vlanIntf->writeConfigurationFile();
 
     this->vlanInterfaces.emplace(vlanInterfaceName,
                                  std::move(vlanIntf));
     // write the new vlan device entry to the configuration(network) file.
     writeConfigurationFile();
-
-    // Create the dbus object for the link local ipv6 address.
-    vlanInterfaces[vlanInterfaceName]->createIPAddressObjects();
-
 }
 
 // Need to merge the below function with the code which writes the
