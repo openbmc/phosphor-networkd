@@ -1,5 +1,6 @@
 #include "xyz/openbmc_project/Common/error.hpp"
 #include "rtnetlink_server.hpp"
+#include "timer.hpp"
 #include "types.hpp"
 #include "util.hpp"
 
@@ -22,8 +23,14 @@ namespace phosphor
 {
 namespace network
 {
+
+extern std::unique_ptr<phosphor::network::Timer> refreshTimer;
+
 namespace rtnetlink
 {
+
+using namespace std::chrono_literals;
+constexpr auto networkChangeTimeout = 1s; //seconds
 
 /* Call Back for the sd event loop */
 static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
@@ -43,9 +50,16 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
             if (netLinkHeader->nlmsg_type == RTM_NEWADDR ||
                 netLinkHeader->nlmsg_type == RTM_DELADDR)
             {
-                // TODO delete the below trace in later commit.
-                std::cout << "Address Changed\n";
-
+                // starting the timer here to make sure that we don't want
+                // create the child objects multiple times.
+                if (refreshTimer->isExpired())
+                {
+                    using namespace std::chrono;
+                    auto time = duration_cast<microseconds>(networkChangeTimeout);
+                    // if start timer throws exception then let the application
+                    // crash
+                    refreshTimer->startTimer(time);
+                } // end if
             } // end if
 
         } // end for
