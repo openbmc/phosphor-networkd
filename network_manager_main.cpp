@@ -1,5 +1,7 @@
+#include "config.h"
 #include "network_manager.hpp"
 #include "rtnetlink_server.hpp"
+#include "timer.hpp"
 
 #include <memory>
 
@@ -13,6 +15,12 @@ namespace network
 {
 
 std::unique_ptr<phosphor::network::Manager> manager = nullptr;
+std::unique_ptr<phosphor::network::Timer> refreshTimer = nullptr;
+
+void refreshObjects()
+{
+    manager->createChildObjects();
+}
 
 } //namespace network
 } //namespace phosphor
@@ -20,6 +28,12 @@ std::unique_ptr<phosphor::network::Manager> manager = nullptr;
 int main(int argc, char *argv[])
 {
     using namespace phosphor::logging;
+
+    std::function<void()> func(
+            std::bind(&phosphor::network::refreshObjects));
+
+    phosphor::network::refreshTimer =
+        std::make_unique<phosphor::network::Timer>(func);
 
     auto bus = sdbusplus::bus::new_default();
 
@@ -51,6 +65,6 @@ int main(int argc, char *argv[])
 
     phosphor::network::manager->createChildObjects();
 
-
     return svr.run();
 }
+
