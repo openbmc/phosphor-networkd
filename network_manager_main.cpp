@@ -1,11 +1,13 @@
+#include "config.h"
 #include "network_manager.hpp"
 #include "rtnetlink_server.hpp"
-#include "xyz/openbmc_project/Common/error.hpp"
+#include "timer.hpp"
+#include "types.hpp"
 
+#include <chrono>
+#include <functional>
 #include <memory>
-#include <iostream>
 
-#include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/manager.hpp>
@@ -20,6 +22,7 @@ namespace phosphor
 namespace network
 {
 
+std::unique_ptr<Timer> refreshTimer = nullptr;
 std::unique_ptr<Manager> manager = nullptr;
 
 namespace rtnetlink
@@ -44,8 +47,18 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
             if (netLinkHeader->nlmsg_type == RTM_NEWADDR ||
                 netLinkHeader->nlmsg_type == RTM_DELADDR)
             {
-                // TODO delete the below trace in later commit.
-                std::cout << "Address Changed\n";
+                // starting the timer here to make sure that we don't want
+                // create the child objects multiple times.
+                if (refreshTimer->isExpired())
+                {
+                    using namespace std::chrono;
+                    auto time = duration_cast<microseconds>(
+                        std::chrono::milliseconds(NETWORK_CHANGE_TIMEOUT_SEC));
+
+                    // if start timer throws exception then let the application
+                    // crash
+                    refreshTimer->startTimer(time);
+                } // end if
 
             } // end if
 
@@ -58,6 +71,10 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
 
 } // namespace rtnetlink
 
+void refreshObjects()
+{
+    phosphor::network::manager->createChildObjects();
+}
 
 } // namespace network
 } // namespace phosphor
@@ -65,7 +82,12 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
 int main(int argc, char *argv[])
 {
     using namespace phosphor::logging;
-    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
+    std::function<void()> func(
+            std::bind(&phosphor::network::refreshObjects));
+
+    phosphor::network::refreshTimer =
+        std::make_unique<phosphor::network::Timer>(func);
 
     auto bus = sdbusplus::bus::new_default();
 
