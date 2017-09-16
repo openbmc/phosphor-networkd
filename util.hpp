@@ -112,6 +112,11 @@ inline void restartSystemdUnit(const std::string& unit)
 
 }
 
+/** @brief Get all the interfaces from the system.
+ *  @returns list of interface names.
+ */
+InterfaceList getInterfaces();
+
 /** @brief Delete the given interface.
  *  @param[in] intf - interface name.
  */
