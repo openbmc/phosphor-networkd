@@ -134,7 +134,7 @@ void EthernetInterface::iP(IP::Protocol protType,
                         prefixLength,
                         gateway));
 
-    writeConfigurationFile();
+    manager.writeToConfigurationFile();
 }
 
 
@@ -246,7 +246,7 @@ void EthernetInterface::deleteObject(const std::string& ipaddress)
         return;
     }
     this->addrs.erase(it);
-    writeConfigurationFile();
+    manager.writeToConfigurationFile();
 }
 
 void EthernetInterface::deleteVLANObject(const std::string& interface)
@@ -282,9 +282,6 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
     }
     // delete the interface
     vlanInterfaces.erase(it);
-    // restart the systemd-networkd
-
-    restartSystemdUnit("systemd-networkd.service");
 
     // TODO  systemd doesn't delete the virtual network interface
     // even after deleting all the related configuartion.
@@ -297,6 +294,8 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
     {
         commit<InternalFailure>();
     }
+
+    manager.writeToConfigurationFile();
 }
 
 std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
@@ -323,7 +322,7 @@ bool EthernetInterface::dHCPEnabled(bool value)
     }
 
     EthernetInterfaceIntf::dHCPEnabled(value);
-    writeConfigurationFile();
+    manager.writeToConfigurationFile();
     return value;
 }
 
@@ -364,19 +363,18 @@ void EthernetInterface::createVLAN(VlanId id)
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
                         bus,
                         path.c_str(),
-                        EthernetInterfaceIntf::dHCPEnabled(),
+                        false,
                         id,
                         *this,
                         manager);
 
     // write the device file for the vlan interface.
     vlanIntf->writeDeviceFile();
-    vlanIntf->writeConfigurationFile();
 
     this->vlanInterfaces.emplace(vlanInterfaceName,
                                  std::move(vlanIntf));
     // write the new vlan device entry to the configuration(network) file.
-    writeConfigurationFile();
+    manager.writeToConfigurationFile();
 }
 
 // Need to merge the below function with the code which writes the
@@ -391,6 +389,15 @@ void EthernetInterface::writeConfigurationFile()
     using AddressOrigin =
         sdbusplus::xyz::openbmc_project::Network::server::IP::AddressOrigin;
     namespace fs = std::experimental::filesystem;
+
+    // if there is vlan interafce then write the configuration file
+    // for vlan also.
+
+    for (const auto& intf: vlanInterfaces)
+    {
+        intf.second->writeConfigurationFile();
+    }
+
     fs::path confPath = manager.getConfDir();
 
     std::string fileName = systemd::config::networkFilePrefix + interfaceName() +
@@ -429,7 +436,6 @@ void EthernetInterface::writeConfigurationFile()
         // configured as dhcp.
         writeDHCPSection(stream);
         stream.close();
-        restartSystemdUnit("systemd-networkd.service");
         return;
     }
 
@@ -475,7 +481,6 @@ void EthernetInterface::writeConfigurationFile()
     }
 
     stream.close();
-    restartSystemdUnit("systemd-networkd.service");
 }
 
 void EthernetInterface::writeDHCPSection(std::fstream& stream)

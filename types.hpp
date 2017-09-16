@@ -8,12 +8,17 @@
 #include <map>
 #include <memory>
 #include <set>
+#include <chrono>
 #include <systemd/sd-event.h>
 
 namespace phosphor
 {
 namespace network
 {
+
+using namespace std::chrono_literals;
+constexpr auto networkChangeTimeout = 1s;
+
 namespace systemd
 {
 namespace config
