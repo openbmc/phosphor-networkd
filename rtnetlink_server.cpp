@@ -27,7 +27,6 @@ namespace rtnetlink
 {
 
 using namespace std::chrono_literals;
-constexpr auto networkChangeTimeout = 1s; //seconds
 
 /* Call Back for the sd event loop */
 static int eventHandler(sd_event_source* es, int fd, uint32_t revents,

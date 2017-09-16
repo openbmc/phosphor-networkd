@@ -3,6 +3,7 @@
 #include "network_manager.hpp"
 #include "network_config.hpp"
 #include "ipaddress.hpp"
+#include "timer.hpp"
 #include "xyz/openbmc_project/Common/error.hpp"
 
 #include <phosphor-logging/log.hpp>
@@ -24,6 +25,7 @@ namespace phosphor
 namespace network
 {
 
+extern std::unique_ptr<phosphor::network::Timer> refreshTimer;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
@@ -104,9 +106,14 @@ void Manager::createChildObjects()
 {
     // creates the ethernet interface dbus object.
     createInterfaces();
-    // create the system conf object.
+
+    systemConf.reset(nullptr);
+    dhcpConf.reset(nullptr);
+
     fs::path objPath = objectPath;
     objPath /= "config";
+
+    // create the system conf object.
     systemConf = std::make_unique<phosphor::network::SystemConfiguration>(
                         bus, objPath.string(), *this);
     // create the dhcp conf object.
@@ -170,12 +177,25 @@ void Manager::reset()
 void Manager::writeToConfigurationFile()
 {
     // write all the static ip address in the systemd-network conf file
-
     for (const auto& intf : interfaces)
     {
         intf.second->writeConfigurationFile();
 
     }
+    restartNetwork();
+}
+
+void Manager::restartNetwork()
+{
+    using namespace std::chrono;
+
+    if (refreshTimer && !refreshTimer->isExpired())
+    {
+        auto time =  duration_cast<microseconds>(
+                        phosphor::network::networkChangeTimeout);
+        refreshTimer->startTimer(time);
+    }
+    restartSystemdUnit("systemd-networkd.service");
 }
 
 }//namespace network
