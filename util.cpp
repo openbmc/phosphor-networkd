@@ -299,6 +299,38 @@ IntfAddrMap getInterfaceAddrs()
     return intfMap;
 }
 
+InterfaceList getInterfaces()
+{
+    InterfaceList interfaces {};
+    struct ifaddrs* ifaddr = nullptr;
+
+    // attempt to fill struct with ifaddrs
+    if (getifaddrs(&ifaddr) == -1)
+    {
+        auto error = errno;
+        log<level::ERR>("Error occurred during the getifaddrs call",
+                        entry("ERRNO=%d", error));
+        elog<InternalFailure>();
+    }
+
+    AddrPtr ifaddrPtr(ifaddr);
+    ifaddr = nullptr;
+
+    for (ifaddrs* ifa = ifaddrPtr.get(); ifa != nullptr; ifa = ifa->ifa_next)
+    {
+        // walk interfaces
+        // if loopback, or not running ignore
+        if ((ifa->ifa_flags & IFF_LOOPBACK) ||
+             !(ifa->ifa_flags & IFF_RUNNING))
+        {
+            continue;
+        }
+        interfaces.emplace(ifa->ifa_name);
+    }
+    return interfaces;
+}
+
+
 void deleteInterface(const std::string& intf)
 {
     pid_t pid = fork();

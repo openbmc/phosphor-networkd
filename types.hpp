@@ -7,7 +7,7 @@
 #include <vector>
 #include <map>
 #include <memory>
-
+#include <set>
 #include <systemd/sd-event.h>
 
 namespace phosphor
@@ -61,7 +61,7 @@ using UniquePtr = std::unique_ptr<T, std::function<void(T*)>>;
 
 using AddrList = std::list<AddrInfo>;
 using IntfAddrMap = std::map<IntfName, AddrList>;
-
+using InterfaceList = std::set<IntfName>;
 
 }//namespace network
 }//namespace phosphor

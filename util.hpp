@@ -89,8 +89,9 @@ bool isLinkLocal(const std::string& address);
 std::string getNetworkID(int addressFamily, const std::string& ipaddress,
                          uint8_t prefix);
 
-/** @brief Get all the interfaces from the system.
- *  @returns list of interface names.
+/** @brief Gets the map of interface and the associated
+ *         address.
+ *  @returns map of interface and the address.
  */
 IntfAddrMap getInterfaceAddrs();
 
@@ -111,6 +112,11 @@ inline void restartSystemdUnit(const std::string& unit)
     bus.call_noreply(method);
 
 }
+
+/** @brief Get all the interfaces from the system.
+ *  @returns list of interface names.
+ */
+InterfaceList getInterfaces();
 
 /** @brief Delete the given interface.
  *  @param[in] intf - interface name.
