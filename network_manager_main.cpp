@@ -19,7 +19,7 @@ std::unique_ptr<phosphor::network::Timer> refreshTimer = nullptr;
 
 void refreshObjects()
 {
-    manager->createChildObjects();
+    manager->createInterfaces();
 }
 
 } //namespace network

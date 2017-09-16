@@ -282,9 +282,6 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
     }
     // delete the interface
     vlanInterfaces.erase(it);
-    // restart the systemd-networkd
-
-    restartSystemdUnit("systemd-networkd.service");
 
     // TODO  systemd doesn't delete the virtual network interface
     // even after deleting all the related configuartion.
@@ -297,6 +294,8 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
     {
         commit<InternalFailure>();
     }
+
+    writeConfigurationFile();
 }
 
 std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
