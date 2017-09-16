@@ -58,12 +58,12 @@ void Manager::createInterfaces()
     //clear all the interfaces first
     interfaces.clear();
 
-    auto interfaceInfoList = getInterfaceAddrs();
+    auto interfaceStrList = getInterfaces();
 
-    for (const auto& intfInfo : interfaceInfoList)
+    for (auto& interface : interfaceStrList)
     {
         fs::path objPath = objectPath;
-        auto index = intfInfo.first.find(".");
+        auto index = interface.find(".");
 
         // interface can be of vlan type or normal ethernet interface.
         // vlan interface looks like "interface.vlanid",so here by looking
@@ -72,17 +72,17 @@ void Manager::createInterfaces()
         if (index != std::string::npos)
         {
             //it is vlan interface
-            auto interface = intfInfo.first.substr(0, index);
-            auto vlanid = intfInfo.first.substr(index + 1);
+            auto interfaceName = interface.substr(0, index);
+            auto vlanid = interface.substr(index + 1);
             uint32_t vlanInt = std::stoul(vlanid);
 
-            interfaces[interface]->loadVLAN(vlanInt);
+            interfaces[interfaceName]->loadVLAN(vlanInt);
             continue;
         }
         // normal ethernet inetrface
-        objPath /= intfInfo.first;
+        objPath /= interface;
 
-        auto dhcp = getDHCPValue(confDir, intfInfo.first);
+        auto dhcp = getDHCPValue(confDir, interface);
 
         auto intf =  std::make_shared<phosphor::network::EthernetInterface>(
                          bus,
@@ -94,7 +94,7 @@ void Manager::createInterfaces()
         intf->createIPAddressObjects();
 
         this->interfaces.emplace(std::make_pair(
-                                     intfInfo.first, std::move(intf)));
+                                     interface, std::move(intf)));
 
     }
 
