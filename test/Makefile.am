@@ -33,6 +33,7 @@ test_LDADD = $(top_builddir)/ethernet_interface.o \
 			$(top_builddir)/ipaddress.o \
 			$(top_builddir)/routing_table.o \
 			$(top_builddir)/util.o \
+			$(top_builddir)/timer.o \
 			$(top_builddir)/system_configuration.o \
 			$(top_builddir)/dhcp_configuration.o \
 			$(top_builddir)/config_parser.o \
