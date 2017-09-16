@@ -3,6 +3,7 @@
 
 #include "xyz/openbmc_project/Common/error.hpp"
 #include <phosphor-logging/elog-errors.hpp>
+#include "timer.hpp"
 
 #include <gtest/gtest.h>
 #include <sdbusplus/bus.hpp>
@@ -20,6 +21,7 @@ namespace phosphor
 namespace network
 {
 
+std::unique_ptr<phosphor::network::Timer> refreshTimer = nullptr;
 namespace fs = std::experimental::filesystem;
 
 class TestNetworkManager : public testing::Test
