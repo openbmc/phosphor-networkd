@@ -568,6 +568,13 @@ std::string EthernetInterface::mACAddress(std::string value)
     {
         intf.second->updateMacAddress();
     }
+
+    // restart the systemd networkd so that dhcp client gets the
+    // ip for the changed mac address.
+    if (dHCPEnabled())
+    {
+        restartSystemdUnit("systemd-networkd.service");
+    }
     return mac;
 
 }
