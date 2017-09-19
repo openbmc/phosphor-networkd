@@ -63,6 +63,11 @@ int main(int argc, char *argv[])
 
     phosphor::network::rtnetlink::Server svr(eventPtr);
 
+    // create the default network files if the network file
+    // is not there for any interface.
+    // Parameter false means don't create the network
+    // files forcefully.
+    phosphor::network::manager->createDefaultNetworkFiles(false);
     phosphor::network::manager->createChildObjects();
 
     return svr.run();
