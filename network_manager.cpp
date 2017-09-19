@@ -37,6 +37,59 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath,
 {
     fs::path confDir(path);
     setConfDir(confDir);
+
+    // create the default network files if the network file
+    // is not there for any interface.
+    // Parameter false means don't create the network
+    // files forcefully.
+    createDefaultNetworkFiles(false);
+}
+
+void Manager::createDefaultNetworkFiles(bool force)
+{
+    try
+    {
+        // Directory would have created before with
+        // setConfDir function.
+
+        auto interfaceStrList = getInterfaces();
+        for (const auto& interface : interfaceStrList)
+        {
+            auto fileName = systemd::config::networkFilePrefix + interface +
+                            systemd::config::networkFileSuffix;
+
+            fs::path  filePath = confDir;
+            filePath /= fileName;
+
+            if (force)
+            {
+                // we need to forcefully write the files
+                // so delete the existing ones.
+                if (fs::exists(filePath))
+                {
+                    fs::remove(filePath);
+                }
+            }
+
+            // create the interface specific network file
+            // if not exist or we forcefully wants to write
+            // the network file.
+
+            if (force || !fs::is_regular_file(filePath.string()))
+            {
+                printf("Creating the network file interface=%s", interface.c_str());
+                bmc::writeDHCPDefault(filePath.string(), interface);
+                log<level::INFO>("Created the default network file.",
+                                 entry("INTERFACE=%s", interface.c_str()));
+            }
+        }
+    }
+
+    catch (std::exception& e)
+    {
+        log<level::ERR>("Unable to create the default network file");
+        elog<InternalFailure>();
+    }
 }
 
 void Manager::setConfDir(const fs::path& dir)
@@ -130,45 +183,15 @@ void Manager::vLAN(IntfName interfaceName, uint32_t id)
 
 void Manager::reset()
 {
-    const std::string networkConfig = confDir.string();
-    bool interfacesMapped = false;
-
-    if(fs::is_directory(networkConfig))
+    try
     {
-        for(auto& file : fs::directory_iterator(networkConfig))
-        {
-            fs::remove(file.path());
-        }
-
-        for (auto& intf : interfaces)
-        {
-            auto fileName = systemd::config::networkFilePrefix + intf.first +
-                            systemd::config::networkFileSuffix;
-
-            fs::path  filePath = networkConfig;
-            filePath /= fileName;
-
-            bmc::writeDHCPDefault(filePath.string(), intf.first);
-            interfacesMapped = true;
-        }
-
-        if(interfacesMapped)
-        {
-            log<level::INFO>("Network configuration reset to DHCP.");
-        }
-        else
-        {
-            log<level::ERR>("No network interfaces are mapped.");
-            // TODO: openbmc/openbmc#1721 - Log ResetFailed error here.
-        }
+        createDefaultNetworkFiles(true);
     }
-    else
+    catch (InternalFailure& e)
     {
-        log<level::ERR>("Network configuration directory not found!");
+        log<level::ERR>("Network Factory Reset failed.");
         // TODO: openbmc/openbmc#1721 - Log ResetFailed error here.
     }
-
-    return;
 }
 
 // Need to merge the below function with the code which writes the
