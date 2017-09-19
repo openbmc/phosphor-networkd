@@ -63,8 +63,20 @@ int main(int argc, char *argv[])
 
     phosphor::network::rtnetlink::Server svr(eventPtr);
 
+    // create the network interface dbus objects and system config
     phosphor::network::manager->createChildObjects();
 
+    // create the default network files if the network file
+    // is not there for any interface.
+    // Parameter false means don't create the network
+    // files forcefully.
+    if (phosphor::network::manager->createDefaultNetworkFiles(false))
+    {
+        // if files created restart the network.
+        // don't need to call the create child objects as eventhandler
+        // will create it.
+        phosphor::network::manager->restartNetwork();
+    }
     return svr.run();
 }
 
