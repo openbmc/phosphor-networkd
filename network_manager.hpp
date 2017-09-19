@@ -94,11 +94,19 @@ class Manager : public details::VLANCreateIface
          */
         const DHCPConfPtr& getDHCPConf() { return dhcpConf; }
 
-    private:
+        /** @brief create the default network files for each interface
+         *  @detail if force param is true then forcefully create the network
+         *          files otherwise if network file doesn't exist then
+         *          create it.
+         *  @param[in] force - forcefully create the file
+         *  @return true if network file created else false
+         */
+        bool createDefaultNetworkFiles(bool force);
 
         /** @brief restart the systemd networkd. */
         void restartNetwork();
 
+    private:
         /** @brief Persistent sdbusplus DBus bus connection. */
         sdbusplus::bus::bus& bus;
 
