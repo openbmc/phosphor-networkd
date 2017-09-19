@@ -94,6 +94,14 @@ class Manager : public details::VLANCreateIface
          */
         const DHCPConfPtr& getDHCPConf() { return dhcpConf; }
 
+        /** @brief create the default network files for each interface
+         *  @detail if force param is true then forcefully create the network
+         *          files otherwise if network file doesn't exist then
+         *          create it.
+         *  @param[in] force - forcefully create the file
+         */
+        void createDefaultNetworkFiles(bool force);
+
     private:
 
         /** @brief restart the systemd networkd. */
