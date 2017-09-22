@@ -103,8 +103,8 @@ class Manager : public details::VLANCreateIface
          */
         bool createDefaultNetworkFiles(bool force);
 
-        /** @brief restart the systemd networkd. */
-        void restartNetwork();
+        /** @brief restart the network timers. */
+        void restartTimers();
 
     private:
         /** @brief Persistent sdbusplus DBus bus connection. */

@@ -21,7 +21,9 @@ namespace phosphor
 namespace network
 {
 
-std::unique_ptr<phosphor::network::Timer> refreshTimer = nullptr;
+std::unique_ptr<phosphor::network::Timer> refreshObjectTimer = nullptr;
+std::unique_ptr<phosphor::network::Timer> restartTimer = nullptr;
+
 namespace fs = std::experimental::filesystem;
 
 class TestNetworkManager : public testing::Test
