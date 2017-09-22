@@ -249,18 +249,8 @@ void EthernetInterface::deleteObject(const std::string& ipaddress)
     manager.writeToConfigurationFile();
 }
 
-void EthernetInterface::deleteVLANObject(const std::string& interface)
+void EthernetInterface::deleteVLANFromSystem(const std::string& interface)
 {
-    using namespace std::string_literals;
-
-    auto it = vlanInterfaces.find(interface);
-    if (it == vlanInterfaces.end())
-    {
-        log<level::ERR>("DeleteVLANObject:Unable to find the object",
-                         entry("INTERFACE=%s",interface.c_str()));
-        return;
-    }
-
     auto confDir = manager.getConfDir();
     fs::path networkFile = confDir;
     networkFile /= systemd::config::networkFilePrefix + interface +
@@ -280,8 +270,6 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
     {
         fs::remove(deviceFile);
     }
-    // delete the interface
-    vlanInterfaces.erase(it);
 
     // TODO  systemd doesn't delete the virtual network interface
     // even after deleting all the related configuartion.
@@ -294,6 +282,22 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
     {
         commit<InternalFailure>();
     }
+
+}
+
+void EthernetInterface::deleteVLANObject(const std::string& interface)
+{
+    auto it = vlanInterfaces.find(interface);
+    if (it == vlanInterfaces.end())
+    {
+        log<level::ERR>("DeleteVLANObject:Unable to find the object",
+                         entry("INTERFACE=%s",interface.c_str()));
+        return;
+    }
+
+    deleteVLANFromSystem(interface);
+    // delete the interface
+    vlanInterfaces.erase(it);
 
     manager.writeToConfigurationFile();
 }
@@ -574,6 +578,22 @@ std::string EthernetInterface::mACAddress(std::string value)
     restartSystemdUnit("systemd-networkd.service");
     return mac;
 
+}
+
+void EthernetInterface::deleteAll()
+{
+    EthernetInterfaceIntf::dHCPEnabled(false);
+    // clear all the ip on the interface
+    addrs.clear();
+
+    for (const auto& intf: vlanInterfaces)
+    {
+        this->deleteVLANFromSystem(intf.first);
+    }
+
+    // clear all the vlan interfaces and the attached ipaddress.
+    vlanInterfaces.clear();
+    manager.writeToConfigurationFile();
 }
 
 }//namespace network
