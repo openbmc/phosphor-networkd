@@ -25,7 +25,8 @@ namespace phosphor
 namespace network
 {
 
-extern std::unique_ptr<phosphor::network::Timer> refreshTimer;
+extern std::unique_ptr<phosphor::network::Timer> refreshObjectTimer;
+extern std::unique_ptr<phosphor::network::Timer> restartTimer;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
@@ -201,20 +202,24 @@ void Manager::writeToConfigurationFile()
         intf.second->writeConfigurationFile();
 
     }
-    restartNetwork();
+    restartTimers();
 }
 
-void Manager::restartNetwork()
+void Manager::restartTimers()
 {
     using namespace std::chrono;
-
-    if (refreshTimer && !refreshTimer->isExpired())
+    if (refreshObjectTimer && restartTimer)
     {
-        auto time =  duration_cast<microseconds>(
-                        phosphor::network::networkChangeTimeout);
-        refreshTimer->startTimer(time);
+        // start the restart timer.
+        auto restartTime = duration_cast<microseconds>(
+                phosphor::network::restartTimeout);
+        restartTimer->startTimer(restartTime);
+
+        // start the refresh timer.
+        auto refreshTime =  duration_cast<microseconds>(
+                phosphor::network::refreshTimeout);
+        refreshObjectTimer->startTimer(refreshTime);
     }
-    restartSystemdUnit("systemd-networkd.service");
 }
 
 }//namespace network
