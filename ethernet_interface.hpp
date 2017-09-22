@@ -151,8 +151,12 @@ class EthernetInterface : public Ifaces
         /** @brief get the info of the ethernet interface.
          *  @return tuple having the link speed,autonegotiation,duplexmode .
          */
-
         InterfaceInfo getInterfaceInfo() const;
+
+        /* @brief delete the vlan interface from system.
+         * @param[in] interface - vlan Interface.
+         */
+        void deleteVLANFromSystem(const std::string& interface);
 
         /** @brief get the mac address of the interface.
          *  @param[in] interfaceName - Network interface name.

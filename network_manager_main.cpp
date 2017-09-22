@@ -15,25 +15,47 @@ namespace network
 {
 
 std::unique_ptr<phosphor::network::Manager> manager = nullptr;
-std::unique_ptr<phosphor::network::Timer> refreshTimer = nullptr;
+std::unique_ptr<phosphor::network::Timer> refreshObjectTimer = nullptr;
+std::unique_ptr<phosphor::network::Timer> restartTimer = nullptr;
 
+/** @brief refresh the network objects. */
 void refreshObjects()
 {
-    manager->createChildObjects();
+    if (manager)
+    {
+        manager->createChildObjects();
+    }
+}
+
+/** @brief restart the systemd networkd. */
+void restartNetwork()
+{
+    restartSystemdUnit("systemd-networkd.service");
 }
 
 } //namespace network
 } //namespace phosphor
 
+void initializeTimers()
+{
+    std::function<void()> refreshFunc(
+            std::bind(&phosphor::network::refreshObjects));
+
+    std::function<void()> restartFunc(
+            std::bind(&phosphor::network::restartNetwork));
+
+    phosphor::network::refreshObjectTimer =
+        std::make_unique<phosphor::network::Timer>(refreshFunc);
+
+    phosphor::network::restartTimer =
+        std::make_unique<phosphor::network::Timer>(restartFunc);
+}
+
 int main(int argc, char *argv[])
 {
     using namespace phosphor::logging;
 
-    std::function<void()> func(
-            std::bind(&phosphor::network::refreshObjects));
-
-    phosphor::network::refreshTimer =
-        std::make_unique<phosphor::network::Timer>(func);
+    initializeTimers();
 
     auto bus = sdbusplus::bus::new_default();
 
@@ -75,7 +97,7 @@ int main(int argc, char *argv[])
         // if files created restart the network.
         // don't need to call the create child objects as eventhandler
         // will create it.
-        phosphor::network::manager->restartNetwork();
+        phosphor::network::restartNetwork();
     }
     return svr.run();
 }
