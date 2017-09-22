@@ -21,7 +21,7 @@ namespace phosphor
 namespace network
 {
 
-extern std::unique_ptr<phosphor::network::Timer> refreshTimer;
+extern std::unique_ptr<phosphor::network::Timer> refreshObjectTimer;
 
 namespace rtnetlink
 {
@@ -46,13 +46,13 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
             {
                 // starting the timer here to make sure that we don't want
                 // create the child objects multiple times.
-                if (refreshTimer->isExpired())
+                if (refreshObjectTimer->isExpired())
                 {
                     using namespace std::chrono;
-                    auto time = duration_cast<microseconds>(networkChangeTimeout);
+                    auto time = duration_cast<microseconds>(refreshTimeout);
                     // if start timer throws exception then let the application
                     // crash
-                    refreshTimer->startTimer(time);
+                    refreshObjectTimer->startTimer(time);
                 } // end if
             } // end if
 
@@ -62,7 +62,6 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
 
     return 0;
 }
-
 
 int Server::run()
 {
@@ -118,7 +117,7 @@ int Server::run()
 
     memset(&addr, 0, sizeof(addr));
     addr.nl_family = AF_NETLINK;
-    addr.nl_groups = RTMGRP_IPV4_IFADDR;
+    addr.nl_groups = RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR;
 
     if (bind(smartSock(), (struct sockaddr*)&addr, sizeof(addr)) < 0)
     {
