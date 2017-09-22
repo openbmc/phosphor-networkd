@@ -6,6 +6,7 @@
 #include "xyz/openbmc_project/Network/EthernetInterface/server.hpp"
 #include "xyz/openbmc_project/Network/MACAddress/server.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
+#include "xyz/openbmc_project/Collection/DeleteAll/server.hpp"
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
@@ -21,7 +22,8 @@ using Ifaces =
     sdbusplus::server::object::object<
         sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface,
         sdbusplus::xyz::openbmc_project::Network::server::MACAddress,
-        sdbusplus::xyz::openbmc_project::Network::IP::server::Create>;
+        sdbusplus::xyz::openbmc_project::Network::IP::server::Create,
+        sdbusplus::xyz::openbmc_project::Collection::server::DeleteAll>;
 
 using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 
@@ -136,17 +138,24 @@ class EthernetInterface : public Ifaces
          */
         void writeConfigurationFile();
 
+        /** @brief delete all dbus objects.
+         */
+        void deleteAll();
+
         using EthernetInterfaceIntf::dHCPEnabled;
         using EthernetInterfaceIntf::interfaceName;
         using MacAddressIntf::mACAddress;
 
     protected:
-
         /** @brief get the info of the ethernet interface.
          *  @return tuple having the link speed,autonegotiation,duplexmode .
          */
-
         InterfaceInfo getInterfaceInfo() const;
+
+        /* @brief delete the vlan interface from system.
+         * @param[in] interface - vlan Interface.
+         */
+        void deleteVLANFromSystem(const std::string& interface);
 
         /** @brief get the mac address of the interface.
          *  @param[in] interfaceName - Network interface name.
