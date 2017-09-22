@@ -576,5 +576,21 @@ std::string EthernetInterface::mACAddress(std::string value)
 
 }
 
+void EthernetInterface::deleteAll()
+{
+    EthernetInterfaceIntf::dHCPEnabled(false);
+    // clear all the ip on the interface
+    addrs.clear();
+
+    for (const auto& intf: vlanInterfaces)
+    {
+        printf("VLAN=%s\n",intf.first.c_str());
+        intf.second->deleteVLANObject(intf.first);
+    }
+
+    // clear all the vlan interfaces and the attached ipaddress.
+    vlanInterfaces.clear();
+}
+
 }//namespace network
 }//namespace phosphor
