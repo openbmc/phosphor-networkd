@@ -482,7 +482,7 @@ std::string getfromInventory(sdbusplus::bus::bus& bus)
         elog<InternalFailure>();
     }
 
-    // It is expected that only one object have impelmented this interface.
+    // It is expected that only one object has implemented this interface.
 
     auto objPath = objectTree.begin()->first;
     auto service = objectTree.begin()->second.begin()->first;
