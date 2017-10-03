@@ -78,7 +78,21 @@ std::string toMask(int addressFamily, uint8_t prefix);
  * @param[in] address - IP address.
  * @returns true if it is linklocal otherwise false.
  */
-bool isLinkLocal(const std::string& address);
+bool isLinkLocalIP(const std::string& address);
+
+/* @brief checks that the given ip address valid or not.
+ * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
+ * @param[in] address - IP address.
+ * @returns true if it is valid otherwise false.
+ */
+bool isValidIP(uint8_t addressFamily, const std::string& address);
+
+/* @brief checks that the given prefix is valid or not.
+ * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
+ * @param[in] prefix - prefix length.
+ * @returns true if it is valid otherwise false.
+ */
+bool isValidPrefix(uint8_t addressFamily, uint8_t prefixLength);
 
 /* @brief gets the network section of the ip adress.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
