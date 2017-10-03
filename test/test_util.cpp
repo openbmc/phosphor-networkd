@@ -64,13 +64,22 @@ TEST_F(TestUtil, convertV6MasktoPrefix)
 TEST_F(TestUtil, isLinkLocaladdress)
 {
     std::string ipaddress = "fe80:fec0::";
-    EXPECT_TRUE(isLinkLocal(ipaddress));
+    EXPECT_TRUE(isLinkLocalIP(ipaddress));
 
-    ipaddress = "2000:4567:789::";
-    EXPECT_FALSE(isLinkLocal(ipaddress));
+    ipaddress = "2000:fe80:789::";
+    EXPECT_FALSE(isLinkLocalIP(ipaddress));
 
     ipaddress = "2000:fe80::";
-    EXPECT_FALSE(isLinkLocal(ipaddress));
+    EXPECT_FALSE(isLinkLocalIP(ipaddress));
+
+    ipaddress = "169.254.3.3";
+    EXPECT_TRUE(isLinkLocalIP(ipaddress));
+
+    ipaddress = "3.169.254.3";
+    EXPECT_FALSE(isLinkLocalIP(ipaddress));
+
+    ipaddress = "3.3.169.254";
+    EXPECT_FALSE(isLinkLocalIP(ipaddress));
 }
 
 TEST_F(TestUtil, convertPrefixToMask)

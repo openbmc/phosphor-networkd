@@ -1,7 +1,10 @@
 #include "ipaddress.hpp"
 #include "ethernet_interface.hpp"
+#include "util.hpp"
 
+#include "xyz/openbmc_project/Common/error.hpp"
 #include <phosphor-logging/log.hpp>
+#include <phosphor-logging/elog-errors.hpp>
 
 namespace phosphor
 {
@@ -9,6 +12,7 @@ namespace network
 {
 
 using namespace phosphor::logging;
+using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 IPAddress::IPAddress(sdbusplus::bus::bus& bus,
           const char* objPath,
@@ -34,6 +38,20 @@ IPAddress::IPAddress(sdbusplus::bus::bus& bus,
 
 void IPAddress::delete_()
 {
+    if (parent.dHCPEnabled())
+    {
+        log<level::ERR>("DHCP enabled on the interface"),
+                        entry("INTERFACE=%s",parent.interfaceName().c_str());
+        elog<InternalFailure>();
+    }
+
+    if (isLinkLocalIP(address().c_str()))
+    {
+        log<level::ERR>("This interface is for LinkLocal"),
+                        entry("INTERFACE=%s",parent.interfaceName().c_str());
+        elog<InternalFailure>();
+    }
+
     parent.deleteObject(address());
 }
 
