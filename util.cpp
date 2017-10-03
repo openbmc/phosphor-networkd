@@ -202,12 +202,23 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
     return networkString;
 }
 
-bool isLinkLocal(const std::string& address)
+bool isLinkLocalIP(const std::string& address,
+                   const std::string& match)
 {
-    std::string linklocal = "fe80";
-    return std::mismatch(linklocal.begin(), linklocal.end(),
-                         address.begin()).first == linklocal.end() ?
-           true : false;
+    constexpr auto ipv4LinkLocalPrefix("169.254");
+    constexpr auto ipv6LinkLocalPrefix("fe80::");
+    auto ipLinkLocalPrefix = (match == "ipv4") ?
+                             ipv4LinkLocalPrefix : ipv6LinkLocalPrefix;
+
+    if (address.find(ipLinkLocalPrefix) != std::string::npos)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
 }
 
 IntfAddrMap getInterfaceAddrs()
