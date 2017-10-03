@@ -202,12 +202,39 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
     return networkString;
 }
 
-bool isLinkLocal(const std::string& address)
+bool isLinkLocalIP(const std::string& address)
 {
-    std::string linklocal = "fe80";
-    return std::mismatch(linklocal.begin(), linklocal.end(),
-                         address.begin()).first == linklocal.end() ?
-           true : false;
+    return address.find(IPV4_PREFIX) == 0 || address.find(IPV6_PREFIX) == 0;
+}
+
+bool isValidIP(int addressFamily, const std::string& address)
+{
+    unsigned char buf[sizeof(struct in6_addr)];
+
+    return inet_pton(addressFamily, address.c_str(), buf) > 0;
+}
+
+bool isValidPrefix(int addressFamily, uint8_t prefixLength)
+{
+    if (addressFamily == AF_INET)
+    {
+        if (prefixLength < IPV4_MIN_PREFIX_LENGTH ||
+            prefixLength > IPV4_MAX_PREFIX_LENGTH)
+        {
+            return false;
+        }
+    }
+
+    if (addressFamily == AF_INET6)
+    {
+        if (prefixLength < IPV4_MIN_PREFIX_LENGTH ||
+            prefixLength > IPV6_MAX_PREFIX_LENGTH)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 IntfAddrMap getInterfaceAddrs()

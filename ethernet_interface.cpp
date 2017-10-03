@@ -32,6 +32,7 @@ namespace network
 
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
@@ -77,7 +78,7 @@ void EthernetInterface::createIPAddressObjects()
         {
             origin = IP::AddressOrigin::DHCP;
         }
-        else if (isLinkLocal(addr.ipaddress))
+        else if (isLinkLocalIP(addr.ipaddress))
         {
             origin = IP::AddressOrigin::LinkLocal;
         }
@@ -112,11 +113,41 @@ void EthernetInterface::iP(IP::Protocol protType,
     if (dHCPEnabled())
     {
         log<level::INFO>("DHCP enabled on the interface"),
-                        entry("INTERFACE=%s",interfaceName().c_str());
+            entry("INTERFACE=%s", interfaceName().c_str());
+        dHCPEnabled(false);
+    }
+
+
+    IP::AddressOrigin origin = IP::AddressOrigin::Static;
+
+    int addressFamily = (protType == IP::Protocol::IPv4) ? AF_INET : AF_INET6;
+
+    if (!isValidIP(addressFamily, ipaddress))
+    {
+        log<level::ERR>("Not a valid IP address"),
+            entry("ADDRESS=%s", ipaddress.c_str());
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("ipaddress"),
+                              Argument::ARGUMENT_VALUE(ipaddress.c_str()));
+    }
+
+    if (!gateway.empty() && (!isValidIP(addressFamily, gateway)))
+    {
+        log<level::ERR>("Not a valid Gateway"),
+            entry("GATEWAY=%s", gateway.c_str());
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("gateway"),
+                              Argument::ARGUMENT_VALUE(gateway.c_str()));
+    }
+
+    if (!isValidPrefix(addressFamily, prefixLength))
+    {
+        log<level::ERR>("PrefixLength is not correct "),
+            entry("PREFIXLENGTH=%d", gateway.c_str());
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("prefixLength"),
+                              Argument::ARGUMENT_VALUE(std::to_string(
+                                          prefixLength).c_str()));
         return;
     }
 
-    IP::AddressOrigin origin = IP::AddressOrigin::Static;
 
     std::string objectPath = generateObjectPath(protType,
                                                 ipaddress,
