@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unistd.h>
+#include <arpa/inet.h>
 
 #include "config.h"
 #include "types.hpp"
@@ -76,9 +77,11 @@ std::string toMask(int addressFamily, uint8_t prefix);
 
 /* @brief checks that the given ip address is link local or not.
  * @param[in] address - IP address.
+ * @param[in] ipType  - IP type.
  * @returns true if it is linklocal otherwise false.
  */
-bool isLinkLocal(const std::string& address);
+bool isLinkLocalIP(const std::string& address,
+                   const std::string& ipType = "ipv4");
 
 /* @brief gets the network section of the ip adress.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
