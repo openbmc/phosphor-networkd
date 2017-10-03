@@ -11,6 +11,28 @@ namespace phosphor
 {
 namespace network
 {
+
+constexpr auto IPV4_MIN_PREFIX_LENGTH = 1;
+constexpr auto IPV4_MAX_PREFIX_LENGTH = 32;
+constexpr auto IPV6_MAX_PREFIX_LENGTH = 64;
+
+template<uint8_t n>
+bool isValidPrefix(uint8_t prefixlength) = delete;
+
+template<>
+bool isValidPrefix<AF_INET>(uint8_t prefixLength)
+{
+    return (prefixLength < IPV4_MIN_PREFIX_LENGTH ||
+            prefixLength > IPV4_MAX_PREFIX_LENGTH) ? false : true;
+}
+
+template<>
+bool isValidPrefix<AF_INET6>(uint8_t prefixLength)
+{
+    return (prefixLength < IPV4_MIN_PREFIX_LENGTH ||
+            prefixLength > IPV6_MAX_PREFIX_LENGTH) ? false : true;
+}
+
 namespace mac_address
 {
 
@@ -78,7 +100,14 @@ std::string toMask(int addressFamily, uint8_t prefix);
  * @param[in] address - IP address.
  * @returns true if it is linklocal otherwise false.
  */
-bool isLinkLocal(const std::string& address);
+bool isLinkLocalIP(const std::string& address);
+
+/* @brief checks that the given ip address valid or not.
+ * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
+ * @param[in] address - IP address.
+ * @returns true if it is valid otherwise false.
+ */
+bool isValidIP(uint8_t addressFamily, const std::string& address);
 
 /* @brief gets the network section of the ip adress.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).

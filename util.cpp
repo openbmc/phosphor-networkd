@@ -202,12 +202,24 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
     return networkString;
 }
 
-bool isLinkLocal(const std::string& address)
+bool isLinkLocalIP(const std::string& address)
 {
-    std::string linklocal = "fe80";
-    return std::mismatch(linklocal.begin(), linklocal.end(),
-                         address.begin()).first == linklocal.end() ?
-           true : false;
+    if (address.find("169.254") == 0 || address.find("fe80") == 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
+}
+
+bool isValidIP(uint8_t addressFamily, const std::string& address)
+{
+    unsigned char buf[sizeof(struct in6_addr)];
+
+    return (inet_pton(addressFamily, address.c_str(), buf) <= 0) ? false : true;
 }
 
 IntfAddrMap getInterfaceAddrs()
