@@ -23,7 +23,8 @@ noinst_HEADERS = \
 		vlan_interface.hpp \
 		rtnetlink_server.hpp \
 		timer.hpp \
-		dns_updater.hpp
+		dns_updater.hpp \
+		watch.hpp
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
@@ -41,7 +42,8 @@ phosphor_network_manager_SOURCES = \
         vlan_interface.cpp \
 		rtnetlink_server.cpp \
 		timer.cpp \
-		dns_updater.cpp
+		dns_updater.cpp \
+		watch.cpp
 
 CLEANFILES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \

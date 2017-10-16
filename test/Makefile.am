@@ -2,7 +2,7 @@ AM_CPPFLAGS = -I${top_srcdir} -I${top_builddir}
 
 TESTS = $(check_PROGRAMS)
 
-check_PROGRAMS = test test_dns_updater
+check_PROGRAMS = test test_dns_updater test_watch
 
 test_SOURCES = \
 	test_util.cpp \
@@ -13,6 +13,7 @@ test_SOURCES = \
 	test_vlan_interface.cpp
 
 test_dns_updater_SOURCES = test_dns_updater.cpp
+test_watch_SOURCES = test_watch.cpp
 
 generic_cpp_flags = -Igtest $(GTEST_CPPFLAGS) $(AM_CPPFLAGS)
 
@@ -37,6 +38,10 @@ test_dns_updater_CPPFLAGS = ${generic_cpp_flags}
 test_dns_updater_CXXFLAGS = ${generic_cxx_flags}
 test_dns_updater_LDFLAGS  = ${generic_ld_flags}
 
+test_watch_CPPFLAGS = ${generic_cpp_flags}
+test_watch_CXXFLAGS = ${generic_cxx_flags}
+test_watch_LDFLAGS  = ${generic_ld_flags}
+
 test_LDADD = $(top_builddir)/ethernet_interface.o \
 			$(top_builddir)/network_manager.o \
 			$(top_builddir)/network_config.o \
@@ -52,3 +57,4 @@ test_LDADD = $(top_builddir)/ethernet_interface.o \
 			$(top_builddir)/xyz/openbmc_project/Network/IP/Create/phosphor_network_manager-server.o
 
 test_dns_updater_LDADD = $(top_builddir)/dns_updater.o
+test_watch_LDADD = $(top_builddir)/watch.o
