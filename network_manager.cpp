@@ -64,6 +64,13 @@ bool Manager::createDefaultNetworkFiles(bool force)
         auto interfaceStrList = getInterfaces();
         for (const auto& interface : interfaceStrList)
         {
+            // if the interface has '.' in the name, it means that this is a
+            // VLAN - don't create the network file.
+            if (interface.find(".") != std::string::npos)
+            {
+                continue;
+            }
+
             auto fileName = systemd::config::networkFilePrefix + interface +
                 systemd::config::networkFileSuffix;
 
