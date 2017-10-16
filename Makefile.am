@@ -3,11 +3,7 @@ nobase_nodist_include_HEADERS = \
 	xyz/openbmc_project/Network/VLAN/Create/server.hpp \
 	xyz/openbmc_project/Network/IP/Create/server.hpp
 
-sbin_PROGRAMS = netman_watch_dns phosphor-network-manager
-
-netman_watch_dns_SOURCES = netman_watch_dns.c
-netman_watch_dns_LDFLAGS = $(SYSTEMD_LIBS)
-netman_watch_dns_CFLAGS = $(SYSTEMD_CFLAGS)
+sbin_PROGRAMS = phosphor-network-manager
 
 noinst_HEADERS = \
 		ethernet_interface.hpp \
