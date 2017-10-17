@@ -17,8 +17,8 @@ namespace dns
 namespace updater
 {
 
-void processDNSEntries(const fs::path& inFile,
-                       const fs::path& outFile)
+void updateDNSEntries(const fs::path& inFile,
+                      const fs::path& outFile)
 {
     using namespace phosphor::logging;
     using namespace sdbusplus::xyz::openbmc_project::Common::Error;
