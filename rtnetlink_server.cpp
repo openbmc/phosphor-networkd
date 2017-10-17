@@ -13,6 +13,8 @@
 #include <unistd.h>
 
 #include <phosphor-logging/log.hpp>
+#include <phosphor-logging/elog-errors.hpp>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 #include <memory>
 
@@ -63,10 +65,11 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
     return 0;
 }
 
-int Server::run()
+Server::Server(EventPtr& eventPtr)
 {
     using namespace phosphor::logging;
-
+    using InternalFailure = sdbusplus::xyz::openbmc_project::Common::
+                                    Error::InternalFailure;
     struct sockaddr_nl addr {};
 
     int fd = -1;
@@ -132,17 +135,14 @@ int Server::run()
         goto finish;
     }
 
-    r = sd_event_loop(eventPtr.get());
-
 finish:
 
     if (r < 0)
     {
         log<level::ERR>("Failure Occured in starting of server:",
                         entry("errno = %d", errno));
+        elog<InternalFailure>();
     }
-
-    return r < 0 ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
 

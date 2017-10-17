@@ -2,6 +2,8 @@
 #include "network_manager.hpp"
 #include "rtnetlink_server.hpp"
 #include "timer.hpp"
+#include "watch.hpp"
+#include "dns_updater.hpp"
 
 #include <memory>
 
@@ -83,8 +85,6 @@ int main(int argc, char *argv[])
                                                          OBJ_NETWORK,
                                                          NETWORK_CONF_DIR);
 
-    phosphor::network::rtnetlink::Server svr(eventPtr);
-
     // create the network interface dbus objects and system config
     phosphor::network::manager->createChildObjects();
 
@@ -99,6 +99,16 @@ int main(int argc, char *argv[])
         // will create it.
         phosphor::network::restartNetwork();
     }
-    return svr.run();
+
+    // RTNETLINK event handler
+    phosphor::network::rtnetlink::Server svr(eventPtr);
+
+    // DNS entry handler
+    phosphor::network::inotify::Watch watch(eventPtr, DNS_ENTRY_FILE,
+            std::bind(&phosphor::network::dns::updater::processDNSEntries,
+                std::placeholders::_1));
+
+    // Run the server
+    sd_event_loop(eventPtr.get());
 }
 

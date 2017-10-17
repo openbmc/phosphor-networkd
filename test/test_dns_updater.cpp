@@ -51,7 +51,7 @@ class DnsUpdateTest : public ::testing::Test
  */
 TEST_F(DnsUpdateTest, validateOutFile)
 {
-    phosphor::network::dns::updater::processDNSEntries(IN_FILE, OUT_FILE);
+    phosphor::network::dns::updater::updateDNSEntries(IN_FILE, OUT_FILE);
 
     // Read files and compare
     std::ifstream resolv(OUT_FILE);
