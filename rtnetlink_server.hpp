@@ -1,6 +1,7 @@
 #pragma once
 
 #include "types.hpp"
+#include "util.hpp"
 
 #include <systemd/sd-event.h>
 
@@ -26,28 +27,18 @@ class Server
 
         /** @brief Constructor
          *
-         *  @param[in] event - Unique ptr reference to sd_event.
+         *  @details Sets up the server to handle incoming RTNETLINK events
+         *
+         *  @param[in] eventPtr - Unique ptr reference to sd_event.
          */
+        Server(EventPtr& eventPtr);
 
-        Server(EventPtr& event):
-            eventPtr(event) {};
-
+        Server() = delete;
+        ~Server() = default;
         Server(const Server&) = delete;
         Server& operator=(const Server&) = delete;
         Server(Server&&) = default;
         Server& operator=(Server &&) = default;
-
-        /** @brief Initialise the event loop and add the handler for incoming
-         *         RTNETLINK events.
-         *
-         *  @return EXIT_SUCCESS on success and EXIT_FAILURE on failure.
-         */
-        int run();
-
-    private:
-        /** @brief reference to sd_event wrapped in unique_ptr */
-        EventPtr& eventPtr;
-
 };
 
 } //namespace rtnetlink
