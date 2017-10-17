@@ -380,12 +380,20 @@ int main(int argc, char *argv[])
 
     printf("Watching for changes in DNS settings..\n");
 
-    /* Now that we have checked it once. rest is all notification bases. */
+     /* Commenting since this functionality has been built into network
+      * manager and this file will be deleted in the very next commit
+      */
+    /*
     rc = watch_for_dns_change(netif_dir, state_file);
     if(rc < 0)
     {
         fprintf(stderr,"Error watching for DNS changes\n");
     }
+    */
 
-    return 0;
+    // Returning will result in app getting launched again per Restart
+    // policy in service file
+    pause();
+
+    return rc;
 }
