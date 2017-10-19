@@ -139,7 +139,7 @@ finish:
     if (r < 0)
     {
         log<level::ERR>("Failure Occured in starting of server:",
-                        entry("errno = %d", errno));
+                        entry("ERRNO = %d", errno));
     }
 
     return r < 0 ? EXIT_FAILURE : EXIT_SUCCESS;
