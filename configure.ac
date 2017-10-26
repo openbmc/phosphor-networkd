@@ -18,7 +18,7 @@ AM_PROG_AR
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
-# Surpress the --with-libtool-sysroot error
+# Suppress the --with-libtool-sysroot error
 LT_INIT
 
 # Checks for libraries.

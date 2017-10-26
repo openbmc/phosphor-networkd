@@ -53,7 +53,7 @@ int Table::readNetLinkSock(int sockFd, std::array<char,BUFSIZE>& buf)
 
     do
     {
-        // Recieve response from the kernel
+        // Receive response from the kernel
         if ((readLen = recv(sockFd, bufPtr, BUFSIZE - msgLen, 0)) < 0)
         {
             auto error = errno;
@@ -168,7 +168,7 @@ Map Table::getRoutes()
     if ((sock = socket(PF_NETLINK, SOCK_DGRAM, NETLINK_ROUTE)) < 0)
     {
         auto error = errno;
-        log<level::ERR>("Error occured during socket creation",
+        log<level::ERR>("Error occurred during socket creation",
                         entry("ERRNO=%s", strerror(error)));
         elog<InternalFailure>();
     }
