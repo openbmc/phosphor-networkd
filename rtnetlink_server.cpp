@@ -139,7 +139,7 @@ finish:
 
     if (r < 0)
     {
-        log<level::ERR>("Failure Occured in starting of server:",
+        log<level::ERR>("Failure Occurred in starting of server:",
                         entry("ERRNO=%d", errno));
         elog<InternalFailure>();
     }

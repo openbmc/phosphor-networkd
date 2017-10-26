@@ -104,7 +104,7 @@ bool isValidIP(int addressFamily, const std::string& address);
  */
 bool isValidPrefix(int addressFamily, uint8_t prefixLength);
 
-/* @brief gets the network section of the ip adress.
+/* @brief gets the network section of the ip address.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
  * @param[in] ipaddress - IP address.
  * @param[in] prefix - prefix length.

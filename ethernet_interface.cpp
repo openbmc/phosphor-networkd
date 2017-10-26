@@ -619,7 +619,7 @@ std::string EthernetInterface::mACAddress(std::string value)
         }
         catch(InternalFailure& e)
         {
-            log<level::ERR>("Exception occured during getting of MAC \
+            log<level::ERR>("Exception occurred during getting of MAC \
                                address from Inventory");
             return  MacAddressIntf::mACAddress();
         }
