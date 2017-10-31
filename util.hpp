@@ -17,6 +17,7 @@ constexpr auto IPV4_MAX_PREFIX_LENGTH = 32;
 constexpr auto IPV6_MAX_PREFIX_LENGTH = 64;
 constexpr auto IPV4_PREFIX = "169.254";
 constexpr auto IPV6_PREFIX = "fe80";
+constexpr auto ZEROMACADDRESS = "00:00:00:00:00:00";
 
 namespace mac_address
 {
@@ -35,7 +36,8 @@ constexpr size_t size = 18;
 inline bool validate(const std::string& value)
 {
     std::regex regexToCheck(regex);
-    return std::regex_search(value, regexToCheck);
+    return std::regex_search(value, regexToCheck) &&
+           value.find(ZEROMACADDRESS) != 0;
 }
 
 /** @brief gets the MAC address from the Inventory.
