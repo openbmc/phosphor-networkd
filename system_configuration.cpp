@@ -95,11 +95,19 @@ std::string SystemConfiguration::getHostNameFromSystem() const
 
 std::string SystemConfiguration::defaultGateway(std::string gateway)
 {
-    if (SystemConfigIntf::defaultGateway() == gateway)
+    auto gw = SystemConfigIntf::defaultGateway();
+    if (gw == gateway)
     {
-        return gateway;
+        return gw;
     }
-    auto gw = SystemConfigIntf::defaultGateway(gateway);
+
+    if (!isValidIP(AF_INET, gateway))
+    {
+        log<level::ERR>("Not a valid Gateway"),
+            entry("GATEWAY=%s", gateway.c_str());
+        return gw;
+    }
+    gw = SystemConfigIntf::defaultGateway(gateway);
     manager.writeToConfigurationFile();
     return gw;
 }
