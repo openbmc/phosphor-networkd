@@ -22,6 +22,7 @@ constexpr auto METHOD_SET = "SetStaticHostname";
 
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
 using SystemConfigIntf =
     sdbusplus::xyz::openbmc_project::Network::server::SystemConfiguration;
@@ -95,6 +96,16 @@ std::string SystemConfiguration::getHostNameFromSystem() const
 
 std::string SystemConfiguration::defaultGateway(std::string gateway)
 {
+    int addressFamily = (gateway.length() <= 15) ? AF_INET : AF_INET6;
+    
+    if (!isValidIP(addressFamily, gateway))
+    {
+        log<level::ERR>("Not a valid Gateway"),
+            entry("GATEWAY=%s", gateway.c_str());
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("gateway"),
+                              Argument::ARGUMENT_VALUE(gateway.c_str()));
+    }
+
     if (SystemConfigIntf::defaultGateway() == gateway)
     {
         return gateway;
