@@ -244,9 +244,46 @@ class NetMan (dbus.service.Object):
             mac = ipout.split ()[1]
             return mac
 
-    @dbus.service.method(DBUS_NAME, "", "")
-    def test(self):
-        print("TEST")
+    def _checkNetworkForRequiredFields(self, device):
+        parser = SafeConfigParser()
+        parser.optionxform = str
+        parser.read("/etc/systemd/network/00-bmc-" + device + ".network")
+        sections = parser.sections()
+        if "Match" not in sections:
+            parser.add_section("Match")
+            parser.set("Match", "Name", device)
+
+        if "Network" not in sections:
+            parser.add_section("Network")
+
+        if "Link" not in sections:
+            parser.add_section("Link")
+            mac = self._getAddr("mac", device)
+            try:
+                self.validatemac(mac)
+                parser.set("Link", MAC_PROPERTY, mac)
+            except ValueError as e:
+                print("System MAC Address invalid:" + e)
+
+        return parser
+
+    def _flushAndRestartNetwork(self, device):
+        print "Restarting networkd service..."
+        subprocess.check_call(["ip", "addr", "flush", device])
+        subprocess.check_call(["systemctl", "restart", "systemd-networkd.service"])
+
+        return 0
+
+    def _upDownNetworkService(self, device, mac=None):
+        print "Restarting networkd service..."
+        subprocess.check_call(["ip", "link", "set", "dev", device, "down"])
+        if mac is not None:
+            subprocess.check_call(["fw_setenv", "ethaddr", mac])
+            subprocess.check_call(["ip", "link", "set", "dev", device, "address", mac])
+
+        subprocess.check_call(["systemctl", "restart", "systemd-networkd.service"])
+
+        return 0
 
     @dbus.service.method(DBUS_NAME, "sas", "x")
     def SetNtpServer (self, device, ntpservers):
@@ -289,60 +326,36 @@ class NetMan (dbus.service.Object):
         return 0
 
     @dbus.service.method(DBUS_NAME, "s", "x")
-    def EnableDHCP (self, device):
-        if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
+    def EnableDHCP(self, device):
+        if not self._isvaliddev(device): raise ValueError, "Invalid Device"
+        parser = self._checkNetworkForRequiredFields(device)
+        parser.set("Network", "DHCP", "yes")
 
-        confFile = "/etc/systemd/network/00-bmc-" + device + ".network"
+        # Write to config file
+        with open("/etc/systemd/network/00-bmc-" + device + ".network", 'w') as configfile:
+            parser.write(configfile)
 
-        print("Making .network file...")
-        try:
-            networkconf = open (confFile, "w+") 
-        except IOError:
-            raise IOError, "Failed to open " + confFile
-            
-        networkconf.write ('[Match]'+ '\n')
-        networkconf.write ('Name=' + (device) + '\n')
-        networkconf.write ('[Network]' + '\n')
-        networkconf.write ('DHCP=yes' + '\n')
-        networkconf.write ('[DHCP]' + '\n')
-        networkconf.write ('ClientIdentifier=mac' + '\n')
-        networkconf.close ()
-
-        print("Restarting networkd service...")
-        rc = call(["ip", "addr", "flush", device])
-        rc = call(["systemctl", "restart", "systemd-networkd.service"])
-        return rc
+        return (self._flushAndRestartNetwork(device))
 
     @dbus.service.method(DBUS_NAME, "ssss", "x")
-    def SetAddress4 (self, device, ipaddr, netmask, gateway):
-        if not self._isvaliddev (device) : raise ValueError, "Invalid Device"
-        if not self._isvalidmask (netmask) : raise ValueError, "Invalid Mask"
-        prefixLen = getPrefixLen (netmask)
+    def SetAddress4(self, device, ipaddr, netmask, gateway):
+        if not self._isvaliddev(device): raise ValueError, "Invalid Device"
+        if not self._isvalidmask(netmask): raise ValueError, "Invalid Mask"
+        prefixLen = getPrefixLen(netmask)
         if prefixLen == 0: raise ValueError, "Invalid Mask"
-        valid = self._isvalidip (ipaddr, netmask)
+        valid = self._isvalidip(ipaddr, netmask)
         if valid != "Valid": raise ValueError, valid + " IP Address"
-        valid = self._isvalidip (gateway)
+        valid = self._isvalidip(gateway)
         if valid != "Valid": raise ValueError, valid + " IP Address"
 
-        confFile = "/etc/systemd/network/00-bmc-" + device + ".network"
+        parser = self._checkNetworkForRequiredFields(device)
+        parser.set("Network", "DHCP", "no")
+        parser.set("Network", "Address", '{}/{}'.format(ipaddr, prefixLen))
+        parser.set("Network", "Gateway", gateway)
+        with open("/etc/systemd/network/00-bmc-" + device + ".network", 'w') as configfile:
+            parser.write(configfile)
 
-        print("Making .network file...")
-        try:
-            networkconf = open (confFile, "w+") 
-        except IOError:
-            raise IOError, "Failed to open " + confFile
-
-        networkconf.write ('[Match]'+ '\n')
-        networkconf.write ('Name=' + (device) + '\n')
-        networkconf.write ('[Network]' + '\n')
-        networkconf.write ('Address=' + ipaddr + '/' + str(prefixLen) +  '\n')
-        networkconf.write ('Gateway=' + gateway + '\n')
-        networkconf.close()
-
-        print("Restarting networkd service...")
-        rc = call(["ip", "addr", "flush", device])
-        rc = call(["systemctl", "restart", "systemd-networkd.service"])
-        return rc
+        return self._flushAndRestartNetwork(device)
 
     @dbus.service.method(DBUS_NAME, "s", "s")
     def GetAddressType (self, device):
@@ -360,15 +373,23 @@ class NetMan (dbus.service.Object):
             print "Using default networkd config file (%s)" % f
             confFile = f
 
-        with open(confFile, "r") as f:
-            for line in f:
-                config = line.split ("=")
-                if (len (config) < 2) : continue
-                if config [0].upper() == "DHCP":
-                    v = config[1].strip().upper()
-                    if (v=="YES" or v=="IPV4" or v=="IPV6"):
-                        return "DHCP"
-        return "STATIC"
+        parser = self._checkNetworkForRequiredFields(device)
+
+        if parser.has_option("Network", "DHCP") is True:
+            mode = parser.get("Network", "DHCP")
+        else:
+            return "Unknown"
+
+        setting = {
+            'yes': 'DHCP',
+            'true': 'DHCP',
+            'no': 'STATIC',
+            'ipv4': 'DHCP',
+            'ipv6': 'DHCP'
+        }
+        setting.get(mode.lower(), "Unknown")
+
+        return setting
 
     #family, prefixlen, ip, defgw
     @dbus.service.method(DBUS_NAME, "s", "iyss")
@@ -387,6 +408,11 @@ class NetMan (dbus.service.Object):
         if not self._ishwdev (device) : raise ValueError, "Not a Hardware Device"
 
         self.validatemac(mac)
+
+        parser = self._checkNetworkForRequiredFields(device)
+        parser.set("Link", MAC_PROPERTY, mac)
+        with open("/etc/systemd/network/00-bmc-" + device + ".network", 'w') as configfile:
+            parser.write(configfile)
 
         rc = subprocess.call(["fw_setenv", "ethaddr", mac])
 
@@ -434,6 +460,67 @@ class NetMan (dbus.service.Object):
             return 'Failures encountered processing' + fail_msg
         else:
             return "DNS entries updated Successfully"
+
+    @dbus.service.method(DBUS_NAME, "s", "x")
+    def SetHostname(self, hostname):
+        print "Setting Hostname"
+        subprocess.check_call(["hostnamectl", "set-hostname", hostname])
+        subprocess.check_call(["systemctl", "restart", "systemd-networkd.service"])
+        return 0
+
+    @dbus.service.method(DBUS_NAME, "", "s")
+    def GetHostname(self):
+        value = subprocess.check_output("hostname")
+
+        return value.rstrip()
+
+    @dbus.service.method(DBUS_NAME, "ss", "x")
+    def SetGateway(self, device, gateway):
+        if not self._isvaliddev(device): raise ValueError, "Invalid Device"
+        valid = self._isvalidip(gateway)
+        if valid != "Valid": raise ValueError, valid + " IP Address"
+        parser = self._checkNetworkForRequiredFields(device)
+        if "no" not in parser.get("Network", "DHCP"):
+            raise EnvironmentError, "DHCP is on"
+        parser.set("Network", "Gateway", gateway)
+        with open("/etc/systemd/network/00-bmc-" + device + ".network", 'w') as configfile:
+            parser.write(configfile)
+        return self._flushAndRestartNetwork(device)
+
+    @dbus.service.method(DBUS_NAME, "s", "s")
+    def GetGateway(self, device):
+        if not self._isvaliddev(device): raise ValueError, "Invalid Device"
+        return self._getAddr("ip", device)[3]
+
+    @dbus.service.method(DBUS_NAME, "ss", "x")
+    def SetGratuitousArp(self, device, level):
+        if not self._isvaliddev(device): raise ValueError, "Invalid Device"
+        setting = {
+            '0': '0',
+            '1': '1',
+            '2': '2',
+            '3': '3',
+            '8': '8'
+        }.get(level, None)
+
+        if setting is not None:
+            with open(os.path.join("/proc/sys/net/ipv4/conf/", device, "arp_ignore"), 'w') as f:
+                f.write(setting)
+            return 0
+
+        raise ValueError, "Invalid ARP Level"
+
+    @dbus.service.method(DBUS_NAME, "s", "s")
+    def GetGratuitousArp(self, device):
+        if not self._isvaliddev(device): raise ValueError, "Invalid Device"
+        try:
+            with open(os.path.join("/proc/sys/net/ipv4/conf/", device, "arp_ignore")) as f:
+                value = f.read()
+        except IOError as e:
+            raise IOError, e
+
+        return value.rstrip()
+
 
 def main():
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
