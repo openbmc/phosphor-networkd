@@ -42,7 +42,7 @@ void IPAddress::delete_()
     {
         log<level::ERR>("DHCP enabled on the interface"),
             entry("INTERFACE=%s", parent.interfaceName().c_str());
-        elog<InternalFailure>();
+        return;
     }
 
     if (isLinkLocalIP(address()))
@@ -50,7 +50,7 @@ void IPAddress::delete_()
         log<level::ERR>("Can not delete the LinkLocal address"),
             entry("INTERFACE=%s ADDRESS=%s",
                   parent.interfaceName().c_str(), address().c_str());
-        elog<InternalFailure>();
+        return;
     }
 
     parent.deleteObject(address());
