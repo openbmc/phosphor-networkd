@@ -114,7 +114,5 @@ int main(int argc, char *argv[])
     // waiting on change events
     phosphor::network::dns::updater::processDNSEntries(DNS_ENTRY_FILE);
 
-    // Run the server
-    sd_event_loop(eventPtr.get());
 }
 

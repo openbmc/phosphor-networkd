@@ -71,7 +71,6 @@ Server::Server(EventPtr& eventPtr)
     using InternalFailure = sdbusplus::xyz::openbmc_project::Common::
                                     Error::InternalFailure;
     struct sockaddr_nl addr {};
-
     int fd = -1;
     phosphor::Descriptor smartSock(fd);
 
@@ -135,6 +134,8 @@ Server::Server(EventPtr& eventPtr)
         goto finish;
     }
 
+    sd_event_loop(eventPtr.get());
+
 finish:
 
     if (r < 0)
@@ -144,7 +145,6 @@ finish:
         elog<InternalFailure>();
     }
 }
-
 
 } //rtnetlink
 } //network

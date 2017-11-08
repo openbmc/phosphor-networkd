@@ -103,6 +103,8 @@ void EthernetInterface::createIPAddressObjects()
                         origin,
                         addr.prefix,
                         gateway));
+
+        origin = IP::AddressOrigin::Static;
     }
 
 }
