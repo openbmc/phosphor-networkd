@@ -71,8 +71,8 @@ Server::Server(EventPtr& eventPtr)
     using InternalFailure = sdbusplus::xyz::openbmc_project::Common::
                                     Error::InternalFailure;
     struct sockaddr_nl addr {};
-
     int fd = -1;
+
     phosphor::Descriptor smartSock(fd);
 
     int r {};
