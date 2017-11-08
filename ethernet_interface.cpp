@@ -40,7 +40,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      bool dhcpEnabled,
                                      Manager& parent,
                                      bool emitSignal) :
-                                     Ifaces(bus, objPath.c_str(), true),
+                                     Ifaces(bus, objPath.c_str(), emitSignal),
                                      bus(bus),
                                      manager(parent),
                                      objPath(objPath)
