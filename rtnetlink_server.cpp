@@ -135,6 +135,8 @@ Server::Server(EventPtr& eventPtr)
         goto finish;
     }
 
+   sd_event_loop(eventPtr.get());
+
 finish:
 
     if (r < 0)
