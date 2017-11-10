@@ -113,7 +113,7 @@ class TestEthernetInterface : public testing::Test
 
             // Passed in "value" is what is read from the config file
             interface.writeDNSEntries(values, resolvFile);
-            std::string expectedServers = "### Generated manually via dbus settings ###";
+            std::string expectedServers = "### Generated manually via dbus settings ###\n";
             expectedServers +=
                 "nameserver 9.1.1.1nameserver 9.2.2.2nameserver 9.3.3.3";
 
