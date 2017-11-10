@@ -422,7 +422,7 @@ void EthernetInterface::writeDNSEntries(const ServerList& dnsList,
         elog<InternalFailure>();
     }
 
-    outStream << "### Generated manually via dbus settings ###";
+    outStream << "### Generated manually via dbus settings ###\n";
     for(const auto& server : dnsList)
     {
         outStream << "nameserver " << server << "\n";
