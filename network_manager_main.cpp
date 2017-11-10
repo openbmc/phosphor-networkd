@@ -5,11 +5,14 @@
 #include "watch.hpp"
 #include "dns_updater.hpp"
 
-#include <memory>
+#include <linux/netlink.h>
 
+#include <memory>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/manager.hpp>
+#include <phosphor-logging/elog-errors.hpp>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {
@@ -52,6 +55,26 @@ void initializeTimers()
     phosphor::network::restartTimer =
         std::make_unique<phosphor::network::Timer>(restartFunc);
 }
+
+void createNetLinkSocket(phosphor::Descriptor& smartSock)
+{
+    using namespace phosphor::logging;
+    using InternalFailure = sdbusplus::xyz::openbmc_project::Common::
+                                    Error::InternalFailure;
+    //RtnetLink socket
+    int fd = -1;
+    fd = socket(PF_NETLINK, SOCK_RAW | SOCK_NONBLOCK, NETLINK_ROUTE);
+    if (fd < 0)
+    {
+        auto r = -errno;
+        log<level::ERR>("Unable to create the net link socket",
+                        entry("ERRNO=%d", r));
+        elog<InternalFailure>();
+    }
+    smartSock.set(fd);
+}
+
+
 
 int main(int argc, char *argv[])
 {
@@ -100,8 +123,14 @@ int main(int argc, char *argv[])
         phosphor::network::restartNetwork();
     }
 
+    //RtnetLink socket
+    int fd = -1;
+    phosphor::Descriptor smartSock(fd);
+    createNetLinkSocket(smartSock);
+
+
     // RTNETLINK event handler
-    phosphor::network::rtnetlink::Server svr(eventPtr);
+    phosphor::network::rtnetlink::Server svr(eventPtr, smartSock);
 
     // DNS entry handler
     phosphor::network::inotify::Watch watch(eventPtr, DNS_ENTRY_FILE,
@@ -114,7 +143,6 @@ int main(int argc, char *argv[])
     // waiting on change events
     phosphor::network::dns::updater::processDNSEntries(DNS_ENTRY_FILE);
 
-    // Run the server
     sd_event_loop(eventPtr.get());
 }
 

@@ -65,20 +65,21 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
     return 0;
 }
 
-Server::Server(EventPtr& eventPtr)
+Server::Server(EventPtr& eventPtr, const phosphor::Descriptor& smartSock)
 {
     using namespace phosphor::logging;
     using InternalFailure = sdbusplus::xyz::openbmc_project::Common::
                                     Error::InternalFailure;
     struct sockaddr_nl addr {};
-
-    int fd = -1;
-    phosphor::Descriptor smartSock(fd);
-
     int r {};
 
     sigset_t ss {};
-
+    // check that the given socket is valid or not.
+    if(smartSock() < 0)
+    {
+        r = -EBADF;
+        goto finish;
+    }
 
     if (sigemptyset(&ss) < 0 || sigaddset(&ss, SIGTERM) < 0 ||
         sigaddset(&ss, SIGINT) < 0)
@@ -107,16 +108,6 @@ Server::Server(EventPtr& eventPtr)
     {
         goto finish;
     }
-
-    fd = socket(PF_NETLINK, SOCK_RAW | SOCK_NONBLOCK, NETLINK_ROUTE);
-    if (fd < 0)
-    {
-        r = -errno;
-        goto finish;
-    }
-
-    smartSock.set(fd);
-    fd = -1;
 
     memset(&addr, 0, sizeof(addr));
     addr.nl_family = AF_NETLINK;
