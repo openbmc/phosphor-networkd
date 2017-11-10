@@ -30,8 +30,9 @@ class Server
          *  @details Sets up the server to handle incoming RTNETLINK events
          *
          *  @param[in] eventPtr - Unique ptr reference to sd_event.
+         *  @param[in] socket - netlink socket.
          */
-        Server(EventPtr& eventPtr);
+        Server(EventPtr& eventPtr, const phosphor::Descriptor& socket);
 
         Server() = delete;
         ~Server() = default;
