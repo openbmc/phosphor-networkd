@@ -131,6 +131,7 @@ void EthernetInterface::iP(IP::Protocol protType,
             entry("ADDRESS=%s", ipaddress.c_str());
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("ipaddress"),
                               Argument::ARGUMENT_VALUE(ipaddress.c_str()));
+        return;
     }
 
     if (!gateway.empty() && (!isValidIP(addressFamily, gateway)))
@@ -139,6 +140,7 @@ void EthernetInterface::iP(IP::Protocol protType,
             entry("GATEWAY=%s", gateway.c_str());
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("gateway"),
                               Argument::ARGUMENT_VALUE(gateway.c_str()));
+        return;
     }
 
     if (!isValidPrefix(addressFamily, prefixLength))
