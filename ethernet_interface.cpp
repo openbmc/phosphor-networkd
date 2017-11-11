@@ -150,9 +150,7 @@ void EthernetInterface::iP(IP::Protocol protType,
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("prefixLength"),
                               Argument::ARGUMENT_VALUE(std::to_string(
                                           prefixLength).c_str()));
-        return;
     }
-
 
     std::string objectPath = generateObjectPath(protType,
                                                 ipaddress,
