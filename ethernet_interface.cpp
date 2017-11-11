@@ -153,7 +153,6 @@ void EthernetInterface::iP(IP::Protocol protType,
         return;
     }
 
-
     std::string objectPath = generateObjectPath(protType,
                                                 ipaddress,
                                                 prefixLength,
