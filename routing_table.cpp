@@ -142,7 +142,7 @@ void Table::parseRoutes(const nlmsghdr* nlHdr)
     std::string dstStr;
     std::string gatewayStr;
 
-    if (dstAddr.s_addr == 0)
+    if (dstAddr.s_addr == 0 && gateWayAddr.s_addr != 0)
     {
         defaultGateway = reinterpret_cast<char*>(inet_ntoa(gateWayAddr));
     }
