@@ -162,6 +162,11 @@ void Manager::createInterfaces()
 
 void Manager::createChildObjects()
 {
+    // Need to lock it as there is a race condition which
+    // can hit when objects is getting refreshed during that
+    // time we get a dbus request.
+
+    std::lock_guard<std::mutex> lock(refreshObjectMutex);
     // creates the ethernet interface dbus object.
     createInterfaces();
 
@@ -179,6 +184,7 @@ void Manager::createChildObjects()
     dhcpConf = std::make_unique<phosphor::network::dhcp::Configuration>(
                         bus, objPath.string(), *this);
 
+    // mutex will automatically relaesed when lock goes out of scope.
 }
 
 void Manager::vLAN(IntfName interfaceName, uint32_t id)
