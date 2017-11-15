@@ -11,6 +11,7 @@
 
 #include <list>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <vector>
 #include <experimental/filesystem>
@@ -127,6 +128,9 @@ class Manager : public details::VLANCreateIface
 
         /** @brief Network Configuration directory. */
         fs::path confDir;
+
+        /** @brief Mutex required during refreshing object */
+        std::mutex refreshObjectMutex;
 
         friend class TestNetworkManager;
 
