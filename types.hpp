@@ -23,7 +23,7 @@ constexpr auto restartTimeout = 3s;
 
 // refresh the objets after five seconds as network
 // configuration takes 3-4 sec after systemd-networkd restart.
-constexpr auto refreshTimeout = restartTimeout + 5s;
+constexpr auto refreshTimeout = restartTimeout + 7s;
 
 namespace systemd
 {

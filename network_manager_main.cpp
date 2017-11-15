@@ -26,9 +26,12 @@ std::unique_ptr<phosphor::network::Timer> restartTimer = nullptr;
 /** @brief refresh the network objects. */
 void refreshObjects()
 {
+    using namespace phosphor::logging;
     if (manager)
     {
+        log<level::INFO>("Refreshing the objects.");
         manager->createChildObjects();
+        log<level::INFO>("Refreshing complete.");
     }
 }
 
