@@ -189,7 +189,7 @@ class Descriptor
         int fd = -1;
 
     public:
-        Descriptor() = delete;
+        Descriptor() = default;
         Descriptor(const Descriptor&) = delete;
         Descriptor& operator=(const Descriptor&) = delete;
         Descriptor(Descriptor&&) = delete;
