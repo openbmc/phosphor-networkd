@@ -195,7 +195,7 @@ class Descriptor
         Descriptor(Descriptor&&) = delete;
         Descriptor& operator=(Descriptor &&) = delete;
 
-        Descriptor(int fd) : fd(fd) {}
+        explicit Descriptor(int fd) : fd(fd) {}
 
         /* @brief sets the internal file descriptor with the given descriptor
          *        and closes the old descriptor.
