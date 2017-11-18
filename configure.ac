@@ -69,6 +69,18 @@ AS_IF([test "x$enable_oe_sdk" == "xyes"],
     AC_SUBST([OESDK_TESTCASE_FLAGS], [$testcase_flags])
 )
 
+# If set, it'll set the MAC address in the network configuraiton.
+AC_ARG_ENABLE([store-mac-in-conf],
+    AS_HELP_STRING([--enable-store-mac-in-conf], [Set MAC address in network configuration])
+)
+
+AC_ARG_VAR(STORE_MAC_IN_CONF, [Set MAC address in network configuration])
+
+AS_IF([test "x$enable_store_mac_in_conf" == "xyes"],
+      [STORE_MAC_IN_CONF="yes"]
+      AC_DEFINE_UNQUOTED([STORE_MAC_IN_CONF], ["$STORE_MAC_IN_CONF"], [Set MAC address in network configuration])
+)
+
 AC_ARG_VAR(DNS_ENTRY_FILE, [File having DNS entries supplied by DHCP])
 AS_IF([test "x$DNS_ENTRY_FILE" == "x"], [DNS_ENTRY_FILE="/run/systemd/netif/state"])
 AC_DEFINE_UNQUOTED([DNS_ENTRY_FILE], ["$DNS_ENTRY_FILE"], [File having DNS entries supplied by DHCP])
