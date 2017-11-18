@@ -512,6 +512,16 @@ void EthernetInterface::writeConfigurationFile()
     stream << "[Match]\n";
     stream << "Name=" << interfaceName() << "\n";
 
+#ifdef STORE_MAC_IN_CONF
+    // Write the MAC address in the Link section
+    auto mac = MacAddressIntf::mACAddress();
+    if (!mac.empty())
+    {
+        stream << "[" << "Link" << "]\n";
+        stream << "MACAddress=" << mac << "\n";
+    }
+#endif
+
     auto addrs = getAddresses();
 
     // write the network section
