@@ -105,6 +105,18 @@ if test "x$enable_link_local_autoconfiguration" = "xyes"; then
     AC_DEFINE([LINK_LOCAL_AUTOCONFIGURATION], [1], [Enable link-local IP address autoconfiguration])
 fi
 
+# If set, it'll set the MAC address in the network configuraiton.
+AC_ARG_ENABLE([store-mac-in-conf],
+    AS_HELP_STRING([--enable-store-mac-in-conf], [Set MAC address in network configuration])
+)
+
+AC_ARG_VAR(STORE_MAC_IN_CONF, [Set MAC address in network configuration])
+
+AS_IF([test "x$enable_store_mac_in_conf" == "xyes"],
+      [STORE_MAC_IN_CONF="yes"]
+      AC_DEFINE_UNQUOTED([STORE_MAC_IN_CONF], ["$STORE_MAC_IN_CONF"], [Set MAC address in network configuration])
+)
+
 DEFAULT_BUSNAME='xyz.openbmc_project.Network'
 AC_DEFINE_UNQUOTED([DEFAULT_BUSNAME], ["$DEFAULT_BUSNAME"], [The DBus busname to own])
 AC_SUBST(DEFAULT_BUSNAME, ["$DEFAULT_BUSNAME"])
