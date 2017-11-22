@@ -398,14 +398,14 @@ ServerList EthernetInterface::getNameServerFromConf()
                            systemd::config::networkFileSuffix;
     confPath /= fileName;
     ServerList servers;
-    try
+    config::Parser parser(confPath.string());
+    auto rc = config::ReturnCode::SUCCESS;
+
+    std::tie(rc, servers) = parser.getValues("Network", "DNS");
+    if (rc != config::ReturnCode::SUCCESS)
     {
-        config::Parser parser(confPath.string());
-        servers = parser.getValues("Network", "DNS");
-    }
-    catch (InternalFailure& e)
-    {
-        log<level::INFO>("Exception getting DNS value from conf file");
+        log<level::DEBUG>("Unable to get the value for network[DNS]",
+                          entry("RC=%d", rc));
     }
     return servers;
 }
@@ -484,18 +484,20 @@ ServerList EthernetInterface::getNTPServersFromConf()
     fs::path confPath = manager.getConfDir();
 
     std::string fileName = systemd::config::networkFilePrefix + interfaceName() +
-                           systemd::config::networkFileSuffix;
+        systemd::config::networkFileSuffix;
     confPath /= fileName;
+
     ServerList servers;
-    try
+    config::Parser parser(confPath.string());
+    auto rc = config::ReturnCode::SUCCESS;
+
+    std::tie(rc, servers) = parser.getValues("Network", "NTP");
+    if (rc != config::ReturnCode::SUCCESS)
     {
-        config::Parser parser(confPath.string());
-        servers = parser.getValues("Network", "NTP");
+        log<level::DEBUG>("Unable to get the value for Network[NTP]",
+                          entry("rc=%d", rc));
     }
-    catch (InternalFailure& e)
-    {
-        log<level::INFO>("Unable to find the NTP server configuration.");
-    }
+
     return servers;
 }
 

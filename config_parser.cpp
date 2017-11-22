@@ -1,7 +1,5 @@
 #include "config_parser.hpp"
-#include "xyz/openbmc_project/Common/error.hpp"
 #include <phosphor-logging/log.hpp>
-#include <phosphor-logging/elog-errors.hpp>
 
 #include <fstream>
 #include <string>
@@ -18,7 +16,6 @@ namespace config
 {
 
 using namespace phosphor::logging;
-using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 Parser::Parser(const fs::path& filePath)
 {
@@ -26,58 +23,66 @@ Parser::Parser(const fs::path& filePath)
 }
 
 
-KeyValues Parser::getSection(const std::string& section)
+std::tuple<ReturnCode, KeyValueMap> Parser::getSection(const std::string& section)
 {
     auto it = sections.find(section);
     if (it == sections.end())
     {
-        log<level::ERR>("ConfigParser: Section not found",
-                        entry("SECTION=%s",section));
-        elog<InternalFailure>();
+        KeyValueMap keyValues;
+        return std::make_tuple(ReturnCode::SECTION_NOT_FOUND,
+                               std::move(keyValues));
     }
-    return it->second;
+
+    return std::make_tuple(ReturnCode::SUCCESS, it->second);
 }
 
-std::vector<std::string> Parser::getValues(const std::string& section,
-                                           const std::string& key)
+std::tuple<ReturnCode, ValueList> Parser::getValues(const std::string& section,
+                                                    const std::string& key)
 {
-    std::vector<std::string> values;
-    auto keyValues = getSection(section);
+    ValueList values;
+    KeyValueMap keyValues {};
+    auto rc = ReturnCode::SUCCESS;
+
+    std::tie(rc, keyValues) = getSection(section);
+    if (rc != ReturnCode::SUCCESS)
+    {
+        return std::make_tuple(rc, std::move(values));
+    }
+
     auto it = keyValues.find(key);
     if (it == keyValues.end())
     {
-        log<level::ERR>("ConfigParser: Key not found",
-                        entry("KEY=%s",key));
-        elog<InternalFailure>();
+        return std::make_tuple(ReturnCode::KEY_NOT_FOUND, std::move(values));
     }
+
     for (; it != keyValues.end() && key == it->first; it++)
     {
         values.push_back(it->second);
     }
-    return values;
+
+    return std::make_tuple(ReturnCode::SUCCESS, std::move(values));
 }
 
 
 bool Parser::isValueExist(const std::string& section, const std::string& key,
                           const std::string& value)
 {
-    try
+    auto rc = ReturnCode::SUCCESS;
+    ValueList values;
+    std::tie(rc, values) = getValues(section, key);
+
+    if (rc != ReturnCode::SUCCESS)
     {
-        auto values = getValues(section, key);
-        auto it = std::find(values.begin(), values.end(), value);
-        return it != std::end(values) ? true : false;
+        return false;
     }
-    catch (InternalFailure& e)
-    {
-        commit<InternalFailure>();
-    }
-    return false;
+    auto it = std::find(values.begin(), values.end(), value);
+    return it != std::end(values) ? true : false;
 }
 
 void Parser::setValue(const std::string& section, const std::string& key,
                       const std::string& value)
 {
-    KeyValues values;
+    KeyValueMap values;
     auto it = sections.find(section);
     if (it != sections.end())
     {

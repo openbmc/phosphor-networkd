@@ -411,19 +411,21 @@ bool getDHCPValue(const std::string& confDir, const std::string& intf)
                            systemd::config::networkFileSuffix;
     confPath /= fileName;
 
-    try
+    auto rc = config::ReturnCode::SUCCESS;
+    config::ValueList values;
+    config::Parser parser(confPath.string());
+
+    std::tie(rc, values) = parser.getValues("Network", "DHCP");
+    if (rc != config::ReturnCode::SUCCESS)
     {
-        config::Parser parser(confPath.string());
-        auto values = parser.getValues("Network", "DHCP");
-        // There will be only single value for DHCP key.
-        if (values[0] == "true")
-        {
-            dhcp = true;
-        }
+        log<level::DEBUG>("Unable to get the value for Network[DHCP]",
+                entry("RC=%d", rc));
+        return dhcp;
     }
-    catch (InternalFailure& e)
+    // There will be only single value for DHCP key.
+    if (values[0] == "true")
     {
-        log<level::INFO>("Exception occurred during getting of DHCP value");
+        dhcp = true;
     }
     return dhcp;
 }
