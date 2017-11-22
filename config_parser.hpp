@@ -2,6 +2,7 @@
 
 #include <string>
 #include <map>
+#include <tuple>
 #include <unordered_map>
 #include <vector>
 #include <experimental/filesystem>
@@ -14,8 +15,17 @@ namespace config
 {
 
 using Section = std::string;
-using KeyValues =  std::multimap<std::string, std::string>;
+using KeyValueMap =  std::multimap<std::string, std::string>;
+using ValueList = std::vector<std::string>;
+
 namespace fs = std::experimental::filesystem;
+
+enum class ReturnCode
+{
+    SUCCESS = 0x0,
+    SECTION_NOT_FOUND = 0x1,
+    KEY_NOT_FOUND = 0x2,
+};
 
 class Parser
 {
@@ -32,11 +42,13 @@ class Parser
         /** @brief Get the values of the given key and section.
          *  @param[in] section - section name.
          *  @param[in] key - key to look for.
-         *  @returns the values associated with the key.
+         *  @returns the tuple of return code and the
+         *           values associated with the key.
          */
 
-        std::vector<std::string> getValues(const std::string& section,
-                                           const std::string& key);
+        std::tuple<ReturnCode, ValueList> getValues(
+                const std::string& section,
+                const std::string& key);
 
         /** @brief Set the value of the given key and section.
          *  @param[in] section - section name.
@@ -64,10 +76,10 @@ class Parser
 
         /** @brief Get all the key values of the given section.
          *  @param[in] section - section name.
-         *  @returns the map of the key and value.
+         *  @returns the tuple of return code and the map of (key,value).
          */
 
-        KeyValues getSection(const std::string& section);
+        std::tuple<ReturnCode, KeyValueMap> getSection(const std::string& section);
 
         /** @brief checks that whether the value exist in the
          *         given section.
@@ -80,7 +92,7 @@ class Parser
         bool isValueExist(const std::string& section, const std::string& key,
                           const std::string& value);
 
-        std::unordered_map<Section, KeyValues> sections;
+        std::unordered_map<Section, KeyValueMap> sections;
         fs::path filePath;
 };
 

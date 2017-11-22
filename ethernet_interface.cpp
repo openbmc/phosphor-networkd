@@ -401,11 +401,18 @@ ServerList EthernetInterface::getNameServerFromConf()
     try
     {
         config::Parser parser(confPath.string());
-        servers = parser.getValues("Network", "DNS");
+        auto rc = config::ReturnCode::SUCCESS;
+
+        std::tie(rc, servers) = parser.getValues("Network", "DNS");
+        if (rc != config::ReturnCode::SUCCESS)
+        {
+            log<level::INFO>("Unable to get the value for network[DNS]",
+                             entry("rc=%d", rc));
+        }
     }
-    catch (InternalFailure& e)
+    catch (std::exception& e)
     {
-        log<level::INFO>("Exception getting DNS value from conf file");
+        log<level::INFO>(e.what());
     }
     return servers;
 }
@@ -490,11 +497,19 @@ ServerList EthernetInterface::getNTPServersFromConf()
     try
     {
         config::Parser parser(confPath.string());
-        servers = parser.getValues("Network", "NTP");
+        auto rc = config::ReturnCode::SUCCESS;
+
+        std::tie(rc, servers) = parser.getValues("Network", "NTP");
+        if (rc != config::ReturnCode::SUCCESS)
+        {
+            log<level::INFO>("Unable to get the value for Network[NTP]",
+                             entry("rc=%d", rc));
+        }
+
     }
-    catch (InternalFailure& e)
+    catch (std::exception& e)
     {
-        log<level::INFO>("Unable to find the NTP server configuration.");
+        log<level::INFO>(e.what());
     }
     return servers;
 }
