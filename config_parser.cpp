@@ -1,7 +1,5 @@
 #include "config_parser.hpp"
-#include "xyz/openbmc_project/Common/error.hpp"
 #include <phosphor-logging/log.hpp>
-#include <phosphor-logging/elog-errors.hpp>
 
 #include <fstream>
 #include <string>
@@ -18,7 +16,6 @@ namespace config
 {
 
 using namespace phosphor::logging;
-using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 Parser::Parser(const fs::path& filePath)
 {
@@ -31,9 +28,8 @@ KeyValues Parser::getSection(const std::string& section)
     auto it = sections.find(section);
     if (it == sections.end())
     {
-        log<level::ERR>("ConfigParser: Section not found",
-                        entry("SECTION=%s",section));
-        elog<InternalFailure>();
+        auto errString = "ConfigParser: Section:[" + section + "] not found.";
+        throw std::runtime_error(errString.c_str());
     }
     return it->second;
 }
@@ -46,9 +42,8 @@ std::vector<std::string> Parser::getValues(const std::string& section,
     auto it = keyValues.find(key);
     if (it == keyValues.end())
     {
-        log<level::ERR>("ConfigParser: Key not found",
-                        entry("KEY=%s",key));
-        elog<InternalFailure>();
+        auto errString = "ConfigParser: Key:[" + key + "] not found.";
+        throw std::runtime_error(errString.c_str());
     }
     for (; it != keyValues.end() && key == it->first; it++)
     {
@@ -67,9 +62,9 @@ bool Parser::isValueExist(const std::string& section, const std::string& key,
         auto it = std::find(values.begin(), values.end(), value);
         return it != std::end(values) ? true : false;
     }
-    catch (InternalFailure& e)
+    catch (std::exception& e)
     {
-        commit<InternalFailure>();
+       log<level::INFO>(e.what());
     }
     return false;
 }

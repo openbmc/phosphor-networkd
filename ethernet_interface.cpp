@@ -404,9 +404,9 @@ ServerList EthernetInterface::getNameServerFromConf()
         config::Parser parser(confPath.string());
         servers = parser.getValues("Network", "DNS");
     }
-    catch (InternalFailure& e)
+    catch (std::exception& e)
     {
-        log<level::INFO>("Exception getting DNS value from conf file");
+        log<level::INFO>(e.what());
     }
     return servers;
 }
@@ -493,9 +493,9 @@ ServerList EthernetInterface::getNTPServersFromConf()
         config::Parser parser(confPath.string());
         servers = parser.getValues("Network", "NTP");
     }
-    catch (InternalFailure& e)
+    catch (std::exception& e)
     {
-        log<level::INFO>("Unable to find the NTP server configuration.");
+        log<level::INFO>(e.what());
     }
     return servers;
 }

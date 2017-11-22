@@ -421,9 +421,9 @@ bool getDHCPValue(const std::string& confDir, const std::string& intf)
             dhcp = true;
         }
     }
-    catch (InternalFailure& e)
+    catch (std::exception& e)
     {
-        log<level::INFO>("Exception occurred during getting of DHCP value");
+        log<level::INFO>(e.what());
     }
     return dhcp;
 }
