@@ -72,7 +72,6 @@ int Timer::timeoutHandler(sd_event_source* eventSource,
         timer->userCallBack();
     }
 
-    log<level::INFO>("Timer expired");
     sd_event_source_set_enabled(eventSource, SD_EVENT_OFF);
     return 0;
 }

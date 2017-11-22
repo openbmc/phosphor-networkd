@@ -197,7 +197,9 @@ TEST_F(TestEthernetInterface, addNameServers)
     fs::path filePath = confDir;
     filePath /= "00-bmc-test0.network";
     config::Parser parser(filePath.string());
-    auto values = parser.getValues("Network", "DNS");
+    config::ReturnCode rc = config::ReturnCode::SUCCESS;
+    config::ValueList values;
+    std::tie(rc, values) = parser.getValues("Network", "DNS");
     EXPECT_EQ(servers , values);
 
     validateResolvFile(values);
@@ -210,7 +212,9 @@ TEST_F(TestEthernetInterface, addNTPServers)
     fs::path filePath = confDir;
     filePath /= "00-bmc-test0.network";
     config::Parser parser(filePath.string());
-    auto values = parser.getValues("Network", "NTP");
+    config::ReturnCode rc = config::ReturnCode::SUCCESS;
+    config::ValueList values;
+    std::tie(rc, values) = parser.getValues("Network", "NTP");
     EXPECT_EQ(servers , values);
 }
 
