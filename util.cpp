@@ -413,17 +413,26 @@ bool getDHCPValue(const std::string& confDir, const std::string& intf)
 
     try
     {
+        auto rc = config::ReturnCode::SUCCESS;
+        config::ValueList values;
         config::Parser parser(confPath.string());
-        auto values = parser.getValues("Network", "DHCP");
+
+        std::tie(rc, values) = parser.getValues("Network", "DHCP");
+        if (rc != config::ReturnCode::SUCCESS)
+        {
+            log<level::INFO>("Unable to get the value for Network[DHCP]",
+                             entry("rc=%d", rc));
+            return dhcp;
+        }
         // There will be only single value for DHCP key.
         if (values[0] == "true")
         {
             dhcp = true;
         }
     }
-    catch (InternalFailure& e)
+    catch (std::exception& e)
     {
-        log<level::INFO>("Exception occurred during getting of DHCP value");
+        log<level::INFO>(e.what());
     }
     return dhcp;
 }
