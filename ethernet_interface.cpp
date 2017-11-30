@@ -685,15 +685,15 @@ std::string EthernetInterface::mACAddress(std::string value)
 
             if (intInventoryMac != intMac)
             {
-                log<level::DEBUG>("Given MAC address is neither a local Admin \
-                                   type nor is same as in inventory");
+                log<level::DEBUG>("Given MAC address is neither a local Admin "
+                                  "type nor is same as in inventory");
                 return MacAddressIntf::mACAddress();
             }
         }
         catch(InternalFailure& e)
         {
-            log<level::ERR>("Exception occurred during getting of MAC \
-                               address from Inventory");
+            log<level::ERR>("Exception occurred during getting of MAC "
+                            "address from Inventory");
             return  MacAddressIntf::mACAddress();
         }
     }
