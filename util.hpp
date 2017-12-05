@@ -26,7 +26,7 @@ constexpr auto regex = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
 constexpr auto localAdminMask = 0x020000000000;
 constexpr auto broadcastMac = 0xFFFFFFFFFFFF;
 
-constexpr auto format = "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx";
+constexpr auto format = "%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx";
 constexpr size_t size = 18;
 
 /** @brief validate the mac address
