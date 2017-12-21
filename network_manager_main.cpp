@@ -124,6 +124,12 @@ int main(int argc, char *argv[])
         // will create it.
         phosphor::network::restartNetwork();
     }
+    else
+    {
+        // this will add the additional fixes which is needed
+        // in the existing network file.
+        phosphor::network::manager->writeToConfigurationFile();
+    }
 
     //RtnetLink socket
     phosphor::Descriptor smartSock;
