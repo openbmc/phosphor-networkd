@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python test
 
 from subprocess import call, Popen, PIPE
 from IPy import IP
