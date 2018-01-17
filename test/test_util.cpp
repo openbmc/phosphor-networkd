@@ -17,6 +17,83 @@ class TestUtil : public testing::Test
 
 };
 
+TEST_F(TestUtil, IpValidation)
+{
+    std::string ipaddress = "0.0.0.0";
+    EXPECT_EQ(true, isValidIP(AF_INET, ipaddress));
+
+    ipaddress = "9.3.185.83";
+    EXPECT_EQ(true, isValidIP(AF_INET, ipaddress));
+
+    ipaddress = "9.3.185.a";
+    EXPECT_EQ(false, isValidIP(AF_INET, ipaddress));
+
+    ipaddress = "9.3.a.83";
+    EXPECT_EQ(false, isValidIP(AF_INET, ipaddress));
+
+    ipaddress = "x.x.x.x";
+    EXPECT_EQ(false, isValidIP(AF_INET, ipaddress));
+
+    ipaddress = "0:0:0:0:0:0:0:0";
+    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+
+    ipaddress = "1:0:0:0:0:0:0:8";
+    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+
+    ipaddress = "1::8";
+    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+
+    ipaddress = "0:0:0:0:0:FFFF:204.152.189.116";
+    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+
+    ipaddress = "::ffff:204.152.189.116";
+    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+
+    ipaddress = "a:0:0:0:0:FFFF:204.152.189.116";
+    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+
+    ipaddress = "1::8";
+    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+
+
+}
+
+TEST_F(TestUtil, PrefixValidation)
+{
+    uint8_t prefixLength = 1;
+    EXPECT_EQ(true, isValidPrefix(AF_INET, prefixLength));
+
+    prefixLength = 32;
+    EXPECT_EQ(true, isValidPrefix(AF_INET, prefixLength));
+
+    prefixLength = 0;
+    EXPECT_EQ(false, isValidPrefix(AF_INET, prefixLength));
+
+    prefixLength = 33;
+    EXPECT_EQ(false, isValidPrefix(AF_INET, prefixLength));
+
+    prefixLength = 33;
+    EXPECT_EQ(true, isValidPrefix(AF_INET6, prefixLength));
+
+    prefixLength = 65;
+    EXPECT_EQ(false, isValidPrefix(AF_INET, prefixLength));
+
+}
+
+
+TEST_F(TestUtil, MacValidation)
+{
+    std::string macaddress = "00:00:00:00:00:00";
+    EXPECT_EQ(false, phosphor::network::mac_address::validate(macaddress));
+
+    macaddress = "F6:C6:E6:6:B0:D3";
+    EXPECT_EQ(false, phosphor::network::mac_address::validate(macaddress));
+
+    macaddress = "F6:C6:E6:06:B0:D3";
+    EXPECT_EQ(true, phosphor::network::mac_address::validate(macaddress));
+
+}
+
 TEST_F(TestUtil, ConvertV4MasktoPrefix)
 {
     std::string mask = "255.255.255.0";
