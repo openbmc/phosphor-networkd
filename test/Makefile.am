@@ -9,6 +9,7 @@ test_SOURCES = \
 	mock_syscall.cpp \
 	test_network_manager.cpp \
 	test_ethernet_interface.cpp \
+	test_rtnetlink.cpp \
 	test_config_parser.cpp \
 	test_vlan_interface.cpp
 
@@ -49,6 +50,7 @@ test_LDADD = $(top_builddir)/ethernet_interface.o \
 			$(top_builddir)/routing_table.o \
 			$(top_builddir)/util.o \
 			$(top_builddir)/timer.o \
+			$(top_builddir)/rtnetlink_server.o \
 			$(top_builddir)/system_configuration.o \
 			$(top_builddir)/dhcp_configuration.o \
 			$(top_builddir)/config_parser.o \

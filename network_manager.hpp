@@ -37,6 +37,7 @@ using VLANCreateIface = details::ServerObject<
 } // namespace details
 
 class TestNetworkManager; //forward declaration
+class TestRtNetlink; //forward declaration
 
 /** @class Manager
  *  @brief OpenBMC network manager implementation.
@@ -129,6 +130,7 @@ class Manager : public details::VLANCreateIface
         fs::path confDir;
 
         friend class TestNetworkManager;
+        friend class TestRtNetlink;
 
 };
 
