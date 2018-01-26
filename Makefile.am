@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS = -I m4
+
 # Build these headers, don't install them
 nobase_nodist_include_HEADERS = \
 	xyz/openbmc_project/Network/VLAN/Create/server.hpp \
