@@ -649,6 +649,15 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
 
         value = manager.getDHCPConf()->hostNameEnabled() ? "true"s : "false"s;
         stream << "UseHostname="s + value + "\n";
+
+        value = manager.getDHCPConf()->dHCPOpt12Enabled() ? "true"s : "false"s;
+        stream << "SendHostname="s + value + "\n";
+
+        if (manager.getDHCPConf()->dHCPOpt60Opt43Enabled())
+        {
+            value = manager.getDHCPConf()->vendorClassIdentifier();
+            stream << "VendorClassIdentifier="s + value + "\n";
+        }
     }
 }
 

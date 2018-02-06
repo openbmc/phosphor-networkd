@@ -56,6 +56,9 @@ class Configuration : public Iface
             ConfigIntf::dNSEnabled(true);
             ConfigIntf::nTPEnabled(true);
             ConfigIntf::hostNameEnabled(true);
+            ConfigIntf::dHCPOpt12Enabled(true);
+            ConfigIntf::dHCPOpt60Opt43Enabled(true);
+            ConfigIntf::vendorClassIdentifier("xxx");
             emit_object_added();
         }
 
@@ -82,13 +85,40 @@ class Configuration : public Iface
          */
         bool hostNameEnabled(bool value) override;
 
+        /** @brief if true then it will cause an Option 12 field to be included
+                    in the DHCP packet.
+         *  @param[in] value - true if Option 12 field  needs included in the
+         *         DHCP packet.
+         *
+         */
+        bool dHCPOpt12Enabled(bool value) override;
+
+        /** @brief if true then it will cause an Option 60 field and Option 43
+                   field to be included in the DHCP packet.
+         *  @param[in] value - true if Option 60 field  and Option 43 needs 
+         *         included in the DHCP packet.
+         *
+         */
+        bool dHCPOpt60Opt43Enabled(bool value) override;
+
+        /** @brief The vendor class identifier used to identify vendor type and 
+                    configuration.
+         *  @param[in] value - xx used to identify vendor type and configuration
+         *
+         */
+        std::string vendorClassIdentifier(std::string value) override;
+
         /* @brief Network Manager needed the below function to know the
-         *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled).
+         *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled
+                  dHCPOpt12Enabled,dHCPOpt60Opt43Enabled).
          *
          */
         using ConfigIntf::dNSEnabled;
         using ConfigIntf::nTPEnabled;
         using ConfigIntf::hostNameEnabled;
+        using ConfigIntf::dHCPOpt12Enabled;
+        using ConfigIntf::dHCPOpt60Opt43Enabled;
+        using ConfigIntf::vendorClassIdentifier;
 
     private:
 
