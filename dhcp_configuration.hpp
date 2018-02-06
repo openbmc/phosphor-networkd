@@ -56,6 +56,8 @@ class Configuration : public Iface
             ConfigIntf::dNSEnabled(true);
             ConfigIntf::nTPEnabled(true);
             ConfigIntf::hostNameEnabled(true);
+            ConfigIntf::sendHostNameEnabled(true);
+            ConfigIntf::vendorClassIdentifier("xxx");
             emit_object_added();
         }
 
@@ -82,13 +84,31 @@ class Configuration : public Iface
          */
         bool hostNameEnabled(bool value) override;
 
+        /** @brief if true (the default) then machine's hostname will be sent to 
+                   the DHCP server.
+         *  @param[in] value - true if machine's hostname needs to be send to
+         *         DHCP server else false.
+         *
+         */
+        bool sendHostNameEnabled(bool value) override;
+
+        /** @brief The vendor class identifier used to identify vendor type and 
+                    configuration.
+         *  @param[in] value - xx used to identify vendor type and configuration
+         *
+         */
+        std::string vendorClassIdentifier(std::string value) override;
+
         /* @brief Network Manager needed the below function to know the
-         *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled).
+         *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled
+                  sendHostNameEnabled,vendorClassIdentifier).
          *
          */
         using ConfigIntf::dNSEnabled;
         using ConfigIntf::nTPEnabled;
         using ConfigIntf::hostNameEnabled;
+        using ConfigIntf::sendHostNameEnabled;
+        using ConfigIntf::vendorClassIdentifier;
 
     private:
 
