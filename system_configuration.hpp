@@ -54,7 +54,14 @@ class SystemConfiguration : public Iface
          */
         std::string defaultGateway(std::string gateway) override;
 
+        /** @brief The vendor class identifier used to identify vendor type.
+         *  @param[in] value - xx used to identify vendor type.
+         *
+         */
+        std::string vendorClassIdentifier(std::string value) override;
+
         using SystemConfigIntf::defaultGateway;
+        using SystemConfigIntf::vendorClassIdentifier;
 
     private:
 

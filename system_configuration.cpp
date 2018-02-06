@@ -38,6 +38,7 @@ SystemConfiguration::SystemConfiguration(sdbusplus::bus::bus& bus,
 
     SystemConfigIntf::hostName(name);
     SystemConfigIntf::defaultGateway(routingTable.getDefaultGateway());
+    SystemConfigIntf::vendorClassIdentifier("xxx");
 
     this->emit_object_added();
 }
@@ -110,6 +111,20 @@ std::string SystemConfiguration::defaultGateway(std::string gateway)
     gw = SystemConfigIntf::defaultGateway(gateway);
     manager.writeToConfigurationFile();
     return gw;
+}
+
+std::string SystemConfiguration::vendorClassIdentifier(std::string value)
+{
+    if (value == SystemConfigIntf::vendorClassIdentifier())
+    {
+        return value;
+    }
+
+    auto name = SystemConfigIntf::vendorClassIdentifier(value);
+    manager.writeToConfigurationFile();
+    restartSystemdUnit(phosphor::network::networkdService);
+
+    return name;
 }
 
 }// namespace network

@@ -9,6 +9,34 @@ namespace network
 namespace dhcp
 {
 
+bool Configuration::sendHostNameEnabled(bool value)
+{
+    if (value == sendHostNameEnabled())
+    {
+        return value;
+    }
+
+    auto name = ConfigIntf::sendHostNameEnabled(value);
+    manager.writeToConfigurationFile();
+    restartSystemdUnit(phosphor::network::networkdService);
+
+    return name;
+}
+
+bool Configuration::includeVendorClassIdentifier(bool value)
+{
+    if (value == includeVendorClassIdentifier())
+    {
+        return value;
+    }
+
+    auto name = ConfigIntf::includeVendorClassIdentifier(value);
+    manager.writeToConfigurationFile();
+    restartSystemdUnit(phosphor::network::networkdService);
+
+    return name;
+}
+
 bool Configuration::hostNameEnabled(bool value)
 {
     if (value == hostNameEnabled())

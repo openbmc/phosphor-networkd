@@ -56,6 +56,8 @@ class Configuration : public Iface
             ConfigIntf::dNSEnabled(true);
             ConfigIntf::nTPEnabled(true);
             ConfigIntf::hostNameEnabled(true);
+            ConfigIntf::sendHostNameEnabled(true);
+            ConfigIntf::includeVendorClassIdentifier(true);
             emit_object_added();
         }
 
@@ -82,13 +84,31 @@ class Configuration : public Iface
          */
         bool hostNameEnabled(bool value) override;
 
+        /** @brief if true then it will cause an Option 12 field, i.e machine's
+         *         hostname, will be to be included in the DHCP packet.
+         *  @param[in] value - true if machine's host name needs to be included
+         *         in the DHCP packet.
+         */
+        bool sendHostNameEnabled(bool value) override;
+
+        /** @brief if true then it will cause clients and servers to exchange
+         *         vendor-specific information.
+         *  @param[in] value - true if vendor-specific information needs
+         *         to be included in the DHCP packet.
+         *
+         */
+        bool includeVendorClassIdentifier(bool value) override;
+
         /* @brief Network Manager needed the below function to know the
-         *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled).
+         *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled
+                  sendHostNameEnabled,includeVendorClassIdentifier).
          *
          */
         using ConfigIntf::dNSEnabled;
         using ConfigIntf::nTPEnabled;
         using ConfigIntf::hostNameEnabled;
+        using ConfigIntf::sendHostNameEnabled;
+        using ConfigIntf::includeVendorClassIdentifier;
 
     private:
 
