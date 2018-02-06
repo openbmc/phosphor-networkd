@@ -9,6 +9,19 @@ namespace network
 namespace dhcp
 {
 
+bool Configuration::sendHostNameEnabled(bool value)
+{
+    if (value == sendHostNameEnabled())
+    {
+        return value;
+    }
+
+    auto name = ConfigIntf::sendHostNameEnabled(value);
+    manager.writeToConfigurationFile();
+
+    return name;
+}
+
 bool Configuration::hostNameEnabled(bool value)
 {
     if (value == hostNameEnabled())
