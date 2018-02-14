@@ -110,9 +110,6 @@ int main(int argc, char *argv[])
                                                          OBJ_NETWORK,
                                                          NETWORK_CONF_DIR);
 
-    // create the network interface dbus objects and system config
-    phosphor::network::manager->createChildObjects();
-
     // create the default network files if the network file
     // is not there for any interface.
     // Parameter false means don't create the network
@@ -129,6 +126,8 @@ int main(int argc, char *argv[])
         // this will add the additional fixes which is needed
         // in the existing network file.
         phosphor::network::manager->writeToConfigurationFile();
+        // whenever the configuration file gets written it restart
+        // the network which creates the network objects
     }
 
     //RtnetLink socket
