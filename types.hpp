@@ -2,6 +2,7 @@
 
 #include <ifaddrs.h>
 
+#include <functional>
 #include <list>
 #include <string>
 #include <vector>
