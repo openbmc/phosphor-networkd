@@ -675,6 +675,15 @@ std::string EthernetInterface::mACAddress(std::string value)
         return MacAddressIntf::mACAddress();
     }
 
+    // Check if the MAC changed (I didn't see strcasecmp())
+    auto pmac = MacAddressIntf::mACAddress();
+    std::transform(pmac.begin(), pmac.end(), pmac.begin(), toupper);
+    std::transform(value.begin(), value.end(), value.begin(), toupper);
+    if (pmac == value)
+    {
+        return MacAddressIntf::mACAddress();
+    }
+
     // Allow the mac to be set if one of the condition is true.
     //   1) Incoming Mac is of local admin type.
     //      or
