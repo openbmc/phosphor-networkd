@@ -41,7 +41,14 @@ class TestVlanInterface : public testing::Test
         {
             if(confDir != "")
             {
-                fs::remove_all(confDir);
+                /*
+                 * There's a bug where we try to remove confDir multiple times.
+                 * The post-condition is that it's gone, just silence the
+                 * failure for now as it really means the first attempt has
+                 * succeeded.
+                 */
+                std::error_code ec;
+                fs::remove_all(confDir, ec);
             }
         }
 
