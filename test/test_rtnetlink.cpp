@@ -17,7 +17,7 @@ namespace phosphor
 
 namespace network
 {
-
+sdbusplus::bus::bus bus(sdbusplus::bus::new_default());
 std::unique_ptr<Manager> manager = nullptr;
 std::unique_ptr<Timer> refreshObjectTimer = nullptr;
 std::unique_ptr<Timer> restartTimer = nullptr;
@@ -54,7 +54,6 @@ class TestRtNetlink : public testing::Test
 
         TestRtNetlink()
         {
-            sdbusplus::bus::bus bus(sdbusplus::bus::new_default());
             manager =
                 std::make_unique<Manager>(bus,
                         "/xyz/openbmc_test/bcd",
