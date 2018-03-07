@@ -1,6 +1,7 @@
 #pragma once
 
 #include <experimental/filesystem>
+#include <fstream>
 
 namespace phosphor
 {
@@ -17,11 +18,10 @@ constexpr auto RESOLV_CONF = "/etc/resolv.conf";
 
 /** @brief Reads DNS entries supplied by DHCP and updates specified file
  *
- *  @param[in] inFile  - File having DNS entries supplied by DHCP
- *  @param[in] outFile - File to write the nameserver entries to
+ *  @param[in] in  - A stream having DNS entries supplied by DHCP
+ *  @param[in] out - A stream to which to write nameserver entries
  */
-void updateDNSEntries(const fs::path& inFile,
-                      const fs::path& outFile);
+void updateDNSEntries(std::istream& in, std::ostream& out);
 
 /** @brief User callback handler invoked by inotify watcher
  *
@@ -32,7 +32,9 @@ void updateDNSEntries(const fs::path& inFile,
  */
 inline void processDNSEntries(const fs::path& inFile)
 {
-    return updateDNSEntries(inFile, RESOLV_CONF);
+    std::fstream in(inFile, std::fstream::in);
+    std::fstream out(RESOLV_CONF, std::fstream::out);
+    return updateDNSEntries(in, out);
 }
 
 } // namepsace updater
