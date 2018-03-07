@@ -562,69 +562,64 @@ void EthernetInterface::writeConfigurationFile()
         stream << "VLAN=" << intf.second->EthernetInterface::interfaceName()
             << "\n";
     }
-
-    // DHCP
-    if (dHCPEnabled() == true)
+    if (dHCPEnabled() == false)
     {
-        // write the dhcp section if interface is
-        // configured as dhcp.
-        writeDHCPSection(stream);
-        stream.close();
-        return;
-    }
-
-    //Add the NTP server
-    for(const auto& ntp: EthernetInterfaceIntf::nTPServers())
-    {
-         stream << "NTP=" << ntp << "\n";
-    }
-
-    //Add the DNS entry
-    for(const auto& dns: EthernetInterfaceIntf::nameservers())
-    {
-         stream << "DNS=" << dns << "\n";
-    }
-
-    // Static
-    for (const auto& addr : addrs)
-    {
-        if (addr.second->origin() == AddressOrigin::Static)
+        //Add the NTP server
+        for(const auto& ntp: EthernetInterfaceIntf::nTPServers())
         {
-            std::string address = addr.second->address() + "/" + std::to_string(
-                                      addr.second->prefixLength());
+             stream << "NTP=" << ntp << "\n";
+        }
 
-            stream << "Address=" << address << "\n";
-         }
-    }
-
-    if (manager.getSystemConf())
-    {
-        stream << "Gateway=" << manager.getSystemConf()->defaultGateway()
-            << "\n";
-    }
-    // write the route section
-    stream << "[" << "Route" << "]\n";
-    for(const auto& addr : addrs)
-    {
-        if (addr.second->origin() == AddressOrigin::Static)
+        //Add the DNS entry
+        for(const auto& dns: EthernetInterfaceIntf::nameservers())
         {
-            int addressFamily = addr.second->type() == IP::Protocol::IPv4 ? AF_INET : AF_INET6;
-            std::string destination = getNetworkID(
-                    addressFamily,
-                    addr.second->address(),
-                    addr.second->prefixLength());
+             stream << "DNS=" << dns << "\n";
+        }
 
-            if (addr.second->gateway() != "0.0.0.0" &&
-                addr.second->gateway() != "" &&
-                destination != "0.0.0.0" &&
-                destination != "")
+        // Static
+        for (const auto& addr : addrs)
+        {
+            if (addr.second->origin() == AddressOrigin::Static)
             {
-                stream << "Gateway=" << addr.second->gateway() << "\n";
-                stream << "Destination=" << destination << "\n";
-            }
+                std::string address = addr.second->address() + "/" + std::to_string(
+                                        addr.second->prefixLength());
 
+                stream << "Address=" << address << "\n";
+            }
+        }
+
+        if (manager.getSystemConf())
+        {
+            stream << "Gateway=" << manager.getSystemConf()->defaultGateway()
+                << "\n";
+        }
+
+        // write the route section
+        stream << "[" << "Route" << "]\n";
+        for(const auto& addr : addrs)
+        {
+            if (addr.second->origin() == AddressOrigin::Static)
+            {
+                int addressFamily = addr.second->type() == IP::Protocol::IPv4 ? AF_INET : AF_INET6;
+                std::string destination = getNetworkID(
+                        addressFamily,
+                        addr.second->address(),
+                        addr.second->prefixLength());
+
+                if (addr.second->gateway() != "0.0.0.0" &&
+                    addr.second->gateway() != "" &&
+                    destination != "0.0.0.0" &&
+                    destination != "")
+                {
+                    stream << "Gateway=" << addr.second->gateway() << "\n";
+                    stream << "Destination=" << destination << "\n";
+                }
+            }
         }
     }
+
+    // write the dhcp section
+    writeDHCPSection(stream);
 
     stream.close();
 }
@@ -632,7 +627,8 @@ void EthernetInterface::writeConfigurationFile()
 void EthernetInterface::writeDHCPSection(std::fstream& stream)
 {
     using namespace std::string_literals;
-    stream << "DHCP=true\n";
+    auto value = dHCPEnabled() ? "true"s : "false"s;
+    stream << "DHCP="s + value + "\n";
     // write the dhcp section
     stream << "[DHCP]\n";
 
@@ -641,7 +637,7 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
     stream << "ClientIdentifier=mac\n";
     if (manager.getDHCPConf())
     {
-        auto value = manager.getDHCPConf()->dNSEnabled() ? "true"s : "false"s;
+        value = manager.getDHCPConf()->dNSEnabled() ? "true"s : "false"s;
         stream << "UseDNS="s + value + "\n";
 
         value = manager.getDHCPConf()->nTPEnabled() ? "true"s : "false"s;

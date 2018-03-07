@@ -3,6 +3,7 @@
 #include "xyz/openbmc_project/Network/DHCPConfiguration/server.hpp"
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
+#include "config_parser.hpp"
 
 #include <string>
 
@@ -50,13 +51,10 @@ class Configuration : public Iface
             bus(bus),
             manager(parent)
         {
-            // systemd default behaviour is following fields should be
-            // enabled by default.
-
-            ConfigIntf::dNSEnabled(true);
-            ConfigIntf::nTPEnabled(true);
-            ConfigIntf::hostNameEnabled(true);
-            ConfigIntf::sendHostNameEnabled(true);
+            ConfigIntf::dNSEnabled(getDHCPPropFromConf("UseDNS"));
+            ConfigIntf::nTPEnabled(getDHCPPropFromConf("UseNTP"));
+            ConfigIntf::hostNameEnabled(getDHCPPropFromConf("UseHostname"));
+            ConfigIntf::sendHostNameEnabled(getDHCPPropFromConf("SendHostname"));
             emit_object_added();
         }
 
@@ -89,6 +87,11 @@ class Configuration : public Iface
          *         in the DHCP packet.
          */
         bool sendHostNameEnabled(bool value) override;
+
+        /** @brief read the DHCP Prop value from the configuration file
+         *  @param[in] prop - DHCP Prop name.
+         */
+        bool getDHCPPropFromConf(const std::string& prop);
 
         /* @brief Network Manager needed the below function to know the
          *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled
