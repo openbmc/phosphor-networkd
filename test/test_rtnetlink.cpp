@@ -122,7 +122,7 @@ TEST_F(TestRtNetlink, WithSingleInterface)
     // Send the request
     send(smartSock(), nlMsg, nlMsg->nlmsg_len, 0);
 
-    int i = 2;
+    int i = 3;
     while (i--)
     {
         //wait for timer to expire
