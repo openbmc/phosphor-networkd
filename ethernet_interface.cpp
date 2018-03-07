@@ -562,16 +562,29 @@ void EthernetInterface::writeConfigurationFile()
         stream << "VLAN=" << intf.second->EthernetInterface::interfaceName()
             << "\n";
     }
-
-    // DHCP
-    if (dHCPEnabled() == true)
+    if (dHCPEnabled() == false)
     {
-        // write the dhcp section if interface is
-        // configured as dhcp.
-        writeDHCPSection(stream);
-        stream.close();
-        return;
+        // Static
+        for (const auto& addr : addrs)
+        {
+            if (addr.second->origin() == AddressOrigin::Static)
+            {
+                std::string address = addr.second->address() + "/" + std::to_string(
+                                        addr.second->prefixLength());
+
+                stream << "Address=" << address << "\n";
+            }
+        }
+
+        if (manager.getSystemConf())
+        {
+            stream << "Gateway=" << manager.getSystemConf()->defaultGateway()
+                << "\n";
+        }
     }
+
+    // write the dhcp section
+    writeDHCPSection(stream);
 
     //Add the NTP server
     for(const auto& ntp: EthernetInterfaceIntf::nTPServers())
@@ -585,23 +598,7 @@ void EthernetInterface::writeConfigurationFile()
          stream << "DNS=" << dns << "\n";
     }
 
-    // Static
-    for (const auto& addr : addrs)
-    {
-        if (addr.second->origin() == AddressOrigin::Static)
-        {
-            std::string address = addr.second->address() + "/" + std::to_string(
-                                      addr.second->prefixLength());
 
-            stream << "Address=" << address << "\n";
-         }
-    }
-
-    if (manager.getSystemConf())
-    {
-        stream << "Gateway=" << manager.getSystemConf()->defaultGateway()
-            << "\n";
-    }
     // write the route section
     stream << "[" << "Route" << "]\n";
     for(const auto& addr : addrs)
@@ -632,28 +629,26 @@ void EthernetInterface::writeConfigurationFile()
 void EthernetInterface::writeDHCPSection(std::fstream& stream)
 {
     using namespace std::string_literals;
-    stream << "DHCP=true\n";
+    auto value = dHCPEnabled() ? "true"s : "false"s;
+    stream << "DHCP="s + value + "\n";
     // write the dhcp section
     stream << "[DHCP]\n";
 
     // Hardcoding the client identifier to mac, to address below issue
     // https://github.com/openbmc/openbmc/issues/1280
     stream << "ClientIdentifier=mac\n";
-    if (manager.getDHCPConf())
-    {
-        auto value = manager.getDHCPConf()->dNSEnabled() ? "true"s : "false"s;
-        stream << "UseDNS="s + value + "\n";
+    value = manager.getDHCPConf()->dNSEnabled() ? "true"s : "false"s;
+    stream << "UseDNS="s + value + "\n";
 
-        value = manager.getDHCPConf()->nTPEnabled() ? "true"s : "false"s;
-        stream << "UseNTP="s + value + "\n";
+    value = manager.getDHCPConf()->nTPEnabled() ? "true"s : "false"s;
+    stream << "UseNTP="s + value + "\n";
 
-        value = manager.getDHCPConf()->hostNameEnabled() ? "true"s : "false"s;
-        stream << "UseHostname="s + value + "\n";
+    value = manager.getDHCPConf()->hostNameEnabled() ? "true"s : "false"s;
+    stream << "UseHostname="s + value + "\n";
 
-        value =
-            manager.getDHCPConf()->sendHostNameEnabled() ? "true"s : "false"s;
-        stream << "SendHostname="s + value + "\n";
-    }
+    value =
+        manager.getDHCPConf()->sendHostNameEnabled() ? "true"s : "false"s;
+    stream << "SendHostname="s + value + "\n";
 }
 
 std::string EthernetInterface::mACAddress(std::string value)
