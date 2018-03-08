@@ -228,7 +228,7 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
  */
 
 std::string EthernetInterface::getMACAddress(
-        const std::string& interfaceName) const
+        const std::string& interfaceName)
 {
     struct ifreq ifr{};
     char macAddress[mac_address::size] {};
