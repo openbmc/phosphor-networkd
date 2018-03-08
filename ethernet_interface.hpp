@@ -154,6 +154,13 @@ class EthernetInterface : public Ifaces
          */
         void deleteAll();
 
+        /** @brief get the mac address of the interface.
+         *  @param[in] interfaceName - Network interface name.
+         *  @return macaddress on success
+         */
+
+        static std::string getMACAddress(const std::string& interfaceName);
+
         using EthernetInterfaceIntf::dHCPEnabled;
         using EthernetInterfaceIntf::interfaceName;
         using MacAddressIntf::mACAddress;
@@ -171,13 +178,6 @@ class EthernetInterface : public Ifaces
          * @param[in] interface - vlan Interface.
          */
         void deleteVLANFromSystem(const std::string& interface);
-
-        /** @brief get the mac address of the interface.
-         *  @param[in] interfaceName - Network interface name.
-         *  @return macaddress on success
-         */
-
-        std::string getMACAddress(const std::string& interfaceName) const;
 
         /** @brief construct the ip address dbus object path.
          *  @param[in] addressType - Type of ip address.
