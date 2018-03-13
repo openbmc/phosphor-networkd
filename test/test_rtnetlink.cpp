@@ -79,7 +79,8 @@ class TestRtNetlink : public testing::Test
 
         void setConfDir()
         {
-            confDir = "/tmp/NetworkManager.YYYY";
+            char tmp[] = "/tmp/NetworkManager.XXXXXX";
+            confDir = mkdtemp(tmp);
             manager->setConfDir(confDir);
         }
 

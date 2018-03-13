@@ -5,9 +5,9 @@
 #include <fstream>
 #include <experimental/filesystem>
 
-static constexpr auto IN_FILE = "/tmp/netif_state";
-static constexpr auto OUT_FILE = "/tmp/resolv.conf";
-static constexpr auto COMPARE_FILE = "/tmp/resolv_compare.conf";
+static constexpr auto IN_FILE = "/tmp/" __BASE_FILE__ "netif_state";
+static constexpr auto OUT_FILE = "/tmp/" __BASE_FILE__ "resolv.conf";
+static constexpr auto COMPARE_FILE = "/tmp/" __BASE_FILE__ "resolv_compare.conf";
 static constexpr auto DNS_ENTRY_1 = "DNS=1.2.3.4\n";
 static constexpr auto DNS_ENTRY_2 = "DNS=5.6.7.8\n";
 
