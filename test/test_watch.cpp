@@ -6,7 +6,7 @@
 #include <fstream>
 #include <experimental/filesystem>
 
-static constexpr auto TRIGGER_FILE = "/tmp/netif_state";
+static constexpr auto TRIGGER_FILE = "/tmp/" __BASE_FILE__ "netif_state";
 
 namespace fs = std::experimental::filesystem;
 
