@@ -3,7 +3,7 @@ nobase_nodist_include_HEADERS = \
 	xyz/openbmc_project/Network/VLAN/Create/server.hpp \
 	xyz/openbmc_project/Network/IP/Create/server.hpp
 
-sbin_PROGRAMS = phosphor-network-manager
+sbin_PROGRAMS = phosphor-network-manager ncsi-netlink
 
 noinst_HEADERS = \
 		ethernet_interface.hpp \
@@ -20,7 +20,13 @@ noinst_HEADERS = \
 		rtnetlink_server.hpp \
 		timer.hpp \
 		dns_updater.hpp \
-		watch.hpp
+		watch.hpp \
+		argument.hpp
+
+ncsi_netlink_SOURCES = \
+		argument.cpp \
+		ncsi_netlink_main.cpp
+
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
