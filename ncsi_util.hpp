@@ -5,6 +5,9 @@ namespace network
 namespace ncsi
 {
 
+constexpr auto DEFAULT_VALUE = -1;
+constexpr auto NONE = 0;
+
 /* @brief  This function will ask underlying NCSI driver
  *         to set a specific  package or package/channel
  *         combination as the preferred choice.
