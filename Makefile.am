@@ -21,12 +21,12 @@ noinst_HEADERS = \
 		timer.hpp \
 		dns_updater.hpp \
 		watch.hpp \
-		argument.hpp
+		argument.hpp \
+		ncsi_util.hpp
 
 ncsi_netlink_SOURCES = \
 		argument.cpp \
 		ncsi_netlink_main.cpp
-
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
