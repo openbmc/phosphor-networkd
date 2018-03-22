@@ -18,6 +18,13 @@ AM_PROG_AR
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 
+# Download ncsi.h from github if necessary.
+AC_CHECK_HEADER(linux/ncsi.h,[HAVE_LINUX_NCSI_H=""],[HAVE_LINUX_NCSI_H="-I linux/ncsi.h"])
+AS_IF([test "$HAVE_LINUX_NCSI_H" != ""],
+    AC_MSG_WARN([Could not find linux/ncsi.h: Attempting to download locally for building from https://raw.githubusercontent.com/openbmc/linux/dev-4.13/include/uapi/linux/ncsi.h])
+    AC_SUBST([BT_BMC_DL],[`mkdir -p linux;wget https://raw.githubusercontent.com/openbmc/linux/dev-4.13/include/uapi/linux/ncsi.h -O linux/ncsi.h`])
+)
+
 # Suppress the --with-libtool-sysroot error
 LT_INIT
 
