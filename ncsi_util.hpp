@@ -27,6 +27,15 @@ int setChannel(int ifindex, int package, int channel);
  */
 int clearInterface(int ifindex);
 
+/* @brief  This function is used to dump all the info
+ *         of the package and the channels underlying
+ *         the package.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @returns 0 on success and negative value for failure.
+ */
+int getInfo(int ifindex, int package);
+
 }//namespace ncsi
 }//namespace network
 }//namespace phosphor
