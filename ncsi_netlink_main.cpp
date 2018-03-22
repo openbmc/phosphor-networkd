@@ -14,9 +14,98 @@
  * limitations under the License.
  */
 
+#include "argument.hpp"
+#include "ncsi_util.hpp"
+
+#include <iostream>
+#include <string>
+
+static void exitWithError(const char* err, char** argv)
+{
+    phosphor::network::ncsi::ArgumentParser::usage(argv);
+    std::cerr << "ERROR: " << err << "\n";
+    exit(EXIT_FAILURE);
+}
+
 int main(int argc, char** argv)
 {
-    //TODO will implement later
+    using namespace phosphor::network;
+    using namespace phosphor::network::ncsi;
+    // Read arguments.
+    auto options = ArgumentParser(argc, argv);
+    int packageInt {};
+    int channelInt {};
+    int indexInt {};
+
+    // Parse out package argument.
+    auto package = (options)["package"];
+    try
+    {
+        packageInt = stoi(package, nullptr);
+    }
+    catch (const std::exception& e)
+    {
+         packageInt = DEFAULT_VALUE;
+    }
+
+    if (packageInt < 0)
+    {
+        packageInt = DEFAULT_VALUE;
+    }
+
+    // Parse out channel argument.
+    auto channel = (options)["channel"];
+    try
+    {
+        channelInt = stoi(channel, nullptr);
+    }
+    catch (const std::exception& e)
+    {
+         channelInt = DEFAULT_VALUE;
+    }
+
+    if (channelInt < 0)
+    {
+        channelInt = DEFAULT_VALUE;
+    }
+    // Parse out interface argument.
+    auto ifIndex = (options)["index"];
+    try
+    {
+        indexInt = stoi(ifIndex, nullptr);
+    }
+    catch (const std::exception& e)
+    {
+        indexInt = INTERFACE; // witherspoon specific
+    }
+
+    if (indexInt < 0)
+    {
+        indexInt = INTERFACE;
+    }
+
+    auto setCmd = (options)["set"];
+    if (setCmd == "true")
+    {
+        // Can not perform set operation without pacakge.
+        if (packageInt == DEFAULT_VALUE)
+        {
+            exitWithError("Package not specified.", argv);
+        }
+        return ncsi::setChannel(indexInt, packageInt, channelInt);
+    }
+    else if ((options)["info"] == "true")
+    {
+        return ncsi::getInfo(indexInt, packageInt);
+    }
+    else if ((options)["clear"] == "true")
+    {
+        return  ncsi::clearInterface(indexInt);
+    }
+    else
+    {
+        exitWithError("No Command specified", argv);
+    }
     return 0;
 }
 
