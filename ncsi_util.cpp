@@ -19,8 +19,6 @@ namespace ncsi
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-constexpr auto DEFAULT_VALUE = -1;
-constexpr auto NONE = 0;
 using CallBack = int(*)(struct nl_msg* msg, void* arg);
 
 namespace internal
@@ -131,21 +129,20 @@ CallBack infoCallBack =  [](struct nl_msg* msg, void* arg)
                 }
                 else
                 {
-                    log<level::DEBUG>("Channel not Active",
-                            entry("CHANNEL=%x", channel));
-
+                    log<level::DEBUG>("Channel Not Active",
+                                      entry("CHANNEL=%x", channel));
                 }
 
                 if (channeltb[NCSI_CHANNEL_ATTR_FORCED])
                 {
                     log<level::DEBUG>("Channel is forced");
                 }
-
             }
             else
             {
                 log<level::DEBUG>("Channel with no ID");
             }
+
             if (channeltb[NCSI_CHANNEL_ATTR_VERSION_MAJOR])
             {
                 auto major = nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_VERSION_MAJOR]);
@@ -166,9 +163,10 @@ CallBack infoCallBack =  [](struct nl_msg* msg, void* arg)
             }
             if (channeltb[NCSI_CHANNEL_ATTR_LINK_STATE])
             {
+
                 auto link = nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_LINK_STATE]);
                 log<level::DEBUG>("Channel Link State",
-                                  entry("STATE=%d", link));
+                                  entry("STATE=%x", link));
             }
             if (channeltb[NCSI_CHANNEL_ATTR_VLAN_LIST])
             {
@@ -181,7 +179,6 @@ CallBack infoCallBack =  [](struct nl_msg* msg, void* arg)
                     auto id = nla_get_u16(vid);
                     log<level::DEBUG>("VID",
                                       entry("VID=%d", id));
-
                     vid = nla_next(vid, &len);
                 }
             }
@@ -287,18 +284,27 @@ int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
 
 int setChannel(int ifindex, int package, int channel)
 {
+    log<level::DEBUG>("Set Channel",
+                      entry("CHANNEL=%x", channel),
+                      entry("PACKAGE=%x", package),
+                      entry("IFINDEX=%x", ifindex));
     return internal::applyCmd(ifindex, ncsi_nl_commands::NCSI_CMD_SET_INTERFACE,
                               package, channel);
 }
 
 int clearInterface(int ifindex)
 {
+    log<level::DEBUG>("ClearInterface",
+                      entry("IFINDEX=%x", ifindex));
     return internal::applyCmd(ifindex,
                               ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE);
 }
 
 int getInfo(int ifindex, int package)
 {
+    log<level::DEBUG>("Get Info",
+                      entry("PACKAGE=%x", package),
+                      entry("IFINDEX=%x", ifindex));
     if (package == DEFAULT_VALUE)
     {
         return internal::applyCmd(ifindex, ncsi_nl_commands::NCSI_CMD_PKG_INFO,
