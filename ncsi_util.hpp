@@ -7,6 +7,10 @@ namespace network
 namespace ncsi
 {
 
+constexpr auto DEFAULT_VALUE = -1;
+constexpr auto NONE = 0;
+constexpr auto INTERFACE = 2; // witherspoon interface number
+
 namespace command
 {
     static constexpr uint8_t UNSPEC = 0;

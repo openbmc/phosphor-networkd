@@ -14,9 +14,66 @@
  * limitations under the License.
  */
 
+#include "argument.hpp"
+#include "ncsi_util.hpp"
+
+#include <iostream>
+#include <string>
+
+static void exitWithError(const char* err, char** argv)
+{
+    phosphor::network::ArgumentParser::usage(argv);
+    std::cerr << "ERROR: " << err << "\n";
+    exit(EXIT_FAILURE);
+}
+
 int main(int argc, char** argv)
 {
-    //TODO will implement later
+    using namespace phosphor::network;
+    using namespace phosphor::network::ncsi;
+    // Read arguments.
+    auto options = ArgumentParser(argc, argv);
+    // Parse out package argument.
+    auto package = (options)["package"];
+    auto packageInt = stoi(package, nullptr, 0);
+    if (packageInt < 0)
+    {
+        packageInt = DEFAULT_VALUE;
+    }
+
+    // Parse out channel argument.
+    auto channel = (options)["channel"];
+    auto channelInt = stoi(channel, nullptr, 0);
+    if (channelInt < 0 )
+    {
+        channelInt = DEFAULT_VALUE;
+    }
+
+    auto ifIndex = (options)["index"];
+    auto indexInt = stoi(ifIndex, nullptr, 0);
+    if (indexInt < 0 )
+    {
+        indexInt = INTERFACE; // withserspoon specific
+    }
+
+    auto setCmd = (options)["set"];
+    if (setCmd == "true")
+    {
+        // Can not perform set operation without pacakge.
+        if (packageInt == DEFAULT_VALUE)
+        {
+            exitWithError("Package not specified.", argv);
+        }
+        return ncsi::setChannel(indexInt, packageInt, channelInt);
+    }
+    else if ((options)["info"] == "true")
+    {
+        return ncsi::getInfo(indexInt, packageInt);
+    }
+    else if ((options)["clear"] == "true")
+    {
+        return  ncsi::clearInterface(indexInt);
+    }
     return 0;
 }
 

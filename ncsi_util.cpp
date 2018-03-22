@@ -18,8 +18,6 @@ namespace ncsi
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-constexpr auto DEFAULT_VALUE = -1;
-constexpr auto NONE = 0;
 using CallBack = int(*)(struct nl_msg* msg, void* arg);
 
 namespace internal
@@ -128,12 +126,23 @@ CallBack infoCallBack =  [](struct nl_msg* msg, void* arg)
                     log<level::DEBUG>("Channel Active",
                                       entry("CHANNEL=%x", channel));
                 }
+                else
+                {
+                    log<level::DEBUG>("Channel Not Active",
+                                      entry("CHANNEL=%x", channel));
+                }
 
             }
             else
             {
                 log<level::DEBUG>("Channel with no ID");
             }
+
+            if (channeltb[channel::ATTR_FORCED])
+            {
+                log<level::DEBUG>("Channel is forced");
+            }
+
             if (channeltb[channel::ATTR_VERSION_MAJOR])
             {
                 auto major = nla_get_u32(channeltb[channel::ATTR_VERSION_MAJOR]);
@@ -156,7 +165,7 @@ CallBack infoCallBack =  [](struct nl_msg* msg, void* arg)
             {
                 auto link = nla_get_u32(channeltb[channel::ATTR_LINK_STATE]);
                 log<level::DEBUG>("Channel Link State",
-                                  entry("STATE=%d", link));
+                                  entry("STATE=%x", link));
             }
             if (channeltb[channel::ATTR_VLAN_LIST])
             {
