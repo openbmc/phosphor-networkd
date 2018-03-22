@@ -72,15 +72,24 @@ namespace vlan
  */
 int setChannel( int ifindex, int package, int channel);
 
-/* @brief  This function will ask underlying NCSI driver
- *         to forcefully clears all the package and the
- *         channel from the given interface.
+/* @brief  This function is used to dump all the info
+ *         of the package and the channels underlying
+ *         the package.
  *         This function talks with the NCSI driver over
  *         netlink messages.
  * @param[in] ifindex - Interface Index.
  * @returns 0 on success and negative value for failure.
  */
 int clearInterface(int ifindex);
+
+/* @brief  This function is used to dump all the info
+ *         of the package and the channels underlying
+ *         the package.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @returns 0 on success and negative value for failure.
+ */
+int getInfo(int ifindex, int package);
 
 }//namespace ncsi
 }//namespace network
