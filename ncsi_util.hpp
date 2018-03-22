@@ -60,6 +60,9 @@ namespace vlan
     static constexpr uint8_t INFO_MAX = 4;
 }// namespace vlan
 
+
+int setInterface( int ifindex, int package, int channel);
+
 }//namespace ncsi
 }//namespace network
 }//namespace phosphor
