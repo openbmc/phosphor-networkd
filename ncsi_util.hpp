@@ -60,6 +60,7 @@ namespace vlan
     static constexpr uint8_t INFO_MAX = 4;
 }// namespace vlan
 
+int getInfo(int ifindex, int package);
 
 int setInterface( int ifindex, int package, int channel);
 
