@@ -26,7 +26,13 @@ noinst_HEADERS = \
 
 ncsi_netlink_SOURCES = \
 		argument.cpp \
-		ncsi_netlink_main.cpp
+		ncsi_netlink_main.cpp \
+		ncsi_util.cpp
+
+ncsi_netlink_LDFLAGS = \
+        $(PHOSPHOR_LOGGING_LIBS) \
+		-lnl-3 \
+		-lnl-genl-3
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
