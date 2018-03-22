@@ -79,14 +79,12 @@ static int infoCallback(struct nl_msg *msg, void *arg)
     if (!tb[attribute::PACKAGE_LIST])
     {
         log<level::ERR>("No Packages");
-        printf("No Packages\n");
         return -1;
     }
 
     auto attrTgt = static_cast<nlattr*>(nla_data(tb[attribute::PACKAGE_LIST]));
     if (!attrTgt)
     {
-        printf("Attribute Target is null\n");
         return -1;
     }
     auto rem = nla_len(tb[attribute::PACKAGE_LIST]);
@@ -97,7 +95,6 @@ static int infoCallback(struct nl_msg *msg, void *arg)
         if (ret < 0)
         {
             log<level::ERR>("Failed to parse package nested");
-            printf("Failed to parse package nested\n");
             return -1;
         }
 
@@ -106,20 +103,17 @@ static int infoCallback(struct nl_msg *msg, void *arg)
             auto attrID = nla_get_u32(packagetb[package::ATTR_ID]);
             log<level::DEBUG>("Package having id",
                               entry("ID=%d", attrID));
-            printf("Package ID=[%d]\n", attrID);
         }
         else
         {
             log<level::DEBUG>("Package with no id\n");
-            printf("Package with no id\n");
         }
 
         if (packagetb[package::ATTR_FORCED])
         {
             log<level::DEBUG>("This package is forced\n");
-            printf("This package is forced\n");
         }
-        printf("===================\n");
+
         auto channelListTarget = static_cast<nlattr*>(
                 nla_data(packagetb[package::ATTR_CHANNEL_LIST]));
 
@@ -132,7 +126,6 @@ static int infoCallback(struct nl_msg *msg, void *arg)
             if (ret < 0)
             {
                 log<level::ERR>("Failed to parse channel nested");
-                printf("Failed to parse channel nested\n");
                 return -1;
             }
             if (channeltb[channel::ATTR_ID])
@@ -142,46 +135,50 @@ static int infoCallback(struct nl_msg *msg, void *arg)
                 {
                     log<level::DEBUG>("Channel Active",
                                       entry("CHANNEL=%d", channel));
-                    printf("Channel=[%d] active\n",channel);
+                }
+                else
+                {
+                    log<level::DEBUG>("Channel Not Active",
+                                      entry("CHANNEL=%d", channel));
                 }
 
             }
             else
             {
                 log<level::DEBUG>("Channel with no ID");
-                printf("Channel with no id\n");
             }
+
+            if (channeltb[channel::ATTR_FORCED])
+            {
+                log<level::DEBUG>("Channel is forced");
+            }
+
             if (channeltb[channel::ATTR_VERSION_MAJOR])
             {
                 auto major = nla_get_u32(channeltb[channel::ATTR_VERSION_MAJOR]);
                 log<level::DEBUG>("Channel Major Version",
-                                  entry("VERSION=%d", major));
-                printf("Channel Major Version=[%d]\n", major);
+                                  entry("VERSION=%x", major));
             }
             if (channeltb[channel::ATTR_VERSION_MINOR])
             {
                 auto minor = nla_get_u32(channeltb[channel::ATTR_VERSION_MINOR]);
                 log<level::DEBUG>("Channel Minor Version",
                                   entry("VERSION=%d", minor));
-                printf("Channel Minor Version=[%d]\n", minor);
             }
             if (channeltb[channel::ATTR_VERSION_STR])
             {
                 auto str = nla_get_string(channeltb[channel::ATTR_VERSION_STR]);
                 log<level::DEBUG>("Channel Version Str",
                                   entry("VERSION=%s", str));
-                printf("Channel Version Str=[%s]\n", str);
             }
             if (channeltb[channel::ATTR_LINK_STATE])
             {
                 auto link = nla_get_u32(channeltb[channel::ATTR_LINK_STATE]);
                 log<level::DEBUG>("Channel Link State",
-                                  entry("STATE=%d", link));
-                printf("Channel Link State=[%d]\n", link);
+                                  entry("STATE=%x", link));
             }
             if (channeltb[channel::ATTR_VLAN_LIST])
             {
-                printf("Active Vlan ids:\n");
                 log<level::DEBUG>("Active Vlan ids");
                 auto vids = channeltb[channel::ATTR_VLAN_LIST];
                 auto vid = static_cast<nlattr*>(nla_data(vids));
@@ -189,7 +186,6 @@ static int infoCallback(struct nl_msg *msg, void *arg)
                 while (nla_ok(vid, len))
                 {
                     auto id = nla_get_u16(vid);
-                    printf("VID=%d", id);
                     log<level::DEBUG>("VID",
                                       entry("VID=%d", id));
 
@@ -215,7 +211,6 @@ int getInfo(int ifindex, int package)
     {
         log<level::ERR>("Failed to open the socket",
                         entry("RC=%d", ret));
-        printf("Failed to open socket: rc=[%d]", ret);
         return -1;
     }
 
@@ -225,7 +220,6 @@ int getInfo(int ifindex, int package)
     {
         log<level::ERR>("Could not resolve NCSI",
                         entry("RC=%d", ret));
-        printf("Could not resolve NCSI");
         return -1;
     }
 
@@ -255,7 +249,6 @@ int getInfo(int ifindex, int package)
     {
         log<level::ERR>("Failed to send the message",
                         entry("RC=%d", ret));
-        printf("Failed to send message: ret=[%d]", ret);
         return ret;
     }
 
@@ -264,7 +257,6 @@ int getInfo(int ifindex, int package)
     {
         log<level::ERR>("Failed to recieve message",
                         entry("RC=%d", ret));
-        printf("recvmsg returned: ret=[%d]", ret);
     }
 
     return ret;
@@ -278,8 +270,6 @@ int setChannel( int ifindex, int package, int channel)
     {
         log<level::ERR>("Failed to open the socket",
                         entry("RC=%d", ret));
-        printf("Failed to open the socket: ret=[%d]\n", ret);
-
         return ret;
     }
 
@@ -288,12 +278,10 @@ int setChannel( int ifindex, int package, int channel)
     {
         log<level::ERR>("Failed to resolve",
                         entry("RC=%d", ret));
-        printf("Failed to Resolve: rc=[%d]\n", ret);
         return driverID;
     }
 
     nlMsgPtr msg(nlmsg_alloc(), &::nlmsg_free);
-    printf("Package=%d,Channel=%d\n", package, channel);
 
     if (package < 0 && channel < 0)
     {
@@ -303,7 +291,6 @@ int setChannel( int ifindex, int package, int channel)
         {
             log<level::ERR>("Unable to add the netlink headers",
                              entry("COMMAND=%d", command::CLEAR_INTERFACE));
-            printf("Unable to add the netlink headers\n");
             return -1;
         }
 
@@ -316,7 +303,6 @@ int setChannel( int ifindex, int package, int channel)
         {
             log<level::ERR>("Unable to add the netlink headers",
                     entry("COMMAND=%d", command::SET_INTERFACE));
-            printf("Unable to add the netlink headers\n");
             return -1;
         }
 
