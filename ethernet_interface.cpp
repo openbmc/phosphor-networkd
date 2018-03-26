@@ -564,6 +564,10 @@ void EthernetInterface::writeConfigurationFile()
         stream << "VLAN=" << intf.second->EthernetInterface::interfaceName()
             << "\n";
     }
+    // Add the DHCP entry
+    auto value = dHCPEnabled() ? "true"s : "false"s;
+    stream << "DHCP="s + value + "\n";
+
     // When the interface configured as dhcp, we don't need below given entries
     // in config file.
     if (dHCPEnabled() == false)
@@ -623,9 +627,6 @@ void EthernetInterface::writeConfigurationFile()
             }
         }
     }
-
-    auto value = dHCPEnabled() ? "true"s : "false"s;
-    stream << "DHCP="s + value + "\n";
 
     // Write the dhcp section irrespective of whether DHCP is enabled or not
     writeDHCPSection(stream);
