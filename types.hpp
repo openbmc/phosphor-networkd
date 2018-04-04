@@ -35,12 +35,13 @@ constexpr auto networkFilePrefix = "00-bmc-";
 constexpr auto networkFileSuffix = ".network";
 constexpr auto deviceFileSuffix = ".netdev";
 
-}// namespace config
-}// namespace systemd
+} // namespace config
+} // namespace systemd
 
 using IntfName = std::string;
 
-struct AddrInfo {
+struct AddrInfo
+{
     uint8_t addrType;
     std::string ipaddress;
     uint16_t prefix;
@@ -68,12 +69,12 @@ struct EventDeleter
 };
 using EventPtr = std::unique_ptr<sd_event, EventDeleter>;
 
-template<typename T>
+template <typename T>
 using UniquePtr = std::unique_ptr<T, std::function<void(T*)>>;
 
 using AddrList = std::list<AddrInfo>;
 using IntfAddrMap = std::map<IntfName, AddrList>;
 using InterfaceList = std::set<IntfName>;
 
-}//namespace network
-}//namespace phosphor
+} // namespace network
+} // namespace phosphor

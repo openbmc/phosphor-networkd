@@ -22,98 +22,89 @@ namespace fs = std::experimental::filesystem;
 
 class TestVlanInterface : public testing::Test
 {
-    public:
+  public:
+    sdbusplus::bus::bus bus;
+    Manager manager;
+    EthernetInterface interface;
+    std::string confDir;
+    TestVlanInterface() :
+        bus(sdbusplus::bus::new_default()),
+        manager(bus, "/xyz/openbmc_test/network", "/tmp"),
+        interface(bus, "/xyz/openbmc_test/network/test0", false, manager)
 
-        sdbusplus::bus::bus bus;
-        Manager manager;
-        EthernetInterface interface;
-        std::string confDir;
-        TestVlanInterface()
-            : bus(sdbusplus::bus::new_default()),
-              manager(bus, "/xyz/openbmc_test/network", "/tmp"),
-              interface(bus, "/xyz/openbmc_test/network/test0", false, manager)
+    {
+        setConfDir();
+    }
 
+    ~TestVlanInterface()
+    {
+        if (confDir != "")
         {
-            setConfDir();
+            fs::remove_all(confDir);
         }
+    }
 
-        ~TestVlanInterface()
+    void setConfDir()
+    {
+        char tmp[] = "/tmp/VlanInterface.XXXXXX";
+        confDir = mkdtemp(tmp);
+        manager.setConfDir(confDir);
+    }
+
+    void createVlan(VlanId id)
+    {
+        interface.createVLAN(id);
+    }
+
+    void deleteVlan(const std::string& interfaceName)
+    {
+        interface.deleteVLANObject(interfaceName);
+    }
+
+    int countIPObjects()
+    {
+        return interface.getAddresses().size();
+    }
+
+    bool isIPObjectExist(const std::string& ipaddress)
+    {
+        auto address = interface.getAddresses().find(ipaddress);
+        if (address == interface.getAddresses().end())
         {
-            if(confDir != "")
-            {
-                fs::remove_all(confDir);
-            }
-        }
-
-        void setConfDir()
-        {
-            char tmp[] = "/tmp/VlanInterface.XXXXXX";
-            confDir = mkdtemp(tmp);
-            manager.setConfDir(confDir);
-        }
-
-        void createVlan(VlanId id)
-        {
-            interface.createVLAN(id);
-        }
-
-        void deleteVlan(const std::string& interfaceName)
-        {
-            interface.deleteVLANObject(interfaceName);
-        }
-
-        int countIPObjects()
-        {
-            return interface.getAddresses().size();
-        }
-
-        bool isIPObjectExist(const std::string& ipaddress)
-        {
-            auto address = interface.getAddresses().find(ipaddress);
-            if (address == interface.getAddresses().end())
-            {
-                return false;
-            }
-            return true;
-
-        }
-
-        bool deleteIPObject(const std::string& ipaddress)
-        {
-            auto address = interface.getAddresses().find(ipaddress);
-            if (address == interface.getAddresses().end())
-            {
-                return false;
-            }
-            address->second->delete_();
-            return true;
-        }
-
-        void createIPObject(IP::Protocol addressType,
-                            const std::string& ipaddress,
-                            uint8_t subnetMask,
-                            const std::string& gateway)
-        {
-            interface.iP(addressType,
-                         ipaddress,
-                         subnetMask,
-                         gateway
-                        );
-
-        }
-
-        bool isValueFound(const std::vector<std::string>& values,
-                          const std::string& expectedValue)
-        {
-            for (const auto& value : values)
-            {
-                if (expectedValue == value)
-                {
-                    return  true;
-                }
-            }
             return false;
         }
+        return true;
+    }
+
+    bool deleteIPObject(const std::string& ipaddress)
+    {
+        auto address = interface.getAddresses().find(ipaddress);
+        if (address == interface.getAddresses().end())
+        {
+            return false;
+        }
+        address->second->delete_();
+        return true;
+    }
+
+    void createIPObject(IP::Protocol addressType, const std::string& ipaddress,
+                        uint8_t subnetMask, const std::string& gateway)
+    {
+        interface.iP(addressType, ipaddress, subnetMask, gateway);
+    }
+
+    bool isValueFound(const std::vector<std::string>& values,
+                      const std::string& expectedValue)
+    {
+        for (const auto& value : values)
+        {
+            if (expectedValue == value)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 TEST_F(TestVlanInterface, createVLAN)
@@ -140,7 +131,6 @@ TEST_F(TestVlanInterface, createVLAN)
     expectedValue = "50";
     found = isValueFound(values, expectedValue);
     EXPECT_EQ(found, true);
-
 }
 
 TEST_F(TestVlanInterface, deleteVLAN)
@@ -153,7 +143,7 @@ TEST_F(TestVlanInterface, deleteVLAN)
     filePath /= "test0.50.netdev";
     if (fs::is_regular_file(filePath.string()))
     {
-       fileFound = true;
+        fileFound = true;
     }
     EXPECT_EQ(fileFound, false);
 }
@@ -201,5 +191,5 @@ TEST_F(TestVlanInterface, createMultipleVLAN)
     deleteVlan("test0.60");
 }
 
-}// namespce network
-}// namespace phosphor
+} // namespce network
+} // namespace phosphor

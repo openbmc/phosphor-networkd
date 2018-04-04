@@ -20,8 +20,7 @@ constexpr auto RESOLV_CONF = "/etc/resolv.conf";
  *  @param[in] inFile  - File having DNS entries supplied by DHCP
  *  @param[in] outFile - File to write the nameserver entries to
  */
-void updateDNSEntries(const fs::path& inFile,
-                      const fs::path& outFile);
+void updateDNSEntries(const fs::path& inFile, const fs::path& outFile);
 
 /** @brief User callback handler invoked by inotify watcher
  *

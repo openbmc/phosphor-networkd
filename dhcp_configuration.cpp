@@ -57,7 +57,6 @@ bool Configuration::nTPEnabled(bool value)
     return ntp;
 }
 
-
 bool Configuration::dNSEnabled(bool value)
 {
     if (value == dNSEnabled())
@@ -79,7 +78,7 @@ bool Configuration::getDHCPPropFromConf(const std::string& prop)
     // get the first interface name, we need it to know config file name.
     auto interface = *interfaceStrList.begin();
     auto fileName = systemd::config::networkFilePrefix + interface +
-            systemd::config::networkFileSuffix;
+                    systemd::config::networkFileSuffix;
 
     confPath /= fileName;
     // systemd default behaviour is all DHCP fields should be enabled by
@@ -94,8 +93,7 @@ bool Configuration::getDHCPPropFromConf(const std::string& prop)
     if (rc != config::ReturnCode::SUCCESS)
     {
         log<level::DEBUG>("Unable to get the value from section DHCP",
-                          entry("PROP=%s", prop.c_str()),
-                          entry("RC=%d", rc));
+                          entry("PROP=%s", prop.c_str()), entry("RC=%d", rc));
         return propValue;
     }
 
@@ -105,6 +103,6 @@ bool Configuration::getDHCPPropFromConf(const std::string& prop)
     }
     return propValue;
 }
-}// namespace dhcp
-}// namespace network
-}// namespace phosphor
+} // namespace dhcp
+} // namespace network
+} // namespace phosphor

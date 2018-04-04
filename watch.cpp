@@ -17,17 +17,10 @@ namespace inotify
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-Watch::Watch(phosphor::network::EventPtr& eventPtr,
-             fs::path path,
-             UserCallBack userFunc,
-             int flags,
-             uint32_t mask,
-             uint32_t events) :
+Watch::Watch(phosphor::network::EventPtr& eventPtr, fs::path path,
+             UserCallBack userFunc, int flags, uint32_t mask, uint32_t events) :
     path(path),
-    userFunc(userFunc),
-    flags(flags),
-    mask(mask),
-    events(events),
+    userFunc(userFunc), flags(flags), mask(mask), events(events),
     fd(inotifyInit())
 {
     // Check if watch file exists
@@ -50,12 +43,8 @@ Watch::Watch(phosphor::network::EventPtr& eventPtr,
 
     // Register the fd with sd_event infrastructure and setup a
     // callback handler to be invoked on events
-    auto rc = sd_event_add_io(eventPtr.get(),
-                              nullptr,
-                              fd(),
-                              events,
-                              Watch::processEvents,
-                              this);
+    auto rc = sd_event_add_io(eventPtr.get(), nullptr, fd(), events,
+                              Watch::processEvents, this);
     if (rc < 0)
     {
         // Failed to add to event loop
@@ -70,17 +59,14 @@ int Watch::inotifyInit()
     auto fd = inotify_init1(flags);
     if (fd < 0)
     {
-        log<level::ERR>("Error from inotify_init1",
-                        entry("ERRNO=%d", errno));
+        log<level::ERR>("Error from inotify_init1", entry("ERRNO=%d", errno));
         elog<InternalFailure>();
     }
     return fd;
 }
 
-int Watch::processEvents(sd_event_source* eventSource,
-                         int fd,
-                         uint32_t retEvents,
-                         void* userData)
+int Watch::processEvents(sd_event_source* eventSource, int fd,
+                         uint32_t retEvents, void* userData)
 {
     auto watch = static_cast<Watch*>(userData);
 
@@ -117,8 +103,8 @@ int Watch::processEvents(sd_event_source* eventSource,
         auto mask = event->mask & watch->mask;
         if (mask)
         {
-            if((event->len > 0) &&
-               (strstr(event->name, stateFile.string().c_str())))
+            if ((event->len > 0) &&
+                (strstr(event->name, stateFile.string().c_str())))
             {
                 if (watch->userFunc)
                 {

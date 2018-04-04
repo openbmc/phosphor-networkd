@@ -41,16 +41,16 @@ void restartNetwork()
     restartSystemdUnit("systemd-networkd.service");
 }
 
-} //namespace network
-} //namespace phosphor
+} // namespace network
+} // namespace phosphor
 
 void initializeTimers()
 {
     std::function<void()> refreshFunc(
-            std::bind(&phosphor::network::refreshObjects));
+        std::bind(&phosphor::network::refreshObjects));
 
     std::function<void()> restartFunc(
-            std::bind(&phosphor::network::restartNetwork));
+        std::bind(&phosphor::network::restartNetwork));
 
     phosphor::network::refreshObjectTimer =
         std::make_unique<phosphor::network::Timer>(refreshFunc);
@@ -62,9 +62,9 @@ void initializeTimers()
 void createNetLinkSocket(phosphor::Descriptor& smartSock)
 {
     using namespace phosphor::logging;
-    using InternalFailure = sdbusplus::xyz::openbmc_project::Common::
-                                    Error::InternalFailure;
-    //RtnetLink socket
+    using InternalFailure =
+        sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
+    // RtnetLink socket
     auto fd = socket(PF_NETLINK, SOCK_RAW | SOCK_NONBLOCK, NETLINK_ROUTE);
     if (fd < 0)
     {
@@ -76,9 +76,7 @@ void createNetLinkSocket(phosphor::Descriptor& smartSock)
     smartSock.set(fd);
 }
 
-
-
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     using namespace phosphor::logging;
 
@@ -105,10 +103,8 @@ int main(int argc, char *argv[])
     sdbusplus::server::manager::manager objManager(bus, OBJ_NETWORK);
     bus.request_name(BUSNAME_NETWORK);
 
-    phosphor::network::manager =
-            std::make_unique<phosphor::network::Manager>(bus,
-                                                         OBJ_NETWORK,
-                                                         NETWORK_CONF_DIR);
+    phosphor::network::manager = std::make_unique<phosphor::network::Manager>(
+        bus, OBJ_NETWORK, NETWORK_CONF_DIR);
 
     // create the default network files if the network file
     // is not there for any interface.
@@ -130,7 +126,7 @@ int main(int argc, char *argv[])
         // the network which creates the network objects
     }
 
-    //RtnetLink socket
+    // RtnetLink socket
     phosphor::Descriptor smartSock;
     createNetLinkSocket(smartSock);
 
@@ -138,9 +134,10 @@ int main(int argc, char *argv[])
     phosphor::network::rtnetlink::Server svr(eventPtr, smartSock);
 
     // DNS entry handler
-    phosphor::network::inotify::Watch watch(eventPtr, DNS_ENTRY_FILE,
-            std::bind(&phosphor::network::dns::updater::processDNSEntries,
-                std::placeholders::_1));
+    phosphor::network::inotify::Watch watch(
+        eventPtr, DNS_ENTRY_FILE,
+        std::bind(&phosphor::network::dns::updater::processDNSEntries,
+                  std::placeholders::_1));
 
     // At this point, we have registered for the notifications for future
     // events. However, if the file is already populated before this, then
@@ -150,4 +147,3 @@ int main(int argc, char *argv[])
 
     sd_event_loop(eventPtr.get());
 }
-

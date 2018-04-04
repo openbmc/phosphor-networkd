@@ -16,7 +16,6 @@
 
 int main(int argc, char** argv)
 {
-    //TODO will implement later
+    // TODO will implement later
     return 0;
 }
-

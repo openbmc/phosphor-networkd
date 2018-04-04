@@ -21,7 +21,7 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
-using CallBack = int(*)(struct nl_msg* msg, void* arg);
+using CallBack = int (*)(struct nl_msg* msg, void* arg);
 
 namespace internal
 {
@@ -29,40 +29,26 @@ namespace internal
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
 
-CallBack infoCallBack =  [](struct nl_msg* msg, void* arg)
-{
+CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
 
-    struct nlattr* tb[NCSI_ATTR_MAX + 1] = { nullptr };
-    struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] =
-    {
-        { type: NLA_UNSPEC },
-        { type: NLA_U32 },
-        { type: NLA_NESTED },
-        { type: NLA_U32 },
-        { type: NLA_U32 },
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {type : NLA_UNSPEC}, {type : NLA_U32}, {type : NLA_NESTED},
+        {type : NLA_U32},    {type : NLA_U32},
     };
 
-    struct nlattr* packagetb[NCSI_PKG_ATTR_MAX + 1] = { nullptr };
-    struct nla_policy packagePolicy[NCSI_PKG_ATTR_MAX + 1] =
-    {
-        { type: NLA_UNSPEC },
-        { type: NLA_NESTED },
-        { type: NLA_U32 },
-        { type: NLA_FLAG },
-        { type: NLA_NESTED },
+    struct nlattr* packagetb[NCSI_PKG_ATTR_MAX + 1] = {nullptr};
+    struct nla_policy packagePolicy[NCSI_PKG_ATTR_MAX + 1] = {
+        {type : NLA_UNSPEC}, {type : NLA_NESTED}, {type : NLA_U32},
+        {type : NLA_FLAG},   {type : NLA_NESTED},
     };
 
-    struct nlattr* channeltb[NCSI_CHANNEL_ATTR_MAX + 1] = { nullptr };
-    struct nla_policy channelPolicy[NCSI_CHANNEL_ATTR_MAX + 1] =
-    {
-        { type: NLA_UNSPEC },
-        { type: NLA_NESTED },
-        { type: NLA_U32 },
-        { type: NLA_FLAG },
-        { type: NLA_NESTED },
-        { type: NLA_UNSPEC},
+    struct nlattr* channeltb[NCSI_CHANNEL_ATTR_MAX + 1] = {nullptr};
+    struct nla_policy channelPolicy[NCSI_CHANNEL_ATTR_MAX + 1] = {
+        {type : NLA_UNSPEC}, {type : NLA_NESTED}, {type : NLA_U32},
+        {type : NLA_FLAG},   {type : NLA_NESTED}, {type : NLA_UNSPEC},
     };
 
     auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
@@ -93,8 +79,7 @@ CallBack infoCallBack =  [](struct nl_msg* msg, void* arg)
         if (packagetb[NCSI_PKG_ATTR_ID])
         {
             auto attrID = nla_get_u32(packagetb[NCSI_PKG_ATTR_ID]);
-            log<level::DEBUG>("Package has id",
-                              entry("ID=%x", attrID));
+            log<level::DEBUG>("Package has id", entry("ID=%x", attrID));
         }
         else
         {
@@ -107,7 +92,7 @@ CallBack infoCallBack =  [](struct nl_msg* msg, void* arg)
         }
 
         auto channelListTarget = static_cast<nlattr*>(
-                nla_data(packagetb[NCSI_PKG_ATTR_CHANNEL_LIST]));
+            nla_data(packagetb[NCSI_PKG_ATTR_CHANNEL_LIST]));
 
         auto channelrem = nla_len(packagetb[NCSI_PKG_ATTR_CHANNEL_LIST]);
         nla_for_each_nested(channelListTarget,
@@ -127,20 +112,18 @@ CallBack infoCallBack =  [](struct nl_msg* msg, void* arg)
                 if (channeltb[NCSI_CHANNEL_ATTR_ACTIVE])
                 {
                     log<level::DEBUG>("Channel Active",
-                            entry("CHANNEL=%x", channel));
+                                      entry("CHANNEL=%x", channel));
                 }
                 else
                 {
                     log<level::DEBUG>("Channel not Active",
-                            entry("CHANNEL=%x", channel));
-
+                                      entry("CHANNEL=%x", channel));
                 }
 
                 if (channeltb[NCSI_CHANNEL_ATTR_FORCED])
                 {
                     log<level::DEBUG>("Channel is forced");
                 }
-
             }
             else
             {
@@ -148,25 +131,29 @@ CallBack infoCallBack =  [](struct nl_msg* msg, void* arg)
             }
             if (channeltb[NCSI_CHANNEL_ATTR_VERSION_MAJOR])
             {
-                auto major = nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_VERSION_MAJOR]);
+                auto major =
+                    nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_VERSION_MAJOR]);
                 log<level::DEBUG>("Channel Major Version",
                                   entry("VERSION=%x", major));
             }
             if (channeltb[NCSI_CHANNEL_ATTR_VERSION_MINOR])
             {
-                auto minor = nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_VERSION_MINOR]);
+                auto minor =
+                    nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_VERSION_MINOR]);
                 log<level::DEBUG>("Channel Minor Version",
                                   entry("VERSION=%x", minor));
             }
             if (channeltb[NCSI_CHANNEL_ATTR_VERSION_STR])
             {
-                auto str = nla_get_string(channeltb[NCSI_CHANNEL_ATTR_VERSION_STR]);
+                auto str =
+                    nla_get_string(channeltb[NCSI_CHANNEL_ATTR_VERSION_STR]);
                 log<level::DEBUG>("Channel Version Str",
                                   entry("VERSION=%s", str));
             }
             if (channeltb[NCSI_CHANNEL_ATTR_LINK_STATE])
             {
-                auto link = nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_LINK_STATE]);
+                auto link =
+                    nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_LINK_STATE]);
                 log<level::DEBUG>("Channel Link State",
                                   entry("STATE=%d", link));
             }
@@ -179,15 +166,12 @@ CallBack infoCallBack =  [](struct nl_msg* msg, void* arg)
                 while (nla_ok(vid, len))
                 {
                     auto id = nla_get_u16(vid);
-                    log<level::DEBUG>("VID",
-                                      entry("VID=%d", id));
+                    log<level::DEBUG>("VID", entry("VID=%d", id));
 
                     vid = nla_next(vid, &len);
                 }
             }
-
         }
-
     }
     return (int)NL_SKIP;
 };
@@ -196,31 +180,28 @@ int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
              int channel = DEFAULT_VALUE, int flags = NONE,
              CallBack function = nullptr)
 {
-    nlSocketPtr socket(nl_socket_alloc(),&::nl_socket_free);
+    nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
     auto ret = genl_connect(socket.get());
     if (ret < 0)
     {
-        log<level::ERR>("Failed to open the socket",
-                        entry("RC=%d", ret));
+        log<level::ERR>("Failed to open the socket", entry("RC=%d", ret));
         return ret;
     }
 
     auto driverID = genl_ctrl_resolve(socket.get(), "NCSI");
     if (driverID < 0)
     {
-        log<level::ERR>("Failed to resolve",
-                        entry("RC=%d", ret));
+        log<level::ERR>("Failed to resolve", entry("RC=%d", ret));
         return driverID;
     }
 
     nlMsgPtr msg(nlmsg_alloc(), &::nlmsg_free);
 
-    auto msgHdr = genlmsg_put(msg.get(), 0, 0, driverID, 0, flags,
-            cmd, 0);
+    auto msgHdr = genlmsg_put(msg.get(), 0, 0, driverID, 0, flags, cmd, 0);
     if (!msgHdr)
     {
         log<level::ERR>("Unable to add the netlink headers",
-                entry("COMMAND=%d", cmd));
+                        entry("COMMAND=%d", cmd));
         return -1;
     }
 
@@ -230,8 +211,7 @@ int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
                           package);
         if (ret < 0)
         {
-            log<level::ERR>("Failed to set the attribute",
-                            entry("RC=%d", ret),
+            log<level::ERR>("Failed to set the attribute", entry("RC=%d", ret),
                             entry("PACKAGE=%x", package));
             return ret;
         }
@@ -243,8 +223,7 @@ int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
                           channel);
         if (ret < 0)
         {
-            log<level::ERR>("Failed to set the attribute",
-                            entry("RC=%d", ret),
+            log<level::ERR>("Failed to set the attribute", entry("RC=%d", ret),
                             entry("CHANNEL=%x", channel));
             return ret;
         }
@@ -253,8 +232,7 @@ int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
     ret = nla_put_u32(msg.get(), ncsi_nl_attrs::NCSI_ATTR_IFINDEX, ifindex);
     if (ret < 0)
     {
-        log<level::ERR>("Failed to set the attribute",
-                        entry("RC=%d", ret),
+        log<level::ERR>("Failed to set the attribute", entry("RC=%d", ret),
                         entry("INTERFACE=%x", ifindex));
         return ret;
     }
@@ -262,28 +240,26 @@ int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
     if (function)
     {
         // Add a callback function to the socket
-        nl_socket_modify_cb(socket.get(), NL_CB_VALID, NL_CB_CUSTOM,
-                            function, nullptr);
+        nl_socket_modify_cb(socket.get(), NL_CB_VALID, NL_CB_CUSTOM, function,
+                            nullptr);
     }
 
     ret = nl_send_auto(socket.get(), msg.get());
     if (ret < 0)
     {
-        log<level::ERR>("Failed to send the message",
-                        entry("RC=%d", ret));
+        log<level::ERR>("Failed to send the message", entry("RC=%d", ret));
         return ret;
     }
 
     ret = nl_recvmsgs_default(socket.get());
     if (ret < 0)
     {
-        log<level::ERR>("Failed to recieve the message",
-                        entry("RC=%d", ret));
+        log<level::ERR>("Failed to recieve the message", entry("RC=%d", ret));
     }
     return ret;
 }
 
-}//namespace internal
+} // namespace internal
 
 int setChannel(int ifindex, int package, int channel)
 {
@@ -313,6 +289,6 @@ int getInfo(int ifindex, int package)
     }
 }
 
-}//namespace ncsi
-}//namespace network
-}//namespace phosphor
+} // namespace ncsi
+} // namespace network
+} // namespace phosphor

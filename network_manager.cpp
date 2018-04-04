@@ -31,10 +31,9 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath,
-                 const std::string& path):
+                 const std::string& path) :
     details::VLANCreateIface(bus, objPath, true),
-    bus(bus),
-    objectPath(objPath)
+    bus(bus), objectPath(objPath)
 {
     fs::path confDir(path);
     setConfDir(confDir);
@@ -72,7 +71,7 @@ bool Manager::createDefaultNetworkFiles(bool force)
             }
 
             auto fileName = systemd::config::networkFilePrefix + interface +
-                systemd::config::networkFileSuffix;
+                            systemd::config::networkFileSuffix;
 
             fs::path filePath = confDir;
             filePath /= fileName;
@@ -85,7 +84,7 @@ bool Manager::createDefaultNetworkFiles(bool force)
             {
                 bmc::writeDHCPDefault(filePath.string(), interface);
                 log<level::INFO>("Created the default network file.",
-                        entry("INTERFACE=%s", interface.c_str()));
+                                 entry("INTERFACE=%s", interface.c_str()));
                 isCreated = true;
             }
         }
@@ -110,12 +109,11 @@ void Manager::setConfDir(const fs::path& dir)
             elog<InternalFailure>();
         }
     }
-
 }
 
 void Manager::createInterfaces()
 {
-    //clear all the interfaces first
+    // clear all the interfaces first
     interfaces.clear();
 
     auto interfaceStrList = getInterfaces();
@@ -131,7 +129,7 @@ void Manager::createInterfaces()
         // to create the vlaninterface or normal physical interface.
         if (index != std::string::npos)
         {
-            //it is vlan interface
+            // it is vlan interface
             auto interfaceName = interface.substr(0, index);
             auto vlanid = interface.substr(index + 1);
             uint32_t vlanInt = std::stoul(vlanid);
@@ -144,20 +142,14 @@ void Manager::createInterfaces()
 
         auto dhcp = getDHCPValue(confDir, interface);
 
-        auto intf =  std::make_shared<phosphor::network::EthernetInterface>(
-                         bus,
-                         objPath.string(),
-                         dhcp,
-                         *this);
-
+        auto intf = std::make_shared<phosphor::network::EthernetInterface>(
+            bus, objPath.string(), dhcp, *this);
 
         intf->createIPAddressObjects();
 
-        this->interfaces.emplace(std::make_pair(
-                                     std::move(interface), std::move(intf)));
-
+        this->interfaces.emplace(
+            std::make_pair(std::move(interface), std::move(intf)));
     }
-
 }
 
 void Manager::createChildObjects()
@@ -173,12 +165,11 @@ void Manager::createChildObjects()
 
     // create the system conf object.
     systemConf = std::make_unique<phosphor::network::SystemConfiguration>(
-                        bus, objPath.string(), *this);
+        bus, objPath.string(), *this);
     // create the dhcp conf object.
     objPath /= "dhcp";
     dhcpConf = std::make_unique<phosphor::network::dhcp::Configuration>(
-                        bus, objPath.string(), *this);
-
+        bus, objPath.string(), *this);
 }
 
 void Manager::vLAN(IntfName interfaceName, uint32_t id)
@@ -188,7 +179,7 @@ void Manager::vLAN(IntfName interfaceName, uint32_t id)
 
 void Manager::reset()
 {
-    if(!createDefaultNetworkFiles(true))
+    if (!createDefaultNetworkFiles(true))
     {
         log<level::ERR>("Network Factory Reset failed.");
         return;
@@ -200,14 +191,13 @@ void Manager::reset()
 
 // Need to merge the below function with the code which writes the
 // config file during factory reset.
-//TODO openbmc/openbmc#1751
+// TODO openbmc/openbmc#1751
 void Manager::writeToConfigurationFile()
 {
     // write all the static ip address in the systemd-network conf file
     for (const auto& intf : interfaces)
     {
         intf.second->writeConfigurationFile();
-
     }
     restartTimers();
 }
@@ -218,16 +208,16 @@ void Manager::restartTimers()
     if (refreshObjectTimer && restartTimer)
     {
         // start the restart timer.
-        auto restartTime = duration_cast<microseconds>(
-                phosphor::network::restartTimeout);
+        auto restartTime =
+            duration_cast<microseconds>(phosphor::network::restartTimeout);
         restartTimer->startTimer(restartTime);
 
         // start the refresh timer.
-        auto refreshTime =  duration_cast<microseconds>(
-                phosphor::network::refreshTimeout);
+        auto refreshTime =
+            duration_cast<microseconds>(phosphor::network::refreshTimeout);
         refreshObjectTimer->startTimer(refreshTime);
     }
 }
 
-}//namespace network
-}//namespace phosphor
+} // namespace network
+} // namespace phosphor

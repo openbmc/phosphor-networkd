@@ -9,12 +9,11 @@ namespace network
 
 class TestUtil : public testing::Test
 {
-    public:
-        TestUtil()
-        {
-            // Empty
-        }
-
+  public:
+    TestUtil()
+    {
+        // Empty
+    }
 };
 
 TEST_F(TestUtil, IpValidation)
@@ -54,8 +53,6 @@ TEST_F(TestUtil, IpValidation)
 
     ipaddress = "1::8";
     EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
-
-
 }
 
 TEST_F(TestUtil, PrefixValidation)
@@ -77,9 +74,7 @@ TEST_F(TestUtil, PrefixValidation)
 
     prefixLength = 65;
     EXPECT_EQ(false, isValidPrefix(AF_INET, prefixLength));
-
 }
-
 
 TEST_F(TestUtil, MacValidation)
 {
@@ -97,7 +92,6 @@ TEST_F(TestUtil, MacValidation)
 
     macaddress = "hhh:GGG:iii:jjj:kkk:lll";
     EXPECT_EQ(false, phosphor::network::mac_address::validate(macaddress));
-
 }
 
 TEST_F(TestUtil, ConvertV4MasktoPrefix)
@@ -118,7 +112,7 @@ TEST_F(TestUtil, ConvertV4MasktoPrefix)
     prefix = toCidr(AF_INET, mask);
     EXPECT_EQ(prefix, 11);
 
-    //Invalid Mask
+    // Invalid Mask
     mask = "255.0.255.0";
     prefix = toCidr(AF_INET, mask);
     EXPECT_EQ(prefix, 0);
@@ -138,7 +132,7 @@ TEST_F(TestUtil, convertV6MasktoPrefix)
     prefix = toCidr(AF_INET6, mask);
     EXPECT_EQ(prefix, 38);
 
-    //Invalid Mask
+    // Invalid Mask
     mask = "ffff:0fff::";
     prefix = toCidr(AF_INET6, mask);
     EXPECT_EQ(prefix, 0);
@@ -179,25 +173,24 @@ TEST_F(TestUtil, convertPrefixToMask)
 
 TEST_F(TestUtil, getNetworkAddress)
 {
-    std::string address = getNetworkID(AF_INET,"9.3.23.251",24);
-    EXPECT_EQ("9.3.23.0",address);
+    std::string address = getNetworkID(AF_INET, "9.3.23.251", 24);
+    EXPECT_EQ("9.3.23.0", address);
 
-    address = getNetworkID(AF_INET,"9.3.23.251",25);
-    EXPECT_EQ("9.3.23.128",address);
+    address = getNetworkID(AF_INET, "9.3.23.251", 25);
+    EXPECT_EQ("9.3.23.128", address);
 
-    address = getNetworkID(AF_INET6,"2001:db8:abcd:dd12::0",64);
-    EXPECT_EQ("2001:db8:abcd:dd12::",address);
+    address = getNetworkID(AF_INET6, "2001:db8:abcd:dd12::0", 64);
+    EXPECT_EQ("2001:db8:abcd:dd12::", address);
 
-    address = getNetworkID(AF_INET,"a.b.c.d",25);
-    EXPECT_EQ("",address);
+    address = getNetworkID(AF_INET, "a.b.c.d", 25);
+    EXPECT_EQ("", address);
 
-    address = getNetworkID(AF_INET6,"2001:db8:gghh:dd12::0",64);
-    EXPECT_EQ("",address);
+    address = getNetworkID(AF_INET6, "2001:db8:gghh:dd12::0", 64);
+    EXPECT_EQ("", address);
 
-
-    address = getNetworkID(AF_INET6,"fe80::201:6cff:fe80:228",64);
-    EXPECT_EQ("fe80::",address);
+    address = getNetworkID(AF_INET6, "fe80::201:6cff:fe80:228", 64);
+    EXPECT_EQ("fe80::", address);
 }
 
-}// namespce network
-}// namespace phosphor
+} // namespce network
+} // namespace phosphor

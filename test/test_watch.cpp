@@ -12,52 +12,50 @@ namespace fs = std::experimental::filesystem;
 
 class WatchTest : public ::testing::Test
 {
-    public:
-        // systemd event handler
-        sd_event* events;
+  public:
+    // systemd event handler
+    sd_event* events;
 
-        // Need this so that events can be initialized.
-        int rc;
+    // Need this so that events can be initialized.
+    int rc;
 
-        // Gets called as part of each TEST_F construction
-        WatchTest()
-            : rc(sd_event_default(&events)),
-              eventPtr(events)
+    // Gets called as part of each TEST_F construction
+    WatchTest() : rc(sd_event_default(&events)), eventPtr(events)
+    {
+        // Create a file containing DNS entries like in netif/state
+        std::ofstream file(TRIGGER_FILE);
+        file << "";
+
+        // Check for successful creation of
+        // event handler
+        EXPECT_GE(rc, 0);
+    }
+
+    // Gets called as part of each TEST_F destruction
+    ~WatchTest()
+    {
+        if (fs::exists(TRIGGER_FILE))
         {
-            // Create a file containing DNS entries like in netif/state
-            std::ofstream file(TRIGGER_FILE);
-            file << "";
-
-            // Check for successful creation of
-            // event handler
-            EXPECT_GE(rc, 0);
+            fs::remove(TRIGGER_FILE);
         }
+    }
 
-        // Gets called as part of each TEST_F destruction
-        ~WatchTest()
-        {
-            if (fs::exists(TRIGGER_FILE))
-            {
-                fs::remove(TRIGGER_FILE);
-            }
-        }
+    // unique_ptr for sd_event
+    phosphor::network::EventPtr eventPtr;
 
-        // unique_ptr for sd_event
-        phosphor::network::EventPtr eventPtr;
+    // Count of callback invocation
+    int count = 0;
 
-        // Count of callback invocation
-        int count = 0;
+    // This is supposed to get hit twice
+    // Once at the beginning to see if there is anything
+    // and the second time when the data is fired.
+    void callBackHandler(const fs::path& file)
+    {
+        count++;
 
-        // This is supposed to get hit twice
-        // Once at the beginning to see if there is anything
-        // and the second time when the data is fired.
-        void callBackHandler(const fs::path& file)
-        {
-            count++;
-
-            // Expect that the file is what we wanted
-            EXPECT_EQ(file, TRIGGER_FILE);
-        }
+        // Expect that the file is what we wanted
+        EXPECT_EQ(file, TRIGGER_FILE);
+    }
 };
 
 /** @brief Makes sure that the inotify event is fired
@@ -65,9 +63,9 @@ class WatchTest : public ::testing::Test
 TEST_F(WatchTest, validateEventNotification)
 {
     // Create a watch object and register the handler
-    phosphor::network::inotify::Watch watch(eventPtr, TRIGGER_FILE,
-            std::bind(&WatchTest::callBackHandler, this,
-                std::placeholders::_1));
+    phosphor::network::inotify::Watch watch(
+        eventPtr, TRIGGER_FILE,
+        std::bind(&WatchTest::callBackHandler, this, std::placeholders::_1));
 
     // Reading the event post subscription
     callBackHandler(TRIGGER_FILE);
@@ -82,7 +80,7 @@ TEST_F(WatchTest, validateEventNotification)
     // Pump the data and get notification
     {
         std::ofstream file(TRIGGER_FILE);
-        file <<"DNS=1.2.3.4\n";
+        file << "DNS=1.2.3.4\n";
     }
 
     sd_event_run(eventPtr.get(), 10);
