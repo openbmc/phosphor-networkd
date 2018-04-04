@@ -39,7 +39,6 @@ int clearInterface(int ifindex);
  */
 int getInfo(int ifindex, int package);
 
-}//namespace ncsi
-}//namespace network
-}//namespace phosphor
-
+} // namespace ncsi
+} // namespace network
+} // namespace phosphor

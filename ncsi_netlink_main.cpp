@@ -33,9 +33,9 @@ int main(int argc, char** argv)
     using namespace phosphor::network::ncsi;
     // Read arguments.
     auto options = ArgumentParser(argc, argv);
-    int packageInt {};
-    int channelInt {};
-    int indexInt {};
+    int packageInt{};
+    int channelInt{};
+    int indexInt{};
 
     // Parse out interface argument.
     auto ifIndex = (options)["index"];
@@ -50,7 +50,8 @@ int main(int argc, char** argv)
 
     if (indexInt < 0)
     {
-        exitWithError("Interface value should be greater than equal to 0", argv);
+        exitWithError("Interface value should be greater than equal to 0",
+                      argv);
     }
 
     // Parse out package argument.
@@ -61,7 +62,7 @@ int main(int argc, char** argv)
     }
     catch (const std::exception& e)
     {
-         packageInt = DEFAULT_VALUE;
+        packageInt = DEFAULT_VALUE;
     }
 
     if (packageInt < 0)
@@ -77,7 +78,7 @@ int main(int argc, char** argv)
     }
     catch (const std::exception& e)
     {
-         channelInt = DEFAULT_VALUE;
+        channelInt = DEFAULT_VALUE;
     }
 
     if (channelInt < 0)
@@ -101,7 +102,7 @@ int main(int argc, char** argv)
     }
     else if ((options)["clear"] == "true")
     {
-        return  ncsi::clearInterface(indexInt);
+        return ncsi::clearInterface(indexInt);
     }
     else
     {
@@ -109,4 +110,3 @@ int main(int argc, char** argv)
     }
     return 0;
 }
-

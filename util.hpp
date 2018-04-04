@@ -55,19 +55,17 @@ inline uint64_t convertToInt(const std::string& value)
 {
     unsigned char mac[6];
 
-    sscanf(value.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
-           mac + 0, mac + 1, mac + 2, mac + 3, mac + 4, mac + 5);
-    return
-        static_cast<uint64_t>(mac[0]) << 40 |
-        static_cast<uint64_t>(mac[1]) << 32 |
-        static_cast<uint64_t>(mac[2]) << 24 |
-        static_cast<uint64_t>(mac[3]) << 16 |
-        static_cast<uint64_t>(mac[4]) << 8 |
-        static_cast<uint64_t>(mac[5]);
+    sscanf(value.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", mac + 0, mac + 1,
+           mac + 2, mac + 3, mac + 4, mac + 5);
+    return static_cast<uint64_t>(mac[0]) << 40 |
+           static_cast<uint64_t>(mac[1]) << 32 |
+           static_cast<uint64_t>(mac[2]) << 24 |
+           static_cast<uint64_t>(mac[3]) << 16 |
+           static_cast<uint64_t>(mac[4]) << 8 | static_cast<uint64_t>(mac[5]);
 }
 
-}//namespace internal
-}//namespace mac_address
+} // namespace internal
+} // namespace mac_address
 
 constexpr auto networkdService = "systemd-networkd.service";
 constexpr auto timeSynchdService = "systemd-timesyncd.service";
@@ -128,15 +126,11 @@ IntfAddrMap getInterfaceAddrs();
 inline void restartSystemdUnit(const std::string& unit)
 {
     auto bus = sdbusplus::bus::new_default();
-    auto method = bus.new_method_call(
-                      SYSTEMD_BUSNAME,
-                      SYSTEMD_PATH,
-                      SYSTEMD_INTERFACE,
-                      "RestartUnit");
+    auto method = bus.new_method_call(SYSTEMD_BUSNAME, SYSTEMD_PATH,
+                                      SYSTEMD_INTERFACE, "RestartUnit");
 
     method.append(unit, "replace");
     bus.call_noreply(method);
-
 }
 
 /** @brief Get all the interfaces from the system.
@@ -170,66 +164,68 @@ void executeCommandinChildProcess(const char* path, char** args);
  * @param[in] path -path of the binary file which needs to be execeuted.
  * @param[in] tArgs - arguments of the command.
  */
-template<typename... ArgTypes>
+template <typename... ArgTypes>
 void execute(const char* path, ArgTypes&&... tArgs)
 {
-    using expandType = char*[];
+    using expandType = char* [];
 
-    expandType args = { const_cast<char*>(tArgs)..., nullptr };
+    expandType args = {const_cast<char*>(tArgs)..., nullptr};
 
     internal::executeCommandinChildProcess(path, args);
 }
 
-} //namespace network
+} // namespace network
 
 class Descriptor
 {
-    private:
-        /** default value */
-        int fd = -1;
+  private:
+    /** default value */
+    int fd = -1;
 
-    public:
-        Descriptor() = default;
-        Descriptor(const Descriptor&) = delete;
-        Descriptor& operator=(const Descriptor&) = delete;
-        Descriptor(Descriptor&&) = delete;
-        Descriptor& operator=(Descriptor &&) = delete;
+  public:
+    Descriptor() = default;
+    Descriptor(const Descriptor&) = delete;
+    Descriptor& operator=(const Descriptor&) = delete;
+    Descriptor(Descriptor&&) = delete;
+    Descriptor& operator=(Descriptor&&) = delete;
 
-        explicit Descriptor(int fd) : fd(fd) {}
+    explicit Descriptor(int fd) : fd(fd)
+    {
+    }
 
-        /* @brief sets the internal file descriptor with the given descriptor
-         *        and closes the old descriptor.
-         * @param[in] descriptor - File/Socket descriptor.
-         */
-        void set(int descriptor)
+    /* @brief sets the internal file descriptor with the given descriptor
+     *        and closes the old descriptor.
+     * @param[in] descriptor - File/Socket descriptor.
+     */
+    void set(int descriptor)
+    {
+        // same descriptor given
+        if (fd == descriptor)
         {
-            // same descriptor given
-            if (fd == descriptor)
-            {
-               return;
-            }
-
-            // close the old descriptor
-            if (fd >= 0)
-            {
-                close(fd);
-            }
-
-            fd = descriptor;
+            return;
         }
 
-        ~Descriptor()
+        // close the old descriptor
+        if (fd >= 0)
         {
-            if (fd >= 0)
-            {
-                close(fd);
-            }
+            close(fd);
         }
 
-        int operator()() const
+        fd = descriptor;
+    }
+
+    ~Descriptor()
+    {
+        if (fd >= 0)
         {
-            return fd;
+            close(fd);
         }
+    }
+
+    int operator()() const
+    {
+        return fd;
+    }
 };
 
-} //namespace phosphor
+} // namespace phosphor

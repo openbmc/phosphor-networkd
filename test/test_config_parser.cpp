@@ -17,31 +17,31 @@ namespace network
 
 class TestConfigParser : public testing::Test
 {
-    public:
-        config::Parser parser;
-        TestConfigParser()
-        {
-            remove("/tmp/eth0.network");
-            std::ofstream filestream("/tmp/eth0.network");
+  public:
+    config::Parser parser;
+    TestConfigParser()
+    {
+        remove("/tmp/eth0.network");
+        std::ofstream filestream("/tmp/eth0.network");
 
-            filestream << "[Match]\nName=eth0\n" <<
-                          "[Network]\nDHCP=true\n[DHCP]\nClientIdentifier= mac\n";
-            filestream.close();
-            parser.setFile("/tmp/eth0.network");
-        }
+        filestream << "[Match]\nName=eth0\n"
+                   << "[Network]\nDHCP=true\n[DHCP]\nClientIdentifier= mac\n";
+        filestream.close();
+        parser.setFile("/tmp/eth0.network");
+    }
 
-        bool isValueFound(const std::vector<std::string>& values,
-                          const std::string& expectedValue)
+    bool isValueFound(const std::vector<std::string>& values,
+                      const std::string& expectedValue)
+    {
+        for (const auto& value : values)
         {
-            for (const auto& value : values)
+            if (expectedValue == value)
             {
-                if (expectedValue == value)
-                {
-                    return  true;
-                }
+                return true;
             }
-            return false;
         }
+        return false;
+    }
 };
 
 TEST_F(TestConfigParser, ReadConfigDataFromFile)
@@ -82,5 +82,5 @@ TEST_F(TestConfigParser, KeyNotFound)
     remove("/tmp/eth0.network");
 }
 
-}//namespace network
-}//namespace phosphor
+} // namespace network
+} // namespace phosphor

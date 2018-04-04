@@ -17,8 +17,7 @@ namespace dns
 namespace updater
 {
 
-void updateDNSEntries(const fs::path& inFile,
-                      const fs::path& outFile)
+void updateDNSEntries(const fs::path& inFile, const fs::path& outFile)
 {
     using namespace phosphor::logging;
     using namespace sdbusplus::xyz::openbmc_project::Common::Error;
@@ -44,10 +43,10 @@ void updateDNSEntries(const fs::path& inFile,
     for (std::string line; std::getline(inStream, line);)
     {
         auto index = line.find("DNS=");
-        if(index != std::string::npos)
+        if (index != std::string::npos)
         {
-           auto dns = line.substr(index + 4);
-           outStream << "nameserver " << dns << "\n" ;
+            auto dns = line.substr(index + 4);
+            outStream << "nameserver " << dns << "\n";
         }
     }
     return;

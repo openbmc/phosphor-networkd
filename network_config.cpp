@@ -9,19 +9,18 @@ namespace network
 
 namespace bmc
 {
-    void writeDHCPDefault(const std::string& filename,
-            const std::string& interface)
-    {
-        std::ofstream filestream;
+void writeDHCPDefault(const std::string& filename, const std::string& interface)
+{
+    std::ofstream filestream;
 
-        filestream.open(filename);
-        filestream << "[Match]\nName=" << interface <<
+    filestream.open(filename);
+    filestream << "[Match]\nName=" << interface <<
                 "\n[Network]\nDHCP=true\nLinkLocalAddressing=yes\n"
                 "IPv6AcceptRA=false\n"
                 "[DHCP]\nClientIdentifier=mac\n";
-        filestream.close();
-    }
+    filestream.close();
+}
 }
 
-}//namespace network
-}//namespace phosphor
+} // namespace network
+} // namespace phosphor

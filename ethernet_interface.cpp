@@ -19,7 +19,6 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-
 #include <algorithm>
 #include <experimental/filesystem>
 #include <fstream>
@@ -37,13 +36,10 @@ using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
-                                     bool dhcpEnabled,
-                                     Manager& parent,
+                                     bool dhcpEnabled, Manager& parent,
                                      bool emitSignal) :
-                                     Ifaces(bus, objPath.c_str(), true),
-                                     bus(bus),
-                                     manager(parent),
-                                     objPath(objPath)
+    Ifaces(bus, objPath.c_str(), true),
+    bus(bus), manager(parent), objPath(objPath)
 {
     auto intfName = objPath.substr(objPath.rfind("/") + 1);
     std::replace(intfName.begin(), intfName.end(), '_', '.');
@@ -85,34 +81,24 @@ void EthernetInterface::createIPAddressObjects()
         {
             origin = IP::AddressOrigin::LinkLocal;
         }
-        gateway = routingTable.getGateway(addr.addrType, addr.ipaddress, addr.prefix);
+        gateway =
+            routingTable.getGateway(addr.addrType, addr.ipaddress, addr.prefix);
 
-        std::string ipAddressObjectPath = generateObjectPath(addressType,
-                                                             addr.ipaddress,
-                                                             addr.prefix,
-                                                             gateway);
+        std::string ipAddressObjectPath = generateObjectPath(
+            addressType, addr.ipaddress, addr.prefix, gateway);
 
-        this->addrs.emplace(
-                    std::move(addr.ipaddress),
-                    std::make_shared<phosphor::network::IPAddress>(
-                        bus,
-                        ipAddressObjectPath.c_str(),
-                        *this,
-                        addressType,
-                        addr.ipaddress,
-                        origin,
-                        addr.prefix,
-                        gateway));
+        this->addrs.emplace(std::move(addr.ipaddress),
+                            std::make_shared<phosphor::network::IPAddress>(
+                                bus, ipAddressObjectPath.c_str(), *this,
+                                addressType, addr.ipaddress, origin,
+                                addr.prefix, gateway));
 
         origin = IP::AddressOrigin::Static;
     }
-
 }
 
-void EthernetInterface::iP(IP::Protocol protType,
-                           std::string ipaddress,
-                           uint8_t prefixLength,
-                           std::string gateway)
+void EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
+                           uint8_t prefixLength, std::string gateway)
 {
 
     if (dHCPEnabled())
@@ -121,7 +107,6 @@ void EthernetInterface::iP(IP::Protocol protType,
             entry("INTERFACE=%s", interfaceName().c_str());
         dHCPEnabled(false);
     }
-
 
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
 
@@ -147,31 +132,20 @@ void EthernetInterface::iP(IP::Protocol protType,
     {
         log<level::ERR>("PrefixLength is not correct "),
             entry("PREFIXLENGTH=%d", gateway.c_str());
-        elog<InvalidArgument>(Argument::ARGUMENT_NAME("prefixLength"),
-                              Argument::ARGUMENT_VALUE(std::to_string(
-                                          prefixLength).c_str()));
+        elog<InvalidArgument>(
+            Argument::ARGUMENT_NAME("prefixLength"),
+            Argument::ARGUMENT_VALUE(std::to_string(prefixLength).c_str()));
     }
 
-
-    std::string objectPath = generateObjectPath(protType,
-                                                ipaddress,
-                                                prefixLength,
-                                                gateway);
-    this->addrs.emplace(
-                std::move(ipaddress),
-                std::make_shared<phosphor::network::IPAddress>(
-                        bus,
-                        objectPath.c_str(),
-                        *this,
-                        protType,
-                        ipaddress,
-                        origin,
-                        prefixLength,
-                        gateway));
+    std::string objectPath =
+        generateObjectPath(protType, ipaddress, prefixLength, gateway);
+    this->addrs.emplace(std::move(ipaddress),
+                        std::make_shared<phosphor::network::IPAddress>(
+                            bus, objectPath.c_str(), *this, protType, ipaddress,
+                            origin, prefixLength, gateway));
 
     manager.writeToConfigurationFile();
 }
-
 
 /*
 Note: We don't have support for  ethtool now
@@ -183,11 +157,17 @@ TODO: https://github.com/openbmc/openbmc/issues/1484
 InterfaceInfo EthernetInterface::getInterfaceInfo() const
 {
     int sock{-1};
-    struct ifreq ifr{0};
-    struct ethtool_cmd edata{0};
-    LinkSpeed speed {0};
-    Autoneg autoneg {0};
-    DuplexMode duplex {0};
+    struct ifreq ifr
+    {
+        0
+    };
+    struct ethtool_cmd edata
+    {
+        0
+    };
+    LinkSpeed speed{0};
+    Autoneg autoneg{0};
+    DuplexMode duplex{0};
     do
     {
         sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
@@ -208,13 +188,11 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
             log<level::ERR>("ioctl failed for SIOCETHTOOL:",
                             entry("ERROR=%s", strerror(errno)));
             break;
-
         }
         speed = edata.speed;
         duplex = edata.duplex;
         autoneg = edata.autoneg;
-    }
-    while (0);
+    } while (0);
 
     if (sock)
     {
@@ -227,11 +205,13 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
  *  @return macaddress on success
  */
 
-std::string EthernetInterface::getMACAddress(
-        const std::string& interfaceName) const
+std::string
+    EthernetInterface::getMACAddress(const std::string& interfaceName) const
 {
-    struct ifreq ifr{};
-    char macAddress[mac_address::size] {};
+    struct ifreq ifr
+    {
+    };
+    char macAddress[mac_address::size]{};
 
     int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
     if (sock < 0)
@@ -245,14 +225,14 @@ std::string EthernetInterface::getMACAddress(
     if (ioctl(sock, SIOCGIFHWADDR, &ifr) != 0)
     {
         log<level::ERR>("ioctl failed for SIOCGIFHWADDR:",
-                entry("ERROR=%s", strerror(errno)));
+                        entry("ERROR=%s", strerror(errno)));
         return macAddress;
     }
 
     snprintf(macAddress, mac_address::size, mac_address::format,
-            ifr.ifr_hwaddr.sa_data[0], ifr.ifr_hwaddr.sa_data[1],
-            ifr.ifr_hwaddr.sa_data[2], ifr.ifr_hwaddr.sa_data[3],
-            ifr.ifr_hwaddr.sa_data[4], ifr.ifr_hwaddr.sa_data[5]);
+             ifr.ifr_hwaddr.sa_data[0], ifr.ifr_hwaddr.sa_data[1],
+             ifr.ifr_hwaddr.sa_data[2], ifr.ifr_hwaddr.sa_data[3],
+             ifr.ifr_hwaddr.sa_data[4], ifr.ifr_hwaddr.sa_data[5]);
 
     return macAddress;
 }
@@ -267,8 +247,7 @@ std::string EthernetInterface::generateId(const std::string& ipaddress,
     hashString += gateway;
 
     // Only want 8 hex digits.
-    hexId << std::hex << ((std::hash<std::string> {}(
-                               hashString)) & 0xFFFFFFFF);
+    hexId << std::hex << ((std::hash<std::string>{}(hashString)) & 0xFFFFFFFF);
     return hexId.str();
 }
 
@@ -317,7 +296,6 @@ void EthernetInterface::deleteVLANFromSystem(const std::string& interface)
     {
         commit<InternalFailure>();
     }
-
 }
 
 void EthernetInterface::deleteVLANObject(const std::string& interface)
@@ -326,7 +304,7 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
     if (it == vlanInterfaces.end())
     {
         log<level::ERR>("DeleteVLANObject:Unable to find the object",
-                         entry("INTERFACE=%s",interface.c_str()));
+                        entry("INTERFACE=%s", interface.c_str()));
         return;
     }
 
@@ -337,10 +315,9 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
     manager.writeToConfigurationFile();
 }
 
-std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
-                                                  const std::string& ipaddress,
-                                                  uint8_t prefixLength,
-                                                  const std::string& gateway) const
+std::string EthernetInterface::generateObjectPath(
+    IP::Protocol addressType, const std::string& ipaddress,
+    uint8_t prefixLength, const std::string& gateway) const
 {
     std::string type = convertForMessage(addressType);
     type = type.substr(type.rfind('.') + 1);
@@ -394,8 +371,7 @@ ServerList EthernetInterface::getNameServerFromConf()
     fs::path confPath = manager.getConfDir();
 
     std::string fileName = systemd::config::networkFilePrefix +
-                           interfaceName() +
-                           systemd::config::networkFileSuffix;
+                           interfaceName() + systemd::config::networkFileSuffix;
     confPath /= fileName;
     ServerList servers;
     config::Parser parser(confPath.string());
@@ -422,7 +398,7 @@ void EthernetInterface::writeDNSEntries(const ServerList& dnsList,
     }
 
     outStream << "### Generated manually via dbus settings ###\n";
-    for(const auto& server : dnsList)
+    for (const auto& server : dnsList)
     {
         outStream << "nameserver " << server << "\n";
     }
@@ -430,24 +406,18 @@ void EthernetInterface::writeDNSEntries(const ServerList& dnsList,
 
 void EthernetInterface::loadVLAN(VlanId id)
 {
-    std::string vlanInterfaceName = interfaceName() + "." +
-                                    std::to_string(id);
+    std::string vlanInterfaceName = interfaceName() + "." + std::to_string(id);
     std::string path = objPath;
     path += "_" + std::to_string(id);
 
-    auto dhcpEnabled = getDHCPValue(manager.getConfDir().string(),
-                                    vlanInterfaceName);
+    auto dhcpEnabled =
+        getDHCPValue(manager.getConfDir().string(), vlanInterfaceName);
 
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-                        bus,
-                        path.c_str(),
-                        dhcpEnabled,
-                        id,
-                        *this,
-                        manager);
+        bus, path.c_str(), dhcpEnabled, id, *this, manager);
 
-   // Fetch the ip address from the system
-   // and create the dbus object.
+    // Fetch the ip address from the system
+    // and create the dbus object.
     vlanIntf->createIPAddressObjects();
 
     this->vlanInterfaces.emplace(std::move(vlanInterfaceName),
@@ -456,25 +426,17 @@ void EthernetInterface::loadVLAN(VlanId id)
 
 void EthernetInterface::createVLAN(VlanId id)
 {
-    std::string vlanInterfaceName = interfaceName() + "." +
-                                    std::to_string(id);
+    std::string vlanInterfaceName = interfaceName() + "." + std::to_string(id);
     std::string path = objPath;
     path += "_" + std::to_string(id);
 
-
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-                        bus,
-                        path.c_str(),
-                        false,
-                        id,
-                        *this,
-                        manager);
+        bus, path.c_str(), false, id, *this, manager);
 
     // write the device file for the vlan interface.
     vlanIntf->writeDeviceFile();
 
-    this->vlanInterfaces.emplace(vlanInterfaceName,
-                                 std::move(vlanIntf));
+    this->vlanInterfaces.emplace(vlanInterfaceName, std::move(vlanIntf));
     // write the new vlan device entry to the configuration(network) file.
     manager.writeToConfigurationFile();
 }
@@ -483,8 +445,8 @@ ServerList EthernetInterface::getNTPServersFromConf()
 {
     fs::path confPath = manager.getConfDir();
 
-    std::string fileName = systemd::config::networkFilePrefix + interfaceName() +
-        systemd::config::networkFileSuffix;
+    std::string fileName = systemd::config::networkFilePrefix +
+                           interfaceName() + systemd::config::networkFileSuffix;
     confPath /= fileName;
 
     ServerList servers;
@@ -503,7 +465,7 @@ ServerList EthernetInterface::getNTPServersFromConf()
 
 ServerList EthernetInterface::nTPServers(ServerList servers)
 {
-    auto ntpServers =  EthernetInterfaceIntf::nTPServers(servers);
+    auto ntpServers = EthernetInterfaceIntf::nTPServers(servers);
 
     writeConfigurationFile();
     // timesynchd reads the NTP server configuration from the
@@ -527,15 +489,15 @@ void EthernetInterface::writeConfigurationFile()
     // if there is vlan interafce then write the configuration file
     // for vlan also.
 
-    for (const auto& intf: vlanInterfaces)
+    for (const auto& intf : vlanInterfaces)
     {
         intf.second->writeConfigurationFile();
     }
 
     fs::path confPath = manager.getConfDir();
 
-    std::string fileName = systemd::config::networkFilePrefix + interfaceName() +
-                           systemd::config::networkFileSuffix;
+    std::string fileName = systemd::config::networkFilePrefix +
+                           interfaceName() + systemd::config::networkFileSuffix;
     confPath /= fileName;
     std::fstream stream;
 
@@ -548,21 +510,25 @@ void EthernetInterface::writeConfigurationFile()
     }
 
     // Write the device
-    stream << "[" << "Match" << "]\n";
+    stream << "["
+           << "Match"
+           << "]\n";
     stream << "Name=" << interfaceName() << "\n";
 
     auto addrs = getAddresses();
 
     // write the network section
-    stream << "[" << "Network" << "]\n";
+    stream << "["
+           << "Network"
+           << "]\n";
     stream << "LinkLocalAddressing=yes\n";
     stream << "IPv6AcceptRA=false\n";
 
     // Add the VLAN entry
-    for (const auto& intf: vlanInterfaces)
+    for (const auto& intf : vlanInterfaces)
     {
         stream << "VLAN=" << intf.second->EthernetInterface::interfaceName()
-            << "\n";
+               << "\n";
     }
     // Add the DHCP entry
     auto value = dHCPEnabled() ? "true"s : "false"s;
@@ -572,13 +538,13 @@ void EthernetInterface::writeConfigurationFile()
     // in config file.
     if (dHCPEnabled() == false)
     {
-        //Add the NTP server
+        // Add the NTP server
         for (const auto& ntp : EthernetInterfaceIntf::nTPServers())
         {
             stream << "NTP=" << ntp << "\n";
         }
 
-        //Add the DNS entry
+        // Add the DNS entry
         for (const auto& dns : EthernetInterfaceIntf::nameservers())
         {
             stream << "DNS=" << dns << "\n";
@@ -589,8 +555,9 @@ void EthernetInterface::writeConfigurationFile()
         {
             if (addr.second->origin() == AddressOrigin::Static)
             {
-                std::string address = addr.second->address() + "/" +
-                                    std::to_string(addr.second->prefixLength());
+                std::string address =
+                    addr.second->address() + "/" +
+                    std::to_string(addr.second->prefixLength());
 
                 stream << "Address=" << address << "\n";
             }
@@ -603,22 +570,23 @@ void EthernetInterface::writeConfigurationFile()
         }
 
         // write the route section
-        stream << "[" << "Route" << "]\n";
+        stream << "["
+               << "Route"
+               << "]\n";
         for (const auto& addr : addrs)
         {
             if (addr.second->origin() == AddressOrigin::Static)
             {
-                int addressFamily = addr.second->type() == IP::Protocol::IPv4 ?
-                                    AF_INET : AF_INET6;
+                int addressFamily = addr.second->type() == IP::Protocol::IPv4
+                                        ? AF_INET
+                                        : AF_INET6;
 
-                std::string destination = getNetworkID(
-                                              addressFamily,
-                                              addr.second->address(),
-                                              addr.second->prefixLength());
+                std::string destination =
+                    getNetworkID(addressFamily, addr.second->address(),
+                                 addr.second->prefixLength());
 
                 if (addr.second->gateway() != "0.0.0.0" &&
-                    addr.second->gateway() != "" &&
-                    destination != "0.0.0.0" &&
+                    addr.second->gateway() != "" && destination != "0.0.0.0" &&
                     destination != "")
                 {
                     stream << "Gateway=" << addr.second->gateway() << "\n";
@@ -696,7 +664,8 @@ std::string EthernetInterface::mACAddress(std::string value)
         try
         {
             auto inventoryMac = mac_address::getfromInventory(bus);
-            auto intInventoryMac = mac_address::internal::convertToInt(inventoryMac);
+            auto intInventoryMac =
+                mac_address::internal::convertToInt(inventoryMac);
 
             if (intInventoryMac != intMac)
             {
@@ -705,27 +674,27 @@ std::string EthernetInterface::mACAddress(std::string value)
                 return MacAddressIntf::mACAddress();
             }
         }
-        catch(InternalFailure& e)
+        catch (InternalFailure& e)
         {
             log<level::ERR>("Exception occurred during getting of MAC "
                             "address from Inventory");
-            return  MacAddressIntf::mACAddress();
+            return MacAddressIntf::mACAddress();
         }
     }
     auto interface = interfaceName();
     execute("/sbin/fw_setenv", "fw_setenv", "ethaddr", value.c_str());
-    //TODO: would replace below three calls
+    // TODO: would replace below three calls
     //      with restarting of systemd-netwokd
     //      through https://github.com/systemd/systemd/issues/6696
     execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(), "down");
-    execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(), "address",
-            value.c_str());
+    execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(),
+            "address", value.c_str());
 
     execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(), "up");
 
     auto mac = MacAddressIntf::mACAddress(std::move(value));
-    //update all the vlan interfaces
-    for(const auto& intf: vlanInterfaces)
+    // update all the vlan interfaces
+    for (const auto& intf : vlanInterfaces)
     {
         intf.second->updateMacAddress();
     }
@@ -737,16 +706,14 @@ std::string EthernetInterface::mACAddress(std::string value)
         restartSystemdUnit(networkdService);
     }
     return mac;
-
 }
 
 void EthernetInterface::deleteAll()
 {
-    if(EthernetInterfaceIntf::dHCPEnabled())
+    if (EthernetInterfaceIntf::dHCPEnabled())
     {
         log<level::INFO>("DHCP enabled on the interface"),
-                        entry("INTERFACE=%s", interfaceName().c_str());
-
+            entry("INTERFACE=%s", interfaceName().c_str());
     }
 
     // clear all the ip on the interface
@@ -754,5 +721,5 @@ void EthernetInterface::deleteAll()
     manager.writeToConfigurationFile();
 }
 
-}//namespace network
-}//namespace phosphor
+} // namespace network
+} // namespace phosphor
