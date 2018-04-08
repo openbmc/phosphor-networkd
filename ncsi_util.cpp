@@ -274,7 +274,7 @@ int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
     ret = nl_recvmsgs_default(socket.get());
     if (ret < 0)
     {
-        log<level::ERR>("Failed to recieve the message",
+        log<level::ERR>("Failed to receive the message",
                         entry("RC=%d", ret));
     }
     return ret;

@@ -183,7 +183,7 @@ class EthernetInterface : public Ifaces
          *  @param[in] addressType - Type of ip address.
          *  @param[in] ipaddress - IP address.
          *  @param[in] prefixLength - Length of prefix.
-         *  @param[in] gateway - Gateway addess.
+         *  @param[in] gateway - Gateway address.
 
          *  @return path of the address object.
          */
@@ -197,7 +197,7 @@ class EthernetInterface : public Ifaces
          *         prefixlength and the gateway.
          *  @param[in] ipaddress - IP address.
          *  @param[in] prefixLength - Length of prefix.
-         *  @param[in] gateway - Gateway addess.
+         *  @param[in] gateway - Gateway address.
          *  @return hash string.
          */
 

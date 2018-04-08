@@ -88,7 +88,7 @@ int main(int argc, char** argv)
     auto setCmd = (options)["set"];
     if (setCmd == "true")
     {
-        // Can not perform set operation without pacakge.
+        // Can not perform set operation without package.
         if (packageInt == DEFAULT_VALUE)
         {
             exitWithError("Package not specified.", argv);
