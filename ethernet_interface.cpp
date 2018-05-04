@@ -93,7 +93,7 @@ void EthernetInterface::createIPAddressObjects()
                                                              gateway);
 
         this->addrs.emplace(
-                    std::move(addr.ipaddress),
+                    addr.ipaddress,
                     std::make_shared<phosphor::network::IPAddress>(
                         bus,
                         ipAddressObjectPath.c_str(),
@@ -158,7 +158,7 @@ void EthernetInterface::iP(IP::Protocol protType,
                                                 prefixLength,
                                                 gateway);
     this->addrs.emplace(
-                std::move(ipaddress),
+                ipaddress,
                 std::make_shared<phosphor::network::IPAddress>(
                         bus,
                         objectPath.c_str(),
