@@ -151,7 +151,15 @@ void Table::parseRoutes(const nlmsghdr* nlHdr)
     gatewayStr = inet_ntoa(gateWayAddr);
 
     Entry route(dstStr, gatewayStr, ifName);
-    routeList.emplace(std::make_pair(dstStr, std::move(route)));
+    // if there is already existing route for this network
+    // then ignore the next one as it would not be used by the
+    // routing policy
+    // So don't update the route entry for the network for which
+    // there is already a route exist.
+    if (routeList.find(dstStr) == routeList.end())
+    {
+        routeList.emplace(std::make_pair(dstStr, std::move(route)));
+    }
 }
 
 Map Table::getRoutes()
