@@ -603,7 +603,6 @@ void EthernetInterface::writeConfigurationFile()
         }
 
         // write the route section
-        stream << "[" << "Route" << "]\n";
         for (const auto& addr : addrs)
         {
             if (addr.second->origin() == AddressOrigin::Static)
@@ -621,6 +620,7 @@ void EthernetInterface::writeConfigurationFile()
                     destination != "0.0.0.0" &&
                     destination != "")
                 {
+                    stream << "[" << "Route" << "]\n";
                     stream << "Gateway=" << addr.second->gateway() << "\n";
                     stream << "Destination=" << destination << "\n";
                 }
