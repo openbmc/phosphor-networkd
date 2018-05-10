@@ -57,7 +57,7 @@ uint8_t toV6Cidr(const std::string& subnetMask)
         if (sscanf(str.c_str(), "%hx", &buff) <= 0)
         {
             log<level::ERR>("Invalid Mask",
-                            entry("SUBNETMASK=%s", subnetMask));
+                            entry("SUBNETMASK=%s", subnetMask.c_str()));
 
             return 0;
         }
@@ -72,7 +72,7 @@ uint8_t toV6Cidr(const std::string& subnetMask)
             if (((sizeof(buff) * 8) - (__builtin_ctz(buff))) != __builtin_popcount(buff))
             {
                 log<level::ERR>("Invalid Mask",
-                                entry("SUBNETMASK=%s", subnetMask));
+                                entry("SUBNETMASK=%s", subnetMask.c_str()));
 
                 return 0;
             }
@@ -101,7 +101,7 @@ uint8_t toCidr(int addressFamily, const std::string& subnetMask)
     if (rc <= 0)
     {
         log<level::ERR>("inet_pton failed:",
-                        entry("SUBNETMASK=%s", subnetMask));
+                        entry("SUBNETMASK=%s", subnetMask.c_str()));
         return 0;
     }
 
@@ -114,7 +114,7 @@ uint8_t toCidr(int addressFamily, const std::string& subnetMask)
     else
     {
         log<level::ERR>("Invalid Mask",
-                        entry("SUBNETMASK=%s", subnetMask));
+                        entry("SUBNETMASK=%s", subnetMask.c_str()));
         return 0;
     }
 }
@@ -394,8 +394,8 @@ void deleteInterface(const std::string& intf)
         if(status < 0)
         {
             log<level::ERR>("Unable to delete the interface",
-                             entry("INTF=%s", intf.c_str(),
-                             entry("STATUS=%d", status)));
+                            entry("INTF=%s", intf.c_str()),
+                            entry("STATUS=%d", status));
             elog<InternalFailure>();
         }
     }
@@ -483,8 +483,8 @@ void executeCommandinChildProcess(const char* path, char** args)
             }
 
             log<level::ERR>("Unable to execute the command",
-                            entry("CMD=%s", command.c_str(),
-                            entry("STATUS=%d", status)));
+                            entry("CMD=%s", command.c_str()),
+                            entry("STATUS=%d", status));
             elog<InternalFailure>();
         }
     }
