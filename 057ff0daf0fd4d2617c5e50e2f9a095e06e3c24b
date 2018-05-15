@@ -1,0 +1,10 @@
+Ok-To-Test+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Verified+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Code-Review+1: MARRI DEVENDER RAO <devenrao@in.ibm.com>
+Code-Review+1: Nagaraju Goruganti <ngorugan@in.ibm.com>
+Code-Review+2: Brad Bishop <bradleyb@fuzziesquirrel.com>
+Submitted-by: Brad Bishop <bradleyb@fuzziesquirrel.com>
+Submitted-at: Tue, 15 May 2018 17:57:51 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/10450
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
