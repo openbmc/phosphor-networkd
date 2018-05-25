@@ -240,7 +240,6 @@ bool isValidPrefix(int addressFamily, uint8_t prefixLength)
 IntfAddrMap getInterfaceAddrs()
 {
     IntfAddrMap intfMap {};
-    AddrList addrList {};
     struct ifaddrs* ifaddr = nullptr;
 
     // attempt to fill struct with ifaddrs
@@ -274,14 +273,6 @@ IntfAddrMap getInterfaceAddrs()
                 !(ifa->ifa_flags & IFF_RUNNING))
             {
                 continue;
-            }
-            // if the interface name is  not same as the  previous
-            // iteration then add the addr list into
-            // the map.
-            if (intfName != "" && intfName != std::string(ifa->ifa_name))
-            {
-                intfMap.emplace(intfName, addrList);
-                addrList.clear();
             }
             intfName = ifa->ifa_name;
             AddrInfo info {};
@@ -319,10 +310,9 @@ IntfAddrMap getInterfaceAddrs()
             info.addrType = ifa->ifa_addr->sa_family;
             info.ipaddress = ip;
             info.prefix = toCidr(info.addrType, std::string(subnetMask));
-            addrList.emplace_back(info);
+            intfMap[intfName].push_back(info);
         }
     }
-    intfMap.emplace(intfName, addrList);
     return intfMap;
 }
 
