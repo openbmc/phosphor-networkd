@@ -412,8 +412,7 @@ bool getDHCPValue(const std::string& confDir, const std::string& intf)
                 entry("RC=%d", rc));
         return dhcp;
     }
-    // There will be only single value for DHCP key.
-    if (values[0] == "true")
+    if (values[0] != "false")
     {
         dhcp = true;
     }
