@@ -206,7 +206,24 @@ class EthernetInterface : public Ifaces
                                       const std::string& gateway);
 
         /** @brief write the dhcp section **/
-        void writeDHCPSection(std::fstream& stream);;
+        void writeDHCPSection(std::fstream& stream);
+
+        /** @brief get the IPv6AcceptRA flag from the network configuration file
+         *
+         */
+        bool getIPv6AcceptRAFromConf();
+
+        /** @brief check conf file for Router Advertisements
+         *
+         */
+        bool iPv6AcceptRA(bool value) override;
+
+        /** @brief get the allowed network modes. Similar to DHCP enabled, but
+         * more specific
+         */
+        IPAllowed getIPAddressEnablesFromConf();
+
+        IPAllowed iPAddressEnables(IPAllowed) override;
 
         /** @brief get the NTP server list from the network conf
          *
