@@ -49,6 +49,8 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
     EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
+    EthernetInterfaceIntf::iPAddressEnables(getIPAddressEnablesFromConf());
+    EthernetInterfaceIntf::iPv6AcceptRA(getIPv6AcceptRAFromConf());
     MacAddressIntf::mACAddress(getMACAddress(intfName));
     EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
     EthernetInterfaceIntf::nameservers(getNameServerFromConf());
@@ -352,7 +354,16 @@ std::string EthernetInterface::generateObjectPath(IP::Protocol addressType,
     objectPath /= generateId(ipaddress, prefixLength, gateway);
     return objectPath.string();
 }
-
+bool EthernetInterface::iPv6AcceptRA(bool value)
+{
+    if (value == EthernetInterfaceIntf::iPv6AcceptRA())
+    {
+        return value;
+    }
+    EthernetInterfaceIntf::iPv6AcceptRA(value);
+    manager.writeToConfigurationFile();
+    return value;
+}
 bool EthernetInterface::dHCPEnabled(bool value)
 {
     if (value == EthernetInterfaceIntf::dHCPEnabled())
@@ -478,7 +489,80 @@ void EthernetInterface::createVLAN(VlanId id)
     // write the new vlan device entry to the configuration(network) file.
     manager.writeToConfigurationFile();
 }
+bool EthernetInterface::getIPv6AcceptRAFromConf()
+{
+    fs::path confPath = manager.getConfDir();
 
+    std::string fileName = systemd::config::networkFilePrefix +
+                           interfaceName() + systemd::config::networkFileSuffix;
+    confPath /= fileName;
+    config::ValueList values;
+    config::Parser parser(confPath.string());
+    auto rc = config::ReturnCode::SUCCESS;
+    std::tie(rc, values) = parser.getValues("Network", "IPv6AcceptRA");
+    if (rc != config::ReturnCode::SUCCESS)
+    {
+        log<level::DEBUG>("Unable to get the value for Network[IPv6AcceptRA]",
+                          entry("rc=%d", rc));
+        return false;
+    }
+    if (values[0] == "true")
+    {
+        return true;
+    }
+
+    return false;
+}
+EthernetInterface::IPAllowed EthernetInterface::getIPAddressEnablesFromConf()
+{
+    fs::path confPath = manager.getConfDir();
+
+    std::string fileName = systemd::config::networkFilePrefix +
+                           interfaceName() + systemd::config::networkFileSuffix;
+    confPath /= fileName;
+    config::ValueList values;
+    config::Parser parser(confPath.string());
+    auto rc = config::ReturnCode::SUCCESS;
+    std::tie(rc, values) = parser.getValues("Network", "DHCP");
+    if (rc != config::ReturnCode::SUCCESS)
+    {
+        log<level::DEBUG>("Unable to get the value for Network[DHCP]",
+                          entry("rc=%d", rc));
+        return EthernetInterface::IPAllowed::IPv4AndIPv6;
+    }
+    // true, false, ipv4, ipv6
+    if (values[0] == "ipv6")
+    {
+        return EthernetInterface::IPAllowed::IPv6Only;
+    }
+    else if (values[0] == "ipv4")
+    {
+        return EthernetInterface::IPAllowed::IPv4Only;
+    }
+    else if (values[0] == "off")
+    {
+        // This function should not get called if DHCP == off
+        log<level::DEBUG>("Function not available in static mode");
+        return EthernetInterface::IPAllowed::IPv4AndIPv6;
+    }
+    else
+    {
+        return EthernetInterface::IPAllowed::IPv4AndIPv6;
+    }
+}
+EthernetInterface::IPAllowed
+    EthernetInterface::iPAddressEnables(EthernetInterface::IPAllowed iPAllowed)
+{
+    if (iPAllowed == EthernetInterfaceIntf::iPAddressEnables())
+    {
+        return iPAllowed;
+    }
+
+    EthernetInterfaceIntf::iPAddressEnables(iPAllowed);
+    writeConfigurationFile();
+
+    return iPAllowed;
+}
 ServerList EthernetInterface::getNTPServersFromConf()
 {
     fs::path confPath = manager.getConfDir();
@@ -556,7 +640,8 @@ void EthernetInterface::writeConfigurationFile()
     // write the network section
     stream << "[" << "Network" << "]\n";
     stream << "LinkLocalAddressing=yes\n";
-    stream << "IPv6AcceptRA=false\n";
+    stream << std::boolalpha
+           << "IPv6AcceptRA=" << EthernetInterfaceIntf::iPv6AcceptRA() << "\n";
 
     // Add the VLAN entry
     for (const auto& intf: vlanInterfaces)
@@ -565,8 +650,24 @@ void EthernetInterface::writeConfigurationFile()
             << "\n";
     }
     // Add the DHCP entry
-    auto value = dHCPEnabled() ? "true"s : "false"s;
-    stream << "DHCP="s + value + "\n";
+    std::string dhcpValue = "false";
+    if (dHCPEnabled())
+    {
+        IPAllowed ipAllowed = EthernetInterfaceIntf::iPAddressEnables();
+        if (ipAllowed == IPAllowed::IPv4AndIPv6)
+        {
+            dhcpValue = "true";
+        }
+        else if (ipAllowed == IPAllowed::IPv4Only)
+        {
+            dhcpValue = "ipv4";
+        }
+        else if (ipAllowed == IPAllowed::IPv6Only)
+        {
+            dhcpValue = "ipv6";
+        }
+    }
+    stream << "DHCP=" << dhcpValue << "\n";
 
     // When the interface configured as dhcp, we don't need below given entries
     // in config file.
