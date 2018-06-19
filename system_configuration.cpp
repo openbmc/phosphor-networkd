@@ -22,6 +22,7 @@ constexpr auto METHOD_SET = "SetStaticHostname";
 
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+using InvalidArgument = xyz::openbmc_project::Common::InvalidArgument;
 
 using SystemConfigIntf =
     sdbusplus::xyz::openbmc_project::Network::server::SystemConfiguration;
@@ -105,7 +106,8 @@ std::string SystemConfiguration::defaultGateway(std::string gateway)
     {
         log<level::ERR>("Not a valid Gateway",
             entry("GATEWAY=%s", gateway.c_str()));
-        return gw;
+        elog<InvalidArgument>(InvalidArgument::ARGUMENT_NAME("GATEWAY"),
+                              InvalidArgument::ARGUMENT_VALUE(gateway.c_str()));
     }
     gw = SystemConfigIntf::defaultGateway(gateway);
     manager.writeToConfigurationFile();
