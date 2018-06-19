@@ -664,9 +664,10 @@ std::string EthernetInterface::mACAddress(std::string value)
 {
     if (!mac_address::validate(value))
     {
-        log<level::DEBUG>("MACAddress is not valid.",
+        log<level::ERR>("MACAddress is not valid.",
                           entry("MAC=%s", value.c_str()));
-        return MacAddressIntf::mACAddress();
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("MACAddress"),
+                              Argument::ARGUMENT_VALUE(value.c_str()));
     }
 
     // check whether MAC is broadcast mac.
@@ -674,9 +675,10 @@ std::string EthernetInterface::mACAddress(std::string value)
 
     if (!(intMac ^ mac_address::broadcastMac))
     {
-        log<level::DEBUG>("MACAddress is a broadcast mac.",
+        log<level::ERR>("MACAddress is a broadcast mac.",
                           entry("MAC=%s", value.c_str()));
-        return MacAddressIntf::mACAddress();
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("MACAddress"),
+                              Argument::ARGUMENT_VALUE(value.c_str()));
     }
 
     // Check if the MAC changed.
@@ -700,9 +702,10 @@ std::string EthernetInterface::mACAddress(std::string value)
 
             if (intInventoryMac != intMac)
             {
-                log<level::DEBUG>("Given MAC address is neither a local Admin "
+                log<level::ERR>("Given MAC address is neither a local Admin "
                                   "type nor is same as in inventory");
-                return MacAddressIntf::mACAddress();
+                elog<InvalidArgument>(Argument::ARGUMENT_NAME("MACAddress"),
+                                      Argument::ARGUMENT_VALUE(value.c_str()));
             }
         }
         catch(InternalFailure& e)

@@ -121,7 +121,7 @@ class EthernetInterface : public Ifaces
 
         /** @brief sets the MAC address.
          *  @param[in] value - MAC address which needs to be set on the system.
-         *  @returns macAddress of the interface.
+         *  @returns macAddress of the interface or throws an error.
          */
         std::string mACAddress(std::string value) override;
 
