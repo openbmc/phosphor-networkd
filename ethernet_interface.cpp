@@ -719,7 +719,7 @@ std::string EthernetInterface::mACAddress(std::string value)
         {
             log<level::ERR>("Exception occurred during getting of MAC "
                             "address from Inventory");
-            return  MacAddressIntf::mACAddress();
+            elog<InternalFailure>();
         }
     }
     auto interface = interfaceName();
