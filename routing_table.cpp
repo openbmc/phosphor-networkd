@@ -1,23 +1,23 @@
 #include "routing_table.hpp"
+
 #include "util.hpp"
-#include "xyz/openbmc_project/Common/error.hpp"
 
-#include <phosphor-logging/log.hpp>
-#include <phosphor-logging/elog-errors.hpp>
-
-#include <netinet/in.h>
-#include <net/if.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <linux/rtnetlink.h>
-#include <sys/types.h>
-#include <sys/socket.h>
 #include <arpa/inet.h>
+#include <linux/rtnetlink.h>
+#include <net/if.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
 
+#include <phosphor-logging/elog-errors.hpp>
+#include <phosphor-logging/log.hpp>
 #include <stdexcept>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {

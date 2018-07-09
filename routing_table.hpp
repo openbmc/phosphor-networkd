@@ -6,8 +6,8 @@
 
 #include <iostream>
 #include <list>
-#include <string>
 #include <map>
+#include <string>
 
 namespace phosphor
 {

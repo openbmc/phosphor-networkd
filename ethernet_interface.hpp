@@ -2,16 +2,15 @@
 
 #include "types.hpp"
 #include "util.hpp"
-
-#include "xyz/openbmc_project/Network/EthernetInterface/server.hpp"
-#include "xyz/openbmc_project/Network/MACAddress/server.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
-#include "xyz/openbmc_project/Collection/DeleteAll/server.hpp"
 
+#include <experimental/filesystem>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <string>
-#include <experimental/filesystem>
+#include <xyz/openbmc_project/Collection/DeleteAll/server.hpp>
+#include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
+#include <xyz/openbmc_project/Network/MACAddress/server.hpp>
 
 namespace phosphor
 {

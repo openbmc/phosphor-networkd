@@ -1,5 +1,7 @@
-#include "config.h"
 #include "network_config.hpp"
+
+#include "config.h"
+
 #include <fstream>
 #include <string>
 
