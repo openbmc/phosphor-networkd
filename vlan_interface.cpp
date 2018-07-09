@@ -1,16 +1,16 @@
+#include "vlan_interface.hpp"
+
 #include "config.h"
 #include "ethernet_interface.hpp"
-#include "vlan_interface.hpp"
 #include "network_manager.hpp"
 
-#include <phosphor-logging/log.hpp>
-#include "xyz/openbmc_project/Common/error.hpp"
-#include <phosphor-logging/elog-errors.hpp>
-
-#include <string>
 #include <algorithm>
-#include <fstream>
 #include <experimental/filesystem>
+#include <fstream>
+#include <phosphor-logging/elog-errors.hpp>
+#include <phosphor-logging/log.hpp>
+#include <string>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {

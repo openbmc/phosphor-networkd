@@ -1,12 +1,10 @@
 #pragma once
 
-#include "xyz/openbmc_project/Network/IP/server.hpp"
-#include "xyz/openbmc_project/Object/Delete/server.hpp"
-
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
-
 #include <string>
+#include <xyz/openbmc_project/Network/IP/server.hpp>
+#include <xyz/openbmc_project/Object/Delete/server.hpp>
 
 namespace phosphor
 {

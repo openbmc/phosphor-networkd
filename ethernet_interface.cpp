@@ -1,14 +1,11 @@
+#include "ethernet_interface.hpp"
+
 #include "config.h"
 #include "config_parser.hpp"
-#include "ethernet_interface.hpp"
 #include "ipaddress.hpp"
 #include "network_manager.hpp"
 #include "routing_table.hpp"
 #include "vlan_interface.hpp"
-#include "xyz/openbmc_project/Common/error.hpp"
-
-#include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
 
 #include <arpa/inet.h>
 #include <linux/ethtool.h>
@@ -19,12 +16,14 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-
 #include <algorithm>
 #include <experimental/filesystem>
 #include <fstream>
+#include <phosphor-logging/elog-errors.hpp>
+#include <phosphor-logging/log.hpp>
 #include <sstream>
 #include <string>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {

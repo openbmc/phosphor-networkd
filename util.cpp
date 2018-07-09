@@ -1,21 +1,21 @@
-#include "config_parser.hpp"
 #include "util.hpp"
-#include "types.hpp"
-#include "xyz/openbmc_project/Common/error.hpp"
 
-#include <phosphor-logging/log.hpp>
-#include <phosphor-logging/elog-errors.hpp>
+#include "config_parser.hpp"
+#include "types.hpp"
 
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <net/if.h>
 #include <sys/wait.h>
 
-#include <iostream>
-#include <list>
-#include <string>
 #include <algorithm>
 #include <experimental/filesystem>
+#include <iostream>
+#include <list>
+#include <phosphor-logging/elog-errors.hpp>
+#include <phosphor-logging/log.hpp>
+#include <string>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {

@@ -1,22 +1,21 @@
 #include "rtnetlink_server.hpp"
+
 #include "timer.hpp"
 #include "types.hpp"
 #include "util.hpp"
 
-
-#include <netinet/in.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
+#include <netinet/in.h>
 #include <sys/types.h>
 #include <systemd/sd-daemon.h>
 #include <unistd.h>
 
-#include <phosphor-logging/log.hpp>
-#include <phosphor-logging/elog-errors.hpp>
-#include <xyz/openbmc_project/Common/error.hpp>
-
 #include <memory>
+#include <phosphor-logging/elog-errors.hpp>
+#include <phosphor-logging/log.hpp>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {

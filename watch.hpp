@@ -1,15 +1,15 @@
 #pragma once
 
+#include "dns_updater.hpp"
 #include "util.hpp"
 #include "types.hpp"
-#include "dns_updater.hpp"
-
-#include <systemd/sd-event.h>
 
 #include <sys/inotify.h>
-#include <map>
-#include <functional>
+#include <systemd/sd-event.h>
+
 #include <experimental/filesystem>
+#include <functional>
+#include <map>
 
 namespace phosphor
 {

@@ -1,11 +1,11 @@
 #include "watch.hpp"
 
-#include <xyz/openbmc_project/Common/error.hpp>
-#include <phosphor-logging/log.hpp>
-#include <phosphor-logging/elog-errors.hpp>
-
-#include <sys/inotify.h>
 #include <errno.h>
+#include <sys/inotify.h>
+
+#include <phosphor-logging/elog-errors.hpp>
+#include <phosphor-logging/log.hpp>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {
