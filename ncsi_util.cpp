@@ -1,13 +1,13 @@
+#include "ncsi_util.hpp"
+
 #include <linux/ncsi.h>
 #include <netlink/netlink.h>
 #include <netlink/genl/genl.h>
 #include <netlink/genl/ctrl.h>
 
-#include "ncsi_util.hpp"
-#include "xyz/openbmc_project/Common/error.hpp"
-
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {

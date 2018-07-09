@@ -1,19 +1,18 @@
 #pragma once
 
+#include "dhcp_configuration.hpp"
 #include "ethernet_interface.hpp"
 #include "system_configuration.hpp"
-#include "dhcp_configuration.hpp"
 #include "vlan_interface.hpp"
+#include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
 
-#include <xyz/openbmc_project/Network/VLAN/Create/server.hpp>
-#include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
-#include <sdbusplus/bus.hpp>
-
+#include <experimental/filesystem>
 #include <list>
 #include <memory>
+#include <sdbusplus/bus.hpp>
 #include <string>
 #include <vector>
-#include <experimental/filesystem>
+#include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
 
 namespace phosphor
 {

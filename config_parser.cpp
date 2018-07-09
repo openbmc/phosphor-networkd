@@ -1,12 +1,12 @@
 #include "config_parser.hpp"
-#include <phosphor-logging/log.hpp>
 
-#include <fstream>
-#include <string>
 #include <algorithm>
-#include <unordered_map>
-#include <regex>
+#include <fstream>
 #include <list>
+#include <phosphor-logging/log.hpp>
+#include <regex>
+#include <string>
+#include <unordered_map>
 
 namespace phosphor
 {

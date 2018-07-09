@@ -1,16 +1,16 @@
 #pragma once
 
 #include <ifaddrs.h>
+#include <systemd/sd-event.h>
 
+#include <chrono>
 #include <functional>
 #include <list>
-#include <string>
-#include <vector>
 #include <map>
 #include <memory>
 #include <set>
-#include <chrono>
-#include <systemd/sd-event.h>
+#include <string>
+#include <vector>
 
 namespace phosphor
 {

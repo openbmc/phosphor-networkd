@@ -1,9 +1,9 @@
 #include "config.h"
+#include "dns_updater.hpp"
 #include "network_manager.hpp"
 #include "rtnetlink_server.hpp"
 #include "timer.hpp"
 #include "watch.hpp"
-#include "dns_updater.hpp"
 
 #include <linux/netlink.h>
 

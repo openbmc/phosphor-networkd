@@ -194,7 +194,6 @@ TEST_F(TestUtil, getNetworkAddress)
     address = getNetworkID(AF_INET6,"2001:db8:gghh:dd12::0",64);
     EXPECT_EQ("",address);
 
-
     address = getNetworkID(AF_INET6,"fe80::201:6cff:fe80:228",64);
     EXPECT_EQ("fe80::",address);
 }

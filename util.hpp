@@ -1,11 +1,12 @@
 #pragma once
 
-#include <unistd.h>
-
 #include "config.h"
 #include "types.hpp"
-#include <sdbusplus/bus.hpp>
+
+#include <unistd.h>
+
 #include <regex>
+#include <sdbusplus/bus.hpp>
 
 namespace phosphor
 {

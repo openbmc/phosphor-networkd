@@ -1,24 +1,23 @@
-#include "config.h"
-#include "util.hpp"
 #include "network_manager.hpp"
-#include "network_config.hpp"
+
+#include "config.h"
 #include "ipaddress.hpp"
+#include "network_config.hpp"
 #include "timer.hpp"
-#include "xyz/openbmc_project/Common/error.hpp"
-
-#include <phosphor-logging/log.hpp>
-#include <phosphor-logging/elog-errors.hpp>
-
-#include <algorithm>
-#include <bitset>
-#include <map>
-#include <fstream>
+#include "util.hpp"
 
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <net/if.h>
 
+#include <algorithm>
+#include <bitset>
+#include <fstream>
+#include <map>
+#include <phosphor-logging/elog-errors.hpp>
+#include <phosphor-logging/log.hpp>
 #include <string>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {

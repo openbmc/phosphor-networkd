@@ -1,9 +1,9 @@
-#include <chrono>
-#include <phosphor-logging/log.hpp>
-#include <phosphor-logging/elog-errors.hpp>
-
 #include "timer.hpp"
-#include "xyz/openbmc_project/Common/error.hpp"
+
+#include <chrono>
+#include <phosphor-logging/elog-errors.hpp>
+#include <phosphor-logging/log.hpp>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {
