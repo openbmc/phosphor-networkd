@@ -1,11 +1,16 @@
 #include <gtest/gtest.h>
 #include <netinet/in.h>
+#include <xyz/openbmc_project/Common/error.hpp>
+
 #include "util.hpp"
 
 namespace phosphor
 {
 namespace network
 {
+
+using InternalFailure =
+    sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
 
 class TestUtil : public testing::Test
 {
@@ -188,12 +193,11 @@ TEST_F(TestUtil, getNetworkAddress)
     address = getNetworkID(AF_INET6,"2001:db8:abcd:dd12::0",64);
     EXPECT_EQ("2001:db8:abcd:dd12::",address);
 
-    address = getNetworkID(AF_INET,"a.b.c.d",25);
-    EXPECT_EQ("",address);
+    EXPECT_THROW(getNetworkID(AF_INET,"a.b.c.d",25),
+                 InternalFailure);
 
-    address = getNetworkID(AF_INET6,"2001:db8:gghh:dd12::0",64);
-    EXPECT_EQ("",address);
-
+    EXPECT_THROW(getNetworkID(AF_INET6,"2001:db8:gghh:dd12::0",64),
+                 InternalFailure);
 
     address = getNetworkID(AF_INET6,"fe80::201:6cff:fe80:228",64);
     EXPECT_EQ("fe80::",address);
