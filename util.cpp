@@ -177,7 +177,7 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
     {
         log<level::ERR>("inet_pton failure",
                         entry("IPADDRESS=%s", ipaddress.c_str()));
-        report<InternalFailure>();
+        elog<InternalFailure>();
 
         return "";
     }
@@ -197,7 +197,7 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
                   INET6_ADDRSTRLEN) == NULL)
     {
         log<level::ERR>("inet_ntop failure");
-        report<InternalFailure>();
+        elog<InternalFailure>();
     }
     return networkString;
 }
@@ -481,6 +481,29 @@ void executeCommandinChildProcess(const char* path, char** args)
 
 }
 } //namespace internal
+
+void restartSystemdUnit(const std::string& unit)
+{
+    try
+    {
+        auto bus = sdbusplus::bus::new_default();
+        auto method = bus.new_method_call(
+                      SYSTEMD_BUSNAME,
+                      SYSTEMD_PATH,
+                      SYSTEMD_INTERFACE,
+                      "RestartUnit");
+
+        method.append(unit, "replace");
+        bus.call_noreply(method);
+    }
+    catch (const std::exception& ex)
+    {
+        log<level::ERR>("Exception occured during restarting of systemd-unit",
+                         entry("SERVICE=%s", unit.c_str()));
+        report<InternalFailure>();
+    }
+
+}
 
 namespace mac_address
 {

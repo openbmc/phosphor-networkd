@@ -29,7 +29,7 @@ void refreshObjects()
 
     if (manager)
     {
-        manager->createChildObjects();
+        manager->createInterfaces();
     }
 }
 

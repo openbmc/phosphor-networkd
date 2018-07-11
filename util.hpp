@@ -125,19 +125,7 @@ IntfAddrMap getInterfaceAddrs();
  *  @param[in] unit - systemd unit name which needs to be
  *                    restarted.
  */
-inline void restartSystemdUnit(const std::string& unit)
-{
-    auto bus = sdbusplus::bus::new_default();
-    auto method = bus.new_method_call(
-                      SYSTEMD_BUSNAME,
-                      SYSTEMD_PATH,
-                      SYSTEMD_INTERFACE,
-                      "RestartUnit");
-
-    method.append(unit, "replace");
-    bus.call_noreply(method);
-
-}
+void restartSystemdUnit(const std::string& unit);
 
 /** @brief Get all the interfaces from the system.
  *  @returns list of interface names.
