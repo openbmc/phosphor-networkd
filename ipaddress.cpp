@@ -1,3 +1,4 @@
+#include "config.h"
 #include "ipaddress.hpp"
 #include "ethernet_interface.hpp"
 #include "util.hpp"
@@ -45,6 +46,7 @@ void IPAddress::delete_()
         return;
     }
 
+#ifdef LINK_LOCAL_AUTOCONFIGURATION
     if (isLinkLocalIP(address()))
     {
         log<level::ERR>("Can not delete the LinkLocal address"),
@@ -52,6 +54,7 @@ void IPAddress::delete_()
                   parent.interfaceName().c_str(), address().c_str());
         return;
     }
+#endif
 
     parent.deleteObject(address());
 }

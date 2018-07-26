@@ -555,7 +555,11 @@ void EthernetInterface::writeConfigurationFile()
 
     // write the network section
     stream << "[" << "Network" << "]\n";
+#ifdef LINK_LOCAL_AUTOCONFIGURATION
     stream << "LinkLocalAddressing=yes\n";
+#else
+    stream << "LinkLocalAddressing=no\n";
+#endif
     stream << "IPv6AcceptRA=false\n";
 
     // Add the VLAN entry
@@ -587,7 +591,11 @@ void EthernetInterface::writeConfigurationFile()
         // Static
         for (const auto& addr : addrs)
         {
-            if (addr.second->origin() == AddressOrigin::Static)
+            if (addr.second->origin() == AddressOrigin::Static
+#ifndef LINK_LOCAL_AUTOCONFIGURATION
+                || addr.second->origin() == AddressOrigin::LinkLocal
+#endif
+            )
             {
                 std::string address = addr.second->address() + "/" +
                                     std::to_string(addr.second->prefixLength());
