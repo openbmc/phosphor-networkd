@@ -76,6 +76,18 @@ AS_IF([test "x$enable_oe_sdk" == "xyes"],
     AC_SUBST([OESDK_TESTCASE_FLAGS], [$testcase_flags])
 )
 
+# If set, auto-configure a link-local address on the NIC.
+AC_ARG_ENABLE([link-local-autoconfiguration],
+    AS_HELP_STRING([--disable-link-local-autoconfiguration], [Disable link-local IP address autoconfiguration])
+)
+
+AC_ARG_VAR(LINK_LOCAL_AUTOCONFIGURATION, [Enable link-local address autoconfiguration])
+
+AS_IF([test "x$enable_link_local_autoconfiguration" != "xno"],
+      [LINK_LOCAL_AUTOCONFIGURATION="yes"]
+      AC_DEFINE_UNQUOTED([LINK_LOCAL_AUTOCONFIGURATION], ["$LINK_LOCAL_AUTOCONFIGURATION"], [Enable link-local IP address autoconfiguration])
+)
+
 AC_ARG_VAR(DNS_ENTRY_FILE, [File having DNS entries supplied by DHCP])
 AS_IF([test "x$DNS_ENTRY_FILE" == "x"], [DNS_ENTRY_FILE="/run/systemd/netif/state"])
 AC_DEFINE_UNQUOTED([DNS_ENTRY_FILE], ["$DNS_ENTRY_FILE"], [File having DNS entries supplied by DHCP])

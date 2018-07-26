@@ -1,3 +1,4 @@
+#include "config.h"
 #include "network_config.hpp"
 #include <fstream>
 #include <string>
@@ -16,7 +17,12 @@ namespace bmc
 
         filestream.open(filename);
         filestream << "[Match]\nName=" << interface <<
-                "\n[Network]\nDHCP=true\nLinkLocalAddressing=yes\n"
+                "\n[Network]\nDHCP=true\n"
+#ifdef LINK_LOCAL_AUTOCONFIGURATION
+                "LinkLocalAddressing=yes\n"
+#else
+                "LinkLocalAddressing=no\n"
+#endif
                 "IPv6AcceptRA=false\n"
                 "[DHCP]\nClientIdentifier=mac\n";
         filestream.close();
