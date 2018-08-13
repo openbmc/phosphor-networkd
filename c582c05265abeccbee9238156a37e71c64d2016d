@@ -1,0 +1,9 @@
+Ok-To-Test+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Verified+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Code-Review+1: Nagaraju Goruganti <ngorugan@in.ibm.com>
+Code-Review+2: Andrew Geissler <geissonator@yahoo.com>
+Submitted-by: Andrew Geissler <geissonator@yahoo.com>
+Submitted-at: Mon, 13 Aug 2018 13:31:56 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/11899
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
