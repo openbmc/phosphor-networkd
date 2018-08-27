@@ -50,7 +50,7 @@ phosphor_network_manager_SOURCES = \
 		routing_table.cpp \
 		config_parser.cpp \
 		dhcp_configuration.cpp \
-        vlan_interface.cpp \
+		vlan_interface.cpp \
 		rtnetlink_server.cpp \
 		timer.cpp \
 		dns_updater.cpp \
