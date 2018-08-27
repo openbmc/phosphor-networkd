@@ -78,7 +78,8 @@ phosphor_network_manager_CXXFLAGS = \
 		$(SYSTEMD_CFLAGS) \
 		$(SDBUSPLUS_CFLAGS) \
 		$(PHOSPHOR_DBUS_INTERFACES_CFLAGS) \
-		$(PHOSPHOR_LOGGING_CFLAGS)
+		$(PHOSPHOR_LOGGING_CFLAGS) \
+		-flto
 
 xyz/openbmc_project/Network/VLAN/Create/server.cpp: xyz/openbmc_project/Network/VLAN/Create.interface.yaml xyz/openbmc_project/Network/VLAN/Create/server.hpp
 	@mkdir -p `dirname $@`
