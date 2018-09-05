@@ -30,6 +30,13 @@ extern std::unique_ptr<phosphor::network::Timer> restartTimer;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
+static constexpr const char* userMgrObjBasePath = "/xyz/openbmc_project/user";
+static constexpr const char* userMgrInterface =
+    "xyz.openbmc_project.User.Manager";
+static constexpr const char* propNameAllPrivileges = "AllPrivileges";
+
+std::unique_ptr<sdbusplus::bus::match_t> usrMgmtSignal(nullptr);
+
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath,
                  const std::string& path) :
     details::VLANCreateIface(bus, objPath, true),
@@ -37,6 +44,101 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath,
 {
     fs::path confDir(path);
     setConfDir(confDir);
+    initSupportedPrivilges();
+}
+
+std::string getUserService(sdbusplus::bus::bus& bus, const std::string& intf,
+                           const std::string& path)
+{
+    auto mapperCall =
+        bus.new_method_call("xyz.openbmc_project.ObjectMapper",
+                            "/xyz/openbmc_project/object_mapper",
+                            "xyz.openbmc_project.ObjectMapper", "GetObject");
+
+    mapperCall.append(path);
+    mapperCall.append(std::vector<std::string>({intf}));
+
+    auto mapperResponseMsg = bus.call(mapperCall);
+
+    std::map<std::string, std::vector<std::string>> mapperResponse;
+    mapperResponseMsg.read(mapperResponse);
+
+    if (mapperResponse.begin() == mapperResponse.end())
+    {
+        throw std::runtime_error("ERROR in reading the mapper response");
+    }
+
+    return mapperResponse.begin()->first;
+}
+
+std::string Manager::getUserServiceName()
+{
+    static std::string userMgmtService;
+    if (userMgmtService.empty())
+    {
+        try
+        {
+            userMgmtService =
+                getUserService(bus, userMgrInterface, userMgrObjBasePath);
+        }
+        catch (const std::exception& e)
+        {
+            log<level::ERR>("Exception caught in getUserServiceName.");
+            userMgmtService.clear();
+        }
+    }
+    return userMgmtService;
+}
+
+void Manager::initSupportedPrivilges()
+{
+    std::string userServiceName = getUserServiceName();
+    if (!userServiceName.empty())
+    {
+        auto method = bus.new_method_call(
+            getUserServiceName().c_str(), userMgrObjBasePath,
+            "org.freedesktop.DBus.Properties", "Get");
+        method.append(userMgrInterface, propNameAllPrivileges);
+
+        auto reply = bus.call(method);
+        if (reply.is_method_error())
+        {
+            log<level::DEBUG>("get-property AllPrivileges failed",
+                              entry("OBJPATH:%s", userMgrObjBasePath),
+                              entry("INTERFACE:%s", userMgrInterface));
+            return;
+        }
+
+        sdbusplus::message::variant<std::vector<std::string>> result;
+        reply.read(result);
+
+        supportedPrivList = result.get<std::vector<std::string>>();
+    }
+
+    // Resgister the signal
+    if (usrMgmtSignal == nullptr)
+    {
+        log<level::DEBUG>("Registering User.Manager propertychange signal.");
+        usrMgmtSignal = std::make_unique<sdbusplus::bus::match_t>(
+            bus,
+            sdbusplus::bus::match::rules::propertiesChanged(userMgrObjBasePath,
+                                                            userMgrInterface),
+            [&](sdbusplus::message::message& msg) {
+                log<level::DEBUG>("UserMgr properties changed signal");
+                std::map<std::string, DbusVariant> props;
+                std::string iface;
+                msg.read(iface, props);
+                for (const auto& t : props)
+                {
+                    if (t.first == propNameAllPrivileges)
+                    {
+                        supportedPrivList =
+                            t.second.get<std::vector<std::string>>();
+                    }
+                }
+            });
+    }
+    return;
 }
 
 bool Manager::createDefaultNetworkFiles(bool force)
