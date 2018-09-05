@@ -115,6 +115,9 @@ class Manager : public details::VLANCreateIface
     /** @brief restart the network timers. */
     void restartTimers();
 
+    /** supported privilege list **/
+    std::vector<std::string> supportedPrivList;
+
   private:
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;
@@ -137,6 +140,12 @@ class Manager : public details::VLANCreateIface
 
     /** @brief Network Configuration directory. */
     fs::path confDir;
+
+    /** Get the user management service name dynamically **/
+    std::string getUserServiceName();
+
+    /** @brief initializes the supportedPrivilege List */
+    void initSupportedPrivilges();
 
     friend class TestNetworkManager;
     friend class TestRtNetlink;
