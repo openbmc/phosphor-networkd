@@ -222,7 +222,7 @@ std::string
         return macAddress;
     }
 
-    strcpy(ifr.ifr_name, interfaceName.c_str());
+    std::strcpy(ifr.ifr_name, interfaceName.c_str());
     if (ioctl(sock, SIOCGIFHWADDR, &ifr) != 0)
     {
         log<level::ERR>("ioctl failed for SIOCGIFHWADDR:",
@@ -230,10 +230,10 @@ std::string
         return macAddress;
     }
 
-    snprintf(macAddress, mac_address::size, mac_address::format,
-             ifr.ifr_hwaddr.sa_data[0], ifr.ifr_hwaddr.sa_data[1],
-             ifr.ifr_hwaddr.sa_data[2], ifr.ifr_hwaddr.sa_data[3],
-             ifr.ifr_hwaddr.sa_data[4], ifr.ifr_hwaddr.sa_data[5]);
+    std::snprintf(macAddress, mac_address::size, mac_address::format,
+                  ifr.ifr_hwaddr.sa_data[0], ifr.ifr_hwaddr.sa_data[1],
+                  ifr.ifr_hwaddr.sa_data[2], ifr.ifr_hwaddr.sa_data[3],
+                  ifr.ifr_hwaddr.sa_data[4], ifr.ifr_hwaddr.sa_data[5]);
 
     return macAddress;
 }
