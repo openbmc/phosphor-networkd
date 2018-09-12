@@ -110,7 +110,7 @@ Server::Server(EventPtr& eventPtr, const phosphor::Descriptor& smartSock)
         goto finish;
     }
 
-    memset(&addr, 0, sizeof(addr));
+    std::memset(&addr, 0, sizeof(addr));
     addr.nl_family = AF_NETLINK;
     addr.nl_groups = RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR;
 
