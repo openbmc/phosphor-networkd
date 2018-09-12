@@ -22,8 +22,8 @@ Parser::Parser(const fs::path& filePath)
     setFile(filePath);
 }
 
-
-std::tuple<ReturnCode, KeyValueMap> Parser::getSection(const std::string& section)
+std::tuple<ReturnCode, KeyValueMap>
+    Parser::getSection(const std::string& section)
 {
     auto it = sections.find(section);
     if (it == sections.end())
@@ -40,7 +40,7 @@ std::tuple<ReturnCode, ValueList> Parser::getValues(const std::string& section,
                                                     const std::string& key)
 {
     ValueList values;
-    KeyValueMap keyValues {};
+    KeyValueMap keyValues{};
     auto rc = ReturnCode::SUCCESS;
 
     std::tie(rc, keyValues) = getSection(section);
@@ -62,7 +62,6 @@ std::tuple<ReturnCode, ValueList> Parser::getValues(const std::string& section,
 
     return std::make_tuple(ReturnCode::SUCCESS, std::move(values));
 }
-
 
 bool Parser::isValueExist(const std::string& section, const std::string& key,
                           const std::string& value)
@@ -124,26 +123,20 @@ void Parser::setFile(const fs::path& filePath)
     {
         return;
     }
-    //clear all the section data.
+    // clear all the section data.
     sections.clear();
     parse(stream);
     stream.close();
- }
+}
 
 void Parser::parse(std::istream& in)
 {
-    static const std::regex commentRegex
-    {
-        R"x(\s*[;#])x"
-    };
-    static const std::regex sectionRegex
-    {
-        R"x(\s*\[([^\]]+)\])x"
-    };
-    static const std::regex valueRegex
-    {
-        R"x(\s*(\S[^ \t=]*)\s*=\s*(\S+)\s*$)x"
-    };
+    static const std::regex commentRegex{
+        R"x(\s*[;#])x"};
+    static const std::regex sectionRegex{
+        R"x(\s*\[([^\]]+)\])x"};
+    static const std::regex valueRegex{
+        R"x(\s*(\S[^ \t=]*)\s*=\s*(\S+)\s*$)x"};
     std::string section;
     std::smatch pieces;
     for (std::string line; std::getline(in, line);)
@@ -169,6 +162,6 @@ void Parser::parse(std::istream& in)
     }
 }
 
-}//namespace config
-}//namespace network
-}//namespace phosphor
+} // namespace config
+} // namespace network
+} // namespace phosphor
