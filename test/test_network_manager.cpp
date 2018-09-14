@@ -1,20 +1,19 @@
-#include "network_manager.hpp"
 #include "mock_syscall.hpp"
-
-#include "xyz/openbmc_project/Common/error.hpp"
-#include <phosphor-logging/elog-errors.hpp>
+#include "network_manager.hpp"
 #include "timer.hpp"
+#include "xyz/openbmc_project/Common/error.hpp"
 
-#include <gtest/gtest.h>
-#include <sdbusplus/bus.hpp>
-
+#include <arpa/inet.h>
 #include <net/if.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
 #include <stdlib.h>
 
 #include <exception>
 #include <experimental/filesystem>
+#include <phosphor-logging/elog-errors.hpp>
+#include <sdbusplus/bus.hpp>
+
+#include <gtest/gtest.h>
 
 namespace phosphor
 {
@@ -25,49 +24,48 @@ namespace fs = std::experimental::filesystem;
 
 class TestNetworkManager : public testing::Test
 {
-    public:
+  public:
+    sdbusplus::bus::bus bus;
+    Manager manager;
+    std::string confDir;
+    TestNetworkManager() :
+        bus(sdbusplus::bus::new_default()),
+        manager(bus, "/xyz/openbmc_test/abc", "/tmp")
+    {
+        setConfDir();
+    }
 
-        sdbusplus::bus::bus bus;
-        Manager manager;
-        std::string confDir;
-        TestNetworkManager()
-            : bus(sdbusplus::bus::new_default()),
-              manager(bus, "/xyz/openbmc_test/abc", "/tmp")
+    ~TestNetworkManager()
+    {
+        if (confDir != "")
         {
-            setConfDir();
+            fs::remove_all(confDir);
         }
+    }
 
-        ~TestNetworkManager()
-        {
-            if(confDir != "")
-            {
-                fs::remove_all(confDir);
-            }
-        }
+    void setConfDir()
+    {
+        char tmp[] = "/tmp/NetworkManager.XXXXXX";
+        confDir = mkdtemp(tmp);
+        manager.setConfDir(confDir);
+    }
 
-        void setConfDir()
-        {
-            char tmp[] = "/tmp/NetworkManager.XXXXXX";
-            confDir = mkdtemp(tmp);
-            manager.setConfDir(confDir);
-        }
+    void createInterfaces()
+    {
+        manager.createInterfaces();
+    }
 
-        void createInterfaces()
-        {
-            manager.createInterfaces();
-        }
+    int getSize()
+    {
+        return manager.interfaces.size();
+    }
 
-        int getSize()
-        {
-            return manager.interfaces.size();
-        }
-
-        bool isInterfaceAdded(std::string intf)
-        {
-            return manager.interfaces.find(intf) != manager.interfaces.end() ?
-                   true :
-                   false;
-        }
+    bool isInterfaceAdded(std::string intf)
+    {
+        return manager.interfaces.find(intf) != manager.interfaces.end()
+                   ? true
+                   : false;
+    }
 };
 
 // getifaddrs will not return any interface
@@ -130,5 +128,5 @@ TEST_F(TestNetworkManager, WithMultipleInterfaces)
     }
 }
 
-}// namespce network
-}// namespace phosphor
+} // namespace network
+} // namespace phosphor
