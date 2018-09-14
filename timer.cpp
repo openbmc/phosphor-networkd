@@ -22,7 +22,7 @@ void Timer::initialize()
         elog<InternalFailure>();
     }
 
-    auto r  = sd_event_default(&timeEvent);
+    auto r = sd_event_default(&timeEvent);
     if (r < 0)
     {
         log<level::ERR>("Failure in creating the sd_event",
@@ -32,8 +32,7 @@ void Timer::initialize()
     }
 
     // Add infinite expiration time
-    r = sd_event_add_time(timeEvent,
-                          &eventSource,
+    r = sd_event_add_time(timeEvent, &eventSource,
                           CLOCK_MONOTONIC, // Time base
                           UINT64_MAX,      // Expire time - way long time
                           0,               // Use default event accuracy
@@ -51,8 +50,7 @@ void Timer::initialize()
     r = setTimer(SD_EVENT_OFF);
     if (r < 0)
     {
-        log<level::ERR>("Failure to disable timer",
-                        entry("ERROR=%d", r));
+        log<level::ERR>("Failure to disable timer", entry("ERROR=%d", r));
 
         elog<InternalFailure>();
     }
@@ -60,8 +58,8 @@ void Timer::initialize()
 }
 
 /** @brief callback handler on timeout */
-int Timer::timeoutHandler(sd_event_source* eventSource,
-                          uint64_t usec, void* userData)
+int Timer::timeoutHandler(sd_event_source* eventSource, uint64_t usec,
+                          void* userData)
 {
     auto timer = static_cast<Timer*>(userData);
     timer->expired = true;
@@ -104,8 +102,7 @@ int Timer::startTimer(std::chrono::microseconds timeValue)
     auto r = sd_event_source_set_time(eventSource, expireTime.count());
     if (r < 0)
     {
-        log<level::ERR>("Failure to set timer",
-                        entry("ERROR=%d", r));
+        log<level::ERR>("Failure to set timer", entry("ERROR=%d", r));
 
         elog<InternalFailure>();
     }
@@ -115,8 +112,7 @@ int Timer::startTimer(std::chrono::microseconds timeValue)
     r = setTimer(SD_EVENT_ONESHOT);
     if (r < 0)
     {
-        log<level::ERR>("Failure to start timer",
-                        entry("ERROR=%d", r));
+        log<level::ERR>("Failure to start timer", entry("ERROR=%d", r));
 
         elog<InternalFailure>();
     }

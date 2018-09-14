@@ -1,6 +1,7 @@
+#include "config.h"
+
 #include "vlan_interface.hpp"
 
-#include "config.h"
 #include "ethernet_interface.hpp"
 #include "network_manager.hpp"
 
@@ -21,15 +22,13 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
-                             const std::string& objPath,
-                             bool dhcpEnabled,
-                             uint32_t vlanID,
-                             EthernetInterface& intf,
-                             Manager& parent ) :
-        VlanIface(bus,objPath.c_str()),
-        DeleteIface(bus,objPath.c_str()),
-        EthernetInterface(bus, objPath, dhcpEnabled, parent, false),
-        parentInterface(intf)
+                             const std::string& objPath, bool dhcpEnabled,
+                             uint32_t vlanID, EthernetInterface& intf,
+                             Manager& parent) :
+    VlanIface(bus, objPath.c_str()),
+    DeleteIface(bus, objPath.c_str()),
+    EthernetInterface(bus, objPath, dhcpEnabled, parent, false),
+    parentInterface(intf)
 {
     id(vlanID);
     VlanIface::interfaceName(EthernetInterface::interfaceName());
@@ -52,16 +51,19 @@ void VlanInterface::writeDeviceFile()
     catch (std::ios_base::failure& e)
     {
         log<level::ERR>("Unable to open the VLAN device file",
-                         entry("FILE=%s", confPath.c_str()),
-                         entry("ERROR=%s", e.what()));
+                        entry("FILE=%s", confPath.c_str()),
+                        entry("ERROR=%s", e.what()));
         elog<InternalFailure>();
-
     }
 
-    stream << "[" << "NetDev" << "]\n";
+    stream << "["
+           << "NetDev"
+           << "]\n";
     stream << "Name=" << EthernetInterface::interfaceName() << "\n";
-    stream << "Kind=vlan" << "\n";
-    stream << "[VLAN]" << "\n";
+    stream << "Kind=vlan"
+           << "\n";
+    stream << "[VLAN]"
+           << "\n";
     stream << "Id=" << id() << "\n";
     stream.close();
 }
@@ -71,5 +73,5 @@ void VlanInterface::delete_()
     parentInterface.deleteVLANObject(EthernetInterface::interfaceName());
 }
 
-}//namespace network
-}//namespace phosphor
+} // namespace network
+} // namespace phosphor

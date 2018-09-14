@@ -23,25 +23,24 @@ constexpr auto BUFSIZE = 4096;
 class Server
 {
 
-    public:
+  public:
+    /** @brief Constructor
+     *
+     *  @details Sets up the server to handle incoming RTNETLINK events
+     *
+     *  @param[in] eventPtr - Unique ptr reference to sd_event.
+     *  @param[in] socket - netlink socket.
+     */
+    Server(EventPtr& eventPtr, const phosphor::Descriptor& socket);
 
-        /** @brief Constructor
-         *
-         *  @details Sets up the server to handle incoming RTNETLINK events
-         *
-         *  @param[in] eventPtr - Unique ptr reference to sd_event.
-         *  @param[in] socket - netlink socket.
-         */
-        Server(EventPtr& eventPtr, const phosphor::Descriptor& socket);
-
-        Server() = delete;
-        ~Server() = default;
-        Server(const Server&) = delete;
-        Server& operator=(const Server&) = delete;
-        Server(Server&&) = default;
-        Server& operator=(Server &&) = default;
+    Server() = delete;
+    ~Server() = default;
+    Server(const Server&) = delete;
+    Server& operator=(const Server&) = delete;
+    Server(Server&&) = default;
+    Server& operator=(Server&&) = default;
 };
 
-} //namespace rtnetlink
-} //namespce network
-} //namespace phosphor
+} // namespace rtnetlink
+} // namespace network
+} // namespace phosphor

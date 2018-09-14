@@ -31,16 +31,16 @@ namespace rtnetlink
 static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
                         void* userdata)
 {
-    char buffer[phosphor::network::rtnetlink::BUFSIZE] {};
-    int len {};
+    char buffer[phosphor::network::rtnetlink::BUFSIZE]{};
+    int len{};
 
     auto netLinkHeader = reinterpret_cast<struct nlmsghdr*>(buffer);
-    while ((len = recv(fd, netLinkHeader,
-                        phosphor::network::rtnetlink::BUFSIZE, 0)) > 0)
+    while ((len = recv(fd, netLinkHeader, phosphor::network::rtnetlink::BUFSIZE,
+                       0)) > 0)
     {
         for (; (NLMSG_OK(netLinkHeader, len)) &&
                (netLinkHeader->nlmsg_type != NLMSG_DONE);
-                    netLinkHeader = NLMSG_NEXT(netLinkHeader, len))
+             netLinkHeader = NLMSG_NEXT(netLinkHeader, len))
         {
             if (netLinkHeader->nlmsg_type == RTM_NEWADDR ||
                 netLinkHeader->nlmsg_type == RTM_DELADDR)
@@ -55,7 +55,7 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
                     // crash
                     refreshObjectTimer->startTimer(time);
                 } // end if
-            } // end if
+            }     // end if
 
         } // end for
 
@@ -67,14 +67,16 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
 Server::Server(EventPtr& eventPtr, const phosphor::Descriptor& smartSock)
 {
     using namespace phosphor::logging;
-    using InternalFailure = sdbusplus::xyz::openbmc_project::Common::
-                                    Error::InternalFailure;
-    struct sockaddr_nl addr {};
-    int r {};
+    using InternalFailure =
+        sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
+    struct sockaddr_nl addr
+    {
+    };
+    int r{};
 
-    sigset_t ss {};
+    sigset_t ss{};
     // check that the given socket is valid or not.
-    if(smartSock() < 0)
+    if (smartSock() < 0)
     {
         r = -EBADF;
         goto finish;
@@ -118,8 +120,8 @@ Server::Server(EventPtr& eventPtr, const phosphor::Descriptor& smartSock)
         goto finish;
     }
 
-    r = sd_event_add_io(eventPtr.get(), nullptr,
-                        smartSock(), EPOLLIN, eventHandler, nullptr);
+    r = sd_event_add_io(eventPtr.get(), nullptr, smartSock(), EPOLLIN,
+                        eventHandler, nullptr);
     if (r < 0)
     {
         goto finish;
@@ -135,7 +137,6 @@ finish:
     }
 }
 
-
-} //rtnetlink
-} //network
-} //phosphor
+} // namespace rtnetlink
+} // namespace network
+} // namespace phosphor

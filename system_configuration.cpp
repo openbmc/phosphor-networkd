@@ -1,6 +1,7 @@
+#include "config.h"
+
 #include "system_configuration.hpp"
 
-#include "config.h"
 #include "network_manager.hpp"
 #include "routing_table.hpp"
 
@@ -14,9 +15,9 @@ namespace network
 {
 
 // systemd service to kick start a target.
-constexpr auto HOSTNAMED_SERVICE    = "org.freedesktop.hostname1";
-constexpr auto HOSTNAMED_SERVICE_PATH  = "/org/freedesktop/hostname1";
-constexpr auto HOSTNAMED_INTERFACE  = "org.freedesktop.hostname1";
+constexpr auto HOSTNAMED_SERVICE = "org.freedesktop.hostname1";
+constexpr auto HOSTNAMED_SERVICE_PATH = "/org/freedesktop/hostname1";
+constexpr auto HOSTNAMED_INTERFACE = "org.freedesktop.hostname1";
 constexpr auto PROPERTY_INTERFACE = "org.freedesktop.DBus.Properties";
 constexpr auto METHOD_GET = "Get";
 constexpr auto METHOD_SET = "SetStaticHostname";
@@ -31,9 +32,8 @@ using SystemConfigIntf =
 SystemConfiguration::SystemConfiguration(sdbusplus::bus::bus& bus,
                                          const std::string& objPath,
                                          Manager& parent) :
-        Iface(bus, objPath.c_str(), true),
-        bus(bus),
-        manager(parent)
+    Iface(bus, objPath.c_str(), true),
+    bus(bus), manager(parent)
 {
     auto name = getHostNameFromSystem();
     route::Table routingTable;
@@ -50,11 +50,8 @@ std::string SystemConfiguration::hostName(std::string name)
     {
         return name;
     }
-    auto method = bus.new_method_call(
-                      HOSTNAMED_SERVICE,
-                      HOSTNAMED_SERVICE_PATH,
-                      HOSTNAMED_INTERFACE,
-                      METHOD_SET);
+    auto method = bus.new_method_call(HOSTNAMED_SERVICE, HOSTNAMED_SERVICE_PATH,
+                                      HOSTNAMED_INTERFACE, METHOD_SET);
 
     method.append(name, true);
 
@@ -71,11 +68,8 @@ std::string SystemConfiguration::hostName(std::string name)
 std::string SystemConfiguration::getHostNameFromSystem() const
 {
     sdbusplus::message::variant<std::string> name;
-    auto method = bus.new_method_call(
-                      HOSTNAMED_SERVICE,
-                      HOSTNAMED_SERVICE_PATH,
-                      PROPERTY_INTERFACE,
-                      METHOD_GET);
+    auto method = bus.new_method_call(HOSTNAMED_SERVICE, HOSTNAMED_SERVICE_PATH,
+                                      PROPERTY_INTERFACE, METHOD_GET);
 
     method.append(HOSTNAMED_INTERFACE, "Hostname");
 
@@ -94,7 +88,6 @@ std::string SystemConfiguration::getHostNameFromSystem() const
     return name.get<std::string>();
 }
 
-
 std::string SystemConfiguration::defaultGateway(std::string gateway)
 {
     auto gw = SystemConfigIntf::defaultGateway();
@@ -106,15 +99,15 @@ std::string SystemConfiguration::defaultGateway(std::string gateway)
     if (!isValidIP(AF_INET, gateway))
     {
         log<level::ERR>("Not a valid Gateway",
-            entry("GATEWAY=%s", gateway.c_str()));
-        elog<InvalidArgument>(InvalidArgumentMetadata::ARGUMENT_NAME("GATEWAY"),
-                              InvalidArgumentMetadata::ARGUMENT_VALUE(
-                                  gateway.c_str()));
+                        entry("GATEWAY=%s", gateway.c_str()));
+        elog<InvalidArgument>(
+            InvalidArgumentMetadata::ARGUMENT_NAME("GATEWAY"),
+            InvalidArgumentMetadata::ARGUMENT_VALUE(gateway.c_str()));
     }
     gw = SystemConfigIntf::defaultGateway(gateway);
     manager.writeToConfigurationFile();
     return gw;
 }
 
-}// namespace network
-}// namespace phosphor
+} // namespace network
+} // namespace phosphor
