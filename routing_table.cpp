@@ -39,14 +39,13 @@ Table::Table()
     {
         commit<InternalFailure>();
     }
-
 }
 
-int Table::readNetLinkSock(int sockFd, std::array<char,BUFSIZE>& buf)
+int Table::readNetLinkSock(int sockFd, std::array<char, BUFSIZE>& buf)
 {
     struct nlmsghdr* nlHdr = nullptr;
-    int readLen {};
-    int msgLen {};
+    int readLen{};
+    int msgLen{};
     uint8_t seqNum = 1;
     uint8_t pID = getpid();
     char* bufPtr = buf.data();
@@ -58,23 +57,22 @@ int Table::readNetLinkSock(int sockFd, std::array<char,BUFSIZE>& buf)
         {
             auto error = errno;
             log<level::ERR>("Socket recv failed:",
-                             entry("ERROR=%s", strerror(error)));
+                            entry("ERROR=%s", strerror(error)));
             elog<InternalFailure>();
-
         }
 
         nlHdr = reinterpret_cast<nlmsghdr*>(bufPtr);
 
         // Check if the header is valid
 
-        if ((NLMSG_OK(nlHdr, readLen) == 0)
-            || (nlHdr->nlmsg_type == NLMSG_ERROR))
+        if ((NLMSG_OK(nlHdr, readLen) == 0) ||
+            (nlHdr->nlmsg_type == NLMSG_ERROR))
         {
 
             auto error = errno;
             log<level::ERR>("Error validating header",
-                             entry("NLMSGTYPE=%d", nlHdr->nlmsg_type),
-                             entry("ERROR=%s", strerror(error)));
+                            entry("NLMSGTYPE=%d", nlHdr->nlmsg_type),
+                            entry("ERROR=%s", strerror(error)));
             elog<InternalFailure>();
         }
 
@@ -95,8 +93,7 @@ int Table::readNetLinkSock(int sockFd, std::array<char,BUFSIZE>& buf)
         {
             break;
         }
-    }
-    while ((nlHdr->nlmsg_seq != seqNum) || (nlHdr->nlmsg_pid != pID));
+    } while ((nlHdr->nlmsg_seq != seqNum) || (nlHdr->nlmsg_pid != pID));
     return msgLen;
 }
 
@@ -104,9 +101,9 @@ void Table::parseRoutes(const nlmsghdr* nlHdr)
 {
     rtmsg* rtMsg = nullptr;
     rtattr* rtAttr = nullptr;
-    int rtLen {};
-    in_addr dstAddr {};
-    in_addr gateWayAddr {};
+    int rtLen{};
+    in_addr dstAddr{};
+    in_addr gateWayAddr{};
     char ifName[IF_NAMESIZE] = {};
 
     rtMsg = reinterpret_cast<rtmsg*>(NLMSG_DATA(nlHdr));
@@ -128,10 +125,12 @@ void Table::parseRoutes(const nlmsghdr* nlHdr)
         switch (rtAttr->rta_type)
         {
             case RTA_OIF:
-                if_indextoname(*reinterpret_cast<int*>(RTA_DATA(rtAttr)), ifName);
+                if_indextoname(*reinterpret_cast<int*>(RTA_DATA(rtAttr)),
+                               ifName);
                 break;
             case RTA_GATEWAY:
-                gateWayAddr.s_addr = *reinterpret_cast<u_int*>(RTA_DATA(rtAttr));
+                gateWayAddr.s_addr =
+                    *reinterpret_cast<u_int*>(RTA_DATA(rtAttr));
                 break;
             case RTA_DST:
                 dstAddr.s_addr = *reinterpret_cast<u_int*>(RTA_DATA(rtAttr));
@@ -168,9 +167,9 @@ Map Table::getRoutes()
     std::array<char, BUFSIZE> msgBuf = {0};
 
     int sock = -1;
-    int len {0};
+    int len{0};
 
-    uint8_t msgSeq {0};
+    uint8_t msgSeq{0};
 
     // Create Socket
     if ((sock = socket(PF_NETLINK, SOCK_DGRAM, NETLINK_ROUTE)) < 0)
@@ -189,7 +188,7 @@ Map Table::getRoutes()
     // Length of message
     nlMsg->nlmsg_len = NLMSG_LENGTH(sizeof(rtmsg));
     // Get the routes from kernel routing table
-    nlMsg->nlmsg_type =  RTM_GETROUTE;
+    nlMsg->nlmsg_type = RTM_GETROUTE;
     // The message is a request for dump
     nlMsg->nlmsg_flags = NLM_F_DUMP | NLM_F_REQUEST;
 
@@ -216,8 +215,7 @@ Map Table::getRoutes()
     return routeList;
 }
 
-std::string Table::getGateway(int addressFamily,
-                              const std::string& ipaddress,
+std::string Table::getGateway(int addressFamily, const std::string& ipaddress,
                               uint8_t prefix) const
 {
     std::string gateway;
@@ -231,6 +229,6 @@ std::string Table::getGateway(int addressFamily,
     return gateway;
 }
 
-}// namespace route
-}// namespace network
-}// namespace phosphor
+} // namespace route
+} // namespace network
+} // namespace phosphor

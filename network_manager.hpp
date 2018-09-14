@@ -35,102 +35,111 @@ using VLANCreateIface = details::ServerObject<
 
 } // namespace details
 
-class TestNetworkManager; //forward declaration
-class TestRtNetlink; //forward declaration
+class TestNetworkManager; // forward declaration
+class TestRtNetlink;      // forward declaration
 
 /** @class Manager
  *  @brief OpenBMC network manager implementation.
  */
 class Manager : public details::VLANCreateIface
 {
-    public:
-        Manager() = delete;
-        Manager(const Manager&) = delete;
-        Manager& operator=(const Manager&) = delete;
-        Manager(Manager&&) = delete;
-        Manager& operator=(Manager&&) = delete;
-        virtual ~Manager() = default;
+  public:
+    Manager() = delete;
+    Manager(const Manager&) = delete;
+    Manager& operator=(const Manager&) = delete;
+    Manager(Manager&&) = delete;
+    Manager& operator=(Manager&&) = delete;
+    virtual ~Manager() = default;
 
-        /** @brief Constructor to put object onto bus at a dbus path.
-         *  @param[in] bus - Bus to attach to.
-         *  @param[in] objPath - Path to attach at.
-         *  @param[in] dir - Network Configuration directory path.
-         */
-        Manager(sdbusplus::bus::bus& bus, const char* objPath,
-                const std::string& dir);
+    /** @brief Constructor to put object onto bus at a dbus path.
+     *  @param[in] bus - Bus to attach to.
+     *  @param[in] objPath - Path to attach at.
+     *  @param[in] dir - Network Configuration directory path.
+     */
+    Manager(sdbusplus::bus::bus& bus, const char* objPath,
+            const std::string& dir);
 
-        void vLAN(IntfName interfaceName, uint32_t id) override;
+    void vLAN(IntfName interfaceName, uint32_t id) override;
 
-        /** @brief write the network conf file with the in-memory objects.
-         */
-        void writeToConfigurationFile();
+    /** @brief write the network conf file with the in-memory objects.
+     */
+    void writeToConfigurationFile();
 
-        /** @brief Fetch the interface and the ipaddress details
-         *         from the system and create the ethernet interraces
-         *         dbus object.
-         */
-        void createInterfaces();
+    /** @brief Fetch the interface and the ipaddress details
+     *         from the system and create the ethernet interraces
+     *         dbus object.
+     */
+    void createInterfaces();
 
-        /** @brief create child interface object and the system conf object.
-         */
-        void createChildObjects();
+    /** @brief create child interface object and the system conf object.
+     */
+    void createChildObjects();
 
-        /** @brief sets the network conf directory.
-         *  @param[in] dirName - Absolute path of the directory.
-         */
-        void setConfDir(const fs::path& dir);
+    /** @brief sets the network conf directory.
+     *  @param[in] dirName - Absolute path of the directory.
+     */
+    void setConfDir(const fs::path& dir);
 
-        /** @brief gets the network conf directory.
-         */
-        fs::path getConfDir() { return confDir; }
+    /** @brief gets the network conf directory.
+     */
+    fs::path getConfDir()
+    {
+        return confDir;
+    }
 
-        /** @brief gets the system conf object.
-         *
-         */
-        const SystemConfPtr& getSystemConf() { return systemConf; }
+    /** @brief gets the system conf object.
+     *
+     */
+    const SystemConfPtr& getSystemConf()
+    {
+        return systemConf;
+    }
 
-        /** @brief gets the dhcp conf object.
-         *
-         */
-        const DHCPConfPtr& getDHCPConf() { return dhcpConf; }
+    /** @brief gets the dhcp conf object.
+     *
+     */
+    const DHCPConfPtr& getDHCPConf()
+    {
+        return dhcpConf;
+    }
 
-        /** @brief create the default network files for each interface
-         *  @detail if force param is true then forcefully create the network
-         *          files otherwise if network file doesn't exist then
-         *          create it.
-         *  @param[in] force - forcefully create the file
-         *  @return true if network file created else false
-         */
-        bool createDefaultNetworkFiles(bool force);
+    /** @brief create the default network files for each interface
+     *  @detail if force param is true then forcefully create the network
+     *          files otherwise if network file doesn't exist then
+     *          create it.
+     *  @param[in] force - forcefully create the file
+     *  @return true if network file created else false
+     */
+    bool createDefaultNetworkFiles(bool force);
 
-        /** @brief restart the network timers. */
-        void restartTimers();
+    /** @brief restart the network timers. */
+    void restartTimers();
 
-    private:
-        /** @brief Persistent sdbusplus DBus bus connection. */
-        sdbusplus::bus::bus& bus;
+  private:
+    /** @brief Persistent sdbusplus DBus bus connection. */
+    sdbusplus::bus::bus& bus;
 
-        /** @brief Persistent map of EthernetInterface dbus objects and their names */
-        std::map<IntfName, std::shared_ptr<EthernetInterface>> interfaces;
+    /** @brief Persistent map of EthernetInterface dbus objects and their names
+     */
+    std::map<IntfName, std::shared_ptr<EthernetInterface>> interfaces;
 
-        /** @brief BMC network reset - resets network configuration for BMC. */
-        void reset() override;
+    /** @brief BMC network reset - resets network configuration for BMC. */
+    void reset() override;
 
-        /** @brief Path of Object. */
-        std::string objectPath;
+    /** @brief Path of Object. */
+    std::string objectPath;
 
-        /** @brief pointer to system conf object. */
-        SystemConfPtr systemConf = nullptr;
+    /** @brief pointer to system conf object. */
+    SystemConfPtr systemConf = nullptr;
 
-        /** @brief pointer to dhcp conf object. */
-        DHCPConfPtr dhcpConf = nullptr;
+    /** @brief pointer to dhcp conf object. */
+    DHCPConfPtr dhcpConf = nullptr;
 
-        /** @brief Network Configuration directory. */
-        fs::path confDir;
+    /** @brief Network Configuration directory. */
+    fs::path confDir;
 
-        friend class TestNetworkManager;
-        friend class TestRtNetlink;
-
+    friend class TestNetworkManager;
+    friend class TestRtNetlink;
 };
 
 } // namespace network
