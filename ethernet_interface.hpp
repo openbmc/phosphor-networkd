@@ -205,7 +205,6 @@ class EthernetInterface : public Ifaces
 
     /** @brief write the dhcp section **/
     void writeDHCPSection(std::fstream& stream);
-    ;
 
     /** @brief get the NTP server list from the network conf
      *

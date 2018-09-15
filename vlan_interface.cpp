@@ -56,14 +56,10 @@ void VlanInterface::writeDeviceFile()
         elog<InternalFailure>();
     }
 
-    stream << "["
-           << "NetDev"
-           << "]\n";
+    stream << "[NetDev]\n";
     stream << "Name=" << EthernetInterface::interfaceName() << "\n";
-    stream << "Kind=vlan"
-           << "\n";
-    stream << "[VLAN]"
-           << "\n";
+    stream << "Kind=vlan\n";
+    stream << "[VLAN]\n";
     stream << "Id=" << id() << "\n";
     stream.close();
 }

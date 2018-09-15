@@ -158,14 +158,8 @@ TODO: https://github.com/openbmc/openbmc/issues/1484
 InterfaceInfo EthernetInterface::getInterfaceInfo() const
 {
     int sock{-1};
-    struct ifreq ifr
-    {
-        0
-    };
-    struct ethtool_cmd edata
-    {
-        0
-    };
+    ifreq ifr{0};
+    ethtool_cmd edata{0};
     LinkSpeed speed{0};
     Autoneg autoneg{0};
     DuplexMode duplex{0};
@@ -209,9 +203,7 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
 std::string
     EthernetInterface::getMACAddress(const std::string& interfaceName) const
 {
-    struct ifreq ifr
-    {
-    };
+    ifreq ifr{};
     char macAddress[mac_address::size]{};
 
     int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
@@ -511,17 +503,13 @@ void EthernetInterface::writeConfigurationFile()
     }
 
     // Write the device
-    stream << "["
-           << "Match"
-           << "]\n";
+    stream << "[Match]\n";
     stream << "Name=" << interfaceName() << "\n";
 
     auto addrs = getAddresses();
 
     // write the network section
-    stream << "["
-           << "Network"
-           << "]\n";
+    stream << "[Network]\n";
 #ifdef LINK_LOCAL_AUTOCONFIGURATION
     stream << "LinkLocalAddressing=yes\n";
 #else
@@ -595,9 +583,7 @@ void EthernetInterface::writeConfigurationFile()
                     addr.second->gateway() != "" && destination != "0.0.0.0" &&
                     destination != "")
                 {
-                    stream << "["
-                           << "Route"
-                           << "]\n";
+                    stream << "[Route]\n";
                     stream << "Gateway=" << addr.second->gateway() << "\n";
                     stream << "Destination=" << destination << "\n";
                 }
