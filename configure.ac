@@ -34,6 +34,8 @@ PKG_CHECK_MODULES([SYSTEMD], [libsystemd >= 221])
 PKG_CHECK_MODULES([SDBUSPLUS], [sdbusplus],,\
 AC_MSG_ERROR(["Requires sdbusplus package."]))
 
+PKG_CHECK_MODULES([SDEVENTPLUS], [sdeventplus],,\
+AC_MSG_ERROR(["Requires sdeventplus package."]))
 
 AC_PATH_PROG([SDBUSPLUSPLUS], [sdbus++])
 

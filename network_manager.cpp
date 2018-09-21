@@ -4,7 +4,7 @@
 
 #include "ipaddress.hpp"
 #include "network_config.hpp"
-#include "timer.hpp"
+#include "types.hpp"
 #include "util.hpp"
 
 #include <arpa/inet.h>
@@ -25,8 +25,8 @@ namespace phosphor
 namespace network
 {
 
-extern std::unique_ptr<phosphor::network::Timer> refreshObjectTimer;
-extern std::unique_ptr<phosphor::network::Timer> restartTimer;
+extern std::unique_ptr<Timer> refreshObjectTimer;
+extern std::unique_ptr<Timer> restartTimer;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
@@ -207,15 +207,8 @@ void Manager::restartTimers()
     using namespace std::chrono;
     if (refreshObjectTimer && restartTimer)
     {
-        // start the restart timer.
-        auto restartTime =
-            duration_cast<microseconds>(phosphor::network::restartTimeout);
-        restartTimer->startTimer(restartTime);
-
-        // start the refresh timer.
-        auto refreshTime =
-            duration_cast<microseconds>(phosphor::network::refreshTimeout);
-        refreshObjectTimer->startTimer(refreshTime);
+        restartTimer->restartOnce(restartTimeout);
+        refreshObjectTimer->restartOnce(refreshTimeout);
     }
 }
 

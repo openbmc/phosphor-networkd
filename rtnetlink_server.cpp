@@ -1,6 +1,5 @@
 #include "rtnetlink_server.hpp"
 
-#include "timer.hpp"
 #include "types.hpp"
 #include "util.hpp"
 
@@ -22,7 +21,7 @@ namespace phosphor
 namespace network
 {
 
-extern std::unique_ptr<phosphor::network::Timer> refreshObjectTimer;
+extern std::unique_ptr<Timer> refreshObjectTimer;
 
 namespace rtnetlink
 {
@@ -47,13 +46,11 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
             {
                 // starting the timer here to make sure that we don't want
                 // create the child objects multiple times.
-                if (refreshObjectTimer->isExpired())
+                if (refreshObjectTimer->hasExpired())
                 {
-                    using namespace std::chrono;
-                    auto time = duration_cast<microseconds>(refreshTimeout);
                     // if start timer throws exception then let the application
                     // crash
-                    refreshObjectTimer->startTimer(time);
+                    refreshObjectTimer->restartOnce(refreshTimeout);
                 } // end if
             }     // end if
 

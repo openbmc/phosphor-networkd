@@ -18,7 +18,6 @@ noinst_HEADERS = \
 		dhcp_configuration.hpp \
 		vlan_interface.hpp \
 		rtnetlink_server.hpp \
-		timer.hpp \
 		dns_updater.hpp \
 		watch.hpp \
 		argument.hpp
@@ -52,7 +51,6 @@ phosphor_network_manager_SOURCES = \
 		dhcp_configuration.cpp \
 		vlan_interface.cpp \
 		rtnetlink_server.cpp \
-		timer.cpp \
 		dns_updater.cpp \
 		watch.cpp
 
@@ -71,6 +69,7 @@ BUILT_SOURCES = \
 phosphor_network_manager_LDFLAGS = \
 		$(SYSTEMD_LIBS) \
 		$(SDBUSPLUS_LIBS) \
+		$(SDEVENTPLUS_LIBS) \
 		$(PHOSPHOR_DBUS_INTERFACES_LIBS) \
 		$(PHOSPHOR_LOGGING_LIBS) \
 		-lstdc++fs
@@ -78,6 +77,7 @@ phosphor_network_manager_LDFLAGS = \
 phosphor_network_manager_CXXFLAGS = \
 		$(SYSTEMD_CFLAGS) \
 		$(SDBUSPLUS_CFLAGS) \
+		$(SDEVENTPLUS_CFLAGS) \
 		$(PHOSPHOR_DBUS_INTERFACES_CFLAGS) \
 		$(PHOSPHOR_LOGGING_CFLAGS) \
 		-flto
