@@ -3,16 +3,18 @@
 #include "dns_updater.hpp"
 #include "network_manager.hpp"
 #include "rtnetlink_server.hpp"
-#include "timer.hpp"
+#include "types.hpp"
 #include "watch.hpp"
 
 #include <linux/netlink.h>
 
+#include <functional>
 #include <memory>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/manager.hpp>
+#include <sdeventplus/event.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
@@ -21,8 +23,8 @@ namespace network
 {
 
 std::unique_ptr<phosphor::network::Manager> manager = nullptr;
-std::unique_ptr<phosphor::network::Timer> refreshObjectTimer = nullptr;
-std::unique_ptr<phosphor::network::Timer> restartTimer = nullptr;
+std::unique_ptr<Timer> refreshObjectTimer = nullptr;
+std::unique_ptr<Timer> restartTimer = nullptr;
 
 /** @brief refresh the network objects. */
 void refreshObjects()
@@ -42,23 +44,16 @@ void restartNetwork()
     restartSystemdUnit("systemd-networkd.service");
 }
 
-} // namespace network
-} // namespace phosphor
-
 void initializeTimers()
 {
-    std::function<void()> refreshFunc(
-        std::bind(&phosphor::network::refreshObjects));
-
-    std::function<void()> restartFunc(
-        std::bind(&phosphor::network::restartNetwork));
-
-    phosphor::network::refreshObjectTimer =
-        std::make_unique<phosphor::network::Timer>(refreshFunc);
-
-    phosphor::network::restartTimer =
-        std::make_unique<phosphor::network::Timer>(restartFunc);
+    auto event = sdeventplus::Event::get_default();
+    refreshObjectTimer =
+        std::make_unique<Timer>(event, std::bind(refreshObjects));
+    restartTimer = std::make_unique<Timer>(event, std::bind(restartNetwork));
 }
+
+} // namespace network
+} // namespace phosphor
 
 void createNetLinkSocket(phosphor::Descriptor& smartSock)
 {
@@ -81,7 +76,7 @@ int main(int argc, char* argv[])
 {
     using namespace phosphor::logging;
 
-    initializeTimers();
+    phosphor::network::initializeTimers();
 
     auto bus = sdbusplus::bus::new_default();
 

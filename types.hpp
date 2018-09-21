@@ -8,6 +8,8 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <sdeventplus/clock.hpp>
+#include <sdeventplus/utility/timer.hpp>
 #include <set>
 #include <string>
 #include <vector>
@@ -75,6 +77,8 @@ using UniquePtr = std::unique_ptr<T, std::function<void(T*)>>;
 using AddrList = std::list<AddrInfo>;
 using IntfAddrMap = std::map<IntfName, AddrList>;
 using InterfaceList = std::set<IntfName>;
+
+using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
 
 } // namespace network
 } // namespace phosphor

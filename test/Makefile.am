@@ -21,6 +21,7 @@ generic_cpp_flags = -Igtest $(GTEST_CPPFLAGS) $(AM_CPPFLAGS)
 generic_cxx_flags = $(PTHREAD_CFLAGS) \
 					$(SYSTEMD_CFLAGS) \
 					$(SDBUSPLUS_CFLAGS) \
+					$(SDEVENTPLUS_CFLAGS) \
 					$(PHOSPHOR_LOGGING_CFLAGS) \
 					$(PHOSPHOR_DBUS_INTERFACES_CFLAGS)
 
@@ -28,6 +29,7 @@ generic_ld_flags =  -lgtest_main -lgtest -lstdc++fs \
 					$(OESDK_TESTCASE_FLAGS) \
 					$(SYSTEMD_LIBS) \
 					$(SDBUSPLUS_LIBS) \
+					$(SDEVENTPLUS_LIBS) \
 					$(PHOSPHOR_LOGGING_LIBS) \
 					$(PHOSPHOR_DBUS_INTERFACES_LIBS)
 
@@ -49,7 +51,6 @@ test_LDADD = $(top_builddir)/ethernet_interface.o \
 			$(top_builddir)/ipaddress.o \
 			$(top_builddir)/routing_table.o \
 			$(top_builddir)/util.o \
-			$(top_builddir)/timer.o \
 			$(top_builddir)/rtnetlink_server.o \
 			$(top_builddir)/system_configuration.o \
 			$(top_builddir)/dhcp_configuration.o \

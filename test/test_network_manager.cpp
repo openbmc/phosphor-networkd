@@ -1,6 +1,5 @@
 #include "mock_syscall.hpp"
 #include "network_manager.hpp"
-#include "timer.hpp"
 #include "xyz/openbmc_project/Common/error.hpp"
 
 #include <arpa/inet.h>

@@ -1,13 +1,15 @@
 #include "mock_syscall.hpp"
 #include "network_manager.hpp"
 #include "rtnetlink_server.hpp"
-#include "timer.hpp"
 #include "types.hpp"
 
 #include <linux/rtnetlink.h>
 #include <net/if.h>
 
+#include <chrono>
+#include <functional>
 #include <sdbusplus/bus.hpp>
+#include <sdeventplus/event.hpp>
 
 #include <gtest/gtest.h>
 
@@ -34,9 +36,8 @@ void refreshObjects()
 
 void initializeTimers()
 {
-    std::function<void()> refreshFunc(std::bind(&refreshObjects));
-
-    refreshObjectTimer = std::make_unique<Timer>(refreshFunc);
+    refreshObjectTimer = std::make_unique<Timer>(
+        sdeventplus::Event::get_default(), std::bind(refreshObjects));
 }
 
 class TestRtNetlink : public testing::Test
