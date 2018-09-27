@@ -60,7 +60,7 @@ void initializeTimers()
 } // namespace network
 } // namespace phosphor
 
-void createNetLinkSocket(phosphor::Descriptor& smartSock)
+phosphor::Descriptor createNetLinkSocket()
 {
     // RtnetLink socket
     auto fd = socket(PF_NETLINK, SOCK_RAW | SOCK_NONBLOCK, NETLINK_ROUTE);
@@ -70,7 +70,8 @@ void createNetLinkSocket(phosphor::Descriptor& smartSock)
                         entry("ERRNO=%d", errno));
         elog<InternalFailure>();
     }
-    smartSock.set(fd);
+
+    return phosphor::Descriptor(fd);
 }
 
 int main(int argc, char* argv[])
@@ -122,8 +123,7 @@ int main(int argc, char* argv[])
     }
 
     // RtnetLink socket
-    phosphor::Descriptor smartSock;
-    createNetLinkSocket(smartSock);
+    auto smartSock = createNetLinkSocket();
 
     // RTNETLINK event handler
     phosphor::network::rtnetlink::Server svr(eventPtr, smartSock);
