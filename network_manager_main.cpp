@@ -66,9 +66,8 @@ void createNetLinkSocket(phosphor::Descriptor& smartSock)
     auto fd = socket(PF_NETLINK, SOCK_RAW | SOCK_NONBLOCK, NETLINK_ROUTE);
     if (fd < 0)
     {
-        auto r = -errno;
         log<level::ERR>("Unable to create the net link socket",
-                        entry("ERRNO=%d", r));
+                        entry("ERRNO=%d", errno));
         elog<InternalFailure>();
     }
     smartSock.set(fd);
