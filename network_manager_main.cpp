@@ -17,6 +17,12 @@
 #include <sdeventplus/event.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
+using phosphor::logging::elog;
+using phosphor::logging::entry;
+using phosphor::logging::level;
+using phosphor::logging::log;
+using sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
+
 namespace phosphor
 {
 namespace network
@@ -29,7 +35,6 @@ std::unique_ptr<Timer> restartTimer = nullptr;
 /** @brief refresh the network objects. */
 void refreshObjects()
 {
-    using namespace phosphor::logging;
     if (manager)
     {
         log<level::INFO>("Refreshing the objects.");
@@ -57,9 +62,6 @@ void initializeTimers()
 
 void createNetLinkSocket(phosphor::Descriptor& smartSock)
 {
-    using namespace phosphor::logging;
-    using InternalFailure =
-        sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
     // RtnetLink socket
     auto fd = socket(PF_NETLINK, SOCK_RAW | SOCK_NONBLOCK, NETLINK_ROUTE);
     if (fd < 0)
@@ -74,8 +76,6 @@ void createNetLinkSocket(phosphor::Descriptor& smartSock)
 
 int main(int argc, char* argv[])
 {
-    using namespace phosphor::logging;
-
     phosphor::network::initializeTimers();
 
     auto bus = sdbusplus::bus::new_default();
