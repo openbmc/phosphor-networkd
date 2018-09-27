@@ -7,6 +7,7 @@
 
 #include <experimental/filesystem>
 #include <functional>
+#include <sdeventplus/event.hpp>
 #include <string>
 
 namespace phosphor
@@ -38,14 +39,14 @@ class Watch
 
     /** @brief Hooks inotify watch with sd-event
      *
-     *  @param[in] eventPtr - Reference to sd_event wrapped in unique_ptr
+     *  @param[in] event    - SdEvent loop handle
      *  @param[in] path     - File path to be watched
      *  @param[in] userFunc - User specific callback function on events
      *  @param[in] flags    - Flags to be supplied to inotify
      *  @param[in] mask     - Mask of events to be supplied to inotify
      *  @param[in] events   - Events to be watched
      */
-    Watch(phosphor::network::EventPtr& eventPtr, const fs::path path,
+    Watch(const sdeventplus::Event& event, const fs::path path,
           UserCallBack userFunc, int flags = IN_NONBLOCK,
           uint32_t mask = IN_CLOSE_WRITE, uint32_t events = EPOLLIN);
 

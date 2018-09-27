@@ -1,8 +1,10 @@
 #include "types.hpp"
 #include "watch.hpp"
 
+#include <chrono>
 #include <experimental/filesystem>
 #include <fstream>
+#include <sdeventplus/event.hpp>
 
 #include <gtest/gtest.h>
 
@@ -14,21 +16,14 @@ class WatchTest : public ::testing::Test
 {
   public:
     // systemd event handler
-    sd_event* events;
-
-    // Need this so that events can be initialized.
-    int rc;
+    sdeventplus::Event event;
 
     // Gets called as part of each TEST_F construction
-    WatchTest() : rc(sd_event_default(&events)), eventPtr(events)
+    WatchTest() : event(sdeventplus::Event::get_default())
     {
         // Create a file containing DNS entries like in netif/state
         std::ofstream file(TRIGGER_FILE);
         file << "";
-
-        // Check for successful creation of
-        // event handler
-        EXPECT_GE(rc, 0);
     }
 
     // Gets called as part of each TEST_F destruction
@@ -39,9 +34,6 @@ class WatchTest : public ::testing::Test
             fs::remove(TRIGGER_FILE);
         }
     }
-
-    // unique_ptr for sd_event
-    phosphor::network::EventPtr eventPtr;
 
     // Count of callback invocation
     int count = 0;
@@ -64,7 +56,7 @@ TEST_F(WatchTest, validateEventNotification)
 {
     // Create a watch object and register the handler
     phosphor::network::inotify::Watch watch(
-        eventPtr, TRIGGER_FILE,
+        event, TRIGGER_FILE,
         std::bind(&WatchTest::callBackHandler, this, std::placeholders::_1));
 
     // Reading the event post subscription
@@ -74,7 +66,7 @@ TEST_F(WatchTest, validateEventNotification)
     EXPECT_EQ(1, count);
 
     // Make a run and see that no changes
-    sd_event_run(eventPtr.get(), 10);
+    event.run(std::chrono::microseconds(10));
     EXPECT_EQ(1, count);
 
     // Pump the data and get notification
@@ -83,6 +75,6 @@ TEST_F(WatchTest, validateEventNotification)
         file << "DNS=1.2.3.4\n";
     }
 
-    sd_event_run(eventPtr.get(), 10);
+    event.run(std::chrono::microseconds(10));
     EXPECT_EQ(2, count);
 }

@@ -22,7 +22,6 @@ sdbusplus::bus::bus bus(sdbusplus::bus::new_default());
 std::unique_ptr<Manager> manager = nullptr;
 std::unique_ptr<Timer> refreshObjectTimer = nullptr;
 std::unique_ptr<Timer> restartTimer = nullptr;
-EventPtr eventPtr = nullptr;
 
 /** @brief refresh the network objects. */
 void refreshObjects()
@@ -34,10 +33,10 @@ void refreshObjects()
     }
 }
 
-void initializeTimers()
+void initializeTimers(const sdeventplus::Event& event)
 {
-    refreshObjectTimer = std::make_unique<Timer>(
-        sdeventplus::Event::get_default(), std::bind(refreshObjects));
+    refreshObjectTimer =
+        std::make_unique<Timer>(event, std::bind(refreshObjects));
 }
 
 class TestRtNetlink : public testing::Test
@@ -46,20 +45,17 @@ class TestRtNetlink : public testing::Test
   public:
     std::string confDir;
     phosphor::Descriptor smartSock;
+    sdeventplus::Event event;
 
-    TestRtNetlink()
+    TestRtNetlink() : event(sdeventplus::Event::get_default())
     {
         manager =
             std::make_unique<Manager>(bus, "/xyz/openbmc_test/bcd", "/tmp");
-        sd_event* events;
-        sd_event_default(&events);
-        eventPtr.reset(events);
-        events = nullptr;
         setConfDir();
-        initializeTimers();
+        initializeTimers(event);
         createNetLinkSocket();
-        bus.attach_event(eventPtr.get(), SD_EVENT_PRIORITY_NORMAL);
-        rtnetlink::Server svr(eventPtr, smartSock);
+        bus.attach_event(event.get(), SD_EVENT_PRIORITY_NORMAL);
+        rtnetlink::Server svr(event, smartSock);
     }
 
     ~TestRtNetlink()
@@ -118,7 +114,7 @@ TEST_F(TestRtNetlink, WithSingleInterface)
     {
         // wait for timer to expire
         std::this_thread::sleep_for(std::chrono::milliseconds(refreshTimeout));
-        sd_event_run(eventPtr.get(), 10);
+        event.run(std::chrono::microseconds(10));
     };
 
     EXPECT_EQ(true, isInterfaceAdded("igb5"));

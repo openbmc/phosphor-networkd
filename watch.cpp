@@ -2,6 +2,7 @@
 
 #include <errno.h>
 #include <sys/inotify.h>
+#include <systemd/sd-event.h>
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
@@ -17,7 +18,7 @@ namespace inotify
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-Watch::Watch(phosphor::network::EventPtr& eventPtr, fs::path path,
+Watch::Watch(const sdeventplus::Event& event, fs::path path,
              UserCallBack userFunc, int flags, uint32_t mask, uint32_t events) :
     path(path),
     userFunc(userFunc), flags(flags), mask(mask), events(events),
@@ -41,7 +42,7 @@ Watch::Watch(phosphor::network::EventPtr& eventPtr, fs::path path,
 
     // Register the fd with sd_event infrastructure and setup a
     // callback handler to be invoked on events
-    auto rc = sd_event_add_io(eventPtr.get(), nullptr, fd(), events,
+    auto rc = sd_event_add_io(event.get(), nullptr, fd(), events,
                               Watch::processEvents, this);
     if (rc < 0)
     {

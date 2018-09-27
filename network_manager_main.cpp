@@ -49,9 +49,8 @@ void restartNetwork()
     restartSystemdUnit("systemd-networkd.service");
 }
 
-void initializeTimers()
+void initializeTimers(const sdeventplus::Event& event)
 {
-    auto event = sdeventplus::Event::get_default();
     refreshObjectTimer =
         std::make_unique<Timer>(event, std::bind(refreshObjects));
     restartTimer = std::make_unique<Timer>(event, std::bind(restartNetwork));
@@ -76,24 +75,13 @@ phosphor::Descriptor createNetLinkSocket()
 
 int main(int argc, char* argv[])
 {
-    phosphor::network::initializeTimers();
-
+    auto event = sdeventplus::Event::get_default();
     auto bus = sdbusplus::bus::new_default();
 
-    // Need sd_event to watch for OCC device errors
-    sd_event* event = nullptr;
-    auto r = sd_event_default(&event);
-    if (r < 0)
-    {
-        log<level::ERR>("Error creating a default sd_event handler");
-        return r;
-    }
-
-    phosphor::network::EventPtr eventPtr{event};
-    event = nullptr;
+    phosphor::network::initializeTimers(event);
 
     // Attach the bus to sd_event to service user requests
-    bus.attach_event(eventPtr.get(), SD_EVENT_PRIORITY_NORMAL);
+    bus.attach_event(event.get(), SD_EVENT_PRIORITY_NORMAL);
 
     // Add sdbusplus Object Manager for the 'root' path of the network manager.
     sdbusplus::server::manager::manager objManager(bus, OBJ_NETWORK);
@@ -126,11 +114,11 @@ int main(int argc, char* argv[])
     auto smartSock = createNetLinkSocket();
 
     // RTNETLINK event handler
-    phosphor::network::rtnetlink::Server svr(eventPtr, smartSock);
+    phosphor::network::rtnetlink::Server svr(event, smartSock);
 
     // DNS entry handler
     phosphor::network::inotify::Watch watch(
-        eventPtr, DNS_ENTRY_FILE,
+        event, DNS_ENTRY_FILE,
         std::bind(&phosphor::network::dns::updater::processDNSEntries,
                   std::placeholders::_1));
 
@@ -140,5 +128,5 @@ int main(int argc, char* argv[])
     // waiting on change events
     phosphor::network::dns::updater::processDNSEntries(DNS_ENTRY_FILE);
 
-    sd_event_loop(eventPtr.get());
+    return event.loop();
 }

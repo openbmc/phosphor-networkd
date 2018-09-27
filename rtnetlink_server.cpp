@@ -8,7 +8,7 @@
 #include <net/if.h>
 #include <netinet/in.h>
 #include <sys/types.h>
-#include <systemd/sd-daemon.h>
+#include <systemd/sd-event.h>
 #include <unistd.h>
 
 #include <memory>
@@ -61,7 +61,7 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
     return 0;
 }
 
-Server::Server(EventPtr& eventPtr, const phosphor::Descriptor& smartSock)
+Server::Server(const sdeventplus::Event& event, const Descriptor& smartSock)
 {
     using namespace phosphor::logging;
     using InternalFailure =
@@ -95,13 +95,13 @@ Server::Server(EventPtr& eventPtr, const phosphor::Descriptor& smartSock)
     /* Let's make use of the default handler and "floating"
        reference features of sd_event_add_signal() */
 
-    r = sd_event_add_signal(eventPtr.get(), NULL, SIGTERM, NULL, NULL);
+    r = sd_event_add_signal(event.get(), NULL, SIGTERM, NULL, NULL);
     if (r < 0)
     {
         goto finish;
     }
 
-    r = sd_event_add_signal(eventPtr.get(), NULL, SIGINT, NULL, NULL);
+    r = sd_event_add_signal(event.get(), NULL, SIGINT, NULL, NULL);
     if (r < 0)
     {
         goto finish;
@@ -117,7 +117,7 @@ Server::Server(EventPtr& eventPtr, const phosphor::Descriptor& smartSock)
         goto finish;
     }
 
-    r = sd_event_add_io(eventPtr.get(), nullptr, smartSock(), EPOLLIN,
+    r = sd_event_add_io(event.get(), nullptr, smartSock(), EPOLLIN,
                         eventHandler, nullptr);
     if (r < 0)
     {

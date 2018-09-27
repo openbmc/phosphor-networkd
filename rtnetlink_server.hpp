@@ -1,9 +1,8 @@
 #pragma once
 
-#include "types.hpp"
 #include "util.hpp"
 
-#include <systemd/sd-event.h>
+#include <sdeventplus/event.hpp>
 
 namespace phosphor
 {
@@ -28,10 +27,10 @@ class Server
      *
      *  @details Sets up the server to handle incoming RTNETLINK events
      *
-     *  @param[in] eventPtr - Unique ptr reference to sd_event.
+     *  @param[in] event  - SdEvent loop handle.
      *  @param[in] socket - netlink socket.
      */
-    Server(EventPtr& eventPtr, const phosphor::Descriptor& socket);
+    Server(const sdeventplus::Event& event, const Descriptor& socket);
 
     Server() = delete;
     ~Server() = default;
