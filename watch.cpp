@@ -32,9 +32,7 @@ Watch::Watch(phosphor::network::EventPtr& eventPtr, fs::path path,
         elog<InternalFailure>();
     }
 
-    auto dirPath = path.parent_path();
-    wd = inotify_add_watch(fd(), dirPath.c_str(), mask);
-    if (wd == -1)
+    if (inotify_add_watch(fd(), path.parent_path().c_str(), mask) < 0)
     {
         log<level::ERR>("Error from inotify_add_watch",
                         entry("ERRNO=%d", errno));

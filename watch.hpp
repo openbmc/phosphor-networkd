@@ -1,7 +1,5 @@
 #pragma once
 
-#include "dns_updater.hpp"
-#include "types.hpp"
 #include "util.hpp"
 
 #include <sys/inotify.h>
@@ -9,7 +7,7 @@
 
 #include <experimental/filesystem>
 #include <functional>
-#include <map>
+#include <string>
 
 namespace phosphor
 {
@@ -51,15 +49,6 @@ class Watch
           UserCallBack userFunc, int flags = IN_NONBLOCK,
           uint32_t mask = IN_CLOSE_WRITE, uint32_t events = EPOLLIN);
 
-    /** @brief Remove inotify watch and close fd's */
-    ~Watch()
-    {
-        if ((fd() >= 0) && (wd >= 0))
-        {
-            inotify_rm_watch(fd(), wd);
-        }
-    }
-
   private:
     /** @brief Callback invoked when inotify event fires
      *
@@ -96,9 +85,6 @@ class Watch
 
     /** @brief Events to be watched */
     uint32_t events;
-
-    /** @brief Watch descriptor */
-    int wd = -1;
 
     /** @brief File descriptor manager */
     phosphor::Descriptor fd;
