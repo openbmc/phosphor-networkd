@@ -25,8 +25,10 @@ struct Entry
     std::string gateway;
     // interface for this route
     std::string interface;
-    Entry(std::string dest, std::string gtw, std::string intf) :
-        destination(dest), gateway(gtw), interface(intf)
+    Entry(const std::string& dest, const std::string& gtw,
+          const std::string& intf) :
+        destination(dest),
+        gateway(gtw), interface(intf)
     {
     }
 
