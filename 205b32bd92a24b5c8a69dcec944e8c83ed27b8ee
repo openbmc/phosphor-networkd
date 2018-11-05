@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb02a92f_17ef6911",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2018-11-05T15:49:25Z",
+      "side": 1,
+      "message": "In openbmc we\u0027re using by convention /var/lib/\u003capp-name\u003e/ . (http://www.pathname.com/fhs/pub/fhs-2.3.html#VARLIBVARIABLESTATEINFORMATION)",
+      "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af143207_415cba35",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2018-11-05T15:49:25Z",
+      "side": 1,
+      "message": "Property values can be automatically saved using the cereal package, here are some examples?\nhttps://github.com/openbmc/phosphor-logging/blob/master/elog_serialize.cpp\nhttps://github.com/openbmc/phosphor-bmc-code-mgmt/blob/master/serialize.cpp",
+      "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    }
+  ]
+}
