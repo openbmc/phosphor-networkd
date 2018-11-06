@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "38e5d092_06080d0f",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000168
+      },
+      "writtenOn": "2018-11-06T16:02:41Z",
+      "side": 1,
+      "message": "Yes. It requires StateDirectory to be defined in .service. Will submit a patch for the same.",
+      "parentUuid": "bb02a92f_17ef6911",
+      "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af143207_415cba35",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2018-11-05T15:49:25Z",
       "side": 1,
       "message": "Property values can be automatically saved using the cereal package, here are some examples?\nhttps://github.com/openbmc/phosphor-logging/blob/master/elog_serialize.cpp\nhttps://github.com/openbmc/phosphor-bmc-code-mgmt/blob/master/serialize.cpp",
+      "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7e3e883_7ba6c144",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1000168
+      },
+      "writtenOn": "2018-11-06T16:02:41Z",
+      "side": 1,
+      "message": "Actually want to use it as separate file, as this provides an option to create a default file, if needed. In this way, access can be restricted / enabled accordingly. So, will keep it this way",
+      "parentUuid": "af143207_415cba35",
       "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
