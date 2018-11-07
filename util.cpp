@@ -544,7 +544,7 @@ std::string getfromInventory(sdbusplus::bus::bus& bus)
     }
 
     reply.read(value);
-    return value.get<std::string>();
+    return sdbusplus::message::variant_ns::get<std::string>(value);
 }
 
 } // namespace mac_address
