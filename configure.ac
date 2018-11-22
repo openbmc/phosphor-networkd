@@ -31,23 +31,42 @@ LT_INIT
 # Checks for libraries.
 PKG_CHECK_MODULES([SYSTEMD], [libsystemd >= 221])
 
-PKG_CHECK_MODULES([SDBUSPLUS], [sdbusplus],,\
-AC_MSG_ERROR(["Requires sdbusplus package."]))
+PKG_CHECK_MODULES(
+    [SDBUSPLUS],
+    [sdbusplus],
+    [],
+    [AC_MSG_ERROR(["Requires sdbusplus package."])]
+)
 
-PKG_CHECK_MODULES([SDEVENTPLUS], [sdeventplus],,\
-AC_MSG_ERROR(["Requires sdeventplus package."]))
+PKG_CHECK_MODULES(
+    [SDEVENTPLUS],
+    [sdeventplus],
+    [],
+    [AC_MSG_ERROR(["Requires sdeventplus package."])]
+)
 
 AC_PATH_PROG([SDBUSPLUSPLUS], [sdbus++])
 
-PKG_CHECK_MODULES([PHOSPHOR_LOGGING], [phosphor-logging],,\
-AC_MSG_ERROR(["Requires phosphor-logging package."]))
+PKG_CHECK_MODULES(
+    [PHOSPHOR_LOGGING],
+    [phosphor-logging],
+    [],
+    [AC_MSG_ERROR(["Requires phosphor-logging package."])]
+)
 
-PKG_CHECK_MODULES([PHOSPHOR_DBUS_INTERFACES], [phosphor-dbus-interfaces],\
-[], [AC_MSG_ERROR(["phosphor-dbus-interfaces required and not found."])])
+PKG_CHECK_MODULES(
+    [PHOSPHOR_DBUS_INTERFACES],
+    [phosphor-dbus-interfaces],
+    [],
+    [AC_MSG_ERROR(["phosphor-dbus-interfaces required and not found."])]
+)
 
 # Checks for header files.
-AC_CHECK_HEADER(systemd/sd-bus.h, ,\
-[AC_MSG_ERROR([Could not find systemd/sd-bus.h...systemd development package required])])
+AC_CHECK_HEADER(
+    systemd/sd-bus.h,
+    [],
+    [AC_MSG_ERROR([Could not find systemd/sd-bus.h...systemd development package required])]
+)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AX_APPEND_COMPILE_FLAGS([-Wall -Werror -Wno-unused-result], [CFLAGS])
