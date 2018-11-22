@@ -42,12 +42,12 @@ AC_PATH_PROG([SDBUSPLUSPLUS], [sdbus++])
 PKG_CHECK_MODULES([PHOSPHOR_LOGGING], [phosphor-logging],,\
 AC_MSG_ERROR(["Requires phosphor-logging package."]))
 
+PKG_CHECK_MODULES([PHOSPHOR_DBUS_INTERFACES], [phosphor-dbus-interfaces],\
+[], [AC_MSG_ERROR(["phosphor-dbus-interfaces required and not found."])])
+
 # Checks for header files.
 AC_CHECK_HEADER(systemd/sd-bus.h, ,\
 [AC_MSG_ERROR([Could not find systemd/sd-bus.h...systemd development package required])])
-
-AX_PKG_CHECK_MODULES([PHOSPHOR_DBUS_INTERFACES], [], [phosphor-dbus-interfaces],\
-[], [AC_MSG_ERROR(["phosphor-dbus-interfaces required and not found."])])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AX_APPEND_COMPILE_FLAGS([-Wall -Werror -Wno-unused-result], [CFLAGS])
