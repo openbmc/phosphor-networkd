@@ -31,23 +31,42 @@ LT_INIT
 # Checks for libraries.
 PKG_CHECK_MODULES([SYSTEMD], [libsystemd >= 221])
 
-PKG_CHECK_MODULES([SDBUSPLUS], [sdbusplus],,\
-AC_MSG_ERROR(["Requires sdbusplus package."]))
+PKG_CHECK_MODULES(
+    [SDBUSPLUS],
+    [sdbusplus],
+    [],
+    [AC_MSG_ERROR(["Requires sdbusplus package."])]
+)
 
-PKG_CHECK_MODULES([SDEVENTPLUS], [sdeventplus],,\
-AC_MSG_ERROR(["Requires sdeventplus package."]))
+PKG_CHECK_MODULES(
+    [SDEVENTPLUS],
+    [sdeventplus],
+    [],
+    [AC_MSG_ERROR(["Requires sdeventplus package."])]
+)
 
 AC_PATH_PROG([SDBUSPLUSPLUS], [sdbus++])
 
-PKG_CHECK_MODULES([PHOSPHOR_LOGGING], [phosphor-logging],,\
-AC_MSG_ERROR(["Requires phosphor-logging package."]))
+PKG_CHECK_MODULES(
+    [PHOSPHOR_LOGGING],
+    [phosphor-logging],
+    [],
+    [AC_MSG_ERROR(["Requires phosphor-logging package."])]
+)
 
-PKG_CHECK_MODULES([PHOSPHOR_DBUS_INTERFACES], [phosphor-dbus-interfaces],\
-[], [AC_MSG_ERROR(["phosphor-dbus-interfaces required and not found."])])
+PKG_CHECK_MODULES(
+    [PHOSPHOR_DBUS_INTERFACES],
+    [phosphor-dbus-interfaces],
+    [],
+    [AC_MSG_ERROR(["phosphor-dbus-interfaces required and not found."])]
+)
 
 # Checks for header files.
-AC_CHECK_HEADER(systemd/sd-bus.h, ,\
-[AC_MSG_ERROR([Could not find systemd/sd-bus.h...systemd development package required])])
+AC_CHECK_HEADER(
+    systemd/sd-bus.h,
+    [],
+    [AC_MSG_ERROR([Could not find systemd/sd-bus.h...systemd development package required])]
+)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AX_APPEND_COMPILE_FLAGS([-Wall -Werror -Wno-unused-result], [CFLAGS])
@@ -57,14 +76,21 @@ LT_INIT # Removes 'unrecognized options: --with-libtool-sysroot'
 
 
 # Check/set gtest specific functions.
-AX_PTHREAD([GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=1"],[GTEST_CPPFLAGS="-GTEST_HAS_PTHREAD=0"])
+AX_PTHREAD(
+    [GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=1"],
+    [GTEST_CPPFLAGS="-GTEST_HAS_PTHREAD=0"]
+)
 AC_SUBST(GTEST_CPPFLAGS)
 
 AC_ARG_ENABLE([oe-sdk],
-    AS_HELP_STRING([--enable-oe-sdk], [Link testcases absolutely against OE SDK so they can be ran within it.])
+    AS_HELP_STRING(
+        [--enable-oe-sdk],
+        [Link testcases absolutely against OE SDK so they can be ran within it.]
+    )
 )
 AC_ARG_VAR(OECORE_TARGET_SYSROOT,
-    [Path to the OE SDK SYSROOT])
+    [Path to the OE SDK SYSROOT]
+)
 AS_IF([test "x$enable_oe_sdk" == "xyes"],
     AS_IF([test "x$OECORE_TARGET_SYSROOT" == "x"],
           AC_MSG_ERROR([OECORE_TARGET_SYSROOT must be set with --enable-oe-sdk])
@@ -80,14 +106,22 @@ AS_IF([test "x$enable_oe_sdk" == "xyes"],
 
 # If set, auto-configure a link-local address on the NIC.
 AC_ARG_ENABLE([link-local-autoconfiguration],
-    AS_HELP_STRING([--disable-link-local-autoconfiguration], [Disable link-local IP address autoconfiguration])
+    AS_HELP_STRING(
+        [--disable-link-local-autoconfiguration],
+        [Disable link-local IP address autoconfiguration]
+   )
 )
 
 AC_ARG_VAR(LINK_LOCAL_AUTOCONFIGURATION, [Enable link-local address autoconfiguration])
 
-AS_IF([test "x$enable_link_local_autoconfiguration" != "xno"],
-      [LINK_LOCAL_AUTOCONFIGURATION="yes"]
-      AC_DEFINE_UNQUOTED([LINK_LOCAL_AUTOCONFIGURATION], ["$LINK_LOCAL_AUTOCONFIGURATION"], [Enable link-local IP address autoconfiguration])
+AS_IF(
+    [test "x$enable_link_local_autoconfiguration" != "xno"],
+    [LINK_LOCAL_AUTOCONFIGURATION="yes"]
+    AC_DEFINE_UNQUOTED(
+        [LINK_LOCAL_AUTOCONFIGURATION],
+        ["$LINK_LOCAL_AUTOCONFIGURATION"],
+        [Enable link-local IP address autoconfiguration]
+    )
 )
 
 AC_ARG_VAR(DNS_ENTRY_FILE, [File having DNS entries supplied by DHCP])
