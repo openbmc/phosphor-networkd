@@ -115,6 +115,20 @@ class Manager : public details::VLANCreateIface
     /** @brief restart the network timers. */
     void restartTimers();
 
+    /** @brief Restart the systemd unit
+     *  @param[in] unit - systemd unit name which needs to be
+     *                    restarted.
+     */
+    inline void restartSystemdUnit(const std::string& unit)
+    {
+        auto bus = sdbusplus::bus::new_default();
+        auto method = bus.new_method_call(SYSTEMD_BUSNAME, SYSTEMD_PATH,
+                                          SYSTEMD_INTERFACE, "RestartUnit");
+
+        method.append(unit, "replace");
+        bus.call_noreply(method);
+    }
+
   private:
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;
