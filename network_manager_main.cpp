@@ -46,7 +46,10 @@ void refreshObjects()
 /** @brief restart the systemd networkd. */
 void restartNetwork()
 {
-    restartSystemdUnit("systemd-networkd.service");
+    if (manager)
+    {
+        manager->restartSystemdUnit("systemd-networkd.service");
+    }
 }
 
 void initializeTimers()

@@ -463,7 +463,7 @@ ServerList EthernetInterface::nTPServers(ServerList servers)
     writeConfigurationFile();
     // timesynchd reads the NTP server configuration from the
     // network file.
-    restartSystemdUnit(networkdService);
+    manager.restartSystemdUnit(networkdService);
     return ntpServers;
 }
 // Need to merge the below function with the code which writes the
@@ -701,7 +701,7 @@ std::string EthernetInterface::mACAddress(std::string value)
     // ip for the changed mac address.
     if (dHCPEnabled())
     {
-        restartSystemdUnit(networkdService);
+        manager.restartSystemdUnit(networkdService);
     }
     return mac;
 }
