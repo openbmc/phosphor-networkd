@@ -178,7 +178,7 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
     {
         log<level::ERR>("inet_pton failure",
                         entry("IPADDRESS=%s", ipaddress.c_str()));
-        report<InternalFailure>();
+        elog<InternalFailure>();
 
         return "";
     }
@@ -198,7 +198,7 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
                   INET6_ADDRSTRLEN) == NULL)
     {
         log<level::ERR>("inet_ntop failure");
-        report<InternalFailure>();
+        elog<InternalFailure>();
     }
     return networkString;
 }
