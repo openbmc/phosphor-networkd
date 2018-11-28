@@ -69,6 +69,24 @@
       "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "339adf22_97949601",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2018-11-28T11:09:03Z",
+      "side": 1,
+      "message": "Richard, In my opinion that we shouldn\u0027t bring another way for persistence, we should adhere to cereal way.\n\nRegarding default values we can do it through config variables.",
+      "parentUuid": "b7e3e883_7ba6c144",
+      "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
