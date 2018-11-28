@@ -212,5 +212,22 @@ void Manager::restartTimers()
     }
 }
 
+void Manager::restartSystemdUnit(const std::string& unit)
+{
+    try
+    {
+        auto method = bus.new_method_call(SYSTEMD_BUSNAME, SYSTEMD_PATH,
+                                          SYSTEMD_INTERFACE, "RestartUnit");
+        method.append(unit.c_str(), "replace");
+        bus.call_noreply(method);
+    }
+    catch (const sdbusplus::exception::SdBusError& ex)
+    {
+        log<level::ERR>("Failed to restart nslcd service",
+                        entry("ERR=%s", ex.what()));
+        elog<InternalFailure>();
+    }
+}
+
 } // namespace network
 } // namespace phosphor

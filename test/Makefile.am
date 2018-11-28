@@ -9,7 +9,6 @@ test_SOURCES = \
 	mock_syscall.cpp \
 	test_network_manager.cpp \
 	test_ethernet_interface.cpp \
-	test_rtnetlink.cpp \
 	test_config_parser.cpp \
 	test_vlan_interface.cpp
 
@@ -25,7 +24,7 @@ generic_cxx_flags = $(PTHREAD_CFLAGS) \
 					$(PHOSPHOR_LOGGING_CFLAGS) \
 					$(PHOSPHOR_DBUS_INTERFACES_CFLAGS)
 
-generic_ld_flags =  -lgtest_main -lgtest -lstdc++fs \
+generic_ld_flags =  -lgtest_main -lgtest -lgmock -lstdc++fs \
 					$(OESDK_TESTCASE_FLAGS) \
 					$(SYSTEMD_LIBS) \
 					$(SDBUSPLUS_LIBS) \

@@ -1,5 +1,5 @@
+#include "mock_network_manager.hpp"
 #include "mock_syscall.hpp"
-#include "network_manager.hpp"
 #include "rtnetlink_server.hpp"
 #include "types.hpp"
 
@@ -19,9 +19,7 @@ namespace phosphor
 namespace network
 {
 sdbusplus::bus::bus bus(sdbusplus::bus::new_default());
-std::unique_ptr<Manager> manager = nullptr;
-std::unique_ptr<Timer> refreshObjectTimer = nullptr;
-std::unique_ptr<Timer> restartTimer = nullptr;
+std::unique_ptr<MockManager> manager = nullptr;
 EventPtr eventPtr = nullptr;
 
 /** @brief refresh the network objects. */
@@ -50,7 +48,7 @@ class TestRtNetlink : public testing::Test
     TestRtNetlink()
     {
         manager =
-            std::make_unique<Manager>(bus, "/xyz/openbmc_test/bcd", "/tmp");
+            std::make_unique<MockManager>(bus, "/xyz/openbmc_test/bcd", "/tmp");
         sd_event* events;
         sd_event_default(&events);
         eventPtr.reset(events);
