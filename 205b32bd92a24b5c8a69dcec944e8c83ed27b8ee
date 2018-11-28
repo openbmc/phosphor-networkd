@@ -123,6 +123,24 @@
       "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb900668_c7a94b3a",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1000168
+      },
+      "writtenOn": "2018-11-28T12:42:51Z",
+      "side": 1,
+      "message": "How we will be able to know which one to load? Also, the configure script is easy to override using bbappend? Do you have any example (probably i overlooked the existing code, from what i infer, it can\u0027t be easily overridden using a bbappend which can be done with .json file override only)",
+      "parentUuid": "b29d2f5b_65f57a8f",
+      "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
