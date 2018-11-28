@@ -105,6 +105,24 @@
       "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b29d2f5b_65f57a8f",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2018-11-28T12:39:16Z",
+      "side": 1,
+      "message": "I was saying that we have some configure variables in the configure script, you can put it there, and then include the config.h where you require.\nIn that sense you don\u0027t need to be dependent on the cereal for the default values.",
+      "parentUuid": "f847f368_e9bdd442",
+      "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
