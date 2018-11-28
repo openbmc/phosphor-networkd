@@ -1,5 +1,5 @@
+#include "mock_network_manager.hpp"
 #include "mock_syscall.hpp"
-#include "network_manager.hpp"
 #include "xyz/openbmc_project/Common/error.hpp"
 
 #include <arpa/inet.h>
@@ -9,7 +9,6 @@
 
 #include <exception>
 #include <experimental/filesystem>
-#include <phosphor-logging/elog-errors.hpp>
 #include <sdbusplus/bus.hpp>
 
 #include <gtest/gtest.h>
@@ -19,13 +18,16 @@ namespace phosphor
 namespace network
 {
 
+std::unique_ptr<Timer> refreshObjectTimer = nullptr;
+std::unique_ptr<Timer> restartTimer = nullptr;
+
 namespace fs = std::experimental::filesystem;
 
 class TestNetworkManager : public testing::Test
 {
   public:
     sdbusplus::bus::bus bus;
-    Manager manager;
+    MockManager manager;
     std::string confDir;
     TestNetworkManager() :
         bus(sdbusplus::bus::new_default()),

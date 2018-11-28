@@ -1,7 +1,7 @@
 #include "config_parser.hpp"
 #include "ipaddress.hpp"
+#include "mock_network_manager.hpp"
 #include "mock_syscall.hpp"
-#include "network_manager.hpp"
 
 #include <arpa/inet.h>
 #include <net/if.h>
@@ -23,7 +23,7 @@ class TestEthernetInterface : public testing::Test
 {
   public:
     sdbusplus::bus::bus bus;
-    Manager manager;
+    MockManager manager;
     EthernetInterface interface;
     std::string confDir;
     TestEthernetInterface() :
@@ -188,6 +188,7 @@ TEST_F(TestEthernetInterface, addNameServers)
 TEST_F(TestEthernetInterface, addNTPServers)
 {
     ServerList servers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};
+    EXPECT_CALL(manager, restartSystemdUnit(networkdService)).Times(1);
     interface.nTPServers(servers);
     fs::path filePath = confDir;
     filePath /= "00-bmc-test0.network";
