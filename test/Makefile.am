@@ -25,7 +25,7 @@ generic_cxx_flags = $(PTHREAD_CFLAGS) \
 					$(PHOSPHOR_LOGGING_CFLAGS) \
 					$(PHOSPHOR_DBUS_INTERFACES_CFLAGS)
 
-generic_ld_flags =  -lgtest_main -lgtest -lstdc++fs \
+generic_ld_flags =  -lgtest_main -lgtest -lgmock -lstdc++fs \
 					$(OESDK_TESTCASE_FLAGS) \
 					$(SYSTEMD_LIBS) \
 					$(SDBUSPLUS_LIBS) \

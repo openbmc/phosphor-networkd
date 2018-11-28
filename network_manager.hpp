@@ -119,17 +119,9 @@ class Manager : public details::VLANCreateIface
      *  @param[in] unit - systemd unit name which needs to be
      *                    restarted.
      */
-    inline void restartSystemdUnit(const std::string& unit)
-    {
-        auto bus = sdbusplus::bus::new_default();
-        auto method = bus.new_method_call(SYSTEMD_BUSNAME, SYSTEMD_PATH,
-                                          SYSTEMD_INTERFACE, "RestartUnit");
+    virtual void restartSystemdUnit(const std::string& unit);
 
-        method.append(unit, "replace");
-        bus.call_noreply(method);
-    }
-
-  private:
+  protected:
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;
 
@@ -151,9 +143,6 @@ class Manager : public details::VLANCreateIface
 
     /** @brief Network Configuration directory. */
     fs::path confDir;
-
-    friend class TestNetworkManager;
-    friend class TestRtNetlink;
 };
 
 } // namespace network

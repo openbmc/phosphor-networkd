@@ -1,7 +1,7 @@
 #include "config_parser.hpp"
 #include "ipaddress.hpp"
+#include "mock_network_manager.hpp"
 #include "mock_syscall.hpp"
-#include "network_manager.hpp"
 #include "vlan_interface.hpp"
 
 #include <arpa/inet.h>
@@ -25,7 +25,7 @@ class TestVlanInterface : public testing::Test
 {
   public:
     sdbusplus::bus::bus bus;
-    Manager manager;
+    MockManager manager;
     EthernetInterface interface;
     std::string confDir;
     TestVlanInterface() :
