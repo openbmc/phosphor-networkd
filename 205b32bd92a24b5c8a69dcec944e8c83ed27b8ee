@@ -159,6 +159,24 @@
       "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b79d24d1_9a6e4877",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1000168
+      },
+      "writtenOn": "2018-11-29T10:35:47Z",
+      "side": 1,
+      "message": "can you point some example for quick understanding? for the override logic?",
+      "parentUuid": "26db3e20_ab5723b5",
+      "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
