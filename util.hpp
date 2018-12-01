@@ -128,11 +128,21 @@ IntfAddrMap getInterfaceAddrs();
 inline void restartSystemdUnit(const std::string& unit)
 {
     auto bus = sdbusplus::bus::new_default();
-    auto method = bus.new_method_call(SYSTEMD_BUSNAME, SYSTEMD_PATH,
-                                      SYSTEMD_INTERFACE, "RestartUnit");
+    {
+        auto method = bus.new_method_call(SYSTEMD_BUSNAME, SYSTEMD_PATH,
+                                          SYSTEMD_INTERFACE, "ResetFailedUnit");
 
-    method.append(unit, "replace");
-    bus.call_noreply(method);
+        method.append(unit);
+        bus.call_noreply(method);
+    }
+
+    {
+        auto method = bus.new_method_call(SYSTEMD_BUSNAME, SYSTEMD_PATH,
+                                          SYSTEMD_INTERFACE, "RestartUnit");
+
+        method.append(unit, "replace");
+        bus.call_noreply(method);
+    }
 }
 
 /** @brief Get all the interfaces from the system.
