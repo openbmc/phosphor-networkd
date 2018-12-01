@@ -57,23 +57,31 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     }
 }
 
+static IP::Protocol convertFamily(int family)
+{
+    switch (family)
+    {
+        case AF_INET:
+            return IP::Protocol::IPv4;
+        case AF_INET6:
+            return IP::Protocol::IPv6;
+    }
+
+    throw std::invalid_argument("Bad address family");
+}
+
 void EthernetInterface::createIPAddressObjects()
 {
-    std::string gateway;
     addrs.clear();
 
     auto addrs = getInterfaceAddrs()[interfaceName()];
 
-    IP::Protocol addressType = IP::Protocol::IPv4;
-    IP::AddressOrigin origin = IP::AddressOrigin::Static;
     route::Table routingTable;
 
     for (auto& addr : addrs)
     {
-        if (addr.addrType == AF_INET6)
-        {
-            addressType = IP::Protocol::IPv6;
-        }
+        IP::Protocol addressType = convertFamily(addr.addrType);
+        IP::AddressOrigin origin = IP::AddressOrigin::Static;
         if (dHCPEnabled())
         {
             origin = IP::AddressOrigin::DHCP;
@@ -82,7 +90,7 @@ void EthernetInterface::createIPAddressObjects()
         {
             origin = IP::AddressOrigin::LinkLocal;
         }
-        gateway =
+        std::string gateway =
             routingTable.getGateway(addr.addrType, addr.ipaddress, addr.prefix);
 
         std::string ipAddressObjectPath = generateObjectPath(
@@ -93,8 +101,6 @@ void EthernetInterface::createIPAddressObjects()
                                 bus, ipAddressObjectPath.c_str(), *this,
                                 addressType, addr.ipaddress, origin,
                                 addr.prefix, gateway));
-
-        origin = IP::AddressOrigin::Static;
     }
 }
 
