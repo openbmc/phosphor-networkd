@@ -8,6 +8,7 @@
 
 #include <regex>
 #include <sdbusplus/bus.hpp>
+#include <string>
 
 namespace phosphor
 {
@@ -49,6 +50,7 @@ std::string getfromInventory(sdbusplus::bus::bus& bus);
 
 namespace internal
 {
+
 /** @brief Converts the given mac address into unsigned 64 bit integer
  *  @param[in] value - MAC address.
  *  @returns converted unsigned 64 bit number.
@@ -65,7 +67,6 @@ inline uint64_t convertToInt(const std::string& value)
            static_cast<uint64_t>(mac[3]) << 16 |
            static_cast<uint64_t>(mac[4]) << 8 | static_cast<uint64_t>(mac[5]);
 }
-
 } // namespace internal
 } // namespace mac_address
 
@@ -78,6 +79,25 @@ constexpr auto timeSynchdService = "systemd-timesyncd.service";
  * @returns prefix.
  */
 uint8_t toCidr(int addressFamily, const std::string& mask);
+
+/** @brief Converts the int value to hex character
+ */
+inline char toHex(uint8_t val)
+{
+    val &= 0xf;
+    return val < 10 ? '0' + val : 'A' + (val - 10);
+}
+/** @brief Converts the given mac address bytes into a string
+ * 	@param[in] bytes - The mac address
+ * 	@returns A valid mac address string
+ */
+std::string toString(const MacAddr& mac);
+
+/* @brief converts the ip bytes into a string representation
+ * @param[in] addr - input ip address to convert.
+ * @returns String representation of the ip.
+ */
+std::string toString(const InAddrAny& addr);
 
 /* @brief converts the prefix into subnetmask.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
