@@ -46,8 +46,7 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
             {
                 // starting the timer here to make sure that we don't want
                 // create the child objects multiple times.
-                if (!refreshObjectTimer->isEnabled() ||
-                    refreshObjectTimer->hasExpired())
+                if (!refreshObjectTimer->isEnabled())
                 {
                     // if start timer throws exception then let the application
                     // crash
