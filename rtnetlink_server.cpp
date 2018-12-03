@@ -14,6 +14,7 @@
 #include <memory>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
+#include <string_view>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
@@ -25,6 +26,32 @@ extern std::unique_ptr<Timer> refreshObjectTimer;
 
 namespace rtnetlink
 {
+
+static bool shouldRefresh(struct nlmsghdr& hdr, std::string_view data)
+{
+    switch (hdr.nlmsg_type)
+    {
+        case RTM_NEWADDR:
+        case RTM_DELADDR:
+        {
+            return true;
+        }
+        case RTM_NEWNEIGH:
+        case RTM_DELNEIGH:
+        {
+            struct ndmsg ndm;
+            if (data.size() < sizeof(ndm))
+            {
+                return false;
+            }
+            memcpy(&ndm, data.data(), sizeof(ndm));
+            // We only want to refresh for static neighbors
+            return ndm.ndm_state & NUD_PERMANENT;
+        }
+    }
+
+    return false;
+}
 
 /* Call Back for the sd event loop */
 static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
@@ -41,8 +68,10 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
                (netLinkHeader->nlmsg_type != NLMSG_DONE);
              netLinkHeader = NLMSG_NEXT(netLinkHeader, len))
         {
-            if (netLinkHeader->nlmsg_type == RTM_NEWADDR ||
-                netLinkHeader->nlmsg_type == RTM_DELADDR)
+            std::string_view data(
+                reinterpret_cast<const char*>(NLMSG_DATA(netLinkHeader)),
+                netLinkHeader->nlmsg_len - NLMSG_HDRLEN);
+            if (shouldRefresh(*netLinkHeader, data))
             {
                 // starting the timer here to make sure that we don't want
                 // create the child objects multiple times.
@@ -109,7 +138,7 @@ Server::Server(EventPtr& eventPtr, const phosphor::Descriptor& smartSock)
 
     std::memset(&addr, 0, sizeof(addr));
     addr.nl_family = AF_NETLINK;
-    addr.nl_groups = RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR;
+    addr.nl_groups = RTMGRP_NEIGH | RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR;
 
     if (bind(smartSock(), (struct sockaddr*)&addr, sizeof(addr)) < 0)
     {
