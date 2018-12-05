@@ -177,6 +177,24 @@
       "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ec776ecc_06572750",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2018-12-05T07:55:34Z",
+      "side": 1,
+      "message": "I think, we should be having it in phosphor-host-ipmid, where we do the overriding for the yaml files,With the same logic we can do it for others.",
+      "parentUuid": "b79d24d1_9a6e4877",
+      "revId": "205b32bd92a24b5c8a69dcec944e8c83ed27b8ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
