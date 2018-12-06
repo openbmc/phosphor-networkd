@@ -1,0 +1,10 @@
+Ok-To-Test+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Verified+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Code-Review+1: Adriana Kobylak <anoo@linux.ibm.com>
+Code-Review+2: Ratan Gupta <ratagupt@linux.vnet.ibm.com>
+Code-Review+1: Alexander Filippov <a.filippov@yadro.com>
+Submitted-by: Ratan Gupta <ratagupt@linux.vnet.ibm.com>
+Submitted-at: Thu, 06 Dec 2018 18:28:19 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/16424
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
