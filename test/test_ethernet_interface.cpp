@@ -21,7 +21,7 @@ namespace network
 
 class TestEthernetInterface : public testing::Test
 {
-  public:
+  protected:
     sdbusplus::bus::bus bus;
     MockManager manager;
     EthernetInterface interface;

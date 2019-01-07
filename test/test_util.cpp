@@ -15,7 +15,7 @@ using InternalFailure =
     sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
 class TestUtil : public testing::Test
 {
-  public:
+  protected:
     TestUtil()
     {
         // Empty

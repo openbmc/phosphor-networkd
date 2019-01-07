@@ -16,7 +16,7 @@ namespace fs = std::experimental::filesystem;
 
 class DnsUpdateTest : public ::testing::Test
 {
-  public:
+  protected:
     // Gets called as part of each TEST_F construction
     DnsUpdateTest()
     {

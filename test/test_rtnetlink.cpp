@@ -43,7 +43,7 @@ void initializeTimers()
 class TestRtNetlink : public testing::Test
 {
 
-  public:
+  protected:
     std::string confDir;
     phosphor::Descriptor smartSock;
 
