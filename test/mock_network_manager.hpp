@@ -20,7 +20,6 @@ class MockManager : public phosphor::network::Manager
 
     MOCK_METHOD1(restartSystemdUnit, void(const std::string& service));
 
-    friend class TestNetworkManager;
     friend class TestRtNetlink;
 };
 
