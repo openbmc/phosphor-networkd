@@ -19,7 +19,8 @@ class TestConfigParser : public testing::Test
 {
   public:
     config::Parser parser;
-    TestConfigParser()
+
+    void SetUp() override
     {
         remove("/tmp/eth0.network");
         std::ofstream filestream("/tmp/eth0.network");
@@ -28,6 +29,11 @@ class TestConfigParser : public testing::Test
                    << "[Network]\nDHCP=true\n[DHCP]\nClientIdentifier= mac\n";
         filestream.close();
         parser.setFile("/tmp/eth0.network");
+    }
+
+    void TearDown() override
+    {
+        remove("/tmp/eth0.network");
     }
 
     bool isValueFound(const std::vector<std::string>& values,
@@ -79,7 +85,6 @@ TEST_F(TestConfigParser, KeyNotFound)
     config::ValueList values;
     std::tie(rc, values) = parser.getValues("Network", "abc");
     EXPECT_EQ(config::ReturnCode::KEY_NOT_FOUND, rc);
-    remove("/tmp/eth0.network");
 }
 
 } // namespace network
