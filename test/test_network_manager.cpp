@@ -1,6 +1,5 @@
 #include "mock_network_manager.hpp"
 #include "mock_syscall.hpp"
-#include "xyz/openbmc_project/Common/error.hpp"
 
 #include <arpa/inet.h>
 #include <net/if.h>
@@ -10,6 +9,7 @@
 #include <exception>
 #include <experimental/filesystem>
 #include <sdbusplus/bus.hpp>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gtest/gtest.h>
 
