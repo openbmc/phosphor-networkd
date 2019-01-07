@@ -25,7 +25,7 @@ namespace fs = std::experimental::filesystem;
 
 class TestNetworkManager : public testing::Test
 {
-  public:
+  protected:
     sdbusplus::bus::bus bus;
     Manager manager;
     std::string confDir;
