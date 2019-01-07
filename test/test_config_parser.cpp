@@ -17,7 +17,7 @@ namespace network
 
 class TestConfigParser : public testing::Test
 {
-  public:
+  protected:
     config::Parser parser;
 
     void SetUp() override
