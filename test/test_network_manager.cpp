@@ -61,17 +61,7 @@ class TestNetworkManager : public testing::Test
 TEST_F(TestNetworkManager, NoInterface)
 {
     using namespace sdbusplus::xyz::openbmc_project::Common::Error;
-    bool caughtException = false;
-    try
-    {
-        createInterfaces();
-    }
-    catch (InternalFailure& e)
-    {
-        caughtException = true;
-    }
-
-    EXPECT_EQ(true, caughtException);
+    EXPECT_THROW(createInterfaces(), InternalFailure);
 }
 
 // getifaddrs returns single interface.
