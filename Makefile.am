@@ -3,6 +3,14 @@ nobase_nodist_include_HEADERS = \
 	xyz/openbmc_project/Network/VLAN/Create/server.hpp \
 	xyz/openbmc_project/Network/IP/Create/server.hpp
 
+if HAVE_SYSTEMD
+systemdsystemunit_DATA = \
+		xyz.openbmc_project.Network.service
+
+dbuspolicy_DATA = \
+		xyz.openbmc_project.Network.conf
+endif
+
 sbin_PROGRAMS = phosphor-network-manager ncsi-netlink
 
 noinst_HEADERS = \
