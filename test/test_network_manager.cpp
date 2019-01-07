@@ -8,7 +8,7 @@
 
 #include <exception>
 #include <experimental/filesystem>
-#include <sdbusplus/bus.hpp>
+#include <sdbusplus/test/sdbus_mock.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gtest/gtest.h>
@@ -26,11 +26,12 @@ namespace fs = std::experimental::filesystem;
 class TestNetworkManager : public testing::Test
 {
   protected:
+    sdbusplus::SdBusMock sdbus_mock;
     sdbusplus::bus::bus bus;
     Manager manager;
     std::string confDir;
     TestNetworkManager() :
-        bus(sdbusplus::bus::new_default()),
+        bus(sdbusplus::get_mocked_new(&sdbus_mock)),
         manager(bus, "/xyz/openbmc_test/abc", "/tmp")
     {
     }
