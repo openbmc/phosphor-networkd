@@ -27,7 +27,7 @@ class TestNetworkManager : public testing::Test
 {
   public:
     sdbusplus::bus::bus bus;
-    MockManager manager;
+    Manager manager;
     std::string confDir;
     TestNetworkManager() :
         bus(sdbusplus::bus::new_default()),
@@ -54,18 +54,6 @@ class TestNetworkManager : public testing::Test
     void createInterfaces()
     {
         manager.createInterfaces();
-    }
-
-    int getSize()
-    {
-        return manager.interfaces.size();
-    }
-
-    bool isInterfaceAdded(std::string intf)
-    {
-        return manager.interfaces.find(intf) != manager.interfaces.end()
-                   ? true
-                   : false;
     }
 };
 
@@ -99,8 +87,8 @@ TEST_F(TestNetworkManager, WithSingleInterface)
         // Now create the interfaces which will call the mocked getifaddrs
         // which returns the above interface detail.
         createInterfaces();
-        EXPECT_EQ(1, getSize());
-        EXPECT_EQ(true, isInterfaceAdded("igb1"));
+        EXPECT_EQ(1, manager.getInterfaceCount());
+        EXPECT_EQ(true, manager.hasInterface("igb1"));
     }
     catch (std::exception& e)
     {
@@ -121,8 +109,8 @@ TEST_F(TestNetworkManager, WithMultipleInterfaces)
                    IFF_UP | IFF_RUNNING);
 
         createInterfaces();
-        EXPECT_EQ(2, getSize());
-        EXPECT_EQ(true, isInterfaceAdded("igb0"));
+        EXPECT_EQ(2, manager.getInterfaceCount());
+        EXPECT_EQ(true, manager.hasInterface("igb0"));
     }
     catch (std::exception& e)
     {

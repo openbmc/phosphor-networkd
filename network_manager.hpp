@@ -118,6 +118,25 @@ class Manager : public details::VLANCreateIface
      */
     virtual void restartSystemdUnit(const std::string& unit);
 
+    /** @brief Returns the number of interfaces under this manager.
+     *
+     * @return the number of interfaces managed by this manager.
+     */
+    int getInterfaceCount()
+    {
+        return interfaces.size();
+    }
+
+    /** @brief Does the requested interface exist under this manager?
+     *
+     * @param[in] intf - the interface name to check.
+     * @return true if found, false otherwise.
+     */
+    bool hasInterface(const std::string& intf)
+    {
+        return (interfaces.find(intf) != interfaces.end());
+    }
+
   protected:
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;
