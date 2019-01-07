@@ -1,7 +1,7 @@
 #include "config.h"
 
 #include "config_parser.hpp"
-#include "xyz/openbmc_project/Common/error.hpp"
+#include <xyz/openbmc_project/Common/error.hpp>
 
 #include <exception>
 #include <fstream>
