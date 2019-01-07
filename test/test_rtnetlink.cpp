@@ -77,13 +77,6 @@ class TestRtNetlink : public testing::Test
         manager->setConfDir(confDir);
     }
 
-    bool isInterfaceAdded(std::string intf)
-    {
-        return manager->interfaces.find(intf) != manager->interfaces.end()
-                   ? true
-                   : false;
-    }
-
     void createNetLinkSocket()
     {
         // RtnetLink socket
@@ -109,7 +102,7 @@ TEST_F(TestRtNetlink, WithSingleInterface)
     nlMsg->nlmsg_seq = 0;
     nlMsg->nlmsg_pid = getpid();
 
-    EXPECT_EQ(false, isInterfaceAdded("igb5"));
+    EXPECT_EQ(false, manager->hasInterface("igb5"));
     // Send the request
     send(smartSock(), nlMsg, nlMsg->nlmsg_len, 0);
 
@@ -121,7 +114,7 @@ TEST_F(TestRtNetlink, WithSingleInterface)
         sd_event_run(eventPtr.get(), 10);
     };
 
-    EXPECT_EQ(true, isInterfaceAdded("igb5"));
+    EXPECT_EQ(true, manager->hasInterface("igb5"));
 }
 
 } // namespace network
