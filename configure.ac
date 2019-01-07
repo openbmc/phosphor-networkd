@@ -52,9 +52,6 @@ AC_CHECK_HEADER(systemd/sd-bus.h, ,\
 # Checks for typedefs, structures, and compiler characteristics.
 AX_APPEND_COMPILE_FLAGS([-Wall -Werror -Wno-unused-result], [CFLAGS])
 
-# Checks for library functions.
-LT_INIT # Removes 'unrecognized options: --with-libtool-sysroot'
-
 PKG_PROG_PKG_CONFIG
 AC_ARG_WITH([systemdsystemunitdir],
      [AS_HELP_STRING([--with-systemdsystemunitdir=DIR], [Directory for systemd service files])],,
