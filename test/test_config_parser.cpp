@@ -1,12 +1,12 @@
 #include "config.h"
 
 #include "config_parser.hpp"
-#include "xyz/openbmc_project/Common/error.hpp"
 
 #include <exception>
 #include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <stdexcept>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gtest/gtest.h>
 
