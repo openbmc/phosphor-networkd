@@ -33,10 +33,14 @@ class TestNetworkManager : public testing::Test
         bus(sdbusplus::bus::new_default()),
         manager(bus, "/xyz/openbmc_test/abc", "/tmp")
     {
+    }
+
+    void SetUp() override
+    {
         setConfDir();
     }
 
-    ~TestNetworkManager()
+    void TearDown() override
     {
         if (confDir != "")
         {
