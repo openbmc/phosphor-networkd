@@ -96,7 +96,7 @@ std::string SystemConfiguration::defaultGateway(std::string gateway)
         return gw;
     }
 
-    if (!isValidIP(AF_INET, gateway))
+    if (!isValidIP(AF_INET, gateway) && !isValidIP(AF_INET6, gateway))
     {
         log<level::ERR>("Not a valid Gateway",
                         entry("GATEWAY=%s", gateway.c_str()));
