@@ -86,7 +86,7 @@ void EthernetInterface::createIPAddressObjects()
         {
             origin = IP::AddressOrigin::DHCP;
         }
-        else if (isLinkLocalIP(addr.ipaddress))
+        if (isLinkLocalIP(addr.ipaddress))
         {
             origin = IP::AddressOrigin::LinkLocal;
         }
