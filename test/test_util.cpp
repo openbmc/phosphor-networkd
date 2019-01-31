@@ -1,5 +1,6 @@
 #include "util.hpp"
 
+#include <arpa/inet.h>
 #include <netinet/in.h>
 
 #include <cstddef>
@@ -42,6 +43,35 @@ TEST_F(TestUtil, MacToString)
         std::byte(0x09), std::byte(0x35), std::byte(0x09),
     };
     EXPECT_EQ("70:FF:84:09:35:09", mac_address::toString(mac2));
+}
+
+TEST_F(TestUtil, IpToString)
+{
+    struct in_addr ip1;
+    EXPECT_EQ(1, inet_pton(AF_INET, "192.168.10.1", &ip1));
+    EXPECT_EQ("192.168.10.1", toString(InAddrAny(ip1)));
+
+    struct in6_addr ip2;
+    EXPECT_EQ(1, inet_pton(AF_INET6, "fdd8:b5ad:9d93:94ee::2:1", &ip2));
+    EXPECT_EQ("fdd8:b5ad:9d93:94ee::2:1", toString(InAddrAny(ip2)));
+
+    InAddrAny ip3;
+    try
+    {
+        struct E
+        {
+            operator struct in6_addr()
+            {
+                throw 1;
+            }
+        };
+        ip3.emplace<struct in6_addr>(E());
+        EXPECT_TRUE(false);
+    }
+    catch (...)
+    {
+    }
+    EXPECT_THROW(toString(ip3), std::runtime_error);
 }
 
 TEST_F(TestUtil, IpValidation)
