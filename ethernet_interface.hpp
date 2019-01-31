@@ -3,6 +3,7 @@
 #include "types.hpp"
 #include "util.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
+#include "xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp"
 
 #include <experimental/filesystem>
 #include <sdbusplus/bus.hpp>
@@ -21,6 +22,7 @@ using Ifaces = sdbusplus::server::object::object<
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface,
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress,
     sdbusplus::xyz::openbmc_project::Network::IP::server::Create,
+    sdbusplus::xyz::openbmc_project::Network::Neighbor::server::CreateStatic,
     sdbusplus::xyz::openbmc_project::Collection::server::DeleteAll>;
 
 using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
@@ -42,6 +44,8 @@ class VlanInterface;
 
 class IPAddress;
 
+class Neighbor;
+
 using LinkSpeed = uint16_t;
 using DuplexMode = uint8_t;
 using Autoneg = uint8_t;
@@ -49,6 +53,7 @@ using VlanId = uint32_t;
 using InterfaceName = std::string;
 using InterfaceInfo = std::tuple<LinkSpeed, DuplexMode, Autoneg>;
 using AddressMap = std::map<std::string, std::shared_ptr<IPAddress>>;
+using NeighborMap = std::map<std::string, std::shared_ptr<Neighbor>>;
 using VlanInterfaceMap =
     std::map<InterfaceName, std::unique_ptr<VlanInterface>>;
 
@@ -89,10 +94,21 @@ class EthernetInterface : public Ifaces
     void iP(IP::Protocol addressType, std::string ipaddress,
             uint8_t prefixLength, std::string gateway) override;
 
+    /** @brief Function to create static neighbor dbus object.
+     *  @param[in] ipAddress - IP address.
+     *  @param[in] macAddress - Low level MAC address.
+     */
+    void neighbor(std::string iPAddress, std::string mACAddress) override;
+
     /* @brief delete the dbus object of the given ipaddress.
      * @param[in] ipaddress - IP address.
      */
     void deleteObject(const std::string& ipaddress);
+
+    /* @brief delete the dbus object of the given ipaddress.
+     * @param[in] ipaddress - IP address.
+     */
+    void deleteStaticNeighborObject(const std::string& ipAddress);
 
     /* @brief delete the vlan dbus object of the given interface.
      *        Also deletes the device file and the network file.
@@ -106,12 +122,24 @@ class EthernetInterface : public Ifaces
      */
     void createIPAddressObjects();
 
+    /* @brief creates the dbus object(Neighbor) given in the neighbor list.
+     */
+    void createStaticNeighborObjects();
+
     /* @brief Gets all the ip addresses.
      * @returns the list of ipaddress.
      */
     const AddressMap& getAddresses() const
     {
         return addrs;
+    }
+
+    /* @brief Gets all the static neighbor entries.
+     * @returns Static neighbor map.
+     */
+    const NeighborMap& getStaticNeighbors() const
+    {
+        return staticNeighbors;
     }
 
     /** Set value of DHCPEnabled */
@@ -191,6 +219,10 @@ class EthernetInterface : public Ifaces
                                    uint8_t prefixLength,
                                    const std::string& gateway) const;
 
+    std::string
+        generateStaticNeighborObjectPath(const std::string& iPAddress,
+                                         const std::string& mACAddress) const;
+
     /** @brief generates the id by doing hash of ipaddress,
      *         prefixlength and the gateway.
      *  @param[in] ipaddress - IP address.
@@ -202,6 +234,15 @@ class EthernetInterface : public Ifaces
     static std::string generateId(const std::string& ipaddress,
                                   uint8_t prefixLength,
                                   const std::string& gateway);
+
+    /** @brief generates the id by doing hash of ipaddress
+     *         and the mac address.
+     *  @param[in] iPAddress  - IP address.
+     *  @param[in] mACAddress - Gateway address.
+     *  @return hash string.
+     */
+    static std::string generateNeighborId(const std::string& iPAddress,
+                                          const std::string& mACAddress);
 
     /** @brief write the dhcp section **/
     void writeDHCPSection(std::fstream& stream);
@@ -230,6 +271,9 @@ class EthernetInterface : public Ifaces
 
     /** @brief Persistent map of IPAddress dbus objects and their names */
     AddressMap addrs;
+
+    /** @brief Persistent map of Neighbor dbus objects and their names */
+    NeighborMap staticNeighbors;
 
     /** @brief Persistent map of VLAN interface dbus objects and their names */
     VlanInterfaceMap vlanInterfaces;
