@@ -93,6 +93,12 @@ constexpr auto timeSynchdService = "systemd-timesyncd.service";
  */
 uint8_t toCidr(int addressFamily, const std::string& mask);
 
+/* @brief converts the ip bytes into a string representation
+ * @param[in] addr - input ip address to convert.
+ * @returns String representation of the ip.
+ */
+std::string toString(const InAddrAny& addr);
+
 /* @brief converts the prefix into subnetmask.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
  * @param[in] prefix - prefix length.
