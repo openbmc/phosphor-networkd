@@ -547,6 +547,21 @@ std::string getfromInventory(sdbusplus::bus::bus& bus)
     return sdbusplus::message::variant_ns::get<std::string>(value);
 }
 
+std::string toString(const MacAddr& mac)
+{
+    std::string str;
+    str.reserve(mac.size() * 3);
+    for (size_t i = 0; i < mac.size(); ++i)
+    {
+        str.push_back(internal::toHex(mac[i] >> 4));
+        str.push_back(internal::toHex(mac[i]));
+        str.push_back(':');
+    }
+    // Remove trailing semicolon
+    str.pop_back();
+    return str;
+}
+
 } // namespace mac_address
 } // namespace network
 } // namespace phosphor
