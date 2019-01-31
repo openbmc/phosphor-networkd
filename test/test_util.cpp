@@ -2,6 +2,7 @@
 
 #include <netinet/in.h>
 
+#include <cstddef>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gtest/gtest.h>
@@ -21,6 +22,27 @@ class TestUtil : public testing::Test
         // Empty
     }
 };
+
+TEST_F(TestUtil, ToHex)
+{
+    EXPECT_EQ('E', mac_address::internal::toHex(std::byte(0xfe)));
+    EXPECT_EQ('A', mac_address::internal::toHex(std::byte(10)));
+    EXPECT_EQ('4', mac_address::internal::toHex(std::byte(4)));
+}
+
+TEST_F(TestUtil, MacToString)
+{
+    MacAddr mac1{
+        std::byte(0x00), std::byte(0xDE), std::byte(0xAD),
+        std::byte(0x00), std::byte(0xBE), std::byte(0xEF),
+    };
+    EXPECT_EQ("00:DE:AD:00:BE:EF", mac_address::toString(mac1));
+    MacAddr mac2{
+        std::byte(0x70), std::byte(0xFF), std::byte(0x84),
+        std::byte(0x09), std::byte(0x35), std::byte(0x09),
+    };
+    EXPECT_EQ("70:FF:84:09:35:09", mac_address::toString(mac2));
+}
 
 TEST_F(TestUtil, IpValidation)
 {
