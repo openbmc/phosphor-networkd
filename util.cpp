@@ -14,6 +14,7 @@
 #include <list>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
+#include <stdexcept>
 #include <string>
 #include <xyz/openbmc_project/Common/error.hpp>
 
@@ -201,6 +202,35 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
         elog<InternalFailure>();
     }
     return networkString;
+}
+
+std::string toString(const InAddrAny& addr)
+{
+    std::string ip;
+    if (std::holds_alternative<struct in_addr>(addr))
+    {
+        const auto& v = std::get<struct in_addr>(addr);
+        ip.resize(INET_ADDRSTRLEN);
+        if (inet_ntop(AF_INET, &v, ip.data(), ip.size()) == NULL)
+        {
+            throw std::runtime_error("Failed to convert IP4 to string");
+        }
+    }
+    else if (std::holds_alternative<struct in6_addr>(addr))
+    {
+        const auto& v = std::get<struct in6_addr>(addr);
+        ip.resize(INET6_ADDRSTRLEN);
+        if (inet_ntop(AF_INET6, &v, ip.data(), ip.size()) == NULL)
+        {
+            throw std::runtime_error("Failed to convert IP6 to string");
+        }
+    }
+    else
+    {
+        throw std::runtime_error("Invalid addr type");
+    }
+    ip.resize(strlen(ip.c_str()));
+    return ip;
 }
 
 bool isLinkLocalIP(const std::string& address)
