@@ -1,0 +1,16 @@
+description: >
+methods:
+    - name: Neighbor
+      description: >
+          Create a static neighbor entry.
+      parameters:
+        - name: IPAddress
+          type: string
+          description: >
+              IP Address.
+        - name: MACAddress
+          type: string
+          description: >
+              MAC Address.
+      errors:
+        - xyz.openbmc_project.Common.Error.InvalidArgument
