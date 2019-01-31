@@ -22,6 +22,21 @@ class TestUtil : public testing::Test
     }
 };
 
+TEST_F(TestUtil, ToHex)
+{
+    EXPECT_EQ('E', mac_address::internal::toHex(0xfe));
+    EXPECT_EQ('A', mac_address::internal::toHex(10));
+    EXPECT_EQ('4', mac_address::internal::toHex(4));
+}
+
+TEST_F(TestUtil, MacToString)
+{
+    MacAddr mac1{'\x00', '\xde', '\xad', '\x00', '\xbe', '\xef'};
+    EXPECT_EQ("00:DE:AD:00:BE:EF", mac_address::toString(mac1));
+    MacAddr mac2{'\x70', '\xff', '\x84', '\x09', '\x35', '\x09'};
+    EXPECT_EQ("70:FF:84:09:35:09", mac_address::toString(mac2));
+}
+
 TEST_F(TestUtil, IpValidation)
 {
     std::string ipaddress = "0.0.0.0";
