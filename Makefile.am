@@ -1,7 +1,8 @@
 # Build these headers, don't install them
 nobase_nodist_include_HEADERS = \
 	xyz/openbmc_project/Network/VLAN/Create/server.hpp \
-	xyz/openbmc_project/Network/IP/Create/server.hpp
+	xyz/openbmc_project/Network/IP/Create/server.hpp \
+	xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp
 
 if HAVE_SYSTEMD
 systemdsystemunit_DATA = \
@@ -15,6 +16,7 @@ sbin_PROGRAMS = phosphor-network-manager ncsi-netlink
 
 noinst_HEADERS = \
 		ethernet_interface.hpp \
+		neighbor.hpp \
 		network_config.hpp \
 		network_manager.hpp \
 		ipaddress.hpp \
@@ -45,6 +47,7 @@ ncsi_netlink_CXXFLAGS = -flto
 
 phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
+		neighbor.cpp \
 		ipaddress.cpp \
 		network_config.cpp \
 		network_manager.cpp \
@@ -52,6 +55,7 @@ phosphor_network_manager_SOURCES = \
 		system_configuration.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 		xyz/openbmc_project/Network/IP/Create/server.cpp \
+		xyz/openbmc_project/Network/Neighbor/CreateStatic/server.cpp \
 		util.cpp \
 		routing_table.cpp \
 		config_parser.cpp \
@@ -65,13 +69,17 @@ CLEANFILES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.hpp \
 		xyz/openbmc_project/Network/IP/Create/server.cpp \
-		xyz/openbmc_project/Network/IP/Create/server.hpp
+		xyz/openbmc_project/Network/IP/Create/server.hpp \
+		xyz/openbmc_project/Network/Neighbor/CreateStatic/server.cpp \
+		xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp
 
 BUILT_SOURCES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
 		xyz/openbmc_project/Network/VLAN/Create/server.hpp \
 		xyz/openbmc_project/Network/IP/Create/server.cpp \
-		xyz/openbmc_project/Network/IP/Create/server.hpp
+		xyz/openbmc_project/Network/IP/Create/server.hpp \
+		xyz/openbmc_project/Network/Neighbor/CreateStatic/server.cpp \
+		xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp
 
 phosphor_network_manager_LDFLAGS = \
 		$(SYSTEMD_LIBS) \
@@ -105,5 +113,14 @@ xyz/openbmc_project/Network/IP/Create/server.hpp: xyz/openbmc_project/Network/IP
 	@mkdir -p `dirname $@`
 	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.IP.Create > $@
 	sed -i '5i #include \"xyz\/openbmc_project\/Network\/IP\/server.hpp\"' $@
+
+xyz/openbmc_project/Network/Neighbor/CreateStatic/server.cpp: xyz/openbmc_project/Network/Neighbor/CreateStatic.interface.yaml xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-cpp xyz.openbmc_project.Network.Neighbor.CreateStatic > $@
+
+xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp: xyz/openbmc_project/Network/Neighbor/CreateStatic.interface.yaml
+	@mkdir -p `dirname $@`
+	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.Neighbor.CreateStatic > $@
+	sed -i '5i #include \"xyz\/openbmc_project\/Network\/Neighbor\/server.hpp\"' $@
 
 SUBDIRS = test
