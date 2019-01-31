@@ -4,6 +4,7 @@
 
 #include "config_parser.hpp"
 #include "ipaddress.hpp"
+#include "neighbor.hpp"
 #include "network_manager.hpp"
 #include "routing_table.hpp"
 #include "vlan_interface.hpp"
@@ -104,6 +105,27 @@ void EthernetInterface::createIPAddressObjects()
     }
 }
 
+void EthernetInterface::createStaticNeighborObjects()
+{
+    staticNeighbors.clear();
+
+    auto neighbors = getCurrentNeighbors();
+    for (const auto& neighbor : neighbors)
+    {
+        if (!neighbor.permanent || !neighbor.mac)
+        {
+            continue;
+        }
+        std::string ip = toString(neighbor.address);
+        std::string mac = toString(*neighbor.mac);
+        std::string objectPath = generateStaticNeighborObjectPath(ip, mac);
+        staticNeighbors.emplace(ip,
+                                std::make_shared<phosphor::network::Neighbor>(
+                                    bus, objectPath.c_str(), *this, ip, mac,
+                                    Neighbor::State::Permanent));
+    }
+}
+
 void EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
                            uint8_t prefixLength, std::string gateway)
 {
@@ -151,6 +173,32 @@ void EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
                             bus, objectPath.c_str(), *this, protType, ipaddress,
                             origin, prefixLength, gateway));
 
+    manager.writeToConfigurationFile();
+}
+
+void EthernetInterface::neighbor(std::string iPAddress, std::string mACAddress)
+{
+    if (!isValidIP(AF_INET, iPAddress) && !isValidIP(AF_INET6, iPAddress))
+    {
+        log<level::ERR>("Not a valid IP address",
+                        entry("ADDRESS=%s", iPAddress.c_str()));
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("iPAddress"),
+                              Argument::ARGUMENT_VALUE(iPAddress.c_str()));
+    }
+    if (!mac_address::validate(mACAddress))
+    {
+        log<level::ERR>("Not a valid MAC address",
+                        entry("MACADDRESS=%s", iPAddress.c_str()));
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("mACAddress"),
+                              Argument::ARGUMENT_VALUE(mACAddress.c_str()));
+    }
+
+    std::string objectPath =
+        generateStaticNeighborObjectPath(iPAddress, mACAddress);
+    staticNeighbors.emplace(iPAddress,
+                            std::make_shared<phosphor::network::Neighbor>(
+                                bus, objectPath.c_str(), *this, iPAddress,
+                                mACAddress, Neighbor::State::Permanent));
     manager.writeToConfigurationFile();
 }
 
@@ -250,6 +298,17 @@ std::string EthernetInterface::generateId(const std::string& ipaddress,
     return hexId.str();
 }
 
+std::string EthernetInterface::generateNeighborId(const std::string& iPAddress,
+                                                  const std::string& mACAddress)
+{
+    std::stringstream hexId;
+    std::string hashString = iPAddress + mACAddress;
+
+    // Only want 8 hex digits.
+    hexId << std::hex << ((std::hash<std::string>{}(hashString)) & 0xFFFFFFFF);
+    return hexId.str();
+}
+
 void EthernetInterface::deleteObject(const std::string& ipaddress)
 {
     auto it = addrs.find(ipaddress);
@@ -259,6 +318,19 @@ void EthernetInterface::deleteObject(const std::string& ipaddress)
         return;
     }
     this->addrs.erase(it);
+    manager.writeToConfigurationFile();
+}
+
+void EthernetInterface::deleteStaticNeighborObject(const std::string& iPAddress)
+{
+    auto it = staticNeighbors.find(iPAddress);
+    if (it == staticNeighbors.end())
+    {
+        log<level::ERR>(
+            "DeleteStaticNeighborObject:Unable to find the object.");
+        return;
+    }
+    staticNeighbors.erase(it);
     manager.writeToConfigurationFile();
 }
 
@@ -326,6 +398,16 @@ std::string EthernetInterface::generateObjectPath(
     objectPath /= objPath;
     objectPath /= type;
     objectPath /= generateId(ipaddress, prefixLength, gateway);
+    return objectPath.string();
+}
+
+std::string EthernetInterface::generateStaticNeighborObjectPath(
+    const std::string& iPAddress, const std::string& mACAddress) const
+{
+    std::experimental::filesystem::path objectPath;
+    objectPath /= objPath;
+    objectPath /= "static_neighbor";
+    objectPath /= generateNeighborId(iPAddress, mACAddress);
     return objectPath.string();
 }
 
@@ -418,6 +500,7 @@ void EthernetInterface::loadVLAN(VlanId id)
     // Fetch the ip address from the system
     // and create the dbus object.
     vlanIntf->createIPAddressObjects();
+    vlanIntf->createStaticNeighborObjects();
 
     this->vlanInterfaces.emplace(std::move(vlanInterfaceName),
                                  std::move(vlanIntf));
@@ -595,6 +678,15 @@ void EthernetInterface::writeConfigurationFile()
                 }
             }
         }
+    }
+
+    // Write the neighbor sections
+    for (const auto& neighbor : staticNeighbors)
+    {
+        stream << "[Neighbor]"
+               << "\n";
+        stream << "Address=" << neighbor.second->iPAddress() << "\n";
+        stream << "MACAddress=" << neighbor.second->mACAddress() << "\n";
     }
 
     // Write the dhcp section irrespective of whether DHCP is enabled or not
