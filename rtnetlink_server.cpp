@@ -26,6 +26,20 @@ extern std::unique_ptr<Timer> refreshObjectTimer;
 namespace rtnetlink
 {
 
+static bool shouldRefresh(const struct nlmsghdr& hdr)
+{
+    switch (hdr.nlmsg_type)
+    {
+        case RTM_NEWADDR:
+        case RTM_DELADDR:
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 /* Call Back for the sd event loop */
 static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
                         void* userdata)
@@ -41,8 +55,7 @@ static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
                (netLinkHeader->nlmsg_type != NLMSG_DONE);
              netLinkHeader = NLMSG_NEXT(netLinkHeader, len))
         {
-            if (netLinkHeader->nlmsg_type == RTM_NEWADDR ||
-                netLinkHeader->nlmsg_type == RTM_DELADDR)
+            if (shouldRefresh(*netLinkHeader))
             {
                 // starting the timer here to make sure that we don't want
                 // create the child objects multiple times.
