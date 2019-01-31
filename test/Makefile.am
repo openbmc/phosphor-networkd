@@ -49,6 +49,7 @@ test_LDADD = $(top_builddir)/ethernet_interface.o \
 			$(top_builddir)/network_manager.o \
 			$(top_builddir)/network_config.o \
 			$(top_builddir)/ipaddress.o \
+			$(top_builddir)/neighbor.o \
 			$(top_builddir)/routing_table.o \
 			$(top_builddir)/util.o \
 			$(top_builddir)/rtnetlink_server.o \
@@ -57,7 +58,8 @@ test_LDADD = $(top_builddir)/ethernet_interface.o \
 			$(top_builddir)/config_parser.o \
 			$(top_builddir)/vlan_interface.o \
 			$(top_builddir)/xyz/openbmc_project/Network/VLAN/Create/phosphor_network_manager-server.o \
-			$(top_builddir)/xyz/openbmc_project/Network/IP/Create/phosphor_network_manager-server.o
+			$(top_builddir)/xyz/openbmc_project/Network/IP/Create/phosphor_network_manager-server.o \
+			$(top_builddir)/xyz/openbmc_project/Network/Neighbor/CreateStatic/phosphor_network_manager-server.o
 
 test_dns_updater_LDADD = $(top_builddir)/dns_updater.o
 test_watch_LDADD = $(top_builddir)/watch.o
