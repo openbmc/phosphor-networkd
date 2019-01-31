@@ -146,6 +146,7 @@ void Manager::createInterfaces()
             bus, objPath.string(), dhcp, *this);
 
         intf->createIPAddressObjects();
+        intf->createStaticNeighborObjects();
 
         this->interfaces.emplace(
             std::make_pair(std::move(interface), std::move(intf)));
