@@ -8,6 +8,7 @@
 
 #include <regex>
 #include <sdbusplus/bus.hpp>
+#include <string>
 
 namespace phosphor
 {
@@ -78,6 +79,19 @@ constexpr auto timeSynchdService = "systemd-timesyncd.service";
  * @returns prefix.
  */
 uint8_t toCidr(int addressFamily, const std::string& mask);
+
+/** @brief Converts the int value to hex character
+ */
+inline char toHex(char val)
+{
+    val &= 0xf;
+    return val < 10 ? '0' + val : 'A' + (val - 10);
+}
+/** @brief Converts the given mac address bytes into a string
+ * 	@param[in] bytes - The mac address
+ * 	@returns A valid mac address string
+ */
+std::string toString(const MacAddr& mac);
 
 /* @brief converts the prefix into subnetmask.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).

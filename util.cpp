@@ -203,6 +203,21 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
     return networkString;
 }
 
+std::string toString(const MacAddr& mac)
+{
+    std::string str;
+    str.reserve(mac.size() * 3);
+    for (size_t i = 0; i < mac.size(); ++i)
+    {
+        str.push_back(toHex(mac[i] >> 4));
+        str.push_back(toHex(mac[i]));
+        str.push_back(':');
+    }
+    // Remove trailing semicolon
+    str.pop_back();
+    return str;
+}
+
 bool isLinkLocalIP(const std::string& address)
 {
     return address.find(IPV4_PREFIX) == 0 || address.find(IPV6_PREFIX) == 0;
