@@ -1,9 +1,12 @@
 #pragma once
 
 #include <ifaddrs.h>
+#include <netinet/in.h>
 #include <systemd/sd-event.h>
 
+#include <array>
 #include <chrono>
+#include <cstddef>
 #include <functional>
 #include <list>
 #include <map>
@@ -12,6 +15,7 @@
 #include <sdeventplus/utility/timer.hpp>
 #include <set>
 #include <string>
+#include <variant>
 #include <vector>
 
 namespace phosphor
@@ -73,6 +77,10 @@ using EventPtr = std::unique_ptr<sd_event, EventDeleter>;
 
 template <typename T>
 using UniquePtr = std::unique_ptr<T, std::function<void(T*)>>;
+
+// Byte representations for common address types in network byte order
+using InAddrAny = std::variant<struct in_addr, struct in6_addr>;
+using MacAddr = std::array<std::byte, 6>;
 
 using AddrList = std::list<AddrInfo>;
 using IntfAddrMap = std::map<IntfName, AddrList>;
