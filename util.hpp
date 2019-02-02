@@ -9,6 +9,7 @@
 #include <regex>
 #include <sdbusplus/bus.hpp>
 #include <string>
+#include <string_view>
 
 namespace phosphor
 {
@@ -92,6 +93,13 @@ constexpr auto timeSynchdService = "systemd-timesyncd.service";
  * @returns prefix.
  */
 uint8_t toCidr(int addressFamily, const std::string& mask);
+
+/* @brief converts a sockaddr for the specified address family into
+ *        a type_safe InAddrAny.
+ * @param[in] addressFamily - The address family of the buf
+ * @param[in] buf - The network byte order address
+ */
+InAddrAny addrFromBuf(int addressFamily, std::string_view buf);
 
 /* @brief converts the ip bytes into a string representation
  * @param[in] addr - input ip address to convert.
