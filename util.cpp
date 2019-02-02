@@ -603,6 +603,17 @@ std::string getfromInventory(sdbusplus::bus::bus& bus)
     return sdbusplus::message::variant_ns::get<std::string>(value);
 }
 
+MacAddr fromBuf(std::string_view buf)
+{
+    MacAddr ret;
+    if (buf.size() != ret.size())
+    {
+        throw std::runtime_error("Invalid MacAddr size");
+    }
+    memcpy(ret.data(), buf.data(), ret.size());
+    return ret;
+}
+
 std::string toString(const MacAddr& mac)
 {
     std::string str;
