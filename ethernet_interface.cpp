@@ -568,8 +568,11 @@ void EthernetInterface::writeConfigurationFile()
 
         if (manager.getSystemConf())
         {
-            stream << "Gateway=" << manager.getSystemConf()->defaultGateway()
-                   << "\n";
+            const auto& gateway = manager.getSystemConf()->defaultGateway();
+            if (!gateway.empty())
+            {
+                stream << "Gateway=" << gateway << "\n";
+            }
         }
 
         // write the route section
