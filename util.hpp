@@ -49,6 +49,11 @@ inline bool validate(const std::string& value)
  */
 std::string getfromInventory(sdbusplus::bus::bus& bus);
 
+/* @brief Marshalls the bytes for a mac address into a MacAddr.
+ * @param[in] buf - The network byte order address
+ */
+MacAddr fromBuf(std::string_view buf);
+
 /** @brief Converts the given mac address bytes into a string
  *  @param[in] bytes - The mac address
  *  @returns A valid mac address string
