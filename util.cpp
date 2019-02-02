@@ -204,6 +204,32 @@ std::string getNetworkID(int addressFamily, const std::string& ipaddress,
     return networkString;
 }
 
+InAddrAny addrFromBuf(int addressFamily, std::string_view buf)
+{
+    if (addressFamily == AF_INET)
+    {
+        struct in_addr ret;
+        if (buf.size() != sizeof(ret))
+        {
+            throw std::runtime_error("Buf not in_addr sized");
+        }
+        memcpy(&ret, buf.data(), sizeof(ret));
+        return ret;
+    }
+    else if (addressFamily == AF_INET6)
+    {
+        struct in6_addr ret;
+        if (buf.size() != sizeof(ret))
+        {
+            throw std::runtime_error("Buf not in6_addr sized");
+        }
+        memcpy(&ret, buf.data(), sizeof(ret));
+        return ret;
+    }
+
+    throw std::runtime_error("Unsupported address family");
+}
+
 std::string toString(const InAddrAny& addr)
 {
     std::string ip;
