@@ -573,6 +573,11 @@ void EthernetInterface::writeConfigurationFile()
             {
                 stream << "Gateway=" << gateway << "\n";
             }
+            const auto& gateway6 = manager.getSystemConf()->defaultGateway6();
+            if (!gateway6.empty())
+            {
+                stream << "Gateway=" << gateway6 << "\n";
+            }
         }
 
         // write the route section
