@@ -30,6 +30,19 @@ TEST_F(TestUtil, ToHex)
     EXPECT_EQ('4', mac_address::internal::toHex(4));
 }
 
+TEST_F(TestUtil, MacFromBuf)
+{
+    std::string tooSmall(1, 'a');
+    std::string tooLarge(24, 'a');
+    std::string buf{'\x00', '\xde', '\xad', '\x00', '\xbe', '\xef'};
+
+    MacAddr mac = mac_address::fromBuf(buf);
+    EXPECT_EQ(0, memcmp(buf.data(), mac.data(), buf.size()));
+
+    EXPECT_THROW(mac_address::fromBuf(tooSmall), std::runtime_error);
+    EXPECT_THROW(mac_address::fromBuf(tooLarge), std::runtime_error);
+}
+
 TEST_F(TestUtil, MacToString)
 {
     MacAddr mac1{'\x00', '\xde', '\xad', '\x00', '\xbe', '\xef'};
