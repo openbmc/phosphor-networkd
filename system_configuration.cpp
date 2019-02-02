@@ -40,6 +40,7 @@ SystemConfiguration::SystemConfiguration(sdbusplus::bus::bus& bus,
 
     SystemConfigIntf::hostName(name);
     SystemConfigIntf::defaultGateway(routingTable.getDefaultGateway());
+    SystemConfigIntf::defaultGateway6(routingTable.getDefaultGateway6());
 
     this->emit_object_added();
 }
@@ -98,13 +99,34 @@ std::string SystemConfiguration::defaultGateway(std::string gateway)
 
     if (!isValidIP(AF_INET, gateway))
     {
-        log<level::ERR>("Not a valid Gateway",
+        log<level::ERR>("Not a valid v4 Gateway",
                         entry("GATEWAY=%s", gateway.c_str()));
         elog<InvalidArgument>(
             InvalidArgumentMetadata::ARGUMENT_NAME("GATEWAY"),
             InvalidArgumentMetadata::ARGUMENT_VALUE(gateway.c_str()));
     }
     gw = SystemConfigIntf::defaultGateway(gateway);
+    manager.writeToConfigurationFile();
+    return gw;
+}
+
+std::string SystemConfiguration::defaultGateway6(std::string gateway)
+{
+    auto gw = SystemConfigIntf::defaultGateway6();
+    if (gw == gateway)
+    {
+        return gw;
+    }
+
+    if (!isValidIP(AF_INET6, gateway))
+    {
+        log<level::ERR>("Not a valid v6 Gateway",
+                        entry("GATEWAY=%s", gateway.c_str()));
+        elog<InvalidArgument>(
+            InvalidArgumentMetadata::ARGUMENT_NAME("GATEWAY"),
+            InvalidArgumentMetadata::ARGUMENT_VALUE(gateway.c_str()));
+    }
+    gw = SystemConfigIntf::defaultGateway6(gateway);
     manager.writeToConfigurationFile();
     return gw;
 }
