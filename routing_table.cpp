@@ -154,6 +154,10 @@ void Table::parseRoutes(const nlmsghdr* nlHdr)
         {
             defaultGateway = gatewayStr;
         }
+        else if (rtMsg->rtm_family == AF_INET6)
+        {
+            defaultGateway6 = gatewayStr;
+        }
     }
 
     Entry route(dstStr, gatewayStr, ifName);
