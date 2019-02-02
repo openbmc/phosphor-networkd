@@ -32,6 +32,8 @@ static bool shouldRefresh(const struct nlmsghdr& hdr)
     {
         case RTM_NEWADDR:
         case RTM_DELADDR:
+        case RTM_NEWROUTE:
+        case RTM_DELROUTE:
         {
             return true;
         }
@@ -122,7 +124,8 @@ Server::Server(EventPtr& eventPtr, const phosphor::Descriptor& smartSock)
 
     std::memset(&addr, 0, sizeof(addr));
     addr.nl_family = AF_NETLINK;
-    addr.nl_groups = RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR;
+    addr.nl_groups = RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR |
+                     RTMGRP_IPV4_ROUTE | RTMGRP_IPV6_ROUTE;
 
     if (bind(smartSock(), (struct sockaddr*)&addr, sizeof(addr)) < 0)
     {
