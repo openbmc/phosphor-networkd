@@ -45,12 +45,19 @@ class SystemConfiguration : public Iface
      */
     std::string hostName(std::string name) override;
 
-    /** @brief set the default gateway of the system.
-     *  @param[in] gateway - default gateway of the system.
+    /** @brief set the default v4 gateway of the system.
+     *  @param[in] gateway - default v4 gateway of the system.
      */
     std::string defaultGateway(std::string gateway) override;
 
     using SystemConfigIntf::defaultGateway;
+
+    /** @brief set the default v6 gateway of the system.
+     *  @param[in] gateway - default v6 gateway of the system.
+     */
+    std::string defaultGateway6(std::string gateway) override;
+
+    using SystemConfigIntf::defaultGateway6;
 
   private:
     /** @brief get the hostname from the system by doing
