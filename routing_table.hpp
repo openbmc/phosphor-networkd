@@ -60,13 +60,23 @@ class Table
     Map getRoutes();
 
     /**
-     * @brief gets the default gateway.
+     * @brief gets the default v6 gateway.
      *
-     * @returns the default gateway.
+     * @returns the default v6 gateway.
      */
     std::string getDefaultGateway() const
     {
         return defaultGateway;
+    };
+
+    /**
+     * @brief gets the default v6 gateway.
+     *
+     * @returns the default v6 gateway.
+     */
+    std::string getDefaultGateway6() const
+    {
+        return defaultGateway6;
     };
 
     /**
@@ -94,8 +104,9 @@ class Table
      */
     void parseRoutes(const struct nlmsghdr* nlHdr);
 
-    std::string defaultGateway; // default gateway
-    Map routeList;              // List of routes
+    std::string defaultGateway;  // default gateway
+    std::string defaultGateway6; // default gateway
+    Map routeList;               // List of routes
 };
 
 } // namespace route
