@@ -14,6 +14,7 @@
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <stdexcept>
+#include <string_view>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
@@ -99,15 +100,16 @@ void Table::parseRoutes(const nlmsghdr* nlHdr)
     rtmsg* rtMsg = nullptr;
     rtattr* rtAttr = nullptr;
     int rtLen{};
-    in_addr dstAddr{};
-    in_addr gateWayAddr{};
+    std::optional<InAddrAny> dstAddr;
+    std::optional<InAddrAny> gateWayAddr;
     char ifName[IF_NAMESIZE] = {};
 
     rtMsg = reinterpret_cast<rtmsg*>(NLMSG_DATA(nlHdr));
 
-    // If the route is not for AF_INET or does not belong to main routing table
-    // then return.
-    if ((rtMsg->rtm_family != AF_INET) || (rtMsg->rtm_table != RT_TABLE_MAIN))
+    // If the route is not for AF_INET{,6} or does not belong to main routing
+    // table then return.
+    if ((rtMsg->rtm_family != AF_INET && rtMsg->rtm_family != AF_INET6) ||
+        rtMsg->rtm_table != RT_TABLE_MAIN)
     {
         return;
     }
@@ -119,6 +121,8 @@ void Table::parseRoutes(const nlmsghdr* nlHdr)
 
     for (; RTA_OK(rtAttr, rtLen); rtAttr = RTA_NEXT(rtAttr, rtLen))
     {
+        std::string_view attrData(reinterpret_cast<char*>(RTA_DATA(rtAttr)),
+                                  RTA_PAYLOAD(rtAttr));
         switch (rtAttr->rta_type)
         {
             case RTA_OIF:
@@ -126,25 +130,31 @@ void Table::parseRoutes(const nlmsghdr* nlHdr)
                                ifName);
                 break;
             case RTA_GATEWAY:
-                gateWayAddr.s_addr =
-                    *reinterpret_cast<u_int*>(RTA_DATA(rtAttr));
+                gateWayAddr = addrFromBuf(rtMsg->rtm_family, attrData);
                 break;
             case RTA_DST:
-                dstAddr.s_addr = *reinterpret_cast<u_int*>(RTA_DATA(rtAttr));
+                dstAddr = addrFromBuf(rtMsg->rtm_family, attrData);
                 break;
         }
     }
 
     std::string dstStr;
-    std::string gatewayStr;
-
-    if (dstAddr.s_addr == 0 && gateWayAddr.s_addr != 0)
+    if (dstAddr)
     {
-        defaultGateway = reinterpret_cast<char*>(inet_ntoa(gateWayAddr));
+        dstStr = toString(*dstAddr);
     }
-
-    dstStr = inet_ntoa(dstAddr);
-    gatewayStr = inet_ntoa(gateWayAddr);
+    std::string gatewayStr;
+    if (gateWayAddr)
+    {
+        gatewayStr = toString(*gateWayAddr);
+    }
+    if (!dstAddr && gateWayAddr)
+    {
+        if (rtMsg->rtm_family == AF_INET)
+        {
+            defaultGateway = gatewayStr;
+        }
+    }
 
     Entry route(dstStr, gatewayStr, ifName);
     // if there is already existing route for this network
