@@ -68,7 +68,7 @@ AC_ARG_WITH([dbuspolicydir],
     AS_HELP_STRING([--with-dbuspolicydir=DIR], [Directory for D-Bus system policy files])
 )
 AS_IF([test "x$with_dbuspolicydir" = "x"],
-      [with_dbuspolicydir="${sysconfdir}/dbus-1/system.d"]
+      [with_dbuspolicydir='${sysconfdir}/dbus-1/system.d']
 )
 AC_SUBST([dbuspolicydir], [$with_dbuspolicydir])
 
