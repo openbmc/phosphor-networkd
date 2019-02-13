@@ -112,10 +112,6 @@ AC_SUBST(DEFAULT_BUSNAME, ["$DEFAULT_BUSNAME"])
 AC_ARG_VAR(SYSTEMD_TARGET, "Target for starting this service")
 AS_IF([test "x$SYSTEMD_TARGET" == "x"], [SYSTEMD_TARGET="multi-user.target"])
 
-AC_DEFINE(SYSTEMD_BUSNAME, "org.freedesktop.systemd1", [systemd busname.])
-AC_DEFINE(SYSTEMD_PATH, "/org/freedesktop/systemd1", [systemd path.])
-AC_DEFINE(SYSTEMD_INTERFACE, "org.freedesktop.systemd1.Manager", [systemd interface.])
-
 # Create configured output.
 AC_CONFIG_FILES([Makefile test/Makefile])
 AC_CONFIG_FILES([xyz.openbmc_project.Network.service])
