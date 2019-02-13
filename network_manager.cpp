@@ -20,6 +20,10 @@
 #include <string>
 #include <xyz/openbmc_project/Common/error.hpp>
 
+constexpr char SYSTEMD_BUSNAME[] = "org.freedesktop.systemd1";
+constexpr char SYSTEMD_PATH[] = "/org/freedesktop/systemd1";
+constexpr char SYSTEMD_INTERFACE[] = "org.freedesktop.systemd1.Manager";
+
 namespace phosphor
 {
 namespace network
