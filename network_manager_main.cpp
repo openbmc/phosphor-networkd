@@ -26,6 +26,8 @@ using sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
 constexpr char NETWORK_STATE_FILE[] = "/run/systemd/netif/state";
 constexpr char NETWORK_CONF_DIR[] = "/etc/systemd/network";
 
+constexpr char DEFAULT_OBJPATH[] = "/xyz/openbmc_project/network";
+
 namespace phosphor
 {
 namespace network
@@ -101,11 +103,11 @@ int main(int argc, char* argv[])
     bus.attach_event(eventPtr.get(), SD_EVENT_PRIORITY_NORMAL);
 
     // Add sdbusplus Object Manager for the 'root' path of the network manager.
-    sdbusplus::server::manager::manager objManager(bus, OBJ_NETWORK);
-    bus.request_name(BUSNAME_NETWORK);
+    sdbusplus::server::manager::manager objManager(bus, DEFAULT_OBJPATH);
+    bus.request_name(DEFAULT_BUSNAME);
 
     phosphor::network::manager = std::make_unique<phosphor::network::Manager>(
-        bus, OBJ_NETWORK, NETWORK_CONF_DIR);
+        bus, DEFAULT_OBJPATH, NETWORK_CONF_DIR);
 
     // create the default network files if the network file
     // is not there for any interface.
