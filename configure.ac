@@ -105,13 +105,9 @@ if test "x$enable_link_local_autoconfiguration" = "xyes"; then
     AC_DEFINE([LINK_LOCAL_AUTOCONFIGURATION], [1], [Enable link-local IP address autoconfiguration])
 fi
 
-AC_ARG_VAR(BUSNAME_NETWORK, [The Dbus busname to own])
-AS_IF([test "x$BUSNAME_NETWORK" == "x"], [BUSNAME_NETWORK="xyz.openbmc_project.Network"])
-AC_DEFINE_UNQUOTED([BUSNAME_NETWORK], ["$BUSNAME_NETWORK"], [The DBus busname to own])
-
-AC_ARG_VAR(OBJ_NETWORK, [The network manager DBus object path])
-AS_IF([test "x$OBJ_NETWORK" == "x"], [OBJ_NETWORK="/xyz/openbmc_project/network"])
-AC_DEFINE_UNQUOTED([OBJ_NETWORK], ["$OBJ_NETWORK"], [The network manager DBus object path])
+DEFAULT_BUSNAME='xyz.openbmc_project.Network'
+AC_DEFINE_UNQUOTED([DEFAULT_BUSNAME], ["$DEFAULT_BUSNAME"], [The DBus busname to own])
+AC_SUBST(DEFAULT_BUSNAME, ["$DEFAULT_BUSNAME"])
 
 AC_ARG_VAR(SYSTEMD_TARGET, "Target for starting this service")
 AS_IF([test "x$SYSTEMD_TARGET" == "x"], [SYSTEMD_TARGET="multi-user.target"])
