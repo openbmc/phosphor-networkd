@@ -23,6 +23,9 @@ using phosphor::logging::level;
 using phosphor::logging::log;
 using sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
 
+constexpr char NETWORK_STATE_FILE[] = "/run/systemd/netif/state";
+constexpr char NETWORK_CONF_DIR[] = "/etc/systemd/network";
+
 namespace phosphor
 {
 namespace network
@@ -133,7 +136,7 @@ int main(int argc, char* argv[])
 
     // DNS entry handler
     phosphor::network::inotify::Watch watch(
-        eventPtr, DNS_ENTRY_FILE,
+        eventPtr, NETWORK_STATE_FILE,
         std::bind(&phosphor::network::dns::updater::processDNSEntries,
                   std::placeholders::_1));
 
@@ -141,7 +144,7 @@ int main(int argc, char* argv[])
     // events. However, if the file is already populated before this, then
     // they won't ever get notified and thus we need to read once before
     // waiting on change events
-    phosphor::network::dns::updater::processDNSEntries(DNS_ENTRY_FILE);
+    phosphor::network::dns::updater::processDNSEntries(NETWORK_STATE_FILE);
 
     sd_event_loop(eventPtr.get());
 }
