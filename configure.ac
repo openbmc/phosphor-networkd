@@ -105,10 +105,6 @@ if test "x$enable_link_local_autoconfiguration" = "xyes"; then
     AC_DEFINE([LINK_LOCAL_AUTOCONFIGURATION], [1], [Enable link-local IP address autoconfiguration])
 fi
 
-AC_ARG_VAR(DNS_ENTRY_FILE, [File having DNS entries supplied by DHCP])
-AS_IF([test "x$DNS_ENTRY_FILE" == "x"], [DNS_ENTRY_FILE="/run/systemd/netif/state"])
-AC_DEFINE_UNQUOTED([DNS_ENTRY_FILE], ["$DNS_ENTRY_FILE"], [File having DNS entries supplied by DHCP])
-
 AC_ARG_VAR(BUSNAME_NETWORK, [The Dbus busname to own])
 AS_IF([test "x$BUSNAME_NETWORK" == "x"], [BUSNAME_NETWORK="xyz.openbmc_project.Network"])
 AC_DEFINE_UNQUOTED([BUSNAME_NETWORK], ["$BUSNAME_NETWORK"], [The DBus busname to own])
@@ -116,10 +112,6 @@ AC_DEFINE_UNQUOTED([BUSNAME_NETWORK], ["$BUSNAME_NETWORK"], [The DBus busname to
 AC_ARG_VAR(OBJ_NETWORK, [The network manager DBus object path])
 AS_IF([test "x$OBJ_NETWORK" == "x"], [OBJ_NETWORK="/xyz/openbmc_project/network"])
 AC_DEFINE_UNQUOTED([OBJ_NETWORK], ["$OBJ_NETWORK"], [The network manager DBus object path])
-
-AC_ARG_VAR(NETWORK_CONF_DIR, [Network configuration directory])
-AS_IF([test "x$NETWORK_CONF_DIR" == "x"], [NETWORK_CONF_DIR="/etc/systemd/network"])
-AC_DEFINE_UNQUOTED([NETWORK_CONF_DIR], ["$NETWORK_CONF_DIR"], [Network configuration directory])
 
 AC_ARG_VAR(SYSTEMD_TARGET, "Target for starting this service")
 AS_IF([test "x$SYSTEMD_TARGET" == "x"], [SYSTEMD_TARGET="multi-user.target"])
