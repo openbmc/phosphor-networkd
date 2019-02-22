@@ -1,0 +1,9 @@
+Code-Review+1: Richard Marian Thomaiyar <richard.marian.thomaiyar@linux.intel.com>
+Ok-To-Test+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Verified+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Code-Review+2: Ratan Gupta <ratagupt@linux.vnet.ibm.com>
+Submitted-by: Ratan Gupta <ratagupt@linux.vnet.ibm.com>
+Submitted-at: Fri, 22 Feb 2019 01:39:45 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/17911
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
