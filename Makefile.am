@@ -37,10 +37,9 @@ ncsi_netlink_SOURCES = \
 
 ncsi_netlink_LDFLAGS = \
         $(PHOSPHOR_LOGGING_LIBS) \
-		-lnl-3 \
-		-lnl-genl-3
+		$(LIBNL_LIBS)
 
-ncsi_netlink_CPPFLAGS = -isystem /usr/include/libnl3
+ncsi_netlink_CPPFLAGS = $(LIBNL_CFLAGS)
 ncsi_netlink_CXXFLAGS = -flto
 
 

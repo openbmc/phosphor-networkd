@@ -35,6 +35,7 @@ PKG_CHECK_MODULES([SDEVENTPLUS], [sdeventplus])
 AC_PATH_PROG([SDBUSPLUSPLUS], [sdbus++])
 PKG_CHECK_MODULES([PHOSPHOR_LOGGING], [phosphor-logging])
 PKG_CHECK_MODULES([PHOSPHOR_DBUS_INTERFACES], [phosphor-dbus-interfaces])
+PKG_CHECK_MODULES([LIBNL], [libnl-3.0 libnl-genl-3.0])
 
 # Checks for header files.
 AC_CHECK_HEADER(systemd/sd-bus.h, ,\
