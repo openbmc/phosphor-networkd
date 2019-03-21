@@ -40,7 +40,7 @@ ncsi_netlink_LDFLAGS = \
 		-lnl-3 \
 		-lnl-genl-3
 
-ncsi_netlink_CPPFLAGS = -isystem=/usr/include/libnl3
+ncsi_netlink_CPPFLAGS = -isystem /usr/include/libnl3
 ncsi_netlink_CXXFLAGS = -flto
 
 
