@@ -104,8 +104,8 @@ void EthernetInterface::createIPAddressObjects()
     }
 }
 
-void EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
-                           uint8_t prefixLength, std::string gateway)
+ObjectPath EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
+                                 uint8_t prefixLength, std::string gateway)
 {
 
     if (dHCPEnabled())
@@ -152,6 +152,7 @@ void EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
                             origin, prefixLength, gateway));
 
     manager.writeToConfigurationFile();
+    return objectPath;
 }
 
 /*
