@@ -88,7 +88,8 @@ class TestEthernetInterface : public testing::Test
     void createIPObject(IP::Protocol addressType, const std::string& ipaddress,
                         uint8_t subnetMask, const std::string& gateway)
     {
-        interface.iP(addressType, ipaddress, subnetMask, gateway);
+        auto objPath =
+            interface.iP(addressType, ipaddress, subnetMask, gateway);
     }
 
     // Validates if the DNS entries have been correctly processed

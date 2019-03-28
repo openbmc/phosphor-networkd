@@ -31,6 +31,7 @@ using MacAddressIntf =
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress;
 
 using ServerList = std::vector<std::string>;
+using ObjectPath = sdbusplus::message::object_path;
 
 namespace fs = std::experimental::filesystem;
 
@@ -86,8 +87,8 @@ class EthernetInterface : public Ifaces
      *  @param[in] gateway - Gateway ip address.
      */
 
-    void iP(IP::Protocol addressType, std::string ipaddress,
-            uint8_t prefixLength, std::string gateway) override;
+    ObjectPath iP(IP::Protocol addressType, std::string ipaddress,
+                  uint8_t prefixLength, std::string gateway) override;
 
     /* @brief delete the dbus object of the given ipaddress.
      * @param[in] ipaddress - IP address.
