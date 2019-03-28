@@ -20,5 +20,10 @@ methods:
           type: string
           description: >
               Gateway Address.
+      returns:
+        - name: Path
+          type: path
+          description: >
+            The path for the created ipaddress object.
       errors:
         - xyz.openbmc_project.Common.Error.InvalidArgument
