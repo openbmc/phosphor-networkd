@@ -12,7 +12,7 @@ dbuspolicy_DATA = \
 		xyz.openbmc_project.Network.conf
 endif
 
-sbin_PROGRAMS = phosphor-network-manager ncsi-netlink
+bin_PROGRAMS = phosphor-network-manager ncsi-netlink
 
 noinst_HEADERS = \
 		ethernet_interface.hpp \
