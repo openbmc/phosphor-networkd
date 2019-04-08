@@ -4,9 +4,10 @@
 
 #include "types.hpp"
 
+#include <netinet/ether.h>
 #include <unistd.h>
 
-#include <regex>
+#include <cstring>
 #include <sdbusplus/bus.hpp>
 #include <string>
 #include <string_view>
@@ -21,12 +22,10 @@ constexpr auto IPV4_MAX_PREFIX_LENGTH = 32;
 constexpr auto IPV6_MAX_PREFIX_LENGTH = 64;
 constexpr auto IPV4_PREFIX = "169.254";
 constexpr auto IPV6_PREFIX = "fe80";
-constexpr auto ZEROMACADDRESS = "00:00:00:00:00:00";
 
 namespace mac_address
 {
 
-constexpr auto regex = "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$";
 constexpr auto localAdminMask = 0x020000000000;
 constexpr auto broadcastMac = 0xFFFFFFFFFFFF;
 
@@ -39,9 +38,13 @@ constexpr size_t size = 18;
  */
 inline bool validate(const std::string& value)
 {
-    std::regex regexToCheck(regex);
-    return std::regex_search(value, regexToCheck) &&
-           value.find(ZEROMACADDRESS) != 0;
+    struct ether_addr* addr = ether_aton(value.c_str());
+    if (addr == nullptr)
+    {
+        return false;
+    }
+    ether_addr zero{};
+    return std::memcmp(addr, &zero, sizeof(zero)) != 0;
 }
 
 /** @brief gets the MAC address from the Inventory.
@@ -68,15 +71,15 @@ namespace internal
  */
 inline uint64_t convertToInt(const std::string& value)
 {
-    unsigned char mac[6];
-
-    sscanf(value.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", mac + 0, mac + 1,
-           mac + 2, mac + 3, mac + 4, mac + 5);
-    return static_cast<uint64_t>(mac[0]) << 40 |
-           static_cast<uint64_t>(mac[1]) << 32 |
-           static_cast<uint64_t>(mac[2]) << 24 |
-           static_cast<uint64_t>(mac[3]) << 16 |
-           static_cast<uint64_t>(mac[4]) << 8 | static_cast<uint64_t>(mac[5]);
+    struct ether_addr* addr = ether_aton(value.c_str());
+    if (addr == nullptr)
+    {
+        return 0;
+    }
+    uint64_t ret = 0;
+    static_assert(sizeof(ret) >= sizeof(*addr));
+    std::memcpy(&ret, addr, sizeof(*addr));
+    return ret;
 }
 
 /** @brief Converts the lower nibble of a byte value to a hex digit
