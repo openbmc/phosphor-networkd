@@ -177,7 +177,7 @@ TEST_F(TestUtil, MacValidation)
     EXPECT_EQ(false, phosphor::network::mac_address::validate(macaddress));
 
     macaddress = "F6:C6:E6:6:B0:D3";
-    EXPECT_EQ(false, phosphor::network::mac_address::validate(macaddress));
+    EXPECT_EQ(true, phosphor::network::mac_address::validate(macaddress));
 
     macaddress = "F6:C6:E6:06:B0:D3";
     EXPECT_EQ(true, phosphor::network::mac_address::validate(macaddress));
