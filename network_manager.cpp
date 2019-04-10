@@ -178,7 +178,23 @@ void Manager::createChildObjects()
 
 void Manager::vLAN(IntfName interfaceName, uint32_t id)
 {
-    interfaces[interfaceName]->createVLAN(id);
+    IntfName parentName;
+
+    // Use '.' as a delimeter for VLAN ID
+    auto index = interfaceName.find(".");
+    if (std::string::npos != index)
+    {
+        parentName = interfaceName.substr(0, index);
+    }
+
+    for (auto& intf : interfaces)
+    {
+        if (parentName == intf.first)
+        {
+            // Create vlan only for existing physical interface
+            interfaces[parentName]->createVLAN(id);
+        }
+    }
 }
 
 void Manager::reset()
