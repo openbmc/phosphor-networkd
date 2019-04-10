@@ -424,7 +424,7 @@ void EthernetInterface::loadVLAN(VlanId id)
                                  std::move(vlanIntf));
 }
 
-void EthernetInterface::createVLAN(VlanId id)
+ObjectPath EthernetInterface::createVLAN(VlanId id)
 {
     std::string vlanInterfaceName = interfaceName() + "." + std::to_string(id);
     std::string path = objPath;
@@ -439,6 +439,8 @@ void EthernetInterface::createVLAN(VlanId id)
     this->vlanInterfaces.emplace(vlanInterfaceName, std::move(vlanIntf));
     // write the new vlan device entry to the configuration(network) file.
     manager.writeToConfigurationFile();
+
+    return path;
 }
 
 ServerList EthernetInterface::getNTPServersFromConf()

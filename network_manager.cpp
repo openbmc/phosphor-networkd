@@ -176,9 +176,9 @@ void Manager::createChildObjects()
         bus, objPath.string(), *this);
 }
 
-void Manager::vLAN(IntfName interfaceName, uint32_t id)
+ObjectPath Manager::vLAN(IntfName interfaceName, uint32_t id)
 {
-    interfaces[interfaceName]->createVLAN(id);
+    return interfaces[interfaceName]->createVLAN(id);
 }
 
 void Manager::reset()

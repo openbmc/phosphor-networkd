@@ -137,7 +137,7 @@ class EthernetInterface : public Ifaces
     /** @brief create Vlan interface.
      *  @param[in] id- VLAN identifier.
      */
-    void createVLAN(VlanId id);
+    ObjectPath createVLAN(VlanId id);
 
     /** @brief load the vlan info from the system
      *         and creates the ip address dbus objects.

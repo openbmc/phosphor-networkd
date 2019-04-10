@@ -56,7 +56,7 @@ class Manager : public details::VLANCreateIface
     Manager(sdbusplus::bus::bus& bus, const char* objPath,
             const std::string& dir);
 
-    void vLAN(IntfName interfaceName, uint32_t id) override;
+    ObjectPath vLAN(IntfName interfaceName, uint32_t id) override;
 
     /** @brief write the network conf file with the in-memory objects.
      */
