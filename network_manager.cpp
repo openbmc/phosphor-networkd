@@ -178,7 +178,28 @@ void Manager::createChildObjects()
 
 ObjectPath Manager::vLAN(IntfName interfaceName, uint32_t id)
 {
-    return interfaces[interfaceName]->createVLAN(id);
+    ObjectPath path;
+    // Check whether the VLAN intf name contains the parent
+    // intf name and uses '.' as a delimeter for VLAN ID
+    auto index = interfaceName.find(".");
+    if (std::string::npos != index)
+    {
+        interfaceName = interfaceName.substr(0, index);
+    }
+    try
+    {
+        // Create vlan only for existing physical interface
+        // If the map is empty, exception will be thrown
+        path = interfaces.at(interfaceName)->createVLAN(id);
+    }
+    catch (const std::exception& e)
+    {
+        log<level::ERR>("Error creating VLAN interface",
+                        entry("VLAN intf=%s", interfaceName.c_str()),
+                        entry("VLAN id=%d", id), entry("ERROR=%s", e.what()));
+        elog<InternalFailure>();
+    }
+    return path;
 }
 
 void Manager::reset()
