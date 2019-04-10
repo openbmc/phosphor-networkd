@@ -178,6 +178,13 @@ void Manager::createChildObjects()
 
 void Manager::vLAN(IntfName interfaceName, uint32_t id)
 {
+    if (!isValidVlanId(id))
+    {
+        log<level::ERR>("VLAN ID doesn't comply with 802.1Q frame format!");
+        elog<InternalFailure>();
+        return;
+    }
+
     IntfName parentName;
 
     // Use '.' as a delimeter for VLAN ID
