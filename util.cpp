@@ -275,8 +275,7 @@ bool isValidPrefix(int addressFamily, uint8_t prefixLength)
 {
     if (addressFamily == AF_INET)
     {
-        if (prefixLength < IPV4_MIN_PREFIX_LENGTH ||
-            prefixLength > IPV4_MAX_PREFIX_LENGTH)
+        if (prefixLength > IPV4_MAX_PREFIX_LENGTH)
         {
             return false;
         }
@@ -284,8 +283,7 @@ bool isValidPrefix(int addressFamily, uint8_t prefixLength)
 
     if (addressFamily == AF_INET6)
     {
-        if (prefixLength < IPV4_MIN_PREFIX_LENGTH ||
-            prefixLength > IPV6_MAX_PREFIX_LENGTH)
+        if (prefixLength > IPV6_MAX_PREFIX_LENGTH)
         {
             return false;
         }
