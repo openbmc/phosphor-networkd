@@ -37,6 +37,11 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
     emit_object_added();
 }
 
+std::string VlanInterface::mACAddress(std::string value)
+{
+    return parentInterface.mACAddress(value);
+}
+
 void VlanInterface::writeDeviceFile()
 {
     using namespace std::string_literals;

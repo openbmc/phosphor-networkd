@@ -52,6 +52,12 @@ class VlanInterface : public VlanIface,
      */
     void delete_() override;
 
+    /** @brief sets the MAC address.
+     *  @param[in] value - MAC address which needs to be set on the system.
+     *  @returns macAddress of the interface or throws an error.
+     */
+    std::string mACAddress(std::string value) override;
+
     /** @brief writes the device configuration.
                systemd reads this configuration file
                and creates the vlan interface.*/
