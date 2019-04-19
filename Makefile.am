@@ -17,6 +17,7 @@ sbin_PROGRAMS = phosphor-network-manager ncsi-netlink
 noinst_HEADERS = \
 		ethernet_interface.hpp \
 		neighbor.hpp \
+		netlink.hpp \
 		network_config.hpp \
 		network_manager.hpp \
 		ipaddress.hpp \
@@ -49,6 +50,7 @@ phosphor_network_manager_SOURCES = \
 		ethernet_interface.cpp \
 		neighbor.cpp \
 		ipaddress.cpp \
+		netlink.cpp \
 		network_config.cpp \
 		network_manager.cpp \
 		network_manager_main.cpp \
