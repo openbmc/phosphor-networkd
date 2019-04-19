@@ -4,6 +4,9 @@
 #include <netinet/in.h>
 
 #include <cstddef>
+#include <cstring>
+#include <string>
+#include <string_view>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gtest/gtest.h>
@@ -13,6 +16,7 @@ namespace phosphor
 namespace network
 {
 
+using namespace std::literals;
 using InternalFailure =
     sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
 class TestUtil : public testing::Test
@@ -266,6 +270,94 @@ TEST_F(TestUtil, getNetworkAddress)
 
     address = getNetworkID(AF_INET6, "fe80::201:6cff:fe80:228", 64);
     EXPECT_EQ("fe80::", address);
+}
+
+TEST_F(TestUtil, CopyFromTooSmall)
+{
+    constexpr auto expected = "abcde"sv;
+    struct
+    {
+        uint8_t data[10];
+    } data;
+    static_assert(sizeof(data) > expected.size());
+    EXPECT_THROW(copyFrom<decltype(data)>(expected), std::runtime_error);
+}
+
+TEST_F(TestUtil, CopyFromSome)
+{
+    constexpr auto expected = "abcde"sv;
+    struct
+    {
+        uint8_t data[2];
+    } data;
+    static_assert(sizeof(data) < expected.size());
+    data = copyFrom<decltype(data)>(expected);
+    EXPECT_EQ(0, memcmp(&data, expected.data(), sizeof(data)));
+}
+
+TEST_F(TestUtil, CopyFromAll)
+{
+    constexpr auto expected = "abcde"sv;
+    struct
+    {
+        uint8_t data[5];
+    } data;
+    static_assert(sizeof(data) == expected.size());
+    data = copyFrom<decltype(data)>(expected);
+    EXPECT_EQ(0, memcmp(&data, expected.data(), sizeof(data)));
+}
+
+TEST_F(TestUtil, ExtractSome)
+{
+    constexpr auto expected = "abcde"sv;
+    auto buf = expected;
+    struct
+    {
+        uint8_t data[2];
+    } data;
+    static_assert(sizeof(data) < expected.size());
+    data = extract<decltype(data)>(buf);
+    EXPECT_EQ(0, memcmp(&data, expected.data(), sizeof(data)));
+    EXPECT_EQ(3, buf.size());
+    EXPECT_EQ(expected.substr(2), buf);
+}
+
+TEST_F(TestUtil, ExtractAll)
+{
+    constexpr auto expected = "abcde"sv;
+    auto buf = expected;
+    struct
+    {
+        uint8_t data[5];
+    } data;
+    static_assert(sizeof(data) == expected.size());
+    data = extract<decltype(data)>(buf);
+    EXPECT_EQ(0, memcmp(&data, expected.data(), sizeof(data)));
+    EXPECT_EQ(0, buf.size());
+}
+
+TEST_F(TestUtil, Equal)
+{
+    struct
+    {
+        int i;
+    } a, b{};
+    a.i = 4;
+    b.i = 4;
+
+    EXPECT_TRUE(equal(a, b));
+}
+
+TEST_F(TestUtil, NotEqual)
+{
+    struct
+    {
+        int i;
+    } a, b{};
+    a.i = 2;
+    b.i = 4;
+
+    EXPECT_FALSE(equal(a, b));
 }
 
 } // namespace network

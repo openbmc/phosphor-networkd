@@ -3,12 +3,13 @@
 #include "types.hpp"
 #include "util.hpp"
 
-#include <netinet/in.h>
+#include <linux/netlink.h>
 
 #include <optional>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <string>
+#include <string_view>
 #include <vector>
 #include <xyz/openbmc_project/Network/Neighbor/server.hpp>
 #include <xyz/openbmc_project/Object/Delete/server.hpp>
@@ -77,6 +78,14 @@ class Neighbor : public NeighborObj
     /** @brief Parent Object. */
     EthernetInterface& parent;
 };
+
+namespace detail
+{
+
+void parseNeighbor(const nlmsghdr& hdr, std::string_view msg,
+                   std::vector<NeighborInfo>& neighbors);
+
+} // namespace detail
 
 } // namespace network
 } // namespace phosphor
