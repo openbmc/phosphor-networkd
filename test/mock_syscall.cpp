@@ -191,16 +191,11 @@ unsigned if_nametoindex(const char* ifname)
 
 char* if_indextoname(unsigned ifindex, char* ifname)
 {
-    if (ifindex == 0)
-    {
-        errno = ENXIO;
-        return NULL;
-    }
     auto it = mock_if_indextoname.find(ifindex);
     if (it == mock_if_indextoname.end())
     {
-        // TODO: Return ENXIO once other code is mocked out
-        return std::strcpy(ifname, "invalid");
+        errno = ENXIO;
+        return NULL;
     }
     return std::strcpy(ifname, it->second.c_str());
 }

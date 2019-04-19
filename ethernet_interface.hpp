@@ -127,6 +127,10 @@ class EthernetInterface : public Ifaces
      */
     void createStaticNeighborObjects();
 
+    /* @brief Gets the index of the interface on the system
+     */
+    unsigned ifIndex() const;
+
     /* @brief Gets all the ip addresses.
      * @returns the list of ipaddress.
      */
