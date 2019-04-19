@@ -112,7 +112,6 @@ xyz/openbmc_project/Network/IP/Create/server.cpp: xyz/openbmc_project/Network/IP
 xyz/openbmc_project/Network/IP/Create/server.hpp: xyz/openbmc_project/Network/IP/Create.interface.yaml
 	@mkdir -p `dirname $@`
 	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.IP.Create > $@
-	sed -i '5i #include \"xyz\/openbmc_project\/Network\/IP\/server.hpp\"' $@
 
 xyz/openbmc_project/Network/Neighbor/CreateStatic/server.cpp: xyz/openbmc_project/Network/Neighbor/CreateStatic.interface.yaml xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp
 	@mkdir -p `dirname $@`
@@ -121,6 +120,5 @@ xyz/openbmc_project/Network/Neighbor/CreateStatic/server.cpp: xyz/openbmc_projec
 xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp: xyz/openbmc_project/Network/Neighbor/CreateStatic.interface.yaml
 	@mkdir -p `dirname $@`
 	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.Neighbor.CreateStatic > $@
-	sed -i '5i #include \"xyz\/openbmc_project\/Network\/Neighbor\/server.hpp\"' $@
 
 SUBDIRS = test
