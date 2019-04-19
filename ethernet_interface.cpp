@@ -11,6 +11,7 @@
 
 #include <arpa/inet.h>
 #include <linux/ethtool.h>
+#include <linux/rtnetlink.h>
 #include <linux/sockios.h>
 #include <net/if.h>
 #include <netinet/in.h>
@@ -110,11 +111,13 @@ void EthernetInterface::createStaticNeighborObjects()
 {
     staticNeighbors.clear();
 
-    auto neighbors = getCurrentNeighbors();
+    NeighborFilter filter;
+    filter.interface = ifIndex();
+    filter.state = NUD_PERMANENT;
+    auto neighbors = getCurrentNeighbors(filter);
     for (const auto& neighbor : neighbors)
     {
-        if (!neighbor.permanent || !neighbor.mac ||
-            neighbor.interface != interfaceName())
+        if (!neighbor.mac)
         {
             continue;
         }
@@ -126,6 +129,17 @@ void EthernetInterface::createStaticNeighborObjects()
                                     bus, objectPath.c_str(), *this, ip, mac,
                                     Neighbor::State::Permanent));
     }
+}
+
+unsigned EthernetInterface::ifIndex() const
+{
+    unsigned idx = if_nametoindex(interfaceName().c_str());
+    if (idx == 0)
+    {
+        throw std::system_error(errno, std::generic_category(),
+                                "if_nametoindex");
+    }
+    return idx;
 }
 
 ObjectPath EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
