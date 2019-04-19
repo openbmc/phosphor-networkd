@@ -7,6 +7,8 @@ check_PROGRAMS = test test_dns_updater test_watch
 test_SOURCES = \
 	test_util.cpp \
 	mock_syscall.cpp \
+	test_neighbor.cpp \
+	test_netlink.cpp \
 	test_network_manager.cpp \
 	test_ethernet_interface.cpp \
 	test_rtnetlink.cpp \
@@ -50,6 +52,7 @@ test_LDADD = $(top_builddir)/ethernet_interface.o \
 			$(top_builddir)/network_config.o \
 			$(top_builddir)/ipaddress.o \
 			$(top_builddir)/neighbor.o \
+			$(top_builddir)/netlink.o \
 			$(top_builddir)/routing_table.o \
 			$(top_builddir)/util.o \
 			$(top_builddir)/rtnetlink_server.o \
