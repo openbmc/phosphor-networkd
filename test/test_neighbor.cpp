@@ -1,4 +1,3 @@
-#include "mock_syscall.hpp"
 #include "neighbor.hpp"
 #include "util.hpp"
 
@@ -10,7 +9,6 @@
 #include <cstring>
 #include <stdexcept>
 #include <string>
-#include <system_error>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -22,16 +20,14 @@ namespace network
 namespace detail
 {
 
-constexpr auto ifStr = "eth0";
-constexpr auto ifIdx = 1;
-
 TEST(ParseNeighbor, NotNeighborType)
 {
     nlmsghdr hdr{};
     hdr.nlmsg_type = RTM_NEWLINK;
+    NeighborFilter filter;
 
     std::vector<NeighborInfo> info;
-    EXPECT_THROW(parseNeighbor(info, hdr, ""), std::runtime_error);
+    EXPECT_THROW(parseNeighbor(filter, info, hdr, ""), std::runtime_error);
     EXPECT_EQ(0, info.size());
 }
 
@@ -40,53 +36,36 @@ TEST(ParseNeighbor, SmallMsg)
     nlmsghdr hdr{};
     hdr.nlmsg_type = RTM_NEWNEIGH;
     std::string data = "1";
+    NeighborFilter filter;
 
     std::vector<NeighborInfo> info;
-    EXPECT_THROW(parseNeighbor(info, hdr, data), std::runtime_error);
-    EXPECT_EQ(0, info.size());
-}
-
-TEST(ParseNeighbor, BadIf)
-{
-    nlmsghdr hdr{};
-    hdr.nlmsg_type = RTM_NEWNEIGH;
-    ndmsg msg{};
-    std::string data;
-    data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
-
-    std::vector<NeighborInfo> info;
-    EXPECT_THROW(parseNeighbor(info, hdr, data), std::system_error);
+    EXPECT_THROW(parseNeighbor(filter, info, hdr, data), std::runtime_error);
     EXPECT_EQ(0, info.size());
 }
 
 TEST(ParseNeighbor, NoAttrs)
 {
-    mock_clear();
-    mock_addIF(ifStr, ifIdx);
-
     nlmsghdr hdr{};
     hdr.nlmsg_type = RTM_NEWNEIGH;
     ndmsg msg{};
-    msg.ndm_ifindex = ifIdx;
-    ASSERT_NE(0, msg.ndm_ifindex);
+    msg.ndm_ifindex = 1;
+    msg.ndm_state = NUD_REACHABLE;
     std::string data;
     data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
+    NeighborFilter filter;
 
     std::vector<NeighborInfo> info;
-    EXPECT_THROW(parseNeighbor(info, hdr, data), std::runtime_error);
+    EXPECT_THROW(parseNeighbor(filter, info, hdr, data), std::runtime_error);
     EXPECT_EQ(0, info.size());
 }
 
 TEST(ParseNeighbor, NoAddress)
 {
-    mock_clear();
-    mock_addIF(ifStr, ifIdx);
-
     nlmsghdr hdr{};
     hdr.nlmsg_type = RTM_NEWNEIGH;
     ndmsg msg{};
-    msg.ndm_ifindex = ifIdx;
-    ASSERT_NE(0, msg.ndm_ifindex);
+    msg.ndm_ifindex = 1;
+    msg.ndm_state = NUD_REACHABLE;
     ether_addr mac = {{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa}};
     rtattr lladdr{};
     lladdr.rta_len = RTA_LENGTH(sizeof(mac));
@@ -98,24 +77,21 @@ TEST(ParseNeighbor, NoAddress)
     std::string data;
     data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
     data.append(reinterpret_cast<char*>(&lladdrbuf), sizeof(lladdrbuf));
+    NeighborFilter filter;
 
     std::vector<NeighborInfo> info;
-    EXPECT_THROW(parseNeighbor(info, hdr, data), std::runtime_error);
+    EXPECT_THROW(parseNeighbor(filter, info, hdr, data), std::runtime_error);
     EXPECT_EQ(0, info.size());
 }
 
 TEST(ParseNeighbor, NoMAC)
 {
-    mock_clear();
-    mock_addIF(ifStr, ifIdx);
-
     nlmsghdr hdr{};
     hdr.nlmsg_type = RTM_NEWNEIGH;
     ndmsg msg{};
     msg.ndm_family = AF_INET;
     msg.ndm_state = NUD_PERMANENT;
-    msg.ndm_ifindex = ifIdx;
-    ASSERT_NE(0, msg.ndm_ifindex);
+    msg.ndm_ifindex = 1;
     in_addr addr;
     ASSERT_EQ(1, inet_pton(msg.ndm_family, "192.168.10.1", &addr));
     rtattr dst{};
@@ -128,27 +104,95 @@ TEST(ParseNeighbor, NoMAC)
     std::string data;
     data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
     data.append(reinterpret_cast<char*>(&dstbuf), sizeof(dstbuf));
+    NeighborFilter filter;
 
     std::vector<NeighborInfo> info;
-    parseNeighbor(info, hdr, data);
+    parseNeighbor(filter, info, hdr, data);
     EXPECT_EQ(1, info.size());
-    EXPECT_EQ(ifStr, info[0].interface);
-    EXPECT_TRUE(info[0].permanent);
+    EXPECT_EQ(msg.ndm_ifindex, info[0].interface);
+    EXPECT_EQ(msg.ndm_state, info[0].state);
+    EXPECT_FALSE(info[0].mac);
+    EXPECT_TRUE(equal(addr, std::get<in_addr>(info[0].address)));
+}
+
+TEST(ParseNeighbor, FilterInterface)
+{
+    nlmsghdr hdr{};
+    hdr.nlmsg_type = RTM_NEWNEIGH;
+    ndmsg msg{};
+    msg.ndm_family = AF_INET;
+    msg.ndm_state = NUD_PERMANENT;
+    msg.ndm_ifindex = 2;
+    in_addr addr;
+    ASSERT_EQ(1, inet_pton(msg.ndm_family, "192.168.10.1", &addr));
+    rtattr dst{};
+    dst.rta_len = RTA_LENGTH(sizeof(addr));
+    dst.rta_type = NDA_DST;
+    char dstbuf[RTA_ALIGN(dst.rta_len)];
+    std::memset(dstbuf, '\0', sizeof(dstbuf));
+    std::memcpy(dstbuf, &dst, sizeof(dst));
+    std::memcpy(RTA_DATA(dstbuf), &addr, sizeof(addr));
+    std::string data;
+    data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
+    data.append(reinterpret_cast<char*>(&dstbuf), sizeof(dstbuf));
+    NeighborFilter filter;
+
+    std::vector<NeighborInfo> info;
+    filter.interface = 1;
+    parseNeighbor(filter, info, hdr, data);
+    EXPECT_EQ(0, info.size());
+    filter.interface = 2;
+    parseNeighbor(filter, info, hdr, data);
+    EXPECT_EQ(1, info.size());
+    EXPECT_EQ(msg.ndm_ifindex, info[0].interface);
+    EXPECT_EQ(msg.ndm_state, info[0].state);
+    EXPECT_FALSE(info[0].mac);
+    EXPECT_TRUE(equal(addr, std::get<in_addr>(info[0].address)));
+}
+
+TEST(ParseNeighbor, FilterState)
+{
+    nlmsghdr hdr{};
+    hdr.nlmsg_type = RTM_NEWNEIGH;
+    ndmsg msg{};
+    msg.ndm_family = AF_INET;
+    msg.ndm_state = NUD_PERMANENT;
+    msg.ndm_ifindex = 2;
+    in_addr addr;
+    ASSERT_EQ(1, inet_pton(msg.ndm_family, "192.168.10.1", &addr));
+    rtattr dst{};
+    dst.rta_len = RTA_LENGTH(sizeof(addr));
+    dst.rta_type = NDA_DST;
+    char dstbuf[RTA_ALIGN(dst.rta_len)];
+    std::memset(dstbuf, '\0', sizeof(dstbuf));
+    std::memcpy(dstbuf, &dst, sizeof(dst));
+    std::memcpy(RTA_DATA(dstbuf), &addr, sizeof(addr));
+    std::string data;
+    data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
+    data.append(reinterpret_cast<char*>(&dstbuf), sizeof(dstbuf));
+    NeighborFilter filter;
+
+    std::vector<NeighborInfo> info;
+    filter.state = NUD_NOARP;
+    parseNeighbor(filter, info, hdr, data);
+    EXPECT_EQ(0, info.size());
+    filter.state = NUD_PERMANENT | NUD_NOARP;
+    parseNeighbor(filter, info, hdr, data);
+    EXPECT_EQ(1, info.size());
+    EXPECT_EQ(msg.ndm_ifindex, info[0].interface);
+    EXPECT_EQ(msg.ndm_state, info[0].state);
     EXPECT_FALSE(info[0].mac);
     EXPECT_TRUE(equal(addr, std::get<in_addr>(info[0].address)));
 }
 
 TEST(ParseNeighbor, Full)
 {
-    mock_clear();
-    mock_addIF(ifStr, ifIdx);
-
     nlmsghdr hdr{};
     hdr.nlmsg_type = RTM_NEWNEIGH;
     ndmsg msg{};
     msg.ndm_family = AF_INET6;
     msg.ndm_state = NUD_NOARP;
-    msg.ndm_ifindex = ifIdx;
+    msg.ndm_ifindex = 1;
     ether_addr mac = {{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa}};
     rtattr lladdr{};
     lladdr.rta_len = RTA_LENGTH(sizeof(mac));
@@ -170,12 +214,13 @@ TEST(ParseNeighbor, Full)
     data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
     data.append(reinterpret_cast<char*>(&lladdrbuf), sizeof(lladdrbuf));
     data.append(reinterpret_cast<char*>(&dstbuf), sizeof(dstbuf));
+    NeighborFilter filter;
 
     std::vector<NeighborInfo> info;
-    parseNeighbor(info, hdr, data);
+    parseNeighbor(filter, info, hdr, data);
     EXPECT_EQ(1, info.size());
-    EXPECT_EQ(ifStr, info[0].interface);
-    EXPECT_FALSE(info[0].permanent);
+    EXPECT_EQ(msg.ndm_ifindex, info[0].interface);
+    EXPECT_EQ(msg.ndm_state, info[0].state);
     EXPECT_TRUE(info[0].mac);
     EXPECT_TRUE(equal(mac, *info[0].mac));
     EXPECT_TRUE(equal(addr, std::get<in6_addr>(info[0].address)));

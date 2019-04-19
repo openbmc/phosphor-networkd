@@ -1,11 +1,11 @@
 #pragma once
 
 #include "types.hpp"
-#include "util.hpp"
 
 #include <linux/netlink.h>
 #include <net/ethernet.h>
 
+#include <cstdint>
 #include <optional>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
@@ -27,20 +27,33 @@ using NeighborObj = sdbusplus::server::object::object<
 
 class EthernetInterface;
 
+/* @class NeighborFilter
+ */
+struct NeighborFilter
+{
+    unsigned interface;
+    uint16_t state;
+
+    /* @brief Creates an empty filter */
+    NeighborFilter() : interface(0), state(~UINT16_C(0))
+    {
+    }
+};
+
 /** @class NeighborInfo
  *  @brief Information about a neighbor from the kernel
  */
 struct NeighborInfo
 {
-    std::string interface;
+    unsigned interface;
     InAddrAny address;
     std::optional<ether_addr> mac;
-    bool permanent;
+    uint16_t state;
 };
 
 /** @brief Returns a list of the current system neighbor table
  */
-std::vector<NeighborInfo> getCurrentNeighbors();
+std::vector<NeighborInfo> getCurrentNeighbors(const NeighborFilter& filter);
 
 /** @class Neighbor
  *  @brief OpenBMC network neighbor implementation.
@@ -83,8 +96,8 @@ class Neighbor : public NeighborObj
 namespace detail
 {
 
-void parseNeighbor(std::vector<NeighborInfo>& ret, const nlmsghdr& hdr,
-                   std::string_view msg);
+void parseNeighbor(const NeighborFilter& filter, std::vector<NeighborInfo>& ret,
+                   const nlmsghdr& hdr, std::string_view msg);
 
 } // namespace detail
 

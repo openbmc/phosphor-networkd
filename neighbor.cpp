@@ -13,10 +13,9 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
-#include <cstring>
 #include <stdexcept>
 #include <string_view>
-#include <system_error>
+#include <utility>
 #include <vector>
 
 namespace phosphor
@@ -26,8 +25,8 @@ namespace network
 namespace detail
 {
 
-void parseNeighbor(std::vector<NeighborInfo>& ret, const nlmsghdr& hdr,
-                   std::string_view msg)
+void parseNeighbor(const NeighborFilter& filter, std::vector<NeighborInfo>& ret,
+                   const nlmsghdr& hdr, std::string_view msg)
 {
     if (hdr.nlmsg_type != RTM_NEWNEIGH)
     {
@@ -35,15 +34,21 @@ void parseNeighbor(std::vector<NeighborInfo>& ret, const nlmsghdr& hdr,
     }
     auto ndm = extract<ndmsg>(msg, "Bad neighbor msg");
 
-    NeighborInfo info;
-    info.interface.resize(IF_NAMESIZE);
-    if (if_indextoname(ndm.ndm_ifindex, info.interface.data()) == nullptr)
+    // Filter out neighbors we don't care about
+    unsigned ifindex = ndm.ndm_ifindex;
+    if (filter.interface != 0 && filter.interface != ifindex)
     {
-        throw std::system_error(errno, std::generic_category(),
-                                "if_indextoname");
+        return;
     }
-    info.interface.resize(strlen(info.interface.c_str()));
-    info.permanent = ndm.ndm_state & NUD_PERMANENT;
+    if ((ndm.ndm_state & filter.state) == 0)
+    {
+        return;
+    }
+
+    // Build the neighbor info for our valid neighbor
+    NeighborInfo info;
+    info.interface = ifindex;
+    info.state = ndm.ndm_state;
     bool set_addr = false;
     while (!msg.empty())
     {
@@ -67,14 +72,15 @@ void parseNeighbor(std::vector<NeighborInfo>& ret, const nlmsghdr& hdr,
 
 } // namespace detail
 
-std::vector<NeighborInfo> getCurrentNeighbors()
+std::vector<NeighborInfo> getCurrentNeighbors(const NeighborFilter& filter)
 {
     std::vector<NeighborInfo> info;
-    auto cb = [&info](const nlmsghdr& hdr, std::string_view msg) {
-        detail::parseNeighbor(info, hdr, msg);
+    auto cb = [&filter, &info](const nlmsghdr& hdr, std::string_view msg) {
+        detail::parseNeighbor(filter, info, hdr, msg);
     };
-    netlink::performRequest(NETLINK_ROUTE, RTM_GETNEIGH, NLM_F_DUMP, ndmsg{},
-                            cb);
+    ndmsg msg{};
+    msg.ndm_ifindex = filter.interface;
+    netlink::performRequest(NETLINK_ROUTE, RTM_GETNEIGH, NLM_F_DUMP, msg, cb);
     return info;
 }
 
