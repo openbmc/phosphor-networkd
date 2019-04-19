@@ -37,6 +37,12 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
     emit_object_added();
 }
 
+std::string VlanInterface::mACAddress(std::string)
+{
+    log<level::ERR>("Tried to set MAC address on VLAN");
+    elog<InternalFailure>();
+}
+
 void VlanInterface::writeDeviceFile()
 {
     using namespace std::string_literals;
