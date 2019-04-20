@@ -4,6 +4,7 @@
 #include "util.hpp"
 
 #include <linux/netlink.h>
+#include <net/ethernet.h>
 
 #include <optional>
 #include <sdbusplus/bus.hpp>
@@ -33,7 +34,7 @@ struct NeighborInfo
 {
     std::string interface;
     InAddrAny address;
-    std::optional<MacAddr> mac;
+    std::optional<ether_addr> mac;
     bool permanent;
 };
 
