@@ -52,16 +52,11 @@ inline bool validate(const std::string& value)
  */
 std::string getfromInventory(sdbusplus::bus::bus& bus);
 
-/* @brief Marshalls the bytes for a mac address into a MacAddr.
- * @param[in] buf - The network byte order address
- */
-MacAddr fromBuf(std::string_view buf);
-
 /** @brief Converts the given mac address bytes into a string
  *  @param[in] bytes - The mac address
  *  @returns A valid mac address string
  */
-std::string toString(const MacAddr& mac);
+std::string toString(const ether_addr& mac);
 
 namespace internal
 {
@@ -82,13 +77,6 @@ inline uint64_t convertToInt(const std::string& value)
     return ret;
 }
 
-/** @brief Converts the lower nibble of a byte value to a hex digit
- */
-inline char toHex(std::byte byte)
-{
-    uint8_t val = std::to_integer<uint8_t>(byte) & 0xf;
-    return val < 10 ? '0' + val : 'A' + (val - 10);
-}
 } // namespace internal
 } // namespace mac_address
 

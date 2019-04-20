@@ -28,40 +28,6 @@ class TestUtil : public testing::Test
     }
 };
 
-TEST_F(TestUtil, ToHex)
-{
-    EXPECT_EQ('E', mac_address::internal::toHex(std::byte(0xfe)));
-    EXPECT_EQ('A', mac_address::internal::toHex(std::byte(10)));
-    EXPECT_EQ('4', mac_address::internal::toHex(std::byte(4)));
-}
-
-TEST_F(TestUtil, MacFromBuf)
-{
-    std::string tooSmall(1, 'a');
-    std::string tooLarge(24, 'a');
-    std::string buf{'\x00', '\xde', '\xad', '\x00', '\xbe', '\xef'};
-
-    MacAddr mac = mac_address::fromBuf(buf);
-    EXPECT_EQ(0, memcmp(buf.data(), mac.data(), buf.size()));
-
-    EXPECT_THROW(mac_address::fromBuf(tooSmall), std::runtime_error);
-    EXPECT_THROW(mac_address::fromBuf(tooLarge), std::runtime_error);
-}
-
-TEST_F(TestUtil, MacToString)
-{
-    MacAddr mac1{
-        std::byte(0x00), std::byte(0xDE), std::byte(0xAD),
-        std::byte(0x00), std::byte(0xBE), std::byte(0xEF),
-    };
-    EXPECT_EQ("00:DE:AD:00:BE:EF", mac_address::toString(mac1));
-    MacAddr mac2{
-        std::byte(0x70), std::byte(0xFF), std::byte(0x84),
-        std::byte(0x09), std::byte(0x35), std::byte(0x09),
-    };
-    EXPECT_EQ("70:FF:84:09:35:09", mac_address::toString(mac2));
-}
-
 TEST_F(TestUtil, AddrFromBuf)
 {
     std::string tooSmall(1, 'a');

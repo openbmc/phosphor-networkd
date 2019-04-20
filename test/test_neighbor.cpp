@@ -164,7 +164,7 @@ TEST(ParseNeighbor, Full)
     EXPECT_EQ(ifstr, neighbors[0].interface);
     EXPECT_FALSE(neighbors[0].permanent);
     EXPECT_TRUE(neighbors[0].mac);
-    EXPECT_EQ(0, std::memcmp(&mac, neighbors[0].mac->data(), sizeof(mac)));
+    EXPECT_TRUE(equal(mac, *neighbors[0].mac));
     EXPECT_TRUE(equal(addr, std::get<in6_addr>(neighbors[0].address)));
 }
 
