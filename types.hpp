@@ -80,7 +80,6 @@ using UniquePtr = std::unique_ptr<T, std::function<void(T*)>>;
 
 // Byte representations for common address types in network byte order
 using InAddrAny = std::variant<struct in_addr, struct in6_addr>;
-using MacAddr = std::array<std::byte, 6>;
 
 using AddrList = std::list<AddrInfo>;
 using IntfAddrMap = std::map<IntfName, AddrList>;
