@@ -603,30 +603,9 @@ std::string getfromInventory(sdbusplus::bus::bus& bus)
     return sdbusplus::message::variant_ns::get<std::string>(value);
 }
 
-MacAddr fromBuf(std::string_view buf)
+std::string toString(const ether_addr& mac)
 {
-    MacAddr ret;
-    if (buf.size() != ret.size())
-    {
-        throw std::runtime_error("Invalid MacAddr size");
-    }
-    memcpy(ret.data(), buf.data(), ret.size());
-    return ret;
-}
-
-std::string toString(const MacAddr& mac)
-{
-    std::string str;
-    str.reserve(mac.size() * 3);
-    for (size_t i = 0; i < mac.size(); ++i)
-    {
-        str.push_back(internal::toHex(mac[i] >> 4));
-        str.push_back(internal::toHex(mac[i]));
-        str.push_back(':');
-    }
-    // Remove trailing semicolon
-    str.pop_back();
-    return str;
+    return ether_ntoa(&mac);
 }
 
 } // namespace mac_address

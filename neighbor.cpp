@@ -50,7 +50,7 @@ void parseNeighbor(const nlmsghdr& hdr, std::string_view msg,
         auto [hdr, data] = netlink::extractRtAttr(msg);
         if (hdr.rta_type == NDA_LLADDR)
         {
-            neighbor.mac = mac_address::fromBuf(data);
+            neighbor.mac = copyFrom<ether_addr>(data, "Bad neighbor MAC");
         }
         else if (hdr.rta_type == NDA_DST)
         {
