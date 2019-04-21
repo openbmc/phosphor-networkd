@@ -5,6 +5,7 @@
 #include "config_parser.hpp"
 #include "ipaddress.hpp"
 #include "neighbor.hpp"
+#include "netlink.hpp"
 #include "network_manager.hpp"
 #include "vlan_interface.hpp"
 
@@ -38,18 +39,29 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
+std::vector<InterfaceInfo> getInterfaces()
+{
+    std::vector<InterfaceInfo> interfaces;
+    auto cb = [&interfaces](const nlmsghdr& hdr, std::string_view msg) {
+        detail::parseInterface(hdr, msg, interfaces);
+    };
+    ifinfomsg msg{};
+    netlink::performRequest(NETLINK_ROUTE, RTM_GETLINK, NLM_F_DUMP, msg, cb);
+    return interfaces;
+}
+
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
+                                     const std::string& name,
+                                     const std::string& mac,
                                      const std::string& objPath,
                                      bool dhcpEnabled, Manager& parent,
                                      bool emitSignal) :
     Ifaces(bus, objPath.c_str(), true),
     bus(bus), manager(parent), objPath(objPath)
 {
-    auto intfName = objPath.substr(objPath.rfind("/") + 1);
-    std::replace(intfName.begin(), intfName.end(), '_', '.');
-    interfaceName(intfName);
+    interfaceName(name);
     EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
-    MacAddressIntf::mACAddress(getMACAddress(intfName));
+    MacAddressIntf::mACAddress(mac);
     EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
     EthernetInterfaceIntf::nameservers(getNameServerFromConf());
 
@@ -211,84 +223,6 @@ ObjectPath EthernetInterface::neighbor(std::string iPAddress,
                                 mACAddress, Neighbor::State::Permanent));
     manager.writeToConfigurationFile();
     return objectPath;
-}
-
-/*
-Note: We don't have support for  ethtool now
-will enable this code once we bring the ethtool
-in the image.
-TODO: https://github.com/openbmc/openbmc/issues/1484
-*/
-
-InterfaceInfo EthernetInterface::getInterfaceInfo() const
-{
-    int sock{-1};
-    ifreq ifr{0};
-    ethtool_cmd edata{0};
-    LinkSpeed speed{0};
-    Autoneg autoneg{0};
-    DuplexMode duplex{0};
-    do
-    {
-        sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
-        if (sock < 0)
-        {
-            log<level::ERR>("socket creation  failed:",
-                            entry("ERROR=%s", strerror(errno)));
-            break;
-        }
-
-        strncpy(ifr.ifr_name, interfaceName().c_str(), sizeof(ifr.ifr_name));
-        ifr.ifr_data = reinterpret_cast<char*>(&edata);
-
-        edata.cmd = ETHTOOL_GSET;
-
-        if (ioctl(sock, SIOCETHTOOL, &ifr) < 0)
-        {
-            log<level::ERR>("ioctl failed for SIOCETHTOOL:",
-                            entry("ERROR=%s", strerror(errno)));
-            break;
-        }
-        speed = edata.speed;
-        duplex = edata.duplex;
-        autoneg = edata.autoneg;
-    } while (0);
-
-    if (sock)
-    {
-        close(sock);
-    }
-    return std::make_tuple(speed, duplex, autoneg);
-}
-
-/** @brief get the mac address of the interface.
- *  @return macaddress on success
- */
-
-std::string
-    EthernetInterface::getMACAddress(const std::string& interfaceName) const
-{
-    ifreq ifr{};
-    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
-    if (sock < 0)
-    {
-        log<level::ERR>("socket creation  failed:",
-                        entry("ERROR=%s", strerror(errno)));
-        elog<InternalFailure>();
-    }
-
-    std::strcpy(ifr.ifr_name, interfaceName.c_str());
-    if (ioctl(sock, SIOCGIFHWADDR, &ifr) != 0)
-    {
-        log<level::ERR>("ioctl failed for SIOCGIFHWADDR:",
-                        entry("ERROR=%s", strerror(errno)));
-        elog<InternalFailure>();
-    }
-
-    static_assert(sizeof(ifr.ifr_hwaddr.sa_data) >= sizeof(ether_addr));
-    std::string_view hwaddr(reinterpret_cast<char*>(ifr.ifr_hwaddr.sa_data),
-                            sizeof(ifr.ifr_hwaddr.sa_data));
-    return mac_address::toString(copyFrom<ether_addr>(hwaddr));
 }
 
 std::string EthernetInterface::generateId(const std::string& ipaddress,
@@ -502,7 +436,7 @@ void EthernetInterface::loadVLAN(VlanId id)
         getDHCPValue(manager.getConfDir().string(), vlanInterfaceName);
 
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, path.c_str(), dhcpEnabled, id, *this, manager);
+        bus, vlanInterfaceName, path.c_str(), dhcpEnabled, id, *this, manager);
 
     // Fetch the ip address from the system
     // and create the dbus object.
@@ -520,7 +454,7 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
     path += "_" + std::to_string(id);
 
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, path.c_str(), false, id, *this, manager);
+        bus, vlanInterfaceName, path.c_str(), false, id, *this, manager);
 
     // write the device file for the vlan interface.
     vlanIntf->writeDeviceFile();
@@ -777,5 +711,53 @@ void EthernetInterface::deleteAll()
     manager.writeToConfigurationFile();
 }
 
+namespace detail
+{
+
+void parseInterface(const nlmsghdr& hdr, std::string_view msg,
+                    std::vector<InterfaceInfo>& interfaces)
+{
+    if (hdr.nlmsg_type != RTM_NEWLINK)
+    {
+        throw std::runtime_error("Not an interface msg");
+    }
+    auto ifinfo = extract<ifinfomsg>(msg, "Bad interface msg");
+
+    // Filter out addresses we don't care about
+    if (ifinfo.ifi_flags & IFF_LOOPBACK)
+    {
+        return;
+    }
+
+    // Build the info about the address we found
+    InterfaceInfo interface;
+    bool set_name = false;
+    interface.index = ifinfo.ifi_index;
+    while (!msg.empty())
+    {
+        auto [hdr, data] = netlink::extractRtAttr(msg);
+        if (hdr.rta_type == IFLA_IFNAME)
+        {
+            interface.name = data.substr(0, strnlen(data.data(), data.size()));
+            set_name = true;
+        }
+        if (hdr.rta_type == IFLA_ADDRESS)
+        {
+            if (data.size() != sizeof(ether_addr))
+            {
+                // Some interfaces have IP addresses for their LLADDR
+                continue;
+            }
+            interface.mac = copyFrom<ether_addr>(data, "Bad interface MAC");
+        }
+    }
+    if (!set_name)
+    {
+        throw std::runtime_error("Missing interface name");
+    }
+    interfaces.push_back(std::move(interface));
+}
+
+} // namespace detail
 } // namespace network
 } // namespace phosphor
