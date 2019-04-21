@@ -60,18 +60,16 @@ class TestNetworkManager : public testing::Test
 // getifaddrs will not return any interface
 TEST_F(TestNetworkManager, NoInterface)
 {
-    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
-    EXPECT_THROW(createInterfaces(), InternalFailure);
+    mock_clear();
+    createInterfaces();
+    EXPECT_EQ(0, manager.getInterfaceCount());
 }
 
 // getifaddrs returns single interface.
 TEST_F(TestNetworkManager, WithSingleInterface)
 {
     mock_clear();
-
-    // Adds the following ip in the getifaddrs list.
     mock_addIF("igb1", 2);
-    mock_addIP("igb1", "192.0.2.3", "255.255.255.128", IFF_UP | IFF_RUNNING);
 
     // Now create the interfaces which will call the mocked getifaddrs
     // which returns the above interface detail.
@@ -84,12 +82,8 @@ TEST_F(TestNetworkManager, WithSingleInterface)
 TEST_F(TestNetworkManager, WithMultipleInterfaces)
 {
     mock_clear();
-
     mock_addIF("igb0", 1);
-    mock_addIP("igb0", "192.0.2.2", "255.255.255.128", IFF_UP | IFF_RUNNING);
-
     mock_addIF("igb1", 2);
-    mock_addIP("igb1", "192.0.2.3", "255.255.255.128", IFF_UP | IFF_RUNNING);
 
     createInterfaces();
     EXPECT_EQ(2, manager.getInterfaceCount());
