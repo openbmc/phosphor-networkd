@@ -25,6 +25,7 @@
 #include <phosphor-logging/log.hpp>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
@@ -194,7 +195,7 @@ ObjectPath EthernetInterface::neighbor(std::string iPAddress,
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("iPAddress"),
                               Argument::ARGUMENT_VALUE(iPAddress.c_str()));
     }
-    if (!mac_address::validate(mACAddress))
+    if (!mac_address::isUnicast(mac_address::fromString(mACAddress)))
     {
         log<level::ERR>("Not a valid MAC address",
                         entry("MACADDRESS=%s", iPAddress.c_str()));
@@ -268,8 +269,6 @@ std::string
     EthernetInterface::getMACAddress(const std::string& interfaceName) const
 {
     ifreq ifr{};
-    char macAddress[mac_address::size]{};
-
     int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
     if (sock < 0)
     {
@@ -286,12 +285,10 @@ std::string
         elog<InternalFailure>();
     }
 
-    std::snprintf(macAddress, mac_address::size, mac_address::format,
-                  ifr.ifr_hwaddr.sa_data[0], ifr.ifr_hwaddr.sa_data[1],
-                  ifr.ifr_hwaddr.sa_data[2], ifr.ifr_hwaddr.sa_data[3],
-                  ifr.ifr_hwaddr.sa_data[4], ifr.ifr_hwaddr.sa_data[5]);
-
-    return macAddress;
+    static_assert(sizeof(ifr.ifr_hwaddr.sa_data) >= sizeof(ether_addr));
+    std::string_view hwaddr(reinterpret_cast<char*>(ifr.ifr_hwaddr.sa_data),
+                            sizeof(ifr.ifr_hwaddr.sa_data));
+    return mac_address::toString(copyFrom<ether_addr>(hwaddr));
 }
 
 std::string EthernetInterface::generateId(const std::string& ipaddress,
@@ -719,7 +716,8 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
 
 std::string EthernetInterface::mACAddress(std::string value)
 {
-    if (!mac_address::validate(value))
+    ether_addr newMAC = mac_address::fromString(value);
+    if (!mac_address::isUnicast(newMAC))
     {
         log<level::ERR>("MACAddress is not valid.",
                         entry("MAC=%s", value.c_str()));
@@ -727,77 +725,49 @@ std::string EthernetInterface::mACAddress(std::string value)
                               Argument::ARGUMENT_VALUE(value.c_str()));
     }
 
-    // check whether MAC is broadcast mac.
-    auto intMac = mac_address::internal::convertToInt(value);
-
-    if (!(intMac ^ mac_address::broadcastMac))
+    // We don't need to update the system if the address is unchanged
+    ether_addr oldMAC = mac_address::fromString(MacAddressIntf::mACAddress());
+    if (!equal(newMAC, oldMAC))
     {
-        log<level::ERR>("MACAddress is a broadcast mac.",
-                        entry("MAC=%s", value.c_str()));
-        elog<InvalidArgument>(Argument::ARGUMENT_NAME("MACAddress"),
-                              Argument::ARGUMENT_VALUE(value.c_str()));
-    }
-
-    // Check if the MAC changed.
-    auto pmac = MacAddressIntf::mACAddress();
-    if (strcasecmp(pmac.c_str(), value.c_str()) == 0)
-    {
-        return MacAddressIntf::mACAddress();
-    }
-
-    // Allow the mac to be set if one of the condition is true.
-    //   1) Incoming Mac is of local admin type.
-    //      or
-    //   2) Incoming mac is same as eeprom Mac.
-
-    if (!(intMac & mac_address::localAdminMask))
-    {
-        try
+        if (!mac_address::isLocalAdmin(newMAC))
         {
-            auto inventoryMac = mac_address::getfromInventory(bus);
-            auto intInventoryMac =
-                mac_address::internal::convertToInt(inventoryMac);
-
-            if (intInventoryMac != intMac)
+            try
             {
-                log<level::ERR>("Given MAC address is neither a local Admin "
-                                "type nor is same as in inventory");
-                elog<InvalidArgument>(Argument::ARGUMENT_NAME("MACAddress"),
-                                      Argument::ARGUMENT_VALUE(value.c_str()));
+                auto inventoryMAC = mac_address::getfromInventory(bus);
+                if (!equal(newMAC, inventoryMAC))
+                {
+                    log<level::ERR>(
+                        "Given MAC address is neither a local Admin "
+                        "type nor is same as in inventory");
+                    elog<InvalidArgument>(
+                        Argument::ARGUMENT_NAME("MACAddress"),
+                        Argument::ARGUMENT_VALUE(value.c_str()));
+                }
+            }
+            catch (const std::exception& e)
+            {
+                log<level::ERR>("Exception occurred during getting of MAC "
+                                "address from Inventory");
+                elog<InternalFailure>();
             }
         }
-        catch (InternalFailure& e)
-        {
-            log<level::ERR>("Exception occurred during getting of MAC "
-                            "address from Inventory");
-            elog<InternalFailure>();
-        }
-    }
-    auto interface = interfaceName();
-    execute("/sbin/fw_setenv", "fw_setenv", "ethaddr", value.c_str());
-    // TODO: would replace below three calls
-    //      with restarting of systemd-netwokd
-    //      through https://github.com/systemd/systemd/issues/6696
-    execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(), "down");
-    execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(),
-            "address", value.c_str());
 
-    execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(), "up");
-
-    auto mac = MacAddressIntf::mACAddress(std::move(value));
-    // update all the vlan interfaces
-    for (const auto& intf : vlanInterfaces)
-    {
-        intf.second->updateMacAddress();
-    }
-
-    // restart the systemd networkd so that dhcp client gets the
-    // ip for the changed mac address.
-    if (dHCPEnabled())
-    {
+        auto interface = interfaceName();
+        execute("/sbin/fw_setenv", "fw_setenv", "ethaddr", value.c_str());
+        // TODO: would remove this call
+        //      with restarting of systemd-netwokd
+        //      through https://github.com/systemd/systemd/issues/6696
+        execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(),
+                "down");
         manager.restartSystemdUnit(networkdService);
     }
-    return mac;
+
+    // Update everything that depends on the MAC value
+    for (const auto& [name, intf] : vlanInterfaces)
+    {
+        intf->MacAddressIntf::mACAddress(value);
+    }
+    return MacAddressIntf::mACAddress(value);
 }
 
 void EthernetInterface::deleteAll()
