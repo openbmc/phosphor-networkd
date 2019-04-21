@@ -5,10 +5,14 @@
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
 #include "xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp"
 
+#include <linux/netlink.h>
+
 #include <experimental/filesystem>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <string>
+#include <string_view>
+#include <vector>
 #include <xyz/openbmc_project/Collection/DeleteAll/server.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 #include <xyz/openbmc_project/Network/MACAddress/server.hpp>
@@ -52,11 +56,25 @@ using DuplexMode = uint8_t;
 using Autoneg = uint8_t;
 using VlanId = uint32_t;
 using InterfaceName = std::string;
-using InterfaceInfo = std::tuple<LinkSpeed, DuplexMode, Autoneg>;
 using AddressMap = std::map<std::string, std::shared_ptr<IPAddress>>;
 using NeighborMap = std::map<std::string, std::shared_ptr<Neighbor>>;
 using VlanInterfaceMap =
     std::map<InterfaceName, std::unique_ptr<VlanInterface>>;
+
+/** @class InterfaceInfo
+ *  @brief Information about interfaces from the kernel
+ */
+struct InterfaceInfo
+{
+    unsigned index;
+    InterfaceName name;
+    std::optional<ether_addr> mac;
+};
+
+/** @brief Get all the interfaces from the system.
+ *  @returns list of interface names.
+ */
+std::vector<InterfaceInfo> getInterfaces();
 
 /** @class EthernetInterface
  *  @brief OpenBMC Ethernet Interface implementation.
@@ -75,13 +93,16 @@ class EthernetInterface : public Ifaces
 
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
+     *  @param[in] name - The system name of the interface
+     *  @param[in] mac - The mac address of the interface
      *  @param[in] objPath - Path to attach at.
      *  @param[in] dhcpEnabled - is dhcp enabled(true/false).
      *  @param[in] parent - parent object.
      *  @param[in] emitSignal - true if the object added signal needs to be
      *                          send.
      */
-    EthernetInterface(sdbusplus::bus::bus& bus, const std::string& objPath,
+    EthernetInterface(sdbusplus::bus::bus& bus, const std::string& name,
+                      const std::string& mac, const std::string& objPath,
                       bool dhcpEnabled, Manager& parent,
                       bool emitSignal = true);
 
@@ -193,22 +214,10 @@ class EthernetInterface : public Ifaces
     static constexpr auto resolvConfFile = "/etc/resolv.conf";
 
   protected:
-    /** @brief get the info of the ethernet interface.
-     *  @return tuple having the link speed,autonegotiation,duplexmode .
-     */
-    InterfaceInfo getInterfaceInfo() const;
-
     /* @brief delete the vlan interface from system.
      * @param[in] interface - vlan Interface.
      */
     void deleteVLANFromSystem(const std::string& interface);
-
-    /** @brief get the mac address of the interface.
-     *  @param[in] interfaceName - Network interface name.
-     *  @return macaddress on success
-     */
-
-    std::string getMACAddress(const std::string& interfaceName) const;
 
     /** @brief construct the ip address dbus object path.
      *  @param[in] addressType - Type of ip address.
@@ -289,5 +298,12 @@ class EthernetInterface : public Ifaces
     friend class TestEthernetInterface;
 };
 
+namespace detail
+{
+
+void parseInterface(const nlmsghdr& hdr, std::string_view msg,
+                    std::vector<InterfaceInfo>& interfaces);
+
+} // namespace detail
 } // namespace network
 } // namespace phosphor

@@ -2,7 +2,6 @@
 
 #include <arpa/inet.h>
 #include <dlfcn.h>
-#include <ifaddrs.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 #include <net/ethernet.h>
@@ -27,42 +26,22 @@
 
 int debugging = false;
 
-/* Data for mocking getifaddrs */
-struct ifaddr_storage
-{
-    struct ifaddrs ifaddr;
-    struct sockaddr_storage addr;
-    struct sockaddr_storage mask;
-    struct sockaddr_storage bcast;
-} mock_ifaddr_storage[MAX_IFADDRS];
-
-struct ifaddrs* mock_ifaddrs = nullptr;
-
-int ifaddr_count = 0;
-
-/* Stub library functions */
-void freeifaddrs(ifaddrs* ifp)
-{
-    return;
-}
-
 std::map<int, std::queue<std::string>> mock_rtnetlinks;
 
 std::map<std::string, int> mock_if_nametoindex;
 std::map<int, std::string> mock_if_indextoname;
-std::map<std::string, ether_addr> mock_macs;
+std::map<int, ether_addr> mock_macs;
 
 void mock_clear()
 {
-    mock_ifaddrs = nullptr;
-    ifaddr_count = 0;
     mock_rtnetlinks.clear();
     mock_if_nametoindex.clear();
     mock_if_indextoname.clear();
     mock_macs.clear();
 }
 
-void mock_addIF(const std::string& name, int idx, const ether_addr& mac)
+void mock_addIF(const std::string& name, int idx,
+                const std::optional<ether_addr>& mac)
 {
     if (idx == 0)
     {
@@ -71,38 +50,10 @@ void mock_addIF(const std::string& name, int idx, const ether_addr& mac)
 
     mock_if_nametoindex[name] = idx;
     mock_if_indextoname[idx] = name;
-    mock_macs[name] = mac;
-}
-
-void mock_addIP(const char* name, const char* addr, const char* mask,
-                unsigned int flags)
-{
-    struct ifaddrs* ifaddr = &mock_ifaddr_storage[ifaddr_count].ifaddr;
-
-    struct sockaddr_in* in =
-        reinterpret_cast<sockaddr_in*>(&mock_ifaddr_storage[ifaddr_count].addr);
-    struct sockaddr_in* mask_in =
-        reinterpret_cast<sockaddr_in*>(&mock_ifaddr_storage[ifaddr_count].mask);
-
-    in->sin_family = AF_INET;
-    in->sin_port = 0;
-    in->sin_addr.s_addr = inet_addr(addr);
-
-    mask_in->sin_family = AF_INET;
-    mask_in->sin_port = 0;
-    mask_in->sin_addr.s_addr = inet_addr(mask);
-
-    ifaddr->ifa_next = nullptr;
-    ifaddr->ifa_name = const_cast<char*>(name);
-    ifaddr->ifa_flags = flags;
-    ifaddr->ifa_addr = reinterpret_cast<struct sockaddr*>(in);
-    ifaddr->ifa_netmask = reinterpret_cast<struct sockaddr*>(mask_in);
-    ifaddr->ifa_data = nullptr;
-
-    if (ifaddr_count > 0)
-        mock_ifaddr_storage[ifaddr_count - 1].ifaddr.ifa_next = ifaddr;
-    ifaddr_count++;
-    mock_ifaddrs = &mock_ifaddr_storage[0].ifaddr;
+    if (mac)
+    {
+        mock_macs[idx] = *mac;
+    }
 }
 
 void validateMsgHdr(const struct msghdr* msg)
@@ -136,15 +87,41 @@ ssize_t sendmsg_link_dump(std::queue<std::string>& msgs, std::string_view in)
 
     for (const auto& [name, idx] : mock_if_nametoindex)
     {
-        ifinfomsg info{};
-        info.ifi_index = idx;
+        std::string msgBuf;
+        {
+            ifinfomsg info{};
+            info.ifi_index = idx;
+            msgBuf.append(reinterpret_cast<char*>(&info), sizeof(info));
+        }
+        {
+            rtattr ifname{};
+            ifname.rta_len = RTA_LENGTH(name.size() + 1);
+            ifname.rta_type = IFLA_IFNAME;
+            std::string buf(RTA_ALIGN(ifname.rta_len), '\0');
+            memcpy(buf.data(), &ifname, sizeof(ifname));
+            memcpy(RTA_DATA(buf.data()), name.c_str(), name.size() + 1);
+            msgBuf.append(buf);
+        }
+        auto macIt = mock_macs.find(idx);
+        if (macIt != mock_macs.end())
+        {
+            const auto& mac = macIt->second;
+            rtattr address{};
+            address.rta_len = RTA_LENGTH(sizeof(mac));
+            address.rta_type = IFLA_ADDRESS;
+            std::string buf(RTA_ALIGN(address.rta_len), '\0');
+            memcpy(buf.data(), &address, sizeof(address));
+            memcpy(RTA_DATA(buf.data()), &mac, sizeof(mac));
+            msgBuf.append(buf);
+        }
+
         nlmsghdr hdr{};
-        hdr.nlmsg_len = NLMSG_LENGTH(sizeof(info));
+        hdr.nlmsg_len = NLMSG_LENGTH(msgBuf.size());
         hdr.nlmsg_type = RTM_NEWLINK;
         hdr.nlmsg_flags = NLM_F_MULTI;
         auto& out = msgs.emplace(hdr.nlmsg_len, '\0');
         memcpy(out.data(), &hdr, sizeof(hdr));
-        memcpy(NLMSG_DATA(out.data()), &info, sizeof(info));
+        memcpy(NLMSG_DATA(out.data()), msgBuf.data(), msgBuf.size());
     }
 
     nlmsghdr hdr{};
@@ -170,14 +147,6 @@ ssize_t sendmsg_ack(std::queue<std::string>& msgs, std::string_view in)
 
 extern "C" {
 
-int getifaddrs(ifaddrs** ifap)
-{
-    *ifap = mock_ifaddrs;
-    if (mock_ifaddrs == nullptr)
-        return -1;
-    return (0);
-}
-
 unsigned if_nametoindex(const char* ifname)
 {
     auto it = mock_if_nametoindex.find(ifname);
@@ -198,31 +167,6 @@ char* if_indextoname(unsigned ifindex, char* ifname)
         return NULL;
     }
     return std::strcpy(ifname, it->second.c_str());
-}
-
-int ioctl(int fd, unsigned long int request, ...)
-{
-    va_list vl;
-    va_start(vl, request);
-    void* data = va_arg(vl, void*);
-    va_end(vl);
-
-    if (request == SIOCGIFHWADDR)
-    {
-        auto req = reinterpret_cast<ifreq*>(data);
-        auto it = mock_macs.find(req->ifr_name);
-        if (it == mock_macs.end())
-        {
-            errno = ENXIO;
-            return -1;
-        }
-        std::memcpy(req->ifr_hwaddr.sa_data, &it->second, sizeof(it->second));
-        return 0;
-    }
-
-    static auto real_ioctl =
-        reinterpret_cast<decltype(&ioctl)>(dlsym(RTLD_NEXT, "ioctl"));
-    return real_ioctl(fd, request, data);
 }
 
 int socket(int domain, int type, int protocol)
