@@ -63,12 +63,6 @@ class VlanInterface : public VlanIface,
                and creates the vlan interface.*/
     void writeDeviceFile();
 
-    /** @brief copy the mac address from the parent interface.*/
-    void updateMacAddress()
-    {
-        MacAddressIntf::mACAddress(parentInterface.mACAddress());
-    }
-
   private:
     /** @brief VLAN Identifier. */
     using VlanIface::id;
