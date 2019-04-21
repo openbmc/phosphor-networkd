@@ -26,58 +26,52 @@ constexpr auto IPV6_PREFIX = "fe80";
 namespace mac_address
 {
 
-constexpr auto localAdminMask = 0x020000000000;
-constexpr auto broadcastMac = 0xFFFFFFFFFFFF;
-
-constexpr auto format = "%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx";
-constexpr size_t size = 18;
-
-/** @brief validate the mac address
- *  @param[in] value - MAC address.
- *  @returns true if validate otherwise false.
- */
-inline bool validate(const std::string& value)
-{
-    struct ether_addr* addr = ether_aton(value.c_str());
-    if (addr == nullptr)
-    {
-        return false;
-    }
-    ether_addr zero{};
-    return std::memcmp(addr, &zero, sizeof(zero)) != 0;
-}
-
 /** @brief gets the MAC address from the Inventory.
  *  @param[in] bus - DBUS Bus Object.
  */
-std::string getfromInventory(sdbusplus::bus::bus& bus);
+ether_addr getfromInventory(sdbusplus::bus::bus& bus);
+
+/** @brief Converts the given mac address into byte form
+ *  @param[in] str - The mac address in human readable form
+ *  @returns A mac address in network byte order
+ *  @throws std::runtime_error for bad mac
+ */
+ether_addr fromString(const char* str);
+inline ether_addr fromString(const std::string& str)
+{
+    return fromString(str.c_str());
+}
 
 /** @brief Converts the given mac address bytes into a string
- *  @param[in] bytes - The mac address
+ *  @param[in] mac - The mac address
  *  @returns A valid mac address string
  */
 std::string toString(const ether_addr& mac);
 
-namespace internal
-{
-/** @brief Converts the given mac address into unsigned 64 bit integer
- *  @param[in] value - MAC address.
- *  @returns converted unsigned 64 bit number.
+/** @brief Determines if the mac address is empty
+ *  @param[in] mac - The mac address
+ *  @return True if 00:00:00:00:00:00
  */
-inline uint64_t convertToInt(const std::string& value)
-{
-    struct ether_addr* addr = ether_aton(value.c_str());
-    if (addr == nullptr)
-    {
-        return 0;
-    }
-    uint64_t ret = 0;
-    static_assert(sizeof(ret) >= sizeof(*addr));
-    std::memcpy(&ret, addr, sizeof(*addr));
-    return ret;
-}
+bool isEmpty(const ether_addr& mac);
 
-} // namespace internal
+/** @brief Determines if the mac address is a multicast address
+ *  @param[in] mac - The mac address
+ *  @return True if multicast bit is set
+ */
+bool isMulticast(const ether_addr& mac);
+
+/** @brief Determines if the mac address is a unicast address
+ *  @param[in] mac - The mac address
+ *  @return True if not multicast or empty
+ */
+bool isUnicast(const ether_addr& mac);
+
+/** @brief Determines if the mac address is locally managed
+ *  @param[in] mac - The mac address
+ *  @return True if local admin bit is set
+ */
+bool isLocalAdmin(const ether_addr& mac);
+
 } // namespace mac_address
 
 constexpr auto networkdService = "systemd-networkd.service";

@@ -123,24 +123,6 @@ TEST_F(TestUtil, PrefixValidation)
     EXPECT_EQ(false, isValidPrefix(AF_INET, prefixLength));
 }
 
-TEST_F(TestUtil, MacValidation)
-{
-    std::string macaddress = "00:00:00:00:00:00";
-    EXPECT_EQ(false, phosphor::network::mac_address::validate(macaddress));
-
-    macaddress = "F6:C6:E6:6:B0:D3";
-    EXPECT_EQ(true, phosphor::network::mac_address::validate(macaddress));
-
-    macaddress = "F6:C6:E6:06:B0:D3";
-    EXPECT_EQ(true, phosphor::network::mac_address::validate(macaddress));
-
-    macaddress = "hh:HH:HH:hh:HH:yy";
-    EXPECT_EQ(false, phosphor::network::mac_address::validate(macaddress));
-
-    macaddress = "hhh:GGG:iii:jjj:kkk:lll";
-    EXPECT_EQ(false, phosphor::network::mac_address::validate(macaddress));
-}
-
 TEST_F(TestUtil, ConvertV4MasktoPrefix)
 {
     std::string mask = "255.255.255.0";
@@ -326,5 +308,81 @@ TEST_F(TestUtil, NotEqual)
     EXPECT_FALSE(equal(a, b));
 }
 
+namespace mac_address
+{
+
+TEST(MacFromString, Bad)
+{
+    EXPECT_THROW(fromString("0x:00:00:00:00:00"), std::runtime_error);
+    EXPECT_THROW(fromString("00:00:00:00:00"), std::runtime_error);
+    EXPECT_THROW(fromString(""), std::runtime_error);
+}
+
+TEST(MacFromString, Valid)
+{
+    EXPECT_TRUE(equal(ether_addr{}, fromString("00:00:00:00:00:00")));
+    EXPECT_TRUE(equal(ether_addr{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa},
+                      fromString("FF:EE:DD:cc:bb:aa")));
+    EXPECT_TRUE(equal(ether_addr{0x00, 0x01, 0x02, 0x03, 0x04, 0x05},
+                      fromString("0:1:2:3:4:5")));
+}
+
+TEST(MacToString, Valid)
+{
+    EXPECT_EQ("11:22:33:44:55:66",
+              toString({0x11, 0x22, 0x33, 0x44, 0x55, 0x66}));
+}
+
+TEST(MacIsEmpty, True)
+{
+    EXPECT_TRUE(isEmpty({}));
+}
+
+TEST(MacIsEmpty, False)
+{
+    EXPECT_FALSE(isEmpty(fromString("01:00:00:00:00:00")));
+    EXPECT_FALSE(isEmpty(fromString("00:00:00:10:00:00")));
+    EXPECT_FALSE(isEmpty(fromString("00:00:00:00:00:01")));
+}
+
+TEST(MacIsMulticast, True)
+{
+    EXPECT_TRUE(isMulticast(fromString("ff:ff:ff:ff:ff:ff")));
+    EXPECT_TRUE(isMulticast(fromString("01:00:00:00:00:00")));
+}
+
+TEST(MacIsMulticast, False)
+{
+    EXPECT_FALSE(isMulticast(fromString("00:11:22:33:44:55")));
+    EXPECT_FALSE(isMulticast(fromString("FE:11:22:33:44:55")));
+}
+
+TEST(MacIsUnicast, True)
+{
+    EXPECT_TRUE(isUnicast(fromString("00:11:22:33:44:55")));
+    EXPECT_TRUE(isUnicast(fromString("FE:11:22:33:44:55")));
+}
+
+TEST(MacIsUnicast, False)
+{
+    EXPECT_FALSE(isUnicast(fromString("00:00:00:00:00:00")));
+    EXPECT_FALSE(isUnicast(fromString("01:00:00:00:00:00")));
+    EXPECT_FALSE(isUnicast(fromString("ff:ff:ff:ff:ff:ff")));
+}
+
+TEST(MacIsLocalAdmin, True)
+{
+    EXPECT_TRUE(isLocalAdmin(fromString("02:11:22:33:44:55")));
+    EXPECT_TRUE(isLocalAdmin(fromString("FE:11:22:33:44:55")));
+}
+
+TEST(MacIsLocalAdmin, False)
+{
+    EXPECT_FALSE(isLocalAdmin(fromString("00:00:00:00:00:00")));
+    EXPECT_FALSE(isLocalAdmin(fromString("01:00:00:00:00:00")));
+    EXPECT_FALSE(isLocalAdmin(fromString("fd:ff:ff:ff:ff:ff")));
+}
+
+} // namespace mac_address
 } // namespace network
 } // namespace phosphor
