@@ -1,6 +1,5 @@
 #pragma once
 
-#include <ifaddrs.h>
 #include <netinet/in.h>
 #include <systemd/sd-event.h>
 
@@ -10,7 +9,6 @@
 #include <memory>
 #include <sdeventplus/clock.hpp>
 #include <sdeventplus/utility/timer.hpp>
-#include <set>
 #include <string>
 #include <variant>
 
@@ -42,18 +40,6 @@ constexpr auto deviceFileSuffix = ".netdev";
 
 using IntfName = std::string;
 
-using Addr_t = ifaddrs*;
-
-struct AddrDeleter
-{
-    void operator()(Addr_t ptr) const
-    {
-        freeifaddrs(ptr);
-    }
-};
-
-using AddrPtr = std::unique_ptr<ifaddrs, AddrDeleter>;
-
 /* Need a custom deleter for freeing up sd_event */
 struct EventDeleter
 {
@@ -69,8 +55,6 @@ using UniquePtr = std::unique_ptr<T, std::function<void(T*)>>;
 
 // Byte representations for common address types in network byte order
 using InAddrAny = std::variant<struct in_addr, struct in6_addr>;
-
-using InterfaceList = std::set<IntfName>;
 
 using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
 
