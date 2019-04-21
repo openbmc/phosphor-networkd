@@ -50,7 +50,8 @@ class TestVlanInterface : public testing::Test
     {
         mock_clear();
         mock_addIF("test0", 1);
-        return {bus, "/xyz/openbmc_test/network/test0", false, manager};
+        return {bus,   "test0", "", "/xyz/openbmc_test/network/test0",
+                false, manager};
     }
 
     void setConfDir()

@@ -38,15 +38,16 @@ class VlanInterface : public VlanIface,
 
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
+     *  @param[in] name - The system name of the interface
      *  @param[in] objPath - Path to attach at.
      *  @param[in] dhcpEnabled - DHCP enable value.
      *  @param[in] vlanID - vlan identifier.
      *  @param[in] intf - ethernet interface object.
      *  @param[in] manager - network manager object.
      */
-    VlanInterface(sdbusplus::bus::bus& bus, const std::string& objPath,
-                  bool dhcpEnabled, uint32_t vlanID, EthernetInterface& intf,
-                  Manager& manager);
+    VlanInterface(sdbusplus::bus::bus& bus, const std::string& name,
+                  const std::string& objPath, bool dhcpEnabled, uint32_t vlanID,
+                  EthernetInterface& intf, Manager& manager);
 
     /** @brief Delete this d-bus object.
      */

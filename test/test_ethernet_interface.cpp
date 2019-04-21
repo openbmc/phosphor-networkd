@@ -5,13 +5,15 @@
 #include "util.hpp"
 
 #include <arpa/inet.h>
+#include <linux/netlink.h>
+#include <linux/rtnetlink.h>
 #include <net/if.h>
-#include <netinet/in.h>
-#include <stdlib.h>
 
-#include <exception>
 #include <fstream>
 #include <sdbusplus/bus.hpp>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
 #include <gtest/gtest.h>
 
@@ -51,14 +53,13 @@ class TestEthernetInterface : public testing::Test
         }
     }
 
-    static constexpr ether_addr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};
-
     static EthernetInterface makeInterface(sdbusplus::bus::bus& bus,
                                            MockManager& manager)
     {
         mock_clear();
-        mock_addIF("test0", 1, mac);
-        return {bus, "/xyz/openbmc_test/network/test0", false, manager};
+        mock_addIF("test0", 1);
+        return {bus,   "test0", "", "/xyz/openbmc_test/network/test0",
+                false, manager};
     }
 
     int countIPObjects()
@@ -129,7 +130,6 @@ class TestEthernetInterface : public testing::Test
 TEST_F(TestEthernetInterface, NoIPaddress)
 {
     EXPECT_EQ(countIPObjects(), 0);
-    EXPECT_EQ(mac_address::toString(mac), interface.mACAddress());
 }
 
 TEST_F(TestEthernetInterface, AddIPAddress)
@@ -211,5 +211,193 @@ TEST_F(TestEthernetInterface, addNTPServers)
     EXPECT_EQ(servers, values);
 }
 
+namespace detail
+{
+
+TEST(ParseInterface, NotLinkType)
+{
+    nlmsghdr hdr{};
+    hdr.nlmsg_type = RTM_NEWADDR;
+
+    std::vector<InterfaceInfo> interfaces;
+    EXPECT_THROW(parseInterface(hdr, "", interfaces), std::runtime_error);
+    EXPECT_EQ(0, interfaces.size());
+}
+
+TEST(ParseInterface, SmallMsg)
+{
+    nlmsghdr hdr{};
+    hdr.nlmsg_type = RTM_NEWLINK;
+    std::string data = "1";
+
+    std::vector<InterfaceInfo> interfaces;
+    EXPECT_THROW(parseInterface(hdr, data, interfaces), std::runtime_error);
+    EXPECT_EQ(0, interfaces.size());
+}
+
+TEST(ParseInterface, NoAttrs)
+{
+    nlmsghdr hdr{};
+    hdr.nlmsg_type = RTM_NEWLINK;
+    ifinfomsg msg{};
+    msg.ifi_index = 1;
+    std::string data;
+    data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
+
+    std::vector<InterfaceInfo> interfaces;
+    EXPECT_THROW(parseInterface(hdr, data, interfaces), std::runtime_error);
+    EXPECT_EQ(0, interfaces.size());
+}
+
+TEST(ParseInterface, NoName)
+{
+    nlmsghdr hdr{};
+    hdr.nlmsg_type = RTM_NEWLINK;
+    ifinfomsg msg{};
+    msg.ifi_index = 1;
+    ether_addr mac = {{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa}};
+    rtattr addr{};
+    addr.rta_len = RTA_LENGTH(sizeof(mac));
+    addr.rta_type = IFLA_ADDRESS;
+    char addrbuf[RTA_ALIGN(addr.rta_len)];
+    std::memset(addrbuf, '\0', sizeof(addrbuf));
+    std::memcpy(addrbuf, &addr, sizeof(addr));
+    std::memcpy(RTA_DATA(addrbuf), &mac, sizeof(mac));
+    std::string data;
+    data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
+    data.append(reinterpret_cast<char*>(&addrbuf), sizeof(addrbuf));
+
+    std::vector<InterfaceInfo> interfaces;
+    EXPECT_THROW(parseInterface(hdr, data, interfaces), std::runtime_error);
+    EXPECT_EQ(0, interfaces.size());
+}
+
+TEST(ParseInterface, NoMAC)
+{
+    nlmsghdr hdr{};
+    hdr.nlmsg_type = RTM_NEWLINK;
+    ifinfomsg msg{};
+    msg.ifi_index = 1;
+    const char* name = "eth0";
+    const size_t namesize = strlen(name) + 1;
+    rtattr ifname{};
+    ifname.rta_len = RTA_LENGTH(namesize);
+    ifname.rta_type = IFLA_IFNAME;
+    char ifnamebuf[RTA_ALIGN(ifname.rta_len)];
+    std::memset(ifnamebuf, '\0', sizeof(ifnamebuf));
+    std::memcpy(ifnamebuf, &ifname, sizeof(ifname));
+    std::memcpy(RTA_DATA(ifnamebuf), name, namesize);
+    std::string data;
+    data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
+    data.append(reinterpret_cast<char*>(&ifnamebuf), sizeof(ifnamebuf));
+
+    std::vector<InterfaceInfo> interfaces;
+    parseInterface(hdr, data, interfaces);
+    EXPECT_EQ(1, interfaces.size());
+    EXPECT_EQ(msg.ifi_index, interfaces[0].index);
+    EXPECT_EQ(name, interfaces[0].name);
+    EXPECT_FALSE(interfaces[0].mac);
+}
+
+TEST(ParseInterface, FilterLoopback)
+{
+    nlmsghdr hdr{};
+    hdr.nlmsg_type = RTM_NEWLINK;
+    ifinfomsg msg{};
+    msg.ifi_index = 1;
+    msg.ifi_flags = IFF_LOOPBACK;
+    const char* name = "eth0";
+    const size_t namesize = strlen(name) + 1;
+    rtattr ifname{};
+    ifname.rta_len = RTA_LENGTH(namesize);
+    ifname.rta_type = IFLA_IFNAME;
+    char ifnamebuf[RTA_ALIGN(ifname.rta_len)];
+    std::memset(ifnamebuf, '\0', sizeof(ifnamebuf));
+    std::memcpy(ifnamebuf, &ifname, sizeof(ifname));
+    std::memcpy(RTA_DATA(ifnamebuf), name, namesize);
+    std::string data;
+    data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
+    data.append(reinterpret_cast<char*>(&ifnamebuf), sizeof(ifnamebuf));
+
+    std::vector<InterfaceInfo> interfaces;
+    parseInterface(hdr, data, interfaces);
+    EXPECT_EQ(0, interfaces.size());
+}
+
+TEST(ParseInterface, NonMACAddr)
+{
+    nlmsghdr hdr{};
+    hdr.nlmsg_type = RTM_NEWLINK;
+    ifinfomsg msg{};
+    msg.ifi_index = 1;
+    const char* name = "sit0";
+    const size_t namesize = strlen(name) + 1;
+    rtattr ifname{};
+    ifname.rta_len = RTA_LENGTH(namesize);
+    ifname.rta_type = IFLA_IFNAME;
+    char ifnamebuf[RTA_ALIGN(ifname.rta_len)];
+    std::memset(ifnamebuf, '\0', sizeof(ifnamebuf));
+    std::memcpy(ifnamebuf, &ifname, sizeof(ifname));
+    std::memcpy(RTA_DATA(ifnamebuf), name, namesize);
+    in_addr ip;
+    ASSERT_EQ(1, inet_pton(AF_INET, "192.168.10.1", &ip));
+    rtattr addr{};
+    addr.rta_len = RTA_LENGTH(sizeof(ip));
+    addr.rta_type = IFLA_ADDRESS;
+    char addrbuf[RTA_ALIGN(addr.rta_len)];
+    std::memset(addrbuf, '\0', sizeof(addrbuf));
+    std::memcpy(addrbuf, &addr, sizeof(addr));
+    std::memcpy(RTA_DATA(addrbuf), &ip, sizeof(ip));
+    std::string data;
+    data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
+    data.append(reinterpret_cast<char*>(&addrbuf), sizeof(addrbuf));
+    data.append(reinterpret_cast<char*>(&ifnamebuf), sizeof(ifnamebuf));
+
+    std::vector<InterfaceInfo> interfaces;
+    parseInterface(hdr, data, interfaces);
+    EXPECT_EQ(1, interfaces.size());
+    EXPECT_EQ(msg.ifi_index, interfaces[0].index);
+    EXPECT_EQ(name, interfaces[0].name);
+    EXPECT_FALSE(interfaces[0].mac);
+}
+
+TEST(ParseInterface, Full)
+{
+    nlmsghdr hdr{};
+    hdr.nlmsg_type = RTM_NEWLINK;
+    ifinfomsg msg{};
+    msg.ifi_index = 1;
+    const char* name = "eth0";
+    const size_t namesize = strlen(name) + 1;
+    rtattr ifname{};
+    ifname.rta_len = RTA_LENGTH(namesize);
+    ifname.rta_type = IFLA_IFNAME;
+    char ifnamebuf[RTA_ALIGN(ifname.rta_len)];
+    std::memset(ifnamebuf, '\0', sizeof(ifnamebuf));
+    std::memcpy(ifnamebuf, &ifname, sizeof(ifname));
+    std::memcpy(RTA_DATA(ifnamebuf), name, namesize);
+    ether_addr mac = {{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa}};
+    rtattr addr{};
+    addr.rta_len = RTA_LENGTH(sizeof(mac));
+    addr.rta_type = IFLA_ADDRESS;
+    char addrbuf[RTA_ALIGN(addr.rta_len)];
+    std::memset(addrbuf, '\0', sizeof(addrbuf));
+    std::memcpy(addrbuf, &addr, sizeof(addr));
+    std::memcpy(RTA_DATA(addrbuf), &mac, sizeof(mac));
+    std::string data;
+    data.append(reinterpret_cast<char*>(&msg), sizeof(msg));
+    data.append(reinterpret_cast<char*>(&addrbuf), sizeof(addrbuf));
+    data.append(reinterpret_cast<char*>(&ifnamebuf), sizeof(ifnamebuf));
+
+    std::vector<InterfaceInfo> interfaces;
+    parseInterface(hdr, data, interfaces);
+    EXPECT_EQ(1, interfaces.size());
+    EXPECT_EQ(msg.ifi_index, interfaces[0].index);
+    EXPECT_EQ(name, interfaces[0].name);
+    EXPECT_TRUE(interfaces[0].mac);
+    EXPECT_TRUE(equal(mac, *interfaces[0].mac));
+}
+
+} // namespace detail
 } // namespace network
 } // namespace phosphor
