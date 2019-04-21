@@ -6,7 +6,6 @@
 #include "ipaddress.hpp"
 #include "neighbor.hpp"
 #include "network_manager.hpp"
-#include "routing_table.hpp"
 #include "vlan_interface.hpp"
 
 #include <arpa/inet.h>
@@ -78,8 +77,6 @@ void EthernetInterface::createIPAddressObjects()
 
     auto addrs = getInterfaceAddrs()[interfaceName()];
 
-    route::Table routingTable;
-
     for (auto& addr : addrs)
     {
         IP::Protocol addressType = convertFamily(addr.addrType);
@@ -92,8 +89,8 @@ void EthernetInterface::createIPAddressObjects()
         {
             origin = IP::AddressOrigin::LinkLocal;
         }
-        std::string gateway =
-            routingTable.getGateway(addr.addrType, addr.ipaddress, addr.prefix);
+        // Obsolete parameter
+        std::string gateway = "";
 
         std::string ipAddressObjectPath = generateObjectPath(
             addressType, addr.ipaddress, addr.prefix, gateway);
@@ -164,18 +161,13 @@ ObjectPath EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
                               Argument::ARGUMENT_VALUE(ipaddress.c_str()));
     }
 
-    if (!gateway.empty() && (!isValidIP(addressFamily, gateway)))
-    {
-        log<level::ERR>("Not a valid Gateway"),
-            entry("GATEWAY=%s", gateway.c_str());
-        elog<InvalidArgument>(Argument::ARGUMENT_NAME("gateway"),
-                              Argument::ARGUMENT_VALUE(gateway.c_str()));
-    }
+    // Gateway is an obsolete parameter
+    gateway = "";
 
     if (!isValidPrefix(addressFamily, prefixLength))
     {
         log<level::ERR>("PrefixLength is not correct "),
-            entry("PREFIXLENGTH=%d", gateway.c_str());
+            entry("PREFIXLENGTH=%" PRIu8, prefixLength);
         elog<InvalidArgument>(
             Argument::ARGUMENT_NAME("prefixLength"),
             Argument::ARGUMENT_VALUE(std::to_string(prefixLength).c_str()));
@@ -680,30 +672,6 @@ void EthernetInterface::writeConfigurationFile()
             if (!gateway6.empty())
             {
                 stream << "Gateway=" << gateway6 << "\n";
-            }
-        }
-
-        // write the route section
-        for (const auto& addr : addrs)
-        {
-            if (addr.second->origin() == AddressOrigin::Static)
-            {
-                int addressFamily = addr.second->type() == IP::Protocol::IPv4
-                                        ? AF_INET
-                                        : AF_INET6;
-
-                std::string destination =
-                    getNetworkID(addressFamily, addr.second->address(),
-                                 addr.second->prefixLength());
-
-                if (addr.second->gateway() != "0.0.0.0" &&
-                    addr.second->gateway() != "" && destination != "0.0.0.0" &&
-                    destination != "")
-                {
-                    stream << "[Route]\n";
-                    stream << "Gateway=" << addr.second->gateway() << "\n";
-                    stream << "Destination=" << destination << "\n";
-                }
             }
         }
     }
