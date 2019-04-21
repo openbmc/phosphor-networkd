@@ -200,26 +200,6 @@ TEST_F(TestUtil, convertPrefixToMask)
     EXPECT_EQ(mask, "255.255.255.224");
 }
 
-TEST_F(TestUtil, getNetworkAddress)
-{
-    std::string address = getNetworkID(AF_INET, "9.3.23.251", 24);
-    EXPECT_EQ("9.3.23.0", address);
-
-    address = getNetworkID(AF_INET, "9.3.23.251", 25);
-    EXPECT_EQ("9.3.23.128", address);
-
-    address = getNetworkID(AF_INET6, "2001:db8:abcd:dd12::0", 64);
-    EXPECT_EQ("2001:db8:abcd:dd12::", address);
-
-    EXPECT_THROW(getNetworkID(AF_INET, "a.b.c.d", 25), InternalFailure);
-
-    EXPECT_THROW(getNetworkID(AF_INET6, "2001:db8:gghh:dd12::0", 64),
-                 InternalFailure);
-
-    address = getNetworkID(AF_INET6, "fe80::201:6cff:fe80:228", 64);
-    EXPECT_EQ("fe80::", address);
-}
-
 TEST_F(TestUtil, CopyFromTooSmall)
 {
     constexpr auto expected = "abcde"sv;

@@ -124,15 +124,6 @@ bool isValidIP(int addressFamily, const std::string& address);
  */
 bool isValidPrefix(int addressFamily, uint8_t prefixLength);
 
-/* @brief gets the network section of the ip address.
- * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
- * @param[in] ipaddress - IP address.
- * @param[in] prefix - prefix length.
- * @returns network section of the ipaddress.
- */
-std::string getNetworkID(int addressFamily, const std::string& ipaddress,
-                         uint8_t prefix);
-
 /** @brief Gets the map of interface and the associated
  *         address.
  *  @returns map of interface and the address.
