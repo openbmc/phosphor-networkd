@@ -227,20 +227,6 @@ Map Table::getRoutes()
     return routeList;
 }
 
-std::string Table::getGateway(int addressFamily, const std::string& ipaddress,
-                              uint8_t prefix) const
-{
-    std::string gateway;
-    std::string network = getNetworkID(addressFamily, ipaddress, prefix);
-    auto it = routeList.find(network);
-    if (it != routeList.end())
-    {
-        gateway = it->second.gateway;
-    }
-
-    return gateway;
-}
-
 } // namespace route
 } // namespace network
 } // namespace phosphor
