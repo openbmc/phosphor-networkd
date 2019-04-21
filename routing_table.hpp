@@ -79,16 +79,6 @@ class Table
         return defaultGateway6;
     };
 
-    /**
-     * @brief get the gateway for the network.
-     * @param[in] addressFamily - ip address family(AF_INET/AF_INET6)
-     * @param[in] ipaddress - ip address.
-     * @param[in] prefix - prefix length.
-     * @returns the gatway for the given network.
-     */
-    std::string getGateway(int addressFamily, const std::string& ipaddress,
-                           uint8_t prefix) const;
-
   private:
     /**
      * @brief read the routing data from the socket and fill the buffer.
