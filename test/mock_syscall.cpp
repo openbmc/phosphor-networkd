@@ -1,10 +1,14 @@
 #include <arpa/inet.h>
+#include <dlfcn.h>
 #include <ifaddrs.h>
+#include <net/ethernet.h>
 #include <net/if.h>
 #include <netinet/in.h>
+#include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 
+#include <cstdarg>
 #include <cstring>
 #include <map>
 #include <stdexcept>
@@ -35,8 +39,9 @@ void freeifaddrs(ifaddrs* ifp)
 
 std::map<std::string, int> mock_if_nametoindex;
 std::map<int, std::string> mock_if_indextoname;
+std::map<std::string, ether_addr> mock_macs;
 
-void mock_addIF(const std::string& name, int idx)
+void mock_addIF(const std::string& name, int idx, const ether_addr& mac)
 {
     if (idx == 0)
     {
@@ -45,6 +50,7 @@ void mock_addIF(const std::string& name, int idx)
 
     mock_if_nametoindex[name] = idx;
     mock_if_indextoname[idx] = name;
+    mock_macs[name] = mac;
 }
 
 void mock_addIP(const char* name, const char* addr, const char* mask,
@@ -77,6 +83,8 @@ void mock_addIP(const char* name, const char* addr, const char* mask,
     ifaddr_count++;
     mock_ifaddrs = &mock_ifaddr_storage[0].ifaddr;
 }
+
+extern "C" {
 
 int getifaddrs(ifaddrs** ifap)
 {
@@ -112,3 +120,30 @@ char* if_indextoname(unsigned ifindex, char* ifname)
     }
     return std::strcpy(ifname, it->second.c_str());
 }
+
+int ioctl(int fd, unsigned long int request, ...)
+{
+    va_list vl;
+    va_start(vl, request);
+    void* data = va_arg(vl, void*);
+    va_end(vl);
+
+    if (request == SIOCGIFHWADDR)
+    {
+        auto req = reinterpret_cast<ifreq*>(data);
+        auto it = mock_macs.find(req->ifr_name);
+        if (it == mock_macs.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        std::memcpy(req->ifr_hwaddr.sa_data, &it->second, sizeof(it->second));
+        return 0;
+    }
+
+    static auto real_ioctl =
+        reinterpret_cast<decltype(&ioctl)>(dlsym(RTLD_NEXT, "ioctl"));
+    return real_ioctl(fd, request, data);
+}
+
+} // extern "C"
