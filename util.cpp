@@ -26,66 +26,69 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 namespace fs = std::experimental::filesystem;
 
-InAddrAny addrFromBuf(int addressFamily, std::string_view buf)
+InAddrAny addrFromBuf(int family, std::string_view buf)
 {
-    if (addressFamily == AF_INET)
+    if (family == AF_INET)
     {
-        struct in_addr ret;
-        if (buf.size() != sizeof(ret))
-        {
-            throw std::runtime_error("Buf not in_addr sized");
-        }
-        memcpy(&ret, buf.data(), sizeof(ret));
-        return ret;
+        return copyFrom<in_addr>(buf, "Invalid IPv4 buffer");
     }
-    else if (addressFamily == AF_INET6)
+    else if (family == AF_INET6)
     {
-        struct in6_addr ret;
-        if (buf.size() != sizeof(ret))
-        {
-            throw std::runtime_error("Buf not in6_addr sized");
-        }
-        memcpy(&ret, buf.data(), sizeof(ret));
-        return ret;
+        return copyFrom<in6_addr>(buf, "Invalid IPv6 buffer");
     }
 
-    throw std::runtime_error("Unsupported address family");
+    throw std::invalid_argument("Invalid addr family");
+}
+
+template <int family>
+std::string toString(const typename FamilyTraits<family>::addr& addr)
+{
+    char ret[FamilyTraits<family>::strlen];
+    if (inet_ntop(family, &addr, ret, sizeof(ret)) == NULL)
+    {
+        throw std::runtime_error("Failed to convert IP to string");
+    }
+    return ret;
 }
 
 std::string toString(const InAddrAny& addr)
 {
-    std::string ip;
-    if (std::holds_alternative<struct in_addr>(addr))
+    if (std::holds_alternative<in_addr>(addr))
     {
-        const auto& v = std::get<struct in_addr>(addr);
-        ip.resize(INET_ADDRSTRLEN);
-        if (inet_ntop(AF_INET, &v, ip.data(), ip.size()) == NULL)
-        {
-            throw std::runtime_error("Failed to convert IP4 to string");
-        }
+        return toString<AF_INET>(std::get<in_addr>(addr));
     }
-    else if (std::holds_alternative<struct in6_addr>(addr))
+    else if (std::holds_alternative<in6_addr>(addr))
     {
-        const auto& v = std::get<struct in6_addr>(addr);
-        ip.resize(INET6_ADDRSTRLEN);
-        if (inet_ntop(AF_INET6, &v, ip.data(), ip.size()) == NULL)
-        {
-            throw std::runtime_error("Failed to convert IP6 to string");
-        }
+        return toString<AF_INET6>(std::get<in6_addr>(addr));
     }
-    else
-    {
-        throw std::runtime_error("Invalid addr type");
-    }
-    ip.resize(strlen(ip.c_str()));
-    return ip;
+
+    throw std::invalid_argument("Invalid addr family");
 }
 
-bool isValidIP(int addressFamily, const std::string& address)
+template <int family>
+bool isValidIP(const std::string& address)
 {
-    unsigned char buf[sizeof(struct in6_addr)];
+    typename FamilyTraits<family>::addr addr;
+    return inet_pton(family, address.c_str(), &addr) == 1;
+}
 
-    return inet_pton(addressFamily, address.c_str(), buf) > 0;
+bool isValidIP(int family, const std::string& address)
+{
+    if (family == AF_INET)
+    {
+        return isValidIP<AF_INET>(address);
+    }
+    else if (family == AF_INET6)
+    {
+        return isValidIP<AF_INET6>(address);
+    }
+
+    throw std::invalid_argument("Invalid addr family");
+}
+
+bool isValidIP(const std::string& address)
+{
+    return isValidIP<AF_INET>(address) || isValidIP<AF_INET6>(address);
 }
 
 template <int family>
