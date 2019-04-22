@@ -269,7 +269,7 @@ std::string
     {
         log<level::ERR>("socket creation  failed:",
                         entry("ERROR=%s", strerror(errno)));
-        return macAddress;
+        elog<InternalFailure>();
     }
 
     std::strcpy(ifr.ifr_name, interfaceName.c_str());
@@ -277,7 +277,7 @@ std::string
     {
         log<level::ERR>("ioctl failed for SIOCGIFHWADDR:",
                         entry("ERROR=%s", strerror(errno)));
-        return macAddress;
+        elog<InternalFailure>();
     }
 
     std::snprintf(macAddress, mac_address::size, mac_address::format,
