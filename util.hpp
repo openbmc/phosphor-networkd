@@ -9,7 +9,6 @@
 
 #include <cstring>
 #include <optional>
-#include <sdbusplus/bus.hpp>
 #include <string>
 #include <string_view>
 
@@ -26,11 +25,6 @@ constexpr auto IPV6_PREFIX = "fe80";
 
 namespace mac_address
 {
-
-/** @brief gets the MAC address from the Inventory.
- *  @param[in] bus - DBUS Bus Object.
- */
-ether_addr getfromInventory(sdbusplus::bus::bus& bus);
 
 /** @brief Converts the given mac address into byte form
  *  @param[in] str - The mac address in human readable form
@@ -66,12 +60,6 @@ bool isMulticast(const ether_addr& mac);
  *  @return True if not multicast or empty
  */
 bool isUnicast(const ether_addr& mac);
-
-/** @brief Determines if the mac address is locally managed
- *  @param[in] mac - The mac address
- *  @return True if local admin bit is set
- */
-bool isLocalAdmin(const ether_addr& mac);
 
 } // namespace mac_address
 

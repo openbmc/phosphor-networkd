@@ -13,12 +13,10 @@
 #include <cstring>
 #include <experimental/filesystem>
 #include <iostream>
-#include <list>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <stdexcept>
 #include <string>
-#include <variant>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
@@ -502,76 +500,6 @@ void executeCommandinChildProcess(const char* path, char** args)
 namespace mac_address
 {
 
-constexpr auto mapperBus = "xyz.openbmc_project.ObjectMapper";
-constexpr auto mapperObj = "/xyz/openbmc_project/object_mapper";
-constexpr auto mapperIntf = "xyz.openbmc_project.ObjectMapper";
-constexpr auto propIntf = "org.freedesktop.DBus.Properties";
-constexpr auto methodGet = "Get";
-
-using DbusObjectPath = std::string;
-using DbusService = std::string;
-using DbusInterface = std::string;
-using ObjectTree =
-    std::map<DbusObjectPath, std::map<DbusService, std::vector<DbusInterface>>>;
-
-constexpr auto invBus = "xyz.openbmc_project.Inventory.Manager";
-constexpr auto invNetworkIntf =
-    "xyz.openbmc_project.Inventory.Item.NetworkInterface";
-constexpr auto invRoot = "/xyz/openbmc_project/inventory";
-
-ether_addr getfromInventory(sdbusplus::bus::bus& bus)
-{
-    std::vector<DbusInterface> interfaces;
-    interfaces.emplace_back(invNetworkIntf);
-
-    auto depth = 0;
-
-    auto mapperCall =
-        bus.new_method_call(mapperBus, mapperObj, mapperIntf, "GetSubTree");
-
-    mapperCall.append(invRoot, depth, interfaces);
-
-    auto mapperReply = bus.call(mapperCall);
-    if (mapperReply.is_method_error())
-    {
-        log<level::ERR>("Error in mapper call");
-        elog<InternalFailure>();
-    }
-
-    ObjectTree objectTree;
-    mapperReply.read(objectTree);
-
-    if (objectTree.empty())
-    {
-        log<level::ERR>("No Object has implemented the interface",
-                        entry("INTERFACE=%s", invNetworkIntf));
-        elog<InternalFailure>();
-    }
-
-    // It is expected that only one object has implemented this interface.
-
-    auto objPath = objectTree.begin()->first;
-    auto service = objectTree.begin()->second.begin()->first;
-
-    auto method = bus.new_method_call(service.c_str(), objPath.c_str(),
-                                      propIntf, methodGet);
-
-    method.append(invNetworkIntf, "MACAddress");
-
-    auto reply = bus.call(method);
-    if (reply.is_method_error())
-    {
-        log<level::ERR>("Failed to get MACAddress",
-                        entry("PATH=%s", objPath.c_str()),
-                        entry("INTERFACE=%s", invNetworkIntf));
-        elog<InternalFailure>();
-    }
-
-    std::variant<std::string> value;
-    reply.read(value);
-    return fromString(std::get<std::string>(value));
-}
-
 ether_addr fromString(const char* str)
 {
     struct ether_addr* mac = ether_aton(str);
@@ -600,11 +528,6 @@ bool isMulticast(const ether_addr& mac)
 bool isUnicast(const ether_addr& mac)
 {
     return !isEmpty(mac) && !isMulticast(mac);
-}
-
-bool isLocalAdmin(const ether_addr& mac)
-{
-    return mac.ether_addr_octet[0] & 0b10;
 }
 
 } // namespace mac_address

@@ -381,19 +381,6 @@ TEST(MacIsUnicast, False)
     EXPECT_FALSE(isUnicast(fromString("ff:ff:ff:ff:ff:ff")));
 }
 
-TEST(MacIsLocalAdmin, True)
-{
-    EXPECT_TRUE(isLocalAdmin(fromString("02:11:22:33:44:55")));
-    EXPECT_TRUE(isLocalAdmin(fromString("FE:11:22:33:44:55")));
-}
-
-TEST(MacIsLocalAdmin, False)
-{
-    EXPECT_FALSE(isLocalAdmin(fromString("00:00:00:00:00:00")));
-    EXPECT_FALSE(isLocalAdmin(fromString("01:00:00:00:00:00")));
-    EXPECT_FALSE(isLocalAdmin(fromString("fd:ff:ff:ff:ff:ff")));
-}
-
 } // namespace mac_address
 } // namespace network
 } // namespace phosphor
