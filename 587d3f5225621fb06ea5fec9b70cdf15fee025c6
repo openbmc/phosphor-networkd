@@ -22,6 +22,30 @@
       "revId": "587d3f5225621fb06ea5fec9b70cdf15fee025c6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31a0f729_0d39d525",
+        "filename": "network_manager.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1000225
+      },
+      "writtenOn": "2019-04-22T13:48:04Z",
+      "side": 1,
+      "message": "In short, one of our engineers tried creating vlan interface with a name differing from a parent interface, which resulted in a crash.\nWhile using a parent name is logical and conventional, it\u0027s not strictly enforced, so that can potentially happen again.\nOn a side note, checking for a delimiter might seem redundant at a first glance, but if user provides something like \u0027eth0.111\u0027 for a name, the service won\u0027t crash.",
+      "parentUuid": "990bbf91_f0643602",
+      "range": {
+        "startLine": 179,
+        "startChar": 32,
+        "endLine": 179,
+        "endChar": 47
+      },
+      "revId": "587d3f5225621fb06ea5fec9b70cdf15fee025c6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
