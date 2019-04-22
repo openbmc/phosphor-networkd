@@ -770,29 +770,6 @@ std::string EthernetInterface::mACAddress(std::string value)
     ether_addr oldMAC = mac_address::fromString(MacAddressIntf::mACAddress());
     if (!equal(newMAC, oldMAC))
     {
-        if (!mac_address::isLocalAdmin(newMAC))
-        {
-            try
-            {
-                auto inventoryMAC = mac_address::getfromInventory(bus);
-                if (!equal(newMAC, inventoryMAC))
-                {
-                    log<level::ERR>(
-                        "Given MAC address is neither a local Admin "
-                        "type nor is same as in inventory");
-                    elog<InvalidArgument>(
-                        Argument::ARGUMENT_NAME("MACAddress"),
-                        Argument::ARGUMENT_VALUE(value.c_str()));
-                }
-            }
-            catch (const std::exception& e)
-            {
-                log<level::ERR>("Exception occurred during getting of MAC "
-                                "address from Inventory");
-                elog<InternalFailure>();
-            }
-        }
-
         // Update everything that depends on the MAC value
         for (const auto& [name, intf] : vlanInterfaces)
         {
