@@ -138,6 +138,19 @@ const std::unordered_set<std::string_view>& getIgnoredInterfaces()
 
 } // namespace internal
 
+constexpr auto familyVisit(auto&& visitor, int family)
+{
+    if (family == AF_INET)
+    {
+        return visitor.template operator()<AF_INET>();
+    }
+    else if (family == AF_INET6)
+    {
+        return visitor.template operator()<AF_INET6>();
+    }
+    throw std::invalid_argument("Invalid addr family");
+}
+
 std::string toMask(int addressFamily, uint8_t prefix)
 {
     if (addressFamily == AF_INET6)
@@ -234,27 +247,10 @@ bool isValidIP(int addressFamily, stdplus::const_zstring address)
     return inet_pton(addressFamily, address.c_str(), buf) > 0;
 }
 
-bool isValidPrefix(int addressFamily, uint8_t prefixLength)
+bool isValidPrefix(int family, uint8_t prefix)
 {
-    if (addressFamily == AF_INET)
-    {
-        if (prefixLength < IPV4_MIN_PREFIX_LENGTH ||
-            prefixLength > IPV4_MAX_PREFIX_LENGTH)
-        {
-            return false;
-        }
-    }
-
-    if (addressFamily == AF_INET6)
-    {
-        if (prefixLength < IPV4_MIN_PREFIX_LENGTH ||
-            prefixLength > IPV6_MAX_PREFIX_LENGTH)
-        {
-            return false;
-        }
-    }
-
-    return true;
+    return familyVisit(
+        [=]<int f>() noexcept { return isValidPrefix<f>(prefix); }, family);
 }
 
 InterfaceList getInterfaces()
