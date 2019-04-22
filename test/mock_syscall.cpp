@@ -5,6 +5,11 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
+#include <cstring>
+#include <map>
+#include <stdexcept>
+#include <string>
+
 #define MAX_IFADDRS 5
 
 int debugging = false;
@@ -26,6 +31,20 @@ int ifaddr_count = 0;
 void freeifaddrs(ifaddrs* ifp)
 {
     return;
+}
+
+std::map<std::string, int> mock_if_nametoindex;
+std::map<int, std::string> mock_if_indextoname;
+
+void mock_addIF(const std::string& name, int idx)
+{
+    if (idx == 0)
+    {
+        throw std::invalid_argument("Bad interface index");
+    }
+
+    mock_if_nametoindex[name] = idx;
+    mock_if_indextoname[idx] = name;
 }
 
 void mock_addIP(const char* name, const char* addr, const char* mask,
@@ -65,4 +84,31 @@ int getifaddrs(ifaddrs** ifap)
     if (mock_ifaddrs == nullptr)
         return -1;
     return (0);
+}
+
+unsigned if_nametoindex(const char* ifname)
+{
+    auto it = mock_if_nametoindex.find(ifname);
+    if (it == mock_if_nametoindex.end())
+    {
+        errno = ENXIO;
+        return 0;
+    }
+    return it->second;
+}
+
+char* if_indextoname(unsigned ifindex, char* ifname)
+{
+    if (ifindex == 0)
+    {
+        errno = ENXIO;
+        return NULL;
+    }
+    auto it = mock_if_indextoname.find(ifindex);
+    if (it == mock_if_indextoname.end())
+    {
+        // TODO: Return ENXIO once other code is mocked out
+        return std::strcpy(ifname, "invalid");
+    }
+    return std::strcpy(ifname, it->second.c_str());
 }
