@@ -7,6 +7,7 @@ check_PROGRAMS = test
 test_SOURCES = \
 	test_util.cpp \
 	mock_syscall.cpp \
+	test_ipaddress.cpp \
 	test_neighbor.cpp \
 	test_netlink.cpp \
 	test_network_manager.cpp \

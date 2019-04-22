@@ -27,6 +27,7 @@
 #include <stdplus/raw.hpp>
 #include <string>
 #include <string_view>
+#include <variant>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
@@ -104,48 +105,47 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     }
 }
 
-static IP::Protocol convertFamily(int family)
+static IP::Protocol getProtocol(const InAddrAny& addr)
 {
-    switch (family)
+    if (std::holds_alternative<in_addr>(addr))
     {
-        case AF_INET:
-            return IP::Protocol::IPv4;
-        case AF_INET6:
-            return IP::Protocol::IPv6;
+        return IP::Protocol::IPv4;
+    }
+    else if (std::holds_alternative<in6_addr>(addr))
+    {
+        return IP::Protocol::IPv6;
     }
 
-    throw std::invalid_argument("Bad address family");
+    throw std::runtime_error("Invalid addr type");
 }
 
 void EthernetInterface::createIPAddressObjects()
 {
     addrs.clear();
 
-    auto addrs = getInterfaceAddrs()[interfaceName()];
-
-    for (auto& addr : addrs)
+    AddressFilter filter;
+    filter.interface = ifIndex();
+    filter.scope = RT_SCOPE_UNIVERSE;
+    auto currentAddrs = getCurrentAddresses(filter);
+    for (const auto& addr : currentAddrs)
     {
-        IP::Protocol addressType = convertFamily(addr.addrType);
+        auto address = toString(addr.address);
+        IP::Protocol addressType = getProtocol(addr.address);
         IP::AddressOrigin origin = IP::AddressOrigin::Static;
         if (dHCPEnabled())
         {
             origin = IP::AddressOrigin::DHCP;
         }
-        if (isLinkLocalIP(addr.ipaddress))
-        {
-            origin = IP::AddressOrigin::LinkLocal;
-        }
         // Obsolete parameter
         std::string gateway = "";
 
-        std::string ipAddressObjectPath = generateObjectPath(
-            addressType, addr.ipaddress, addr.prefix, gateway);
+        std::string ipAddressObjectPath =
+            generateObjectPath(addressType, address, addr.prefix, gateway);
 
-        this->addrs.emplace(addr.ipaddress,
-                            std::make_shared<phosphor::network::IPAddress>(
-                                bus, ipAddressObjectPath.c_str(), *this,
-                                addressType, addr.ipaddress, origin,
-                                addr.prefix, gateway));
+        addrs.emplace(address,
+                      std::make_shared<phosphor::network::IPAddress>(
+                          bus, ipAddressObjectPath.c_str(), *this, addressType,
+                          address, origin, addr.prefix, gateway));
     }
 }
 

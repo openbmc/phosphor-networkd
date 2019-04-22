@@ -21,8 +21,6 @@ namespace network
 constexpr auto IPV4_MIN_PREFIX_LENGTH = 1;
 constexpr auto IPV4_MAX_PREFIX_LENGTH = 32;
 constexpr auto IPV6_MAX_PREFIX_LENGTH = 64;
-constexpr auto IPV4_PREFIX = "169.254";
-constexpr auto IPV6_PREFIX = "fe80";
 
 namespace mac_address
 {
@@ -67,13 +65,6 @@ bool isUnicast(const ether_addr& mac);
 constexpr auto networkdService = "systemd-networkd.service";
 constexpr auto timeSynchdService = "systemd-timesyncd.service";
 
-/* @brief converts the given subnet into prefix notation.
- * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
- * @param[in] mask - Subnet Mask.
- * @returns prefix.
- */
-uint8_t toCidr(int addressFamily, const std::string& mask);
-
 /* @brief converts a sockaddr for the specified address family into
  *        a type_safe InAddrAny.
  * @param[in] addressFamily - The address family of the buf
@@ -86,19 +77,6 @@ InAddrAny addrFromBuf(int addressFamily, std::string_view buf);
  * @returns String representation of the ip.
  */
 std::string toString(const InAddrAny& addr);
-
-/* @brief converts the prefix into subnetmask.
- * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
- * @param[in] prefix - prefix length.
- * @returns subnet mask.
- */
-std::string toMask(int addressFamily, uint8_t prefix);
-
-/* @brief checks that the given ip address is link local or not.
- * @param[in] address - IP address.
- * @returns true if it is linklocal otherwise false.
- */
-bool isLinkLocalIP(const std::string& address);
 
 /* @brief checks that the given ip address valid or not.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
@@ -113,12 +91,6 @@ bool isValidIP(int addressFamily, const std::string& address);
  * @returns true if it is valid otherwise false.
  */
 bool isValidPrefix(int addressFamily, uint8_t prefixLength);
-
-/** @brief Gets the map of interface and the associated
- *         address.
- *  @returns map of interface and the address.
- */
-IntfAddrMap getInterfaceAddrs();
 
 /** @brief Get all the interfaces from the system.
  *  @returns list of interface names.
