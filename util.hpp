@@ -70,12 +70,6 @@ bool isMulticast(const ether_addr& mac);
  */
 bool isUnicast(const ether_addr& mac);
 
-/** @brief Determines if the mac address is locally managed
- *  @param[in] mac - The mac address
- *  @return True if local admin bit is set
- */
-bool isLocalAdmin(const ether_addr& mac);
-
 } // namespace mac_address
 
 constexpr auto networkdService = "systemd-networkd.service";
