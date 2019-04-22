@@ -27,7 +27,6 @@ EventPtr eventPtr = nullptr;
 /** @brief refresh the network objects. */
 void refreshObjects()
 {
-
     if (manager)
     {
         manager->createChildObjects();
@@ -89,6 +88,7 @@ TEST_F(TestRtNetlink, WithSingleInterface)
 {
     using namespace std::chrono;
     // Adds the following ip in the getifaddrs list.
+    mock_addIF("igb5", 6);
     mock_addIP("igb5", "127.0.0.1", "255.255.255.128", IFF_UP | IFF_RUNNING);
     constexpr auto BUFSIZE = 4096;
     std::array<char, BUFSIZE> msgBuf = {0};
