@@ -67,47 +67,30 @@ TEST_F(TestNetworkManager, NoInterface)
 // getifaddrs returns single interface.
 TEST_F(TestNetworkManager, WithSingleInterface)
 {
-    bool caughtException = false;
-    try
-    {
-        // Adds the following ip in the getifaddrs list.
-        mock_addIF("igb1", 2);
-        mock_addIP("igb1", "192.0.2.3", "255.255.255.128",
-                   IFF_UP | IFF_RUNNING);
+    // Adds the following ip in the getifaddrs list.
+    mock_addIF("igb1", 2);
+    mock_addIP("igb1", "192.0.2.3", "255.255.255.128", IFF_UP | IFF_RUNNING);
 
-        // Now create the interfaces which will call the mocked getifaddrs
-        // which returns the above interface detail.
-        createInterfaces();
-        EXPECT_EQ(1, manager.getInterfaceCount());
-        EXPECT_EQ(true, manager.hasInterface("igb1"));
-    }
-    catch (std::exception& e)
-    {
-        caughtException = true;
-    }
-    EXPECT_EQ(false, caughtException);
+    // Now create the interfaces which will call the mocked getifaddrs
+    // which returns the above interface detail.
+    createInterfaces();
+    EXPECT_EQ(1, manager.getInterfaceCount());
+    EXPECT_EQ(true, manager.hasInterface("igb1"));
 }
 
 // getifaddrs returns two interfaces.
 TEST_F(TestNetworkManager, WithMultipleInterfaces)
 {
-    try
-    {
-        mock_addIF("igb0", 1);
-        mock_addIP("igb0", "192.0.2.2", "255.255.255.128",
-                   IFF_UP | IFF_RUNNING);
+    mock_addIF("igb0", 1);
+    mock_addIP("igb0", "192.0.2.2", "255.255.255.128", IFF_UP | IFF_RUNNING);
 
-        mock_addIF("igb1", 2);
-        mock_addIP("igb1", "192.0.2.3", "255.255.255.128",
-                   IFF_UP | IFF_RUNNING);
+    mock_addIF("igb1", 2);
+    mock_addIP("igb1", "192.0.2.3", "255.255.255.128", IFF_UP | IFF_RUNNING);
 
-        createInterfaces();
-        EXPECT_EQ(2, manager.getInterfaceCount());
-        EXPECT_EQ(true, manager.hasInterface("igb0"));
-    }
-    catch (std::exception& e)
-    {
-    }
+    createInterfaces();
+    EXPECT_EQ(2, manager.getInterfaceCount());
+    EXPECT_EQ(true, manager.hasInterface("igb0"));
+    EXPECT_EQ(true, manager.hasInterface("igb1"));
 }
 
 } // namespace network
