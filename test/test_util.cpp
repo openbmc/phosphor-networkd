@@ -51,6 +51,8 @@ TEST_F(TestUtil, AddrFromBuf)
     EXPECT_THROW(addrFromBuf(AF_INET6, tooSmall), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_INET6, tooLarge), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_UNSPEC, buf2), std::runtime_error);
+
+    EXPECT_THROW(addrFromBuf(AF_UNSPEC, nullptr), std::invalid_argument);
 }
 
 TEST_F(TestUtil, IpToString)
@@ -79,7 +81,7 @@ TEST_F(TestUtil, IpToString)
     catch (...)
     {
     }
-    EXPECT_THROW(toString(ip3), std::runtime_error);
+    EXPECT_THROW(toString(ip3), std::invalid_argument);
 }
 
 TEST_F(TestUtil, IpValidation)
@@ -119,6 +121,12 @@ TEST_F(TestUtil, IpValidation)
 
     ipaddress = "1::8";
     EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+
+    EXPECT_THROW(isValidIP(AF_UNSPEC, "::"), std::invalid_argument);
+
+    EXPECT_TRUE(isValidIP("8.8.8.8"));
+    EXPECT_TRUE(isValidIP("fd00::2"));
+    EXPECT_FALSE(isValidIP("fx::2"));
 }
 
 TEST_F(TestUtil, PrefixValidation)
