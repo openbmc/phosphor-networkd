@@ -70,6 +70,30 @@
       "revId": "587d3f5225621fb06ea5fec9b70cdf15fee025c6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4566081_598a40db",
+        "filename": "network_manager.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2019-04-22T15:12:09Z",
+      "side": 1,
+      "message": "I think in that case the fix should have been that introduce the check that if the given interface name is not the existing physical interface then throw the error.",
+      "parentUuid": "7e74ba04_db8bffc5",
+      "range": {
+        "startLine": 179,
+        "startChar": 32,
+        "endLine": 179,
+        "endChar": 47
+      },
+      "revId": "587d3f5225621fb06ea5fec9b70cdf15fee025c6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
