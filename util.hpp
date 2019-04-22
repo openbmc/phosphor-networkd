@@ -5,6 +5,7 @@
 #include "types.hpp"
 
 #include <netinet/ether.h>
+#include <netinet/in.h>
 #include <unistd.h>
 
 #include <cstring>
@@ -15,10 +16,6 @@ namespace phosphor
 {
 namespace network
 {
-
-constexpr auto IPV4_MIN_PREFIX_LENGTH = 1;
-constexpr auto IPV4_MAX_PREFIX_LENGTH = 32;
-constexpr auto IPV6_MAX_PREFIX_LENGTH = 64;
 
 namespace mac_address
 {
@@ -63,6 +60,23 @@ bool isUnicast(const ether_addr& mac);
 constexpr auto networkdService = "systemd-networkd.service";
 constexpr auto timeSynchdService = "systemd-timesyncd.service";
 
+template <int family>
+struct FamilyTraits
+{
+};
+
+template <>
+struct FamilyTraits<AF_INET>
+{
+    using addr = in_addr;
+};
+
+template <>
+struct FamilyTraits<AF_INET6>
+{
+    using addr = in6_addr;
+};
+
 /* @brief converts a sockaddr for the specified address family into
  *        a type_safe InAddrAny.
  * @param[in] addressFamily - The address family of the buf
@@ -84,11 +98,11 @@ std::string toString(const InAddrAny& addr);
 bool isValidIP(int addressFamily, const std::string& address);
 
 /* @brief checks that the given prefix is valid or not.
- * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
+ * @param[in] family - IP address family(AF_INET/AF_INET6).
  * @param[in] prefix - prefix length.
  * @returns true if it is valid otherwise false.
  */
-bool isValidPrefix(int addressFamily, uint8_t prefixLength);
+bool isValidPrefix(int family, uint8_t prefixLength);
 
 /** @brief Get all the interfaces from the system.
  *  @returns list of interface names.
