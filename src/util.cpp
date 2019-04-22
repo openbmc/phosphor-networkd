@@ -143,43 +143,6 @@ const std::set<std::string_view>& getIgnoredInterfaces()
 
 } // namespace internal
 
-uint8_t toCidr(int addressFamily, const std::string& subnetMask)
-{
-    uint32_t subnet[sizeof(in6_addr) / sizeof(uint32_t)];
-    if (inet_pton(addressFamily, subnetMask.c_str(), &subnet) != 1)
-    {
-        log<level::ERR>("inet_pton failed:",
-                        entry("SUBNETMASK=%s", subnetMask.c_str()));
-        return 0;
-    }
-
-    static_assert(sizeof(in6_addr) % sizeof(uint32_t) == 0);
-    static_assert(sizeof(in_addr) % sizeof(uint32_t) == 0);
-    auto i = (addressFamily == AF_INET ? sizeof(in_addr) : sizeof(in6_addr)) /
-             sizeof(uint32_t);
-    while (i > 0)
-    {
-        if (subnet[--i] != 0)
-        {
-            auto v = be32toh(subnet[i]);
-            static_assert(sizeof(unsigned) == sizeof(uint32_t));
-            auto trailing = __builtin_ctz(v);
-            auto ret = (i + 1) * 32 - trailing;
-            bool valid = ~v == 0 || 32 == trailing + __builtin_clz(~v);
-            while (i > 0 && (valid = (~subnet[--i] == 0) && valid))
-                ;
-            if (!valid)
-            {
-                log<level::ERR>("Invalid netmask",
-                                entry("SUBNETMASK=%s", subnetMask.c_str()));
-                return 0;
-            }
-            return ret;
-        }
-    }
-    return 0;
-}
-
 std::string toMask(int addressFamily, uint8_t prefix)
 {
     if (addressFamily == AF_INET6)
@@ -270,11 +233,6 @@ std::string toString(const InAddrAny& addr)
     throw std::runtime_error("Invalid addr type");
 }
 
-bool isLinkLocalIP(const std::string& address)
-{
-    return address.find(IPV4_PREFIX) == 0 || address.find(IPV6_PREFIX) == 0;
-}
-
 bool isValidIP(int addressFamily, const std::string& address)
 {
     unsigned char buf[sizeof(struct in6_addr)];
@@ -303,81 +261,6 @@ bool isValidPrefix(int addressFamily, uint8_t prefixLength)
     }
 
     return true;
-}
-
-IntfAddrMap getInterfaceAddrs()
-{
-    IntfAddrMap intfMap{};
-    struct ifaddrs* ifaddr = nullptr;
-
-    // attempt to fill struct with ifaddrs
-    if (getifaddrs(&ifaddr) == -1)
-    {
-        auto error = errno;
-        log<level::ERR>("Error occurred during the getifaddrs call",
-                        entry("ERRNO=%s", strerror(error)));
-        elog<InternalFailure>();
-    }
-
-    AddrPtr ifaddrPtr(ifaddr);
-    ifaddr = nullptr;
-
-    std::string intfName{};
-
-    for (ifaddrs* ifa = ifaddrPtr.get(); ifa != nullptr; ifa = ifa->ifa_next)
-    {
-        // walk interfaces
-        if (ifa->ifa_addr == nullptr)
-        {
-            continue;
-        }
-
-        // get only INET interfaces not ipv6
-        if (ifa->ifa_addr->sa_family == AF_INET ||
-            ifa->ifa_addr->sa_family == AF_INET6)
-        {
-            // if loopback, or not running ignore
-            if ((ifa->ifa_flags & IFF_LOOPBACK) ||
-                !(ifa->ifa_flags & IFF_RUNNING))
-            {
-                continue;
-            }
-            intfName = ifa->ifa_name;
-            AddrInfo info{};
-            char ip[INET6_ADDRSTRLEN] = {0};
-            char subnetMask[INET6_ADDRSTRLEN] = {0};
-
-            if (ifa->ifa_addr->sa_family == AF_INET)
-            {
-
-                inet_ntop(ifa->ifa_addr->sa_family,
-                          &(((struct sockaddr_in*)(ifa->ifa_addr))->sin_addr),
-                          ip, sizeof(ip));
-
-                inet_ntop(
-                    ifa->ifa_addr->sa_family,
-                    &(((struct sockaddr_in*)(ifa->ifa_netmask))->sin_addr),
-                    subnetMask, sizeof(subnetMask));
-            }
-            else
-            {
-                inet_ntop(ifa->ifa_addr->sa_family,
-                          &(((struct sockaddr_in6*)(ifa->ifa_addr))->sin6_addr),
-                          ip, sizeof(ip));
-
-                inet_ntop(
-                    ifa->ifa_addr->sa_family,
-                    &(((struct sockaddr_in6*)(ifa->ifa_netmask))->sin6_addr),
-                    subnetMask, sizeof(subnetMask));
-            }
-
-            info.addrType = ifa->ifa_addr->sa_family;
-            info.ipaddress = ip;
-            info.prefix = toCidr(info.addrType, std::string(subnetMask));
-            intfMap[intfName].push_back(info);
-        }
-    }
-    return intfMap;
 }
 
 InterfaceList getInterfaces()

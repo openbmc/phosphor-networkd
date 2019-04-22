@@ -3,8 +3,10 @@
 #include "ethernet_interface.hpp"
 
 #include "config_parser.hpp"
+#include "ipaddress.hpp"
 #include "neighbor.hpp"
 #include "network_manager.hpp"
+#include "types.hpp"
 #include "vlan_interface.hpp"
 
 #include <arpa/inet.h>
@@ -140,17 +142,18 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     }
 }
 
-static IP::Protocol convertFamily(int family)
+static IP::Protocol getProtocol(const InAddrAny& addr)
 {
-    switch (family)
+    if (std::holds_alternative<in_addr>(addr))
     {
-        case AF_INET:
-            return IP::Protocol::IPv4;
-        case AF_INET6:
-            return IP::Protocol::IPv6;
+        return IP::Protocol::IPv4;
+    }
+    else if (std::holds_alternative<in6_addr>(addr))
+    {
+        return IP::Protocol::IPv6;
     }
 
-    throw std::invalid_argument("Bad address family");
+    throw std::runtime_error("Invalid addr type");
 }
 
 void EthernetInterface::disableDHCP(IP::Protocol protocol)
@@ -216,17 +219,19 @@ void EthernetInterface::createIPAddressObjects()
 {
     addrs.clear();
 
-    auto addrs = getInterfaceAddrs()[interfaceName()];
-
-    for (auto& addr : addrs)
+    AddressFilter filter;
+    filter.interface = ifIndex();
+    auto currentAddrs = getCurrentAddresses(filter);
+    for (const auto& addr : currentAddrs)
     {
-        IP::Protocol addressType = convertFamily(addr.addrType);
+        auto address = toString(addr.address);
+        IP::Protocol addressType = getProtocol(addr.address);
         IP::AddressOrigin origin = IP::AddressOrigin::Static;
         if (dhcpIsEnabled(addressType))
         {
             origin = IP::AddressOrigin::DHCP;
         }
-        if (isLinkLocalIP(addr.ipaddress))
+        if (addr.scope == RT_SCOPE_LINK)
         {
             origin = IP::AddressOrigin::LinkLocal;
         }
@@ -234,13 +239,12 @@ void EthernetInterface::createIPAddressObjects()
         std::string gateway = "";
 
         std::string ipAddressObjectPath = generateObjectPath(
-            addressType, addr.ipaddress, addr.prefix, gateway, origin);
+            addressType, address, addr.prefix, gateway, origin);
 
         this->addrs.insert_or_assign(
-            addr.ipaddress,
-            std::make_shared<phosphor::network::IPAddress>(
-                bus, ipAddressObjectPath.c_str(), *this, addressType,
-                addr.ipaddress, origin, addr.prefix, gateway));
+            address, std::make_shared<phosphor::network::IPAddress>(
+                         bus, ipAddressObjectPath.c_str(), *this, addressType,
+                         address, origin, addr.prefix, gateway));
     }
 }
 
