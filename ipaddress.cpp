@@ -36,22 +36,14 @@ IPAddress::IPAddress(sdbusplus::bus::bus& bus, const char* objPath,
 
 void IPAddress::delete_()
 {
-    if (parent.dHCPEnabled())
+    if (origin() != IP::AddressOrigin::Static)
     {
-        log<level::ERR>("DHCP enabled on the interface"),
+        log<level::ERR>("Tried to delete a non-static address"),
+            entry("ADDRESS=%s", address().c_str()),
+            entry("PREFIX=%" PRIu8, prefixLength()),
             entry("INTERFACE=%s", parent.interfaceName().c_str());
-        return;
+        elog<InternalFailure>();
     }
-
-#ifdef LINK_LOCAL_AUTOCONFIGURATION
-    if (isLinkLocalIP(address()))
-    {
-        log<level::ERR>("Can not delete the LinkLocal address"),
-            entry("INTERFACE=%s ADDRESS=%s", parent.interfaceName().c_str(),
-                  address().c_str());
-        return;
-    }
-#endif
 
     parent.deleteObject(address());
 }
