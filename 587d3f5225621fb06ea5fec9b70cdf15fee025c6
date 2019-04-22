@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "990bbf91_f0643602",
+        "filename": "network_manager.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2019-04-22T13:22:06Z",
+      "side": 1,
+      "message": "I am hoping this interface should be parent interface name, eg eth0 or eth1.\nIt should not be eth0. something.\n\nCan you get me the flow how did you get the crash?",
+      "range": {
+        "startLine": 179,
+        "startChar": 32,
+        "endLine": 179,
+        "endChar": 47
+      },
+      "revId": "587d3f5225621fb06ea5fec9b70cdf15fee025c6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
