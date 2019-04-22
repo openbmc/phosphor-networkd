@@ -31,7 +31,7 @@ class TestVlanInterface : public testing::Test
     TestVlanInterface() :
         bus(sdbusplus::bus::new_default()),
         manager(bus, "/xyz/openbmc_test/network", "/tmp"),
-        interface(bus, "/xyz/openbmc_test/network/test0", false, manager)
+        interface(makeInterface(bus, manager))
 
     {
         setConfDir();
@@ -45,6 +45,13 @@ class TestVlanInterface : public testing::Test
         }
     }
 
+    static EthernetInterface makeInterface(sdbusplus::bus::bus& bus,
+                                           MockManager& manager)
+    {
+        mock_addIF("test0", 1);
+        return {bus, "/xyz/openbmc_test/network/test0", false, manager};
+    }
+
     void setConfDir()
     {
         char tmp[] = "/tmp/VlanInterface.XXXXXX";
@@ -54,6 +61,9 @@ class TestVlanInterface : public testing::Test
 
     void createVlan(VlanId id)
     {
+        std::string ifname = "test0.";
+        ifname += std::to_string(id);
+        mock_addIF(ifname.c_str(), 1000 + id);
         interface.createVLAN(id);
     }
 
