@@ -661,11 +661,6 @@ bool isUnicast(const ether_addr& mac)
     return !isEmpty(mac) && !isMulticast(mac);
 }
 
-bool isLocalAdmin(const ether_addr& mac)
-{
-    return mac.ether_addr_octet[0] & 0b10;
-}
-
 } // namespace mac_address
 } // namespace network
 } // namespace phosphor
