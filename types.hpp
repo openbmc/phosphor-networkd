@@ -4,19 +4,15 @@
 #include <netinet/in.h>
 #include <systemd/sd-event.h>
 
-#include <array>
 #include <chrono>
 #include <cstddef>
 #include <functional>
-#include <list>
-#include <map>
 #include <memory>
 #include <sdeventplus/clock.hpp>
 #include <sdeventplus/utility/timer.hpp>
 #include <set>
 #include <string>
 #include <variant>
-#include <vector>
 
 namespace phosphor
 {
@@ -46,13 +42,6 @@ constexpr auto deviceFileSuffix = ".netdev";
 
 using IntfName = std::string;
 
-struct AddrInfo
-{
-    uint8_t addrType;
-    std::string ipaddress;
-    uint16_t prefix;
-};
-
 using Addr_t = ifaddrs*;
 
 struct AddrDeleter
@@ -81,8 +70,6 @@ using UniquePtr = std::unique_ptr<T, std::function<void(T*)>>;
 // Byte representations for common address types in network byte order
 using InAddrAny = std::variant<struct in_addr, struct in6_addr>;
 
-using AddrList = std::list<AddrInfo>;
-using IntfAddrMap = std::map<IntfName, AddrList>;
 using InterfaceList = std::set<IntfName>;
 
 using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
