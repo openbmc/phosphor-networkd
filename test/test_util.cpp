@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <cstring>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -122,23 +123,21 @@ TEST_F(TestUtil, IpValidation)
 
 TEST_F(TestUtil, PrefixValidation)
 {
-    uint8_t prefixLength = 1;
-    EXPECT_EQ(true, isValidPrefix(AF_INET, prefixLength));
+    EXPECT_EQ(true, isValidPrefix(AF_INET, 0));
+    EXPECT_EQ(true, isValidPrefix(AF_INET, 1));
+    EXPECT_EQ(true, isValidPrefix(AF_INET, 32));
+    EXPECT_EQ(false, isValidPrefix(AF_INET, 33));
+    EXPECT_EQ(false, isValidPrefix(AF_INET, 64));
 
-    prefixLength = 32;
-    EXPECT_EQ(true, isValidPrefix(AF_INET, prefixLength));
+    EXPECT_EQ(true, isValidPrefix(AF_INET6, 0));
+    EXPECT_EQ(true, isValidPrefix(AF_INET6, 1));
+    EXPECT_EQ(true, isValidPrefix(AF_INET6, 53));
+    EXPECT_EQ(true, isValidPrefix(AF_INET6, 64));
+    EXPECT_EQ(true, isValidPrefix(AF_INET6, 128));
+    EXPECT_EQ(false, isValidPrefix(AF_INET6, 129));
+    EXPECT_EQ(false, isValidPrefix(AF_INET6, 177));
 
-    prefixLength = 0;
-    EXPECT_EQ(false, isValidPrefix(AF_INET, prefixLength));
-
-    prefixLength = 33;
-    EXPECT_EQ(false, isValidPrefix(AF_INET, prefixLength));
-
-    prefixLength = 33;
-    EXPECT_EQ(true, isValidPrefix(AF_INET6, prefixLength));
-
-    prefixLength = 65;
-    EXPECT_EQ(false, isValidPrefix(AF_INET, prefixLength));
+    EXPECT_THROW(isValidPrefix(AF_UNSPEC, 1), std::invalid_argument);
 }
 
 TEST_F(TestUtil, InterfaceToUbootEthAddr)
