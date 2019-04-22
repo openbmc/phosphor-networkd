@@ -188,7 +188,7 @@ ObjectPath EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
 ObjectPath EthernetInterface::neighbor(std::string iPAddress,
                                        std::string mACAddress)
 {
-    if (!isValidIP(AF_INET, iPAddress) && !isValidIP(AF_INET6, iPAddress))
+    if (!isValidIP(iPAddress))
     {
         log<level::ERR>("Not a valid IP address",
                         entry("ADDRESS=%s", iPAddress.c_str()));
