@@ -29,7 +29,7 @@ class TestEthernetInterface : public testing::Test
     TestEthernetInterface() :
         bus(sdbusplus::bus::new_default()),
         manager(bus, "/xyz/openbmc_test/network", "/tmp/"),
-        interface(bus, "/xyz/openbmc_test/network/test0", false, manager)
+        interface(makeInterface(bus, manager))
 
     {
         setConfDir();
@@ -48,6 +48,13 @@ class TestEthernetInterface : public testing::Test
         {
             fs::remove_all(confDir);
         }
+    }
+
+    static EthernetInterface makeInterface(sdbusplus::bus::bus& bus,
+                                           MockManager& manager)
+    {
+        mock_addIF("test0", 1);
+        return {bus, "/xyz/openbmc_test/network/test0", false, manager};
     }
 
     int countIPObjects()
