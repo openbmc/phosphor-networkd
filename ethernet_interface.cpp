@@ -268,7 +268,7 @@ std::string
     {
         log<level::ERR>("socket creation  failed:",
                         entry("ERROR=%s", strerror(errno)));
-        return "";
+        elog<InternalFailure>();
     }
 
     std::strcpy(ifr.ifr_name, interfaceName.c_str());
@@ -276,7 +276,7 @@ std::string
     {
         log<level::ERR>("ioctl failed for SIOCGIFHWADDR:",
                         entry("ERROR=%s", strerror(errno)));
-        return "";
+        elog<InternalFailure>();
     }
 
     static_assert(sizeof(ifr.ifr_hwaddr.sa_data) >= sizeof(ether_addr));
