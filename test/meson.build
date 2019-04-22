@@ -46,6 +46,7 @@ test_dep = declare_dependency(
 tests = [
   'config_parser',
   'ethernet_interface',
+  'ipaddress',
   'neighbor',
   'netlink',
   'network_manager',
