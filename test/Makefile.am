@@ -37,7 +37,7 @@ generic_ld_flags =  -lgtest_main -lgtest -lgmock -lstdc++fs \
 
 test_CPPFLAGS = ${generic_cpp_flags}
 test_CXXFLAGS = ${generic_cxx_flags}
-test_LDFLAGS  = ${generic_ld_flags}
+test_LDFLAGS  = ${generic_ld_flags} -ldl
 
 test_dns_updater_CPPFLAGS = ${generic_cpp_flags}
 test_dns_updater_CXXFLAGS = ${generic_cxx_flags}
