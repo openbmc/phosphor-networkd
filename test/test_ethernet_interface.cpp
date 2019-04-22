@@ -2,6 +2,7 @@
 #include "ipaddress.hpp"
 #include "mock_network_manager.hpp"
 #include "mock_syscall.hpp"
+#include "util.hpp"
 
 #include <arpa/inet.h>
 #include <net/if.h>
@@ -50,10 +51,12 @@ class TestEthernetInterface : public testing::Test
         }
     }
 
+    static constexpr ether_addr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};
+
     static EthernetInterface makeInterface(sdbusplus::bus::bus& bus,
                                            MockManager& manager)
     {
-        mock_addIF("test0", 1);
+        mock_addIF("test0", 1, mac);
         return {bus, "/xyz/openbmc_test/network/test0", false, manager};
     }
 
@@ -125,6 +128,7 @@ class TestEthernetInterface : public testing::Test
 TEST_F(TestEthernetInterface, NoIPaddress)
 {
     EXPECT_EQ(countIPObjects(), 0);
+    EXPECT_EQ(mac_address::toString(mac), interface.mACAddress());
 }
 
 TEST_F(TestEthernetInterface, AddIPAddress)
