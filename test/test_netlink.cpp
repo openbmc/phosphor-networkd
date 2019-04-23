@@ -286,6 +286,46 @@ TEST(ExtractRtAttr, SomeData)
     EXPECT_EQ(0, memcmp(&nextbuf, data.data(), sizeof(nextbuf)));
 }
 
+class PerformRequest : public testing::Test
+{
+  public:
+    void doLinkDump(size_t ifs)
+    {
+        mock_clear();
+        for (size_t i = 0; i < ifs; ++i)
+        {
+            mock_addIF("eth" + std::to_string(i), 1 + i);
+        }
+
+        size_t cbCalls = 0;
+        auto cb = [&](const nlmsghdr&, std::string_view) { cbCalls++; };
+        ifinfomsg msg{};
+        netlink::performRequest(NETLINK_ROUTE, RTM_GETLINK, NLM_F_DUMP, msg,
+                                cb);
+        EXPECT_EQ(ifs, cbCalls);
+    }
+};
+
+TEST_F(PerformRequest, NoResponse)
+{
+    doLinkDump(0);
+}
+
+TEST_F(PerformRequest, SingleResponse)
+{
+    doLinkDump(1);
+}
+
+TEST_F(PerformRequest, MultiResponse)
+{
+    doLinkDump(3);
+}
+
+TEST_F(PerformRequest, MultiMsg)
+{
+    doLinkDump(1000);
+}
+
 } // namespace netlink
 } // namespace network
 } // namespace phosphor
