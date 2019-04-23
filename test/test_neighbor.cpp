@@ -61,6 +61,7 @@ TEST(ParseNeighbor, BadIf)
 
 TEST(ParseNeighbor, NoAttrs)
 {
+    mock_clear();
     mock_addIF(ifStr, ifIdx);
 
     nlmsghdr hdr{};
@@ -78,6 +79,7 @@ TEST(ParseNeighbor, NoAttrs)
 
 TEST(ParseNeighbor, NoAddress)
 {
+    mock_clear();
     mock_addIF(ifStr, ifIdx);
 
     nlmsghdr hdr{};
@@ -104,6 +106,7 @@ TEST(ParseNeighbor, NoAddress)
 
 TEST(ParseNeighbor, NoMAC)
 {
+    mock_clear();
     mock_addIF(ifStr, ifIdx);
 
     nlmsghdr hdr{};
@@ -137,6 +140,7 @@ TEST(ParseNeighbor, NoMAC)
 
 TEST(ParseNeighbor, Full)
 {
+    mock_clear();
     mock_addIF(ifStr, ifIdx);
 
     nlmsghdr hdr{};

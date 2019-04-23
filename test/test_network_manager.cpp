@@ -70,6 +70,8 @@ TEST_F(TestNetworkManager, WithSingleInterface)
     bool caughtException = false;
     try
     {
+        mock_clear();
+
         // Adds the following ip in the getifaddrs list.
         mock_addIF("igb1", 2);
         mock_addIP("igb1", "192.0.2.3", "255.255.255.128",
@@ -93,6 +95,8 @@ TEST_F(TestNetworkManager, WithMultipleInterfaces)
 {
     try
     {
+        mock_clear();
+
         mock_addIF("igb0", 1);
         mock_addIP("igb0", "192.0.2.2", "255.255.255.128",
                    IFF_UP | IFF_RUNNING);
