@@ -1,3 +1,5 @@
+#include "util.hpp"
+
 #include <arpa/inet.h>
 #include <dlfcn.h>
 #include <ifaddrs.h>
@@ -121,6 +123,37 @@ void validateMsgHdr(const struct msghdr* msg)
         fprintf(stderr, "recvmsg unsupported iov configuration\n");
         abort();
     }
+}
+
+ssize_t sendmsg_link_dump(std::queue<std::string>& msgs, std::string_view in)
+{
+    const ssize_t ret = in.size();
+    const auto& hdrin = phosphor::copyFrom<nlmsghdr>(in);
+    if (hdrin.nlmsg_type != RTM_GETLINK)
+    {
+        return 0;
+    }
+
+    for (const auto& [name, idx] : mock_if_nametoindex)
+    {
+        ifinfomsg info{};
+        info.ifi_index = idx;
+        nlmsghdr hdr{};
+        hdr.nlmsg_len = NLMSG_LENGTH(sizeof(info));
+        hdr.nlmsg_type = RTM_NEWLINK;
+        hdr.nlmsg_flags = NLM_F_MULTI;
+        auto& out = msgs.emplace(hdr.nlmsg_len, '\0');
+        memcpy(out.data(), &hdr, sizeof(hdr));
+        memcpy(NLMSG_DATA(out.data()), &info, sizeof(info));
+    }
+
+    nlmsghdr hdr{};
+    hdr.nlmsg_len = NLMSG_LENGTH(0);
+    hdr.nlmsg_type = NLMSG_DONE;
+    hdr.nlmsg_flags = NLM_F_MULTI;
+    auto& out = msgs.emplace(hdr.nlmsg_len, '\0');
+    memcpy(out.data(), &hdr, sizeof(hdr));
+    return ret;
 }
 
 ssize_t sendmsg_ack(std::queue<std::string>& msgs, std::string_view in)
@@ -248,6 +281,12 @@ ssize_t sendmsg(int sockfd, const struct msghdr* msg, int flags)
     ssize_t ret;
     std::string_view iov(reinterpret_cast<char*>(msg->msg_iov[0].iov_base),
                          msg->msg_iov[0].iov_len);
+
+    ret = sendmsg_link_dump(msgs, iov);
+    if (ret != 0)
+    {
+        return ret;
+    }
 
     ret = sendmsg_ack(msgs, iov);
     if (ret != 0)
