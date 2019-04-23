@@ -56,6 +56,7 @@ class TestEthernetInterface : public testing::Test
     static EthernetInterface makeInterface(sdbusplus::bus::bus& bus,
                                            MockManager& manager)
     {
+        mock_clear();
         mock_addIF("test0", 1, mac);
         return {bus, "/xyz/openbmc_test/network/test0", false, manager};
     }

@@ -41,6 +41,15 @@ std::map<std::string, int> mock_if_nametoindex;
 std::map<int, std::string> mock_if_indextoname;
 std::map<std::string, ether_addr> mock_macs;
 
+void mock_clear()
+{
+    mock_ifaddrs = nullptr;
+    ifaddr_count = 0;
+    mock_if_nametoindex.clear();
+    mock_if_indextoname.clear();
+    mock_macs.clear();
+}
+
 void mock_addIF(const std::string& name, int idx, const ether_addr& mac)
 {
     if (idx == 0)
