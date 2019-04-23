@@ -87,6 +87,7 @@ class TestRtNetlink : public testing::Test
 TEST_F(TestRtNetlink, WithSingleInterface)
 {
     using namespace std::chrono;
+    mock_clear();
     // Adds the following ip in the getifaddrs list.
     mock_addIF("igb5", 6);
     mock_addIP("igb5", "127.0.0.1", "255.255.255.128", IFF_UP | IFF_RUNNING);
