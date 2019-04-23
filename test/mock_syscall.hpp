@@ -3,6 +3,10 @@
 
 #include <string>
 
+/** @brief Clears out the interfaces and IPs configured for mocking
+ */
+void mock_clear();
+
 /** @brief Adds the given interface and addr info
  *         into the ifaddr list.
  *  @param[in] name - Interface name.
