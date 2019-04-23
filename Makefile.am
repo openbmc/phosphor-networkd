@@ -12,7 +12,7 @@ dbuspolicy_DATA = \
 		xyz.openbmc_project.Network.conf
 endif
 
-sbin_PROGRAMS = phosphor-network-manager ncsi-netlink
+sbin_PROGRAMS = phosphor_unique_hostname phosphor-network-manager ncsi-netlink
 
 noinst_HEADERS = \
 		ethernet_interface.hpp \
@@ -64,6 +64,15 @@ phosphor_network_manager_SOURCES = \
 		rtnetlink_server.cpp \
 		dns_updater.cpp \
 		watch.cpp
+
+phosphor_unique_hostname_SOURCES = \
+                unique_serv_name.cpp
+
+phosphor_unique_hostname_LDFLAGS = \
+                -lstdc++fs
+
+phosphor_unique_hostname_CXXFLAGS = \
+                -flto
 
 CLEANFILES = \
 		xyz/openbmc_project/Network/VLAN/Create/server.cpp \
