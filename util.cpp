@@ -9,6 +9,8 @@
 #include <sys/wait.h>
 
 #include <algorithm>
+#include <cstdlib>
+#include <cstring>
 #include <experimental/filesystem>
 #include <iostream>
 #include <list>
@@ -380,6 +382,32 @@ void deleteInterface(const std::string& intf)
             elog<InternalFailure>();
         }
     }
+}
+
+std::optional<std::string> interfaceToUbootEthAddr(const char* intf)
+{
+    constexpr char ethPrefix[] = "eth";
+    constexpr size_t ethPrefixLen = sizeof(ethPrefix) - 1;
+    if (strncmp(ethPrefix, intf, ethPrefixLen) != 0)
+    {
+        return std::nullopt;
+    }
+    const auto intfSuffix = intf + ethPrefixLen;
+    if (intfSuffix[0] == '\0')
+    {
+        return std::nullopt;
+    }
+    char* end;
+    unsigned long idx = strtoul(intfSuffix, &end, 10);
+    if (end[0] != '\0')
+    {
+        return std::nullopt;
+    }
+    if (idx == 0)
+    {
+        return "ethaddr";
+    }
+    return "eth" + std::to_string(idx) + "addr";
 }
 
 bool getDHCPValue(const std::string& confDir, const std::string& intf)
