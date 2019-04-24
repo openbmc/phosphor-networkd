@@ -768,7 +768,14 @@ std::string EthernetInterface::mACAddress(std::string value)
         MacAddressIntf::mACAddress(value);
 
         auto interface = interfaceName();
-        execute("/sbin/fw_setenv", "fw_setenv", "ethaddr", value.c_str());
+        if (interface == "eth0")
+        {
+            execute("/sbin/fw_setenv", "fw_setenv", "ethaddr", value.c_str());
+        }
+        else if (interface == "eth1")
+        {
+            execute("/sbin/fw_setenv", "fw_setenv", "ethaddr1", value.c_str());
+        }
         // TODO: would remove the call below and
         //      just restart systemd-netwokd
         //      through https://github.com/systemd/systemd/issues/6696
