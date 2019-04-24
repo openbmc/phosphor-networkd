@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include <cstring>
+#include <optional>
 #include <sdbusplus/bus.hpp>
 #include <string>
 #include <string_view>
@@ -139,6 +140,14 @@ InterfaceList getInterfaces();
  *  @param[in] intf - interface name.
  */
 void deleteInterface(const std::string& intf);
+
+/** @brief Converts the interface name into a u-boot environment
+ *         variable that would hold its ethernet address.
+ *
+ *  @param[in] intf - interface name
+ *  @return The name of th environment key
+ */
+std::optional<std::string> interfaceToUbootEthAddr(const char* intf);
 
 /** @brief read the DHCP value from the configuration file
  *  @param[in] confDir - Network configuration directory.
