@@ -606,6 +606,14 @@ void EthernetInterface::writeConfigurationFile()
 
     auto addrs = getAddresses();
 
+    // Write the link section
+    stream << "[Link]\n";
+    auto mac = MacAddressIntf::mACAddress();
+    if (!mac.empty())
+    {
+        stream << "MACAddress=" << mac << "\n";
+    }
+
     // write the network section
     stream << "[Network]\n";
 #ifdef LINK_LOCAL_AUTOCONFIGURATION
@@ -754,16 +762,12 @@ std::string EthernetInterface::mACAddress(std::string value)
 
         auto interface = interfaceName();
         execute("/sbin/fw_setenv", "fw_setenv", "ethaddr", value.c_str());
-        // TODO: would replace below three calls
-        //      with restarting of systemd-netwokd
+        // TODO: would remove the call below and
+        //      just restart systemd-netwokd
         //      through https://github.com/systemd/systemd/issues/6696
         execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(),
                 "down");
-        execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(),
-                "address", value.c_str());
-        execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(),
-                "up");
-        manager.restartSystemdUnit(networkdService);
+        manager.writeToConfigurationFile();
     }
 
     // Update everything that depends on the MAC value
