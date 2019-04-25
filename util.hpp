@@ -26,7 +26,7 @@ constexpr auto IPV6_PREFIX = "fe80";
 namespace mac_address
 {
 
-constexpr auto localAdminMask = 0x020000000000;
+constexpr auto localAdminMask = 0x0000000000000002;
 constexpr auto broadcastMac = 0xFFFFFFFFFFFF;
 
 constexpr auto format = "%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx";
