@@ -26,70 +26,52 @@ constexpr auto IPV6_PREFIX = "fe80";
 namespace mac_address
 {
 
-constexpr auto localAdminMask = 0x020000000000;
-constexpr auto broadcastMac = 0xFFFFFFFFFFFF;
-
-constexpr auto format = "%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx";
-constexpr size_t size = 18;
-
-/** @brief validate the mac address
- *  @param[in] value - MAC address.
- *  @returns true if validate otherwise false.
- */
-inline bool validate(const std::string& value)
-{
-    struct ether_addr* addr = ether_aton(value.c_str());
-    if (addr == nullptr)
-    {
-        return false;
-    }
-    ether_addr zero{};
-    return std::memcmp(addr, &zero, sizeof(zero)) != 0;
-}
-
 /** @brief gets the MAC address from the Inventory.
  *  @param[in] bus - DBUS Bus Object.
  */
-std::string getfromInventory(sdbusplus::bus::bus& bus);
+ether_addr getfromInventory(sdbusplus::bus::bus& bus);
 
-/* @brief Marshalls the bytes for a mac address into a MacAddr.
- * @param[in] buf - The network byte order address
+/** @brief Converts the given mac address into byte form
+ *  @param[in] str - The mac address in human readable form
+ *  @returns A mac address in network byte order
+ *  @throws std::runtime_error for bad mac
  */
-MacAddr fromBuf(std::string_view buf);
+ether_addr fromString(const char* str);
+inline ether_addr fromString(const std::string& str)
+{
+    return fromString(str.c_str());
+}
 
 /** @brief Converts the given mac address bytes into a string
- *  @param[in] bytes - The mac address
+ *  @param[in] mac - The mac address
  *  @returns A valid mac address string
  */
-std::string toString(const MacAddr& mac);
+std::string toString(const ether_addr& mac);
 
-namespace internal
-{
-/** @brief Converts the given mac address into unsigned 64 bit integer
- *  @param[in] value - MAC address.
- *  @returns converted unsigned 64 bit number.
+/** @brief Determines if the mac address is empty
+ *  @param[in] mac - The mac address
+ *  @return True if 00:00:00:00:00:00
  */
-inline uint64_t convertToInt(const std::string& value)
-{
-    struct ether_addr* addr = ether_aton(value.c_str());
-    if (addr == nullptr)
-    {
-        return 0;
-    }
-    uint64_t ret = 0;
-    static_assert(sizeof(ret) >= sizeof(*addr));
-    std::memcpy(&ret, addr, sizeof(*addr));
-    return ret;
-}
+bool isEmpty(const ether_addr& mac);
 
-/** @brief Converts the lower nibble of a byte value to a hex digit
+/** @brief Determines if the mac address is a multicast address
+ *  @param[in] mac - The mac address
+ *  @return True if multicast bit is set
  */
-inline char toHex(std::byte byte)
-{
-    uint8_t val = std::to_integer<uint8_t>(byte) & 0xf;
-    return val < 10 ? '0' + val : 'A' + (val - 10);
-}
-} // namespace internal
+bool isMulticast(const ether_addr& mac);
+
+/** @brief Determines if the mac address is a unicast address
+ *  @param[in] mac - The mac address
+ *  @return True if not multicast or empty
+ */
+bool isUnicast(const ether_addr& mac);
+
+/** @brief Determines if the mac address is locally managed
+ *  @param[in] mac - The mac address
+ *  @return True if local admin bit is set
+ */
+bool isLocalAdmin(const ether_addr& mac);
+
 } // namespace mac_address
 
 constexpr auto networkdService = "systemd-networkd.service";
@@ -199,6 +181,38 @@ void execute(const char* path, ArgTypes&&... tArgs)
 }
 
 } // namespace network
+
+/** @brief Copies data from a buffer into a copyable type
+ *
+ *  @param[in] data - The data buffer being extracted from
+ *  @param[in] emsg - The message to print if extraction fails
+ *  @return The copyable type with data populated
+ */
+template <typename T>
+T copyFrom(std::string_view data, const char* emsg = "Extract Failed")
+{
+    static_assert(std::is_trivially_copyable_v<T>);
+    T ret;
+    if (data.size() < sizeof(ret))
+    {
+        throw std::runtime_error(emsg);
+    }
+    std::memcpy(&ret, data.data(), sizeof(ret));
+    return ret;
+}
+
+/** @brief Compares two of the same trivially copyable types
+ *
+ *  @param[in] a - The data buffer being extracted from
+ *  @param[in] b - The message to print if extraction fails
+ *  @return True if the parameters are bitwise identical
+ */
+template <typename T>
+bool equal(const T& a, const T& b)
+{
+    static_assert(std::is_trivially_copyable_v<T>);
+    return memcmp(&a, &b, sizeof(T)) == 0;
+}
 
 class Descriptor
 {
