@@ -50,6 +50,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     MacAddressIntf::mACAddress(getMACAddress(intfName));
     EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
     EthernetInterfaceIntf::nameservers(getNameServerFromConf());
+    EthernetInterfaceIntf::linkLocalAutoConf(getLinkLocalAutoConfFromConf());
 
     // Emit deferred signal.
     if (emitSignal)
@@ -427,6 +428,18 @@ bool EthernetInterface::dHCPEnabled(bool value)
     return value;
 }
 
+LinkLocalAutoConf EthernetInterface::linkLocalAutoConf(LinkLocalAutoConf value)
+{
+    if (value == EthernetInterfaceIntf::linkLocalAutoConf())
+    {
+        return value;
+    }
+
+    EthernetInterfaceIntf::linkLocalAutoConf(value);
+    manager.writeToConfigurationFile();
+    return value;
+}
+
 ServerList EthernetInterface::nameservers(ServerList value)
 {
     try
@@ -551,6 +564,45 @@ ServerList EthernetInterface::getNTPServersFromConf()
     return servers;
 }
 
+LinkLocalAutoConf EthernetInterface::getLinkLocalAutoConfFromConf()
+{
+    fs::path confPath = manager.getConfDir();
+
+    std::string fileName = systemd::config::networkFilePrefix +
+                           interfaceName() + systemd::config::networkFileSuffix;
+    confPath /= fileName;
+
+    config::ValueList values;
+    LinkLocalAutoConf linkLocalConf;
+    config::Parser parser(confPath.string());
+    auto rc = config::ReturnCode::SUCCESS;
+
+    std::tie(rc, values) = parser.getValues("Network", "LinkLocalAutoConf");
+    if (rc != config::ReturnCode::SUCCESS)
+    {
+        log<level::DEBUG>(
+            "Unable to get the value for Network[LinkLocalAutoConf]",
+            entry("rc=%d", rc));
+    }
+    if (values[0] == "yes")
+    {
+        linkLocalConf = LinkLocalAutoConf::both;
+    }
+    else if (values[0] == "ipv4")
+    {
+        linkLocalConf = LinkLocalAutoConf::v4;
+    }
+    else if (values[0] == "ipv6")
+    {
+        linkLocalConf = LinkLocalAutoConf::v6;
+    }
+    else if (values[0] == "no")
+    {
+        linkLocalConf = LinkLocalAutoConf::none;
+    }
+    return linkLocalConf;
+}
+
 ServerList EthernetInterface::nTPServers(ServerList servers)
 {
     auto ntpServers = EthernetInterfaceIntf::nTPServers(servers);
@@ -605,11 +657,28 @@ void EthernetInterface::writeConfigurationFile()
 
     // write the network section
     stream << "[Network]\n";
-#ifdef LINK_LOCAL_AUTOCONFIGURATION
-    stream << "LinkLocalAddressing=yes\n";
-#else
-    stream << "LinkLocalAddressing=no\n";
-#endif
+
+    // Add the Link local auto configuration entry
+    auto conf = EthernetInterfaceIntf::linkLocalAutoConf();
+    std::string linkLocalConf;
+    if (conf == LinkLocalConf::both)
+    {
+        linkLocalConf = "yes";
+    }
+    else if (conf == LinkLocalConf::v6)
+    {
+        linkLocalConf = "ipv6";
+    }
+    else if (conf == LinkLocalConf::v4)
+    {
+        linkLocalConf = "ipv4";
+    }
+    else if (conf == LinkLocalConf::none)
+    {
+        linkLocalConf = "no";
+    }
+    stream << "LinkLocalAddressing=" + linkLocalConf + "\n";
+	
     stream << "IPv6AcceptRA=false\n";
 
     // Add the VLAN entry
