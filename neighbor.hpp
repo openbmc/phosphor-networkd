@@ -32,7 +32,7 @@ struct NeighborInfo
 {
     std::string interface;
     InAddrAny address;
-    std::optional<MacAddr> mac;
+    std::optional<ether_addr> mac;
     bool permanent;
 };
 

@@ -61,7 +61,7 @@ NeighborInfo parseNeighbor(std::string_view msg)
         auto data = attrs.substr(RTA_LENGTH(0), hdr.rta_len - RTA_LENGTH(0));
         if (hdr.rta_type == NDA_LLADDR)
         {
-            info.mac = mac_address::fromBuf(data);
+            info.mac = copyFrom<ether_addr>(data, "Bad neighbor MAC");
         }
         else if (hdr.rta_type == NDA_DST)
         {
