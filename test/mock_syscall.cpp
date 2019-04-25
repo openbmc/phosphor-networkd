@@ -2,9 +2,11 @@
 #include <ifaddrs.h>
 #include <net/if.h>
 #include <netinet/in.h>
+#include <net/ethernet.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-
+#include <map>
+#include <queue>
 #define MAX_IFADDRS 5
 
 int debugging = false;
@@ -27,6 +29,35 @@ void freeifaddrs(ifaddrs* ifp)
 {
     return;
 }
+
+std::map<int, std::queue<std::string>> mock_rtnetlinks;
+
+std::map<std::string, int> mock_if_nametoindex;
+std::map<int, std::string> mock_if_indextoname;
+std::map<std::string, ether_addr> mock_macs;
+
+void mock_clear()
+{
+    mock_ifaddrs = nullptr;
+    ifaddr_count = 0;
+    mock_rtnetlinks.clear();
+    mock_if_nametoindex.clear();
+    mock_if_indextoname.clear();
+    mock_macs.clear();
+}
+
+void mock_addIF(const std::string& name, int idx, const ether_addr& mac)
+{
+    if (idx == 0)
+    {
+        throw std::invalid_argument("Bad interface index");
+    }
+
+    mock_if_nametoindex[name] = idx;
+    mock_if_indextoname[idx] = name;
+    mock_macs[name] = mac;
+}
+
 
 void mock_addIP(const char* name, const char* addr, const char* mask,
                 unsigned int flags)
