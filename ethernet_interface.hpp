@@ -31,6 +31,8 @@ using EthernetInterfaceIntf =
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface;
 using MacAddressIntf =
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress;
+using LinkLocalAutoConf = sdbusplus::xyz::openbmc_project::Network::server::
+    EthernetInterface::LinkLocalConf;
 
 using ServerList = std::vector<std::string>;
 using ObjectPath = sdbusplus::message::object_path;
@@ -146,6 +148,9 @@ class EthernetInterface : public Ifaces
     /** Set value of DHCPEnabled */
     bool dHCPEnabled(bool value) override;
 
+    /** Set value of LinkLocalAutoConf */
+    LinkLocalAutoConf linkLocalAutoConf(LinkLocalAutoConf value) override;
+
     /** @brief sets the MAC address.
      *  @param[in] value - MAC address which needs to be set on the system.
      *  @returns macAddress of the interface or throws an error.
@@ -183,8 +188,8 @@ class EthernetInterface : public Ifaces
 
     using EthernetInterfaceIntf::dHCPEnabled;
     using EthernetInterfaceIntf::interfaceName;
+    using EthernetInterfaceIntf::linkLocalAutoConf;
     using MacAddressIntf::mACAddress;
-
     /** @brief Absolute path of the resolv conf file */
     static constexpr auto resolvConfFile = "/etc/resolv.conf";
 
@@ -263,6 +268,11 @@ class EthernetInterface : public Ifaces
      *
      */
     ServerList getNameServerFromConf();
+
+    /** @brief get the link local auto conf from the network conf
+     *
+     */
+    LinkLocalAutoConf getLinkLocalAutoConfFromConf();
 
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;
