@@ -775,7 +775,6 @@ std::string EthernetInterface::mACAddress(std::string value)
             auto inventoryMac = mac_address::getfromInventory(bus);
             auto intInventoryMac =
                 mac_address::internal::convertToInt(inventoryMac);
-
             if (intInventoryMac != intMac)
             {
                 log<level::ERR>("Given MAC address is neither a local Admin "
