@@ -20,7 +20,7 @@ void writeDHCPDefault(const std::string& filename, const std::string& interface)
     filestream << "[Match]\nName=" << interface <<
                 "\n[Network]\nDHCP=true\n"
 #ifdef LINK_LOCAL_AUTOCONFIGURATION
-                "LinkLocalAddressing=yes\n"
+                "LinkLocalAddressing=fallback\n"
 #else
                 "LinkLocalAddressing=no\n"
 #endif
