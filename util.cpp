@@ -16,6 +16,7 @@
 #include <phosphor-logging/log.hpp>
 #include <stdexcept>
 #include <string>
+#include <variant>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
@@ -549,7 +550,7 @@ constexpr auto invNetworkIntf =
     "xyz.openbmc_project.Inventory.Item.NetworkInterface";
 constexpr auto invRoot = "/xyz/openbmc_project/inventory";
 
-std::string getfromInventory(sdbusplus::bus::bus& bus)
+ether_addr getfromInventory(sdbusplus::bus::bus& bus)
 {
     std::vector<DbusInterface> interfaces;
     interfaces.emplace_back(invNetworkIntf);
@@ -583,8 +584,6 @@ std::string getfromInventory(sdbusplus::bus::bus& bus)
     auto objPath = objectTree.begin()->first;
     auto service = objectTree.begin()->second.begin()->first;
 
-    sdbusplus::message::variant<std::string> value;
-
     auto method = bus.new_method_call(service.c_str(), objPath.c_str(),
                                       propIntf, methodGet);
 
@@ -599,34 +598,44 @@ std::string getfromInventory(sdbusplus::bus::bus& bus)
         elog<InternalFailure>();
     }
 
+    std::variant<std::string> value;
     reply.read(value);
-    return sdbusplus::message::variant_ns::get<std::string>(value);
+    return fromString(std::get<std::string>(value));
 }
 
-MacAddr fromBuf(std::string_view buf)
+ether_addr fromString(const char* str)
 {
-    MacAddr ret;
-    if (buf.size() != ret.size())
+    struct ether_addr* mac = ether_aton(str);
+    if (mac == nullptr)
     {
-        throw std::runtime_error("Invalid MacAddr size");
+        throw std::runtime_error("Invalid mac address string");
     }
-    memcpy(ret.data(), buf.data(), ret.size());
-    return ret;
+    return *mac;
 }
 
-std::string toString(const MacAddr& mac)
+std::string toString(const ether_addr& mac)
 {
-    std::string str;
-    str.reserve(mac.size() * 3);
-    for (size_t i = 0; i < mac.size(); ++i)
-    {
-        str.push_back(internal::toHex(mac[i] >> 4));
-        str.push_back(internal::toHex(mac[i]));
-        str.push_back(':');
-    }
-    // Remove trailing semicolon
-    str.pop_back();
-    return str;
+    return ether_ntoa(&mac);
+}
+
+bool isEmpty(const ether_addr& mac)
+{
+    return equal(mac, ether_addr{});
+}
+
+bool isMulticast(const ether_addr& mac)
+{
+    return mac.ether_addr_octet[0] & 0b1;
+}
+
+bool isUnicast(const ether_addr& mac)
+{
+    return !isEmpty(mac) && !isMulticast(mac);
+}
+
+bool isLocalAdmin(const ether_addr& mac)
+{
+    return mac.ether_addr_octet[0] & 0b10;
 }
 
 } // namespace mac_address
