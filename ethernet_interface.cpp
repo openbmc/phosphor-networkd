@@ -50,6 +50,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     MacAddressIntf::mACAddress(getMACAddress(intfName));
     EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
     EthernetInterfaceIntf::nameservers(getNameServerFromConf());
+    EthernetInterfaceIntf::linkLocalAutoConf(getLinkLocalAutoConfFromConf());
 
     // Emit deferred signal.
     if (emitSignal)
@@ -89,7 +90,27 @@ void EthernetInterface::createIPAddressObjects()
         }
         if (isLinkLocalIP(addr.ipaddress))
         {
-            origin = IP::AddressOrigin::LinkLocal;
+            if (EthernetInterfaceIntf::linkLocalAutoConf() ==
+                LinkLocalAutoConf::both)
+            {
+                origin = IP::AddressOrigin::LinkLocal;
+            }
+            else if ((EthernetInterfaceIntf::linkLocalAutoConf() ==
+                      LinkLocalAutoConf::v6) &&
+                     (addressType == IP::Protocol::IPv6))
+            {
+                origin = IP::AddressOrigin::LinkLocal;
+            }
+            else if ((EthernetInterfaceIntf::linkLocalAutoConf() ==
+                      LinkLocalAutoConf::v4) &&
+                     (addressType == IP::Protocol::IPv4))
+            {
+                origin = IP::AddressOrigin::LinkLocal;
+            }
+            else
+            {
+                continue;
+            }
         }
         std::string gateway =
             routingTable.getGateway(addr.addrType, addr.ipaddress, addr.prefix);
@@ -427,6 +448,18 @@ bool EthernetInterface::dHCPEnabled(bool value)
     return value;
 }
 
+LinkLocalAutoConf EthernetInterface::linkLocalAutoConf(LinkLocalAutoConf value)
+{
+    if (value == EthernetInterfaceIntf::linkLocalAutoConf())
+    {
+        return value;
+    }
+
+    EthernetInterfaceIntf::linkLocalAutoConf(value);
+    manager.writeToConfigurationFile();
+    return value;
+}
+
 ServerList EthernetInterface::nameservers(ServerList value)
 {
     try
@@ -551,6 +584,45 @@ ServerList EthernetInterface::getNTPServersFromConf()
     return servers;
 }
 
+LinkLocalAutoConf EthernetInterface::getLinkLocalAutoConfFromConf()
+{
+    fs::path confPath = manager.getConfDir();
+
+    std::string fileName = systemd::config::networkFilePrefix +
+                           interfaceName() + systemd::config::networkFileSuffix;
+    confPath /= fileName;
+
+    config::ValueList values;
+    LinkLocalAutoConf linkLocalConf;
+    config::Parser parser(confPath.string());
+    auto rc = config::ReturnCode::SUCCESS;
+
+    std::tie(rc, values) = parser.getValues("Network", "LinkLocalAutoConf");
+    if (rc != config::ReturnCode::SUCCESS)
+    {
+        log<level::DEBUG>(
+            "Unable to get the value for Network[LinkLocalAutoConf]",
+            entry("rc=%d", rc));
+    }
+    if (values[0] == "both")
+    {
+        linkLocalConf = LinkLocalAutoConf::both;
+    }
+    else if (values[0] == "v4")
+    {
+        linkLocalConf = LinkLocalAutoConf::v4;
+    }
+    else if (values[0] == "v6")
+    {
+        linkLocalConf = LinkLocalAutoConf::v6;
+    }
+    else if (values[0] == "none")
+    {
+        linkLocalConf = LinkLocalAutoConf::none;
+    }
+    return linkLocalConf;
+}
+
 ServerList EthernetInterface::nTPServers(ServerList servers)
 {
     auto ntpServers = EthernetInterfaceIntf::nTPServers(servers);
@@ -611,6 +683,27 @@ void EthernetInterface::writeConfigurationFile()
     stream << "LinkLocalAddressing=no\n";
 #endif
     stream << "IPv6AcceptRA=false\n";
+
+    // Add the Link local auto configuration entry
+    auto conf = EthernetInterfaceIntf::linkLocalAutoConf();
+    std::string linkLocalAutoConf;
+    if (conf == LinkLocalAutoConf::both)
+    {
+        linkLocalAutoConf = "both";
+    }
+    else if (conf == LinkLocalAutoConf::v6)
+    {
+        linkLocalAutoConf = "v6";
+    }
+    else if (conf == LinkLocalAutoConf::v4)
+    {
+        linkLocalAutoConf = "v4";
+    }
+    else if (conf == LinkLocalAutoConf::none)
+    {
+        linkLocalAutoConf = "none";
+    }
+    stream << "LinkLocalAutoConf=" + linkLocalAutoConf + "\n";
 
     // Add the VLAN entry
     for (const auto& intf : vlanInterfaces)
