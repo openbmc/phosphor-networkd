@@ -10,6 +10,7 @@
 #include "vlan_interface.hpp"
 
 #include <arpa/inet.h>
+#include <endian.h>
 #include <linux/ethtool.h>
 #include <linux/sockios.h>
 #include <net/if.h>
@@ -746,7 +747,7 @@ std::string EthernetInterface::mACAddress(std::string value)
     }
 
     // check whether MAC is broadcast mac.
-    auto intMac = mac_address::internal::convertToInt(value);
+    auto intMac = be64toh(mac_address::internal::convertToInt(value));
 
     if (!(intMac ^ mac_address::broadcastMac))
     {
@@ -774,8 +775,7 @@ std::string EthernetInterface::mACAddress(std::string value)
         {
             auto inventoryMac = mac_address::getfromInventory(bus);
             auto intInventoryMac =
-                mac_address::internal::convertToInt(inventoryMac);
-
+                be64toh(mac_address::internal::convertToInt(inventoryMac));
             if (intInventoryMac != intMac)
             {
                 log<level::ERR>("Given MAC address is neither a local Admin "
