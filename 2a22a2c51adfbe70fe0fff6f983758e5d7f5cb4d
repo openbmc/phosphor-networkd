@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "261eb7e5_afd9f3cf",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2019-05-01T19:40:50Z",
+      "side": 1,
+      "message": "This is going to be updated to read the information from the kernel in terms of scope. We shouldn\u0027t second guess this info and there is no reason why we couldn\u0027t have link scoped addresses with the config option being changed.",
+      "revId": "2a22a2c51adfbe70fe0fff6f983758e5d7f5cb4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "505d771b_7ff14802",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2019-05-01T19:40:50Z",
+      "side": 1,
+      "message": "I haven\u0027t looked at the config parser, but we should be able to handle a missing / default value. This would be v6 https://systemd.network/systemd.network.html#LinkLocalAddressing\u003d",
+      "revId": "2a22a2c51adfbe70fe0fff6f983758e5d7f5cb4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
