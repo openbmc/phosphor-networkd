@@ -6,7 +6,8 @@ nobase_nodist_include_HEADERS = \
 
 if HAVE_SYSTEMD
 systemdsystemunit_DATA = \
-		xyz.openbmc_project.Network.service
+		xyz.openbmc_project.Network.service \
+		ncsi-netlink.service
 
 dbuspolicy_DATA = \
 		xyz.openbmc_project.Network.conf
