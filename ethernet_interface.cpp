@@ -51,6 +51,10 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
     EthernetInterfaceIntf::nameservers(getNameServerFromConf());
 
+    InterfaceInfo ethInfo(getInterfaceInfo());
+    EthernetInterfaceIntf::speed(std::get<0>(ethInfo));
+    EthernetInterfaceIntf::autoNeg(std::get<2>(ethInfo));
+
     // Emit deferred signal.
     if (emitSignal)
     {
@@ -205,13 +209,6 @@ ObjectPath EthernetInterface::neighbor(std::string iPAddress,
     manager.writeToConfigurationFile();
     return objectPath;
 }
-
-/*
-Note: We don't have support for  ethtool now
-will enable this code once we bring the ethtool
-in the image.
-TODO: https://github.com/openbmc/openbmc/issues/1484
-*/
 
 InterfaceInfo EthernetInterface::getInterfaceInfo() const
 {
