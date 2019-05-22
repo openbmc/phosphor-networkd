@@ -18,6 +18,53 @@ namespace dhcp
 using namespace phosphor::network;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
+ConfigIntf::ClientIdentifier
+    Configuration::clientIdentifier(ClientIdentifier value)
+{
+    if (value == clientIdentifier())
+    {
+        return value;
+    }
+
+    auto clientId = ConfigIntf::clientIdentifier(value);
+    manager.writeToConfigurationFile();
+    manager.restartSystemdUnit(phosphor::network::networkdService);
+
+    return clientId;
+}
+
+ConfigIntf::DUIDType Configuration::dUIDType(DUIDType value)
+{
+    if (value == dUIDType())
+    {
+        return value;
+    }
+
+    if (value == DHCPConfiguration::DUIDType::vendor)
+    {
+        log<level::ERR>("DUID type "
+                        "xyz.openbmc_project.Network.DHCPConfiguration."
+                        "DUIDType.vendor is not supported...");
+        elog<InternalFailure>();
+        return dUIDType();
+    }
+    else if (value == DHCPConfiguration::DUIDType::uid)
+    {
+        log<level::ERR>("DUID type "
+                        "xyz.openbmc_project.Network.DHCPConfiguration."
+                        "DUIDType.uid is not supported...");
+        elog<InternalFailure>();
+        return dUIDType();
+    }
+
+    auto dUIDType = ConfigIntf::dUIDType(value);
+    manager.writeToConfigurationFile();
+    manager.restartSystemdUnit(phosphor::network::networkdService);
+
+    return dUIDType;
+}
+
 bool Configuration::sendHostNameEnabled(bool value)
 {
     if (value == sendHostNameEnabled())
@@ -74,7 +121,8 @@ bool Configuration::dNSEnabled(bool value)
     return dns;
 }
 
-bool Configuration::getDHCPPropFromConf(const std::string& prop)
+std::variant<bool, std::string>
+    Configuration::getDHCPPropFromConf(const std::string& prop)
 {
     fs::path confPath = manager.getConfDir();
     auto interfaceStrList = getInterfaces();

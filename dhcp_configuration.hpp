@@ -47,12 +47,94 @@ class Configuration : public Iface
         Iface(bus, objPath.c_str(), true),
         bus(bus), manager(parent)
     {
-        ConfigIntf::dNSEnabled(getDHCPPropFromConf("UseDNS"));
-        ConfigIntf::nTPEnabled(getDHCPPropFromConf("UseNTP"));
-        ConfigIntf::hostNameEnabled(getDHCPPropFromConf("UseHostname"));
-        ConfigIntf::sendHostNameEnabled(getDHCPPropFromConf("SendHostname"));
+        auto&& value = getDHCPPropFromConf("ClientIdentifier");
+        std::string* clientId = std::get_if<std::string>(&value);
+        if (clientId)
+        {
+            if (*clientId == "mac")
+            {
+                ConfigIntf::clientIdentifier(
+                    DHCPConfiguration::ClientIdentifier::mac);
+            }
+            else if (*clientId == "duid")
+            {
+                ConfigIntf::clientIdentifier(
+                    DHCPConfiguration::ClientIdentifier::duid);
+            }
+        }
+
+        value = getDHCPPropFromConf("DUIDType");
+        std::string* dUIDType = std::get_if<std::string>(&value);
+        if (dUIDType)
+        {
+            if (*dUIDType == "vendor")
+            {
+                ConfigIntf::dUIDType(DHCPConfiguration::DUIDType::vendor);
+            }
+            else if (*dUIDType == "uid")
+            {
+                ConfigIntf::dUIDType(DHCPConfiguration::DUIDType::uid);
+            }
+            else if (*dUIDType == "link-layer-time")
+            {
+                ConfigIntf::dUIDType(
+                    DHCPConfiguration::DUIDType::link_layer_time);
+            }
+            else if (*dUIDType == "link-layer")
+            {
+                ConfigIntf::dUIDType(DHCPConfiguration::DUIDType::link_layer);
+            }
+        }
+
+        value = getDHCPPropFromConf("UseDNS");
+        bool* dNSEnabled = std::get_if<bool>(&value);
+        if (dNSEnabled)
+        {
+            ConfigIntf::dNSEnabled(*dNSEnabled);
+        }
+
+        value = getDHCPPropFromConf("UseNTP");
+        bool* nTPEnabled = std::get_if<bool>(&value);
+        if (nTPEnabled)
+        {
+            ConfigIntf::nTPEnabled(*nTPEnabled);
+        }
+
+        value = getDHCPPropFromConf("UseHostname");
+        bool* hostNameEnabled = std::get_if<bool>(&value);
+        if (hostNameEnabled)
+        {
+            ConfigIntf::hostNameEnabled(*hostNameEnabled);
+        }
+
+        value = getDHCPPropFromConf("SendHostname");
+        bool* sendHostNameEnabled = std::get_if<bool>(&value);
+        if (sendHostNameEnabled)
+        {
+            ConfigIntf::sendHostNameEnabled(*sendHostNameEnabled);
+        }
         emit_object_added();
     }
+
+    /** @brief This is used to generate client ID passed to
+     *         the DHCP server.
+     *
+     *  @param[in] value - mac to generate client ID based on
+     *                     MAC address.
+     *                     duid to generate client ID based on
+     *                     RFC-4361
+     */
+    ClientIdentifier clientIdentifier(ClientIdentifier value) override;
+
+    /** @brief This specifies how the DUID should be generated.
+     *
+     *  @param[in] value - vendor - DUID based on machine-id
+     *                     uid - DUID based on product UUID
+     *                     link_layer_time - DUID based on MAC address
+     *                     of the interface and an additional time value
+     *                     link_layer - DUID based on MAC address
+     */
+    DUIDType dUIDType(DUIDType value) override;
 
     /** @brief If true then DNS servers received from the DHCP server
      *         will be used and take precedence over any statically
@@ -87,14 +169,17 @@ class Configuration : public Iface
     /** @brief read the DHCP Prop value from the configuration file
      *  @param[in] prop - DHCP Prop name.
      */
-    bool getDHCPPropFromConf(const std::string& prop);
+    std::variant<bool, std::string>
+        getDHCPPropFromConf(const std::string& prop);
 
     /* @brief Network Manager needed the below function to know the
      *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled
               sendHostNameEnabled).
      *
      */
+    using ConfigIntf::clientIdentifier;
     using ConfigIntf::dNSEnabled;
+    using ConfigIntf::dUIDType;
     using ConfigIntf::hostNameEnabled;
     using ConfigIntf::nTPEnabled;
     using ConfigIntf::sendHostNameEnabled;

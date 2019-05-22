@@ -26,6 +26,7 @@
 #include <sstream>
 #include <string>
 #include <xyz/openbmc_project/Common/error.hpp>
+#include <xyz/openbmc_project/Network/DHCPConfiguration/server.hpp>
 
 namespace phosphor
 {
@@ -35,6 +36,8 @@ namespace network
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
+using DHCPConfiguration =
+    sdbusplus::xyz::openbmc_project::Network::server::DHCPConfiguration;
 
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
@@ -715,11 +718,36 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
     // write the dhcp section
     stream << "[DHCP]\n";
 
-    // Hardcoding the client identifier to mac, to address below issue
-    // https://github.com/openbmc/openbmc/issues/1280
-    stream << "ClientIdentifier=mac\n";
     if (manager.getDHCPConf())
     {
+        auto clientIdentifier = manager.getDHCPConf()->clientIdentifier();
+        if (clientIdentifier == DHCPConfiguration::ClientIdentifier::mac)
+        {
+            stream << "ClientIdentifier=mac"s + "\n";
+        }
+        else if (clientIdentifier == DHCPConfiguration::ClientIdentifier::duid)
+        {
+            stream << "ClientIdentifier=duid"s + "\n";
+        }
+
+        auto dUIDType = manager.getDHCPConf()->dUIDType();
+        if (dUIDType == DHCPConfiguration::DUIDType::vendor)
+        {
+            stream << "DUIDType=vendor"s + "\n";
+        }
+        else if (dUIDType == DHCPConfiguration::DUIDType::uid)
+        {
+            stream << "DUIDType=uid"s + "\n";
+        }
+        else if (dUIDType == DHCPConfiguration::DUIDType::link_layer_time)
+        {
+            stream << "DUIDType=link-layer-time"s + "\n";
+        }
+        else if (dUIDType == DHCPConfiguration::DUIDType::link_layer)
+        {
+            stream << "DUIDType=link-layer"s + "\n";
+        }
+
         auto value = manager.getDHCPConf()->dNSEnabled() ? "true"s : "false"s;
         stream << "UseDNS="s + value + "\n";
 
