@@ -19,6 +19,7 @@
 #include <unistd.h>
 
 #include <algorithm>
+#include <dhcp_configuration.hpp>
 #include <experimental/filesystem>
 #include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
@@ -35,6 +36,7 @@ namespace network
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
+using Configuration = phosphor::network::dhcp::Configuration;
 
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
@@ -715,11 +717,17 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
     // write the dhcp section
     stream << "[DHCP]\n";
 
-    // Hardcoding the client identifier to mac, to address below issue
-    // https://github.com/openbmc/openbmc/issues/1280
-    stream << "ClientIdentifier=mac\n";
     if (manager.getDHCPConf())
     {
+        stream << "ClientIdentifier="s +
+                      manager.getDHCPConf()->getClientIdentifierAsString(
+                          manager.getDHCPConf()->clientIdentifier()) +
+                      "\n";
+        stream << "DUIDType="s +
+                      manager.getDHCPConf()->getDUIDTypeAsString(
+                          manager.getDHCPConf()->dUIDType()) +
+                      "\n";
+
         auto value = manager.getDHCPConf()->dNSEnabled() ? "true"s : "false"s;
         stream << "UseDNS="s + value + "\n";
 

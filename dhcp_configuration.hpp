@@ -2,6 +2,8 @@
 
 #include "config_parser.hpp"
 
+#include <phosphor-logging/elog-errors.hpp>
+#include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <string>
@@ -47,12 +49,66 @@ class Configuration : public Iface
         Iface(bus, objPath.c_str(), true),
         bus(bus), manager(parent)
     {
-        ConfigIntf::dNSEnabled(getDHCPPropFromConf("UseDNS"));
-        ConfigIntf::nTPEnabled(getDHCPPropFromConf("UseNTP"));
-        ConfigIntf::hostNameEnabled(getDHCPPropFromConf("UseHostname"));
-        ConfigIntf::sendHostNameEnabled(getDHCPPropFromConf("SendHostname"));
+        ConfigIntf::clientIdentifier(
+            getClientIdentifierAsEnum(getDHCPPropFromConf("ClientIdentifier")));
+
+        ConfigIntf::dUIDType(
+            getDUIDTypeAsEnum(getDHCPPropFromConf("DUIDType")));
+
+        bool dNSEnabled = true;
+        std::string&& propValue = getDHCPPropFromConf("UseDNS");
+        if (propValue == "false")
+        {
+            dNSEnabled = false;
+        }
+        ConfigIntf::dNSEnabled(dNSEnabled);
+
+        bool nTPEnabled = true;
+        propValue = getDHCPPropFromConf("UseNTP");
+        if (propValue == "false")
+        {
+            nTPEnabled = false;
+        }
+        ConfigIntf::nTPEnabled(nTPEnabled);
+
+        bool hostNameEnabled = true;
+        propValue = getDHCPPropFromConf("UseHostname");
+        if (propValue == "false")
+        {
+            hostNameEnabled = false;
+        }
+        ConfigIntf::hostNameEnabled(hostNameEnabled);
+
+        bool sendHostNameEnabled = true;
+        propValue = getDHCPPropFromConf("SendHostname");
+        if (propValue == "false")
+        {
+            sendHostNameEnabled = false;
+        }
+        ConfigIntf::sendHostNameEnabled(sendHostNameEnabled);
+
         emit_object_added();
     }
+
+    /** @brief This is used to generate client ID passed to
+     *         the DHCP server.
+     *
+     *  @param[in] value - mac to generate client ID based on
+     *                     MAC address.
+     *                     duid to generate client ID based on
+     *                     RFC-4361
+     */
+    ClientIdentifier clientIdentifier(ClientIdentifier value) override;
+
+    /** @brief This specifies how the DUID should be generated.
+     *
+     *  @param[in] value - vendor - DUID based on machine-id
+     *                     uuid - DUID based on product UUID
+     *                     link_layer_time - DUID based on MAC address
+     *                     of the interface and an additional time value
+     *                     link_layer - DUID based on MAC address
+     */
+    DUIDType dUIDType(DUIDType value) override;
 
     /** @brief If true then DNS servers received from the DHCP server
      *         will be used and take precedence over any statically
@@ -87,14 +143,27 @@ class Configuration : public Iface
     /** @brief read the DHCP Prop value from the configuration file
      *  @param[in] prop - DHCP Prop name.
      */
-    bool getDHCPPropFromConf(const std::string& prop);
+    std::string getDHCPPropFromConf(const std::string& prop);
+
+    std::string getClientIdentifierAsString(
+        const DHCPConfiguration::ClientIdentifier&& clientId);
+
+    ConfigIntf::ClientIdentifier
+        getClientIdentifierAsEnum(const std::string&& clientId);
+
+    std::string
+        getDUIDTypeAsString(const DHCPConfiguration::DUIDType&& dUIDType);
+
+    ConfigIntf::DUIDType getDUIDTypeAsEnum(const std::string&& dUIDType);
 
     /* @brief Network Manager needed the below function to know the
      *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled
               sendHostNameEnabled).
      *
      */
+    using ConfigIntf::clientIdentifier;
     using ConfigIntf::dNSEnabled;
+    using ConfigIntf::dUIDType;
     using ConfigIntf::hostNameEnabled;
     using ConfigIntf::nTPEnabled;
     using ConfigIntf::sendHostNameEnabled;
