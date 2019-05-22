@@ -33,6 +33,24 @@
       "revId": "2a22a2c51adfbe70fe0fff6f983758e5d7f5cb4d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97498516_30188880",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2019-05-22T10:03:20Z",
+      "side": 1,
+      "message": "Yes, it should have been \"LinkLocalAddressing\"",
+      "parentUuid": "505d771b_7ff14802",
+      "revId": "2a22a2c51adfbe70fe0fff6f983758e5d7f5cb4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
