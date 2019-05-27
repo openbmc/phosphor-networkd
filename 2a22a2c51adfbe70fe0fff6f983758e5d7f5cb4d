@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "86205411_9a4a5fd5",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2019-05-27T16:34:17Z",
+      "side": 1,
+      "message": "i didn\u0027t get you,can you please explain?",
+      "parentUuid": "261eb7e5_afd9f3cf",
+      "revId": "2a22a2c51adfbe70fe0fff6f983758e5d7f5cb4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "505d771b_7ff14802",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 3
