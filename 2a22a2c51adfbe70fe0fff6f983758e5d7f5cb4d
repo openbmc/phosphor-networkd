@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "b791a1c2_10d5f374",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2019-05-31T19:40:29Z",
+      "side": 1,
+      "message": "We don\u0027t actually need any of this code because we shouldn\u0027t be trying to determine whether an address is link local or not. The kernel tells us this information when we query the address information.",
+      "parentUuid": "86205411_9a4a5fd5",
+      "revId": "2a22a2c51adfbe70fe0fff6f983758e5d7f5cb4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "505d771b_7ff14802",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 3
