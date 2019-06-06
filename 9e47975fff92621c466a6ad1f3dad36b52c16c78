@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f00cd54a_8a983d73",
+        "filename": "dhcp_configuration.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1000344
+      },
+      "writtenOn": "2019-06-06T17:49:14Z",
+      "side": 1,
+      "message": "If the configuration file was manually edited to specify a value which was not supported by the code, then it would be better to set it back to the default one. So, I coded to write the default value back to the configuration file. But, it was continuously writing the error message \"Unknown DUIDType found in the config file.Setting it to the default \"link_layer\". So, I have commented this code.",
+      "revId": "9e47975fff92621c466a6ad1f3dad36b52c16c78",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
