@@ -50,9 +50,21 @@ class IPAddress : public IPIfaces
               const std::string& ipAddress, IP::AddressOrigin origin,
               uint8_t prefixLength, const std::string& gateway);
 
+    std::string address(std::string ipAddress) override;
+    uint8_t prefixLength(uint8_t) override;
+    std::string gateway(std::string gateway) override;
+    IP::Protocol type(IP::Protocol type) override;
+    IP::AddressOrigin origin(IP::AddressOrigin origin) override;
+
     /** @brief Delete this d-bus object.
      */
     void delete_() override;
+
+    using IP::address;
+    using IP::gateway;
+    using IP::origin;
+    using IP::prefixLength;
+    using IP::type;
 
   private:
     /** @brief Parent Object. */
