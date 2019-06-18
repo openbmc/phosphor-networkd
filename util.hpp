@@ -19,7 +19,7 @@ namespace network
 
 constexpr auto IPV4_MIN_PREFIX_LENGTH = 1;
 constexpr auto IPV4_MAX_PREFIX_LENGTH = 32;
-constexpr auto IPV6_MAX_PREFIX_LENGTH = 64;
+constexpr auto IPV6_MAX_PREFIX_LENGTH = 128;
 constexpr auto IPV4_PREFIX = "169.254";
 constexpr auto IPV6_PREFIX = "fe80";
 
@@ -191,7 +191,7 @@ void executeCommandinChildProcess(const char* path, char** args);
 template <typename... ArgTypes>
 void execute(const char* path, ArgTypes&&... tArgs)
 {
-    using expandType = char* [];
+    using expandType = char*[];
 
     expandType args = {const_cast<char*>(tArgs)..., nullptr};
 
