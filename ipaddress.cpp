@@ -38,22 +38,27 @@ IPAddress::IPAddress(sdbusplus::bus::bus& bus, const char* objPath,
 std::string IPAddress::address(std::string ipAddress)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
+    return {};
 }
 uint8_t IPAddress::prefixLength(uint8_t value)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
+    return 0;
 }
 std::string IPAddress::gateway(std::string gateway)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
+    return {};
 }
 IP::Protocol IPAddress::type(IP::Protocol type)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
+    return IP::Protocol::IPv4;
 }
 IP::AddressOrigin IPAddress::origin(IP::AddressOrigin origin)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
+    return IP::AddressOrigin::Static;
 }
 void IPAddress::delete_()
 {

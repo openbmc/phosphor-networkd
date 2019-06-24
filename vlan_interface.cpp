@@ -41,6 +41,7 @@ std::string VlanInterface::mACAddress(std::string)
 {
     log<level::ERR>("Tried to set MAC address on VLAN");
     elog<InternalFailure>();
+    return {};
 }
 
 void VlanInterface::writeDeviceFile()
