@@ -152,6 +152,16 @@ class EthernetInterface : public Ifaces
      */
     std::string mACAddress(std::string value) override;
 
+    /** @brief get the IPv6AcceptRA flag from the network configuration file
+     *
+     */
+    bool getIPv6AcceptRAFromConf();
+
+    /** @brief check conf file for Router Advertisements
+     *
+     */
+    bool iPv6AcceptRA(bool value) override;
+
     /** @brief sets the NTP servers.
      *  @param[in] value - vector of NTP servers.
      */

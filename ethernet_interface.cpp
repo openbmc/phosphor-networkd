@@ -47,6 +47,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
     EthernetInterfaceIntf::dHCPEnabled(dhcpEnabled);
+    EthernetInterfaceIntf::iPv6AcceptRA(getIPv6AcceptRAFromConf());
     MacAddressIntf::mACAddress(getMACAddress(intfName));
     EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
     EthernetInterfaceIntf::nameservers(getNameServerFromConf());
@@ -415,6 +416,17 @@ std::string EthernetInterface::generateStaticNeighborObjectPath(
     return objectPath.string();
 }
 
+bool EthernetInterface::iPv6AcceptRA(bool value)
+{
+    if (value == EthernetInterfaceIntf::iPv6AcceptRA())
+    {
+        return value;
+    }
+    EthernetInterfaceIntf::iPv6AcceptRA(value);
+    manager.writeToConfigurationFile();
+    return value;
+}
+
 bool EthernetInterface::dHCPEnabled(bool value)
 {
     if (value == EthernetInterfaceIntf::dHCPEnabled())
@@ -529,6 +541,26 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
     return path;
 }
 
+bool EthernetInterface::getIPv6AcceptRAFromConf()
+{
+    fs::path confPath = manager.getConfDir();
+
+    std::string fileName = systemd::config::networkFilePrefix +
+                           interfaceName() + systemd::config::networkFileSuffix;
+    confPath /= fileName;
+    config::ValueList values;
+    config::Parser parser(confPath.string());
+    auto rc = config::ReturnCode::SUCCESS;
+    std::tie(rc, values) = parser.getValues("Network", "IPv6AcceptRA");
+    if (rc != config::ReturnCode::SUCCESS)
+    {
+        log<level::DEBUG>("Unable to get the value for Network[IPv6AcceptRA]",
+                          entry("rc=%d", rc));
+        return false;
+    }
+    return (values[0] == "true");
+}
+
 ServerList EthernetInterface::getNTPServersFromConf()
 {
     fs::path confPath = manager.getConfDir();
@@ -610,7 +642,8 @@ void EthernetInterface::writeConfigurationFile()
 #else
     stream << "LinkLocalAddressing=no\n";
 #endif
-    stream << "IPv6AcceptRA=false\n";
+    stream << std::boolalpha
+           << "IPv6AcceptRA=" << EthernetInterfaceIntf::iPv6AcceptRA() << "\n";
 
     // Add the VLAN entry
     for (const auto& intf : vlanInterfaces)
