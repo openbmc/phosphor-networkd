@@ -91,24 +91,6 @@ TEST_F(TestUtil, IpToString)
     struct in6_addr ip2;
     EXPECT_EQ(1, inet_pton(AF_INET6, "fdd8:b5ad:9d93:94ee::2:1", &ip2));
     EXPECT_EQ("fdd8:b5ad:9d93:94ee::2:1", toString(InAddrAny(ip2)));
-
-    InAddrAny ip3;
-    try
-    {
-        struct E
-        {
-            operator struct in6_addr()
-            {
-                throw 1;
-            }
-        };
-        ip3.emplace<struct in6_addr>(E());
-        EXPECT_TRUE(false);
-    }
-    catch (...)
-    {
-    }
-    EXPECT_THROW(toString(ip3), std::runtime_error);
 }
 
 TEST_F(TestUtil, IpValidation)
