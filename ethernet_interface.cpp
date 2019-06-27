@@ -231,7 +231,7 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
             break;
         }
 
-        strncpy(ifr.ifr_name, interfaceName().c_str(), sizeof(ifr.ifr_name));
+        strcpy(ifr.ifr_name, interfaceName().c_str());
         ifr.ifr_data = reinterpret_cast<char*>(&edata);
 
         edata.cmd = ETHTOOL_GSET;
