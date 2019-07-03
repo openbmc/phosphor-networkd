@@ -12,11 +12,15 @@
 #include <sdbusplus/bus.hpp>
 #include <string>
 #include <string_view>
+#include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 
 namespace phosphor
 {
 namespace network
 {
+
+using EthernetInterfaceIntf =
+    sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface;
 
 constexpr auto IPV4_MIN_PREFIX_LENGTH = 1;
 constexpr auto IPV4_MAX_PREFIX_LENGTH = 32;
@@ -153,7 +157,8 @@ std::optional<std::string> interfaceToUbootEthAddr(const char* intf);
  *  @param[in] confDir - Network configuration directory.
  *  @param[in] intf - Interface name.
  */
-bool getDHCPValue(const std::string& confDir, const std::string& intf);
+EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
+                                             const std::string& intf);
 
 namespace internal
 {
@@ -179,6 +184,12 @@ void execute(const char* path, ArgTypes&&... tArgs)
 
     internal::executeCommandinChildProcess(path, args);
 }
+
+/* @brief Retrieve the source (DHCP, Static, Local/Self assigned) for
+ *        each IP address supplied
+ * @param[in] addressList - List of IP addresses active on one interface
+ */
+int getIPAddrOrigins(AddrList& addressList);
 
 } // namespace network
 
