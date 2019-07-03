@@ -144,7 +144,7 @@ void Manager::createInterfaces()
         // normal ethernet interface
         objPath /= interface;
 
-        auto dhcp = getDHCPValue(confDir, interface);
+        EthernetInterfaceIntf::DHCPConf dhcp = getDHCPValue(confDir, interface);
 
         auto intf = std::make_shared<phosphor::network::EthernetInterface>(
             bus, objPath.string(), dhcp, *this);
