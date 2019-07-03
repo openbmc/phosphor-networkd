@@ -6,12 +6,17 @@
 #include <arpa/inet.h>
 #include <dirent.h>
 #include <net/if.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
 
 #include <algorithm>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/process.hpp>
 #include <cstdlib>
 #include <cstring>
 #include <experimental/filesystem>
+#include <fstream>
 #include <iostream>
 #include <list>
 #include <phosphor-logging/elog-errors.hpp>
@@ -25,6 +30,54 @@ namespace phosphor
 {
 namespace network
 {
+
+int getIPAddrOrigins(AddrList& addressList)
+{
+    boost::process::ipstream inputStream;
+    boost::process::child ipaddr("ip -o addr",
+                                 boost::process::std_out > inputStream);
+    std::string ipaddrLine;
+
+    while (inputStream && std::getline(inputStream, ipaddrLine) &&
+           !ipaddrLine.empty())
+    {
+        std::vector<std::string> addressElements;
+        std::vector<std::string> addrPrefixVec;
+
+        boost::split(addressElements, ipaddrLine, boost::is_any_of(" "),
+                     boost::token_compress_on);
+        boost::split(addrPrefixVec, addressElements[3], boost::is_any_of("/"),
+                     boost::token_compress_on);
+        std::string& nic = addressElements[1];
+        std::string& ipClass = addressElements[2]; // inet | inet6
+        std::string& address = addrPrefixVec[0];
+        if (nic != "lo")
+        {
+            for (auto it = addressList.begin(); it != addressList.end(); it++)
+            {
+                if (it->ipaddress == address)
+                {
+                    bool isIPv6 = (ipClass == "inet6");
+                    int globalStrIdx = isIPv6 ? 5 : 7;
+                    if (addressElements[globalStrIdx] == "global")
+                    {
+                        it->origin = (addressElements[8] == "dynamic")
+                                         ? IP::AddressOrigin::DHCP
+                                         : IP::AddressOrigin::Static;
+                    }
+                    else if (addressElements[globalStrIdx] == "link")
+                    {
+                        it->origin = isIPv6 ? IP::AddressOrigin::SLAAC
+                                            : IP::AddressOrigin::LinkLocal;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    ipaddr.wait();
+    return 0;
+}
 
 namespace
 {
@@ -410,9 +463,11 @@ std::optional<std::string> interfaceToUbootEthAddr(const char* intf)
     return "eth" + std::to_string(idx) + "addr";
 }
 
-bool getDHCPValue(const std::string& confDir, const std::string& intf)
+EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
+                                             const std::string& intf)
 {
-    bool dhcp = false;
+    EthernetInterfaceIntf::DHCPConf dhcp =
+        EthernetInterfaceIntf::DHCPConf::none;
     // Get the interface mode value from systemd conf
     // using namespace std::string_literals;
     fs::path confPath = confDir;
@@ -434,7 +489,15 @@ bool getDHCPValue(const std::string& confDir, const std::string& intf)
     // There will be only single value for DHCP key.
     if (values[0] == "true")
     {
-        dhcp = true;
+        dhcp = EthernetInterfaceIntf::DHCPConf::both;
+    }
+    else if (values[0] == "ipv4")
+    {
+        dhcp = EthernetInterfaceIntf::DHCPConf::v4;
+    }
+    else if (values[0] == "ipv6")
+    {
+        dhcp = EthernetInterfaceIntf::DHCPConf::v6;
     }
     return dhcp;
 }
