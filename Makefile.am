@@ -97,6 +97,11 @@ phosphor_network_manager_CXXFLAGS = \
 		$(SDEVENTPLUS_CFLAGS) \
 		$(PHOSPHOR_DBUS_INTERFACES_CFLAGS) \
 		$(PHOSPHOR_LOGGING_CFLAGS) \
+		-DBOOST_ERROR_CODE_HEADER_ONLY \
+		-DBOOST_SYSTEM_NO_DEPRECATED \
+		-DBOOST_COROUTINES_NO_DEPRECATION_WARNING \
+		-DBOOST_ASIO_DISABLE_THREADS \
+		-DBOOST_ALL_NO_LIB \
 		-flto
 
 xyz/openbmc_project/Network/VLAN/Create/server.cpp: xyz/openbmc_project/Network/VLAN/Create.interface.yaml xyz/openbmc_project/Network/VLAN/Create/server.hpp

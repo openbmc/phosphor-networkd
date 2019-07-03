@@ -82,7 +82,7 @@ class EthernetInterface : public Ifaces
      *                          send.
      */
     EthernetInterface(sdbusplus::bus::bus& bus, const std::string& objPath,
-                      bool dhcpEnabled, Manager& parent,
+                      DHCPConf dhcpEnabled, Manager& parent,
                       bool emitSignal = true);
 
     /** @brief Function to create ipaddress dbus object.
@@ -148,7 +148,34 @@ class EthernetInterface : public Ifaces
     }
 
     /** Set value of DHCPEnabled */
-    bool dHCPEnabled(bool value) override;
+    DHCPConf dHCPEnabled(DHCPConf value) override;
+
+    /** @brief Determines if DHCP is active for the IP::Protocol supplied.
+     *  @param[in] protocol - Either IPv4 or IPv6
+     *  @param[in] ignoreProtocol - Allows IPv4 and IPv6 to be checked using a
+     *                              single call.
+     *  @returns true/false value if DHCP is active for the input protocol
+     */
+    bool dhcpIsEnabled(IP::Protocol protocol, bool ignoreProtocol = false);
+
+    /** @brief Determines if DHCP will be active following next reconfig
+     *  @param[in] protocol - Either IPv4 or IPv6
+     *  @param[in] nextDHCPState - The new DHCP mode to take affect
+     *  @returns true/false value if DHCP is active for the input protocol
+     */
+    bool dhcpToBeEnabled(IP::Protocol family, std::string& nextDHCPState);
+
+    /** @brief Determines if the address is manually assigned
+     *  @param[in] origin - The origin entry of the IP::Address
+     *  @returns true/false value if the address is static
+     */
+    bool addressIsStatic(IP::AddressOrigin origin);
+
+    /** @brief Selectively disables DHCP
+     *  @param[in] protocol - The IPv4 or IPv6 protocol to return to static
+     *                        addressing mode
+     */
+    void disableDHCP(IP::Protocol protocol);
 
     /** @brief sets the MAC address.
      *  @param[in] value - MAC address which needs to be set on the system.
