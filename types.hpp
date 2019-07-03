@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ipaddress.hpp"
+
 #include <ifaddrs.h>
 #include <netinet/in.h>
 #include <systemd/sd-event.h>
@@ -50,6 +52,7 @@ struct AddrInfo
 {
     uint8_t addrType;
     std::string ipaddress;
+    IP::AddressOrigin origin;
     uint16_t prefix;
 };
 
