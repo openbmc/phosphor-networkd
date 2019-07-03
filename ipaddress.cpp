@@ -57,7 +57,7 @@ IP::AddressOrigin IPAddress::origin(IP::AddressOrigin origin)
 }
 void IPAddress::delete_()
 {
-    if (origin() != IP::AddressOrigin::Static)
+    if (parent.dhcpIsEnabled(type()))
     {
         log<level::ERR>("Tried to delete a non-static address"),
             entry("ADDRESS=%s", address().c_str()),
