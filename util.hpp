@@ -191,7 +191,7 @@ void executeCommandinChildProcess(const char* path, char** args);
 template <typename... ArgTypes>
 void execute(const char* path, ArgTypes&&... tArgs)
 {
-    using expandType = char* [];
+    using expandType = char*[];
 
     expandType args = {const_cast<char*>(tArgs)..., nullptr};
 

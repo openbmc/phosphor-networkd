@@ -21,12 +21,12 @@
 #include <algorithm>
 #include <experimental/filesystem>
 #include <fstream>
+#include <iostream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <sstream>
 #include <string>
 #include <xyz/openbmc_project/Common/error.hpp>
-
 namespace phosphor
 {
 namespace network
@@ -43,6 +43,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     Ifaces(bus, objPath.c_str(), true),
     bus(bus), manager(parent), objPath(objPath)
 {
+    std::cout << "EthernetInterface" << std::endl;
     auto intfName = objPath.substr(objPath.rfind("/") + 1);
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
@@ -231,7 +232,7 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
             break;
         }
 
-        strncpy(ifr.ifr_name, interfaceName().c_str(), sizeof(ifr.ifr_name));
+        strncpy(ifr.ifr_name, interfaceName().c_str(), strlen(ifr.ifr_name));
         ifr.ifr_data = reinterpret_cast<char*>(&edata);
 
         edata.cmd = ETHTOOL_GSET;
