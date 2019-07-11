@@ -16,6 +16,24 @@
       "revId": "a711a789c6a7e7c2e5b3ac5b620afe3912316b22",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0a798d0_ccd3da9d",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2019-07-11T10:22:16Z",
+      "side": 1,
+      "message": "do you want me add this check here\n#ifdef LINK_LOCAL_AUTOCONFIGURATION\n    auto linkLocalConf \u003d LinkLocalAutoConf::both;\n#else\n    auto linkLocalConf \u003d LinkLocalAutoConf::none;\n#endif",
+      "parentUuid": "e01f1a99_2d2abc30",
+      "revId": "a711a789c6a7e7c2e5b3ac5b620afe3912316b22",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
