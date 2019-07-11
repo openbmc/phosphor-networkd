@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e01f1a99_2d2abc30",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2019-07-11T07:29:43Z",
+      "side": 1,
+      "message": "Put the deleted ifdef from below around the value of the default linkLocalConf here.\n\nWe can decide how to deprecate that later.",
+      "revId": "a711a789c6a7e7c2e5b3ac5b620afe3912316b22",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
