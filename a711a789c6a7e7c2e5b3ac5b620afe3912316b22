@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "972a8bb1_8cae22c4",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2019-07-17T05:57:45Z",
+      "side": 1,
+      "message": "Ravi: Yeah, that\u0027s exactly what I was looking for\n\nRatan: It will always be populated by this function when the object is first created. So we need to ensure the user sees the value that will be written out to the file. If we have the define here, it will propagate down to the file writer bit but still allow the user to override the default settings.",
+      "parentUuid": "cd0b4311_5bedb1a5",
+      "revId": "a711a789c6a7e7c2e5b3ac5b620afe3912316b22",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "17c8ceef_bb347b5b",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 19
