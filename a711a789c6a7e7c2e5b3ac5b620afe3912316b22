@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4dfcd84d_e7f8b8d5",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2019-07-19T14:17:14Z",
+      "side": 1,
+      "message": "I\u0027d prefer not doing that because the intention of the ifdef is to just alter the default. Not prevent the user from changing it. (I think we are the original users of this define)",
+      "parentUuid": "6f2fafcb_8671c0d8",
+      "revId": "a711a789c6a7e7c2e5b3ac5b620afe3912316b22",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e01f1a99_2d2abc30",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 19
