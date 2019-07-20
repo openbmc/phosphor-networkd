@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "4d179b83_5869c50c",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2019-07-20T03:38:37Z",
+      "side": 1,
+      "message": "The intent of the earlier changes were that link local auto conf address should not be generated if the LINK_LOCAL_AUTOCONFIGURATION is not defined.\n\nIn earlier change we don\u0027t have the flexibility to enable it again.\n\nNow with this change we are making it configurable.\n\nSo you want the flexibility to enable it again.\n\nSeems we need to improve the help string in configure.ac\n\nAC_ARG_ENABLE(\n    [link-local-autoconfiguration],\n    AS_HELP_STRING([--disable-link-local-autoconfiguration], [Disable link-local IP address autoconfiguration]),\n    [],\n    [enable_link_local_autoconfiguration\u003d\"yes\"]\n)\nif test \"x$enable_link_local_autoconfiguration\" \u003d \"xyes\"; then\n    AC_DEFINE([LINK_LOCAL_AUTOCONFIGURATION], [1], [Enable link-local IP address autoconfiguration])\nfi\n\nBy reading above I get a feeling that we don\u0027t want link-local IP address autoconfiguration.",
+      "parentUuid": "4dfcd84d_e7f8b8d5",
+      "revId": "a711a789c6a7e7c2e5b3ac5b620afe3912316b22",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e01f1a99_2d2abc30",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 19
