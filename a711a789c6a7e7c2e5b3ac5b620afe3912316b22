@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "be7971a2_c86463a4",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2019-07-30T07:31:38Z",
+      "side": 1,
+      "message": "I don\u0027t think very many people seriously want to disable v6 link local autoconf anyway because their networks probably depend on it. Unlike with v4 where it goes mostly unused.",
+      "parentUuid": "35698dd9_7838f953",
+      "revId": "a711a789c6a7e7c2e5b3ac5b620afe3912316b22",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e01f1a99_2d2abc30",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 19
