@@ -52,6 +52,10 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     MacAddressIntf::mACAddress(getMACAddress(intfName));
     EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
     EthernetInterfaceIntf::nameservers(getNameServerFromConf());
+    InterfaceInfo ifInfo = EthernetInterface::getInterfaceInfo();
+
+    EthernetInterfaceIntf::autoNeg(std::get<2>(ifInfo));
+    EthernetInterfaceIntf::speed(std::get<0>(ifInfo));
 
     // Emit deferred signal.
     if (emitSignal)
