@@ -36,6 +36,8 @@ namespace network
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
+using NotAllowed = sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
+using Reason = xyz::openbmc_project::Common::NotAllowed::REASON;
 
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
@@ -432,44 +434,57 @@ bool EthernetInterface::dHCPEnabled(bool value)
 
 ServerList EthernetInterface::nameservers(ServerList value)
 {
-    try
+
+    if (!EthernetInterfaceIntf::dHCPEnabled())
     {
-        EthernetInterfaceIntf::nameservers(value);
+        // if interface is DHCP enabled we have two choices either
+        // don't allow the static DNS server configuration or allow
+        // the static DNS server configuration, which will lead to a
+        // inconsistency where DHCP renew will overwrite the existing
+        // static DNS server
+        try
+        {
+            EthernetInterfaceIntf::nameservers(value);
 
-        writeConfigurationFile();
+            writeConfigurationFile();
 
-        // Currently we don't have systemd-resolved enabled
-        // in the openbmc. Once we update the network conf file,
-        // it should be read by systemd-resolved.service.
+            // Currently we don't have systemd-resolved enabled
+            // in the openbmc. Once we update the network conf file,
+            // it should be read by systemd-resolved.service.
 
-        // The other reason to write the resolv conf is,
-        // we don't want to restart the networkd for nameserver change.
-        // as restarting of systemd-networkd takes more then 2 secs
-        writeDNSEntries(value, resolvConfFile);
+            // The other reason to write the resolv conf is,
+            // we don't want to restart the networkd for nameserver change.
+            // as restarting of systemd-networkd takes more then 2 secs
+            writeDNSEntries(value, resolvConfFile);
+        }
+        catch (InternalFailure& e)
+        {
+            log<level::ERR>("Exception processing DNS entries");
+        }
     }
-    catch (InternalFailure& e)
+    else
     {
-        log<level::ERR>("Exception processing DNS entries");
+        log<level::INFO>("DHCP enabled on the interface,Writing the Static "
+                         "Nameservers is restricted"),
+            entry("INTERFACE=%s", interfaceName().c_str());
+        elog<NotAllowed>(
+            Reason("Setting Static Nameservers is not allowed in DHCP mode"));
     }
+
     return EthernetInterfaceIntf::nameservers();
 }
 
 ServerList EthernetInterface::getNameServerFromConf()
 {
-    fs::path confPath = manager.getConfDir();
-
-    std::string fileName = systemd::config::networkFilePrefix +
-                           interfaceName() + systemd::config::networkFileSuffix;
-    confPath /= fileName;
+    std::ifstream infile(resolvConfFile);
     ServerList servers;
-    config::Parser parser(confPath.string());
-    auto rc = config::ReturnCode::SUCCESS;
-
-    std::tie(rc, servers) = parser.getValues("Network", "DNS");
-    if (rc != config::ReturnCode::SUCCESS)
+    std::string key, value;
+    while (infile >> key >> value)
     {
-        log<level::DEBUG>("Unable to get the value for network[DNS]",
-                          entry("RC=%d", rc));
+        if (key == "nameserver")
+        {
+            servers.push_back(value);
+        }
     }
     return servers;
 }
