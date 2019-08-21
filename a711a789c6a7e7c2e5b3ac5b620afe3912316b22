@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "1c37353c_b7db496f",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2019-08-21T17:44:43Z",
+      "side": 1,
+      "message": "I was reading more on the systemd-networkd, Till now if we enable the link-local auto configuration we always get the link local address irrespective of whether the interface having other address or not.\n\nNow I am having the proposal to change the default behavior where link-local address will only exist if the interface is not having any other address configured.\n\nFor the same behavior, systemd-networkd has the following values for the  \"linkLocalAddresing\"\nfallback/ipv4-fallback.\n\nwe can add the above enum values in the D-bus interface.\n\nWilliam, Do you see any issues here?",
+      "parentUuid": "be7971a2_c86463a4",
+      "revId": "a711a789c6a7e7c2e5b3ac5b620afe3912316b22",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e01f1a99_2d2abc30",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 19
