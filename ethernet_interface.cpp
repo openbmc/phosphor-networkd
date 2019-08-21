@@ -444,6 +444,20 @@ bool EthernetInterface::dHCPEnabled(bool value)
 
 ServerList EthernetInterface::nameservers(ServerList value)
 {
+    for (const auto& nameserverip : value)
+    {
+        if (!isValidIP(AF_INET, nameserverip))
+        {
+            if (!isValidIP(AF_INET6, nameserverip))
+            {
+                log<level::ERR>("Not a valid IP address"),
+                    entry("ADDRESS=%s", nameserverip.c_str());
+                elog<InvalidArgument>(
+                    Argument::ARGUMENT_NAME("Nameserver"),
+                    Argument::ARGUMENT_VALUE(nameserverip.c_str()));
+            }
+        }
+    }
     try
     {
         EthernetInterfaceIntf::nameservers(value);
