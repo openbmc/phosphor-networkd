@@ -127,6 +127,24 @@
     },
     {
       "key": {
+        "uuid": "ae66a949_c83c1f65",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2019-08-28T01:07:22Z",
+      "side": 1,
+      "message": "This is something we could consider since IPv4 users typically don\u0027t use the link local v4 address when DHCP is providing one. \"fallback\" would seem like the most sane default value since that is what other operating systems default to.",
+      "parentUuid": "ecef1047_aeb00fcf",
+      "revId": "a711a789c6a7e7c2e5b3ac5b620afe3912316b22",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e01f1a99_2d2abc30",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 19
@@ -213,6 +231,24 @@
       "revId": "a711a789c6a7e7c2e5b3ac5b620afe3912316b22",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbad6547_f48a5408",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2019-08-28T01:07:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "dc660fed_92206c53",
+      "revId": "a711a789c6a7e7c2e5b3ac5b620afe3912316b22",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
