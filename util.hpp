@@ -2,6 +2,7 @@
 
 #include "config.h"
 
+#include "ethernet_interface.hpp"
 #include "types.hpp"
 
 #include <netinet/ether.h>
@@ -29,8 +30,10 @@ namespace mac_address
 
 /** @brief gets the MAC address from the Inventory.
  *  @param[in] bus - DBUS Bus Object.
+ *  @param[in] intfName - Interface name
  */
-ether_addr getfromInventory(sdbusplus::bus::bus& bus);
+ether_addr getfromInventory(sdbusplus::bus::bus& bus,
+                            const std::string& intfName);
 
 /** @brief Converts the given mac address into byte form
  *  @param[in] str - The mac address in human readable form
