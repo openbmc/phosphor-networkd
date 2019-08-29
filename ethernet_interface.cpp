@@ -774,7 +774,7 @@ std::string EthernetInterface::mACAddress(std::string value)
         {
             try
             {
-                auto inventoryMAC = mac_address::getfromInventory(bus);
+                auto inventoryMAC = mac_address::getfromInventory(bus, objPath);
                 if (!equal(newMAC, inventoryMAC))
                 {
                     log<level::ERR>(
