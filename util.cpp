@@ -519,7 +519,7 @@ constexpr auto invNetworkIntf =
     "xyz.openbmc_project.Inventory.Item.NetworkInterface";
 constexpr auto invRoot = "/xyz/openbmc_project/inventory";
 
-ether_addr getfromInventory(sdbusplus::bus::bus& bus)
+ether_addr getfromInventory(sdbusplus::bus::bus& bus, const std::string& intfName)
 {
     std::vector<DbusInterface> interfaces;
     interfaces.emplace_back(invNetworkIntf);
@@ -548,10 +548,36 @@ ether_addr getfromInventory(sdbusplus::bus::bus& bus)
         elog<InternalFailure>();
     }
 
-    // It is expected that only one object has implemented this interface.
+    DbusObjectPath objPath;
+    DbusService service;
 
-    auto objPath = objectTree.begin()->first;
-    auto service = objectTree.begin()->second.begin()->first;
+    if ( 1 == objectTree.size())
+    {
+        objPath = objectTree.begin()->first;
+        service = objectTree.begin()->second.begin()->first;
+    }
+    else
+    {
+        // If there are more than 2 objects, object path must contain the interface name
+        for (auto const& object : objectTree)
+        {
+            log<level::INFO>("interface", entry("INT=%s", intfName.c_str()));
+            log<level::INFO>("object", entry("OBJ=%s", object.first.c_str()));
+            if(  std::string::npos != object.first.find(intfName) )
+            {
+                objPath = object.first;
+                service = object.second.begin()->first;
+                break;
+            }
+        }
+
+        if (objPath.empty())
+        {
+            log<level::ERR>("Can't find the object for the interface",
+                            entry("intfName=%s", intfName.c_str()));
+            elog<InternalFailure>();
+        }
+    }
 
     auto method = bus.new_method_call(service.c_str(), objPath.c_str(),
                                       propIntf, methodGet);

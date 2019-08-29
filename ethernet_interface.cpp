@@ -786,7 +786,11 @@ std::string EthernetInterface::mACAddress(std::string value)
         {
             try
             {
-                auto inventoryMAC = mac_address::getfromInventory(bus);
+                // Get the interface name
+                auto intfName = objPath.substr(objPath.rfind("/") + 1);
+                std::replace(intfName.begin(), intfName.end(), '_', '.');
+
+                auto inventoryMAC = mac_address::getfromInventory(bus, intfName);
                 if (!equal(newMAC, inventoryMAC))
                 {
                     log<level::ERR>(
