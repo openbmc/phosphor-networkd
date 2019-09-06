@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "743dbad9_78b2777f",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2019-09-06T20:34:42Z",
+      "side": 1,
+      "message": "Please change to:\n        IP::AddressOrigin origin \u003d addr.staticallyAssigned\n                                       ? IP::AddressOrigin::Static\n                                       : IP::AddressOrigin::DHCP;",
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f02015e_f715bcba",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2019-09-06T20:34:42Z",
+      "side": 1,
+      "message": "With the preceding requested change this fragment can be removed.",
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "16b88c5e_0d8679d3",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 8
@@ -13,6 +47,40 @@
       "writtenOn": "2019-07-10T03:39:38Z",
       "side": 1,
       "message": "How we are handling the Link local IP address here? how to fill the origin value for the link local IP address here?",
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f163e52b_2e916721",
+        "filename": "ipaddress.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2019-09-06T20:34:42Z",
+      "side": 1,
+      "message": "Please add:\naddress.staticallyAssigned \u003d (bool)(ifaddr.ifa_flags \u0026 IFA_F_PERMANENT);",
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "caa41eec_a25d7bd2",
+        "filename": "ipaddress.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2019-09-06T20:34:42Z",
+      "side": 1,
+      "message": "please add:\nbool staticallyAssigned;",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
@@ -36,6 +104,23 @@
         "endLine": 54,
         "endChar": 74
       },
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9989a79d_c4b5eeb3",
+        "filename": "ipaddress.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2019-09-06T20:34:42Z",
+      "side": 1,
+      "message": "Why the new namespace?  Is this being used outside phosphor::network namespace?",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
