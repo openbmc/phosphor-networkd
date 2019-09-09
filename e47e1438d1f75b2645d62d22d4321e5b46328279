@@ -16,6 +16,24 @@
       "revId": "e47e1438d1f75b2645d62d22d4321e5b46328279",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d09cd8d_69324144",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2019-09-09T10:54:27Z",
+      "side": 1,
+      "message": "yes.we are not completely preventing runtime override, user can override if LINK_LOCAL_AUTOCONFIGURATION set.\nas discussed earlier,The intent of this change is that link local auto conf address should not be generated if the LINK_LOCAL_AUTOCONFIGURATION is not defined.",
+      "parentUuid": "8b425de1_fe12bce0",
+      "revId": "e47e1438d1f75b2645d62d22d4321e5b46328279",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
