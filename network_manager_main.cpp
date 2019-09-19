@@ -1,6 +1,5 @@
 #include "config.h"
 
-#include "dns_updater.hpp"
 #include "network_manager.hpp"
 #include "rtnetlink_server.hpp"
 #include "types.hpp"
@@ -23,7 +22,6 @@ using phosphor::logging::level;
 using phosphor::logging::log;
 using sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
 
-constexpr char NETWORK_STATE_FILE[] = "/run/systemd/netif/state";
 constexpr char NETWORK_CONF_DIR[] = "/etc/systemd/network";
 
 constexpr char DEFAULT_OBJPATH[] = "/xyz/openbmc_project/network";
@@ -135,18 +133,6 @@ int main(int argc, char* argv[])
 
     // RTNETLINK event handler
     phosphor::network::rtnetlink::Server svr(eventPtr, smartSock);
-
-    // DNS entry handler
-    phosphor::network::inotify::Watch watch(
-        eventPtr, NETWORK_STATE_FILE,
-        std::bind(&phosphor::network::dns::updater::processDNSEntries,
-                  std::placeholders::_1));
-
-    // At this point, we have registered for the notifications for future
-    // events. However, if the file is already populated before this, then
-    // they won't ever get notified and thus we need to read once before
-    // waiting on change events
-    phosphor::network::dns::updater::processDNSEntries(NETWORK_STATE_FILE);
 
     sd_event_loop(eventPtr.get());
 }

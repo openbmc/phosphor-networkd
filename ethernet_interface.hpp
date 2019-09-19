@@ -267,12 +267,6 @@ class EthernetInterface : public Ifaces
      */
     ServerList getNTPServersFromConf();
 
-    /** @brief write the DNS entries to resolver file.
-     *  @param[in] dnsList - DNS server list which needs to be written.
-     *  @param[in] file    - File to write the name server entries to.
-     */
-    void writeDNSEntries(const ServerList& dnsList, const std::string& file);
-
     /** @brief get the name server details from the network conf
      *
      */

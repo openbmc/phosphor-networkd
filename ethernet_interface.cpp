@@ -461,15 +461,9 @@ ServerList EthernetInterface::nameservers(ServerList value)
         EthernetInterfaceIntf::nameservers(value);
 
         writeConfigurationFile();
-
-        // Currently we don't have systemd-resolved enabled
-        // in the openbmc. Once we update the network conf file,
-        // it should be read by systemd-resolved.service.
-
-        // The other reason to write the resolv conf is,
-        // we don't want to restart the networkd for nameserver change.
-        // as restarting of systemd-networkd takes more then 2 secs
-        writeDNSEntries(value, resolvConfFile);
+        // resolved reads the DNS server configuration from the
+        // network file.
+        manager.restartSystemdUnit(networkdService);
     }
     catch (InternalFailure& e)
     {
@@ -496,24 +490,6 @@ ServerList EthernetInterface::getNameServerFromConf()
                           entry("RC=%d", rc));
     }
     return servers;
-}
-
-void EthernetInterface::writeDNSEntries(const ServerList& dnsList,
-                                        const std::string& file)
-{
-    std::fstream outStream(file, std::fstream::out);
-    if (!outStream.is_open())
-    {
-        log<level::ERR>("Unable to open the file",
-                        entry("FILE=%s", file.c_str()));
-        elog<InternalFailure>();
-    }
-
-    outStream << "### Generated manually via dbus settings ###\n";
-    for (const auto& server : dnsList)
-    {
-        outStream << "nameserver " << server << "\n";
-    }
 }
 
 void EthernetInterface::loadVLAN(VlanId id)
