@@ -459,7 +459,6 @@ ServerList EthernetInterface::nameservers(ServerList value)
     try
     {
         EthernetInterfaceIntf::nameservers(value);
-
         writeConfigurationFile();
         // resolved reads the DNS server configuration from the
         // network file.
@@ -650,6 +649,18 @@ void EthernetInterface::writeConfigurationFile()
         stream << "VLAN=" << intf.second->EthernetInterface::interfaceName()
                << "\n";
     }
+    // Add the NTP server
+    for (const auto& ntp : EthernetInterfaceIntf::nTPServers())
+    {
+        stream << "NTP=" << ntp << "\n";
+    }
+
+    // Add the DNS entry
+    for (const auto& dns : EthernetInterfaceIntf::nameservers())
+    {
+        stream << "DNS=" << dns << "\n";
+    }
+
     // Add the DHCP entry
     auto value = dHCPEnabled() ? "true"s : "false"s;
     stream << "DHCP="s + value + "\n";
@@ -658,18 +669,6 @@ void EthernetInterface::writeConfigurationFile()
     // in config file.
     if (dHCPEnabled() == false)
     {
-        // Add the NTP server
-        for (const auto& ntp : EthernetInterfaceIntf::nTPServers())
-        {
-            stream << "NTP=" << ntp << "\n";
-        }
-
-        // Add the DNS entry
-        for (const auto& dns : EthernetInterfaceIntf::nameservers())
-        {
-            stream << "DNS=" << dns << "\n";
-        }
-
         // Static
         for (const auto& addr : addrs)
         {
