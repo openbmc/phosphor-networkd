@@ -35,7 +35,15 @@ namespace network
 
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+using NotAllowed = sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
+using NotAllowedArgument = xyz::openbmc_project::Common::NotAllowed;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
+
+constexpr auto RESOLVED_SERVICE = "org.freedesktop.resolve1";
+constexpr auto RESOLVED_INTERFACE = "org.freedesktop.resolve1.Link";
+constexpr auto PROPERTY_INTERFACE = "org.freedesktop.DBus.Properties";
+constexpr auto RESOLVED_SERVICE_PATH = "/org/freedesktop/resolve1/link/";
+constexpr auto METHOD_GET = "Get";
 
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
@@ -51,7 +59,8 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     EthernetInterfaceIntf::iPv6AcceptRA(getIPv6AcceptRAFromConf());
     MacAddressIntf::mACAddress(getMACAddress(intfName));
     EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
-    EthernetInterfaceIntf::nameservers(getNameServerFromConf());
+    EthernetInterfaceIntf::nameservers(getNameServerFromResolvd());
+    EthernetInterfaceIntf::staticNameServers(getstaticNameServerFromConf());
 
     // Emit deferred signal.
     if (emitSignal)
@@ -444,6 +453,12 @@ bool EthernetInterface::dHCPEnabled(bool value)
 
 ServerList EthernetInterface::nameservers(ServerList value)
 {
+    elog<NotAllowed>(NotAllowedArgument::REASON("ReadOnly Property"));
+    return EthernetInterfaceIntf::nameservers();
+}
+
+ServerList EthernetInterface::staticNameServers(ServerList value)
+{
     for (const auto& nameserverip : value)
     {
         if (!isValidIP(AF_INET, nameserverip) &&
@@ -452,13 +467,13 @@ ServerList EthernetInterface::nameservers(ServerList value)
             log<level::ERR>("Not a valid IP address"),
                 entry("ADDRESS=%s", nameserverip.c_str());
             elog<InvalidArgument>(
-                Argument::ARGUMENT_NAME("Nameserver"),
+                Argument::ARGUMENT_NAME("StaticNameserver"),
                 Argument::ARGUMENT_VALUE(nameserverip.c_str()));
         }
     }
     try
     {
-        EthernetInterfaceIntf::nameservers(value);
+        EthernetInterfaceIntf::staticNameServers(value);
         writeConfigurationFile();
         // resolved reads the DNS server configuration from the
         // network file.
@@ -468,10 +483,10 @@ ServerList EthernetInterface::nameservers(ServerList value)
     {
         log<level::ERR>("Exception processing DNS entries");
     }
-    return EthernetInterfaceIntf::nameservers();
+    return EthernetInterfaceIntf::staticNameServers();
 }
 
-ServerList EthernetInterface::getNameServerFromConf()
+ServerList EthernetInterface::getstaticNameServerFromConf()
 {
     fs::path confPath = manager.getConfDir();
 
@@ -487,6 +502,58 @@ ServerList EthernetInterface::getNameServerFromConf()
     {
         log<level::DEBUG>("Unable to get the value for network[DNS]",
                           entry("RC=%d", rc));
+    }
+    return servers;
+}
+
+ServerList EthernetInterface::getNameServerFromResolvd()
+{
+    ServerList servers;
+    std::string OBJ_PATH = RESOLVED_SERVICE_PATH + std::to_string(ifIndex());
+
+    /*
+      The DNS property under org.freedesktop.resolve1.Link interface contains
+      an array containing all DNS servers currently used by resolved. It
+      contains similar information as the DNS server data written to
+      /run/systemd/resolve/resolv.conf.
+
+      Each structure in the array consists of a numeric network interface index,
+      an address family, and a byte array containing the DNS server address
+      (either 4 bytes in length for IPv4 or 16 bytes in lengths for IPv6).
+      The array contains DNS servers configured system-wide, including those
+      possibly read from a foreign /etc/resolv.conf or the DNS= setting in
+      /etc/systemd/resolved.conf, as well as per-interface DNS server
+      information either retrieved from systemd-networkd or configured by
+      external software via SetLinkDNS().
+    */
+
+    using type = std::vector<std::tuple<int32_t, std::vector<uint8_t>>>;
+    std::variant<type> name; // Variable to capture the DNS property
+    auto method = bus.new_method_call(RESOLVED_SERVICE, OBJ_PATH.c_str(),
+                                      PROPERTY_INTERFACE, METHOD_GET);
+
+    method.append(RESOLVED_INTERFACE, "DNS");
+    auto reply = bus.call(method);
+
+    try
+    {
+        reply.read(name);
+    }
+    catch (const sdbusplus::exception::SdBusError& e)
+    {
+        log<level::ERR>("Failed to get DNS information from Systemd-Resolved");
+    }
+    auto tupleVector = std::get_if<type>(&name);
+    for (auto i = tupleVector->begin(); i != tupleVector->end(); ++i)
+    {
+        std::vector<uint8_t> ipaddress = std::get<1>(*i);
+        std::string address;
+        for (auto byte : ipaddress)
+        {
+            address += std::to_string(byte) + ".";
+        }
+        address.pop_back();
+        servers.push_back(address);
     }
     return servers;
 }
@@ -656,7 +723,7 @@ void EthernetInterface::writeConfigurationFile()
     }
 
     // Add the DNS entry
-    for (const auto& dns : EthernetInterfaceIntf::nameservers())
+    for (const auto& dns : EthernetInterfaceIntf::staticNameServers())
     {
         stream << "DNS=" << dns << "\n";
     }
