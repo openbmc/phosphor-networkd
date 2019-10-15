@@ -159,11 +159,11 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
     EXPECT_EQ(expectedObjectPath, getObjectPath(ipaddress, prefix, gateway));
 }
 
-TEST_F(TestEthernetInterface, addNameServers)
+TEST_F(TestEthernetInterface, addStaticNameServers)
 {
     ServerList servers = {"9.1.1.1", "9.2.2.2", "9.3.3.3"};
     EXPECT_CALL(manager, restartSystemdUnit(networkdService)).Times(1);
-    interface.nameservers(servers);
+    interface.staticNameServers(servers);
     fs::path filePath = confDir;
     filePath /= "00-bmc-test0.network";
     config::Parser parser(filePath.string());
