@@ -12,6 +12,7 @@
 #include <exception>
 #include <fstream>
 #include <sdbusplus/bus.hpp>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gtest/gtest.h>
 
@@ -25,7 +26,7 @@ class TestEthernetInterface : public testing::Test
   public:
     sdbusplus::bus::bus bus;
     MockManager manager;
-    EthernetInterface interface;
+    MockEthernetInterface interface;
     std::string confDir;
     TestEthernetInterface() :
         bus(sdbusplus::bus::new_default()),
@@ -53,12 +54,12 @@ class TestEthernetInterface : public testing::Test
 
     static constexpr ether_addr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};
 
-    static EthernetInterface makeInterface(sdbusplus::bus::bus& bus,
-                                           MockManager& manager)
+    static MockEthernetInterface makeInterface(sdbusplus::bus::bus& bus,
+                                               MockManager& manager)
     {
         mock_clear();
         mock_addIF("test0", 1, mac);
-        return {bus, "/xyz/openbmc_test/network/test0", false, manager};
+        return {bus, "/xyz/openbmc_test/network/test0", false, manager, true};
     }
 
     int countIPObjects()
@@ -159,11 +160,11 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
     EXPECT_EQ(expectedObjectPath, getObjectPath(ipaddress, prefix, gateway));
 }
 
-TEST_F(TestEthernetInterface, addNameServers)
+TEST_F(TestEthernetInterface, addStaticNameServers)
 {
     ServerList servers = {"9.1.1.1", "9.2.2.2", "9.3.3.3"};
     EXPECT_CALL(manager, restartSystemdUnit(networkdService)).Times(1);
-    interface.nameservers(servers);
+    interface.staticNameServers(servers);
     fs::path filePath = confDir;
     filePath /= "00-bmc-test0.network";
     config::Parser parser(filePath.string());
@@ -171,6 +172,21 @@ TEST_F(TestEthernetInterface, addNameServers)
     config::ValueList values;
     std::tie(rc, values) = parser.getValues("Network", "DNS");
     EXPECT_EQ(servers, values);
+}
+
+TEST_F(TestEthernetInterface, addDynamicNameServers)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+    ServerList servers = {"9.1.1.1", "9.2.2.2", "9.3.3.3"};
+    EXPECT_THROW(interface.nameservers(servers), NotAllowed);
+}
+
+TEST_F(TestEthernetInterface, getDynamicNameServers)
+{
+    ServerList servers = {"9.1.1.1", "9.2.2.2", "9.3.3.3"};
+    EXPECT_CALL(interface, getNameServerFromResolvd())
+        .WillRepeatedly(testing::Return(servers));
+    EXPECT_EQ(interface.getNameServerFromResolvd(), servers);
 }
 
 TEST_F(TestEthernetInterface, addNTPServers)

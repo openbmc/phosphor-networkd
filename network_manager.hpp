@@ -66,7 +66,7 @@ class Manager : public details::VLANCreateIface
      *         from the system and create the ethernet interraces
      *         dbus object.
      */
-    void createInterfaces();
+    virtual void createInterfaces();
 
     /** @brief create child interface object and the system conf object.
      */
