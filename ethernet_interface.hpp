@@ -86,6 +86,10 @@ class EthernetInterface : public Ifaces
                       bool dhcpEnabled, Manager& parent,
                       bool emitSignal = true);
 
+    /** @brief Function used to load the nameservers.
+     */
+    virtual void loadNameServers();
+
     /** @brief Function to create ipaddress dbus object.
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipaddress- IP address.
@@ -179,6 +183,12 @@ class EthernetInterface : public Ifaces
      *  @param[in] value - vector of DNS servers.
      */
     ServerList nameservers(ServerList value) override;
+
+    /** @brief sets the Static DNS/nameservers.
+     *  @param[in] value - vector of DNS servers.
+     */
+
+    ServerList staticNameServers(ServerList value) override;
 
     /** @brief create Vlan interface.
      *  @param[in] id- VLAN identifier.
@@ -275,7 +285,8 @@ class EthernetInterface : public Ifaces
     /** @brief get the name server details from the network conf
      *
      */
-    ServerList getNameServerFromConf();
+    virtual ServerList getNameServerFromResolvd();
+    ServerList getstaticNameServerFromConf();
 
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;

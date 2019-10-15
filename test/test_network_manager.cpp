@@ -27,7 +27,7 @@ class TestNetworkManager : public testing::Test
 {
   public:
     sdbusplus::bus::bus bus;
-    Manager manager;
+    MockManager manager;
     std::string confDir;
     TestNetworkManager() :
         bus(sdbusplus::bus::new_default()),
@@ -63,7 +63,6 @@ TEST_F(TestNetworkManager, NoInterface)
     using namespace sdbusplus::xyz::openbmc_project::Common::Error;
     EXPECT_THROW(createInterfaces(), InternalFailure);
 }
-
 // getifaddrs returns single interface.
 TEST_F(TestNetworkManager, WithSingleInterface)
 {
@@ -96,6 +95,5 @@ TEST_F(TestNetworkManager, WithMultipleInterfaces)
     EXPECT_EQ(true, manager.hasInterface("igb0"));
     EXPECT_EQ(true, manager.hasInterface("igb1"));
 }
-
 } // namespace network
 } // namespace phosphor
