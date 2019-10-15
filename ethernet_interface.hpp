@@ -180,6 +180,12 @@ class EthernetInterface : public Ifaces
      */
     ServerList nameservers(ServerList value) override;
 
+    /** @brief sets the Static DNS/nameservers.
+     *  @param[in] value - vector of DNS servers.
+     */
+
+    ServerList staticNameServers(ServerList value) override;
+
     /** @brief create Vlan interface.
      *  @param[in] id- VLAN identifier.
      */
@@ -275,7 +281,8 @@ class EthernetInterface : public Ifaces
     /** @brief get the name server details from the network conf
      *
      */
-    ServerList getNameServerFromConf();
+    virtual ServerList getNameServerFromResolvd();
+    ServerList getstaticNameServerFromConf();
 
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;
