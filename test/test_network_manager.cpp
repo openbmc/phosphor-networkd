@@ -27,7 +27,7 @@ class TestNetworkManager : public testing::Test
 {
   public:
     sdbusplus::bus::bus bus;
-    Manager manager;
+    MockManager manager;
     std::string confDir;
     TestNetworkManager() :
         bus(sdbusplus::bus::new_default()),

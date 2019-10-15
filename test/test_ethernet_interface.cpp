@@ -25,7 +25,8 @@ class TestEthernetInterface : public testing::Test
   public:
     sdbusplus::bus::bus bus;
     MockManager manager;
-    EthernetInterface interface;
+    // EthernetInterface interface;
+    MockEthernetInterface interface;
     std::string confDir;
     TestEthernetInterface() :
         bus(sdbusplus::bus::new_default()),
@@ -53,12 +54,13 @@ class TestEthernetInterface : public testing::Test
 
     static constexpr ether_addr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};
 
-    static EthernetInterface makeInterface(sdbusplus::bus::bus& bus,
-                                           MockManager& manager)
+    static MockEthernetInterface makeInterface(sdbusplus::bus::bus& bus,
+                                               MockManager& manager)
     {
         mock_clear();
         mock_addIF("test0", 1, mac);
-        return {bus, "/xyz/openbmc_test/network/test0", false, manager};
+
+        return {bus, "/xyz/openbmc_test/network/test0", true, manager, true};
     }
 
     int countIPObjects()
@@ -159,11 +161,14 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
     EXPECT_EQ(expectedObjectPath, getObjectPath(ipaddress, prefix, gateway));
 }
 
-TEST_F(TestEthernetInterface, addNameServers)
+TEST_F(TestEthernetInterface, addStaticNameServers)
 {
+
     ServerList servers = {"9.1.1.1", "9.2.2.2", "9.3.3.3"};
+    EXPECT_CALL(interface, getNameServerFromResolvd())
+        .WillRepeatedly(testing::Return(servers));
     EXPECT_CALL(manager, restartSystemdUnit(networkdService)).Times(1);
-    interface.nameservers(servers);
+    interface.staticNameServers(servers);
     fs::path filePath = confDir;
     filePath /= "00-bmc-test0.network";
     config::Parser parser(filePath.string());
