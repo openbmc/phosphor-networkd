@@ -85,6 +85,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     EthernetInterfaceIntf::autoNeg(std::get<2>(ifInfo));
     EthernetInterfaceIntf::speed(std::get<0>(ifInfo));
     EthernetInterfaceIntf::linkUp(std::get<3>(ifInfo));
+    EthernetInterfaceIntf::nICEnabled(std::get<4>(ifInfo));
 #endif
 
     // Emit deferred signal.
@@ -263,11 +264,12 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
     Autoneg autoneg{0};
     DuplexMode duplex{0};
     LinkUp linkState{false};
+    NICEnabled nicEnabled{false};
     EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
 
     if (eifSocket.sock < 0)
     {
-        return std::make_tuple(speed, duplex, autoneg, linkState);
+        return std::make_tuple(speed, duplex, autoneg, linkState, nicEnabled);
     }
 
     std::strncpy(ifr.ifr_name, interfaceName().c_str(), IFNAMSIZ - 1);
@@ -281,9 +283,10 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
         autoneg = edata.autoneg;
     }
 
+    nicEnabled = nICEnabled();
     linkState = linkUp();
 
-    return std::make_tuple(speed, duplex, autoneg, linkState);
+    return std::make_tuple(speed, duplex, autoneg, linkState, nicEnabled);
 }
 #endif
 
@@ -488,6 +491,66 @@ bool EthernetInterface::linkUp() const
         log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
                         entry("ERROR=%s", strerror(errno)));
     }
+    return value;
+}
+
+bool EthernetInterface::nICEnabled() const
+{
+    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+    bool value = EthernetInterfaceIntf::nICEnabled();
+
+    if (eifSocket.sock < 0)
+    {
+        return value;
+    }
+
+    ifreq ifr{0};
+    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
+    if (ioctl(eifSocket.sock, SIOCGIFFLAGS, &ifr) == 0)
+    {
+        value = static_cast<bool>(ifr.ifr_flags & IFF_UP);
+    }
+    else
+    {
+        log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
+                        entry("ERROR=%s", strerror(errno)));
+    }
+    return value;
+}
+
+bool EthernetInterface::nICEnabled(bool value)
+{
+    if (value == EthernetInterfaceIntf::nICEnabled())
+    {
+        return value;
+    }
+
+    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+    if (eifSocket.sock < 0)
+    {
+        return EthernetInterfaceIntf::nICEnabled();
+    }
+
+    ifreq ifr{0};
+    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
+    if (ioctl(eifSocket.sock, SIOCGIFFLAGS, &ifr) != 0)
+    {
+        log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
+                        entry("ERROR=%s", strerror(errno)));
+        return EthernetInterfaceIntf::nICEnabled();
+    }
+
+    ifr.ifr_flags &= ~IFF_UP;
+    ifr.ifr_flags |= value ? IFF_UP : 0;
+
+    if (ioctl(eifSocket.sock, SIOCSIFFLAGS, &ifr) != 0)
+    {
+        log<level::ERR>("ioctl failed for SIOCSIFFLAGS:",
+                        entry("ERROR=%s", strerror(errno)));
+        return EthernetInterfaceIntf::nICEnabled();
+    }
+    EthernetInterfaceIntf::nICEnabled(value);
+    writeConfigurationFile();
 
     return value;
 }
@@ -681,6 +744,11 @@ void EthernetInterface::writeConfigurationFile()
     if (!mac.empty())
     {
         stream << "MACAddress=" << mac << "\n";
+    }
+
+    if (!nICEnabled())
+    {
+        stream << "Unmanaged=yes\n";
     }
 
     // write the network section
