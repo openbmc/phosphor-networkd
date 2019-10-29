@@ -50,9 +50,10 @@ class Neighbor;
 using LinkSpeed = uint16_t;
 using DuplexMode = uint8_t;
 using Autoneg = uint8_t;
+using NICEnabled = bool;
 using VlanId = uint32_t;
 using InterfaceName = std::string;
-using InterfaceInfo = std::tuple<LinkSpeed, DuplexMode, Autoneg>;
+using InterfaceInfo = std::tuple<LinkSpeed, DuplexMode, Autoneg, NICEnabled>;
 using AddressMap = std::map<std::string, std::shared_ptr<IPAddress>>;
 using NeighborMap = std::map<std::string, std::shared_ptr<Neighbor>>;
 using VlanInterfaceMap =
@@ -150,6 +151,9 @@ class EthernetInterface : public Ifaces
     /** Set value of DHCPEnabled */
     bool dHCPEnabled(bool value) override;
 
+    /** Set value of NICEnabled */
+    bool nICEnabled(bool value) override;
+
     /** @brief sets the MAC address.
      *  @param[in] value - MAC address which needs to be set on the system.
      *  @returns macAddress of the interface or throws an error.
@@ -197,6 +201,7 @@ class EthernetInterface : public Ifaces
 
     using EthernetInterfaceIntf::dHCPEnabled;
     using EthernetInterfaceIntf::interfaceName;
+    using EthernetInterfaceIntf::nICEnabled;
     using MacAddressIntf::mACAddress;
 
     /** @brief Absolute path of the resolv conf file */
