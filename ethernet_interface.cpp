@@ -56,6 +56,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
 
     EthernetInterfaceIntf::autoNeg(std::get<2>(ifInfo));
     EthernetInterfaceIntf::speed(std::get<0>(ifInfo));
+    EthernetInterfaceIntf::nICEnabled(std::get<3>(ifInfo));
 
     // Emit deferred signal.
     if (emitSignal)
@@ -233,6 +234,7 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
     LinkSpeed speed{0};
     Autoneg autoneg{0};
     DuplexMode duplex{0};
+    NICEnabled nicEnabled{false};
     do
     {
         sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
@@ -257,13 +259,21 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
         speed = edata.speed;
         duplex = edata.duplex;
         autoneg = edata.autoneg;
+
+        if (ioctl(sock, SIOCGIFFLAGS, &ifr) < 0)
+        {
+            log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
+                            entry("ERROR=%s", strerror(errno)));
+            break;
+        }
+        nicEnabled = static_cast<bool>(ifr.ifr_flags & IFF_UP);
     } while (0);
 
-    if (sock)
+    if (sock >= 0)
     {
         close(sock);
     }
-    return std::make_tuple(speed, duplex, autoneg);
+    return std::make_tuple(speed, duplex, autoneg, nicEnabled);
 }
 
 /** @brief get the mac address of the interface.
@@ -287,9 +297,11 @@ std::string
     {
         log<level::ERR>("ioctl failed for SIOCGIFHWADDR:",
                         entry("ERROR=%s", strerror(errno)));
+        close(sock);
         elog<InternalFailure>();
     }
 
+    close(sock);
     static_assert(sizeof(ifr.ifr_hwaddr.sa_data) >= sizeof(ether_addr));
     std::string_view hwaddr(reinterpret_cast<char*>(ifr.ifr_hwaddr.sa_data),
                             sizeof(ifr.ifr_hwaddr.sa_data));
@@ -443,6 +455,54 @@ bool EthernetInterface::dHCPEnabled(bool value)
 
     EthernetInterfaceIntf::dHCPEnabled(value);
     manager.writeToConfigurationFile();
+    return value;
+}
+
+bool EthernetInterface::nICEnabled(bool value)
+{
+    if (value == EthernetInterfaceIntf::nICEnabled())
+    {
+        return value;
+    }
+
+    int sock{-1};
+    ifreq ifr{0};
+    EthernetInterfaceIntf::nICEnabled(value);
+    sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+    if (sock < 0)
+    {
+        log<level::ERR>("socket creation  failed:",
+                        entry("ERROR=%s", strerror(errno)));
+        return value;
+    }
+
+    do
+    {
+        std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE);
+        if (ioctl(sock, SIOCGIFFLAGS, &ifr) != 0)
+        {
+            log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
+                            entry("ERROR=%s", strerror(errno)));
+            break;
+        }
+        if (value)
+        {
+            ifr.ifr_flags |= IFF_UP;
+        }
+        else
+        {
+            ifr.ifr_flags &= ~IFF_UP;
+        }
+
+        if (ioctl(sock, SIOCSIFFLAGS, &ifr) != 0)
+        {
+            log<level::ERR>("ioctl failed for SIOCSIFFLAGS:",
+                            entry("ERROR=%s", strerror(errno)));
+            break;
+        }
+    } while (0);
+
+    close(sock);
     return value;
 }
 
