@@ -612,7 +612,12 @@ ether_addr fromString(const char* str)
 
 std::string toString(const ether_addr& mac)
 {
-    return ether_ntoa(&mac);
+    char buf[18];
+    snprintf(buf, 18, "%02x:%02x:%02x:%02x:%02x:%02x", mac.ether_addr_octet[0],
+             mac.ether_addr_octet[1], mac.ether_addr_octet[2],
+             mac.ether_addr_octet[3], mac.ether_addr_octet[4],
+             mac.ether_addr_octet[5]);
+    return buf;
 }
 
 bool isEmpty(const ether_addr& mac)
