@@ -324,6 +324,10 @@ TEST(MacToString, Valid)
 {
     EXPECT_EQ("11:22:33:44:55:66",
               toString({0x11, 0x22, 0x33, 0x44, 0x55, 0x66}));
+    EXPECT_EQ("01:02:03:04:05:67",
+              toString({0x01, 0x02, 0x03, 0x04, 0x05, 0x67}));
+    EXPECT_EQ("00:00:00:00:00:00",
+              toString({0x00, 0x00, 0x00, 0x00, 0x00, 0x00}));
 }
 
 TEST(MacIsEmpty, True)
