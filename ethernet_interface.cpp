@@ -56,6 +56,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
 
     EthernetInterfaceIntf::autoNeg(std::get<2>(ifInfo));
     EthernetInterfaceIntf::speed(std::get<0>(ifInfo));
+    EthernetInterfaceIntf::linkUp(std::get<3>(ifInfo));
 
     // Emit deferred signal.
     if (emitSignal)
@@ -233,6 +234,8 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
     LinkSpeed speed{0};
     Autoneg autoneg{0};
     DuplexMode duplex{0};
+    LinkUp linkUp{false};
+
     do
     {
         sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
@@ -259,11 +262,21 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
         autoneg = edata.autoneg;
     } while (0);
 
+    if (ioctl(sock, SIOCGIFFLAGS, &ifr) >= 0)
+    {
+        linkUp = static_cast<bool>(ifr.ifr_flags & IFF_RUNNING);
+    }
+    else
+    {
+        log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
+                        entry("ERROR=%s", strerror(errno)));
+    }
+
     if (sock)
     {
         close(sock);
     }
-    return std::make_tuple(speed, duplex, autoneg);
+    return std::make_tuple(speed, duplex, autoneg, linkUp);
 }
 
 /** @brief get the mac address of the interface.
@@ -443,6 +456,38 @@ bool EthernetInterface::dHCPEnabled(bool value)
 
     EthernetInterfaceIntf::dHCPEnabled(value);
     manager.writeToConfigurationFile();
+    return value;
+}
+
+bool EthernetInterface::linkUp() const
+{
+    int sock{-1};
+    ifreq ifr{0};
+    bool value;
+
+    sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+    if (sock < 0)
+    {
+        log<level::ERR>("socket creation  failed:",
+                        entry("ERROR=%s", strerror(errno)));
+        return value;
+    }
+
+    do
+    {
+        std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE);
+        if (ioctl(sock, SIOCGIFFLAGS, &ifr) != 0)
+        {
+            log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
+                            entry("ERROR=%s", strerror(errno)));
+            break;
+        }
+
+        value = static_cast<bool>(ifr.ifr_flags & IFF_RUNNING);
+    } while (0);
+
+    close(sock);
+
     return value;
 }
 
