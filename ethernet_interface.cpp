@@ -37,6 +37,28 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
+struct EthernetIntfSocket
+{
+    EthernetIntfSocket(int domain, int type, int protocol)
+    {
+        if ((sock = socket(domain, type, protocol)) < 0)
+        {
+            log<level::ERR>("socket creation failed:",
+                            entry("ERROR=%s", strerror(errno)));
+        }
+    }
+
+    ~EthernetIntfSocket()
+    {
+        if (sock >= 0)
+        {
+            close(sock);
+        }
+    }
+
+    int sock{-1};
+};
+
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
                                      bool dhcpEnabled, Manager& parent,
@@ -56,6 +78,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
 
     EthernetInterfaceIntf::autoNeg(std::get<2>(ifInfo));
     EthernetInterfaceIntf::speed(std::get<0>(ifInfo));
+    EthernetInterfaceIntf::linkUp(std::get<3>(ifInfo));
 
     // Emit deferred signal.
     if (emitSignal)
@@ -227,43 +250,33 @@ TODO: https://github.com/openbmc/openbmc/issues/1484
 
 InterfaceInfo EthernetInterface::getInterfaceInfo() const
 {
-    int sock{-1};
     ifreq ifr{0};
     ethtool_cmd edata{0};
     LinkSpeed speed{0};
     Autoneg autoneg{0};
     DuplexMode duplex{0};
-    do
+    LinkUp linkState{false};
+    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+
+    if (eifSocket.sock < 0)
     {
-        sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
-        if (sock < 0)
-        {
-            log<level::ERR>("socket creation  failed:",
-                            entry("ERROR=%s", strerror(errno)));
-            break;
-        }
+        return std::make_tuple(speed, duplex, autoneg, linkState);
+    }
 
-        strcpy(ifr.ifr_name, interfaceName().c_str());
-        ifr.ifr_data = reinterpret_cast<char*>(&edata);
+    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IFNAMSIZ);
+    ifr.ifr_data = reinterpret_cast<char*>(&edata);
 
-        edata.cmd = ETHTOOL_GSET;
-
-        if (ioctl(sock, SIOCETHTOOL, &ifr) < 0)
-        {
-            log<level::ERR>("ioctl failed for SIOCETHTOOL:",
-                            entry("ERROR=%s", strerror(errno)));
-            break;
-        }
+    edata.cmd = ETHTOOL_GSET;
+    if (ioctl(eifSocket.sock, SIOCETHTOOL, &ifr) >= 0)
+    {
         speed = edata.speed;
         duplex = edata.duplex;
         autoneg = edata.autoneg;
-    } while (0);
-
-    if (sock)
-    {
-        close(sock);
     }
-    return std::make_tuple(speed, duplex, autoneg);
+
+    linkState = linkUp();
+
+    return std::make_tuple(speed, duplex, autoneg, linkState);
 }
 
 /** @brief get the mac address of the interface.
@@ -273,17 +286,17 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
 std::string
     EthernetInterface::getMACAddress(const std::string& interfaceName) const
 {
-    ifreq ifr{};
-    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
-    if (sock < 0)
+    std::string activeMACAddr = MacAddressIntf::mACAddress();
+    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+
+    if (eifSocket.sock < 0)
     {
-        log<level::ERR>("socket creation  failed:",
-                        entry("ERROR=%s", strerror(errno)));
-        elog<InternalFailure>();
+        return activeMACAddr;
     }
 
-    std::strcpy(ifr.ifr_name, interfaceName.c_str());
-    if (ioctl(sock, SIOCGIFHWADDR, &ifr) != 0)
+    ifreq ifr{};
+    std::strncpy(ifr.ifr_name, interfaceName.c_str(), IFNAMSIZ);
+    if (ioctl(eifSocket.sock, SIOCGIFHWADDR, &ifr) != 0)
     {
         log<level::ERR>("ioctl failed for SIOCGIFHWADDR:",
                         entry("ERROR=%s", strerror(errno)));
@@ -443,6 +456,32 @@ bool EthernetInterface::dHCPEnabled(bool value)
 
     EthernetInterfaceIntf::dHCPEnabled(value);
     manager.writeToConfigurationFile();
+    return value;
+}
+
+bool EthernetInterface::linkUp() const
+{
+    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+    bool value = EthernetInterfaceIntf::linkUp();
+
+    if (eifSocket.sock < 0)
+    {
+        return value;
+    }
+
+    ifreq ifr{0};
+    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
+    ifr.ifr_name[IF_NAMESIZE - 1] = 0;
+    if (ioctl(eifSocket.sock, SIOCGIFFLAGS, &ifr) == 0)
+    {
+        value = static_cast<bool>(ifr.ifr_flags & IFF_RUNNING);
+    }
+    else
+    {
+        log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
+                        entry("ERROR=%s", strerror(errno)));
+    }
+
     return value;
 }
 
