@@ -85,6 +85,16 @@ class EthernetInterface : public Ifaces
                       bool dhcpEnabled, Manager& parent,
                       bool emitSignal = true);
 
+    /** @brief Constructor to put object onto bus at a dbus path.
+     *  @param[in] bus - Bus to attach to.
+     *  @param[in] objPath - Path to attach at.
+     *  @param[in] parent - parent object.
+     *  @param[in] emitSignal - true if the object added signal needs to be
+     *                          send.
+     */
+    EthernetInterface(sdbusplus::bus::bus& bus, const std::string& objPath,
+                      Manager& parent, bool emitSignal = true);
+
     /** @brief Function to create ipaddress dbus object.
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipaddress- IP address.

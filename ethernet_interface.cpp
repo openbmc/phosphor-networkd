@@ -64,6 +64,27 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     }
 }
 
+EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
+                                     const std::string& objPath,
+                                     Manager& parent, bool emitSignal) :
+    Ifaces(bus, objPath.c_str(), true),
+    bus(bus), manager(parent), objPath(objPath)
+{
+    auto intfName = objPath.substr(objPath.rfind("/") + 1);
+    std::replace(intfName.begin(), intfName.end(), '_', '.');
+    interfaceName(intfName);
+    EthernetInterfaceIntf::dHCPEnabled(false);
+    EthernetInterfaceIntf::iPv6AcceptRA(getIPv6AcceptRAFromConf());
+    EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
+    EthernetInterfaceIntf::nameservers(getNameServerFromConf());
+
+    // Emit deferred signal.
+    if (emitSignal)
+    {
+        this->emit_object_added();
+    }
+}
+
 static IP::Protocol convertFamily(int family)
 {
     switch (family)
@@ -523,7 +544,7 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
     path += "_" + std::to_string(id);
 
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, path.c_str(), false, id, *this, manager);
+        bus, path.c_str(), id, *this, manager);
 
     // write the device file for the vlan interface.
     vlanIntf->writeDeviceFile();

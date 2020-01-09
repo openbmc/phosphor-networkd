@@ -22,13 +22,11 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
-                             const std::string& objPath, bool dhcpEnabled,
-                             uint32_t vlanID, EthernetInterface& intf,
-                             Manager& parent) :
+                             const std::string& objPath, uint32_t vlanID,
+                             EthernetInterface& intf, Manager& parent) :
     VlanIface(bus, objPath.c_str()),
     DeleteIface(bus, objPath.c_str()),
-    EthernetInterface(bus, objPath, dhcpEnabled, parent, false),
-    parentInterface(intf)
+    EthernetInterface(bus, objPath, parent, false), parentInterface(intf)
 {
     id(vlanID);
     VlanIface::interfaceName(EthernetInterface::interfaceName());
