@@ -12,6 +12,10 @@ dbuspolicy_DATA = \
 		xyz.openbmc_project.Network.conf
 endif
 
+if FEATURE_NIC_ETHTOOL
+phosphor_network_manager_CXXFLAGS += -DNIC_SUPPORTS_ETHTOOL
+endif
+
 bin_PROGRAMS = phosphor-network-manager ncsi-netlink
 
 noinst_HEADERS = \
