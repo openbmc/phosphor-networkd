@@ -79,11 +79,13 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     }
     EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
     EthernetInterfaceIntf::nameservers(getNameServerFromConf());
+#if NIC_SUPPORTS_ETHTOOL
     InterfaceInfo ifInfo = EthernetInterface::getInterfaceInfo();
 
     EthernetInterfaceIntf::autoNeg(std::get<2>(ifInfo));
     EthernetInterfaceIntf::speed(std::get<0>(ifInfo));
     EthernetInterfaceIntf::linkUp(std::get<3>(ifInfo));
+#endif
 
     // Emit deferred signal.
     if (emitSignal)
@@ -246,13 +248,13 @@ ObjectPath EthernetInterface::neighbor(std::string iPAddress,
     return objectPath;
 }
 
+#if NIC_SUPPORTS_ETHTOOL
 /*
-Note: We don't have support for  ethtool now
-will enable this code once we bring the ethtool
-in the image.
-TODO: https://github.com/openbmc/openbmc/issues/1484
+  Enable this code if your NIC driver supports the ETHTOOL features.
+  Do this by adding the following to your phosphor-network*.bbappend file.
+     EXTRA_OECONF_append = " --enable-nic-ethtool=yes"
+  The default compile mode is to omit getInterfaceInfo()
 */
-
 InterfaceInfo EthernetInterface::getInterfaceInfo() const
 {
     ifreq ifr{0};
@@ -283,6 +285,7 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
 
     return std::make_tuple(speed, duplex, autoneg, linkState);
 }
+#endif
 
 /** @brief get the mac address of the interface.
  *  @return macaddress on success
