@@ -113,6 +113,16 @@ AC_SUBST(DEFAULT_BUSNAME, ["$DEFAULT_BUSNAME"])
 AC_ARG_VAR(SYSTEMD_TARGET, "Target for starting this service")
 AS_IF([test "x$SYSTEMD_TARGET" == "x"], [SYSTEMD_TARGET="multi-user.target"])
 
+AC_ARG_ENABLE([nic_ethtool],
+    [  --enable-nic-ethtool  Enable/disable the use of ETHTOOL features in the NIC driver],
+    [case "${enableval}" in
+      yes) nic_ethtool=true ;;
+      no) nic_ethtool=false ;;
+      *) AC_MSG_ERROR([bad value ${nic_ethtool} for --enable-nic-ethtool]) ;;
+      esac],[nic_ethtool=false]
+      )
+AM_CONDITIONAL([FEATURE_NIC_ETHTOOL], [test x$nic_ethtool = xtrue])
+
 # Create configured output.
 AC_CONFIG_FILES([Makefile test/Makefile])
 AC_CONFIG_FILES([xyz.openbmc_project.Network.service])

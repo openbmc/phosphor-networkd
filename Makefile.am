@@ -99,6 +99,10 @@ phosphor_network_manager_CXXFLAGS = \
 		$(PHOSPHOR_LOGGING_CFLAGS) \
 		-flto
 
+if FEATURE_NIC_ETHTOOL
+phosphor_network_manager_CXXFLAGS += -DNIC_SUPPORTS_ETHTOOL
+endif
+
 xyz/openbmc_project/Network/VLAN/Create/server.cpp: xyz/openbmc_project/Network/VLAN/Create.interface.yaml xyz/openbmc_project/Network/VLAN/Create/server.hpp
 	@mkdir -p `dirname $@`
 	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-cpp xyz.openbmc_project.Network.VLAN.Create > $@
