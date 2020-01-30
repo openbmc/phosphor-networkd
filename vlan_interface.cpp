@@ -22,7 +22,7 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
-                             const std::string& objPath, bool dhcpEnabled,
+                             const std::string& objPath, DHCPConf dhcpEnabled,
                              uint32_t vlanID, EthernetInterface& intf,
                              Manager& parent) :
     VlanIface(bus, objPath.c_str()),
