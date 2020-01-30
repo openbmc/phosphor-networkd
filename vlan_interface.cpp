@@ -22,7 +22,7 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
-                             const std::string& objPath, bool dhcpEnabled,
+                             const std::string& objPath, DHCPConf dhcpEnabled,
                              bool nICEnabled, uint32_t vlanID,
                              EthernetInterface& intf, Manager& parent) :
     VlanIface(bus, objPath.c_str()),
@@ -32,22 +32,6 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
 {
     id(vlanID);
     EthernetInterfaceIntf::nICEnabled(nICEnabled);
-    VlanIface::interfaceName(EthernetInterface::interfaceName());
-    MacAddressIntf::mACAddress(parentInterface.mACAddress());
-
-    emit_object_added();
-}
-
-VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
-                             const std::string& objPath, bool dhcpEnabled,
-                             uint32_t vlanID, EthernetInterface& intf,
-                             Manager& parent) :
-    VlanIface(bus, objPath.c_str()),
-    DeleteIface(bus, objPath.c_str()),
-    EthernetInterface(bus, objPath, dhcpEnabled, parent, false),
-    parentInterface(intf)
-{
-    id(vlanID);
     VlanIface::interfaceName(EthernetInterface::interfaceName());
     MacAddressIntf::mACAddress(parentInterface.mACAddress());
 
