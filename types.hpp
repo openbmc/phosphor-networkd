@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ipaddress.hpp"
+
 #include <ifaddrs.h>
 #include <netinet/in.h>
 #include <systemd/sd-event.h>
