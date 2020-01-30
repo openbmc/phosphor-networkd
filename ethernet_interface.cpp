@@ -3,7 +3,6 @@
 #include "ethernet_interface.hpp"
 
 #include "config_parser.hpp"
-#include "ipaddress.hpp"
 #include "neighbor.hpp"
 #include "network_manager.hpp"
 #include "vlan_interface.hpp"
@@ -37,9 +36,12 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
+std::map<std::string, std::string> mapDHCPToSystemd = {
+    {"both", "true"}, {"v4", "ipv4"}, {"v6", "ipv6"}, {"none", "false"}};
+
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
-                                     bool dhcpEnabled, Manager& parent,
+                                     DHCPConf dhcpEnabled, Manager& parent,
                                      bool emitSignal) :
     Ifaces(bus, objPath.c_str(), true),
     bus(bus), manager(parent), objPath(objPath)
@@ -77,6 +79,65 @@ static IP::Protocol convertFamily(int family)
     throw std::invalid_argument("Bad address family");
 }
 
+void EthernetInterface::disableDHCP(IP::Protocol protocol)
+{
+    DHCPConf dhcpState = EthernetInterfaceIntf::dHCPEnabled();
+    if (dhcpState == EthernetInterface::DHCPConf::both)
+    {
+        if (protocol == IP::Protocol::IPv4)
+        {
+            dHCPEnabled(EthernetInterface::DHCPConf::v6);
+        }
+        else if (protocol == IP::Protocol::IPv6)
+        {
+            dHCPEnabled(EthernetInterface::DHCPConf::v4);
+        }
+    }
+    else if ((dhcpState == EthernetInterface::DHCPConf::v4) &&
+             (protocol == IP::Protocol::IPv4))
+    {
+        dHCPEnabled(EthernetInterface::DHCPConf::none);
+    }
+    else if ((dhcpState == EthernetInterface::DHCPConf::v6) &&
+             (protocol == IP::Protocol::IPv6))
+    {
+        dHCPEnabled(EthernetInterface::DHCPConf::none);
+    }
+}
+
+bool EthernetInterface::dhcpIsEnabled(IP::Protocol family, bool ignoreProtocol)
+{
+    return ((EthernetInterfaceIntf::dHCPEnabled() ==
+             EthernetInterface::DHCPConf::both) ||
+            ((EthernetInterfaceIntf::dHCPEnabled() ==
+              EthernetInterface::DHCPConf::v6) &&
+             ((family == IP::Protocol::IPv6) || ignoreProtocol)) ||
+            ((EthernetInterfaceIntf::dHCPEnabled() ==
+              EthernetInterface::DHCPConf::v4) &&
+             ((family == IP::Protocol::IPv4) || ignoreProtocol)));
+}
+
+bool EthernetInterface::dhcpToBeEnabled(IP::Protocol family,
+                                        std::string& nextDHCPState)
+{
+    return ((nextDHCPState == "true") ||
+            ((nextDHCPState == "ipv6") && (family == IP::Protocol::IPv6)) ||
+            ((nextDHCPState == "ipv4") && (family == IP::Protocol::IPv4)));
+}
+
+bool EthernetInterface::addressIsStatic(IP::AddressOrigin origin)
+{
+    return (
+#ifdef LINK_LOCAL_AUTOCONFIGURATION
+        (origin == IP::AddressOrigin::Static)
+#else
+        (origin == IP::AddressOrigin::Static ||
+         origin == IP::AddressOrigin::LinkLocal)
+#endif
+
+    );
+}
+
 void EthernetInterface::createIPAddressObjects()
 {
     addrs.clear();
@@ -87,7 +148,7 @@ void EthernetInterface::createIPAddressObjects()
     {
         IP::Protocol addressType = convertFamily(addr.addrType);
         IP::AddressOrigin origin = IP::AddressOrigin::Static;
-        if (dHCPEnabled())
+        if (dhcpIsEnabled(addressType))
         {
             origin = IP::AddressOrigin::DHCP;
         }
@@ -148,11 +209,11 @@ ObjectPath EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
                                  uint8_t prefixLength, std::string gateway)
 {
 
-    if (dHCPEnabled())
+    if (dhcpIsEnabled(protType))
     {
         log<level::INFO>("DHCP enabled on the interface"),
             entry("INTERFACE=%s", interfaceName().c_str());
-        dHCPEnabled(false);
+        disableDHCP(protType);
     }
 
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
@@ -434,7 +495,7 @@ bool EthernetInterface::iPv6AcceptRA(bool value)
     return value;
 }
 
-bool EthernetInterface::dHCPEnabled(bool value)
+EthernetInterface::DHCPConf EthernetInterface::dHCPEnabled(DHCPConf value)
 {
     if (value == EthernetInterfaceIntf::dHCPEnabled())
     {
@@ -501,7 +562,7 @@ void EthernetInterface::loadVLAN(VlanId id)
     std::string path = objPath;
     path += "_" + std::to_string(id);
 
-    auto dhcpEnabled =
+    DHCPConf dhcpEnabled =
         getDHCPValue(manager.getConfDir().string(), vlanInterfaceName);
 
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
@@ -523,7 +584,8 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
     path += "_" + std::to_string(id);
 
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, path.c_str(), false, id, *this, manager);
+        bus, path.c_str(), EthernetInterface::DHCPConf::none, id, *this,
+        manager);
 
     // write the device file for the vlan interface.
     vlanIntf->writeDeviceFile();
@@ -596,8 +658,6 @@ void EthernetInterface::writeConfigurationFile()
     // write all the static ip address in the systemd-network conf file
 
     using namespace std::string_literals;
-    using AddressOrigin =
-        sdbusplus::xyz::openbmc_project::Network::server::IP::AddressOrigin;
     namespace fs = std::experimental::filesystem;
 
     // if there is vlan interafce then write the configuration file
@@ -666,42 +726,45 @@ void EthernetInterface::writeConfigurationFile()
     }
 
     // Add the DHCP entry
-    auto value = dHCPEnabled() ? "true"s : "false"s;
-    stream << "DHCP="s + value + "\n";
+    std::string value = convertForMessage(EthernetInterfaceIntf::dHCPEnabled());
+    std::string::size_type loc = value.rfind(".");
+    std::string requestedDHCPState = value.substr(loc + 1);
+    std::string mappedDHCPState = mapDHCPToSystemd[requestedDHCPState];
+    stream << "DHCP="s + mappedDHCPState + "\n";
 
-    // When the interface configured as dhcp, we don't need below given entries
-    // in config file.
-    if (dHCPEnabled() == false)
+    bool dhcpv6Requested = dhcpToBeEnabled(IP::Protocol::IPv6, mappedDHCPState);
+    bool dhcpv4Requested = dhcpToBeEnabled(IP::Protocol::IPv4, mappedDHCPState);
+    // Static IP addresses
+    for (const auto& addr : addrs)
     {
-        // Static
-        for (const auto& addr : addrs)
+        bool isValidIPv4 = isValidIP(AF_INET, addr.second->address());
+        bool isValidIPv6 = isValidIP(AF_INET6, addr.second->address());
+        if (((!dhcpv4Requested && isValidIPv4) ||
+             (!dhcpv6Requested && isValidIPv6)) &&
+            addressIsStatic(addr.second->origin()))
         {
-            if (addr.second->origin() == AddressOrigin::Static
-#ifndef LINK_LOCAL_AUTOCONFIGURATION
-                || addr.second->origin() == AddressOrigin::LinkLocal
-#endif
-            )
-            {
-                std::string address =
-                    addr.second->address() + "/" +
-                    std::to_string(addr.second->prefixLength());
+            // Process all static addresses
+            std::string address = addr.second->address() + "/" +
+                                  std::to_string(addr.second->prefixLength());
 
-                stream << "Address=" << address << "\n";
-            }
+            // build the address entries. Do not use [Network] shortcuts to
+            // insert address entries.
+            stream << "[Address]\n";
+            stream << "Address=" << address << "\n";
         }
+    }
 
-        if (manager.getSystemConf())
+    if (manager.getSystemConf())
+    {
+        const auto& gateway = manager.getSystemConf()->defaultGateway();
+        if (!gateway.empty())
         {
-            const auto& gateway = manager.getSystemConf()->defaultGateway();
-            if (!gateway.empty())
-            {
-                stream << "Gateway=" << gateway << "\n";
-            }
-            const auto& gateway6 = manager.getSystemConf()->defaultGateway6();
-            if (!gateway6.empty())
-            {
-                stream << "Gateway=" << gateway6 << "\n";
-            }
+            stream << "Gateway=" << gateway << "\n";
+        }
+        const auto& gateway6 = manager.getSystemConf()->defaultGateway6();
+        if (!gateway6.empty())
+        {
+            stream << "Gateway=" << gateway6 << "\n";
         }
     }
 
@@ -812,7 +875,7 @@ std::string EthernetInterface::mACAddress(std::string value)
 
 void EthernetInterface::deleteAll()
 {
-    if (EthernetInterfaceIntf::dHCPEnabled())
+    if (dhcpIsEnabled(IP::Protocol::IPv4, true))
     {
         log<level::INFO>("DHCP enabled on the interface"),
             entry("INTERFACE=%s", interfaceName().c_str());
