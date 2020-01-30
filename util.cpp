@@ -412,9 +412,11 @@ std::optional<std::string> interfaceToUbootEthAddr(const char* intf)
     return "eth" + std::to_string(idx) + "addr";
 }
 
-bool getDHCPValue(const std::string& confDir, const std::string& intf)
+EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
+                                             const std::string& intf)
 {
-    bool dhcp = false;
+    EthernetInterfaceIntf::DHCPConf dhcp =
+        EthernetInterfaceIntf::DHCPConf::none;
     // Get the interface mode value from systemd conf
     // using namespace std::string_literals;
     fs::path confPath = confDir;
@@ -436,7 +438,15 @@ bool getDHCPValue(const std::string& confDir, const std::string& intf)
     // There will be only single value for DHCP key.
     if (values[0] == "true")
     {
-        dhcp = true;
+        dhcp = EthernetInterfaceIntf::DHCPConf::both;
+    }
+    else if (values[0] == "ipv4")
+    {
+        dhcp = EthernetInterfaceIntf::DHCPConf::v4;
+    }
+    else if (values[0] == "ipv6")
+    {
+        dhcp = EthernetInterfaceIntf::DHCPConf::v6;
     }
     return dhcp;
 }
