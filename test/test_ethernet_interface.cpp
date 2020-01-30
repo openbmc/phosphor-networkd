@@ -59,7 +59,8 @@ class TestEthernetInterface : public testing::Test
     {
         mock_clear();
         mock_addIF("test0", 1, mac);
-        return {bus, "/xyz/openbmc_test/network/test0", false, manager, true};
+        return {bus, "/xyz/openbmc_test/network/test0",
+                EthernetInterface::DHCPConf::none, manager};
     }
 
     int countIPObjects()
