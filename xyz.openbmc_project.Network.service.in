@@ -1,5 +1,7 @@
 [Unit]
 Description=Phosphor Network Manager
+Requires=xyz.openbmc_project.User.Manager.service
+After=xyz.openbmc_project.User.Manager.service
 After=obmc-mapper.target
 
 [Service]
