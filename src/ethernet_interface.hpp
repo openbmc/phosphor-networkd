@@ -2,10 +2,14 @@
 #include "ipaddress.hpp"
 #include "neighbor.hpp"
 #include "types.hpp"
+#include "util.hpp"
+#include "xyz/openbmc_project/Channel/ChannelAccess/server.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
 #include "xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp"
 
+#include <nlohmann/json.hpp>
 #include <sdbusplus/bus.hpp>
+#include <sdbusplus/bus/match.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <stdplus/pinned.hpp>
 #include <stdplus/zstring_view.hpp>
@@ -15,6 +19,7 @@
 #include <xyz/openbmc_project/Network/VLAN/server.hpp>
 #include <xyz/openbmc_project/Object/Delete/server.hpp>
 
+#include <filesystem>
 #include <optional>
 #include <string>
 #include <vector>
@@ -29,7 +34,8 @@ using Ifaces = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress,
     sdbusplus::xyz::openbmc_project::Network::IP::server::Create,
     sdbusplus::xyz::openbmc_project::Network::Neighbor::server::CreateStatic,
-    sdbusplus::xyz::openbmc_project::Collection::server::DeleteAll>;
+    sdbusplus::xyz::openbmc_project::Collection::server::DeleteAll,
+    sdbusplus::xyz::openbmc_project::Channel::server::ChannelAccess>;
 
 using VlanIfaces = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Object::server::Delete,
@@ -43,11 +49,16 @@ using EthernetInterfaceIntf =
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface;
 using MacAddressIntf =
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress;
+using ChannelAccessIntf =
+    sdbusplus::xyz::openbmc_project::Channel::server::ChannelAccess;
 
 using ServerList = std::vector<std::string>;
 using ObjectPath = sdbusplus::message::object_path;
 
-class Manager;
+namespace fs = std::filesystem;
+using DbusVariant = std::variant<std::string, std::vector<std::string>>;
+
+class Manager; // forward declaration of network manager.
 
 class TestEthernetInterface;
 class TestNetworkManager;
@@ -199,6 +210,15 @@ class EthernetInterface : public Ifaces
      */
     std::string defaultGateway6(std::string gateway) override;
 
+    /** @brief sets the channel maxium privilege.
+     *  @param[in] value - Channel privilege which needs to be set on the
+     * system.
+     *  @returns privilege of the interface or throws an error.
+     */
+    std::string maxPrivilege(std::string value) override;
+
+    using ChannelAccessIntf::maxPrivilege;
+    using EthernetInterfaceIntf::dhcpEnabled;
     using EthernetInterfaceIntf::interfaceName;
     using EthernetInterfaceIntf::linkUp;
     using EthernetInterfaceIntf::mtu;
@@ -253,6 +273,26 @@ class EthernetInterface : public Ifaces
      *  @returns true/false value if the address is static
      */
     bool originIsManuallyAssigned(IP::AddressOrigin origin);
+
+    /** @brief gets the channel privilege.
+     *  @param[in] interfaceName - Network interface name.
+     *  @returns privilege of the interface
+     */
+    std::string getChannelPrivilege(const std::string& interfaceName);
+
+    /** @brief reads the channel access info from file.
+     *  @param[in] configFile - channel access filename
+     *  @returns json file data
+     */
+    nlohmann::json readJsonFile(const std::string& configFile);
+
+    /** @brief writes the channel access info to file.
+     *  @param[in] configFile - channel access filename
+     *  @param[in] jsonData - json data to write
+     *  @returns success or failure
+     */
+    int writeJsonFile(const std::string& configFile,
+                      const nlohmann::json& jsonData);
 };
 
 } // namespace network

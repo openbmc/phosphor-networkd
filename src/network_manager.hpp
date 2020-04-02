@@ -121,6 +121,12 @@ class Manager : public ManagerIface
         reloadPostHooks.push_back(std::move(hook));
     }
 
+    /** supported privilege list **/
+    std::vector<std::string> supportedPrivList;
+
+    /** @brief initializes the supportedPrivilege List */
+    void initSupportedPrivilges();
+
   protected:
     /** @brief Handle to the object used to trigger reloads of networkd. */
     stdplus::PinnedRef<DelayedExecutor> reload;
@@ -159,6 +165,9 @@ class Manager : public ManagerIface
 
     /** @brief Creates the interface in the maps */
     void createInterface(const AllIntfInfo& info, bool enabled);
+
+    /** Get the user management service name dynamically **/
+    std::string getUserServiceName();
 };
 
 } // namespace network
