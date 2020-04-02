@@ -171,6 +171,12 @@ class Manager : public details::VLANCreateIface
         reloadPreHooks.push_back(std::move(hook));
     }
 
+    /** supported privilege list **/
+    std::vector<std::string> supportedPrivList;
+
+    /** @brief initializes the supportedPrivilege List */
+    void initSupportedPrivilges();
+
   protected:
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;
@@ -199,6 +205,9 @@ class Manager : public details::VLANCreateIface
 
     /** @brief List of hooks to execute during the next reload */
     std::vector<fu2::unique_function<void()>> reloadPreHooks;
+
+    /** Get the user management service name dynamically **/
+    std::string getUserServiceName();
 };
 
 } // namespace network
