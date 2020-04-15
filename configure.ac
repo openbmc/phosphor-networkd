@@ -73,6 +73,12 @@ AS_IF([test "x$with_dbuspolicydir" = "x"],
 )
 AC_SUBST([dbuspolicydir], [$with_dbuspolicydir])
 
+AC_ARG_WITH([uboot-env],
+              AS_HELP_STRING([--without-uboot-env], [Disable features that require a u-boot environment]))
+AS_IF([test "x$with_uboot_env" != "xno"], [
+     AC_DEFINE([HAVE_UBOOT_ENV], [1], [u-boot environment is available])
+])
+
 # Check/set gtest specific functions.
 AX_PTHREAD([GTEST_CPPFLAGS="-DGTEST_HAS_PTHREAD=1"],[GTEST_CPPFLAGS="-GTEST_HAS_PTHREAD=0"])
 AC_SUBST(GTEST_CPPFLAGS)

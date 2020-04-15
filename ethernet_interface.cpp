@@ -979,12 +979,16 @@ std::string EthernetInterface::mACAddress(std::string value)
         MacAddressIntf::mACAddress(value);
 
         auto interface = interfaceName();
+
+#ifdef HAVE_UBOOT_ENV
         auto envVar = interfaceToUbootEthAddr(interface.c_str());
         if (envVar)
         {
             execute("/sbin/fw_setenv", "fw_setenv", envVar->c_str(),
                     value.c_str());
         }
+#endif // HAVE_UBOOT_ENV
+
         // TODO: would remove the call below and
         //      just restart systemd-netwokd
         //      through https://github.com/systemd/systemd/issues/6696
