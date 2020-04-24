@@ -818,7 +818,7 @@ void EthernetInterface::writeConfigurationFile()
         stream << "MACAddress=" << mac << "\n";
     }
 
-    if (!nICEnabled())
+    if (!EthernetInterfaceIntf::nICEnabled())
     {
         stream << "Unmanaged=yes\n";
     }
