@@ -85,13 +85,15 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
         MacAddressIntf::mACAddress(getMACAddress(intfName));
     }
     EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
+
+    EthernetInterfaceIntf::linkUp(linkUp());
+    EthernetInterfaceIntf::nICEnabled(nICEnabled());
+
 #if NIC_SUPPORTS_ETHTOOL
     InterfaceInfo ifInfo = EthernetInterface::getInterfaceInfo();
 
     EthernetInterfaceIntf::autoNeg(std::get<2>(ifInfo));
     EthernetInterfaceIntf::speed(std::get<0>(ifInfo));
-    EthernetInterfaceIntf::linkUp(std::get<3>(ifInfo));
-    EthernetInterfaceIntf::nICEnabled(std::get<4>(ifInfo));
 #endif
 
     // Emit deferred signal.
