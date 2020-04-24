@@ -86,8 +86,8 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     }
     EthernetInterfaceIntf::nTPServers(getNTPServersFromConf());
 
-    EthernetInterfaceIntf::linkUp(std::get<3>(ifInfo));
-    EthernetInterfaceIntf::nICEnabled(std::get<4>(ifInfo));
+    EthernetInterfaceIntf::linkUp(linkUp());
+    EthernetInterfaceIntf::nICEnabled(nICEnabled());
 
 #if NIC_SUPPORTS_ETHTOOL
     InterfaceInfo ifInfo = EthernetInterface::getInterfaceInfo();
@@ -818,7 +818,7 @@ void EthernetInterface::writeConfigurationFile()
         stream << "MACAddress=" << mac << "\n";
     }
 
-    if (!nICEnabled())
+    if (!EthernetInterfaceIntf::nICEnabled())
     {
         stream << "Unmanaged=yes\n";
     }
