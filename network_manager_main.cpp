@@ -7,11 +7,15 @@
 
 #include <linux/netlink.h>
 
+#include <filesystem>
+#include <fstream>
 #include <functional>
 #include <memory>
+#include <nlohmann/json.hpp>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus.hpp>
+#include <sdbusplus/bus/match.hpp>
 #include <sdbusplus/server/manager.hpp>
 #include <sdeventplus/event.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -26,6 +30,9 @@ constexpr char NETWORK_CONF_DIR[] = "/etc/systemd/network";
 
 constexpr char DEFAULT_OBJPATH[] = "/xyz/openbmc_project/network";
 
+constexpr auto FirstBootPath = "/var/lib/network/";
+constexpr auto configFilePath = "/usr/share/network/config.json";
+
 namespace phosphor
 {
 namespace network
@@ -34,6 +41,72 @@ namespace network
 std::unique_ptr<phosphor::network::Manager> manager = nullptr;
 std::unique_ptr<Timer> refreshObjectTimer = nullptr;
 std::unique_ptr<Timer> restartTimer = nullptr;
+std::pair<std::string, std::string> ethmap;
+
+bool firstBootGetMAC()
+{
+    // At the time of calling the API, the ethenet Interface objects
+    // are not populated,so force it to create the objects
+    manager->createChildObjects();
+
+    bool status = manager->getAndSetFirstBootMACFromVPD();
+    if (!status)
+    {
+        return false;
+    }
+    return true;
+}
+
+// register the macthes to be monitored from inventory manager
+void registerSignals(sdbusplus::bus::bus& bus, const nlohmann::json& configJson)
+{
+
+    log<level::INFO>("Registering the Inventory Signals Matcher");
+
+    static std::unique_ptr<sdbusplus::bus::match::match> MacAddressMatch;
+
+    auto callback = [&](sdbusplus::message::message& m) {
+        log<level::INFO>("Match for MACAdress Fired by the Inventory Manager");
+
+        std::map<std::string, std::map<std::string, std::variant<std::string>>>
+            interfacesProperties;
+
+        sdbusplus::message::object_path objPath;
+
+        m.read(objPath, interfacesProperties);
+
+        for (const auto& pattern : configJson.items())
+        {
+            if (objPath.str.find(pattern.value()) != std::string::npos)
+            {
+                for (auto& interface : interfacesProperties)
+                {
+                    if (interface.first == "xyz.openbmc_project.Inventory."
+                                           "Item.NetworkInterface")
+                    {
+                        for (const auto& path : interface.second)
+                        {
+                            if (path.first.find("MAC") != std::string::npos)
+                            {
+                                ethmap = std::make_pair(
+                                    pattern.key(),
+                                    std::get<std::string>(path.second));
+                            }
+                        }
+                    }
+                }
+                manager->setMACAddressOnInterface(ethmap);
+            }
+        }
+    };
+
+    MacAddressMatch = std::make_unique<sdbusplus::bus::match::match>(
+        bus,
+        "interface='org.freedesktop.DBus.ObjectManager',type='signal',"
+        "member='InterfacesAdded',path='/xyz/openbmc_project/"
+        "inventory'",
+        callback);
+}
 
 /** @brief refresh the network objects. */
 void refreshObjects()
@@ -82,6 +155,9 @@ void createNetLinkSocket(phosphor::Descriptor& smartSock)
 int main(int argc, char* argv[])
 {
     phosphor::network::initializeTimers();
+    std::ifstream in(configFilePath);
+    nlohmann::json configJson;
+    in >> configJson;
 
     auto bus = sdbusplus::bus::new_default();
 
@@ -134,5 +210,22 @@ int main(int argc, char* argv[])
     // RTNETLINK event handler
     phosphor::network::rtnetlink::Server svr(eventPtr, smartSock);
 
+    // Incase if phosphor-inventory-manager started early and the VPD is already
+    // collected by the time network service has come up, better to check the
+    // VPD directly and set the MAC Address on the respective Interface.
+    bool registeredSignals = false;
+    for (const auto& interfaceString : configJson.items())
+    {
+
+        if (!std::filesystem::exists(FirstBootPath + interfaceString.key()) &&
+            !registeredSignals)
+        {
+            if (!phosphor::network::firstBootGetMAC())
+            {
+                phosphor::network::registerSignals(bus, configJson);
+                registeredSignals = true;
+            }
+        }
+    }
     sd_event_loop(eventPtr.get());
 }

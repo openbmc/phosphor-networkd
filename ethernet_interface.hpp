@@ -172,6 +172,22 @@ class EthernetInterface : public Ifaces
      */
     std::string mACAddress(std::string value) override;
 
+    /** @brief set the MAC only during First Boot on the
+     *  interfaces present in the machine
+     *  @param[in] value - MAC address which is obtained from the DBUS Match
+     *  @return NULL
+     */
+    void setFirstBootMACAddress(const std::string&);
+
+    /** @brief Gets the MAC address from the VPD incase if the Inventory
+     *  service started before the Network service and then Sets the respective
+     *  MAC address on the corresponding ethernet Interfaces.
+     *  @param[in] value - MAC address which is obtained From the VPD
+     *  @return True/False based on whether the VPD Objects are populated.
+     */
+
+    bool firstBootGetAndSetMAC(const std::string&);
+
     /** @brief get the IPv6AcceptRA flag from the network configuration file
      *
      */

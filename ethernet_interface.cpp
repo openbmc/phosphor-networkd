@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <experimental/filesystem>
+#include <filesystem>
 #include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
@@ -43,6 +44,7 @@ constexpr auto RESOLVED_INTERFACE = "org.freedesktop.resolve1.Link";
 constexpr auto PROPERTY_INTERFACE = "org.freedesktop.DBus.Properties";
 constexpr auto RESOLVED_SERVICE_PATH = "/org/freedesktop/resolve1/link/";
 constexpr auto METHOD_GET = "Get";
+constexpr auto FirstBootPath = "/var/lib/network/";
 
 struct EthernetIntfSocket
 {
@@ -932,6 +934,54 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
     }
 }
 
+void EthernetInterface::setFirstBootMACAddress(const std::string& value)
+{
+    auto interface = interfaceName();
+    // Update everything that depends on the MAC value
+    for (const auto& [name, intf] : vlanInterfaces)
+    {
+        intf->MacAddressIntf::mACAddress(value);
+    }
+
+    MacAddressIntf::mACAddress(value);
+
+    auto envVar = interfaceToUbootEthAddr(interface.c_str());
+
+    // TODO: would remove the call below and
+    //      just restart systemd-netwokd
+    //      through https://github.com/systemd/systemd/issues/6696
+    execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(), "down");
+    manager.writeToConfigurationFile();
+    std::error_code ec;
+    if (std::filesystem::is_directory("/var/lib/network", ec))
+    {
+        std::ofstream persistentFile(FirstBootPath + interface);
+    }
+}
+
+bool EthernetInterface::firstBootGetAndSetMAC(const std::string& interfaceName)
+{
+    try
+    {
+        auto inventoryInterfaceMAC =
+            mac_address::getfromInventory(bus, interfaceName.c_str());
+        if (!mac_address::toString(inventoryInterfaceMAC).empty())
+        {
+            EthernetInterface::setFirstBootMACAddress(
+                mac_address::toString(inventoryInterfaceMAC));
+            return true;
+        }
+    }
+
+    catch (const std::exception& e)
+    {
+        log<level::ERR>("Exception occurred during getting of MAC "
+                        "address from Inventory");
+        return false;
+    }
+    return false;
+}
+
 std::string EthernetInterface::mACAddress(std::string value)
 {
     ether_addr newMAC = mac_address::fromString(value);
@@ -945,6 +995,9 @@ std::string EthernetInterface::mACAddress(std::string value)
 
     // We don't need to update the system if the address is unchanged
     ether_addr oldMAC = mac_address::fromString(MacAddressIntf::mACAddress());
+
+    auto interface = interfaceName();
+
     if (!equal(newMAC, oldMAC))
     {
         if (!mac_address::isLocalAdmin(newMAC))
@@ -952,7 +1005,7 @@ std::string EthernetInterface::mACAddress(std::string value)
             try
             {
                 auto inventoryMAC =
-                    mac_address::getfromInventory(bus, interfaceName());
+                    mac_address::getfromInventory(bus, interface.c_str());
                 if (!equal(newMAC, inventoryMAC))
                 {
                     log<level::ERR>(

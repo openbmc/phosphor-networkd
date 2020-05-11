@@ -112,6 +112,10 @@ class Manager : public details::VLANCreateIface
     /** @brief restart the network timers. */
     void restartTimers();
 
+    void setMACAddressOnInterface(const std::pair<std::string, std::string>&);
+
+    bool getAndSetFirstBootMACFromVPD();
+
     /** @brief Restart the systemd unit
      *  @param[in] unit - systemd unit name which needs to be
      *                    restarted.

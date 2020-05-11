@@ -208,6 +208,55 @@ void Manager::writeToConfigurationFile()
     restartTimers();
 }
 
+void Manager::setMACAddressOnInterface(
+    const std::pair<std::string, std::string>& ethmap)
+{
+    for (const auto& interface : interfaces)
+    {
+        if (interface.first == ethmap.first)
+        {
+            log<level::INFO>("Trying to change ",
+                             entry("MAP=%s", ethmap.first.c_str()));
+            log<level::INFO>("On the Ethernet",
+                             entry("Interface=%s", ethmap.second.c_str()));
+            interface.second->setFirstBootMACAddress(ethmap.second);
+        }
+    }
+}
+
+bool Manager::getAndSetFirstBootMACFromVPD()
+{
+    log<level::INFO>("Trying to Get & Set the MAC Adress from the Inventory "
+                     "for the First time");
+    for (const auto& interface : interfaces)
+    {
+        if (interface.first.find("eth") != std::string::npos)
+        {
+            log<level::INFO>("Get MAC for interface :",
+                             entry(interface.first.c_str()));
+            bool status =
+                interface.second->firstBootGetAndSetMAC(interface.first);
+            if (status)
+            {
+                continue;
+                // if status is true, at least one interface is set, we can
+                // continue for the next interface
+            }
+            else
+            {
+                // we failed to get the MAC address from the VPD, probably
+                // the Inventory Service might not be up or the VPD is not
+                // collected yet.
+                return false;
+            }
+        }
+    }
+
+    // reached here means, we were able to get MAC address from the VPD for all
+    // the interfaces present on the system.
+    return true;
+}
+
 void Manager::restartTimers()
 {
     using namespace std::chrono;
