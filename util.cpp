@@ -12,8 +12,9 @@
 #include <cstdlib>
 #include <cstring>
 #include <experimental/filesystem>
-#include <iostream>
+#include <fstream>
 #include <list>
+#include <nlohmann/json.hpp>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <stdexcept>
@@ -518,10 +519,17 @@ constexpr auto invBus = "xyz.openbmc_project.Inventory.Manager";
 constexpr auto invNetworkIntf =
     "xyz.openbmc_project.Inventory.Item.NetworkInterface";
 constexpr auto invRoot = "/xyz/openbmc_project/inventory";
+constexpr auto configFilePath = "/usr/share/network/config.json";
 
 ether_addr getfromInventory(sdbusplus::bus::bus& bus,
                             const std::string& intfName)
 {
+    // load the config JSON from the Read Only Path
+
+    std::ifstream in(configFilePath);
+    nlohmann::json configJson;
+    in >> configJson;
+
     std::vector<DbusInterface> interfaces;
     interfaces.emplace_back(invNetworkIntf);
 
@@ -565,7 +573,7 @@ ether_addr getfromInventory(sdbusplus::bus::bus& bus,
         {
             log<level::INFO>("interface", entry("INT=%s", intfName.c_str()));
             log<level::INFO>("object", entry("OBJ=%s", object.first.c_str()));
-            if (std::string::npos != object.first.find(intfName))
+            if (std::string::npos != object.first.find(configJson[intfName]))
             {
                 objPath = object.first;
                 service = object.second.begin()->first;
