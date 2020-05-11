@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <experimental/filesystem>
+#include <filesystem>
 #include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
@@ -952,7 +953,7 @@ std::string EthernetInterface::mACAddress(std::string value)
             try
             {
                 auto inventoryMAC =
-                    mac_address::getfromInventory(bus, interfaceName());
+                    mac_address::getfromInventory(bus, interfaceName().c_str());
                 if (!equal(newMAC, inventoryMAC))
                 {
                     log<level::ERR>(
@@ -984,8 +985,16 @@ std::string EthernetInterface::mACAddress(std::string value)
         auto envVar = interfaceToUbootEthAddr(interface.c_str());
         if (envVar)
         {
-            execute("/sbin/fw_setenv", "fw_setenv", envVar->c_str(),
-                    value.c_str());
+            if (std::filesystem::exists("/sbin/fw_setenv"))
+            {
+                execute("/sbin/fw_setenv", "fw_setenv", envVar->c_str(),
+                        value.c_str());
+            }
+            else
+            {
+                log<level::INFO>(
+                    "fw_setenv binary not found, uboot variable cannot be set");
+            }
         }
 #endif // HAVE_UBOOT_ENV
 

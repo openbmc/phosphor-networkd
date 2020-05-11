@@ -112,6 +112,20 @@ class Manager : public details::VLANCreateIface
     /** @brief restart the network timers. */
     void restartTimers();
 
+    /** @brief This function gets the MAC address from the VPD and
+     *  sets it on the corresponding ethernet interface during first
+     *  Boot, once it sets the MAC from VPD, it creates a file named
+     *  firstBoot under /var/lib to make sure we dont run this function
+     *  again.
+     *
+     *  @param[in] ethPair - Its a pair of ethernet interface name & the
+     * corresponding MAC Address from the VPD
+     *
+     *  return - NULL
+     */
+    void setFistBootMACOnInterface(
+        const std::pair<std::string, std::string>& ethPair);
+
     /** @brief Restart the systemd unit
      *  @param[in] unit - systemd unit name which needs to be
      *                    restarted.
