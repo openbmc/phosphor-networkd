@@ -12,8 +12,9 @@
 #include <cstdlib>
 #include <cstring>
 #include <experimental/filesystem>
-#include <iostream>
+#include <fstream>
 #include <list>
+#include <nlohmann/json.hpp>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <stdexcept>
@@ -508,6 +509,7 @@ constexpr auto mapperObj = "/xyz/openbmc_project/object_mapper";
 constexpr auto mapperIntf = "xyz.openbmc_project.ObjectMapper";
 constexpr auto propIntf = "org.freedesktop.DBus.Properties";
 constexpr auto methodGet = "Get";
+constexpr auto configFile = "/usr/share/network/config.json";
 
 using DbusObjectPath = std::string;
 using DbusService = std::string;
@@ -523,6 +525,17 @@ constexpr auto invRoot = "/xyz/openbmc_project/inventory";
 ether_addr getfromInventory(sdbusplus::bus::bus& bus,
                             const std::string& intfName)
 {
+
+    std::string interfaceName = intfName;
+
+#if SYNC_MAC_FROM_INVENTORY
+    // load the config JSON from the Read Only Path
+    std::ifstream in(configFile);
+    nlohmann::json configJson;
+    in >> configJson;
+    interfaceName = configJson[intfName];
+#endif
+
     std::vector<DbusInterface> interfaces;
     interfaces.emplace_back(invNetworkIntf);
 
@@ -564,9 +577,11 @@ ether_addr getfromInventory(sdbusplus::bus::bus& bus,
         // interface name
         for (auto const& object : objectTree)
         {
-            log<level::INFO>("interface", entry("INT=%s", intfName.c_str()));
+            log<level::INFO>("interface",
+                             entry("INT=%s", interfaceName.c_str()));
             log<level::INFO>("object", entry("OBJ=%s", object.first.c_str()));
-            if (std::string::npos != object.first.find(intfName))
+
+            if (std::string::npos != object.first.find(interfaceName.c_str()))
             {
                 objPath = object.first;
                 service = object.second.begin()->first;
@@ -577,7 +592,7 @@ ether_addr getfromInventory(sdbusplus::bus::bus& bus,
         if (objPath.empty())
         {
             log<level::ERR>("Can't find the object for the interface",
-                            entry("intfName=%s", intfName.c_str()));
+                            entry("intfName=%s", interfaceName.c_str()));
             elog<InternalFailure>();
         }
     }
