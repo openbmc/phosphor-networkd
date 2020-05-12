@@ -1,0 +1,9 @@
+Ok-To-Test+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Verified+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Code-Review+1: Sunitha Harish <sunithaharish04@gmail.com>
+Code-Review+2: William A. Kennington III <wak@google.com>
+Submitted-by: Ratan Gupta <ratagupt@linux.vnet.ibm.com>
+Submitted-at: Tue, 12 May 2020 13:56:32 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-networkd/+/31667
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
