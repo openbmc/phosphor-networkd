@@ -68,7 +68,7 @@ std::string SystemConfiguration::hostName(std::string name)
 
 std::string SystemConfiguration::getHostNameFromSystem() const
 {
-    sdbusplus::message::variant<std::string> name;
+    std::variant<std::string> name;
     auto method = bus.new_method_call(HOSTNAMED_SERVICE, HOSTNAMED_SERVICE_PATH,
                                       PROPERTY_INTERFACE, METHOD_GET);
 
