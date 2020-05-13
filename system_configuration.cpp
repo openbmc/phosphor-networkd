@@ -86,7 +86,7 @@ std::string SystemConfiguration::getHostNameFromSystem() const
         report<InternalFailure>();
         return "";
     }
-    return sdbusplus::message::variant_ns::get<std::string>(name);
+    return std::get<std::string>(name);
 }
 
 std::string SystemConfiguration::defaultGateway(std::string gateway)
