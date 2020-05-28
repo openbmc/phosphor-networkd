@@ -684,9 +684,9 @@ void EthernetInterface::loadVLAN(VlanId id)
 
     auto dhcpEnabled =
         getDHCPValue(manager.getConfDir().string(), vlanInterfaceName);
-
+    auto nICEnabled = EthernetInterfaceIntf::nICEnabled();
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, path.c_str(), dhcpEnabled, id, *this, manager);
+        bus, path.c_str(), dhcpEnabled, nICEnabled, id, *this, manager);
 
     // Fetch the ip address from the system
     // and create the dbus object.
@@ -702,9 +702,9 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
     std::string vlanInterfaceName = interfaceName() + "." + std::to_string(id);
     std::string path = objPath;
     path += "_" + std::to_string(id);
-
+    auto nICEnabled = EthernetInterfaceIntf::nICEnabled();
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, path.c_str(), false, id, *this, manager);
+        bus, path.c_str(), false, nICEnabled, id, *this, manager);
 
     // write the device file for the vlan interface.
     vlanIntf->writeDeviceFile();
