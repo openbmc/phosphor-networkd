@@ -43,10 +43,28 @@ class VlanInterface : public VlanIface,
      *  @param[in] vlanID - vlan identifier.
      *  @param[in] intf - ethernet interface object.
      *  @param[in] manager - network manager object.
+     *
+     *  This constructor is called during creation of VLAN Interface
+     *  so that the VLAN interface can inherit the nICEnabled property
+     *  from the parent interface.
+     */
+    VlanInterface(sdbusplus::bus::bus& bus, const std::string& objPath,
+                  bool dhcpEnabled, bool nICEnabled, uint32_t vlanID,
+                  EthernetInterface& intf, Manager& manager);
+
+    /** @brief Constructor to put object onto bus at a dbus path.
+     *  @param[in] bus - Bus to attach to.
+     *  @param[in] objPath - Path to attach at.
+     *  @param[in] dhcpEnabled - DHCP enable value.
+     *  @param[in] vlanID - vlan identifier.
+     *  @param[in] intf - ethernet interface object.
+     *  @param[in] manager - network manager object.
+     *
+     *  This constructor is called during loading the VLAN Interface
      */
     VlanInterface(sdbusplus::bus::bus& bus, const std::string& objPath,
                   bool dhcpEnabled, uint32_t vlanID, EthernetInterface& intf,
-                  Manager& manager);
+                  Manager& parent);
 
     /** @brief Delete this d-bus object.
      */
