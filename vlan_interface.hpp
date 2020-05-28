@@ -45,8 +45,8 @@ class VlanInterface : public VlanIface,
      *  @param[in] manager - network manager object.
      */
     VlanInterface(sdbusplus::bus::bus& bus, const std::string& objPath,
-                  bool dhcpEnabled, uint32_t vlanID, EthernetInterface& intf,
-                  Manager& manager);
+                  bool dhcpEnabled, bool nICEnabled, uint32_t vlanID,
+                  EthernetInterface& intf, Manager& manager);
 
     /** @brief Delete this d-bus object.
      */
