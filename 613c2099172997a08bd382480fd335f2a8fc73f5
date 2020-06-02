@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "45a929fb_44c706b8",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-06-02T13:16:48Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "4302c6be_06951902",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "94720950_568da7c9",
         "filename": "meson.build",
         "patchSetId": 1
@@ -59,6 +77,29 @@
     },
     {
       "key": {
+        "uuid": "b4729d7d_70001a20",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-06-02T13:16:48Z",
+      "side": 1,
+      "message": "Are we using it?",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 31
+      },
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a347d0c7_8a5f327c",
         "filename": "meson.build",
         "patchSetId": 1
@@ -76,6 +117,29 @@
     },
     {
       "key": {
+        "uuid": "d49f1191_3f05948c",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-06-02T13:16:48Z",
+      "side": 1,
+      "message": "Can we take this in test/meson.build???",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 34
+      },
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fbbfa6e7_de944aae",
         "filename": "meson.build",
         "patchSetId": 1
@@ -87,6 +151,30 @@
       "writtenOn": "2020-06-02T11:01:07Z",
       "side": 1,
       "message": "This seems ancient behavior.  Is it still necessary (@Ratan)?",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 5
+      },
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "410dd699_9aa97bd4",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-06-02T13:16:48Z",
+      "side": 1,
+      "message": "Patrick, We are still using it.",
+      "parentUuid": "fbbfa6e7_de944aae",
       "range": {
         "startLine": 49,
         "startChar": 0,
@@ -144,6 +232,47 @@
       "writtenOn": "2020-06-02T11:01:07Z",
       "side": 1,
       "message": "Can you do this as a dependency?\n\nIt seems like dl-functions are only used by the test cases.  Can you limit the scope of this dependency?",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ddd2fcd6_90a1a6f4",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-06-02T13:16:48Z",
+      "side": 1,
+      "message": "Yes, move it to test/meson",
+      "parentUuid": "f8e4d4f0_40b91fb4",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39644fbe_3ce45223",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-06-02T13:16:48Z",
+      "side": 1,
+      "message": "Can we move all at line no 175 as it is being used over there??",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 57
+      },
       "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
@@ -223,6 +352,29 @@
         "startChar": 0,
         "endLine": 205,
         "endChar": 25
+      },
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9625f63b_02f831dc",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-06-02T13:16:48Z",
+      "side": 1,
+      "message": "Can we club all the subdir at single place??\n  Line no 95 and this one.",
+      "range": {
+        "startLine": 208,
+        "startChar": 0,
+        "endLine": 210,
+        "endChar": 5
       },
       "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
@@ -395,6 +547,29 @@
       "writtenOn": "2020-06-02T11:01:07Z",
       "side": 1,
       "message": "In sdbusplus, I created a tool (which is exported) called \u0027sdbus++-gendir\u0027 that automatically generates all these pieces.  I suggest looking at the \u0027example/meson.build\u0027 in that repository to understand how it is used.  This tool will let you eliminate this tree of meson.build files under xyz/...",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da6ab671_029f2a13",
+        "filename": "xyz/openbmc_project/Network/meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-06-02T13:16:48Z",
+      "side": 1,
+      "message": "Do we need this file? Can we include that at the global meson.build file?",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 21
+      },
       "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
