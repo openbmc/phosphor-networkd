@@ -1,0 +1,40 @@
+# Features List
+# command : meson configure -Dfeature_name=enabled
+
+option( 'tests', type : 'feature',
+         value : 'enabled',
+         description: 'Build unit tests'
+      )
+
+option( 'ethtool',type : 'feature',
+         value : 'disabled',
+         description:' Build ETHTOOL features in the NIC driver'
+      )
+
+option( 'link-local-config', type : 'feature',
+        value : 'enabled',
+        description : 'Enable link-local IP address auto configuration'
+      )
+
+option( 'uboot-env', type : 'feature',
+         value : 'enabled',
+         description:'Enable/Disable features that are related to u-boot environment'
+      )
+
+option(
+    'oe-sdk', type: 'feature', description: 'Enable OE SDK'
+)
+# Commandline variables list
+# Value can be assigned from commandline to below variables
+# otherwise default value will be considered
+# Command: meson configure -Doption=value
+# Ex: meson configure -DOECORE_TARGET_SYSROOT=path
+
+option ( 'systemd-target', type : 'string',
+          value : 'multi-user.target',
+          description : 'Target for starting this service')
+
+option ( 'bus-name', type : 'string',
+          value : 'xyz.openbmc_project.Network',
+          description : 'Bus name to be acquired')
+
