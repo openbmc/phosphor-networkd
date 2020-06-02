@@ -35,23 +35,23 @@ IPAddress::IPAddress(sdbusplus::bus::bus& bus, const char* objPath,
     // Emit deferred signal.
     emit_object_added();
 }
-std::string IPAddress::address(std::string ipAddress)
+std::string IPAddress::address(std::string /*ipAddress*/)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
 }
-uint8_t IPAddress::prefixLength(uint8_t value)
+uint8_t IPAddress::prefixLength(uint8_t /*value*/)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
 }
-std::string IPAddress::gateway(std::string gateway)
+std::string IPAddress::gateway(std::string /*gateway*/)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
 }
-IP::Protocol IPAddress::type(IP::Protocol type)
+IP::Protocol IPAddress::type(IP::Protocol /*type*/)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
 }
-IP::AddressOrigin IPAddress::origin(IP::AddressOrigin origin)
+IP::AddressOrigin IPAddress::origin(IP::AddressOrigin /*origin*/)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
 }
