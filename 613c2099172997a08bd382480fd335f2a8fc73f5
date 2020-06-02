@@ -1,0 +1,403 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4302c6be_06951902",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Suggest moving these cleanups to another commit so they are distinct from meson build changes.",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94720950_568da7c9",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Please un-tab the file.",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06d30412_d67fbd1f",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Similar suggestions here as your bmcweb changes.",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 0
+      },
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a347d0c7_8a5f327c",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Also think this is unnecessary here.",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbbfa6e7_de944aae",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "This seems ancient behavior.  Is it still necessary (@Ratan)?",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 5
+      },
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c462872_485d1812",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "This ends up being a side-effect of sdbusplus.  Suggest moving.",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eaf408e4_3ad2fc9c",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Already covered by cppfs above, isn\u0027t it?",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8e4d4f0_40b91fb4",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Can you do this as a dependency?\n\nIt seems like dl-functions are only used by the test cases.  Can you limit the scope of this dependency?",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebbc860f_43a94d92",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Suggest sorting.",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39938d3b_a6bccdc0",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Why is this necessary?  Are we missing some flags to meson?",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1dfa8b86_c357c7ca",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "[] are not needed here.",
+      "range": {
+        "startLine": 195,
+        "startChar": 14,
+        "endLine": 195,
+        "endChar": 26
+      },
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc78e5ab_8f8f0a4d",
+        "filename": "meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "[] are not needed on these.",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 205,
+        "endChar": 25
+      },
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6d0ea09_8604922a",
+        "filename": "network_manager_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Why not just /*argc*/ ?  There is no requirement that these are named that way other than by convention.",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b758371_10cf7cb5",
+        "filename": "rtnetlink_server.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Please update the .clang-format with the latest from docs to avoid this change.  This is a side-effect of our project-wide upgrade to clang-10 and this repository missing the .clang-format update to go with it.",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "844e5669_ee78d829",
+        "filename": "test/meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "please make indentation consistent",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 3
+      },
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fa7910a_95167cfa",
+        "filename": "test/meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Suggest using \u0027include_directories\u0027 instead of a simple [].",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3b3c81a_2519238f",
+        "filename": "test/meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "So, why are they two different variables?",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01883879_86b10ee5",
+        "filename": "test/meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Not necessary for a single file.",
+      "range": {
+        "startLine": 21,
+        "startChar": 40,
+        "endLine": 21,
+        "endChar": 60
+      },
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f2fd743_64aa6502",
+        "filename": "test/meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Can these be made into N tests instead of 1 large test executable?",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0370af92_863b1450",
+        "filename": "test/meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "Why is this required?",
+      "range": {
+        "startLine": 38,
+        "startChar": 2,
+        "endLine": 38,
+        "endChar": 21
+      },
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d45758e2_dea0e0fc",
+        "filename": "xyz/openbmc_project/Network/IP/Create/meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-02T11:01:07Z",
+      "side": 1,
+      "message": "In sdbusplus, I created a tool (which is exported) called \u0027sdbus++-gendir\u0027 that automatically generates all these pieces.  I suggest looking at the \u0027example/meson.build\u0027 in that repository to understand how it is used.  This tool will let you eliminate this tree of meson.build files under xyz/...",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
