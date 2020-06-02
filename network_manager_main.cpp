@@ -81,6 +81,8 @@ void createNetLinkSocket(phosphor::Descriptor& smartSock)
 
 int main(int /*argc*/, char** /*argv*/)
 {
+    (void)argc;
+    (void)argv;
     phosphor::network::initializeTimers();
 
     auto bus = sdbusplus::bus::new_default();
