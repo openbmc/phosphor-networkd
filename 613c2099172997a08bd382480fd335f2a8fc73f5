@@ -595,6 +595,24 @@
     },
     {
       "key": {
+        "uuid": "9c2381fa_b40dd824",
+        "filename": "xyz/openbmc_project/Network/IP/Create/meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2020-06-08T14:43:46Z",
+      "side": 1,
+      "message": "Patrick,\n\nI did try using the sdbus++-gendir tool today,i was able to generate all the server.cpp,hpp files in the respective directories in one shot which is awesome.\n\nBut meson refuses to compile as meson tries to compile , as it find the same name server.cpp both under IP as well as under VLAN,as all these object files are generated under the same builddirectory(without the directory structure).\n\nCode Snip:\ncustom_gen_files \u003d files(\n    run_command(\n        sdbusgen_prog,\n        \u0027--tool\u0027, sdbuspp,\n        \u0027--output\u0027, meson.current_build_dir(),\n        \u0027xyz\u0027,\n        check: true\n    ).stdout().strip().split(\u0027\\n\u0027)\n)\n\n\nThe generated files structure:\n[Juliet@juliet phosphor-networkd]$ tree builddir/xyz\nbuilddir/xyz\n└── openbmc_project\n    └── Network\n        ├── IP\n        │   ├── Create\n        │   │   ├── client.hpp\n        │   │   ├── server.cpp\n        │   │   └── server.hpp\n        │   └── Create.md\n        ├── Neighbor\n        │   ├── CreateStatic\n        │   │   ├── client.hpp\n        │   │   ├── server.cpp\n        │   │   └── server.hpp\n        │   └── CreateStatic.md\n        └── VLAN\n            ├── Create\n            │   ├── client.hpp\n            │   ├── server.cpp\n            │   └── server.hpp\n            └── Create.md\n\n\nError :\nERROR: Multiple producers for Ninja target \"libnetworkd@sta/server.cpp.o\". Please rename your targets.\n\nDo you know any better way to generate object files in the sub directories ? without using the subdir() in meson ? i one way i can think of is to rename the server.cpp to add the directory structure to it manually ?",
+      "parentUuid": "d45758e2_dea0e0fc",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "da6ab671_029f2a13",
         "filename": "xyz/openbmc_project/Network/meson.build",
         "patchSetId": 1
