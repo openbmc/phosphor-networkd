@@ -613,6 +613,24 @@
     },
     {
       "key": {
+        "uuid": "298e734a_f03dd992",
+        "filename": "xyz/openbmc_project/Network/IP/Create/meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-09T15:26:29Z",
+      "side": 1,
+      "message": "I don\u0027t see anything wrong with the results of the \u0027run_command\u0027 call, but I suspect something is wrong with how you\u0027re asking to have those files included into your library/executable (I\u0027ll need to see that to help debug).\n\nI\u0027ve been working on converting phosphor-dbus-interfaces to use mesonbuild and I am using the `sdbus++-gen` there.  I\u0027ve uploaded the WIP commit for you to take a look at as an example:\n\nhttps://gerrit.openbmc-project.xyz/c/openbmc/phosphor-dbus-interfaces/+/33415",
+      "parentUuid": "9c2381fa_b40dd824",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "da6ab671_029f2a13",
         "filename": "xyz/openbmc_project/Network/meson.build",
         "patchSetId": 1
