@@ -631,6 +631,24 @@
     },
     {
       "key": {
+        "uuid": "586470a2_6258209a",
+        "filename": "xyz/openbmc_project/Network/IP/Create/meson.build",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-06-10T01:39:31Z",
+      "side": 1,
+      "message": "It turns out this was a bug with meson that was only fixed in 0.54.1.  Yocto is upgraded to 0.54.2 and I\u0027m pushing up a change to the CI scripts to update as well.  You\u0027ll want to update your minimum version above to 0.54.1, which I\u0027ve similarly done in that phosphor-dbus-interfaces commit.",
+      "parentUuid": "298e734a_f03dd992",
+      "revId": "613c2099172997a08bd382480fd335f2a8fc73f5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "da6ab671_029f2a13",
         "filename": "xyz/openbmc_project/Network/meson.build",
         "patchSetId": 1
