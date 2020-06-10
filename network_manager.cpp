@@ -24,7 +24,7 @@
 constexpr char SYSTEMD_BUSNAME[] = "org.freedesktop.systemd1";
 constexpr char SYSTEMD_PATH[] = "/org/freedesktop/systemd1";
 constexpr char SYSTEMD_INTERFACE[] = "org.freedesktop.systemd1.Manager";
-constexpr auto FirstBootFile = "/var/lib/network/firstBoot";
+constexpr auto FirstBootFile = "/var/lib/network/firstBoot_";
 
 namespace phosphor
 {
@@ -213,7 +213,6 @@ void Manager::writeToConfigurationFile()
 void Manager::setFistBootMACOnInterface(
     const std::pair<std::string, std::string>& inventoryEthPair)
 {
-    bool isMACSet = false;
     for (const auto& interface : interfaces)
     {
         if (interface.first == inventoryEthPair.first)
@@ -225,20 +224,17 @@ void Manager::setFistBootMACOnInterface(
                 log<level::INFO>("Set the MAC on "),
                     entry("interface : ", interface.first.c_str()),
                     entry("MAC : ", inventoryEthPair.second.c_str());
-                isMACSet = true;
+                std::error_code ec;
+                if (std::filesystem::is_directory("/var/lib/network", ec))
+                {
+                    std::ofstream persistentFile(FirstBootFile +
+                                                 interface.first);
+                }
             }
             else
             {
                 log<level::INFO>("MAC is Not Set on ethernet Interface");
             }
-        }
-    }
-    if (isMACSet)
-    {
-        std::error_code ec;
-        if (std::filesystem::is_directory("/var/lib/network", ec))
-        {
-            std::ofstream persistentFile(FirstBootFile);
         }
     }
 }
