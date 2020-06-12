@@ -69,22 +69,26 @@ std::string SystemConfiguration::hostName(std::string name)
 std::string SystemConfiguration::getHostNameFromSystem() const
 {
     std::variant<std::string> name;
-    auto method = bus.new_method_call(HOSTNAMED_SERVICE, HOSTNAMED_SERVICE_PATH,
-                                      PROPERTY_INTERFACE, METHOD_GET);
-
-    method.append(HOSTNAMED_INTERFACE, "Hostname");
-
-    auto reply = bus.call(method);
-
-    if (reply)
+    try
     {
-        reply.read(name);
+        auto method =
+            bus.new_method_call(HOSTNAMED_SERVICE, HOSTNAMED_SERVICE_PATH,
+                                PROPERTY_INTERFACE, METHOD_GET);
+
+        method.append(HOSTNAMED_INTERFACE, "Hostname");
+
+        auto reply = bus.call(method);
+
+        if (reply)
+        {
+            reply.read(name);
+        }
     }
-    else
+    catch (const sdbusplus::exception::SdBusError& ex)
     {
-        log<level::ERR>("Failed to get hostname");
-        report<InternalFailure>();
-        return "";
+        log<level::ERR>(
+            "Failed to get the hostname from systemd-hostnamed service",
+            entry("ERR=%s", ex.what()));
     }
     return std::get<std::string>(name);
 }
