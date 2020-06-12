@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3611efab_ecf3d780",
+        "filename": "network_config.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2020-06-12T08:13:36Z",
+      "side": 1,
+      "message": "I don\u0027t think fallback is desirable for most cases, especially the default. If you plug a machine into a dead network and eventually set up a DHCP server it won\u0027t just join the network. You will have to intervene to get it to try DHCP again.",
+      "revId": "3b57de30f11fab64dc75e253837dd58524527d00",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
