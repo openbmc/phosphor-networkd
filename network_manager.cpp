@@ -244,8 +244,8 @@ void Manager::restartSystemdUnit(const std::string& unit)
     }
     catch (const sdbusplus::exception::SdBusError& ex)
     {
-        log<level::ERR>("Failed to restart nslcd service",
-                        entry("ERR=%s", ex.what()));
+        log<level::ERR>("Failed to restart service", entry("ERR=%s", ex.what()),
+                        entry("UNIT=%s", unit.c_str()));
         elog<InternalFailure>();
     }
 }
