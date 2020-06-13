@@ -56,8 +56,8 @@ static bool shouldRefresh(const struct nlmsghdr& hdr, std::string_view data)
 }
 
 /* Call Back for the sd event loop */
-static int eventHandler(sd_event_source* es, int fd, uint32_t revents,
-                        void* userdata)
+static int eventHandler(sd_event_source* /*es*/, int fd, uint32_t /*revents*/,
+                        void* /*userdata*/)
 {
     char buffer[phosphor::network::rtnetlink::BUFSIZE]{};
     int len{};
