@@ -1,3 +1,4 @@
+#include "mock_network_manager.hpp"
 #include "neighbor.hpp"
 #include "util.hpp"
 
@@ -18,6 +19,10 @@ namespace phosphor
 {
 namespace network
 {
+extern std::unique_ptr<Timer> refreshObjectTimer;
+extern std::unique_ptr<Timer> restartTimer;
+extern std::unique_ptr<MockManager> manager;
+
 namespace detail
 {
 

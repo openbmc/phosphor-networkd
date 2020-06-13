@@ -18,6 +18,9 @@ namespace phosphor
 {
 namespace network
 {
+extern std::unique_ptr<Timer> refreshObjectTimer;
+extern std::unique_ptr<Timer> restartTimer;
+extern std::unique_ptr<MockManager> manager;
 
 namespace fs = std::filesystem;
 
