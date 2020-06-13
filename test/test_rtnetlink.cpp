@@ -19,25 +19,10 @@ namespace phosphor
 namespace network
 {
 sdbusplus::bus::bus bus(sdbusplus::bus::new_default());
-std::unique_ptr<MockManager> manager = nullptr;
+extern std::unique_ptr<MockManager> manager;
 extern std::unique_ptr<Timer> refreshObjectTimer;
 extern std::unique_ptr<Timer> restartTimer;
 EventPtr eventPtr = nullptr;
-
-/** @brief refresh the network objects. */
-void refreshObjects()
-{
-    if (manager)
-    {
-        manager->createChildObjects();
-    }
-}
-
-void initializeTimers()
-{
-    refreshObjectTimer = std::make_unique<Timer>(
-        sdeventplus::Event::get_default(), std::bind(refreshObjects));
-}
 
 class TestRtNetlink : public testing::Test
 {
