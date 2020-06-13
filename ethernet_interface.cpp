@@ -563,7 +563,7 @@ bool EthernetInterface::nICEnabled(bool value)
     return value;
 }
 
-ServerList EthernetInterface::nameservers(ServerList value)
+ServerList EthernetInterface::nameservers(ServerList /*value*/)
 {
     elog<NotAllowed>(NotAllowedArgument::REASON("ReadOnly Property"));
     return EthernetInterfaceIntf::nameservers();
