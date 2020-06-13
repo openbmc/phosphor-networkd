@@ -9,7 +9,7 @@
 #include <netinet/in.h>
 
 #include <exception>
-#include <experimental/filesystem>
+#include <filesystem>
 #include <sdbusplus/bus.hpp>
 
 #include <gtest/gtest.h>
@@ -19,7 +19,7 @@ namespace phosphor
 namespace network
 {
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 class TestVlanInterface : public testing::Test
 {
