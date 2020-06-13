@@ -18,6 +18,7 @@ namespace phosphor
 {
 namespace network
 {
+
 namespace detail
 {
 

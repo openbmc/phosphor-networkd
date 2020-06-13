@@ -12,6 +12,9 @@ namespace phosphor
 namespace network
 {
 
+void initializeTimers();
+void refreshObjects();
+
 class MockManager : public phosphor::network::Manager
 {
   public:
