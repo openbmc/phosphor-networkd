@@ -89,8 +89,7 @@ phosphor_network_manager_LDFLAGS = \
 		$(SDEVENTPLUS_LIBS) \
 		$(STDPLUS_LIBS) \
 		$(PHOSPHOR_DBUS_INTERFACES_LIBS) \
-		$(PHOSPHOR_LOGGING_LIBS) \
-		-lstdc++fs
+		$(PHOSPHOR_LOGGING_LIBS)
 
 phosphor_network_manager_CXXFLAGS = \
 		$(SYSTEMD_CFLAGS) \

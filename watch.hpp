@@ -7,7 +7,7 @@
 #include <sys/inotify.h>
 #include <systemd/sd-event.h>
 
-#include <experimental/filesystem>
+#include <filesystem>
 #include <functional>
 #include <map>
 
@@ -18,7 +18,7 @@ namespace network
 namespace inotify
 {
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 // Auxiliary callback to be invoked on inotify events
 using UserCallBack = std::function<void(const std::string&)>;
