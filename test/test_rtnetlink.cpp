@@ -20,8 +20,8 @@ namespace network
 {
 sdbusplus::bus::bus bus(sdbusplus::bus::new_default());
 std::unique_ptr<MockManager> manager = nullptr;
-extern std::unique_ptr<Timer> refreshObjectTimer;
-extern std::unique_ptr<Timer> restartTimer;
+std::unique_ptr<Timer> refreshObjectTimer = nullptr;
+std::unique_ptr<Timer> restartTimer = nullptr;
 EventPtr eventPtr = nullptr;
 
 /** @brief refresh the network objects. */
