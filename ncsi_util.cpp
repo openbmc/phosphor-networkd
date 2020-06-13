@@ -27,7 +27,7 @@ namespace internal
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
 
-CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
+CallBack infoCallBack = [](struct nl_msg* msg, void* /*arg*/) {
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
 

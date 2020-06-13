@@ -41,7 +41,7 @@ struct ifaddrs* mock_ifaddrs = nullptr;
 int ifaddr_count = 0;
 
 /* Stub library functions */
-void freeifaddrs(ifaddrs* ifp)
+void freeifaddrs(ifaddrs* /*ifp*/)
 {
     return;
 }
