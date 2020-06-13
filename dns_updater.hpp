@@ -1,6 +1,6 @@
 #pragma once
 
-#include <experimental/filesystem>
+#include <filesystem>
 
 namespace phosphor
 {
@@ -11,7 +11,7 @@ namespace dns
 namespace updater
 {
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 
 constexpr auto RESOLV_CONF = "/etc/resolv.conf";
 

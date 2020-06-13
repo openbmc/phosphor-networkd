@@ -19,7 +19,7 @@
 #include <unistd.h>
 
 #include <algorithm>
-#include <experimental/filesystem>
+#include <filesystem>
 #include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
@@ -438,7 +438,7 @@ std::string EthernetInterface::generateObjectPath(
     type = type.substr(type.rfind('.') + 1);
     std::transform(type.begin(), type.end(), type.begin(), ::tolower);
 
-    std::experimental::filesystem::path objectPath;
+    std::filesystem::path objectPath;
     objectPath /= objPath;
     objectPath /= type;
     objectPath /= generateId(ipaddress, prefixLength, gateway);
@@ -448,7 +448,7 @@ std::string EthernetInterface::generateObjectPath(
 std::string EthernetInterface::generateStaticNeighborObjectPath(
     const std::string& iPAddress, const std::string& mACAddress) const
 {
-    std::experimental::filesystem::path objectPath;
+    std::filesystem::path objectPath;
     objectPath /= objPath;
     objectPath /= "static_neighbor";
     objectPath /= generateNeighborId(iPAddress, mACAddress);
@@ -779,7 +779,7 @@ void EthernetInterface::writeConfigurationFile()
     using namespace std::string_literals;
     using AddressOrigin =
         sdbusplus::xyz::openbmc_project::Network::server::IP::AddressOrigin;
-    namespace fs = std::experimental::filesystem;
+    namespace fs = std::filesystem;
 
     // if there is vlan interafce then write the configuration file
     // for vlan also.
