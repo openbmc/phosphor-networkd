@@ -79,7 +79,7 @@ void createNetLinkSocket(phosphor::Descriptor& smartSock)
     smartSock.set(fd);
 }
 
-int main(int argc, char* argv[])
+int main(int /*argc*/, char** /*argv*/)
 {
     phosphor::network::initializeTimers();
 

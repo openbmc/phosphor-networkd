@@ -65,7 +65,7 @@ int Watch::inotifyInit()
     return fd;
 }
 
-int Watch::processEvents(sd_event_source* eventSource, int fd,
+int Watch::processEvents(sd_event_source* /*eventSource*/, int fd,
                          uint32_t retEvents, void* userData)
 {
     auto watch = static_cast<Watch*>(userData);
