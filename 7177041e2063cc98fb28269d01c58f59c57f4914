@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "19feeed2_7587a840",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2020-06-14T03:24:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "743dbad9_78b2777f",
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1f02015e_f715bcba",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 8
@@ -33,6 +51,24 @@
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "366bf953_21fe163d",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2020-06-14T03:24:07Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1f02015e_f715bcba",
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "5610b716_7310edeb",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2020-06-14T03:24:07Z",
+      "side": 1,
+      "message": "Currently, we are ignoring the link local addresses by setting the `filter.scope \u003d RT_SCOPE_UNIVERSE`",
+      "parentUuid": "16b88c5e_0d8679d3",
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f163e52b_2e916721",
         "filename": "ipaddress.cpp",
         "patchSetId": 8
@@ -67,6 +121,24 @@
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77609629_b93d2a3c",
+        "filename": "ipaddress.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2020-06-14T03:24:07Z",
+      "side": 1,
+      "message": "That doesn\u0027t actually work for DHCP, systemd marks those addresses as IFA_F_PERMANENT. We currently don\u0027t have a better way to detect DHCP addresses or distinguish them from non-temporary SLAAC so I\u0027m leaving this behavior as it was for now.",
+      "parentUuid": "f163e52b_2e916721",
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "a826baae_0496176f",
+        "filename": "ipaddress.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2020-06-14T03:24:07Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "caa41eec_a25d7bd2",
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c655129_aa0f7f73",
         "filename": "ipaddress.hpp",
         "patchSetId": 8
@@ -98,6 +188,30 @@
       "writtenOn": "2019-07-16T06:47:59Z",
       "side": 1,
       "message": "Can we declare it in util/ethernetInterface instead of ipaddress?",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 74
+      },
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac5b77bc_6fe78f11",
+        "filename": "ipaddress.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2020-06-14T03:24:07Z",
+      "side": 1,
+      "message": "We can, but do I need to move the neighbor stuff too then?",
+      "parentUuid": "8c655129_aa0f7f73",
       "range": {
         "startLine": 54,
         "startChar": 0,
@@ -127,6 +241,24 @@
     },
     {
       "key": {
+        "uuid": "f82f60a5_7ecfac9e",
+        "filename": "ipaddress.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2020-06-14T03:24:07Z",
+      "side": 1,
+      "message": "It\u0027s not meant to be used outside of this file, it\u0027s a detail of the IPAddress module",
+      "parentUuid": "9989a79d_c4b5eeb3",
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4772c8fd_62e7b00f",
         "filename": "ipaddress.hpp",
         "patchSetId": 8
@@ -147,6 +279,30 @@
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6dc465f9_1d975828",
+        "filename": "ipaddress.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2020-06-14T03:24:07Z",
+      "side": 1,
+      "message": "See the other comment",
+      "parentUuid": "4772c8fd_62e7b00f",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 3
+      },
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
