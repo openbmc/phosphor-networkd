@@ -14,6 +14,7 @@
 #include <sys/types.h>
 
 #include <stdexcept>
+#include <stdplus/raw.hpp>
 #include <string_view>
 #include <utility>
 #include <vector>
@@ -32,7 +33,7 @@ void parseNeighbor(const NeighborFilter& filter, const nlmsghdr& hdr,
     {
         throw std::runtime_error("Not a neighbor msg");
     }
-    auto ndm = extract<ndmsg>(msg, "Bad neighbor msg");
+    auto ndm = stdplus::raw::extract<ndmsg>(msg);
 
     // Filter out neighbors we don't care about
     unsigned ifindex = ndm.ndm_ifindex;
@@ -55,7 +56,7 @@ void parseNeighbor(const NeighborFilter& filter, const nlmsghdr& hdr,
         auto [hdr, data] = netlink::extractRtAttr(msg);
         if (hdr.rta_type == NDA_LLADDR)
         {
-            neighbor.mac = copyFrom<ether_addr>(data, "Bad neighbor MAC");
+            neighbor.mac = stdplus::raw::copyFrom<ether_addr>(data);
         }
         else if (hdr.rta_type == NDA_DST)
         {

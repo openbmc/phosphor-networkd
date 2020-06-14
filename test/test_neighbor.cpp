@@ -8,6 +8,7 @@
 
 #include <cstring>
 #include <stdexcept>
+#include <stdplus/raw.hpp>
 #include <string>
 #include <vector>
 
@@ -115,7 +116,8 @@ TEST(ParseNeighbor, NoMAC)
     EXPECT_EQ(msg.ndm_ifindex, neighbors[0].interface);
     EXPECT_EQ(msg.ndm_state, neighbors[0].state);
     EXPECT_FALSE(neighbors[0].mac);
-    EXPECT_TRUE(equal(addr, std::get<in_addr>(neighbors[0].address)));
+    EXPECT_TRUE(
+        stdplus::raw::equal(addr, std::get<in_addr>(neighbors[0].address)));
 }
 
 TEST(ParseNeighbor, FilterInterface)
@@ -150,7 +152,8 @@ TEST(ParseNeighbor, FilterInterface)
     EXPECT_EQ(msg.ndm_ifindex, neighbors[0].interface);
     EXPECT_EQ(msg.ndm_state, neighbors[0].state);
     EXPECT_FALSE(neighbors[0].mac);
-    EXPECT_TRUE(equal(addr, std::get<in_addr>(neighbors[0].address)));
+    EXPECT_TRUE(
+        stdplus::raw::equal(addr, std::get<in_addr>(neighbors[0].address)));
 }
 
 TEST(ParseNeighbor, FilterState)
@@ -185,7 +188,8 @@ TEST(ParseNeighbor, FilterState)
     EXPECT_EQ(msg.ndm_ifindex, neighbors[0].interface);
     EXPECT_EQ(msg.ndm_state, neighbors[0].state);
     EXPECT_FALSE(neighbors[0].mac);
-    EXPECT_TRUE(equal(addr, std::get<in_addr>(neighbors[0].address)));
+    EXPECT_TRUE(
+        stdplus::raw::equal(addr, std::get<in_addr>(neighbors[0].address)));
 }
 
 TEST(ParseNeighbor, Full)
@@ -225,8 +229,9 @@ TEST(ParseNeighbor, Full)
     EXPECT_EQ(msg.ndm_ifindex, neighbors[0].interface);
     EXPECT_EQ(msg.ndm_state, neighbors[0].state);
     EXPECT_TRUE(neighbors[0].mac);
-    EXPECT_TRUE(equal(mac, *neighbors[0].mac));
-    EXPECT_TRUE(equal(addr, std::get<in6_addr>(neighbors[0].address)));
+    EXPECT_TRUE(stdplus::raw::equal(mac, *neighbors[0].mac));
+    EXPECT_TRUE(
+        stdplus::raw::equal(addr, std::get<in6_addr>(neighbors[0].address)));
 }
 
 } // namespace detail

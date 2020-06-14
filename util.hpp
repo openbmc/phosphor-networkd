@@ -185,53 +185,6 @@ void execute(const char* path, ArgTypes&&... tArgs)
 
 } // namespace network
 
-/** @brief Copies data from a buffer into a copyable type
- *
- *  @param[in] data - The data buffer being extracted from
- *  @param[in] emsg - The message to print if extraction fails
- *  @return The copyable type with data populated
- */
-template <typename T>
-T copyFrom(std::string_view data, const char* emsg = "Extract Failed")
-{
-    static_assert(std::is_trivially_copyable_v<T>);
-    T ret;
-    if (data.size() < sizeof(ret))
-    {
-        throw std::runtime_error(emsg);
-    }
-    std::memcpy(&ret, data.data(), sizeof(ret));
-    return ret;
-}
-
-/** @brief Extracts data from a buffer into a copyable type
- *         Updates the data buffer to show that data was removed
- *
- *  @param[in,out] data - The data buffer being extracted from
- *  @param[in] emsg     - The message to print if extraction fails
- *  @return The copyable type with data populated
- */
-template <typename T>
-T extract(std::string_view& data, const char* emsg = "Extract Failed")
-{
-    T ret = copyFrom<T>(data, emsg);
-    data.remove_prefix(sizeof(ret));
-    return ret;
-}
-
-/** @brief Compares two of the same trivially copyable types
- *
- *  @param[in] a - The data buffer being extracted from
- *  @param[in] b - The message to print if extraction fails
- *  @return True if the parameters are bitwise identical
- */
-template <typename T>
-bool equal(const T& a, const T& b)
-{
-    static_assert(std::is_trivially_copyable_v<T>);
-    return memcmp(&a, &b, sizeof(T)) == 0;
-}
-
 class Descriptor
 {
   private:

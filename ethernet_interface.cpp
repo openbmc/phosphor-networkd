@@ -24,6 +24,7 @@
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <sstream>
+#include <stdplus/raw.hpp>
 #include <string>
 #include <string_view>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -325,7 +326,7 @@ std::string
     static_assert(sizeof(ifr.ifr_hwaddr.sa_data) >= sizeof(ether_addr));
     std::string_view hwaddr(reinterpret_cast<char*>(ifr.ifr_hwaddr.sa_data),
                             sizeof(ifr.ifr_hwaddr.sa_data));
-    return mac_address::toString(copyFrom<ether_addr>(hwaddr));
+    return mac_address::toString(stdplus::raw::copyFrom<ether_addr>(hwaddr));
 }
 
 std::string EthernetInterface::generateId(const std::string& ipaddress,
@@ -945,7 +946,7 @@ std::string EthernetInterface::mACAddress(std::string value)
 
     // We don't need to update the system if the address is unchanged
     ether_addr oldMAC = mac_address::fromString(MacAddressIntf::mACAddress());
-    if (!equal(newMAC, oldMAC))
+    if (!stdplus::raw::equal(newMAC, oldMAC))
     {
         if (!mac_address::isLocalAdmin(newMAC))
         {
@@ -953,7 +954,7 @@ std::string EthernetInterface::mACAddress(std::string value)
             {
                 auto inventoryMAC =
                     mac_address::getfromInventory(bus, interfaceName());
-                if (!equal(newMAC, inventoryMAC))
+                if (!stdplus::raw::equal(newMAC, inventoryMAC))
                 {
                     log<level::ERR>(
                         "Given MAC address is neither a local Admin "

@@ -5,6 +5,7 @@
 
 #include <cstddef>
 #include <cstring>
+#include <stdplus/raw.hpp>
 #include <string>
 #include <string_view>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -213,94 +214,6 @@ TEST_F(TestUtil, InterfaceToUbootEthAddr)
     EXPECT_EQ("eth28addr", interfaceToUbootEthAddr("eth28"));
 }
 
-TEST_F(TestUtil, CopyFromTooSmall)
-{
-    constexpr auto expected = "abcde"sv;
-    struct
-    {
-        uint8_t data[10];
-    } data;
-    static_assert(sizeof(data) > expected.size());
-    EXPECT_THROW(copyFrom<decltype(data)>(expected), std::runtime_error);
-}
-
-TEST_F(TestUtil, CopyFromSome)
-{
-    constexpr auto expected = "abcde"sv;
-    struct
-    {
-        uint8_t data[2];
-    } data;
-    static_assert(sizeof(data) < expected.size());
-    data = copyFrom<decltype(data)>(expected);
-    EXPECT_EQ(0, memcmp(&data, expected.data(), sizeof(data)));
-}
-
-TEST_F(TestUtil, CopyFromAll)
-{
-    constexpr auto expected = "abcde"sv;
-    struct
-    {
-        uint8_t data[5];
-    } data;
-    static_assert(sizeof(data) == expected.size());
-    data = copyFrom<decltype(data)>(expected);
-    EXPECT_EQ(0, memcmp(&data, expected.data(), sizeof(data)));
-}
-
-TEST_F(TestUtil, ExtractSome)
-{
-    constexpr auto expected = "abcde"sv;
-    auto buf = expected;
-    struct
-    {
-        uint8_t data[2];
-    } data;
-    static_assert(sizeof(data) < expected.size());
-    data = extract<decltype(data)>(buf);
-    EXPECT_EQ(0, memcmp(&data, expected.data(), sizeof(data)));
-    EXPECT_EQ(3, buf.size());
-    EXPECT_EQ(expected.substr(2), buf);
-}
-
-TEST_F(TestUtil, ExtractAll)
-{
-    constexpr auto expected = "abcde"sv;
-    auto buf = expected;
-    struct
-    {
-        uint8_t data[5];
-    } data;
-    static_assert(sizeof(data) == expected.size());
-    data = extract<decltype(data)>(buf);
-    EXPECT_EQ(0, memcmp(&data, expected.data(), sizeof(data)));
-    EXPECT_EQ(0, buf.size());
-}
-
-TEST_F(TestUtil, Equal)
-{
-    struct
-    {
-        int i;
-    } a, b{};
-    a.i = 4;
-    b.i = 4;
-
-    EXPECT_TRUE(equal(a, b));
-}
-
-TEST_F(TestUtil, NotEqual)
-{
-    struct
-    {
-        int i;
-    } a, b{};
-    a.i = 2;
-    b.i = 4;
-
-    EXPECT_FALSE(equal(a, b));
-}
-
 namespace mac_address
 {
 
@@ -313,11 +226,14 @@ TEST(MacFromString, Bad)
 
 TEST(MacFromString, Valid)
 {
-    EXPECT_TRUE(equal(ether_addr{}, fromString("00:00:00:00:00:00")));
-    EXPECT_TRUE(equal(ether_addr{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa},
-                      fromString("FF:EE:DD:cc:bb:aa")));
-    EXPECT_TRUE(equal(ether_addr{0x00, 0x01, 0x02, 0x03, 0x04, 0x05},
-                      fromString("0:1:2:3:4:5")));
+    EXPECT_TRUE(
+        stdplus::raw::equal(ether_addr{}, fromString("00:00:00:00:00:00")));
+    EXPECT_TRUE(
+        stdplus::raw::equal(ether_addr{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa},
+                            fromString("FF:EE:DD:cc:bb:aa")));
+    EXPECT_TRUE(
+        stdplus::raw::equal(ether_addr{0x00, 0x01, 0x02, 0x03, 0x04, 0x05},
+                            fromString("0:1:2:3:4:5")));
 }
 
 TEST(MacToString, Valid)

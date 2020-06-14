@@ -19,6 +19,7 @@
 #include <map>
 #include <queue>
 #include <stdexcept>
+#include <stdplus/raw.hpp>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -128,7 +129,7 @@ void validateMsgHdr(const struct msghdr* msg)
 ssize_t sendmsg_link_dump(std::queue<std::string>& msgs, std::string_view in)
 {
     const ssize_t ret = in.size();
-    const auto& hdrin = phosphor::copyFrom<nlmsghdr>(in);
+    const auto& hdrin = stdplus::raw::copyFrom<nlmsghdr>(in);
     if (hdrin.nlmsg_type != RTM_GETLINK)
     {
         return 0;

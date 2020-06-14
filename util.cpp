@@ -17,6 +17,7 @@
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <stdexcept>
+#include <stdplus/raw.hpp>
 #include <string>
 #include <variant>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -622,7 +623,7 @@ std::string toString(const ether_addr& mac)
 
 bool isEmpty(const ether_addr& mac)
 {
-    return equal(mac, ether_addr{});
+    return stdplus::raw::equal(mac, ether_addr{});
 }
 
 bool isMulticast(const ether_addr& mac)

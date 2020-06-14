@@ -9,6 +9,7 @@
 
 #include <array>
 #include <stdexcept>
+#include <stdplus/raw.hpp>
 #include <system_error>
 
 namespace phosphor
@@ -23,7 +24,7 @@ namespace detail
 void processMsg(std::string_view& msgs, bool& done, const ReceiveCallback& cb)
 {
     // Parse and update the message buffer
-    auto hdr = copyFrom<nlmsghdr>(msgs, "Bad netlink header");
+    auto hdr = stdplus::raw::copyFrom<nlmsghdr>(msgs);
     if (hdr.nlmsg_len < sizeof(hdr))
     {
         throw std::runtime_error("Invalid nlmsg length");
@@ -56,7 +57,7 @@ void processMsg(std::string_view& msgs, bool& done, const ReceiveCallback& cb)
     }
     else if (hdr.nlmsg_type == NLMSG_ERROR)
     {
-        auto err = copyFrom<nlmsgerr>(msg, "Bad netlink error");
+        auto err = stdplus::raw::copyFrom<nlmsgerr>(msg);
         // This is just an ACK so don't do the callback
         if (err.error <= 0)
         {
@@ -175,7 +176,7 @@ void performRequest(int protocol, void* data, size_t size,
 
 std::tuple<rtattr, std::string_view> extractRtAttr(std::string_view& data)
 {
-    auto hdr = copyFrom<rtattr>(data, "Bad rtattr header");
+    auto hdr = stdplus::raw::copyFrom<rtattr>(data);
     if (hdr.rta_len < RTA_LENGTH(0))
     {
         throw std::runtime_error("Invalid rtattr length");

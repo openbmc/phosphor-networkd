@@ -7,6 +7,7 @@
 
 #include <cstring>
 #include <stdexcept>
+#include <stdplus/raw.hpp>
 #include <string_view>
 
 #include <gtest/gtest.h>
@@ -125,8 +126,9 @@ TEST(ExtractMsgs, ErrMsg)
     processMsg(data, done, cb);
     EXPECT_EQ(0, data.size());
     EXPECT_EQ(1, cbCalls);
-    EXPECT_TRUE(equal(hdr, hdrOut));
-    EXPECT_TRUE(equal(err, extract<nlmsgerr>(dataOut)));
+    EXPECT_TRUE(stdplus::raw::equal(hdr, hdrOut));
+    EXPECT_TRUE(
+        stdplus::raw::equal(err, stdplus::raw::extract<nlmsgerr>(dataOut)));
     EXPECT_EQ(0, dataOut.size());
     EXPECT_TRUE(done);
 }
