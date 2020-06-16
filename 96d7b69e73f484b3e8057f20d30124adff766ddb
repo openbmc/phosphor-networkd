@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "719ac897_8f0683e2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-06-16T08:35:02Z",
+      "side": 1,
+      "message": "nit: remove hyphon",
+      "range": {
+        "startLine": 22,
+        "startChar": 5,
+        "endLine": 22,
+        "endChar": 9
+      },
+      "revId": "96d7b69e73f484b3e8057f20d30124adff766ddb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bad19dc_8b8005ac",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-06-16T08:35:02Z",
+      "side": 1,
+      "message": "This doesn\u0027t include the running time for the test as the tests are not getting executed with the command \"ninja test\"",
+      "range": {
+        "startLine": 23,
+        "startChar": 1,
+        "endLine": 23,
+        "endChar": 13
+      },
+      "revId": "96d7b69e73f484b3e8057f20d30124adff766ddb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
