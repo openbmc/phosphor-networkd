@@ -130,6 +130,18 @@ AC_ARG_ENABLE([nic_ethtool],
       )
 AM_CONDITIONAL([FEATURE_NIC_ETHTOOL], [test x$nic_ethtool = xtrue])
 
+# Configure option to enable ibm configuration for mapping ethernet interface
+# with the Inventory
+AC_ARG_ENABLE([ibm_config],
+    [  --enable-ibm-config  Enable/disable ibm configuration for mapping ethernet interface],
+    [case "${enableval}" in
+      yes) ibm_config=true ;;
+      no) ibm_config=false ;;
+      *) AC_MSG_ERROR([bad value ${ibm_config} for --enable-ibm-config]) ;;
+      esac],[ibm_config=false]
+      )
+AM_CONDITIONAL([FEATURE_IBM_CONFIG], [test x$ibm_config = xtrue])
+
 # Create configured output.
 AC_CONFIG_FILES([Makefile test/Makefile])
 AC_CONFIG_FILES([xyz.openbmc_project.Network.service])
