@@ -130,6 +130,18 @@ AC_ARG_ENABLE([nic_ethtool],
       )
 AM_CONDITIONAL([FEATURE_NIC_ETHTOOL], [test x$nic_ethtool = xtrue])
 
+# Configure option to enable sync operation between the MAC address in the Inventory 
+# on to the respective ethernet interface
+AC_ARG_ENABLE([sync_mac],
+    [  --enable-sync-mac  Enable/disable sync mac mapping for ethernet interface],
+    [case "${enableval}" in
+      yes) sync_mac=true ;;
+      no) sync_mac=false ;;
+      *) AC_MSG_ERROR([bad value ${sync_mac} for --enable-sync-mac]) ;;
+      esac],[sync_mac=false]
+      )
+AM_CONDITIONAL([FEATURE_SYNC_MAC_FROM_INVENTORY], [test x$sync_mac = xtrue])
+
 # Create configured output.
 AC_CONFIG_FILES([Makefile test/Makefile])
 AC_CONFIG_FILES([xyz.openbmc_project.Network.service])
