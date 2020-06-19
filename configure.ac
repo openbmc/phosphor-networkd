@@ -42,6 +42,12 @@ PKG_CHECK_MODULES([LIBNL], [libnl-3.0 libnl-genl-3.0])
 AC_CHECK_HEADER(systemd/sd-bus.h, ,\
 [AC_MSG_ERROR([Could not find systemd/sd-bus.h...systemd development package required])])
 
+#check for nlohmann-json header files.
+AC_CHECK_HEADER(
+    nlohmann/json.hpp,
+    [],
+    [AC_MSG_ERROR([Could not find nlohmann/json.hpp])]
+)
 # Checks for typedefs, structures, and compiler characteristics.
 AX_APPEND_COMPILE_FLAGS([-Wall -Werror -Wno-unused-result], [CFLAGS])
 
