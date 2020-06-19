@@ -142,6 +142,14 @@ AC_ARG_ENABLE([sync_mac],
       )
 AM_CONDITIONAL([FEATURE_SYNC_MAC_FROM_INVENTORY], [test x$sync_mac = xtrue])
 
+#check for nlohmann-json header files.
+AS_IF([test "x$sync_mac" == "xtrue"],[
+AC_CHECK_HEADER(
+    nlohmann/json.hpp,
+    [],
+    [AC_MSG_ERROR([Could not find nlohmann/json.hpp])]]
+))
+
 # Create configured output.
 AC_CONFIG_FILES([Makefile test/Makefile])
 AC_CONFIG_FILES([xyz.openbmc_project.Network.service])
