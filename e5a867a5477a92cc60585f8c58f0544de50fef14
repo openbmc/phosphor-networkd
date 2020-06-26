@@ -1,0 +1,10 @@
+Code-Review+1: Sunitha Harish <sunithaharish04@gmail.com>
+Code-Review+2: William A. Kennington III <wak@google.com>
+Ok-To-Test+1: <openbmcbump-ci@yahoo.com>
+Ok-To-Test+1: ManojKiran Eda <manojkiran.eda@gmail.com>
+Verified+1: <openbmcbump-ci@yahoo.com>
+Submitted-by: ManojKiran Eda <manojkiran.eda@gmail.com>
+Submitted-at: Fri, 26 Jun 2020 14:32:57 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-networkd/+/33028
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
