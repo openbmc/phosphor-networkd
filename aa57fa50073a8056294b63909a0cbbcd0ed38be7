@@ -1,0 +1,10 @@
+Code-Review+2: William A. Kennington III <wak@google.com>
+Code-Review+1: Gunnar Mills <gmills@us.ibm.com>
+Code-Review+1: Ratan Gupta <ratagupt@linux.vnet.ibm.com>
+Ok-To-Test+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Verified+1: Jenkins <openbmc-ci-admin@ozlabs.org>
+Submitted-by: ManojKiran Eda <manojkiran.eda@gmail.com>
+Submitted-at: Fri, 26 Jun 2020 12:31:18 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-networkd/+/33616
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
