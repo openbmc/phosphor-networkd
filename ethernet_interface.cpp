@@ -1006,6 +1006,8 @@ std::string EthernetInterface::mACAddress(std::string value)
                               Argument::ARGUMENT_VALUE(value.c_str()));
     }
 
+    auto interface = interfaceName();
+
     // We don't need to update the system if the address is unchanged
     ether_addr oldMAC = mac_address::fromString(MacAddressIntf::mACAddress());
     if (!stdplus::raw::equal(newMAC, oldMAC))
@@ -1041,17 +1043,6 @@ std::string EthernetInterface::mACAddress(std::string value)
         }
         MacAddressIntf::mACAddress(value);
 
-        auto interface = interfaceName();
-
-#ifdef HAVE_UBOOT_ENV
-        auto envVar = interfaceToUbootEthAddr(interface.c_str());
-        if (envVar)
-        {
-            execute("/sbin/fw_setenv", "fw_setenv", envVar->c_str(),
-                    value.c_str());
-        }
-#endif // HAVE_UBOOT_ENV
-
         // TODO: would remove the call below and
         //      just restart systemd-netwokd
         //      through https://github.com/systemd/systemd/issues/6696
@@ -1059,6 +1050,16 @@ std::string EthernetInterface::mACAddress(std::string value)
                 "down");
         manager.writeToConfigurationFile();
     }
+
+#ifdef HAVE_UBOOT_ENV
+    // Ensure that the valid address is stored in the u-boot-env
+    auto envVar = interfaceToUbootEthAddr(interface.c_str());
+    if (envVar)
+    {
+        execute("/sbin/fw_setenv", "fw_setenv", envVar->c_str(),
+                value.c_str());
+    }
+#endif // HAVE_UBOOT_ENV
 
     return value;
 }
