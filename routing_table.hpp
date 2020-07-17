@@ -8,6 +8,7 @@
 #include <list>
 #include <map>
 #include <string>
+#include <vector>
 
 namespace phosphor
 {
@@ -62,9 +63,9 @@ class Table
     /**
      * @brief gets the default v4 gateway.
      *
-     * @returns the default v4 gateway.
+     * @returns the default v4 gateway list.
      */
-    std::string getDefaultGateway() const
+    std::map<std::string, std::string> getDefaultGateway() const
     {
         return defaultGateway;
     };
@@ -72,9 +73,9 @@ class Table
     /**
      * @brief gets the default v6 gateway.
      *
-     * @returns the default v6 gateway.
+     * @returns the default v6 gateway list.
      */
-    std::string getDefaultGateway6() const
+    std::map<std::string, std::string> getDefaultGateway6() const
     {
         return defaultGateway6;
     };
@@ -94,9 +95,9 @@ class Table
      */
     void parseRoutes(const struct nlmsghdr* nlHdr);
 
-    std::string defaultGateway;  // default gateway
-    std::string defaultGateway6; // default gateway
-    Map routeList;               // List of routes
+    std::map<std::string, std::string> defaultGateway;  // default gateway list
+    std::map<std::string, std::string> defaultGateway6; // default gateway list
+    Map routeList;                                      // List of routes
 };
 
 } // namespace route
