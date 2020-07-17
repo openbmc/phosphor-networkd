@@ -39,8 +39,22 @@ SystemConfiguration::SystemConfiguration(sdbusplus::bus::bus& bus,
     route::Table routingTable;
 
     SystemConfigIntf::hostName(name);
-    SystemConfigIntf::defaultGateway(routingTable.getDefaultGateway());
-    SystemConfigIntf::defaultGateway6(routingTable.getDefaultGateway6());
+    auto gatewayList = routingTable.getDefaultGateway();
+    auto gateway6List = routingTable.getDefaultGateway6();
+    // Assign first entry of gateway list
+    std::string gateway;
+    std::string gateway6;
+    if (!gatewayList.empty())
+    {
+        gateway = gatewayList[0].second;
+    }
+    if (!gateway6List.empty())
+    {
+        gateway6 = gateway6List[0].second;
+    }
+
+    SystemConfigIntf::defaultGateway(gateway);
+    SystemConfigIntf::defaultGateway6(gateway6);
 
     this->emit_object_added();
 }
