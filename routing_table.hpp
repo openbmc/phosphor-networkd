@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <list>
+#include <vector>
 #include <map>
 #include <string>
 
@@ -62,9 +63,9 @@ class Table
     /**
      * @brief gets the default v4 gateway.
      *
-     * @returns the default v4 gateway.
+     * @returns the default v4 gateway list.
      */
-    std::string getDefaultGateway() const
+    std::vector< std::pair<std::string,std::string>> getDefaultGateway() const
     {
         return defaultGateway;
     };
@@ -72,9 +73,9 @@ class Table
     /**
      * @brief gets the default v6 gateway.
      *
-     * @returns the default v6 gateway.
+     * @returns the default v6 gateway list.
      */
-    std::string getDefaultGateway6() const
+    std::vector< std::pair<std::string,std::string>> getDefaultGateway6() const
     {
         return defaultGateway6;
     };
@@ -94,8 +95,8 @@ class Table
      */
     void parseRoutes(const struct nlmsghdr* nlHdr);
 
-    std::string defaultGateway;  // default gateway
-    std::string defaultGateway6; // default gateway
+    std::vector<std::pair<std::string,std::string>> defaultGateway;  // default gateway list
+    std::vector<std::pair<std::string,std::string>> defaultGateway6; // default gateway list
     Map routeList;               // List of routes
 };
 
