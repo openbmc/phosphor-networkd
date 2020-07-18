@@ -43,16 +43,14 @@ class IPAddress : public IPIfaces
      *  @param[in] ipAddress - ipadress.
      *  @param[in] origin - origin of ipaddress(dhcp/static/SLAAC/LinkLocal).
      *  @param[in] prefixLength - Length of prefix.
-     *  @param[in] gateway - gateway address.
      */
     IPAddress(sdbusplus::bus::bus& bus, const char* objPath,
               EthernetInterface& parent, IP::Protocol type,
               const std::string& ipAddress, IP::AddressOrigin origin,
-              uint8_t prefixLength, const std::string& gateway);
+              uint8_t prefixLength);
 
     std::string address(std::string ipAddress) override;
     uint8_t prefixLength(uint8_t) override;
-    std::string gateway(std::string gateway) override;
     IP::Protocol type(IP::Protocol type) override;
     IP::AddressOrigin origin(IP::AddressOrigin origin) override;
 
@@ -61,7 +59,6 @@ class IPAddress : public IPIfaces
     void delete_() override;
 
     using IP::address;
-    using IP::gateway;
     using IP::origin;
     using IP::prefixLength;
     using IP::type;

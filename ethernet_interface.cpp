@@ -203,17 +203,15 @@ void EthernetInterface::createIPAddressObjects()
         {
             origin = IP::AddressOrigin::LinkLocal;
         }
-        // Obsolete parameter
-        std::string gateway = "";
 
         std::string ipAddressObjectPath = generateObjectPath(
-            addressType, addr.ipaddress, addr.prefix, gateway);
+            addressType, addr.ipaddress, addr.prefix);
 
         this->addrs.emplace(addr.ipaddress,
                             std::make_shared<phosphor::network::IPAddress>(
                                 bus, ipAddressObjectPath.c_str(), *this,
                                 addressType, addr.ipaddress, origin,
-                                addr.prefix, gateway));
+                                addr.prefix));
     }
 }
 
@@ -253,7 +251,7 @@ unsigned EthernetInterface::ifIndex() const
 }
 
 ObjectPath EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
-                                 uint8_t prefixLength, std::string gateway)
+                                 uint8_t prefixLength)
 {
 
     if (dhcpIsEnabled(protType))
@@ -275,9 +273,6 @@ ObjectPath EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
                               Argument::ARGUMENT_VALUE(ipaddress.c_str()));
     }
 
-    // Gateway is an obsolete parameter
-    gateway = "";
-
     if (!isValidPrefix(addressFamily, prefixLength))
     {
         log<level::ERR>("PrefixLength is not correct "),
@@ -288,11 +283,11 @@ ObjectPath EthernetInterface::iP(IP::Protocol protType, std::string ipaddress,
     }
 
     std::string objectPath =
-        generateObjectPath(protType, ipaddress, prefixLength, gateway);
+        generateObjectPath(protType, ipaddress, prefixLength);
     this->addrs.emplace(ipaddress,
                         std::make_shared<phosphor::network::IPAddress>(
                             bus, objectPath.c_str(), *this, protType, ipaddress,
-                            origin, prefixLength, gateway));
+                            origin, prefixLength));
 
     manager.writeToConfigurationFile();
     return objectPath;
@@ -398,13 +393,11 @@ std::string
 }
 
 std::string EthernetInterface::generateId(const std::string& ipaddress,
-                                          uint8_t prefixLength,
-                                          const std::string& gateway)
+                                          uint8_t prefixLength)
 {
     std::stringstream hexId;
     std::string hashString = ipaddress;
     hashString += std::to_string(prefixLength);
-    hashString += gateway;
 
     // Only want 8 hex digits.
     hexId << std::hex << ((std::hash<std::string>{}(hashString)) & 0xFFFFFFFF);
@@ -501,7 +494,7 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
 
 std::string EthernetInterface::generateObjectPath(
     IP::Protocol addressType, const std::string& ipaddress,
-    uint8_t prefixLength, const std::string& gateway) const
+    uint8_t prefixLength) const
 {
     std::string type = convertForMessage(addressType);
     type = type.substr(type.rfind('.') + 1);
@@ -510,7 +503,7 @@ std::string EthernetInterface::generateObjectPath(
     std::filesystem::path objectPath;
     objectPath /= objPath;
     objectPath /= type;
-    objectPath /= generateId(ipaddress, prefixLength, gateway);
+    objectPath /= generateId(ipaddress, prefixLength);
     return objectPath.string();
 }
 

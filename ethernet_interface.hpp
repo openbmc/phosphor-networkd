@@ -96,11 +96,10 @@ class EthernetInterface : public Ifaces
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipaddress- IP address.
      *  @param[in] prefixLength - Length of prefix.
-     *  @param[in] gateway - Gateway ip address.
      */
 
     ObjectPath iP(IP::Protocol addressType, std::string ipaddress,
-                  uint8_t prefixLength, std::string gateway) override;
+                  uint8_t prefixLength) override;
 
     /** @brief Function to create static neighbor dbus object.
      *  @param[in] ipAddress - IP address.
@@ -266,31 +265,26 @@ class EthernetInterface : public Ifaces
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipaddress - IP address.
      *  @param[in] prefixLength - Length of prefix.
-     *  @param[in] gateway - Gateway address.
-
      *  @return path of the address object.
      */
 
     std::string generateObjectPath(IP::Protocol addressType,
                                    const std::string& ipaddress,
-                                   uint8_t prefixLength,
-                                   const std::string& gateway) const;
+                                   uint8_t prefixLength) const;
 
     std::string
         generateStaticNeighborObjectPath(const std::string& iPAddress,
                                          const std::string& mACAddress) const;
 
     /** @brief generates the id by doing hash of ipaddress,
-     *         prefixlength and the gateway.
+     *         prefixlength.
      *  @param[in] ipaddress - IP address.
      *  @param[in] prefixLength - Length of prefix.
-     *  @param[in] gateway - Gateway address.
      *  @return hash string.
      */
 
     static std::string generateId(const std::string& ipaddress,
-                                  uint8_t prefixLength,
-                                  const std::string& gateway);
+                                  uint8_t prefixLength);
 
     /** @brief generates the id by doing hash of ipaddress
      *         and the mac address.

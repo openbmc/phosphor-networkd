@@ -21,14 +21,13 @@ using Reason = xyz::openbmc_project::Common::NotAllowed::REASON;
 IPAddress::IPAddress(sdbusplus::bus::bus& bus, const char* objPath,
                      EthernetInterface& parent, IP::Protocol type,
                      const std::string& ipaddress, IP::AddressOrigin origin,
-                     uint8_t prefixLength, const std::string& gateway) :
+                     uint8_t prefixLength) :
     IPIfaces(bus, objPath, true),
     parent(parent)
 {
 
     IP::address(ipaddress);
     IP::prefixLength(prefixLength);
-    IP::gateway(gateway);
     IP::type(type);
     IP::origin(origin);
 
@@ -40,10 +39,6 @@ std::string IPAddress::address(std::string /*ipAddress*/)
     elog<NotAllowed>(Reason("Property update is not allowed"));
 }
 uint8_t IPAddress::prefixLength(uint8_t /*value*/)
-{
-    elog<NotAllowed>(Reason("Property update is not allowed"));
-}
-std::string IPAddress::gateway(std::string /*gateway*/)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
 }
