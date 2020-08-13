@@ -998,6 +998,7 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
 std::string EthernetInterface::mACAddress(std::string value)
 {
     ether_addr newMAC = mac_address::fromString(value);
+
     if (!mac_address::isUnicast(newMAC))
     {
         log<level::ERR>("MACAddress is not valid.",
@@ -1032,7 +1033,10 @@ std::string EthernetInterface::mACAddress(std::string value)
     auto envVar = interfaceToUbootEthAddr(interface.c_str());
     if (envVar)
     {
-        execute("/sbin/fw_setenv", "fw_setenv", envVar->c_str(), value.c_str());
+        // Trimming MAC addresses that are out of range. eg: AA:FF:FF:FF:FF:100;
+        // and those having more than 6 bytes. eg: AA:AA:AA:AA:AA:AA:BB
+        execute("/sbin/fw_setenv", "fw_setenv", envVar->c_str(),
+                mac_address::toString(newMAC).c_str());
     }
 #endif // HAVE_UBOOT_ENV
 
