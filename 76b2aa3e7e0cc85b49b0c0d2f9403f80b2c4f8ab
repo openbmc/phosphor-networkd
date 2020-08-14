@@ -1,0 +1,10 @@
+Ok-To-Test+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Code-Review+1: Alexander Amelkin <a.amelkin@yadro.com>
+Code-Review+1: Adriana Kobylak <anoo@linux.ibm.com>
+Code-Review+2: William A. Kennington III <wak@google.com>
+Submitted-by: Alexander Filippov <a.filippov@yadro.com>
+Submitted-at: Fri, 14 Aug 2020 11:17:45 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-networkd/+/34577
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
