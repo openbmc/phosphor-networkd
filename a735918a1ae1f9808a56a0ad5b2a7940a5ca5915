@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7494562_03e0283d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000192
+      },
+      "writtenOn": "2020-08-28T11:51:24Z",
+      "side": 1,
+      "message": "Could you please explain how exactly this is expected to work.\n\nImagine that a BMC is configured to send SNMP traps or syslog events to a remote host outside of immediately connected networks. With more than 1 default gateway, how will one be selected to send the packets through?\n\nAlso, how exactly the user is going to control that from WebUI ? \n\nUnless that is explained and a linked commit to WebUI is created, I\u0027m all against this change because I see it as a potential source of serious network configuration troubles.",
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
