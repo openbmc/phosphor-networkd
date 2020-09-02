@@ -941,15 +941,16 @@ void EthernetInterface::writeConfigurationFile()
 
     if (manager.getSystemConf())
     {
-        stream << "[Route]\n";
         const auto& gateway = manager.getSystemConf()->defaultGateway();
         if (!gateway.empty())
         {
+            stream << "[Route]\n";
             stream << "Gateway=" << gateway << "\n";
         }
         const auto& gateway6 = manager.getSystemConf()->defaultGateway6();
         if (!gateway6.empty())
         {
+            stream << "[Route]\n";
             stream << "Gateway=" << gateway6 << "\n";
         }
     }
