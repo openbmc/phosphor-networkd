@@ -12,6 +12,7 @@ executable(
   implicit_include_directories: false,
   include_directories: src_includes,
   dependencies: [
+    dependency('fmt'),
     dependency('libnl-3.0'),
     dependency('libnl-genl-3.0'),
     phosphor_dbus_interfaces_dep,

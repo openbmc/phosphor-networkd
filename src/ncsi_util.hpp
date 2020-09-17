@@ -1,3 +1,7 @@
+#pragma once
+
+#include <span>
+
 namespace phosphor
 {
 namespace network
@@ -7,6 +11,20 @@ namespace ncsi
 
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
+
+/* @brief  This function will ask underlying NCSI driver
+ *         to send an OEM command (command type 0x50) with
+ *         the specified payload as the OEM data.
+ *         This function talks with the NCSI driver over
+ *         netlink messages.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] channel - Channel number with in the package.
+ * @param[in] payload - OEM data to send.
+ * @returns 0 on success and negative value for failure.
+ */
+int sendOemCommand(int ifindex, int package, int channel,
+                   std::span<const unsigned char> payload);
 
 /* @brief  This function will ask underlying NCSI driver
  *         to set a specific  package or package/channel
