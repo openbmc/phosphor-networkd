@@ -72,6 +72,8 @@ void ArgumentParser::usage(char** argv)
     std::cerr << "    --set=<set>       Set a specific package/channel.\n";
     std::cerr
         << "    --clear=<clear>   Clear all the settings on the interface.\n";
+    std::cerr
+        << "    --oem-payload=<hex data> Send an OEM command with payload.\n";
     std::cerr << "    --package=<package>  Specify a package.\n";
     std::cerr << "    --channel=<channel> Specify a channel.\n";
     std::cerr << "    --index=<device index> Specify device ifindex.\n";
@@ -82,6 +84,7 @@ const option ArgumentParser::options[] = {
     {"info", no_argument, NULL, 'i'},
     {"set", no_argument, NULL, 's'},
     {"clear", no_argument, NULL, 'r'},
+    {"oem-payload", required_argument, NULL, 'o'},
     {"package", required_argument, NULL, 'p'},
     {"channel", required_argument, NULL, 'c'},
     {"index", required_argument, NULL, 'x'},
@@ -89,7 +92,7 @@ const option ArgumentParser::options[] = {
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "i:s:r:p:c:x:h?";
+const char* ArgumentParser::optionStr = "i:s:r:o:p:c:x:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
