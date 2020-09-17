@@ -69,9 +69,11 @@ void ArgumentParser::usage(char** argv)
     std::cerr << "Options:\n";
     std::cerr << "    --help            Print this menu.\n";
     std::cerr << "    --info=<info>     Retrieve info about NCSI topology.\n";
+    std::cerr << "    --send=<cmd>      Send a command with payload.\n";
     std::cerr << "    --set=<set>       Set a specific package/channel.\n";
     std::cerr
         << "    --clear=<clear>   Clear all the settings on the interface.\n";
+    std::cerr << "    --payload=<hex data> Specify the command payload.\n";
     std::cerr << "    --package=<package>  Specify a package.\n";
     std::cerr << "    --channel=<channel> Specify a channel.\n";
     std::cerr << "    --index=<device index> Specify device ifindex.\n";
@@ -80,8 +82,10 @@ void ArgumentParser::usage(char** argv)
 
 const option ArgumentParser::options[] = {
     {"info", no_argument, NULL, 'i'},
+    {"send", required_argument, NULL, 'd'},
     {"set", no_argument, NULL, 's'},
     {"clear", no_argument, NULL, 'r'},
+    {"payload", required_argument, NULL, 'l'},
     {"package", required_argument, NULL, 'p'},
     {"channel", required_argument, NULL, 'c'},
     {"index", required_argument, NULL, 'x'},
@@ -89,7 +93,7 @@ const option ArgumentParser::options[] = {
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "i:s:r:p:c:x:h?";
+const char* ArgumentParser::optionStr = "i:d:s:r:l:p:c:x:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";

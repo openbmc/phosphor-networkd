@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 static void exitWithError(const char* err, char** argv)
 {
@@ -85,8 +86,56 @@ int main(int argc, char** argv)
         channelInt = DEFAULT_VALUE;
     }
 
-    auto setCmd = (options)["set"];
-    if (setCmd == "true")
+    auto sendCmd = (options)["send"];
+    if (!sendCmd.empty())
+    {
+        int sendCmdInt{};
+        std::vector<unsigned char> payload;
+        auto payloadStr = (options)["payload"];
+
+        if (!payloadStr.empty())
+        {
+            std::string byte(2, 0);
+
+            for (auto it = payloadStr.begin(); it != payloadStr.end(); ++it)
+            {
+                byte[0] = *it;
+                ++it;
+                if (it == payloadStr.end())
+                {
+                    break;
+                }
+
+                byte[1] = *it;
+                try
+                {
+                    payload.push_back(stoi(byte, nullptr, 16));
+                }
+                catch (const std::exception& e)
+                {
+                    exitWithError("Payload invalid.", argv);
+                }
+            }
+        }
+
+        try
+        {
+            sendCmdInt = stoi(sendCmd, nullptr, 0);
+        }
+        catch (const std::exception& e)
+        {
+            exitWithError("Command not specified.", argv);
+        }
+
+        if (packageInt == DEFAULT_VALUE)
+        {
+            exitWithError("Package not specified.", argv);
+        }
+
+        return ncsi::sendCommand(indexInt, packageInt, channelInt, sendCmdInt,
+                                 payload);
+    }
+    else if ((options)["set"] == "true")
     {
         // Can not perform set operation without package.
         if (packageInt == DEFAULT_VALUE)

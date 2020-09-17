@@ -1,3 +1,7 @@
+#pragma once
+
+#include <vector>
+
 namespace phosphor
 {
 namespace network
@@ -7,6 +11,9 @@ namespace ncsi
 
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
+
+int sendCommand(int ifindex, int package, int channel, int cmd,
+                const std::vector<unsigned char>& payload);
 
 /* @brief  This function will ask underlying NCSI driver
  *         to set a specific  package or package/channel
