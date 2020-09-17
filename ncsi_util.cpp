@@ -5,6 +5,7 @@
 #include <netlink/genl/genl.h>
 #include <netlink/netlink.h>
 
+#include <iomanip>
 #include <iostream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
@@ -25,10 +26,48 @@ using CallBack = int (*)(struct nl_msg* msg, void* arg);
 namespace internal
 {
 
+struct NCSIPacketHeader
+{
+    __u8 MCID;
+    __u8 revision;
+    __u8 reserved;
+    __u8 id;
+    __u8 type;
+    __u8 channel;
+    __be16 length;
+    __be32 rsvd[2];
+};
+
+class Command
+{
+  private:
+    static const std::vector<unsigned char> emptyPayload;
+
+  public:
+    Command() = delete;
+    ~Command() = default;
+    Command(const Command&) = delete;
+    Command& operator=(const Command&) = delete;
+    Command(Command&&) = default;
+    Command& operator=(Command&&) = default;
+    Command(int c, int nc = DEFAULT_VALUE,
+            const std::vector<unsigned char>& p = emptyPayload) :
+        cmd(c),
+        ncsi_cmd(nc), payload(p)
+    {
+    }
+
+    int cmd;
+    int ncsi_cmd;
+    const std::vector<unsigned char>& payload;
+};
+
+const std::vector<unsigned char> Command::emptyPayload;
+
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
 
-CallBack infoCallBack = [](struct nl_msg* msg, void* /*arg*/) {
+CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
 
@@ -49,6 +88,8 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* /*arg*/) {
         {type : NLA_UNSPEC}, {type : NLA_NESTED}, {type : NLA_U32},
         {type : NLA_FLAG},   {type : NLA_NESTED}, {type : NLA_UNSPEC},
     };
+
+    *(int*)arg = 0;
 
     auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
     if (!tb[NCSI_ATTR_PACKAGE_LIST])
@@ -175,10 +216,59 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* /*arg*/) {
     return (int)NL_SKIP;
 };
 
-int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
+CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    constexpr auto ETHERNET_HEADER_SIZE = 16;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {type : NLA_UNSPEC}, {type : NLA_U32}, {type : NLA_NESTED},
+        {type : NLA_U32},    {type : NLA_U32}, {type : NLA_BINARY},
+        {type : NLA_FLAG},   {type : NLA_U32}, {type : NLA_U32},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        std::cerr << "Failed to parse package" << std::endl;
+        return ret;
+    }
+
+    auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - ETHERNET_HEADER_SIZE;
+    unsigned char* data =
+        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + ETHERNET_HEADER_SIZE;
+
+    // Dump the response to stdout. Enhancement: option to save response data
+    std::cout << "Response : " << std::dec << data_len << " bytes" << std::endl;
+    for (auto i = 0; i < data_len; ++i)
+    {
+        if (i)
+        {
+            if (!(i % 8))
+            {
+                std::cout << std::endl;
+            }
+            else
+            {
+                std::cout << " ";
+            }
+        }
+        std::cout << std::hex << std::setfill('0') << std::setw(2)
+                  << (int)data[i];
+    }
+
+    std::cout << std::endl;
+
+    return 0;
+};
+
+int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
              int channel = DEFAULT_VALUE, int flags = NONE,
              CallBack function = nullptr)
 {
+    int cb_ret = 0;
     nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
     auto ret = genl_connect(socket.get());
     if (ret < 0)
@@ -196,10 +286,10 @@ int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
 
     nlMsgPtr msg(nlmsg_alloc(), &::nlmsg_free);
 
-    auto msgHdr = genlmsg_put(msg.get(), 0, 0, driverID, 0, flags, cmd, 0);
+    auto msgHdr = genlmsg_put(msg.get(), 0, 0, driverID, 0, flags, cmd.cmd, 0);
     if (!msgHdr)
     {
-        std::cerr << "Unable to add the netlink headers , COMMAND : " << cmd
+        std::cerr << "Unable to add the netlink headers , COMMAND : " << cmd.cmd
                   << std::endl;
         return -1;
     }
@@ -236,11 +326,37 @@ int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
         return ret;
     }
 
+    if (cmd.ncsi_cmd != DEFAULT_VALUE)
+    {
+        std::vector<unsigned char> pl(sizeof(NCSIPacketHeader) +
+                                      cmd.payload.size());
+        NCSIPacketHeader* hdr = (NCSIPacketHeader*)pl.data();
+
+        std::copy(cmd.payload.begin(), cmd.payload.end(),
+                  pl.begin() + sizeof(NCSIPacketHeader));
+
+        hdr->type = cmd.ncsi_cmd;
+        hdr->length = htons(cmd.payload.size());
+
+        ret = nla_put(msg.get(), ncsi_nl_attrs::NCSI_ATTR_DATA, pl.size(),
+                      pl.data());
+        if (ret < 0)
+        {
+            std::cerr << "Failed to set the data attribute, RC : " << ret
+                      << std::endl;
+            return ret;
+        }
+
+        nl_socket_disable_seq_check(socket.get());
+    }
+
     if (function)
     {
+        cb_ret = 1;
+
         // Add a callback function to the socket
         nl_socket_modify_cb(socket.get(), NL_CB_VALID, NL_CB_CUSTOM, function,
-                            nullptr);
+                            &cb_ret);
     }
 
     ret = nl_send_auto(socket.get(), msg.get());
@@ -250,32 +366,63 @@ int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
         return ret;
     }
 
-    ret = nl_recvmsgs_default(socket.get());
-    if (ret < 0)
+    do
     {
-        std::cerr << "Failed to receive the message , RC : " << ret
-                  << std::endl;
-    }
+        ret = nl_recvmsgs_default(socket.get());
+        if (ret < 0)
+        {
+            std::cerr << "Failed to receive the message , RC : " << ret
+                      << std::endl;
+            break;
+        }
+    } while (cb_ret);
+
     return ret;
 }
 
 } // namespace internal
+
+int sendOemCommand(int ifindex, int package, int channel,
+                   const std::vector<unsigned char>& payload)
+{
+    constexpr auto cmd = 0x50;
+
+    std::cout << "Send OEM Command, CHANNEL : " << std::hex << channel
+              << ", PACKAGE : " << std::hex << package
+              << ", IFINDEX: " << std::hex << ifindex << std::endl;
+    if (!payload.empty())
+    {
+        std::cout << "Payload :";
+        for (auto& i : payload)
+        {
+            std::cout << " " << std::hex << std::setfill('0') << std::setw(2)
+                      << (int)i;
+        }
+        std::cout << std::endl;
+    }
+
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, cmd, payload),
+        package, channel, NONE, internal::sendCallBack);
+}
 
 int setChannel(int ifindex, int package, int channel)
 {
     std::cout << "Set Channel : " << std::hex << channel
               << ", PACKAGE : " << std::hex << package
               << ", IFINDEX :  " << std::hex << ifindex << std::endl;
-    return internal::applyCmd(ifindex, ncsi_nl_commands::NCSI_CMD_SET_INTERFACE,
-                              package, channel);
+    return internal::applyCmd(
+        ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_INTERFACE),
+        package, channel);
 }
 
 int clearInterface(int ifindex)
 {
     std::cout << "ClearInterface , IFINDEX :" << std::hex << ifindex
               << std::endl;
-    return internal::applyCmd(ifindex,
-                              ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE);
+    return internal::applyCmd(
+        ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE));
 }
 
 int getInfo(int ifindex, int package)
@@ -284,9 +431,9 @@ int getInfo(int ifindex, int package)
               << ", IFINDEX :  " << std::hex << ifindex << std::endl;
     if (package == DEFAULT_VALUE)
     {
-        return internal::applyCmd(ifindex, ncsi_nl_commands::NCSI_CMD_PKG_INFO,
-                                  package, DEFAULT_VALUE, NLM_F_DUMP,
-                                  internal::infoCallBack);
+        return internal::applyCmd(
+            ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_PKG_INFO),
+            package, DEFAULT_VALUE, NLM_F_DUMP, internal::infoCallBack);
     }
     else
     {
