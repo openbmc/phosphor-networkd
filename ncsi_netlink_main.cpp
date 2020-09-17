@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 static void exitWithError(const char* err, char** argv)
 {
@@ -85,8 +86,41 @@ int main(int argc, char** argv)
         channelInt = DEFAULT_VALUE;
     }
 
-    auto setCmd = (options)["set"];
-    if (setCmd == "true")
+    auto payloadStr = (options)["oem-payload"];
+    if (!payloadStr.empty())
+    {
+        std::string byte(2, 0);
+        std::vector<unsigned char> payload;
+
+        // Parse the payload string (e.g. "000001572100") to byte data
+        for (unsigned int i = 1; i < payloadStr.size(); i += 2)
+        {
+            byte[0] = payloadStr[i - 1];
+            byte[1] = payloadStr[i];
+
+            try
+            {
+                payload.push_back(stoi(byte, nullptr, 16));
+            }
+            catch (const std::exception& e)
+            {
+                exitWithError("Payload invalid.", argv);
+            }
+        }
+
+        if (payload.empty())
+        {
+            exitWithError("No payload specified.", argv);
+        }
+
+        if (packageInt == DEFAULT_VALUE)
+        {
+            exitWithError("Package not specified.", argv);
+        }
+
+        return ncsi::sendOemCommand(indexInt, packageInt, channelInt, payload);
+    }
+    else if ((options)["set"] == "true")
     {
         // Can not perform set operation without package.
         if (packageInt == DEFAULT_VALUE)
