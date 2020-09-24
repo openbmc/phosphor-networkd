@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2f7eb01_5fae6f47",
+        "filename": "argument.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2020-09-24T18:22:35Z",
+      "side": 1,
+      "message": "So the kernel will accept any command packet, but will always force the command to be an OEM command when (assigning the sequence and) putting the packet on the wire.\n\nIs there a reason to pretend to send other commands vs just hard coding the command to be NCSI OEM command?",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48f0c225_1de341ad",
+        "filename": "ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2020-09-24T18:22:35Z",
+      "side": 1,
+      "message": "I\u0027m not familiar with C++ arg handling so will just observe that it seems like this for loop is not really intended to iterate because the body is checking for early exit and has special cases for the beginning?",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e565702_2ed24958",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2020-09-24T18:22:35Z",
+      "side": 1,
+      "message": "can we make the above __u8 to go along with the __be16 and __be32 below?",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2092d18_78d1c917",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2020-09-24T18:22:35Z",
+      "side": 1,
+      "message": "failed to parse ncsi genetlink message ?\n(where did package come from?  packet?)\n\nDo you handle \"command sent, result was timeout waiting for ncsi response packet.\"?",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "740138aa_049c05c3",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2020-09-24T18:22:35Z",
+      "side": 1,
+      "message": "So this is dumping the response bytes on stdout but with other formatting around it.  Correct?  Should we have an option to save the response data?  or a comment for future enhancement.\n\nI think you are getting a trailng space before the new line below.   Place it before and take it off the \"Response : \" string above.",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef7b7872_9ddcc754",
+        "filename": "ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2020-09-24T18:22:35Z",
+      "side": 1,
+      "message": "This function needs documentation like the functions below.",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
