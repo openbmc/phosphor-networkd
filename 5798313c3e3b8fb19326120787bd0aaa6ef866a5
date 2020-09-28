@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ae6dce5f_d4af02a3",
+        "filename": "argument.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-28T22:01:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c2f7eb01_5fae6f47",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48f0c225_1de341ad",
         "filename": "ncsi_netlink_main.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2020-09-24T18:22:35Z",
       "side": 1,
       "message": "I\u0027m not familiar with C++ arg handling so will just observe that it seems like this for loop is not really intended to iterate because the body is checking for early exit and has special cases for the beginning?",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35ee77d4_ddd8aa07",
+        "filename": "ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-28T22:01:27Z",
+      "side": 1,
+      "message": "Well it\u0027s iterating two at once so it has to check that it hasn\u0027t gone beyond the end of the string. Don\u0027t see the special cases for the beginning?",
+      "parentUuid": "48f0c225_1de341ad",
       "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "6cfde24c_0a193c02",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-28T22:01:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2e565702_2ed24958",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b2092d18_78d1c917",
         "filename": "ncsi_util.cpp",
         "patchSetId": 1
@@ -64,6 +118,24 @@
       "writtenOn": "2020-09-24T18:22:35Z",
       "side": 1,
       "message": "failed to parse ncsi genetlink message ?\n(where did package come from?  packet?)\n\nDo you handle \"command sent, result was timeout waiting for ncsi response packet.\"?",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d3700c6_41a810de",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-28T22:01:27Z",
+      "side": 1,
+      "message": "The function above for the \"info\" callback refers to that as package - I can change it.\n\nNo, I think that\u0027s handled in the libnl layer?",
+      "parentUuid": "b2092d18_78d1c917",
       "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "b8c580a0_d3a4b17a",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-28T22:01:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "740138aa_049c05c3",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef7b7872_9ddcc754",
         "filename": "ncsi_util.hpp",
         "patchSetId": 1
@@ -101,6 +191,24 @@
       "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b24da2c2_dc1de032",
+        "filename": "ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-28T22:01:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ef7b7872_9ddcc754",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
