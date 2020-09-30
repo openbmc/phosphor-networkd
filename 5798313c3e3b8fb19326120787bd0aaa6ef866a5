@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "c1a5b8c1_75d2301a",
+        "filename": "ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-09-30T13:44:51Z",
+      "side": 1,
+      "message": "Can we do as below instead of running the loop?\nbyte[0] \u003d payloadStr[0];\nbyte[1] \u003d payload[1];\npayload.push_back(stoi(byte, nullptr, 16));",
+      "parentUuid": "35ee77d4_ddd8aa07",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2e565702_2ed24958",
         "filename": "ncsi_util.cpp",
         "patchSetId": 1
@@ -107,6 +125,52 @@
     },
     {
       "key": {
+        "uuid": "a01851d7_19955b2b",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-09-30T13:44:51Z",
+      "side": 1,
+      "message": "{}",
+      "range": {
+        "startLine": 54,
+        "startChar": 50,
+        "endLine": 54,
+        "endChar": 62
+      },
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bf3b92c_9fe2137c",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-09-30T13:44:51Z",
+      "side": 1,
+      "message": "Seems it can be removed if we use the empty braces in initialization.",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 55
+      },
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b2092d18_78d1c917",
         "filename": "ncsi_util.cpp",
         "patchSetId": 1
@@ -136,6 +200,24 @@
       "side": 1,
       "message": "The function above for the \"info\" callback refers to that as package - I can change it.\n\nNo, I think that\u0027s handled in the libnl layer?",
       "parentUuid": "b2092d18_78d1c917",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce3a80de_25a10a46",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-09-30T13:44:51Z",
+      "side": 1,
+      "message": "The output of above would be a package list and then we run the loop for each package.",
+      "parentUuid": "3d3700c6_41a810de",
       "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
@@ -177,6 +259,29 @@
     },
     {
       "key": {
+        "uuid": "b48e184b_bb561385",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-09-30T13:44:51Z",
+      "side": 1,
+      "message": "Can you get an example how the payload looks like?",
+      "range": {
+        "startLine": 384,
+        "startChar": 1,
+        "endLine": 393,
+        "endChar": 5
+      },
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ef7b7872_9ddcc754",
         "filename": "ncsi_util.hpp",
         "patchSetId": 1
@@ -206,6 +311,24 @@
       "side": 1,
       "message": "Ack",
       "parentUuid": "ef7b7872_9ddcc754",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d514a684_f5925094",
+        "filename": "ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-09-30T13:44:51Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "b24da2c2_dc1de032",
       "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
