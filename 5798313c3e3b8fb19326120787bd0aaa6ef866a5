@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "7a69032c_f12c7e7c",
+        "filename": "argument.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-30T15:28:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae6dce5f_d4af02a3",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48f0c225_1de341ad",
         "filename": "ncsi_netlink_main.cpp",
         "patchSetId": 1
@@ -90,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "cb02e923_df107a01",
+        "filename": "ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-30T15:28:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c1a5b8c1_75d2301a",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e565702_2ed24958",
         "filename": "ncsi_util.cpp",
         "patchSetId": 1
@@ -125,6 +161,24 @@
     },
     {
       "key": {
+        "uuid": "c14a5314_b79ef748",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-30T15:28:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6cfde24c_0a193c02",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a01851d7_19955b2b",
         "filename": "ncsi_util.cpp",
         "patchSetId": 1
@@ -136,6 +190,30 @@
       "writtenOn": "2020-09-30T13:44:51Z",
       "side": 1,
       "message": "{}",
+      "range": {
+        "startLine": 54,
+        "startChar": 50,
+        "endLine": 54,
+        "endChar": 62
+      },
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "519e3e51_d95f33d8",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-30T15:28:46Z",
+      "side": 1,
+      "message": "That\u0027s a reference, not an actual vector, so it must be initialized referring to something.",
+      "parentUuid": "a01851d7_19955b2b",
       "range": {
         "startLine": 54,
         "startChar": 50,
@@ -259,6 +337,24 @@
     },
     {
       "key": {
+        "uuid": "35f410d5_ea2bf8d0",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-30T15:28:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8c580a0_d3a4b17a",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b48e184b_bb561385",
         "filename": "ncsi_util.cpp",
         "patchSetId": 1
@@ -270,6 +366,30 @@
       "writtenOn": "2020-09-30T13:44:51Z",
       "side": 1,
       "message": "Can you get an example how the payload looks like?",
+      "range": {
+        "startLine": 384,
+        "startChar": 1,
+        "endLine": 393,
+        "endChar": 5
+      },
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9802bc67_86ed096b",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-30T15:28:46Z",
+      "side": 1,
+      "message": "I added an example in argument.cpp",
+      "parentUuid": "b48e184b_bb561385",
       "range": {
         "startLine": 384,
         "startChar": 1,
@@ -329,6 +449,24 @@
       "side": 1,
       "message": "+1",
       "parentUuid": "b24da2c2_dc1de032",
+      "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58384108_9ef47844",
+        "filename": "ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2020-09-30T15:28:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d514a684_f5925094",
       "revId": "5798313c3e3b8fb19326120787bd0aaa6ef866a5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
