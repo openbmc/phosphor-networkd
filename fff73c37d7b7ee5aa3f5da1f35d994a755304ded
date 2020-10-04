@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f59109f_4cf7901b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2020-10-04T23:29:38Z",
+      "side": 1,
+      "message": "Now sending only OEM commands and they always have a payload of at least the vendor id.",
+      "revId": "fff73c37d7b7ee5aa3f5da1f35d994a755304ded",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0e0f0cd_9c167985",
+        "filename": "argument.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2020-10-04T23:29:38Z",
+      "side": 1,
+      "message": "I just notices most if not all of these long options have short forms but they are not listed in the help message.   Can be a seperate commit or folded in.",
+      "revId": "fff73c37d7b7ee5aa3f5da1f35d994a755304ded",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ad620a9_b04cb3c1",
+        "filename": "ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2020-10-04T23:29:38Z",
+      "side": 1,
+      "message": "Not knowing C++ I looked up how stoi differs from the C functions that I know.  It appears to throw an excpetion if no coversion could be performed or if it exceeds the range of an int.\n\nHowever, this still seems like weak verification:  Since the code has extracted to adjacent characters without regards to having an even number of characters, a user could pass a string with bytes separated by whitespace or an odd number of digits and still pass this parsing.",
+      "revId": "fff73c37d7b7ee5aa3f5da1f35d994a755304ded",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
