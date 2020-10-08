@@ -16,6 +16,24 @@
       "revId": "17daf0da93e953fd6192d3785124847b47c07171",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35d7fb4a_112befb3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2020-10-08T07:02:02Z",
+      "side": 1,
+      "message": "The unit tests are passed in CI. I am not changing any of the src code, but just made the extern objects that are present in test files into a different object file, so that we can compile individual test files seperately rather than together.",
+      "parentUuid": "002969c2_546a03fd",
+      "revId": "17daf0da93e953fd6192d3785124847b47c07171",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
