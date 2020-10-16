@@ -51,6 +51,24 @@
       "revId": "17daf0da93e953fd6192d3785124847b47c07171",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c597215_509aff67",
+        "filename": "test/mock_network_manager.hpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2020-10-16T09:39:47Z",
+      "side": 1,
+      "message": "No, I don\u0027t think so. These two functions are actually coming from network_manager_main.cpp and are not included in the header file and are also not included as a part of manager class as well. And by definition Mock manager is a mock class for manager so thats, not the ideal place to put these functions.\n\nThere are certain tests like rtnetlink that need these functions to be inside the phosphor::network namespace and not inside a mockmanager object.",
+      "parentUuid": "ffa7fa16_e8bf9b4f",
+      "revId": "17daf0da93e953fd6192d3785124847b47c07171",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
