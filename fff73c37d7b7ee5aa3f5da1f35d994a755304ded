@@ -86,6 +86,24 @@
       "revId": "fff73c37d7b7ee5aa3f5da1f35d994a755304ded",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19c5c06f_7df87ba1",
+        "filename": "ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2020-10-19T17:19:54Z",
+      "side": 1,
+      "message": "The code is expecting a string of hex digits, and I think that part is ok.   It should be documentted as you said, but also I am pointing out I think the validation of this assumption is weak.",
+      "parentUuid": "bc766b2e_b04e62c1",
+      "revId": "fff73c37d7b7ee5aa3f5da1f35d994a755304ded",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
