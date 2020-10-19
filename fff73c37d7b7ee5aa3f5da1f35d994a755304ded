@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "982ff11d_958521c1",
+        "filename": "argument.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-10-19T12:40:08Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "d0e0f0cd_9c167985",
+      "revId": "fff73c37d7b7ee5aa3f5da1f35d994a755304ded",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2ad620a9_b04cb3c1",
         "filename": "ncsi_netlink_main.cpp",
         "patchSetId": 2
@@ -47,6 +65,24 @@
       "writtenOn": "2020-10-04T23:29:38Z",
       "side": 1,
       "message": "Not knowing C++ I looked up how stoi differs from the C functions that I know.  It appears to throw an excpetion if no coversion could be performed or if it exceeds the range of an int.\n\nHowever, this still seems like weak verification:  Since the code has extracted to adjacent characters without regards to having an even number of characters, a user could pass a string with bytes separated by whitespace or an odd number of digits and still pass this parsing.",
+      "revId": "fff73c37d7b7ee5aa3f5da1f35d994a755304ded",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc766b2e_b04e62c1",
+        "filename": "ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2020-10-19T12:40:08Z",
+      "side": 1,
+      "message": "\u003e a user could pass a string with bytes separated by whitespace \n\nWhat is the expectation here? We need to define the expectation of the string that bytes should be seprated with spaces or not.Can we document somewhere?",
+      "parentUuid": "2ad620a9_b04cb3c1",
       "revId": "fff73c37d7b7ee5aa3f5da1f35d994a755304ded",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
