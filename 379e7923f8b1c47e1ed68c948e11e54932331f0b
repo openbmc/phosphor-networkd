@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8f679fd_1172f8d1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-10-26T21:09:01Z",
+      "side": 1,
+      "message": "The network repo is migrating to meson (https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-networkd/+/33071) and therefore boostrap.sh will be deleted. Should we wait until then because maybe there\u0027s no reason of fixing a file that\u0027s going to be removed? Also what other scripts would this shell check be checking?",
+      "revId": "379e7923f8b1c47e1ed68c948e11e54932331f0b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
