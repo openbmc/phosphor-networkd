@@ -39,6 +39,23 @@
       "revId": "276505b3b6afafb46060144c69e4839e0e21cb1c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "864b22d0_c7f2743e",
+        "filename": "meson.build",
+        "patchSetId": 17
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2020-10-26T21:01:27Z",
+      "side": 1,
+      "message": "If you want code coverage to be automatically generated, you\u0027d need to build the tests from this meson.build file instead of having a test/meson.build file.\n\nIf you don\u0027t want code coverage, need to change this logic to:\nif not build_tests.disabled()\n    subdir(\u0027test\u0027)\nendif\nI\u0027d have to look it up but in a code review William explained why this was the case. Otherwise this builds by default even though you don\u0027t specify the test option (you can verify yourself).",
+      "revId": "276505b3b6afafb46060144c69e4839e0e21cb1c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
