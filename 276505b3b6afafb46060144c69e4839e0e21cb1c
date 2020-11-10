@@ -92,6 +92,24 @@
       "revId": "276505b3b6afafb46060144c69e4839e0e21cb1c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f654092d_80b86e11",
+        "filename": "meson.build",
+        "patchSetId": 17
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2020-11-10T22:16:38Z",
+      "side": 1,
+      "message": "Yeah, that is unfortunate.  I really don\u0027t like us creating massive hard-to-read meson files as a workaround of an upstream bug.  This isn\u0027t my repo though.",
+      "parentUuid": "743d36cc_f39ada48",
+      "revId": "276505b3b6afafb46060144c69e4839e0e21cb1c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
