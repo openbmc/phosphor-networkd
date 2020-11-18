@@ -334,9 +334,8 @@ InterfaceList getInterfaces()
 
     for (ifaddrs* ifa = ifaddrPtr.get(); ifa != nullptr; ifa = ifa->ifa_next)
     {
-        // walk interfaces
-        // if loopback ignore
-        if (ifa->ifa_flags & IFF_LOOPBACK)
+        // ignore loopback or sit0
+        if ((ifa->ifa_flags & IFF_LOOPBACK) || !(ifa->ifa_flags & IFF_RUNNING))
         {
             continue;
         }
