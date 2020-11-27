@@ -92,6 +92,30 @@
       "revId": "17daf0da93e953fd6192d3785124847b47c07171",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9ae56e1_8c47f3dd",
+        "filename": "test/mock_network_manager.hpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2020-11-27T08:28:31Z",
+      "side": 1,
+      "message": "I can do this was well, but william had suggested me to create a separate object for these in the earlier comments.\n\nWhat do you suggest ? I don\u0027t have any strict preference on this as long as all the tests are compiling fine.",
+      "parentUuid": "166dbcf4_e551b3ad",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 22
+      },
+      "revId": "17daf0da93e953fd6192d3785124847b47c07171",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
