@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "216137f1_2d398e53",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-01-05T08:03:15Z",
+      "side": 1,
+      "message": "shouldn\u0027t we throw the Invalid Argument error where there is a Dbus call.It is a utility function we shouldn\u0027t use elog here,",
+      "range": {
+        "startLine": 635,
+        "startChar": 8,
+        "endLine": 636,
+        "endChar": 61
+      },
+      "revId": "53d0d916583c799ad4a42bfc4eb3f6ceeebc38d2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
