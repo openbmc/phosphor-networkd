@@ -521,6 +521,7 @@ constexpr auto propIntf = "org.freedesktop.DBus.Properties";
 constexpr auto methodGet = "Get";
 constexpr auto configFile = "/usr/share/network/config.json";
 
+using Argument = xyz::openbmc_project::Common::InvalidArgument;
 using DbusObjectPath = std::string;
 using DbusService = std::string;
 using DbusInterface = std::string;
@@ -631,7 +632,9 @@ ether_addr fromString(const char* str)
     struct ether_addr* mac = ether_aton(str);
     if (mac == nullptr)
     {
-        throw std::runtime_error("Invalid mac address string");
+        log<level::ERR>("Invalid mac address string");
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("MACAddress"),
+                              Argument::ARGUMENT_VALUE(str));
     }
     return *mac;
 }
