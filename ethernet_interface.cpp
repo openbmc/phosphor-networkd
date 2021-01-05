@@ -998,7 +998,15 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
 
 std::string EthernetInterface::mACAddress(std::string value)
 {
-    ether_addr newMAC = mac_address::fromString(value);
+    ether_addr newMAC;
+    try
+    {
+        newMAC = mac_address::fromString(value);
+    }
+    catch (std::invalid_argument&)
+    {
+        log<level::ERR>("Invalid MAC Address given");
+    }
     if (!mac_address::isUnicast(newMAC))
     {
         log<level::ERR>("MACAddress is not valid.",
