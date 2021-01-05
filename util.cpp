@@ -631,7 +631,7 @@ ether_addr fromString(const char* str)
     struct ether_addr* mac = ether_aton(str);
     if (mac == nullptr)
     {
-        throw std::runtime_error("Invalid mac address string");
+        throw std::invalid_argument("Invalid MAC Address");
     }
     return *mac;
 }

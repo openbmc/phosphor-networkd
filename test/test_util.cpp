@@ -219,9 +219,9 @@ namespace mac_address
 
 TEST(MacFromString, Bad)
 {
-    EXPECT_THROW(fromString("0x:00:00:00:00:00"), std::runtime_error);
-    EXPECT_THROW(fromString("00:00:00:00:00"), std::runtime_error);
-    EXPECT_THROW(fromString(""), std::runtime_error);
+    EXPECT_THROW(fromString("0x:00:00:00:00:00"), std::invalid_argument);
+    EXPECT_THROW(fromString("00:00:00:00:00"), std::invalid_argument);
+    EXPECT_THROW(fromString(""), std::invalid_argument);
 }
 
 TEST(MacFromString, Valid)
