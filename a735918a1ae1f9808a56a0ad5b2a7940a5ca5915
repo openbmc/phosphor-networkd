@@ -16,6 +16,24 @@
       "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc8b2b75_bc60434b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-01-22T05:02:40Z",
+      "side": 1,
+      "message": "Hi Alexander,\n\nif we are having multiple default gateways(interface specific gateway).\n\nThe order would depend on the metric value of the route.\n1) Route will be picked up with lowest metric.\n2) In current implementation as we don\u0027t have configuration for the metric value, default metric value would be given by the systemd-networkd.\n\nLet\u0027s take the default case where default metric would be supplied by the systemd-netwokd.\n\nWhenever the packet has to gone out from the system, it will pick up any default route and try to send the packet out from the system and if it fails then it tries to send through other default route..\n\nThis is not new, Standard linux is also having the same behavior.\nhttps://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/sec-configuring_the_default_gateway",
+      "parentUuid": "b7494562_03e0283d",
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
