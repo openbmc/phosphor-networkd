@@ -37,59 +37,40 @@ namespace fs = std::filesystem;
 
 uint8_t toV6Cidr(const std::string& subnetMask)
 {
-    uint8_t pos = 0;
-    uint8_t prevPos = 0;
-    uint8_t cidr = 0;
-    uint16_t buff{};
-    do
+    struct in6_addr subnet;
+    int ret = inet_pton(AF_INET6, subnetMask.c_str(), &subnet);
+    if (ret != 1)
     {
-        // subnet mask look like ffff:ffff::
-        // or ffff:c000::
-        pos = subnetMask.find(":", prevPos);
-        if (pos == std::string::npos)
-        {
-            break;
-        }
+        log<level::ERR>("Invalid Mask",
+                        entry("SUBNETMASK=%s", subnetMask.c_str()));
+        return 0;
+    }
 
-        auto str = subnetMask.substr(prevPos, (pos - prevPos));
-        prevPos = pos + 1;
-
-        // String length is 0
-        if (!str.length())
-        {
-            return cidr;
-        }
-        // converts it into number.
-        if (sscanf(str.c_str(), "%hx", &buff) <= 0)
+    uint8_t cidr = 0;
+    bool zeroesFound = false;
+    int bitsSet, trailingZeroes;
+    for (int lv = 0; lv < 4; lv++)
+    {
+        subnet.s6_addr32[lv] = be32toh(subnet.s6_addr32[lv]);
+        bitsSet = __builtin_popcount(subnet.s6_addr32[lv]);
+        if (zeroesFound && bitsSet)
         {
             log<level::ERR>("Invalid Mask",
                             entry("SUBNETMASK=%s", subnetMask.c_str()));
-
             return 0;
         }
+        trailingZeroes = __builtin_ctz(subnet.s6_addr32[lv]);
+        zeroesFound |= trailingZeroes;
 
-        // convert the number into bitset
-        // and check for how many ones are there.
-        // if we don't have all the ones then make
-        // sure that all the ones should be left justify.
-
-        if (__builtin_popcount(buff) != 16)
+        if (bitsSet + trailingZeroes != 32)
         {
-            if (((sizeof(buff) * 8) - (__builtin_ctz(buff))) !=
-                __builtin_popcount(buff))
-            {
-                log<level::ERR>("Invalid Mask",
-                                entry("SUBNETMASK=%s", subnetMask.c_str()));
-
-                return 0;
-            }
-            cidr += __builtin_popcount(buff);
-            return cidr;
+            // There are '1' bits interspersed with '0' bits
+            log<level::ERR>("Invalid Mask",
+                            entry("SUBNETMASK=%s", subnetMask.c_str()));
+            return 0;
         }
-
-        cidr += 16;
-    } while (1);
-
+        cidr += bitsSet;
+    }
     return cidr;
 }
 } // anonymous namespace

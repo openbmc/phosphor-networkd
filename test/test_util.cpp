@@ -162,8 +162,44 @@ TEST_F(TestUtil, convertV6MasktoPrefix)
     prefix = toCidr(AF_INET6, mask);
     EXPECT_EQ(prefix, 38);
 
-    // Invalid Mask
+    mask = "ffff:0:0:0:0:0:0:0";
+    prefix = toCidr(AF_INET6, mask);
+    EXPECT_EQ(prefix, 16);
+
+    mask = "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff";
+    prefix = toCidr(AF_INET6, mask);
+    EXPECT_EQ(prefix, 128);
+
+    mask = "ffff:ffff:ffff:ffff:ffff:ffff:ffff:fffc";
+    prefix = toCidr(AF_INET6, mask);
+    EXPECT_EQ(prefix, 126);
+
+    // Invalid Masks
     mask = "ffff:0fff::";
+    prefix = toCidr(AF_INET6, mask);
+    EXPECT_EQ(prefix, 0);
+
+    mask = "ffff:fgff::";
+    prefix = toCidr(AF_INET6, mask);
+    EXPECT_EQ(prefix, 0);
+
+    mask = "ffff:0:0:6:0:0:0:0";
+    prefix = toCidr(AF_INET6, mask);
+    EXPECT_EQ(prefix, 0);
+
+    mask = "::";
+    prefix = toCidr(AF_INET6, mask);
+    EXPECT_EQ(prefix, 0);
+
+    mask = ":";
+    prefix = toCidr(AF_INET6, mask);
+    EXPECT_EQ(prefix, 0);
+
+    mask = "abcd:efgh:ijkl:mnop:pqrs:tuvw:xyz:abcd";
+    prefix = toCidr(AF_INET6, mask);
+    EXPECT_EQ(prefix, 0);
+
+    mask = "ffff:0:0:0:0:0:0";
     prefix = toCidr(AF_INET6, mask);
     EXPECT_EQ(prefix, 0);
 }
