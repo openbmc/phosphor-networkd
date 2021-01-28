@@ -57,6 +57,30 @@
       "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "292d2743_020ca1e6",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 987,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-01-28T16:17:11Z",
+      "side": 1,
+      "message": "yeah.. seems we need changes here",
+      "parentUuid": "d6b96dbc_70b04bfd",
+      "range": {
+        "startLine": 968,
+        "startChar": 0,
+        "endLine": 987,
+        "endChar": 52
+      },
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
