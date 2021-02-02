@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "ba26918f_efed1607",
+        "filename": "meson.build",
+        "patchSetId": 17
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-02-02T08:41:11Z",
+      "side": 1,
+      "message": "why dl is required?",
+      "range": {
+        "startLine": 53,
+        "startChar": 47,
+        "endLine": 53,
+        "endChar": 49
+      },
+      "revId": "276505b3b6afafb46060144c69e4839e0e21cb1c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8270a6a6_869a1d51",
+        "filename": "meson.build",
+        "patchSetId": 17
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-02-02T08:41:11Z",
+      "side": 1,
+      "message": "all this dependency check should it go under test/meson.build?",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 1
+      },
+      "revId": "276505b3b6afafb46060144c69e4839e0e21cb1c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67997eee_9eb16f55",
+        "filename": "meson.build",
+        "patchSetId": 17
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-02-02T08:41:11Z",
+      "side": 1,
+      "message": "why threads is required?",
+      "range": {
+        "startLine": 56,
+        "startChar": 24,
+        "endLine": 56,
+        "endChar": 58
+      },
+      "revId": "276505b3b6afafb46060144c69e4839e0e21cb1c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4a0241f8_62812876",
         "filename": "meson.build",
         "patchSetId": 17
@@ -107,6 +176,29 @@
       "side": 1,
       "message": "Yeah, that is unfortunate.  I really don\u0027t like us creating massive hard-to-read meson files as a workaround of an upstream bug.  This isn\u0027t my repo though.",
       "parentUuid": "743d36cc_f39ada48",
+      "revId": "276505b3b6afafb46060144c69e4839e0e21cb1c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2971c1c_7e6dc8ab",
+        "filename": "meson_options.txt",
+        "patchSetId": 17
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-02-02T08:41:11Z",
+      "side": 1,
+      "message": "why do we need this option? we can directly hard code it.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 50
+      },
       "revId": "276505b3b6afafb46060144c69e4839e0e21cb1c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
