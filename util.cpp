@@ -176,33 +176,44 @@ InAddrAny addrFromBuf(int addressFamily, std::string_view buf)
     throw std::runtime_error("Unsupported address family");
 }
 
+std::string toString(const struct in_addr& addr)
+{
+    std::string ip(INET_ADDRSTRLEN, '\0');
+    if (inet_ntop(AF_INET, &addr, ip.data(), ip.size()) == nullptr)
+    {
+        throw std::runtime_error("Failed to convert IP4 to string");
+    }
+
+    ip.resize(strlen(ip.c_str()));
+    return ip;
+}
+
+std::string toString(const struct in6_addr& addr)
+{
+    std::string ip(INET6_ADDRSTRLEN, '\0');
+    if (inet_ntop(AF_INET6, &addr, ip.data(), ip.size()) == nullptr)
+    {
+        throw std::runtime_error("Failed to convert IP6 to string");
+    }
+
+    ip.resize(strlen(ip.c_str()));
+    return ip;
+}
+
 std::string toString(const InAddrAny& addr)
 {
-    std::string ip;
     if (std::holds_alternative<struct in_addr>(addr))
     {
         const auto& v = std::get<struct in_addr>(addr);
-        ip.resize(INET_ADDRSTRLEN);
-        if (inet_ntop(AF_INET, &v, ip.data(), ip.size()) == NULL)
-        {
-            throw std::runtime_error("Failed to convert IP4 to string");
-        }
+        return toString(v);
     }
     else if (std::holds_alternative<struct in6_addr>(addr))
     {
         const auto& v = std::get<struct in6_addr>(addr);
-        ip.resize(INET6_ADDRSTRLEN);
-        if (inet_ntop(AF_INET6, &v, ip.data(), ip.size()) == NULL)
-        {
-            throw std::runtime_error("Failed to convert IP6 to string");
-        }
+        return toString(v);
     }
-    else
-    {
-        throw std::runtime_error("Invalid addr type");
-    }
-    ip.resize(strlen(ip.c_str()));
-    return ip;
+
+    throw std::runtime_error("Invalid addr type");
 }
 
 bool isLinkLocalIP(const std::string& address)
