@@ -729,14 +729,42 @@ ServerList EthernetInterface::getNameServerFromResolvd()
     auto tupleVector = std::get_if<type>(&name);
     for (auto i = tupleVector->begin(); i != tupleVector->end(); ++i)
     {
-        std::vector<uint8_t> ipaddress = std::get<1>(*i);
-        std::string address;
-        for (auto byte : ipaddress)
+        int addressFamily = std::get<0>(*i);
+        std::vector<uint8_t>& ipaddress = std::get<1>(*i);
+
+        switch (addressFamily)
         {
-            address += std::to_string(byte) + ".";
+            case AF_INET:
+                if (ipaddress.size() == sizeof(struct in_addr))
+                {
+                    servers.push_back(toString(
+                        reinterpret_cast<struct in_addr*>(ipaddress.data())));
+                }
+                else
+                {
+                    log<level::ERR>(
+                        "Invalid data recived from Systemd-Resolved");
+                }
+                break;
+
+            case AF_INET6:
+                if (ipaddress.size() == sizeof(struct in6_addr))
+                {
+                    servers.push_back(toString(
+                        reinterpret_cast<struct in6_addr*>(ipaddress.data())));
+                }
+                else
+                {
+                    log<level::ERR>(
+                        "Invalid data recived from Systemd-Resolved");
+                }
+                break;
+
+            default:
+                log<level::ERR>(
+                    "Unsupported address family in DNS from Systemd-Resolved");
+                break;
         }
-        address.pop_back();
-        servers.push_back(address);
     }
     return servers;
 }
