@@ -37,6 +37,29 @@
     },
     {
       "key": {
+        "uuid": "08980bc6_253ada6f",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2021-02-10T02:21:17Z",
+      "side": 1,
+      "message": "range based forloop ?",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 5
+      },
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d6b96dbc_70b04bfd",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 9
