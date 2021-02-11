@@ -37,6 +37,23 @@
     },
     {
       "key": {
+        "uuid": "69093886_d4acde20",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-02-11T12:24:10Z",
+      "side": 1,
+      "message": "Don\u0027t we already have a route::Table somewhere...",
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "08980bc6_253ada6f",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 9
@@ -125,6 +142,40 @@
         "endLine": 987,
         "endChar": 52
       },
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23d6ef1c_dd12d065",
+        "filename": "ethernet_interface.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-02-11T12:24:10Z",
+      "side": 1,
+      "message": "I\u0027m pretty sure the functions takes `const std::string\u0026` in the generated code",
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "943bde5e_101dd6f1",
+        "filename": "routing_table.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-02-11T12:24:10Z",
+      "side": 1,
+      "message": "These should return a map instead of vector pairs. Ideally a reference as the table always outlives the users.",
       "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
