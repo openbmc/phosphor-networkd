@@ -22,6 +22,30 @@
       "revId": "28289fb72ac5bcd8db796bb93925a842524a7718",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "158a41a9_8b4c2e22",
+        "filename": "util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1000219
+      },
+      "writtenOn": "2021-02-15T08:20:04Z",
+      "side": 1,
+      "message": "\u003e why did we create these two functions? was the earlier function not working?\n\nI just moved out the according implementation for each IP family into separate functions. It\u0027s done to avoid an excess data copying inside of `EthernetInterface::getNameServerFromResolvd()`.\n\nDo you think we could ignore that copying and use `toString(addrFromBuf(...))` instead?",
+      "parentUuid": "53ab82d9_ae7ac28d",
+      "range": {
+        "startLine": 179,
+        "startChar": 0,
+        "endLine": 201,
+        "endChar": 1
+      },
+      "revId": "28289fb72ac5bcd8db796bb93925a842524a7718",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
