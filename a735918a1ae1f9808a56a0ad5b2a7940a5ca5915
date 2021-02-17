@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "321ce9a7_28a3436c",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-02-17T09:19:25Z",
+      "side": 1,
+      "message": "Seems earlier we have it in system configuration, The goal will be to deprecate the default gateway from the system configuration.",
+      "parentUuid": "69093886_d4acde20",
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "08980bc6_253ada6f",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 9
@@ -65,6 +83,30 @@
       "writtenOn": "2021-02-10T02:21:17Z",
       "side": 1,
       "message": "range based forloop ?",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 5
+      },
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "888debdf_61bf4beb",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-02-17T09:19:25Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "08980bc6_253ada6f",
       "range": {
         "startLine": 94,
         "startChar": 4,
@@ -165,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "25bdfec0_61e6c114",
+        "filename": "ethernet_interface.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-02-17T09:19:25Z",
+      "side": 1,
+      "message": "William, in that case don\u0027t you think that the compilation should fail saying that.\n\n```\ndefaultGateway marked ‘override’, but does not override.\n```\n\nRavi, have you tested and compiled this code? Can you share the signature of the generated code?",
+      "parentUuid": "23d6ef1c_dd12d065",
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "943bde5e_101dd6f1",
         "filename": "routing_table.hpp",
         "patchSetId": 9
@@ -176,6 +236,24 @@
       "writtenOn": "2021-02-11T12:24:10Z",
       "side": 1,
       "message": "These should return a map instead of vector pairs. Ideally a reference as the table always outlives the users.",
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76a4197d_ae16fd7e",
+        "filename": "routing_table.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-02-17T09:19:25Z",
+      "side": 1,
+      "message": "As there could be only few entries, I am not sure that do we really need a map which brings the complexity?\nI am fine with either.",
+      "parentUuid": "943bde5e_101dd6f1",
       "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
