@@ -191,6 +191,15 @@ ObjectPath Manager::vLAN(IntfName interfaceName, uint32_t id)
                               Argument::ARGUMENT_VALUE(interfaceName.c_str()));
     }
 
+    if (!isValidVlanId(id))
+    {
+        log<level::ERR>("VLAN ID doesn't comply with 802.1Q frame format!",
+                        entry("VLAN ID=%x", id));
+        elog<InvalidArgument>(
+            Argument::ARGUMENT_NAME("id"),
+            Argument::ARGUMENT_VALUE(std::to_string(id).c_str()));
+    }
+
     return interfaces[interfaceName]->createVLAN(id);
 }
 
