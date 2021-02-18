@@ -173,6 +173,26 @@ class Manager : public details::VLANCreateIface
 
     /** @brief Network Configuration directory. */
     fs::path confDir;
+
+    /** @brief VLAN ID 802.1Q limits.
+     *
+     * According to 802.1Q-2003 values 1-4094 are allowed for VLAN use.
+     * However, according to 802.1Q-2005, VLAN 1 is reserved for
+     * management. Thus value 1 will be forbidden for future use, should the
+     * bridge support be added.
+     */
+    const uint32_t minVlanId = 2;
+    const uint32_t maxVlanId = 4094;
+
+    /** @brief Check whether the provided VLAN ID conforms to the 802.1Q-2005.
+     *
+     * @param[in] vlanId - provided VLAN ID to check.
+     * @return true if valid, false otherwise.
+     */
+    bool isValidVlanId(const uint32_t vlanId)
+    {
+        return (vlanId >= minVlanId) && (vlanId <= maxVlanId);
+    }
 };
 
 } // namespace network
