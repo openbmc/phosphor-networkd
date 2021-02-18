@@ -35,6 +35,7 @@ extern std::unique_ptr<Timer> refreshObjectTimer;
 extern std::unique_ptr<Timer> restartTimer;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath,
                  const std::string& path) :
@@ -182,6 +183,14 @@ void Manager::createChildObjects()
 
 ObjectPath Manager::vLAN(IntfName interfaceName, uint32_t id)
 {
+    if (!hasInterface(interfaceName))
+    {
+        log<level::ERR>("Attempted creation of VLAN on an unknown interface",
+                        entry("INTERFACE NAME=%s", interfaceName.c_str()));
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("interfaceName"),
+                              Argument::ARGUMENT_VALUE(interfaceName.c_str()));
+    }
+
     return interfaces[interfaceName]->createVLAN(id);
 }
 
