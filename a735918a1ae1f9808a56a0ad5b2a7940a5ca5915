@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "6e9e410b_20b3decf",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-02-23T16:35:07Z",
+      "side": 1,
+      "message": "no. it\u0027s used in system_configuration.cpp but will be removed when we deprecate gateway on system_configuration",
+      "parentUuid": "69093886_d4acde20",
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "08980bc6_253ada6f",
         "filename": "ethernet_interface.cpp",
         "patchSetId": 9
@@ -116,6 +134,30 @@
       "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1d46246_020b5399",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-02-23T16:35:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "888debdf_61bf4beb",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 5
+      },
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
@@ -254,6 +296,24 @@
       "side": 1,
       "message": "As there could be only few entries, I am not sure that do we really need a map which brings the complexity?\nI am fine with either.",
       "parentUuid": "943bde5e_101dd6f1",
+      "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce04d50b_a01970c8",
+        "filename": "routing_table.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-02-23T16:35:07Z",
+      "side": 1,
+      "message": "modified to use map",
+      "parentUuid": "76a4197d_ae16fd7e",
       "revId": "a735918a1ae1f9808a56a0ad5b2a7940a5ca5915",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
