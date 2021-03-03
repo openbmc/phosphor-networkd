@@ -22,6 +22,30 @@
       "revId": "3d5abb6b333d7a25ee1e86b20a6b2872d9d6c082",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f082cf14_94451f55",
+        "filename": "util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2021-03-03T17:31:51Z",
+      "side": 1,
+      "message": "The sit0 interface does not assert the IFF_RUNNING flag. It only seems to assert the IFF_NOARP flag.\nAdmittedly, this test casts a wider net than I\u0027d like. In spite of that I don\u0027t see it being much different than the net cast on line 276. The test here is directly lifted from line 276.\nIf this test is too broad, then perhaps a string compare of the first three letters in the ifa_name could be done to reduce the possibility of false positives.\nIf a string compare is the solution here, does the code on line 276 need to be reconsidered?",
+      "parentUuid": "5a144973_a3524c9f",
+      "range": {
+        "startLine": 338,
+        "startChar": 46,
+        "endLine": 338,
+        "endChar": 78
+      },
+      "revId": "3d5abb6b333d7a25ee1e86b20a6b2872d9d6c082",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
