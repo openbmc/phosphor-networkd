@@ -22,6 +22,30 @@
       "revId": "acfac1bcd1d4e8cdd4c0a8e20b3e8d284f59eceb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc4026ea_2d90ec9e",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2021-03-03T16:40:15Z",
+      "side": 1,
+      "message": "builtin_ctz counts trailing zeroes. The subnet needs to be leading \u00271\u0027s and trailing \u00270\u0027s",
+      "parentUuid": "a32fe005_bf3ff424",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 16
+      },
+      "revId": "acfac1bcd1d4e8cdd4c0a8e20b3e8d284f59eceb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
