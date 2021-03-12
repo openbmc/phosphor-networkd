@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "02b47b4b_21ed5ca3",
+        "filename": "ncsi_netlink_main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-03-12T11:34:43Z",
+      "side": 1,
+      "message": "nit: \u0027\\0\u0027 instead of 0 to make the param intention more clear",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9ed5293c_18559bbb",
         "filename": "ncsi_netlink_main.cpp",
         "patchSetId": 5
@@ -90,6 +107,91 @@
     },
     {
       "key": {
+        "uuid": "8cf5f3a0_c521a0fe",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-03-12T11:34:43Z",
+      "side": 1,
+      "message": "Use cstdint types not internal linux types.",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85043c92_8e171835",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-03-12T11:34:43Z",
+      "side": 1,
+      "message": "Don\u0027t store references directly as class members. Use a reference wrapper / pointer. Using a span would solve this problem too.",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5b3d802_a6204552",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-03-12T11:34:43Z",
+      "side": 1,
+      "message": "Use `struct ethhdr` / `sizeof(ethhdr)` directly. 16 Wouldn\u0027t include the NCSI_PROTO, which I assume you don\u0027t need to specify / return here either.",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fd1336a_3f63c880",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-03-12T11:34:43Z",
+      "side": 1,
+      "message": "I imagine someone trying to capture the command line would prefer this on stderr.",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74ecd0e5_14cb214a",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-03-12T11:34:43Z",
+      "side": 1,
+      "message": "This entire loop could be way more succint with fmtlib:\nfmt::print(\"{:02x}\", fmt::join(s.begin(), s.end(), \" \"));",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "efc0030d_80628bb8",
         "filename": "ncsi_util.cpp",
         "patchSetId": 5
@@ -107,6 +209,23 @@
         "endLine": 249,
         "endChar": 23
       },
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8bb8c638_14be9a84",
+        "filename": "ncsi_util.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-03-12T11:34:43Z",
+      "side": 1,
+      "message": "Prefer stdplus::span\u003cconst unsigned char\u003e",
       "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
