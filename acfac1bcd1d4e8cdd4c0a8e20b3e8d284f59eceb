@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "c5a3bed6_6f4feaae",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-03-12T12:01:20Z",
+      "side": 1,
+      "message": "Wouldn\u0027t this be simpler as\n```\nfor (uint8_t i \u003d std::size(subnet.s6_addr32); i \u003e 0; --i)\n{\n   if (subnet.s6_addr32[i-1] !\u003d 0)\n   {\n       return (std::size(subnet.s6_addr32) - i) * 32 + __builtin_ctz(be32toh(subnet.s6_addr32[i-1]));\n   }\n}\n```",
+      "revId": "acfac1bcd1d4e8cdd4c0a8e20b3e8d284f59eceb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a32fe005_bf3ff424",
         "filename": "util.cpp",
         "patchSetId": 2
