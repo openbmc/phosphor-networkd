@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "577ac0bd_b922fea6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2021-03-15T22:35:18Z",
+      "side": 1,
+      "message": "Something along the lines of\n\nProvide a means to send an OEM command to an NIC\nvia NCSI netlink.  This may be invoked from a \nsystemd Unit file to configure NIC behavior.\n\nSome NICs provide OEM commands to influence their behavior, for example maintaining full speed even when the host is down instead of negotiating a lower speed for power.",
+      "parentUuid": "b6522a56_2561cdc8",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "02b47b4b_21ed5ca3",
         "filename": "ncsi_netlink_main.cpp",
         "patchSetId": 5
