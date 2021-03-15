@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e5a8ec72_0408cc59",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2021-03-15T16:30:41Z",
+      "side": 1,
+      "message": "It\u0027s less code. It is also is incomplete. It implicitly assumes all bits in the array at a lower numeric index to that being tested are all assigned \u00271\u0027. This is not necessarily true.\nThe code as written makes certain that all bits in the subnet mask supplied have left aligned \u00271\u0027 bits, and have no \u00271\u0027 bits trailing the first \u00270\u0027 bit found.\nAll bits of the subnet mask have to be analyzed, not just the least significant byte(s).",
+      "parentUuid": "c5a3bed6_6f4feaae",
+      "revId": "acfac1bcd1d4e8cdd4c0a8e20b3e8d284f59eceb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a32fe005_bf3ff424",
         "filename": "util.cpp",
         "patchSetId": 2
