@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6667a5d8_4e9c6aac",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-03-16T22:01:41Z",
+      "side": 1,
+      "message": "nit: prefer comparing to nullptr since it returns a pointer",
+      "revId": "44dbc3276cf72aa8b28d32a322dd54c5dcdfbfa0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d6df4b8_1abe3730",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 764,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-03-16T22:01:41Z",
+      "side": 1,
+      "message": "Reference the input dst size directly with `std::size(address)` instead of INET6_ADDRSTRLEN to guarantee the size is consistent",
+      "revId": "44dbc3276cf72aa8b28d32a322dd54c5dcdfbfa0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
