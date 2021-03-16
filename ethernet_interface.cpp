@@ -981,6 +981,7 @@ void EthernetInterface::writeConfigurationFile()
 
     if (manager.getSystemConf())
     {
+        stream << "[Route]\n";
         const auto& gateway = manager.getSystemConf()->defaultGateway();
         if (!gateway.empty())
         {
