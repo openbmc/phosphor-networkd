@@ -204,19 +204,5 @@ TEST_F(TestEthernetInterface, addNTPServers)
     EXPECT_EQ(servers, values);
 }
 
-TEST_F(TestEthernetInterface, addGateway)
-{
-    std::string gateway = "10.3.3.3";
-    interface.defaultGateway(gateway);
-    EXPECT_EQ(interface.defaultGateway(), gateway);
-}
-
-TEST_F(TestEthernetInterface, addGateway6)
-{
-    std::string gateway6 = "ffff:ffff:ffff:fe80::1";
-    interface.defaultGateway6(gateway6);
-    EXPECT_EQ(interface.defaultGateway6(), gateway6);
-}
-
 } // namespace network
 } // namespace phosphor

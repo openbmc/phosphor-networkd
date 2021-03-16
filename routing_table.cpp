@@ -151,16 +151,16 @@ void Table::parseRoutes(const nlmsghdr* nlHdr)
     }
     if (!dstAddr && gateWayAddr)
     {
-        std::string ifNameStr(ifName);
         if (rtMsg->rtm_family == AF_INET)
         {
-            defaultGateway[ifNameStr] = gatewayStr;
+            defaultGateway = gatewayStr;
         }
         else if (rtMsg->rtm_family == AF_INET6)
         {
-            defaultGateway6[ifNameStr] = gatewayStr;
+            defaultGateway6 = gatewayStr;
         }
     }
+
     Entry route(dstStr, gatewayStr, ifName);
     // if there is already existing route for this network
     // then ignore the next one as it would not be used by the

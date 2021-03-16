@@ -223,24 +223,12 @@ class EthernetInterface : public Ifaces
      */
     void deleteAll();
 
-    /** @brief set the default v4 gateway of the interface.
-     *  @param[in] gateway - default v4 gateway of the interface.
-     */
-    std::string defaultGateway(std::string gateway) override;
-
-    /** @brief set the default v6 gateway of the interface.
-     *  @param[in] gateway - default v6 gateway of the interface.
-     */
-    std::string defaultGateway6(std::string gateway) override;
-
     using EthernetInterfaceIntf::dHCPEnabled;
     using EthernetInterfaceIntf::interfaceName;
     using EthernetInterfaceIntf::linkUp;
     using EthernetInterfaceIntf::nICEnabled;
     using MacAddressIntf::mACAddress;
 
-    using EthernetInterfaceIntf::defaultGateway;
-    using EthernetInterfaceIntf::defaultGateway6;
     /** @brief Absolute path of the resolv conf file */
     static constexpr auto resolvConfFile = "/etc/resolv.conf";
 
