@@ -966,16 +966,17 @@ void EthernetInterface::writeConfigurationFile()
         }
     }
 
-    stream << "[Route]\n";
     auto gateway = EthernetInterfaceIntf::defaultGateway();
     if (!gateway.empty())
     {
+        stream << "[Route]\n";
         stream << "Gateway=" << gateway << "\n";
     }
 
     auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
     if (!gateway6.empty())
     {
+        stream << "[Route]\n";
         stream << "Gateway=" << gateway6 << "\n";
     }
 
@@ -984,11 +985,13 @@ void EthernetInterface::writeConfigurationFile()
         const auto& gateway = manager.getSystemConf()->defaultGateway();
         if (!gateway.empty())
         {
+            stream << "[Route]\n";
             stream << "Gateway=" << gateway << "\n";
         }
         const auto& gateway6 = manager.getSystemConf()->defaultGateway6();
         if (!gateway6.empty())
         {
+            stream << "[Route]\n";
             stream << "Gateway=" << gateway6 << "\n";
         }
     }
