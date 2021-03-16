@@ -754,15 +754,18 @@ ServerList EthernetInterface::getNameServerFromResolvd()
         log<level::ERR>("Failed to get DNS information from Systemd-Resolved");
     }
     auto tupleVector = std::get_if<type>(&name);
+    char address[INET6_ADDRSTRLEN];
     for (auto i = tupleVector->begin(); i != tupleVector->end(); ++i)
     {
+        uint8_t addressType = std::get<0>(*i);
         std::vector<uint8_t> ipaddress = std::get<1>(*i);
-        std::string address;
-        for (auto byte : ipaddress)
+
+        if (!inet_ntop(addressType, ipaddress.data(), address,
+                       INET6_ADDRSTRLEN))
         {
-            address += std::to_string(byte) + ".";
+            log<level::ERR>("Unable to parse the supplied DNS address");
+            continue;
         }
-        address.pop_back();
         servers.push_back(address);
     }
     return servers;
