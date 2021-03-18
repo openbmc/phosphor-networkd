@@ -10,6 +10,7 @@
 #include <string_view>
 #include <xyz/openbmc_project/Common/error.hpp>
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 namespace phosphor
@@ -327,6 +328,27 @@ TEST(MacIsUnicast, False)
     EXPECT_FALSE(isUnicast(fromString("00:00:00:00:00:00")));
     EXPECT_FALSE(isUnicast(fromString("01:00:00:00:00:00")));
     EXPECT_FALSE(isUnicast(fromString("ff:ff:ff:ff:ff:ff")));
+}
+
+TEST(IgnoredInterfaces, Empty)
+{
+    auto ret = internal::parseInterfaces({});
+    EXPECT_TRUE(ret.empty());
+
+    ret = internal::parseInterfaces(" ,  ,, ");
+    EXPECT_TRUE(ret.empty());
+}
+
+TEST(IgnoredInterfaces, NotEmpty)
+{
+    using ::testing::ContainerEq;
+    std::set<std::string> expected = {"eth0"};
+    auto ret = internal::parseInterfaces("eth0");
+    EXPECT_THAT(ret, ContainerEq(expected));
+
+    expected = {"eth0", "eth1", "bond1", "usb0"};
+    ret = internal::parseInterfaces(" ,eth0, eth1  ,bond1, usb0,,");
+    EXPECT_THAT(ret, ContainerEq(expected));
 }
 
 } // namespace mac_address
