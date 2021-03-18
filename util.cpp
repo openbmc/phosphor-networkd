@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 
 #include <algorithm>
+#include <cctype>
 #include <cstdlib>
 #include <cstring>
 #include <filesystem>
@@ -17,6 +18,7 @@
 #include <nlohmann/json.hpp>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
+#include <sstream>
 #include <stdexcept>
 #include <stdplus/raw.hpp>
 #include <string>
@@ -147,6 +149,48 @@ void executeCommandinChildProcess(const char* path, char** args)
         }
     }
 }
+
+/** @brief Get ignored interfaces from environment */
+std::string getIgnoredInterfacesEnv()
+{
+    constexpr auto ENV_IGNORED_INTERFACES = "IGNORED_INTERFACES";
+    auto r = std::getenv(ENV_IGNORED_INTERFACES);
+    if (r == nullptr)
+    {
+        return {};
+    }
+    return std::string(r);
+}
+
+/** @brief Parse the comma separated interface names */
+std::set<std::string> parseInterfaces(std::string interfaces)
+{
+    // Strip
+    interfaces.erase(
+        std::remove_if(interfaces.begin(), interfaces.end(),
+                       [](unsigned char c) { return std::isspace(c); }),
+        interfaces.end());
+    std::set<std::string> result;
+    std::stringstream ss(interfaces);
+    while (ss.good())
+    {
+        std::string str;
+        std::getline(ss, str, ',');
+        if (!str.empty())
+        {
+            result.insert(str);
+        }
+    }
+    return result;
+}
+
+/** @brief Get the ignored interfaces */
+std::set<std::string> getIgnoredInterfaces()
+{
+    static auto ignoredInterfaces = parseInterfaces(getIgnoredInterfacesEnv());
+    return ignoredInterfaces;
+}
+
 } // namespace internal
 
 uint8_t toCidr(int addressFamily, const std::string& subnetMask)

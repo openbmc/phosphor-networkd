@@ -166,6 +166,15 @@ namespace internal
  */
 void executeCommandinChildProcess(const char* path, char** args);
 
+/** @brief Get ignored interfaces from environment */
+std::string getIgnoredInterfacesEnv();
+
+/** @brief Parse the comma separated interface names */
+std::set<std::string> parseInterfaces(std::string interfaces);
+
+/** @brief Get the ignored interfaces */
+std::set<std::string> getIgnoredInterfaces();
+
 } // namespace internal
 
 /* @brief runs the given command in child process.
