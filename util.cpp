@@ -389,12 +389,14 @@ InterfaceList getInterfaces()
 
     AddrPtr ifaddrPtr(ifaddr);
     ifaddr = nullptr;
+    const auto& ignoredInterfaces = internal::getIgnoredInterfaces();
 
     for (ifaddrs* ifa = ifaddrPtr.get(); ifa != nullptr; ifa = ifa->ifa_next)
     {
         // walk interfaces
         // if loopback ignore
-        if (ifa->ifa_flags & IFF_LOOPBACK)
+        if (ifa->ifa_flags & IFF_LOOPBACK ||
+            ignoredInterfaces.find(ifa->ifa_name) != ignoredInterfaces.end())
         {
             continue;
         }
