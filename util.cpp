@@ -28,14 +28,70 @@ namespace phosphor
 namespace network
 {
 
-namespace
-{
-
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 namespace fs = std::filesystem;
 
-} // anonymous namespace
+namespace internal
+{
+
+void executeCommandinChildProcess(const char* path, char** args)
+{
+    using namespace std::string_literals;
+    pid_t pid = fork();
+    int status{};
+
+    if (pid == 0)
+    {
+        execv(path, args);
+        auto error = errno;
+        // create the command from var args.
+        std::string command = path + " "s;
+
+        for (int i = 0; args[i]; i++)
+        {
+            command += args[i] + " "s;
+        }
+
+        log<level::ERR>("Couldn't exceute the command",
+                        entry("ERRNO=%d", error),
+                        entry("CMD=%s", command.c_str()));
+        elog<InternalFailure>();
+    }
+    else if (pid < 0)
+    {
+        auto error = errno;
+        log<level::ERR>("Error occurred during fork", entry("ERRNO=%d", error));
+        elog<InternalFailure>();
+    }
+    else if (pid > 0)
+    {
+        while (waitpid(pid, &status, 0) == -1)
+        {
+            if (errno != EINTR)
+            { // Error other than EINTR
+                status = -1;
+                break;
+            }
+        }
+
+        if (status < 0)
+        {
+            std::string command = path + " "s;
+            for (int i = 0; args[i]; i++)
+            {
+                command += args[i] + " "s;
+            }
+
+            log<level::ERR>("Unable to execute the command",
+                            entry("CMD=%s", command.c_str()),
+                            entry("STATUS=%d", status));
+            elog<InternalFailure>();
+        }
+    }
+}
+
+} // namespace internal
 
 uint8_t toCidr(int addressFamily, const std::string& subnetMask)
 {
@@ -409,66 +465,6 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
     }
     return dhcp;
 }
-
-namespace internal
-{
-
-void executeCommandinChildProcess(const char* path, char** args)
-{
-    using namespace std::string_literals;
-    pid_t pid = fork();
-    int status{};
-
-    if (pid == 0)
-    {
-        execv(path, args);
-        auto error = errno;
-        // create the command from var args.
-        std::string command = path + " "s;
-
-        for (int i = 0; args[i]; i++)
-        {
-            command += args[i] + " "s;
-        }
-
-        log<level::ERR>("Couldn't exceute the command",
-                        entry("ERRNO=%d", error),
-                        entry("CMD=%s", command.c_str()));
-        elog<InternalFailure>();
-    }
-    else if (pid < 0)
-    {
-        auto error = errno;
-        log<level::ERR>("Error occurred during fork", entry("ERRNO=%d", error));
-        elog<InternalFailure>();
-    }
-    else if (pid > 0)
-    {
-        while (waitpid(pid, &status, 0) == -1)
-        {
-            if (errno != EINTR)
-            { // Error other than EINTR
-                status = -1;
-                break;
-            }
-        }
-
-        if (status < 0)
-        {
-            std::string command = path + " "s;
-            for (int i = 0; args[i]; i++)
-            {
-                command += args[i] + " "s;
-            }
-
-            log<level::ERR>("Unable to execute the command",
-                            entry("CMD=%s", command.c_str()),
-                            entry("STATUS=%d", status));
-            elog<InternalFailure>();
-        }
-    }
-}
-} // namespace internal
 
 namespace mac_address
 {
