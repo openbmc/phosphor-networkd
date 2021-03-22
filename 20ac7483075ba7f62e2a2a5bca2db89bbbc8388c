@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7f763f5d_826efb48",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000416
+      },
+      "writtenOn": "2021-03-22T08:38:38Z",
+      "side": 1,
+      "message": "Updated. Thanks",
+      "parentUuid": "2636029a_ac52684c",
+      "revId": "20ac7483075ba7f62e2a2a5bca2db89bbbc8388c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c02695ad_170711d7",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2021-03-22T06:28:06Z",
       "side": 1,
       "message": "You can rewrite Fix also:\n\n\"\nFix: Do MAC-addr patching after validating the request and responding \"200 OK\" to RedFish client. i.e.) Start a timer which will modify the MAC-addr at the end of its expiry.\n\"",
+      "revId": "20ac7483075ba7f62e2a2a5bca2db89bbbc8388c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f896ef0_b73e9bf6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000416
+      },
+      "writtenOn": "2021-03-22T08:38:38Z",
+      "side": 1,
+      "message": "Updated. Thanks",
+      "parentUuid": "c02695ad_170711d7",
       "revId": "20ac7483075ba7f62e2a2a5bca2db89bbbc8388c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
