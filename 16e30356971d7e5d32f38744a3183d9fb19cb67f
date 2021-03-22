@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9efe6143_6dda1852",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1089,
+      "author": {
+        "id": 1000418
+      },
+      "writtenOn": "2021-03-22T18:04:48Z",
+      "side": 1,
+      "message": "Did you check the behavior for parallel MAC address patch requests from 2 clients say every 4-seconds (i.e.) mainly within this interval time) ?",
+      "revId": "16e30356971d7e5d32f38744a3183d9fb19cb67f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ab43013_e52b2c5c",
+        "filename": "ethernet_interface.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000418
+      },
+      "writtenOn": "2021-03-22T18:04:48Z",
+      "side": 1,
+      "message": "Check whether these definitions can be added/come from Network/EthernetInterface/server.hpp (or) Network/MACAddress/server.hpp ?",
+      "revId": "16e30356971d7e5d32f38744a3183d9fb19cb67f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
