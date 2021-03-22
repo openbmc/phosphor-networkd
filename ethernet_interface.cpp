@@ -107,6 +107,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     {
         this->emit_object_added();
     }
+    timer = std::make_unique<phosphor::Timer>([&](void) { timeoutHandler(); });
 }
 
 static IP::Protocol convertFamily(int family)
@@ -996,12 +997,30 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
     }
 }
 
+void EthernetInterface::timeoutHandler()
+{
+    timer->stop();
+    auto interface = interfaceName();
+    // Update everything that depends on the MAC value
+    for (const auto& [name, intf] : vlanInterfaces)
+    {
+        intf->MacAddressIntf::mACAddress(newMACAddress);
+    }
+    MacAddressIntf::mACAddress(newMACAddress);
+    // TODO: would remove the call below and
+    //      just restart systemd-netwokd
+    //      through https://github.com/systemd/systemd/issues/6696
+    execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(), "down");
+    manager.writeToConfigurationFile();
+}
 std::string EthernetInterface::mACAddress(std::string value)
 {
+    std::chrono::seconds usec(defaultTimeout);
     ether_addr newMAC;
     try
     {
         newMAC = mac_address::fromString(value);
+        newMACAddress = mac_address::toString(newMAC);
     }
     catch (std::invalid_argument&)
     {
@@ -1025,19 +1044,7 @@ std::string EthernetInterface::mACAddress(std::string value)
     ether_addr oldMAC = mac_address::fromString(MacAddressIntf::mACAddress());
     if (!stdplus::raw::equal(newMAC, oldMAC))
     {
-        // Update everything that depends on the MAC value
-        for (const auto& [name, intf] : vlanInterfaces)
-        {
-            intf->MacAddressIntf::mACAddress(validMAC);
-        }
-        MacAddressIntf::mACAddress(validMAC);
-
-        // TODO: would remove the call below and
-        //      just restart systemd-netwokd
-        //      through https://github.com/systemd/systemd/issues/6696
-        execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(),
-                "down");
-        manager.writeToConfigurationFile();
+        timer->start(usec);
     }
 
 #ifdef HAVE_UBOOT_ENV
