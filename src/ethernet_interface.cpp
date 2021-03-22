@@ -134,6 +134,8 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     {
         this->emit_object_added();
     }
+    macUpdateTimer = std::make_unique<phosphor::Timer>(
+        [&](void) { macAddressTimeoutHandler(); });
 }
 
 static IP::Protocol convertFamily(int family)
@@ -1064,8 +1066,18 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
     }
 }
 
+void EthernetInterface::macAddressTimeoutHandler()
+{
+    macUpdateTimer->stop();
+    auto interface = interfaceName();
+    // TODO: would remove the call below and
+    // just restart systemd-netwokd
+    // through https://github.com/systemd/systemd/issues/6696
+    execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(), "down");
+}
 std::string EthernetInterface::macAddress(std::string value)
 {
+    std::chrono::seconds usec(defaultTimeout);
     ether_addr newMAC;
     try
     {
@@ -1099,12 +1111,7 @@ std::string EthernetInterface::macAddress(std::string value)
             intf->MacAddressIntf::macAddress(validMAC);
         }
         MacAddressIntf::macAddress(validMAC);
-
-        // TODO: would remove the call below and
-        //      just restart systemd-netwokd
-        //      through https://github.com/systemd/systemd/issues/6696
-        execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(),
-                "down");
+        macUpdateTimer->start(usec);
         manager.writeToConfigurationFile();
     }
 

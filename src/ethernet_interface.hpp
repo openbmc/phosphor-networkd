@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
+#include <sdbusplus/timer.hpp>
 #include <string>
 #include <xyz/openbmc_project/Collection/DeleteAll/server.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
@@ -23,6 +24,7 @@
 #define ntpServers nTPServers
 #endif
 
+static constexpr const uint32_t defaultTimeout = 1;
 namespace phosphor
 {
 namespace network
@@ -85,7 +87,8 @@ class EthernetInterface : public Ifaces
     EthernetInterface(EthernetInterface&&) = delete;
     EthernetInterface& operator=(EthernetInterface&&) = delete;
     virtual ~EthernetInterface() = default;
-
+    std::unique_ptr<phosphor::Timer> macUpdateTimer;
+    void macAddressTimeoutHandler();
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
      *  @param[in] objPath - Path to attach at.
