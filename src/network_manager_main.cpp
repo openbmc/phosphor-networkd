@@ -249,7 +249,7 @@ void restartNetwork()
 {
     if (manager)
     {
-        manager->restartSystemdUnit("systemd-networkd.service");
+        manager->restartSystemdUnit(phosphor::network::networkdService);
     }
 }
 
@@ -309,14 +309,7 @@ int main(int /*argc*/, char** /*argv*/)
     // is not there for any interface.
     // Parameter false means don't create the network
     // files forcefully.
-    if (phosphor::network::manager->createDefaultNetworkFiles(false))
-    {
-        // if files created restart the network.
-        // don't need to call the create child objects as eventhandler
-        // will create it.
-        phosphor::network::restartNetwork();
-    }
-    else
+    if (!phosphor::network::manager->createDefaultNetworkFiles(false))
     {
         // this will add the additional fixes which is needed
         // in the existing network file.

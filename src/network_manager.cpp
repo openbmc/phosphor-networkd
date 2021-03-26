@@ -99,6 +99,15 @@ bool Manager::createDefaultNetworkFiles(bool force)
     {
         log<level::ERR>("Unable to create the default network file");
     }
+
+    if (isCreated)
+    {
+        // if files created restart the network.
+        // don't need to call the create child objects as eventhandler
+        // will create it.
+        restartSystemdUnit(phosphor::network::networkdService);
+    }
+
     return isCreated;
 }
 
