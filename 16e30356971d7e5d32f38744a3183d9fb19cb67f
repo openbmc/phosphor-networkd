@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "0ab611d2_b4061260",
+        "filename": "ethernet_interface.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000418
+      },
+      "writtenOn": "2021-03-29T16:06:43Z",
+      "side": 1,
+      "message": "10-seconds timeout may be large value. Can you try with 1-second ?",
+      "revId": "16e30356971d7e5d32f38744a3183d9fb19cb67f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4ab43013_e52b2c5c",
         "filename": "ethernet_interface.hpp",
         "patchSetId": 3
