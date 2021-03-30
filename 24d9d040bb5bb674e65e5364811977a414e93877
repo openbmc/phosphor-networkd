@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "669d5b01_e99d7337",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1000478
+      },
+      "writtenOn": "2021-03-30T13:20:13Z",
+      "side": 1,
+      "message": "Have you considered using toString(...) function from utils, possibly with addrFromBuf(...)?\nExample usage can be found at routing_table.cpp",
+      "revId": "24d9d040bb5bb674e65e5364811977a414e93877",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
