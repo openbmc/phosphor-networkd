@@ -16,6 +16,24 @@
       "revId": "24d9d040bb5bb674e65e5364811977a414e93877",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a35488d_78f0457e",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 763,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2021-03-30T15:45:32Z",
+      "side": 1,
+      "message": "I had not considered that. I continued using the mode already established by the prior author. D-Bus is already providing an array of bytes in the correct form. Is there an advantage to be gained by pointing those bytes at addrFromBuf as a string_view, then having it copy those bytes into a in_addr{6}, recasting them to InAddrAny, and then passing them to toString to be handed to inet_ntop? I\u0027d rather just provide the bytes to inet_ntop directly.",
+      "parentUuid": "669d5b01_e99d7337",
+      "revId": "24d9d040bb5bb674e65e5364811977a414e93877",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
