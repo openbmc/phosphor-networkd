@@ -35,90 +35,43 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 namespace fs = std::filesystem;
 
-uint8_t toV6Cidr(const std::string& subnetMask)
-{
-    struct in6_addr subnet;
-    int ret = inet_pton(AF_INET6, subnetMask.c_str(), &subnet);
-    if (ret != 1)
-    {
-        log<level::ERR>("Invalid Mask",
-                        entry("SUBNETMASK=%s", subnetMask.c_str()));
-        return 0;
-    }
-
-    uint8_t cidr = 0;
-    bool zeroesFound = false;
-    int bitsSet, trailingZeroes;
-    for (int lv = 0; lv < 4; lv++)
-    {
-        subnet.s6_addr32[lv] = be32toh(subnet.s6_addr32[lv]);
-        bitsSet = __builtin_popcount(subnet.s6_addr32[lv]);
-        if (zeroesFound && bitsSet)
-        {
-            log<level::ERR>("Invalid Mask",
-                            entry("SUBNETMASK=%s", subnetMask.c_str()));
-            return 0;
-        }
-
-        // The __builtin_ctz function returns -1 when the value is 0 on arm.
-        // GCC's doc specifies that:
-        //  If x is 0, the result is undefined.
-        //  https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Other-Builtins.html
-        // So we could not rely on the undefined behavior.
-        // Handling the 0 case specifically fixes the issue.
-        if (subnet.s6_addr32[lv] == 0)
-        {
-            trailingZeroes = 32;
-        }
-        else
-        {
-            trailingZeroes = __builtin_ctz(subnet.s6_addr32[lv]);
-        }
-        zeroesFound |= trailingZeroes;
-
-        if (bitsSet + trailingZeroes != 32)
-        {
-            // There are '1' bits interspersed with '0' bits
-            log<level::ERR>("Invalid Mask",
-                            entry("SUBNETMASK=%s", subnetMask.c_str()));
-            return 0;
-        }
-        cidr += bitsSet;
-    }
-    return cidr;
-}
 } // anonymous namespace
 
 uint8_t toCidr(int addressFamily, const std::string& subnetMask)
 {
-    if (addressFamily == AF_INET6)
-    {
-        return toV6Cidr(subnetMask);
-    }
-
-    uint32_t buff;
-
-    auto rc = inet_pton(addressFamily, subnetMask.c_str(), &buff);
-    if (rc <= 0)
+    uint32_t subnet[sizeof(in6_addr) / sizeof(uint32_t)];
+    if (inet_pton(addressFamily, subnetMask.c_str(), &subnet) != 1)
     {
         log<level::ERR>("inet_pton failed:",
                         entry("SUBNETMASK=%s", subnetMask.c_str()));
         return 0;
     }
 
-    buff = be32toh(buff);
-    // total no of bits - total no of leading zero == total no of ones
-    if (((sizeof(buff) * 8) - (__builtin_ctz(buff))) ==
-        __builtin_popcount(buff))
+    static_assert(sizeof(in6_addr) % sizeof(uint32_t) == 0);
+    static_assert(sizeof(in_addr) % sizeof(uint32_t) == 0);
+    auto i = (addressFamily == AF_INET ? sizeof(in_addr) : sizeof(in6_addr)) /
+             sizeof(uint32_t);
+    while (i > 0)
     {
-        return __builtin_popcount(buff);
+        if (subnet[--i] != 0)
+        {
+            auto v = be32toh(subnet[i]);
+            static_assert(sizeof(unsigned) == sizeof(uint32_t));
+            auto trailing = __builtin_ctz(v);
+            auto ret = (i + 1) * 32 - trailing;
+            bool valid = ~v == 0 || 32 == trailing + __builtin_clz(~v);
+            while (i > 0 && (valid = (~subnet[--i] == 0) && valid))
+                ;
+            if (!valid)
+            {
+                log<level::ERR>("Invalid netmask",
+                                entry("SUBNETMASK=%s", subnetMask.c_str()));
+                return 0;
+            }
+            return ret;
+        }
     }
-    else
-    {
-        log<level::ERR>("Invalid Mask",
-                        entry("SUBNETMASK=%s", subnetMask.c_str()));
-        return 0;
-    }
+    return 0;
 }
 
 std::string toMask(int addressFamily, uint8_t prefix)
