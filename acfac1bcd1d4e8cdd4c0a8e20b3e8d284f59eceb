@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "7dd682c3_a883952b",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-03-31T19:44:02Z",
+      "side": 1,
+      "message": "Sure, but that validation is easy enough to fix. I\u0027ll just send it out as a separate change since it also collapses both of the cidr functions.\n\nI\u0027d argue it\u0027s not that important to actually verify if the input is a real netmask, as we don\u0027t return an error but an arbitrary cidr value currently. Having an arbitrarily defined output would be fine, especially when you consider we only parse the values from the kernel.",
+      "parentUuid": "e5a8ec72_0408cc59",
+      "revId": "acfac1bcd1d4e8cdd4c0a8e20b3e8d284f59eceb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a32fe005_bf3ff424",
         "filename": "util.cpp",
         "patchSetId": 2
@@ -81,6 +99,30 @@
       "revId": "acfac1bcd1d4e8cdd4c0a8e20b3e8d284f59eceb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d86435ab_02193b0a",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-03-31T19:44:02Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "cc4026ea_2d90ec9e",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 62,
+        "endChar": 16
+      },
+      "revId": "acfac1bcd1d4e8cdd4c0a8e20b3e8d284f59eceb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
