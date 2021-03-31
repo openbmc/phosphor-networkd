@@ -132,6 +132,10 @@ TEST_F(TestUtil, ConvertV4MasktoPrefix)
     uint8_t prefix = toCidr(AF_INET, mask);
     EXPECT_EQ(prefix, 24);
 
+    mask = "255.255.255.255";
+    prefix = toCidr(AF_INET, mask);
+    EXPECT_EQ(prefix, 32);
+
     mask = "255.255.0.0";
     prefix = toCidr(AF_INET, mask);
     EXPECT_EQ(prefix, 16);
@@ -155,6 +159,10 @@ TEST_F(TestUtil, convertV6MasktoPrefix)
     std::string mask = "ffff:ffff::";
     uint8_t prefix = toCidr(AF_INET6, mask);
     EXPECT_EQ(prefix, 32);
+
+    mask = "::";
+    prefix = toCidr(AF_INET6, mask);
+    EXPECT_EQ(prefix, 0);
 
     mask = "ffff:ffff:ffff::";
     prefix = toCidr(AF_INET6, mask);
@@ -190,10 +198,6 @@ TEST_F(TestUtil, convertV6MasktoPrefix)
     EXPECT_EQ(prefix, 0);
 
     mask = "ffff:0:0:6:0:0:0:0";
-    prefix = toCidr(AF_INET6, mask);
-    EXPECT_EQ(prefix, 0);
-
-    mask = "::";
     prefix = toCidr(AF_INET6, mask);
     EXPECT_EQ(prefix, 0);
 
