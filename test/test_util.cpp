@@ -216,6 +216,26 @@ TEST_F(TestUtil, InterfaceToUbootEthAddr)
     EXPECT_EQ("eth28addr", interfaceToUbootEthAddr("eth28"));
 }
 
+namespace internal
+{
+extern uint8_t toV6Cidr(const std::string& subnetMask);
+}
+
+TEST_F(TestUtil, toV6Cidr)
+{
+    auto cidr = internal::toV6Cidr("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff");
+    EXPECT_EQ(128, cidr);
+
+    cidr = internal::toV6Cidr("ffff:ffff:ffff:ffff:ffff:ffff:ffff:fff0");
+    EXPECT_EQ(124, cidr);
+
+    cidr = internal::toV6Cidr("ffff:ffff:ffff:ffff::");
+    EXPECT_EQ(64, cidr);
+
+    cidr = internal::toV6Cidr("ffff:ffff::");
+    EXPECT_EQ(32, cidr);
+}
+
 namespace mac_address
 {
 

@@ -28,12 +28,12 @@ namespace phosphor
 namespace network
 {
 
-namespace
-{
-
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 namespace fs = std::filesystem;
+
+namespace internal
+{
 
 uint8_t toV6Cidr(const std::string& subnetMask)
 {
@@ -88,17 +88,21 @@ uint8_t toV6Cidr(const std::string& subnetMask)
         }
 
         cidr += 16;
+        if (cidr >= 128)
+        {
+            return 128;
+        }
     } while (1);
 
     return cidr;
 }
-} // anonymous namespace
+} // namespace internal
 
 uint8_t toCidr(int addressFamily, const std::string& subnetMask)
 {
     if (addressFamily == AF_INET6)
     {
-        return toV6Cidr(subnetMask);
+        return internal::toV6Cidr(subnetMask);
     }
 
     uint32_t buff;
