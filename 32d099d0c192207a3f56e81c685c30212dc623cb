@@ -22,6 +22,30 @@
       "revId": "32d099d0c192207a3f56e81c685c30212dc623cb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "016f67d2_1ad08017",
+        "filename": "util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1000044
+      },
+      "writtenOn": "2021-04-06T06:07:25Z",
+      "side": 1,
+      "message": "The function was in internal namespace already. This commit just moves the toV6Cidr to internal.",
+      "parentUuid": "9b894592_ab690e0c",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 1
+      },
+      "revId": "32d099d0c192207a3f56e81c685c30212dc623cb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
