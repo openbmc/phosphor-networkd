@@ -176,6 +176,10 @@ TEST_F(TestUtil, convertV6MasktoPrefix)
     prefix = toCidr(AF_INET6, mask);
     EXPECT_EQ(prefix, 126);
 
+    mask = "ffff:ffff:ffff:ffff::";
+    prefix = toCidr(AF_INET6, mask);
+    EXPECT_EQ(prefix, 64);
+
     // Invalid Masks
     mask = "ffff:0fff::";
     prefix = toCidr(AF_INET6, mask);

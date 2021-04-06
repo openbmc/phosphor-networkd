@@ -59,7 +59,21 @@ uint8_t toV6Cidr(const std::string& subnetMask)
                             entry("SUBNETMASK=%s", subnetMask.c_str()));
             return 0;
         }
-        trailingZeroes = __builtin_ctz(subnet.s6_addr32[lv]);
+
+        // The __builtin_ctz function returns -1 when the value is 0 on arm.
+        // GCC's doc specifies that:
+        //  If x is 0, the result is undefined.
+        //  https://gcc.gnu.org/onlinedocs/gcc-10.2.0/gcc/Other-Builtins.html
+        // So we could not rely on the undefined behavior.
+        // Handling the 0 case specifically fixes the issue.
+        if (subnet.s6_addr32[lv] == 0)
+        {
+            trailingZeroes = 32;
+        }
+        else
+        {
+            trailingZeroes = __builtin_ctz(subnet.s6_addr32[lv]);
+        }
         zeroesFound |= trailingZeroes;
 
         if (bitsSet + trailingZeroes != 32)
