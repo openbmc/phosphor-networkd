@@ -232,11 +232,11 @@ void EthernetInterface::createIPAddressObjects()
         std::string ipAddressObjectPath = generateObjectPath(
             addressType, addr.ipaddress, addr.prefix, gateway);
 
-        this->addrs.emplace(addr.ipaddress,
-                            std::make_shared<phosphor::network::IPAddress>(
-                                bus, ipAddressObjectPath.c_str(), *this,
-                                addressType, addr.ipaddress, origin,
-                                addr.prefix, gateway));
+        this->addrs.insert_or_assign(
+            addr.ipaddress,
+            std::make_shared<phosphor::network::IPAddress>(
+                bus, ipAddressObjectPath.c_str(), *this, addressType,
+                addr.ipaddress, origin, addr.prefix, gateway));
     }
 }
 
@@ -278,7 +278,6 @@ unsigned EthernetInterface::ifIndex() const
 ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
                                  uint8_t prefixLength, std::string gateway)
 {
-
     if (dhcpIsEnabled(protType))
     {
         log<level::INFO>("DHCP enabled on the interface"),
@@ -312,10 +311,10 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
 
     std::string objectPath =
         generateObjectPath(protType, ipaddress, prefixLength, gateway);
-    this->addrs.emplace(ipaddress,
-                        std::make_shared<phosphor::network::IPAddress>(
-                            bus, objectPath.c_str(), *this, protType, ipaddress,
-                            origin, prefixLength, gateway));
+    this->addrs.insert_or_assign(ipaddress,
+                                 std::make_shared<phosphor::network::IPAddress>(
+                                     bus, objectPath.c_str(), *this, protType,
+                                     ipaddress, origin, prefixLength, gateway));
 
     manager.writeToConfigurationFile();
     return objectPath;
