@@ -1,0 +1,10 @@
+Ok-To-Test+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Code-Review+1: Lei YU <yulei.sh@bytedance.com>
+Code-Review+2: William A. Kennington III <wak@google.com>
+Code-Review+1: Bruce Mitchell <bruce.mitchell@linux.vnet.ibm.com>
+Submitted-by: John Wang <wangzhiqiang.bj@bytedance.com>
+Submitted-at: Sun, 11 Apr 2021 05:39:52 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-networkd/+/42038
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
