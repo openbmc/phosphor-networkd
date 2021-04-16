@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf630ff4_a790ed00",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-04-16T05:38:51Z",
+      "side": 1,
+      "message": "How you are making sure that same IP should not be assigned multiple times?\nEg: IP1_same subnet followed by IP1_same_subnet",
+      "range": {
+        "startLine": 235,
+        "startChar": 1,
+        "endLine": 239,
+        "endChar": 63
+      },
+      "revId": "94fb46a7bf1709ba43221220f63fb3ba11957922",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
