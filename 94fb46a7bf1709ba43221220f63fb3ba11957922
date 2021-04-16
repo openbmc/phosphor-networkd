@@ -94,6 +94,30 @@
       "revId": "94fb46a7bf1709ba43221220f63fb3ba11957922",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8937432e_4a35d3c9",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-04-16T11:51:11Z",
+      "side": 1,
+      "message": "\u003e If the second static ip is the same as before, we should allow the new ip settings, is it?\nWe should not allow the second static IP if it is same.\n\n\u003e If the second static ip is different, it becomes a new IP, and that\u0027s OK as before.\nYes",
+      "parentUuid": "75add465_0e7fb9f7",
+      "range": {
+        "startLine": 235,
+        "startChar": 1,
+        "endLine": 239,
+        "endChar": 63
+      },
+      "revId": "94fb46a7bf1709ba43221220f63fb3ba11957922",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
