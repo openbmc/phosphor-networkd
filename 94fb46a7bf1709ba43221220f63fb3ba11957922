@@ -166,6 +166,30 @@
       "revId": "94fb46a7bf1709ba43221220f63fb3ba11957922",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28c5391c_f1491a4e",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1000044
+      },
+      "writtenOn": "2021-04-19T11:27:10Z",
+      "side": 1,
+      "message": "So I assume you are OK with this change then?",
+      "parentUuid": "afa1b3a3_13187cc4",
+      "range": {
+        "startLine": 235,
+        "startChar": 1,
+        "endLine": 239,
+        "endChar": 63
+      },
+      "revId": "94fb46a7bf1709ba43221220f63fb3ba11957922",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
