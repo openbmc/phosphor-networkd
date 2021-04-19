@@ -142,6 +142,30 @@
       "revId": "94fb46a7bf1709ba43221220f63fb3ba11957922",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afa1b3a3_13187cc4",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-04-19T10:54:40Z",
+      "side": 1,
+      "message": "\u003e Why is that? If user sets a static IP address with a different mask, it is valid, is it?\nYes if the IP address is same but the mask is different, in that case network is different.",
+      "parentUuid": "e96eaf09_9cd8d474",
+      "range": {
+        "startLine": 235,
+        "startChar": 1,
+        "endLine": 239,
+        "endChar": 63
+      },
+      "revId": "94fb46a7bf1709ba43221220f63fb3ba11957922",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
