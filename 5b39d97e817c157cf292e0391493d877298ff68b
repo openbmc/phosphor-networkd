@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "07dbd929_6bfe0693",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-04-23T09:08:49Z",
+      "side": 1,
+      "message": "nit: unneeded variable, this should be clearly obvious to the reader",
+      "revId": "5b39d97e817c157cf292e0391493d877298ff68b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68492d21_b6948469",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-04-23T09:08:49Z",
+      "side": 1,
+      "message": "nit: no need for explicit construction.",
+      "revId": "5b39d97e817c157cf292e0391493d877298ff68b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa907dfd_9e62fc49",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-04-23T09:08:49Z",
+      "side": 1,
+      "message": "string inputs should generally be string_views.",
+      "revId": "5b39d97e817c157cf292e0391493d877298ff68b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24e50ce4_34b0e44d",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-04-23T09:08:49Z",
+      "side": 1,
+      "message": "It would be simpler and not require extra allocations to iterate over found commas, trim spaces on those substrings, and then append them to the set.",
+      "revId": "5b39d97e817c157cf292e0391493d877298ff68b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
