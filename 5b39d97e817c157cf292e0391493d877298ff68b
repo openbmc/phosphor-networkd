@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ed220154_291ba422",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000044
+      },
+      "writtenOn": "2021-04-27T05:33:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07dbd929_6bfe0693",
+      "revId": "5b39d97e817c157cf292e0391493d877298ff68b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "68492d21_b6948469",
         "filename": "util.cpp",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "5b39d97e817c157cf292e0391493d877298ff68b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8500cb09_3d2aeb1c",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1000044
+      },
+      "writtenOn": "2021-04-27T05:33:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68492d21_b6948469",
+      "revId": "5b39d97e817c157cf292e0391493d877298ff68b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "b66c440a_fb9317ed",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000044
+      },
+      "writtenOn": "2021-04-27T05:33:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa907dfd_9e62fc49",
+      "revId": "5b39d97e817c157cf292e0391493d877298ff68b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "24e50ce4_34b0e44d",
         "filename": "util.cpp",
         "patchSetId": 2
@@ -67,6 +121,24 @@
       "revId": "5b39d97e817c157cf292e0391493d877298ff68b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc5924e4_0bf72adf",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000044
+      },
+      "writtenOn": "2021-04-27T05:33:47Z",
+      "side": 1,
+      "message": "Then it requires to trim the each string splited by comma, but that\u0027s ok.\nDone",
+      "parentUuid": "24e50ce4_34b0e44d",
+      "revId": "5b39d97e817c157cf292e0391493d877298ff68b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
@@ -102,6 +174,24 @@
       "revId": "5b39d97e817c157cf292e0391493d877298ff68b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a8f7237_eba682ba",
+        "filename": "util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1000044
+      },
+      "writtenOn": "2021-04-27T05:33:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b4c6666_ebbed7f4",
+      "revId": "5b39d97e817c157cf292e0391493d877298ff68b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
