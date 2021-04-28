@@ -46,6 +46,30 @@
       "revId": "307554e745a8d00e32d63296a6f78fc9245af007",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96c3cb00_3340e324",
+        "filename": "util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1000044
+      },
+      "writtenOn": "2021-04-28T10:34:21Z",
+      "side": 1,
+      "message": "Exactly, this is to cache the result, as it only needs to parse the env once.",
+      "parentUuid": "c75ae247_65f0eb1e",
+      "range": {
+        "startLine": 135,
+        "startChar": 3,
+        "endLine": 135,
+        "endChar": 34
+      },
+      "revId": "307554e745a8d00e32d63296a6f78fc9245af007",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
