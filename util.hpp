@@ -169,13 +169,13 @@ namespace internal
 void executeCommandinChildProcess(const char* path, char** args);
 
 /** @brief Get ignored interfaces from environment */
-std::string getIgnoredInterfacesEnv();
+std::string_view getIgnoredInterfacesEnv();
 
 /** @brief Parse the comma separated interface names */
-std::set<std::string> parseInterfaces(const std::string& interfaces);
+std::set<std::string_view> parseInterfaces(std::string_view interfaces);
 
 /** @brief Get the ignored interfaces */
-const std::set<std::string>& getIgnoredInterfaces();
+const std::set<std::string_view>& getIgnoredInterfaces();
 
 } // namespace internal
 

@@ -18,7 +18,6 @@
 #include <nlohmann/json.hpp>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
-#include <sstream>
 #include <stdexcept>
 #include <stdplus/raw.hpp>
 #include <string>
@@ -94,43 +93,47 @@ void executeCommandinChildProcess(const char* path, char** args)
 }
 
 /** @brief Get ignored interfaces from environment */
-std::string getIgnoredInterfacesEnv()
+std::string_view getIgnoredInterfacesEnv()
 {
     auto r = std::getenv("IGNORED_INTERFACES");
     if (r == nullptr)
     {
-        return {};
+        return "";
     }
     return r;
 }
 
 /** @brief Parse the comma separated interface names */
-std::set<std::string> parseInterfaces(const std::string& interfaces)
+std::set<std::string_view> parseInterfaces(std::string_view interfaces)
 {
-    std::set<std::string> result;
-    std::stringstream ss(interfaces);
-    while (ss.good())
+    std::set<std::string_view> result;
+    while (true)
     {
-        std::string str;
-        std::getline(ss, str, ',');
-        // Trim str
-        if (!str.empty())
+        auto sep = interfaces.find(',');
+        auto interface = interfaces.substr(0, sep);
+        while (!interface.empty() && std::isspace(interface.front()))
         {
-            str.erase(
-                std::remove_if(str.begin(), str.end(),
-                               [](unsigned char c) { return std::isspace(c); }),
-                str.end());
+            interface.remove_prefix(1);
         }
-        if (!str.empty())
+        while (!interface.empty() && std::isspace(interface.back()))
         {
-            result.insert(str);
+            interface.remove_suffix(1);
         }
+        if (!interface.empty())
+        {
+            result.insert(interface);
+        }
+        if (sep == interfaces.npos)
+        {
+            break;
+        }
+        interfaces = interfaces.substr(sep + 1);
     }
     return result;
 }
 
 /** @brief Get the ignored interfaces */
-const std::set<std::string>& getIgnoredInterfaces()
+const std::set<std::string_view>& getIgnoredInterfaces()
 {
     static auto ignoredInterfaces = parseInterfaces(getIgnoredInterfacesEnv());
     return ignoredInterfaces;
