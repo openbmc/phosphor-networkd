@@ -219,7 +219,7 @@ void Manager::setFistBootMACOnInterface(
         if (interface.first == inventoryEthPair.first)
         {
             auto returnMAC =
-                interface.second->mACAddress(inventoryEthPair.second);
+                interface.second->macAddress(inventoryEthPair.second);
             if (returnMAC == inventoryEthPair.second)
             {
                 log<level::INFO>("Set the MAC on "),

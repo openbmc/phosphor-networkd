@@ -45,14 +45,14 @@ bool Configuration::hostNameEnabled(bool value)
     return name;
 }
 
-bool Configuration::nTPEnabled(bool value)
+bool Configuration::ntpEnabled(bool value)
 {
-    if (value == nTPEnabled())
+    if (value == ntpEnabled())
     {
         return value;
     }
 
-    auto ntp = ConfigIntf::nTPEnabled(value);
+    auto ntp = ConfigIntf::ntpEnabled(value);
     manager.writeToConfigurationFile();
     manager.restartSystemdUnit(phosphor::network::networkdService);
     manager.restartSystemdUnit(phosphor::network::timeSynchdService);
@@ -60,14 +60,14 @@ bool Configuration::nTPEnabled(bool value)
     return ntp;
 }
 
-bool Configuration::dNSEnabled(bool value)
+bool Configuration::dnsEnabled(bool value)
 {
-    if (value == dNSEnabled())
+    if (value == dnsEnabled())
     {
         return value;
     }
 
-    auto dns = ConfigIntf::dNSEnabled(value);
+    auto dns = ConfigIntf::dnsEnabled(value);
     manager.writeToConfigurationFile();
     manager.restartSystemdUnit(phosphor::network::networkdService);
 

@@ -13,6 +13,16 @@
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 #include <xyz/openbmc_project/Network/MACAddress/server.hpp>
 
+#ifndef SDBUSPP_NEW_CAMELCASE
+#define dhcpEnabled dHCPEnabled
+#define ip iP
+#define ipAddress iPAddress
+#define ipv6AcceptRA iPv6AcceptRA
+#define macAddress mACAddress
+#define nicEnabled nICEnabled
+#define ntpServers nTPServers
+#endif
+
 namespace phosphor
 {
 namespace network
@@ -92,29 +102,29 @@ class EthernetInterface : public Ifaces
      */
     virtual void loadNameServers();
 
-    /** @brief Function to create ipaddress dbus object.
+    /** @brief Function to create ipAddress dbus object.
      *  @param[in] addressType - Type of ip address.
-     *  @param[in] ipaddress- IP address.
+     *  @param[in] ipAddress- IP address.
      *  @param[in] prefixLength - Length of prefix.
      *  @param[in] gateway - Gateway ip address.
      */
 
-    ObjectPath iP(IP::Protocol addressType, std::string ipaddress,
+    ObjectPath ip(IP::Protocol addressType, std::string ipAddress,
                   uint8_t prefixLength, std::string gateway) override;
 
     /** @brief Function to create static neighbor dbus object.
      *  @param[in] ipAddress - IP address.
      *  @param[in] macAddress - Low level MAC address.
      */
-    ObjectPath neighbor(std::string iPAddress, std::string mACAddress) override;
+    ObjectPath neighbor(std::string ipAddress, std::string macAddress) override;
 
-    /* @brief delete the dbus object of the given ipaddress.
-     * @param[in] ipaddress - IP address.
+    /* @brief delete the dbus object of the given ipAddress.
+     * @param[in] ipAddress - IP address.
      */
-    void deleteObject(const std::string& ipaddress);
+    void deleteObject(const std::string& ipAddress);
 
-    /* @brief delete the dbus object of the given ipaddress.
-     * @param[in] ipaddress - IP address.
+    /* @brief delete the dbus object of the given ipAddress.
+     * @param[in] ipAddress - IP address.
      */
     void deleteStaticNeighborObject(const std::string& ipAddress);
 
@@ -139,7 +149,7 @@ class EthernetInterface : public Ifaces
     unsigned ifIndex() const;
 
     /* @brief Gets all the ip addresses.
-     * @returns the list of ipaddress.
+     * @returns the list of ipAddress.
      */
     const AddressMap& getAddresses() const
     {
@@ -155,7 +165,7 @@ class EthernetInterface : public Ifaces
     }
 
     /** Set value of DHCPEnabled */
-    DHCPConf dHCPEnabled(DHCPConf value) override;
+    DHCPConf dhcpEnabled(DHCPConf value) override;
 
     /** @brief Selectively disables DHCP
      *  @param[in] protocol - The IPv4 or IPv6 protocol to return to static
@@ -167,16 +177,16 @@ class EthernetInterface : public Ifaces
     bool linkUp() const override;
 
     /** Retrieve NIC State */
-    bool nICEnabled() const override;
+    bool nicEnabled() const override;
 
     /** Set value of NICEnabled */
-    bool nICEnabled(bool value) override;
+    bool nicEnabled(bool value) override;
 
     /** @brief sets the MAC address.
      *  @param[in] value - MAC address which needs to be set on the system.
      *  @returns macAddress of the interface or throws an error.
      */
-    std::string mACAddress(std::string value) override;
+    std::string macAddress(std::string value) override;
 
     /** @brief get the IPv6AcceptRA flag from the network configuration file
      *
@@ -186,12 +196,12 @@ class EthernetInterface : public Ifaces
     /** @brief check conf file for Router Advertisements
      *
      */
-    bool iPv6AcceptRA(bool value) override;
+    bool ipv6AcceptRA(bool value) override;
 
     /** @brief sets the NTP servers.
      *  @param[in] value - vector of NTP servers.
      */
-    ServerList nTPServers(ServerList value) override;
+    ServerList ntpServers(ServerList value) override;
 
     /** @brief sets the DNS/nameservers.
      *  @param[in] value - vector of DNS servers.
@@ -233,11 +243,11 @@ class EthernetInterface : public Ifaces
      */
     std::string defaultGateway6(std::string gateway) override;
 
-    using EthernetInterfaceIntf::dHCPEnabled;
+    using EthernetInterfaceIntf::dhcpEnabled;
     using EthernetInterfaceIntf::interfaceName;
     using EthernetInterfaceIntf::linkUp;
-    using EthernetInterfaceIntf::nICEnabled;
-    using MacAddressIntf::mACAddress;
+    using EthernetInterfaceIntf::nicEnabled;
+    using MacAddressIntf::macAddress;
 
     using EthernetInterfaceIntf::defaultGateway;
     using EthernetInterfaceIntf::defaultGateway6;
@@ -264,7 +274,7 @@ class EthernetInterface : public Ifaces
 
     /** @brief construct the ip address dbus object path.
      *  @param[in] addressType - Type of ip address.
-     *  @param[in] ipaddress - IP address.
+     *  @param[in] ipAddress - IP address.
      *  @param[in] prefixLength - Length of prefix.
      *  @param[in] gateway - Gateway address.
 
@@ -272,34 +282,34 @@ class EthernetInterface : public Ifaces
      */
 
     std::string generateObjectPath(IP::Protocol addressType,
-                                   const std::string& ipaddress,
+                                   const std::string& ipAddress,
                                    uint8_t prefixLength,
                                    const std::string& gateway) const;
 
     std::string
-        generateStaticNeighborObjectPath(const std::string& iPAddress,
-                                         const std::string& mACAddress) const;
+        generateStaticNeighborObjectPath(const std::string& ipAddress,
+                                         const std::string& macAddress) const;
 
-    /** @brief generates the id by doing hash of ipaddress,
+    /** @brief generates the id by doing hash of ipAddress,
      *         prefixlength and the gateway.
-     *  @param[in] ipaddress - IP address.
+     *  @param[in] ipAddress - IP address.
      *  @param[in] prefixLength - Length of prefix.
      *  @param[in] gateway - Gateway address.
      *  @return hash string.
      */
 
-    static std::string generateId(const std::string& ipaddress,
+    static std::string generateId(const std::string& ipAddress,
                                   uint8_t prefixLength,
                                   const std::string& gateway);
 
-    /** @brief generates the id by doing hash of ipaddress
+    /** @brief generates the id by doing hash of ipAddress
      *         and the mac address.
-     *  @param[in] iPAddress  - IP address.
-     *  @param[in] mACAddress - Gateway address.
+     *  @param[in] ipAddress  - IP address.
+     *  @param[in] macAddress - Gateway address.
      *  @return hash string.
      */
-    static std::string generateNeighborId(const std::string& iPAddress,
-                                          const std::string& mACAddress);
+    static std::string generateNeighborId(const std::string& ipAddress,
+                                          const std::string& macAddress);
 
     /** @brief write the dhcp section **/
     void writeDHCPSection(std::fstream& stream);
