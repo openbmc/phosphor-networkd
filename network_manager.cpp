@@ -180,7 +180,7 @@ void Manager::createChildObjects()
         bus, objPath.string(), *this);
 }
 
-ObjectPath Manager::vLAN(IntfName interfaceName, uint32_t id)
+ObjectPath Manager::vlan(IntfName interfaceName, uint32_t id)
 {
     return interfaces[interfaceName]->createVLAN(id);
 }

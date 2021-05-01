@@ -14,6 +14,10 @@
 #include <vector>
 #include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
 
+#ifndef SDBUSPP_NEW_CAMELCASE
+#define vlan vLAN
+#endif
+
 namespace phosphor
 {
 namespace network
@@ -56,7 +60,7 @@ class Manager : public details::VLANCreateIface
     Manager(sdbusplus::bus::bus& bus, const char* objPath,
             const std::string& dir);
 
-    ObjectPath vLAN(IntfName interfaceName, uint32_t id) override;
+    ObjectPath vlan(IntfName interfaceName, uint32_t id) override;
 
     /** @brief write the network conf file with the in-memory objects.
      */
