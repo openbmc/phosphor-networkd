@@ -23,7 +23,7 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
                              const std::string& objPath, DHCPConf dhcpEnabled,
-                             bool nICEnabled, uint32_t vlanID,
+                             bool nicEnabled, uint32_t vlanID,
                              EthernetInterface& intf, Manager& parent) :
     VlanIface(bus, objPath.c_str()),
     DeleteIface(bus, objPath.c_str()),
@@ -31,14 +31,14 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
     parentInterface(intf)
 {
     id(vlanID);
-    EthernetInterfaceIntf::nICEnabled(nICEnabled);
+    EthernetInterfaceIntf::nicEnabled(nicEnabled);
     VlanIface::interfaceName(EthernetInterface::interfaceName());
-    MacAddressIntf::mACAddress(parentInterface.mACAddress());
+    MacAddressIntf::macAddress(parentInterface.macAddress());
 
     emit_object_added();
 }
 
-std::string VlanInterface::mACAddress(std::string)
+std::string VlanInterface::macAddress(std::string)
 {
     log<level::ERR>("Tried to set MAC address on VLAN");
     elog<InternalFailure>();

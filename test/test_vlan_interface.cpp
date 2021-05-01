@@ -103,7 +103,7 @@ class TestVlanInterface : public testing::Test
     void createIPObject(IP::Protocol addressType, const std::string& ipaddress,
                         uint8_t subnetMask, const std::string& gateway)
     {
-        interface.iP(addressType, ipaddress, subnetMask, gateway);
+        interface.ip(addressType, ipaddress, subnetMask, gateway);
     }
 
     bool isValueFound(const std::vector<std::string>& values,

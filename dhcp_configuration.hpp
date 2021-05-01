@@ -7,6 +7,11 @@
 #include <string>
 #include <xyz/openbmc_project/Network/DHCPConfiguration/server.hpp>
 
+#ifndef SDBUSPP_NEW_CAMELCASE
+#define dnsEnabled dNSEnabled
+#define ntpEnabled nTPEnabled
+#endif
+
 namespace phosphor
 {
 namespace network
@@ -47,8 +52,8 @@ class Configuration : public Iface
         Iface(bus, objPath.c_str(), true),
         bus(bus), manager(parent)
     {
-        ConfigIntf::dNSEnabled(getDHCPPropFromConf("UseDNS"));
-        ConfigIntf::nTPEnabled(getDHCPPropFromConf("UseNTP"));
+        ConfigIntf::dnsEnabled(getDHCPPropFromConf("UseDNS"));
+        ConfigIntf::ntpEnabled(getDHCPPropFromConf("UseNTP"));
         ConfigIntf::hostNameEnabled(getDHCPPropFromConf("UseHostname"));
         ConfigIntf::sendHostNameEnabled(getDHCPPropFromConf("SendHostname"));
         emit_object_added();
@@ -60,14 +65,14 @@ class Configuration : public Iface
      *  @param[in] value - true if DNS server needed from DHCP server
      *                     else false.
      */
-    bool dNSEnabled(bool value) override;
+    bool dnsEnabled(bool value) override;
 
     /** @brief If true then NTP servers received from the DHCP server
                will be used by systemd-timesyncd.
      *  @param[in] value - true if NTP server needed from DHCP server
      *                     else false.
      */
-    bool nTPEnabled(bool value) override;
+    bool ntpEnabled(bool value) override;
 
     /** @brief If true then Hostname received from the DHCP server will
      *         be set as the hostname of the system
@@ -94,9 +99,9 @@ class Configuration : public Iface
               sendHostNameEnabled).
      *
      */
-    using ConfigIntf::dNSEnabled;
+    using ConfigIntf::dnsEnabled;
     using ConfigIntf::hostNameEnabled;
-    using ConfigIntf::nTPEnabled;
+    using ConfigIntf::ntpEnabled;
     using ConfigIntf::sendHostNameEnabled;
 
   private:

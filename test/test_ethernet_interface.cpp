@@ -101,14 +101,14 @@ class TestEthernetInterface : public testing::Test
     void createIPObject(IP::Protocol addressType, const std::string& ipaddress,
                         uint8_t subnetMask, const std::string& gateway)
     {
-        interface.iP(addressType, ipaddress, subnetMask, gateway);
+        interface.ip(addressType, ipaddress, subnetMask, gateway);
     }
 };
 
 TEST_F(TestEthernetInterface, NoIPaddress)
 {
     EXPECT_EQ(countIPObjects(), 0);
-    EXPECT_EQ(mac_address::toString(mac), interface.mACAddress());
+    EXPECT_EQ(mac_address::toString(mac), interface.macAddress());
 }
 
 TEST_F(TestEthernetInterface, AddIPAddress)
@@ -194,7 +194,7 @@ TEST_F(TestEthernetInterface, addNTPServers)
 {
     ServerList servers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};
     EXPECT_CALL(manager, restartSystemdUnit(networkdService)).Times(1);
-    interface.nTPServers(servers);
+    interface.ntpServers(servers);
     fs::path filePath = confDir;
     filePath /= "00-bmc-test0.network";
     config::Parser parser(filePath.string());

@@ -91,8 +91,8 @@ Neighbor::Neighbor(sdbusplus::bus::bus& bus, const char* objPath,
     NeighborObj(bus, objPath, true),
     parent(parent)
 {
-    this->iPAddress(ipAddress);
-    this->mACAddress(macAddress);
+    this->ipAddress(ipAddress);
+    this->macAddress(macAddress);
     this->state(state);
 
     // Emit deferred signal.
@@ -101,7 +101,7 @@ Neighbor::Neighbor(sdbusplus::bus::bus& bus, const char* objPath,
 
 void Neighbor::delete_()
 {
-    parent.deleteStaticNeighborObject(iPAddress());
+    parent.deleteStaticNeighborObject(ipAddress());
 }
 
 } // namespace network
