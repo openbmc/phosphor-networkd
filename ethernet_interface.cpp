@@ -363,12 +363,12 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
     Autoneg autoneg{0};
     DuplexMode duplex{0};
     LinkUp linkState{false};
-    NICEnabled nicEnabled{false};
+    NICEnabled enabled{false};
     EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
 
     if (eifSocket.sock < 0)
     {
-        return std::make_tuple(speed, duplex, autoneg, linkState, nicEnabled);
+        return std::make_tuple(speed, duplex, autoneg, linkState, enabled);
     }
 
     std::strncpy(ifr.ifr_name, interfaceName().c_str(), IFNAMSIZ - 1);
@@ -382,10 +382,10 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
         autoneg = edata.autoneg;
     }
 
-    nicEnabled = nicEnabled();
+    enabled = nicEnabled();
     linkState = linkUp();
 
-    return std::make_tuple(speed, duplex, autoneg, linkState, nicEnabled);
+    return std::make_tuple(speed, duplex, autoneg, linkState, enabled);
 }
 #endif
 
