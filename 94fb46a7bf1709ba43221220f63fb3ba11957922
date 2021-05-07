@@ -238,6 +238,30 @@
       "revId": "94fb46a7bf1709ba43221220f63fb3ba11957922",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "55037a85_4446eaa5",
+        "filename": "ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-05-07T11:10:00Z",
+      "side": 1,
+      "message": "\u003e The earlier behavior has the issue openbmc/phosphor-networkd#38, which should be fixed.\nYes,It is fixing this issue but introducing other one.\n\nSame IP address/subnet mask can be added multiple times.\n\nlook at line no 314\n\nTake an eg : There is a static IP (ip1/subnet1)\nUser tries to configure the same static IP again (ip1/subnet1. \n\nWith this patch it will get configured but earlier it throws an error(IP already configured).\n\nI was thinking can we fix this behavior or should we allow the user to configure same IP again and again.\n\nNOTE: with the iP API (line no 314)(IP gets added not replaced).\n\nI think let\u0027s live with this behaviour to fix the issue 38.",
+      "parentUuid": "bb02b2c7_b370b84a",
+      "range": {
+        "startLine": 235,
+        "startChar": 1,
+        "endLine": 239,
+        "endChar": 63
+      },
+      "revId": "94fb46a7bf1709ba43221220f63fb3ba11957922",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
