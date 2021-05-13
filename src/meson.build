@@ -101,3 +101,7 @@ executable(
   dependencies: networkd_dep,
   install: true,
   install_dir: get_option('bindir'))
+
+if (get_option('hyp-nw-config') == true)
+  subdir('ibm')
+endif
