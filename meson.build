@@ -74,6 +74,10 @@ networkd_dbus_dep = declare_dependency(
 
 subdir('src')
 
+if get_option('hyp-nw-config').enabled()
+  subdir('src/hypervisor-network-mgr-src')
+endif
+
 configure_file(
   input: 'xyz.openbmc_project.Network.service.in',
   output: 'xyz.openbmc_project.Network.service',
