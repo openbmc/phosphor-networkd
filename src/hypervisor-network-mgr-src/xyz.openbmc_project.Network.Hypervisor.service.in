@@ -1,0 +1,13 @@
+[Unit]
+Description=Hypervisor Network Manager
+After=xyz.openbmc_project.biosconfig_manager.service
+
+[Service]
+ExecStart=/usr/bin/env phosphor-hyp-network-manager
+SyslogIdentifier=phosphor-hyp-network-manager
+Restart=always
+Type=dbus
+BusName=xyz.openbmc_project.Network.Hypervisor
+
+[Install]
+WantedBy=multi-user.target
