@@ -151,7 +151,7 @@ AC_CHECK_HEADER(
 ))
 
 # Create configured output.
-AC_CONFIG_FILES([Makefile test/Makefile])
+AC_CONFIG_FILES([Makefile hyp-network-manager/Makefile test/Makefile])
 AC_CONFIG_FILES([xyz.openbmc_project.Network.service])
 AC_CONFIG_FILES([xyz.openbmc_project.Network.conf])
 AC_OUTPUT
