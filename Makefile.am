@@ -133,3 +133,4 @@ xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp: xyz/openbmc_projec
 	$(SDBUSPLUSPLUS) -r $(srcdir) interface server-header xyz.openbmc_project.Network.Neighbor.CreateStatic > $@
 
 SUBDIRS = test
+SUBDIRS += hyp-network-manager
