@@ -10,3 +10,5 @@ option('nic-ethtool', type: 'boolean',
        description: 'Enable ethtool information lookup')
 option('sync-mac', type: 'boolean',
        description: 'Sync mac address with phosphor-inventory-manager')
+option('hyp-nw-config', type : 'feature', value : 'disabled',
+       description : 'Enable the hypervisor network manager')
