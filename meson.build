@@ -33,6 +33,9 @@ else
   sdbuspp_gen_meson_prog = sdbusplus_proj.get_variable('sdbuspp_gen_meson_prog')
 endif
 
+phosphor_dbus_interfaces_dep = dependency('phosphor-dbus-interfaces')
+phosphor_logging_dep = dependency('phosphor-logging')
+
 generated_sources = []
 generated_others = []
 yaml_sources = []
@@ -41,6 +44,10 @@ subdir('gen/xyz')
 generated_includes = include_directories('gen')
 
 subdir('src')
+
+if get_option('ibm-hyp-nw-config').enabled()
+  subdir('src/hypervisor-network-mgr-src')
+endif
 
 configure_file(
   input: 'xyz.openbmc_project.Network.service.in',

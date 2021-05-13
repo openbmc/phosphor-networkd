@@ -1,6 +1,3 @@
-phosphor_dbus_interfaces_dep = dependency('phosphor-dbus-interfaces')
-phosphor_logging_dep = dependency('phosphor-logging')
-
 src_includes = include_directories('.')
 
 executable(
