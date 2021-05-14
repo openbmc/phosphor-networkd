@@ -55,3 +55,6 @@ test/test_dns_updater
 __pycache__/
 *.py[cod]
 *$py.class
+
+/build*/
+/subprojects/*/

@@ -1,0 +1,10 @@
+#!/bin/bash
+"$(dirname "$0")/regenerate-meson"
+
+out="$(git status --porcelain --untracked-files)"
+if [ -n "$out" ]; then
+  echo "git status is not clean after running regenerate-meson!"
+  echo
+  echo "$out"
+  exit 1
+fi
