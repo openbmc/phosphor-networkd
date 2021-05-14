@@ -210,7 +210,7 @@ void Manager::writeToConfigurationFile()
     restartTimers();
 }
 
-#if SYNC_MAC_FROM_INVENTORY
+#ifdef SYNC_MAC_FROM_INVENTORY
 void Manager::setFistBootMACOnInterface(
     const std::pair<std::string, std::string>& inventoryEthPair)
 {

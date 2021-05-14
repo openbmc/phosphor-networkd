@@ -122,7 +122,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     EthernetInterfaceIntf::linkUp(linkUp());
     EthernetInterfaceIntf::nicEnabled(nicEnabled());
 
-#if NIC_SUPPORTS_ETHTOOL
+#ifdef NIC_SUPPORTS_ETHTOOL
     InterfaceInfo ifInfo = EthernetInterface::getInterfaceInfo();
 
     EthernetInterfaceIntf::autoNeg(std::get<2>(ifInfo));
@@ -348,7 +348,7 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
     return objectPath;
 }
 
-#if NIC_SUPPORTS_ETHTOOL
+#ifdef NIC_SUPPORTS_ETHTOOL
 /*
   Enable this code if your NIC driver supports the ETHTOOL features.
   Do this by adding the following to your phosphor-network*.bbappend file.

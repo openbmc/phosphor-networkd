@@ -48,7 +48,7 @@ std::unique_ptr<phosphor::network::Manager> manager = nullptr;
 std::unique_ptr<Timer> refreshObjectTimer = nullptr;
 std::unique_ptr<Timer> restartTimer = nullptr;
 
-#if SYNC_MAC_FROM_INVENTORY
+#ifdef SYNC_MAC_FROM_INVENTORY
 std::unique_ptr<sdbusplus::bus::match::match> EthInterfaceMatch = nullptr;
 std::vector<std::string> first_boot_status;
 
@@ -330,7 +330,7 @@ int main(int /*argc*/, char** /*argv*/)
     // RTNETLINK event handler
     phosphor::network::rtnetlink::Server svr(eventPtr, smartSock);
 
-#if SYNC_MAC_FROM_INVENTORY
+#ifdef SYNC_MAC_FROM_INVENTORY
     std::ifstream in(configFile);
     nlohmann::json configJson;
     in >> configJson;

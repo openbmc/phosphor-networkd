@@ -543,7 +543,7 @@ ether_addr getfromInventory(sdbusplus::bus::bus& bus,
 
     std::string interfaceName = intfName;
 
-#if SYNC_MAC_FROM_INVENTORY
+#ifdef SYNC_MAC_FROM_INVENTORY
     // load the config JSON from the Read Only Path
     std::ifstream in(configFile);
     nlohmann::json configJson;
