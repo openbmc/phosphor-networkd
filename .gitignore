@@ -60,3 +60,6 @@ test/test
 __pycache__/
 *.py[cod]
 *$py.class
+
+/build*/
+/subprojects/*/
