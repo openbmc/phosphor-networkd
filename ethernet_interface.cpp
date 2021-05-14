@@ -357,13 +357,13 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
 */
 InterfaceInfo EthernetInterface::getInterfaceInfo() const
 {
-    ifreq ifr{0};
-    ethtool_cmd edata{0};
-    LinkSpeed speed{0};
-    Autoneg autoneg{0};
-    DuplexMode duplex{0};
-    LinkUp linkState{false};
-    NICEnabled enabled{false};
+    ifreq ifr = {};
+    ethtool_cmd edata = {};
+    LinkSpeed speed = {};
+    Autoneg autoneg = {};
+    DuplexMode duplex = {};
+    LinkUp linkState = {};
+    NICEnabled enabled = {};
     EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
 
     if (eifSocket.sock < 0)
@@ -404,7 +404,7 @@ std::string
         return activeMACAddr;
     }
 
-    ifreq ifr{0};
+    ifreq ifr = {};
     std::strncpy(ifr.ifr_name, interfaceName.c_str(), IFNAMSIZ - 1);
     if (ioctl(eifSocket.sock, SIOCGIFHWADDR, &ifr) != 0)
     {
@@ -579,7 +579,7 @@ bool EthernetInterface::linkUp() const
         return value;
     }
 
-    ifreq ifr{0};
+    ifreq ifr = {};
     std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
     if (ioctl(eifSocket.sock, SIOCGIFFLAGS, &ifr) == 0)
     {
@@ -603,7 +603,7 @@ bool EthernetInterface::nicEnabled() const
         return value;
     }
 
-    ifreq ifr{0};
+    ifreq ifr = {};
     std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
     if (ioctl(eifSocket.sock, SIOCGIFFLAGS, &ifr) == 0)
     {
@@ -630,7 +630,7 @@ bool EthernetInterface::nicEnabled(bool value)
         return EthernetInterfaceIntf::nicEnabled();
     }
 
-    ifreq ifr{0};
+    ifreq ifr = {};
     std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
     if (ioctl(eifSocket.sock, SIOCGIFFLAGS, &ifr) != 0)
     {

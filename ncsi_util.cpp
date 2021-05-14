@@ -34,20 +34,20 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* /*arg*/) {
 
     struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
     struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
-        {type : NLA_UNSPEC}, {type : NLA_U32}, {type : NLA_NESTED},
-        {type : NLA_U32},    {type : NLA_U32},
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0},
     };
 
     struct nlattr* packagetb[NCSI_PKG_ATTR_MAX + 1] = {nullptr};
     struct nla_policy packagePolicy[NCSI_PKG_ATTR_MAX + 1] = {
-        {type : NLA_UNSPEC}, {type : NLA_NESTED}, {type : NLA_U32},
-        {type : NLA_FLAG},   {type : NLA_NESTED},
+        {NLA_UNSPEC, 0, 0}, {NLA_NESTED, 0, 0}, {NLA_U32, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_NESTED, 0, 0},
     };
 
     struct nlattr* channeltb[NCSI_CHANNEL_ATTR_MAX + 1] = {nullptr};
     struct nla_policy channelPolicy[NCSI_CHANNEL_ATTR_MAX + 1] = {
-        {type : NLA_UNSPEC}, {type : NLA_NESTED}, {type : NLA_U32},
-        {type : NLA_FLAG},   {type : NLA_NESTED}, {type : NLA_UNSPEC},
+        {NLA_UNSPEC, 0, 0}, {NLA_NESTED, 0, 0}, {NLA_U32, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_NESTED, 0, 0}, {NLA_UNSPEC, 0, 0},
     };
 
     auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
