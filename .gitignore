@@ -30,6 +30,7 @@ Makefile.in
 # https://www.gnu.org/software/libtool/
 
 /ltmain.sh
+/libtool
 
 # http://www.gnu.org/software/texinfo
 
@@ -41,6 +42,7 @@ Makefile.in
 /config.h.in~
 /config.log
 /config.status
+/ncsi-netlink
 /phosphor-network-manager
 Makefile
 .deps
@@ -49,6 +51,9 @@ Makefile
 test/*.log
 test/*.trs
 test/test_dns_updater
+test/test
+/xyz.openbmc_project.Network.conf
+/xyz.openbmc_project.Network.service
 
 # https://www.gitignore.io/api/python
 # Byte-compiled / optimized / DLL files
