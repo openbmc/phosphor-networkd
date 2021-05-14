@@ -1,0 +1,10 @@
+option('tests', type: 'feature', description: 'Build tests')
+
+option('uboot-env', type: 'boolean',
+       description: 'Update u-boot env for MAC changes')
+option('link-local-autoconf', type: 'boolean',
+       description: 'Enable link local autoconfiguration')
+option('nic-ethtool', type: 'boolean',
+       description: 'Enable ethtool information lookup')
+option('sync-mac', type: 'boolean',
+       description: 'Sync mac address with phosphor-inventory-manager')
