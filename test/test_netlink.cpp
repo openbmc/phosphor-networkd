@@ -86,9 +86,10 @@ TEST(ExtractMsgs, AckMsg)
 {
     nlmsgerr ack{};
     nlmsghdr hdr{};
-    hdr.nlmsg_len = NLMSG_LENGTH(sizeof(ack));
+    constexpr size_t len = NLMSG_LENGTH(sizeof(ack));
+    hdr.nlmsg_len = len;
     hdr.nlmsg_type = NLMSG_ERROR;
-    char buf[NLMSG_ALIGN(hdr.nlmsg_len)];
+    char buf[NLMSG_ALIGN(len)];
     std::memcpy(buf, &hdr, sizeof(hdr));
     std::memcpy(NLMSG_DATA(buf), &ack, sizeof(ack));
     std::string_view data(reinterpret_cast<char*>(&buf), sizeof(buf));
@@ -107,9 +108,10 @@ TEST(ExtractMsgs, ErrMsg)
     nlmsgerr err{};
     err.error = EINVAL;
     nlmsghdr hdr{};
-    hdr.nlmsg_len = NLMSG_LENGTH(sizeof(err));
+    constexpr size_t len = NLMSG_LENGTH(sizeof(err));
+    hdr.nlmsg_len = len;
     hdr.nlmsg_type = NLMSG_ERROR;
-    char buf[NLMSG_ALIGN(hdr.nlmsg_len)];
+    char buf[NLMSG_ALIGN(len)];
     std::memcpy(buf, &hdr, sizeof(hdr));
     std::memcpy(NLMSG_DATA(buf), &err, sizeof(err));
     std::string_view data(reinterpret_cast<char*>(&buf), sizeof(buf));
