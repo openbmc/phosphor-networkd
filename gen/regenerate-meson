@@ -1,0 +1,4 @@
+#!/bin/bash
+cd "$(dirname "$0")" || exit
+export PATH="$PWD/../subprojects/sdbusplus/tools:$PATH"
+exec sdbus++-gen-meson --command meson --directory .. --output .
