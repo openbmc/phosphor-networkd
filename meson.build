@@ -23,7 +23,7 @@ conf_data.set('NIC_SUPPORTS_ETHTOOL', get_option('nic-ethtool'))
 conf_data.set('SYNC_MAC_FROM_INVENTORY', get_option('sync-mac'))
 
 sdbusplus_dep = dependency('sdbusplus', required: false)
-if sdbusplus_dep.found()
+if sdbusplus_dep.found() and sdbusplus_dep.type_name() != 'internal'
   sdbusplusplus_prog = find_program('sdbus++', native: true)
   sdbuspp_gen_meson_prog = find_program('sdbus++-gen-meson', native: true)
 else
@@ -38,7 +38,39 @@ generated_others = []
 yaml_sources = []
 subdir('gen')
 subdir('gen/xyz')
-generated_includes = include_directories('gen')
+networkd_dbus_includes = include_directories('gen')
+
+phosphor_dbus_interfaces_dep = dependency(
+  'phosphor-dbus-interfaces',
+  fallback: ['phosphor-dbus-interfaces', 'phosphor_dbus_interfaces_dep'])
+
+networkd_dbus_deps = [
+  phosphor_dbus_interfaces_dep,
+  sdbusplus_dep,
+]
+
+networkd_dbus_lib = static_library(
+  'networkd_dbus',
+  generated_sources,
+  implicit_include_directories: false,
+  include_directories: networkd_dbus_includes,
+  dependencies: networkd_dbus_deps)
+
+generated_files_headers = []
+foreach s : generated_sources
+    foreach f : s.to_list()
+        p = f.full_path()
+        if p.endswith('.hpp')
+            generated_files_headers += f
+        endif
+    endforeach
+endforeach
+
+networkd_dbus_dep = declare_dependency(
+  sources: generated_files_headers,
+  include_directories: networkd_dbus_includes,
+  link_with: networkd_dbus_lib,
+  dependencies: networkd_dbus_deps)
 
 subdir('src')
 

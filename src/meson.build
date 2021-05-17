@@ -1,5 +1,6 @@
-phosphor_dbus_interfaces_dep = dependency('phosphor-dbus-interfaces')
-phosphor_logging_dep = dependency('phosphor-logging')
+phosphor_logging_dep = dependency(
+  'phosphor-logging',
+  fallback: ['phosphor-logging', 'phosphor_logging_dep'])
 
 src_includes = include_directories('.')
 
@@ -39,6 +40,7 @@ networkd_deps = [
   json_dep,
   phosphor_dbus_interfaces_dep,
   phosphor_logging_dep,
+  networkd_dbus_dep,
   sdbusplus_dep,
   dependency('sdeventplus', fallback: ['sdeventplus', 'sdeventplus_dep']),
   dependency('stdplus', fallback: ['stdplus', 'stdplus_dep']),
@@ -48,18 +50,9 @@ conf_header = configure_file(
   output: 'config.h',
   configuration: conf_data)
 
-networkd_generated = [
-  conf_header,
-] + generated_sources
-
-networkd_includes = [
-  src_includes,
-  generated_includes,
-]
-
 networkd_lib = static_library(
   'networkd',
-  networkd_generated,
+  conf_header,
   'ethernet_interface.cpp',
   'neighbor.cpp',
   'ipaddress.cpp',
@@ -76,13 +69,13 @@ networkd_lib = static_library(
   'dns_updater.cpp',
   'watch.cpp',
   implicit_include_directories: false,
-  include_directories: networkd_includes,
+  include_directories: src_includes,
   dependencies: networkd_deps)
 
 networkd_dep = declare_dependency(
-  sources: networkd_generated,
+  sources: conf_header,
   dependencies: networkd_deps,
-  include_directories: networkd_includes,
+  include_directories: src_includes,
   link_with: networkd_lib)
 
 executable(
