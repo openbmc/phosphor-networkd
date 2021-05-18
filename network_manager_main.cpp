@@ -11,7 +11,9 @@
 #include <fstream>
 #include <functional>
 #include <memory>
+#ifdef SYNC_MAC_FROM_INVENTORY
 #include <nlohmann/json.hpp>
+#endif
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus.hpp>

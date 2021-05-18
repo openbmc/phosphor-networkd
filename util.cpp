@@ -15,7 +15,9 @@
 #include <filesystem>
 #include <fstream>
 #include <list>
+#ifdef SYNC_MAC_FROM_INVENTORY
 #include <nlohmann/json.hpp>
+#endif
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <stdexcept>
