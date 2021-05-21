@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7dd50e3c_825ac211",
+        "filename": "gen/meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-05-21T22:17:06Z",
+      "side": 1,
+      "message": "You just need to execute `gen/regenerate-meson` that is added by this change.",
+      "parentUuid": "32fe0c4d_b5c60ca4",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 22
+      },
+      "revId": "0a01b2a98137bfe358b6c41859d7dee623081514",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f1718929_c7ab2297",
         "filename": "meson.build",
         "patchSetId": 5
@@ -39,6 +63,24 @@
       "revId": "0a01b2a98137bfe358b6c41859d7dee623081514",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5eb4d3e3_cf984fc6",
+        "filename": "meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-05-21T22:17:06Z",
+      "side": 1,
+      "message": "We don\u0027t need this anymore, the linux kernel has had the ncsi headers for quite some time and no one should be using a build environment this out of date. If we find that we really need to bundle a copy we can add it to the repo directly instead of pulling it down.",
+      "parentUuid": "f1718929_c7ab2297",
+      "revId": "0a01b2a98137bfe358b6c41859d7dee623081514",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "8f76c7c7_a257f632",
+        "filename": "meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-05-21T22:17:06Z",
+      "side": 1,
+      "message": "The generated meson builds from sdbus++-gen-meson append to these arrays.",
+      "parentUuid": "44e03267_a2e81366",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 17
+      },
+      "revId": "0a01b2a98137bfe358b6c41859d7dee623081514",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b91a38ae_d121f962",
         "filename": "meson.build",
         "patchSetId": 5
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "fb7aa3a6_378c56d4",
+        "filename": "meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-05-21T22:17:06Z",
+      "side": 1,
+      "message": "`lib` is prepended automatically by meson. Adding it again would make it `liblibnetworkd`. This isn\u0027t even installed, just used so it can be linked for the main binary and test cases.",
+      "parentUuid": "b91a38ae_d121f962",
+      "range": {
+        "startLine": 91,
+        "startChar": 3,
+        "endLine": 91,
+        "endChar": 11
+      },
+      "revId": "0a01b2a98137bfe358b6c41859d7dee623081514",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c948e383_2f127898",
         "filename": "test/meson.build",
         "patchSetId": 5
@@ -108,6 +198,30 @@
       "revId": "0a01b2a98137bfe358b6c41859d7dee623081514",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c303c036_4022633e",
+        "filename": "test/meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-05-21T22:17:06Z",
+      "side": 1,
+      "message": "googletest headers require threads in order to build and link correctly. You don\u0027t notice this when built from the packageconfig dependencies as it correctly adds threading, but subproject builds require this which is why it is included here.",
+      "parentUuid": "c948e383_2f127898",
+      "range": {
+        "startLine": 13,
+        "startChar": 3,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "0a01b2a98137bfe358b6c41859d7dee623081514",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
