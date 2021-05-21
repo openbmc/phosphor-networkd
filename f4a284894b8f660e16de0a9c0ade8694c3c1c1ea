@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "26bae4d9_ee6dceda",
+        "filename": "configure.ac",
+        "patchSetId": 2
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-05-21T06:23:27Z",
+      "side": 1,
+      "message": "I think we need to add a new flag to compile this application.",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b4024b9_720ba39e",
+        "filename": "hyp-network-manager/hyp_ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-05-21T06:23:27Z",
+      "side": 1,
+      "message": "why we need to generate this id, I think we can use id starting from one and keep increment\nlike other objects right?",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "479bd9f5_72be8194",
+        "filename": "hyp-network-manager/hyp_ethernet_interface.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-05-21T06:23:27Z",
+      "side": 1,
+      "message": "can we register signal for bios table here using signal method",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf6535ce_4c7a4863",
+        "filename": "hyp-network-manager/hyp_ethernet_interface.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-05-21T06:23:27Z",
+      "side": 1,
+      "message": "I did not understand why do we need old ip address?",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d97ddcdf_88253c07",
+        "filename": "hyp-network-manager/hyp_network_manager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-05-21T06:23:27Z",
+      "side": 1,
+      "message": "don\u0027t we need delete support?",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a901352_b5bb465b",
+        "filename": "hyp-network-manager/hyp_network_manager.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-05-21T06:23:27Z",
+      "side": 1,
+      "message": "this app has dependency on bios manager for initialising objects\ndefine dependency in service file?",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88dd382d_29129626",
+        "filename": "hyp-network-manager/hyp_network_manager_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-05-21T06:23:27Z",
+      "side": 1,
+      "message": "please remove unused headers",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "719c77fa_9a2f0663",
+        "filename": "hyp-network-manager/xyz.openbmc_project.Network.Hypervisor.service",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-05-21T06:23:27Z",
+      "side": 1,
+      "message": "can we name it as hypervisor-network-manager?\nphosphor used for generic apps.",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
