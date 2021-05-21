@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32fe0c4d_b5c60ca4",
+        "filename": "gen/meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-05-21T13:17:03Z",
+      "side": 1,
+      "message": "I see a lot of generated file, Seems you manually created this with the use of tool sdbus++-gen-meson?",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 22
+      },
+      "revId": "0a01b2a98137bfe358b6c41859d7dee623081514",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1718929_c7ab2297",
+        "filename": "meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-05-21T13:17:03Z",
+      "side": 1,
+      "message": "I don\u0027t see the equivalent of below in the meson\n\n# Download ncsi.h from github if necessary.\nAC_CHECK_HEADER(linux/ncsi.h,[HAVE_LINUX_NCSI_H\u003d\"\"],[HAVE_LINUX_NCSI_H\u003d\"-I linux/ncsi.h\"])\nAS_IF([test \"$HAVE_LINUX_NCSI_H\" !\u003d \"\"],\n    AC_MSG_WARN([Could not find linux/ncsi.h: Attempting to download locally for building from https://raw.githubusercontent.com/openbmc/linux/dev-4.13/include/uapi/linux/ncsi.h])\n    AC_SUBST([BT_BMC_DL],[`mkdir -p linux;wget https://raw.githubusercontent.com/openbmc/linux/dev-4.13/include/uapi/linux/ncsi.h -O linux/ncsi.h`])\n)",
+      "revId": "0a01b2a98137bfe358b6c41859d7dee623081514",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44e03267_a2e81366",
+        "filename": "meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-05-21T13:17:03Z",
+      "side": 1,
+      "message": "where they are getting used?",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 17
+      },
+      "revId": "0a01b2a98137bfe358b6c41859d7dee623081514",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b91a38ae_d121f962",
+        "filename": "meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-05-21T13:17:03Z",
+      "side": 1,
+      "message": "libnetworkd?",
+      "range": {
+        "startLine": 91,
+        "startChar": 3,
+        "endLine": 91,
+        "endChar": 11
+      },
+      "revId": "0a01b2a98137bfe358b6c41859d7dee623081514",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c948e383_2f127898",
+        "filename": "test/meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-05-21T13:17:03Z",
+      "side": 1,
+      "message": "when do we need this dependency, I have seen that gtest works without this also.",
+      "range": {
+        "startLine": 13,
+        "startChar": 3,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "0a01b2a98137bfe358b6c41859d7dee623081514",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
