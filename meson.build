@@ -8,9 +8,10 @@ project(
     'cpp_std=c++20',
   ])
 
+default_busname = 'xyz.openbmc_project.Network'
+
 conf_data = configuration_data()
-conf_data.set_quoted('DEFAULT_BUSNAME', 'xyz.openbmc_project.Network')
-conf_data.set_quoted('SYSTEMD_TARGET', 'multi-user.target')
+conf_data.set_quoted('DEFAULT_BUSNAME', default_busname)
 conf_data.set('HAVE_UBOOT_ENV', get_option('uboot-env'))
 conf_data.set(
   'LINK_LOCAL_AUTOCONFIGURATION',
@@ -126,7 +127,10 @@ executable(
 configure_file(
   input: 'xyz.openbmc_project.Network.service.in',
   output: 'xyz.openbmc_project.Network.service',
-  configuration: conf_data,
+  configuration: {
+    'SYSTEMD_TARGET': 'multi-user.target',
+    'DEFAULT_BUSNAME': default_busname,
+  },
   install: true,
   install_dir: dependency('systemd').get_variable(
     pkgconfig: 'systemdsystemunitdir'))
@@ -134,7 +138,7 @@ configure_file(
 configure_file(
   input: 'xyz.openbmc_project.Network.conf.in',
   output: 'xyz.openbmc_project.Network.conf',
-  configuration: conf_data,
+  configuration: {'DEFAULT_BUSNAME': default_busname},
   install: true,
   install_dir: get_option('datadir') / 'dbus-1' / 'system.d')
 
