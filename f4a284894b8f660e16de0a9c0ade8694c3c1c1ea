@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "68b2add6_8bdb3dc6",
+        "filename": "configure.ac",
+        "patchSetId": 2
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-05-25T04:29:47Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "26bae4d9_ee6dceda",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1b4024b9_720ba39e",
         "filename": "hyp-network-manager/hyp_ethernet_interface.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2021-05-21T06:23:27Z",
       "side": 1,
       "message": "why we need to generate this id, I think we can use id starting from one and keep increment\nlike other objects right?",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cee2850d_fbd75a37",
+        "filename": "hyp-network-manager/hyp_ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-05-25T04:29:47Z",
+      "side": 1,
+      "message": "Used the same like how it is followed in network manager. But, @Ratan do you have any suggestions here?",
+      "parentUuid": "1b4024b9_720ba39e",
       "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ae117c03_c9209441",
+        "filename": "hyp-network-manager/hyp_ethernet_interface.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-05-25T04:29:47Z",
+      "side": 1,
+      "message": "You mean the watchBaseBiosTable method must be split into two - register and the callback method?",
+      "parentUuid": "479bd9f5_72be8194",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cf6535ce_4c7a4863",
         "filename": "hyp-network-manager/hyp_ethernet_interface.hpp",
         "patchSetId": 2
@@ -67,6 +121,24 @@
       "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecaa3d33_1a18f817",
+        "filename": "hyp-network-manager/hyp_ethernet_interface.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-05-25T04:29:47Z",
+      "side": 1,
+      "message": "Old ip address is needed in case if the ip address gets changed in the bios table.\nIf there is a change in ip, the old ip address will be deleted in the local copy of \"ipaddress, ipaddress obj\" map (addrs) and new ip address will be emplaced.",
+      "parentUuid": "cf6535ce_4c7a4863",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "b3a80b2c_adc9a010",
+        "filename": "hyp-network-manager/hyp_network_manager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-05-25T04:29:47Z",
+      "side": 1,
+      "message": "Yes, but i havent implemented yet. I will do it on top of this commit",
+      "parentUuid": "d97ddcdf_88253c07",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a901352_b5bb465b",
         "filename": "hyp-network-manager/hyp_network_manager.hpp",
         "patchSetId": 2
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "09cf229e_218c4b3c",
+        "filename": "hyp-network-manager/hyp_network_manager.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-05-25T04:29:47Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9a901352_b5bb465b",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88dd382d_29129626",
         "filename": "hyp-network-manager/hyp_network_manager_main.cpp",
         "patchSetId": 2
@@ -118,6 +226,24 @@
       "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a1ed9d2_134de4df",
+        "filename": "hyp-network-manager/hyp_network_manager_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-05-25T04:29:47Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "88dd382d_29129626",
+      "revId": "f4a284894b8f660e16de0a9c0ade8694c3c1c1ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
