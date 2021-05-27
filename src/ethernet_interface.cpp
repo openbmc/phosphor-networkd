@@ -946,11 +946,28 @@ void EthernetInterface::writeConfigurationFile()
 
     // write the network section
     stream << "[Network]\n";
+
+    //  Ideally the value of the linklocaladdress should be fallback for DHCP
+    //  but it is not working properly so keeping it yes.
+    //  https://github.com/systemd/systemd/issues/13316
+
+    if (EthernetInterfaceIntf::dhcpEnabled())
+    {
 #ifdef LINK_LOCAL_AUTOCONFIGURATION
-    stream << "LinkLocalAddressing=yes\n";
+        stream << "LinkLocalAddressing=yes\n";
 #else
-    stream << "LinkLocalAddressing=no\n";
+        stream << "LinkLocalAddressing=no\n";
 #endif
+    }
+    else
+    {
+#ifdef LINK_LOCAL_AUTOCONFIGURATION
+        stream << "LinkLocalAddressing=ipv6\n";
+#else
+        stream << "LinkLocalAddressing=no\n";
+#endif
+    }
+
     stream << std::boolalpha
            << "IPv6AcceptRA=" << EthernetInterfaceIntf::ipv6AcceptRA() << "\n";
 
