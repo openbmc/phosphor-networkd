@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d78f1478_ec8ff786",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-06-07T14:25:52Z",
+      "side": 1,
+      "message": "Are you saying that dbus property update is not working properly. If that is the case, we should fix why the property update is not working properly?",
+      "range": {
+        "startLine": 10,
+        "startChar": 34,
+        "endLine": 12,
+        "endChar": 0
+      },
+      "revId": "5d6d27f26388c4ab1028ccc4ee85102330ef71e5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7eb1c48_d64fdd0d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-06-07T14:25:52Z",
+      "side": 1,
+      "message": "when bmcweb patches the MAC address, and bmcweb makes the dbus call to change the mac address, it should return the success even though  interface gets new IP address.\nDid you monitor the Dbus traffic?",
+      "range": {
+        "startLine": 13,
+        "startChar": 11,
+        "endLine": 16,
+        "endChar": 9
+      },
+      "revId": "5d6d27f26388c4ab1028ccc4ee85102330ef71e5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
