@@ -19,7 +19,6 @@ namespace phosphor
 {
 namespace network
 {
-using namespace phosphor::logging;
 auto HypNetworkMgr::makeDBusCall(const std::string& objectName,
                                  const std::string& interface,
                                  const std::string& kw)
@@ -128,12 +127,21 @@ void HypNetworkMgr::createIfObjects()
     if (intfCount == 1)
     {
         // create if0 object
-        log<level::INFO>("Create if0 object");
+        log<level::INFO>("Creating if0 object");
+        interfaces.emplace(
+            "if0", std::make_shared<phosphor::network::HypEthInterface>(
+                       bus, (objectPath + "/if0").c_str(), "if0", *this));
     }
     else if (intfCount == 2)
     {
         // create if0 and if1 objects
-        log<level::INFO>("Create if0 and if1 objects");
+        log<level::INFO>("Creating if0 and if1 objects");
+        interfaces.emplace(
+            "if0", std::make_shared<phosphor::network::HypEthInterface>(
+                       bus, (objectPath + "/if0").c_str(), "if0", *this));
+        interfaces.emplace(
+            "if1", std::make_shared<phosphor::network::HypEthInterface>(
+                       bus, (objectPath + "/if1").c_str(), "if1", *this));
     }
     else
     {
