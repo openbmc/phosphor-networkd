@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hyp_ethernet_interface.hpp"
 #include "hyp_sys_config.hpp"
 #include "types.hpp"
 #include "util.hpp"
@@ -98,7 +99,7 @@ class HypNetworkMgr
                           std::variant<std::string, int64_t> attrValue,
                           std::string attrType);
 
-  private:
+  protected:
     /**
      * @brief get Dbus Prop
      *
