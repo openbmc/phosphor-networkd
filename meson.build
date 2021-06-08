@@ -70,6 +70,12 @@ networkd_dbus_dep = declare_dependency(
 
 subdir('src')
 
+if (get_option('hyp-nw-config') == true)
+  hyp_networkd_lib = [
+    hyp_networkd_lib
+  ]
+endif
+
 configure_file(
   input: '60-phosphor-networkd-default.network.in',
   output: '60-phosphor-networkd-default.network',
