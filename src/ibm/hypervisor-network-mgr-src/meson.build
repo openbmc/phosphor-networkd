@@ -11,11 +11,21 @@ configure_file(
   install_dir: dependency('systemd').get_variable(
     pkgconfig: 'systemdsystemunitdir'))
 
+hyp_src_includes = include_directories('.')
+
+hyp_networkd_lib = static_library(
+  'hyp-networkd',
+  'hyp_network_manager.cpp',
+  'hyp_sys_config.cpp',
+  'hyp_ethernet_interface.cpp',
+  implicit_include_directories: false,
+  include_directories: [src_includes, hyp_src_includes],
+  dependencies: networkd_deps)
+
 executable(
   'hyp-network-manager',
   'hyp_network_manager_main.cpp',
-  'hyp_network_manager.cpp',
-  'hyp_sys_config.cpp',
+  link_with: hyp_networkd_lib,
   implicit_include_directories: false,
   dependencies: [
     networkd_dep,
@@ -23,4 +33,3 @@ executable(
   ],
   install: true,
   install_dir: get_option('bindir'))
-
