@@ -221,13 +221,22 @@ void HypNetworkMgr::createIfObjects()
 
     if (intfCount == 1)
     {
-        // TODO: create eth0 object
-        log<level::INFO>("Create eth0 object");
+        // create eth0 object
+        log<level::INFO>("Creating eth0 object");
+        interfaces.emplace(
+            "eth0", std::make_shared<phosphor::network::HypEthInterface>(
+                        bus, (objectPath + "/eth0").c_str(), "eth0", *this));
     }
     else if (intfCount == 2)
     {
-        // TODO: create eth0 and eth1 objects
-        log<level::INFO>("Create eth0 and eth1 objects");
+        // create eth0 and eth1 objects
+        log<level::INFO>("Creating eth0 and eth1 objects");
+        interfaces.emplace(
+            "eth0", std::make_shared<phosphor::network::HypEthInterface>(
+                        bus, (objectPath + "/eth0").c_str(), "eth0", *this));
+        interfaces.emplace(
+            "eth1", std::make_shared<phosphor::network::HypEthInterface>(
+                        bus, (objectPath + "/eth1").c_str(), "eth1", *this));
     }
     else
     {
