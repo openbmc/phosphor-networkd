@@ -1,13 +1,25 @@
 #include "hyp_network_manager.hpp"
 
+#include <fmt/format.h>
+
+#include <phosphor-logging/log.hpp>
 #include <sdeventplus/event.hpp>
+
+using phosphor::logging::entry;
+using phosphor::logging::level;
+using phosphor::logging::log;
 
 constexpr char DEFAULT_HYP_NW_OBJPATH[] =
     "/xyz/openbmc_project/network/hypervisor";
 constexpr char HYP_DEFAULT_NETWORK_BUSNAME[] =
     "xyz.openbmc_project.Network.Hypervisor";
 
-int main(int /*argc*/, char** /*argv*/)
+namespace phosphor
+{
+namespace network
+{
+
+int main()
 {
     auto bus = sdbusplus::bus::new_default();
 
@@ -21,19 +33,35 @@ int main(int /*argc*/, char** /*argv*/)
     bus.attach_event(event.get(), SD_EVENT_PRIORITY_NORMAL);
 
     // Create hypervisor network manager dbus object
-    phosphor::network::HypNetworkMgr manager(bus, DEFAULT_HYP_NW_OBJPATH);
+    std::unique_ptr<HypNetworkMgr> manager =
+        std::make_unique<HypNetworkMgr>(bus, DEFAULT_HYP_NW_OBJPATH);
 
     // Create the hypervisor eth interface objects
-    manager.createIfObjects();
+    manager->createIfObjects();
 
     // Create the hypervisor system config object
-    manager.createSysConfObj();
-    const phosphor::network::SystemConfPtr& systemConfigObj =
-        manager.getSystemConf();
+    manager->createSysConfObj();
+    const SystemConfPtr& systemConfigObj = manager->getSystemConf();
     systemConfigObj->setHostName();
 
     bus.request_name(HYP_DEFAULT_NETWORK_BUSNAME);
 
-    event.loop();
-    return 0;
+    return event.loop();
+}
+
+} // namespace network
+} // namespace phosphor
+
+int main(int /*argc*/, char** /*argv*/)
+{
+    try
+    {
+        return phosphor::network::main();
+    }
+    catch (const std::exception& e)
+    {
+        fmt::print(stderr, "FAILED: {}", e.what());
+        fflush(stderr);
+        return 1;
+    }
 }
