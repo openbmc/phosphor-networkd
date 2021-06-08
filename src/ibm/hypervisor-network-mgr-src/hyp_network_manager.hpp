@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hyp_ethernet_interface.hpp"
 #include "hyp_sys_config.hpp"
 #include "types.hpp"
 #include "util.hpp"
@@ -48,6 +49,7 @@ enum BiosBaseTableIndex
 };
 
 using SystemConfPtr = std::unique_ptr<HypSysConfig>;
+using ethIntfMapType = std::map<std::string, std::shared_ptr<HypEthInterface>>;
 
 /** @class Manager
  *  @brief Implementation for the
@@ -98,6 +100,12 @@ class HypNetworkMgr
                           std::variant<std::string, int64_t> attrValue,
                           std::string attrType);
 
+    /** @brief Get the ethernet interfaces list data member
+     *
+     * @return ethernet interfaces list
+     */
+    ethIntfMapType getEthIntfList();
+
   private:
     /**
      * @brief get Dbus Prop
@@ -129,12 +137,6 @@ class HypNetworkMgr
         return systemConf;
     }
 
-    /** @brief Get the hypervisor eth interfaces count
-     *
-     *  @return number of interfaces
-     */
-    uint16_t getIntfCount();
-
     /** @brief Setter method for biosTableAttrs data member
      *         GET operation on the BIOS table to
      *         read all the hyp attrbutes (name, value pair)
@@ -158,9 +160,6 @@ class HypNetworkMgr
      *         objects and their names
      */
     std::map<std::string, std::shared_ptr<HypEthInterface>> interfaces;
-
-    /** @brief interface count */
-    uint16_t intfCount;
 
     /** @brief map of bios table attrs and values */
     std::map<biosAttrName, biosAttrCurrValue> biosTableAttrs;
