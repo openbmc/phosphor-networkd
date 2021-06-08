@@ -5,11 +5,6 @@ hyp_tests = [
   'hyp_sys_config',
 ]
 
-hyp_test_src = declare_dependency(
-              sources: [
-                '../../../src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp',
-                '../../../src/ibm/hypervisor-network-mgr-src/hyp_sys_config.cpp'])
-
 foreach t : hyp_tests
   test(
     t,
@@ -18,5 +13,6 @@ foreach t : hyp_tests
       'test_' + t + '.cpp',
       implicit_include_directories: false,
       include_directories: inc_dir,
-      dependencies: [test_dep, hyp_test_src]))
+      link_with: hyp_networkd_lib,
+      dependencies: test_dep))
 endforeach

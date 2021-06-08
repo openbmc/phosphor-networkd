@@ -1,5 +1,8 @@
 #pragma once
+
+#include "hyp_ethernet_interface.hpp"
 #include "hyp_sys_config.hpp"
+#include "types.hpp"
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
@@ -44,6 +47,7 @@ enum BiosBaseTableIndex
 };
 
 using SystemConfPtr = std::unique_ptr<HypSysConfig>;
+using ethIntfMapType = string_umap<std::unique_ptr<HypEthInterface>>;
 
 /** @class Manager
  *  @brief Implementation for the
@@ -70,7 +74,10 @@ class HypNetworkMgr
      *
      * @return attributes list
      */
-    biosTableType getBIOSTableAttrs();
+    inline biosTableType getBIOSTableAttrs()
+    {
+        return biosTableAttrs;
+    }
 
     /** @brief Set specific attribute and its value to
      *         the biosTableAttrs data member
@@ -83,6 +90,15 @@ class HypNetworkMgr
     void setBIOSTableAttr(std::string attrName,
                           std::variant<std::string, int64_t> attrValue,
                           std::string attrType);
+
+    /** @brief Get the ethernet interfaces list data member
+     *
+     * @return ethernet interfaces list
+     */
+    inline const auto& getEthIntfList()
+    {
+        return interfaces;
+    }
 
     /** @brief Method to set all the interface 0 attributes
      *         to its default value in biosTableAttrs data member
@@ -145,7 +161,7 @@ class HypNetworkMgr
     /** @brief Persistent map of EthernetInterface dbus
      *         objects and their names
      */
-    std::map<std::string, std::shared_ptr<HypEthInterface>> interfaces;
+    ethIntfMapType interfaces;
 
     /** @brief map of bios table attrs and values */
     std::map<biosAttrName, biosAttrCurrValue> biosTableAttrs;
