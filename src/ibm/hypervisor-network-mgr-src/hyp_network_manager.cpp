@@ -224,6 +224,11 @@ biosTableType HypNetworkMgr::getBIOSTableAttrs()
     return biosTableAttrs;
 }
 
+ethIntfMapType HypNetworkMgr::getEthIntfList()
+{
+    return interfaces;
+}
+
 void HypNetworkMgr::createIfObjects()
 {
     setBIOSTableAttrs();
@@ -238,7 +243,21 @@ void HypNetworkMgr::createIfObjects()
     // created during init time to support the static
     // network configurations on the both.
     // create eth0 and eth1 objects
-    log<level::INFO>("Create eth0 and eth1 objects");
+    log<level::INFO>("Creating eth0 and eth1 objects");
+    interfaces.emplace("eth0",
+                       std::make_shared<phosphor::network::HypEthInterface>(
+                           bus, (objectPath + "/eth0").c_str(), "eth0", *this));
+    interfaces.emplace("eth1",
+                       std::make_shared<phosphor::network::HypEthInterface>(
+                           bus, (objectPath + "/eth1").c_str(), "eth1", *this));
+
+    // Create ip address objects for each ethernet interface
+    interfaces["eth0"]->createIPAddressObjects();
+    interfaces["eth1"]->createIPAddressObjects();
+
+    // Call watch method to register for properties changed signal
+    // This method can be called only once
+    interfaces["eth0"]->watchBaseBiosTable();
 }
 
 void HypNetworkMgr::createSysConfObj()
