@@ -221,19 +221,29 @@ biosTableType HypNetworkMgr::getBIOSTableAttrs()
     return biosTableAttrs;
 }
 
+ethIntfMapType HypNetworkMgr::getEthIntfList()
+{
+    return interfaces;
+}
+
 void HypNetworkMgr::createIfObjects()
 {
     setBIOSTableAttrs();
 
-    if (intfCount == 1)
+    // The hypervisor can support maximum of
+    // 2 ethernet interfaces. Both eth0/1 objects are
+    // created during init time to support the static
+    // network configurations on the both.
+    if (intfCount == 1 || intfCount == 2)
     {
-        // TODO: create eth0 object
-        log<level::INFO>("Create eth0 object");
-    }
-    else if (intfCount == 2)
-    {
-        // TODO: create eth0 and eth1 objects
-        log<level::INFO>("Create eth0 and eth1 objects");
+        // create eth0 and eth1 objects
+        log<level::INFO>("Creating eth0 and eth1 objects");
+        interfaces.emplace(
+            "eth0", std::make_shared<phosphor::network::HypEthInterface>(
+                        bus, (objectPath + "/eth0").c_str(), "eth0", *this));
+        interfaces.emplace(
+            "eth1", std::make_shared<phosphor::network::HypEthInterface>(
+                        bus, (objectPath + "/eth1").c_str(), "eth1", *this));
     }
     else
     {
