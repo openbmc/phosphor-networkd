@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad3fe63d_91d11581",
+        "filename": "meson.build",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-06-11T09:58:47Z",
+      "side": 1,
+      "message": "Just \"hypervisor-network-config\" should be good. Remove \"ibm\"",
+      "range": {
+        "startLine": 48,
+        "startChar": 15,
+        "endLine": 48,
+        "endChar": 19
+      },
+      "revId": "d10ede4c822ec08849629e9ae9965b25ccad679a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ddbb306_5361c68a",
+        "filename": "meson_options.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-06-11T09:58:47Z",
+      "side": 1,
+      "message": "Can remove IBM",
+      "range": {
+        "startLine": 14,
+        "startChar": 33,
+        "endLine": 14,
+        "endChar": 37
+      },
+      "revId": "d10ede4c822ec08849629e9ae9965b25ccad679a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a1a29ab_5ba1ac56",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-06-11T09:58:47Z",
+      "side": 1,
+      "message": "Lets not mention vmi here. Can this be changed to \u0027hypervisor_intf\u0027",
+      "range": {
+        "startLine": 84,
+        "startChar": 48,
+        "endLine": 84,
+        "endChar": 51
+      },
+      "revId": "d10ede4c822ec08849629e9ae9965b25ccad679a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7df029b1_e3050c9f",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-06-11T09:58:47Z",
+      "side": 1,
+      "message": "Are these TODO ? \nYou can take the interface object number as a parameter passed and use that to decide how many interface to create",
+      "range": {
+        "startLine": 130,
+        "startChar": 8,
+        "endLine": 130,
+        "endChar": 28
+      },
+      "revId": "d10ede4c822ec08849629e9ae9965b25ccad679a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
