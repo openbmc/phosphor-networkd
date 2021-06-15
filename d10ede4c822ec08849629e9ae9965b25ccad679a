@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "97687c7f_8d0407b7",
+        "filename": "meson.build",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-06-15T08:22:08Z",
+      "side": 1,
+      "message": "Since this is specific to IBM, i added this keyword in the prefix",
+      "parentUuid": "ad3fe63d_91d11581",
+      "range": {
+        "startLine": 48,
+        "startChar": 15,
+        "endLine": 48,
+        "endChar": 19
+      },
+      "revId": "d10ede4c822ec08849629e9ae9965b25ccad679a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ddbb306_5361c68a",
         "filename": "meson_options.txt",
         "patchSetId": 4
@@ -71,6 +95,23 @@
     },
     {
       "key": {
+        "uuid": "305f6202_b4e37685",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-06-15T08:22:08Z",
+      "side": 1,
+      "message": "Since this portion of code is specific to IBM, this variable directly maps to the bios attribute name in the bios table.",
+      "revId": "d10ede4c822ec08849629e9ae9965b25ccad679a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7df029b1_e3050c9f",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 4
@@ -82,6 +123,30 @@
       "writtenOn": "2021-06-11T09:58:47Z",
       "side": 1,
       "message": "Are these TODO ? \nYou can take the interface object number as a parameter passed and use that to decide how many interface to create",
+      "range": {
+        "startLine": 130,
+        "startChar": 8,
+        "endLine": 130,
+        "endChar": 28
+      },
+      "revId": "d10ede4c822ec08849629e9ae9965b25ccad679a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af5cf642_7e5df385",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-06-15T08:22:08Z",
+      "side": 1,
+      "message": "\u003e Are these TODO ? \nThe obj creation here will be updated in the next commit (443869) on top of this commit.",
+      "parentUuid": "7df029b1_e3050c9f",
       "range": {
         "startLine": 130,
         "startChar": 8,
