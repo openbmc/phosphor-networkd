@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ea98511_80223788",
+        "filename": "src/hypervisor-network-mgr-src/hyp_ethernet_interface.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-06-21T03:41:31Z",
+      "side": 1,
+      "message": "InterfaceIntf ?",
+      "range": {
+        "startLine": 29,
+        "startChar": 6,
+        "endLine": 29,
+        "endChar": 31
+      },
+      "revId": "43168ec7d1c4a1266666133bcd37393f8ccdbec3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d6a1d05_2e41e540",
+        "filename": "src/hypervisor-network-mgr-src/hyp_ethernet_interface.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-06-21T03:41:31Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 59,
+        "startChar": 40,
+        "endLine": 59,
+        "endChar": 45
+      },
+      "revId": "43168ec7d1c4a1266666133bcd37393f8ccdbec3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
