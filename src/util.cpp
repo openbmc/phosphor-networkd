@@ -238,7 +238,7 @@ std::string toString(const struct in_addr& addr)
         throw std::runtime_error("Failed to convert IP4 to string");
     }
 
-    ip.resize(strlen(ip.c_str()));
+    ip.resize(strlen(ip.c_str()) + 1);
     return ip;
 }
 
@@ -250,7 +250,7 @@ std::string toString(const struct in6_addr& addr)
         throw std::runtime_error("Failed to convert IP6 to string");
     }
 
-    ip.resize(strlen(ip.c_str()));
+    ip.resize(strlen(ip.c_str()) + 1);
     return ip;
 }
 
