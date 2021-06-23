@@ -180,6 +180,12 @@ int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
              CallBack function = nullptr)
 {
     nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
+    if (socket == nullptr)
+    {
+        log<level::ERR>("Unable to allocate memory for the socket.");
+        return -ENOMEM;
+    }
+
     auto ret = genl_connect(socket.get());
     if (ret < 0)
     {
@@ -195,13 +201,18 @@ int applyCmd(int ifindex, int cmd, int package = DEFAULT_VALUE,
     }
 
     nlMsgPtr msg(nlmsg_alloc(), &::nlmsg_free);
+    if (msg == nullptr)
+    {
+        log<level::ERR>("Unable to allocate memory for the message.");
+        return -ENOMEM;
+    }
 
     auto msgHdr = genlmsg_put(msg.get(), 0, 0, driverID, 0, flags, cmd, 0);
     if (!msgHdr)
     {
         std::cerr << "Unable to add the netlink headers , COMMAND : " << cmd
                   << std::endl;
-        return -1;
+        return -ENOMEM;
     }
 
     if (package != DEFAULT_VALUE)
