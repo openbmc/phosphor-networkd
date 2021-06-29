@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69ae025e_4b2b83a8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-06-29T15:43:26Z",
+      "side": 1,
+      "message": "Can use eth0 instead of if0\nthis makes it unique, and easy to consume in bmcweb",
+      "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "895b8b35_156d3919",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-06-29T15:43:26Z",
+      "side": 1,
+      "message": "can we use int starting from 1 as ID instead of random number?",
+      "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "001edd07_7fa9aeb4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-06-29T15:43:26Z",
+      "side": 1,
+      "message": "we need to handle invalid argument errors, seems its crashing\nbusctl set-property xyz.openbmc_project.Network.Hypervisor /xyz/openbmc_project/network/hypervisor/if0/ipv4/1 xyz.openbmc_project.Network.IP Address s \"0.0.0\" \nterminate called after throwing an instance of \u0027sdbusplus::xyz::openbmc_project::Common::Error::InvalidArgument\u0027\n  what():  xyz.openbmc_project.Common.Error.InvalidArgument: Invalid argument was given.\nFailed to set property Address on interface xyz.openbmc_project.Network.IP: Remote peer disconnected\n[1]+  Aborted                 (core dumped) ./hyp-network-manager",
+      "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a900f47c_4250d51f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-06-29T15:43:26Z",
+      "side": 1,
+      "message": "are we persisting these D-bus objects?",
+      "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
