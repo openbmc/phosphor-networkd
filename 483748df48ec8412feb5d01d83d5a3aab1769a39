@@ -101,6 +101,24 @@
       "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "160addcc_831a5c79",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2021-06-29T16:05:38Z",
+      "side": 1,
+      "message": "Existing Networkd app hosts interface at /xyz/openbmc_project/network/config\nFor hostname. I think we may need same for vmi host name\n\nxyz.openbmc_project.Network.SystemConfiguration interface -         -                         -\n.DefaultGateway                                 property  s         \"10.10.10.10\"                emits-change writable\n.DefaultGateway6                                property  s         \"\"                        emits-change writable\n.HostName                                       property  s         \"Witherspoon\" emits-change writable",
+      "parentUuid": "d02124e3_456a3a5f",
+      "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
