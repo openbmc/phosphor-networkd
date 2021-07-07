@@ -116,8 +116,7 @@ void Parser::print()
 void Parser::setFile(const fs::path& filePath)
 {
     this->filePath = filePath;
-    std::fstream stream;
-    stream.open(filePath.string(), std::fstream::in);
+    std::fstream stream(filePath, std::fstream::in);
 
     if (!stream.is_open())
     {
@@ -126,7 +125,6 @@ void Parser::setFile(const fs::path& filePath)
     // clear all the section data.
     sections.clear();
     parse(stream);
-    stream.close();
 }
 
 void Parser::parse(std::istream& in)
