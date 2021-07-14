@@ -93,10 +93,12 @@ class EthernetInterface : public Ifaces
      *  @param[in] parent - parent object.
      *  @param[in] emitSignal - true if the object added signal needs to be
      *                          send.
+     *  @param[in] enabled - Override the lookup of nicEnabled
      */
     EthernetInterface(sdbusplus::bus::bus& bus, const std::string& objPath,
                       DHCPConf dhcpEnabled, Manager& parent,
-                      bool emitSignal = true);
+                      bool emitSignal = true,
+                      std::optional<bool> enabled = std::nullopt);
 
     /** @brief Function used to load the nameservers.
      */
@@ -175,9 +177,6 @@ class EthernetInterface : public Ifaces
 
     /** Retrieve Link State */
     bool linkUp() const override;
-
-    /** Retrieve NIC State */
-    bool nicEnabled() const override;
 
     /** Set value of NICEnabled */
     bool nicEnabled(bool value) override;
@@ -366,6 +365,11 @@ class EthernetInterface : public Ifaces
      *  @returns true/false value if the address is static
      */
     bool originIsManuallyAssigned(IP::AddressOrigin origin);
+
+    /** @brief Determines if the NIC is enabled in systemd
+     *  @returns true/false value if the NIC is enabled
+     */
+    bool queryNicEnabled() const;
 };
 
 } // namespace network

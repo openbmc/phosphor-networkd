@@ -23,6 +23,7 @@
 #include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
+#include <sdbusplus/bus/match.hpp>
 #include <sstream>
 #include <stdplus/raw.hpp>
 #include <string>
@@ -76,7 +77,8 @@ std::map<EthernetInterface::DHCPConf, std::string> mapDHCPToSystemd = {
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
                                      DHCPConf dhcpEnabled, Manager& parent,
-                                     bool emitSignal) :
+                                     bool emitSignal,
+                                     std::optional<bool> enabled) :
     Ifaces(bus, objPath.c_str(), true),
     bus(bus), manager(parent), objPath(objPath)
 {
@@ -120,7 +122,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     EthernetInterfaceIntf::ntpServers(getNTPServersFromConf());
 
     EthernetInterfaceIntf::linkUp(linkUp());
-    EthernetInterfaceIntf::nicEnabled(nicEnabled());
+    EthernetInterfaceIntf::nicEnabled(enabled ? *enabled : queryNicEnabled());
 
 #ifdef NIC_SUPPORTS_ETHTOOL
     InterfaceInfo ifInfo = EthernetInterface::getInterfaceInfo();
@@ -593,28 +595,71 @@ bool EthernetInterface::linkUp() const
     return value;
 }
 
-bool EthernetInterface::nicEnabled() const
+bool EthernetInterface::queryNicEnabled() const
 {
-    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
-    bool value = EthernetInterfaceIntf::nicEnabled();
+    constexpr auto svc = "org.freedesktop.network1";
+    constexpr auto intf = "org.freedesktop.network1.Link";
+    constexpr auto prop = "AdministrativeState";
+    char* rpath;
+    sd_bus_path_encode("/org/freedesktop/network1/link",
+                       std::to_string(ifIndex()).c_str(), &rpath);
+    std::string path(rpath);
+    free(rpath);
 
-    if (eifSocket.sock < 0)
+    // Store / Parser for the AdministrativeState return value
+    std::optional<bool> ret;
+    auto cb = [&](const std::string& state) {
+        if (state != "initialized")
+        {
+            ret = state != "unmanaged";
+        }
+    };
+
+    // Build a matcher before making the property call to ensure we
+    // can eventually get the value.
+    sdbusplus::bus::match::match match(
+        bus,
+        fmt::format("type='signal',sender='{}',path='{}',interface='{}',member="
+                    "'PropertiesChanged',arg0='{}',",
+                    svc, path, PROPERTY_INTERFACE, intf)
+            .c_str(),
+        [&](sdbusplus::message::message& m) {
+            std::string intf;
+            std::map<std::string, std::variant<std::string>> values;
+            try
+            {
+                m.read(intf, values);
+                cb(std::get<std::string>(values.at(prop)));
+            }
+            catch (...)
+            {
+            }
+        });
+
+    // Actively call for the value in case the interface is already configured
+    auto method =
+        bus.new_method_call(svc, path.c_str(), PROPERTY_INTERFACE, METHOD_GET);
+    method.append(intf, prop);
+    try
     {
-        return value;
+        auto reply = bus.call(method);
+        std::variant<std::string> state;
+        reply.read(state);
+        cb(std::get<std::string>(state));
+    }
+    catch (...)
+    {
     }
 
-    ifreq ifr = {};
-    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
-    if (ioctl(eifSocket.sock, SIOCGIFFLAGS, &ifr) == 0)
+    // The interface is not yet configured by systemd-networkd, wait until it
+    // signals us a valid state.
+    while (!ret)
     {
-        value = static_cast<bool>(ifr.ifr_flags & IFF_UP);
+        bus.wait();
+        bus.process_discard();
     }
-    else
-    {
-        log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
-                        entry("ERROR=%s", strerror(errno)));
-    }
-    return value;
+
+    return *ret;
 }
 
 bool EthernetInterface::nicEnabled(bool value)
