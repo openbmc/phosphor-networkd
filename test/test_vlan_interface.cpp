@@ -50,8 +50,12 @@ class TestVlanInterface : public testing::Test
     {
         mock_clear();
         mock_addIF("test0", 1);
-        return {bus, "/xyz/openbmc_test/network/test0",
-                EthernetInterface::DHCPConf::none, manager};
+        return {bus,
+                "/xyz/openbmc_test/network/test0",
+                EthernetInterface::DHCPConf::none,
+                manager,
+                false,
+                true};
     }
 
     void setConfDir()
