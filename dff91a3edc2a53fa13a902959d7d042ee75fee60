@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "62aa87a9_c14be844",
+        "filename": "ncsi_netlink_main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2021-07-14T14:03:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02b47b4b_21ed5ca3",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9ed5293c_18559bbb",
         "filename": "ncsi_netlink_main.cpp",
         "patchSetId": 5
@@ -142,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "f470456d_b7c4ab6a",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2021-07-14T14:03:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8cf5f3a0_c521a0fe",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85043c92_8e171835",
         "filename": "ncsi_util.cpp",
         "patchSetId": 5
@@ -159,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "9db5c06a_013b1cac",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2021-07-14T14:03:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85043c92_8e171835",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5b3d802_a6204552",
         "filename": "ncsi_util.cpp",
         "patchSetId": 5
@@ -170,6 +224,24 @@
       "writtenOn": "2021-03-12T11:34:43Z",
       "side": 1,
       "message": "Use `struct ethhdr` / `sizeof(ethhdr)` directly. 16 Wouldn\u0027t include the NCSI_PROTO, which I assume you don\u0027t need to specify / return here either.",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "263a7be8_1ce49ee0",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2021-07-14T14:03:00Z",
+      "side": 1,
+      "message": "sizeof(ethhdr) \u003d 14 though. But I think we want to skip the NCSIPacketHeader here anyway, so I will use that size.",
+      "parentUuid": "c5b3d802_a6204552",
       "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
@@ -193,6 +265,24 @@
     },
     {
       "key": {
+        "uuid": "bea3ed96_5a7e3c8b",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2021-07-14T14:03:00Z",
+      "side": 1,
+      "message": "Perhaps, but I prefer to use stderr for errors. There is a comment already about enhancement to save the response data, which would be a better way to capture it.",
+      "parentUuid": "5fd1336a_3f63c880",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "74ecd0e5_14cb214a",
         "filename": "ncsi_util.cpp",
         "patchSetId": 5
@@ -207,6 +297,24 @@
       "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbda933f_6701b2da",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2021-07-14T14:03:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74ecd0e5_14cb214a",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
@@ -233,6 +341,30 @@
     },
     {
       "key": {
+        "uuid": "3b755b7f_915c374e",
+        "filename": "ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2021-07-14T14:03:00Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "efc0030d_80628bb8",
+      "range": {
+        "startLine": 249,
+        "startChar": 22,
+        "endLine": 249,
+        "endChar": 23
+      },
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8bb8c638_14be9a84",
         "filename": "ncsi_util.hpp",
         "patchSetId": 5
@@ -247,6 +379,24 @@
       "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34de2db2_2dda98f7",
+        "filename": "ncsi_util.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000025
+      },
+      "writtenOn": "2021-07-14T14:03:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8bb8c638_14be9a84",
+      "revId": "dff91a3edc2a53fa13a902959d7d042ee75fee60",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
