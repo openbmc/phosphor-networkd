@@ -27,11 +27,11 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
                              EthernetInterface& intf, Manager& parent) :
     VlanIface(bus, objPath.c_str()),
     DeleteIface(bus, objPath.c_str()),
-    EthernetInterface(bus, objPath, dhcpEnabled, parent, false),
+    EthernetInterface(bus, objPath, dhcpEnabled, parent, /*emitSignal=*/false,
+                      nicEnabled),
     parentInterface(intf)
 {
     id(vlanID);
-    EthernetInterfaceIntf::nicEnabled(nicEnabled);
     VlanIface::interfaceName(EthernetInterface::interfaceName());
     MacAddressIntf::macAddress(parentInterface.macAddress());
 
