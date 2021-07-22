@@ -18,6 +18,7 @@ namespace phosphor
 {
 namespace network
 {
+
 using namespace phosphor::logging;
 using InternalFailure =
     sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
@@ -239,6 +240,13 @@ void HypNetworkMgr::createIfObjects()
         log<level::ERR>("More than 2 Interfaces");
         return;
     }
+}
+
+void HypNetworkMgr::createSysConfObj()
+{
+    systemConf.reset(nullptr);
+    this->systemConf = std::make_unique<phosphor::network::HypSysConfig>(
+        bus, objectPath + "/config", *this);
 }
 
 } // namespace network
