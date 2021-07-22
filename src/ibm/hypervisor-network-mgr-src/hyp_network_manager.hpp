@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hyp_sys_config.hpp"
 #include "types.hpp"
 #include "util.hpp"
 
@@ -13,6 +14,7 @@ namespace network
 {
 
 class HypEthInterface;
+class HypSysConfig;
 
 using biosAttrName = std::string;
 using biosAttrType = std::string;
@@ -44,6 +46,8 @@ enum BiosBaseTableIndex
     biosBaseDefaultValue,
     biosBaseOptions
 };
+
+using SystemConfPtr = std::unique_ptr<HypSysConfig>;
 
 /** @class Manager
  *  @brief Implementation for the
@@ -109,6 +113,18 @@ class HypNetworkMgr
      */
     void createIfObjects();
 
+    /** @brief Creates system config object
+     */
+    void createSysConfObj();
+
+    /** @brief gets the system conf object.
+     *
+     */
+    const SystemConfPtr& getSystemConf()
+    {
+        return systemConf;
+    }
+
   protected:
     /**
      * @brief get Dbus Prop
@@ -137,6 +153,9 @@ class HypNetworkMgr
 
     /** @brief object path */
     std::string objectPath;
+
+    /** @brief pointer to system conf object. */
+    SystemConfPtr systemConf = nullptr;
 
     /** @brief Persistent map of EthernetInterface dbus
      *         objects and their names
