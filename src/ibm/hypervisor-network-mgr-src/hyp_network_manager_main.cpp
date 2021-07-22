@@ -27,6 +27,11 @@ int main(int /*argc*/, char** /*argv*/)
     // Create the hypervisor eth interface objects
     manager.createIfObjects();
 
+    // Create the hypervisor system config object
+    manager.createSysConfObj();
+    const phosphor::network::SystemConfPtr& systemConfigObj = manager.getSystemConf();
+    systemConfigObj->setHostName();
+
     bus.request_name(HYP_DEFAULT_NETWORK_BUSNAME);
 
     event.loop();

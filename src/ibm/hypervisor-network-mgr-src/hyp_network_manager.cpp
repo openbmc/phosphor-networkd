@@ -18,6 +18,7 @@ namespace phosphor
 {
 namespace network
 {
+
 using namespace phosphor::logging;
 using InternalFailure =
     sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
@@ -247,6 +248,13 @@ void HypNetworkMgr::createIfObjects()
     // network configurations on the both.
     // create eth0 and eth1 objects
     log<level::INFO>("Create eth0 and eth1 objects");
+}
+
+void HypNetworkMgr::createSysConfObj()
+{
+    systemConf.reset(nullptr);
+    this->systemConf = std::make_unique<phosphor::network::HypSysConfig>(
+        bus, objectPath + "/config", *this);
 }
 
 } // namespace network
