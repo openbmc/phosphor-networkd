@@ -249,5 +249,12 @@ void HypNetworkMgr::createIfObjects()
     log<level::INFO>("Create eth0 and eth1 objects");
 }
 
+void HypNetworkMgr::createSysConfObj()
+{
+    systemConf.reset(nullptr);
+    this->systemConf = std::make_unique<phosphor::network::HypSysConfig>(
+        bus, objectPath + "/config", *this);
+}
+
 } // namespace network
 } // namespace phosphor
