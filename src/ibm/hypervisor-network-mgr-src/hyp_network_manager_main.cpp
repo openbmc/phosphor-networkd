@@ -27,6 +27,9 @@ int main(int /*argc*/, char** /*argv*/)
     // Create the hypervisor eth interface objects
     manager.createIfObjects();
 
+    // Create the hypervisor system config object
+    manager.createSysConfObj();
+
     bus.request_name(HYP_DEFAULT_NETWORK_BUSNAME);
 
     event.loop();
