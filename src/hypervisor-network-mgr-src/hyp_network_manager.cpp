@@ -19,7 +19,9 @@ namespace phosphor
 {
 namespace network
 {
+
 using namespace phosphor::logging;
+
 auto HypNetworkMgr::makeDBusCall(const std::string& objectName,
                                  const std::string& interface,
                                  const std::string& kw)
@@ -147,6 +149,13 @@ void HypNetworkMgr::createIfObjects()
         log<level::ERR>("More than 2 Interfaces");
         return;
     }
+}
+
+void HypNetworkMgr::createSysConfObj()
+{
+    systemConf.reset(nullptr);
+    this->systemConf = std::make_unique<phosphor::network::HypSysConfig>(
+        bus, objectPath + "/config", *this);
 }
 
 } // namespace network
