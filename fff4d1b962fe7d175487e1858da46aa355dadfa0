@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6573f5af_07b9f267",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-07-22T14:07:26Z",
+      "side": 1,
+      "message": "That means the ethernetinterface objects is not going to be created until the Administrative state changes to Managed?",
+      "range": {
+        "startLine": 677,
+        "startChar": 0,
+        "endLine": 681,
+        "endChar": 5
+      },
+      "revId": "fff4d1b962fe7d175487e1858da46aa355dadfa0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fbd8490_3e4f5e48",
+        "filename": "test/mock_ethernet_interface.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-07-22T14:07:26Z",
+      "side": 1,
+      "message": "/*nicEnabled*/true",
+      "range": {
+        "startLine": 18,
+        "startChar": 73,
+        "endLine": 18,
+        "endChar": 77
+      },
+      "revId": "fff4d1b962fe7d175487e1858da46aa355dadfa0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
