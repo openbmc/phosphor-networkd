@@ -15,6 +15,7 @@ executable(
   'hyp-network-manager',
   'hyp_network_manager_main.cpp',
   'hyp_network_manager.cpp',
+  'hyp_sys_config.cpp',
   implicit_include_directories: false,
   dependencies: networkd_dep,
   install: true,

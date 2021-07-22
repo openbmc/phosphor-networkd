@@ -19,7 +19,9 @@ namespace phosphor
 {
 namespace network
 {
+
 using namespace phosphor::logging;
+
 auto HypNetworkMgr::makeDBusCall(const std::string& objectName,
                                  const std::string& interface,
                                  const std::string& kw)
@@ -107,7 +109,8 @@ void HypNetworkMgr::setBIOSTableAttrs()
     }
     catch (const SdBusError& e)
     {
-        log<level::INFO>("Error in making dbus call");
+        log<level::ERR>("Error in making dbus call");
+        throw std::runtime_error("DBus call failed");
     }
 }
 
@@ -140,6 +143,13 @@ void HypNetworkMgr::createIfObjects()
         log<level::ERR>("More than 2 Interfaces");
         return;
     }
+}
+
+void HypNetworkMgr::createSysConfObj()
+{
+    systemConf.reset(nullptr);
+    this->systemConf = std::make_unique<phosphor::network::HypSysConfig>(
+        bus, objectPath + "/config", *this);
 }
 
 } // namespace network

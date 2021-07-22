@@ -1,5 +1,6 @@
 #pragma once
 
+#include "hyp_sys_config.hpp"
 #include "types.hpp"
 #include "util.hpp"
 
@@ -13,6 +14,7 @@ namespace network
 {
 
 class HypEthInterface;
+class HypSysConfig;
 
 using biosTableType = std::map<std::string, std::variant<int64_t, std::string>>;
 
@@ -44,6 +46,8 @@ enum BiosBaseTableIndex
     biosBaseOptions
 };
 
+using SystemConfPtr = std::unique_ptr<HypSysConfig>;
+
 /** @class Manager
  *  @brief Implementation for the
  *         xyz.openbmc_project.Network.Hypervisor DBus API.
@@ -70,6 +74,9 @@ class HypNetworkMgr
     {
         // Create the hypervisor eth interface objects
         createIfObjects();
+
+        // Create system configuration obj
+        createSysConfObj();
     };
 
     /**
@@ -89,6 +96,18 @@ class HypNetworkMgr
      *         dbus object.
      */
     void createIfObjects();
+
+    /** @brief Creates system config object
+     */
+    void createSysConfObj();
+
+    /** @brief gets the system conf object.
+     *
+     */
+    const SystemConfPtr& getSystemConf()
+    {
+        return systemConf;
+    }
 
     /** @brief Get the hypervisor eth interfaces count
      *
@@ -129,6 +148,9 @@ class HypNetworkMgr
 
     /** @brief object path */
     std::string objectPath;
+
+    /** @brief pointer to system conf object. */
+    SystemConfPtr systemConf = nullptr;
 
     /** @brief Persistent map of EthernetInterface dbus
      *         objects and their names
