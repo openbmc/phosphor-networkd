@@ -62,10 +62,11 @@ using DuplexMode = uint8_t;
 using Autoneg = uint8_t;
 using LinkUp = bool;
 using NICEnabled = bool;
+using MTU = size_t;
 using VlanId = uint32_t;
 using InterfaceName = std::string;
 using InterfaceInfo =
-    std::tuple<LinkSpeed, DuplexMode, Autoneg, LinkUp, NICEnabled>;
+    std::tuple<LinkSpeed, DuplexMode, Autoneg, LinkUp, NICEnabled, MTU>;
 using AddressMap = std::map<std::string, std::shared_ptr<IPAddress>>;
 using NeighborMap = std::map<std::string, std::shared_ptr<Neighbor>>;
 using VlanInterfaceMap =
@@ -176,6 +177,12 @@ class EthernetInterface : public Ifaces
     /** Retrieve Link State */
     bool linkUp() const override;
 
+    /** Retrieve MTU Size */
+    size_t mtu() const override;
+
+    /** Set size of MTU */
+    size_t mtu(size_t value) override;
+
     /** Retrieve NIC State */
     bool nicEnabled() const override;
 
@@ -246,6 +253,7 @@ class EthernetInterface : public Ifaces
     using EthernetInterfaceIntf::dhcpEnabled;
     using EthernetInterfaceIntf::interfaceName;
     using EthernetInterfaceIntf::linkUp;
+    using EthernetInterfaceIntf::mtu;
     using EthernetInterfaceIntf::nicEnabled;
     using MacAddressIntf::macAddress;
 
