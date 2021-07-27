@@ -121,6 +121,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
 
     EthernetInterfaceIntf::linkUp(linkUp());
     EthernetInterfaceIntf::nicEnabled(nicEnabled());
+    EthernetInterfaceIntf::mtuSize(mtuSize());
 
 #ifdef NIC_SUPPORTS_ETHTOOL
     InterfaceInfo ifInfo = EthernetInterface::getInterfaceInfo();
@@ -363,12 +364,14 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
     Autoneg autoneg = {};
     DuplexMode duplex = {};
     LinkUp linkState = {};
+    MTUSize mtuSizeVal = {};
     NICEnabled enabled = {};
     EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
 
     if (eifSocket.sock < 0)
     {
-        return std::make_tuple(speed, duplex, autoneg, linkState, enabled);
+        return std::make_tuple(speed, duplex, autoneg, linkState, mtuSizeVal,
+                               enabled);
     }
 
     std::strncpy(ifr.ifr_name, interfaceName().c_str(), IFNAMSIZ - 1);
@@ -384,8 +387,10 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
 
     enabled = nicEnabled();
     linkState = linkUp();
+    mtuSizeVal = mtuSize();
 
-    return std::make_tuple(speed, duplex, autoneg, linkState, enabled);
+    return std::make_tuple(speed, duplex, autoneg, linkState, mtuSizeVal,
+                           enabled);
 }
 #endif
 
@@ -590,6 +595,68 @@ bool EthernetInterface::linkUp() const
         log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
                         entry("ERROR=%s", strerror(errno)));
     }
+    return value;
+}
+
+uint32_t EthernetInterface::mtuSize() const
+{
+    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+    uint32_t value = EthernetInterfaceIntf::mtuSize();
+
+    if (eifSocket.sock < 0)
+    {
+        return value;
+    }
+
+    ifreq ifr = {};
+    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
+    if (ioctl(eifSocket.sock, SIOCGIFMTU, &ifr) == 0)
+    {
+        value = ifr.ifr_mtu;
+    }
+    else
+    {
+        log<level::ERR>("ioctl failed for SIOCGIFMTU:",
+                        entry("ERROR=%s", strerror(errno)));
+    }
+    return value;
+}
+
+uint32_t EthernetInterface::mtuSize(uint32_t value)
+{
+    if (value == EthernetInterfaceIntf::mtuSize())
+    {
+        return value;
+    }
+    else if (value == 0)
+    {
+        return EthernetInterfaceIntf::mtuSize();
+    }
+
+    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+    if (eifSocket.sock < 0)
+    {
+        return EthernetInterfaceIntf::mtuSize();
+    }
+
+    ifreq ifr = {};
+    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
+    if (ioctl(eifSocket.sock, SIOCGIFMTU, &ifr) != 0)
+    {
+        log<level::ERR>("ioctl failed for SIOCGIFMTU:",
+                        entry("ERROR=%s", strerror(errno)));
+        return EthernetInterfaceIntf::mtuSize();
+    }
+
+    ifr.ifr_mtu = value;
+    if (ioctl(eifSocket.sock, SIOCSIFMTU, &ifr) != 0)
+    {
+        log<level::ERR>("ioctl failed for SIOCSIFMTU:",
+                        entry("ERROR=%s", strerror(errno)));
+        return EthernetInterfaceIntf::mtuSize();
+    }
+    EthernetInterfaceIntf::mtuSize(value);
+
     return value;
 }
 
