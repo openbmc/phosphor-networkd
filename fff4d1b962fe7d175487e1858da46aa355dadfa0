@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e22a4f98_eab7156c",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-07-29T17:38:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b792d3e8_79b58222",
+      "range": {
+        "startLine": 677,
+        "startChar": 0,
+        "endLine": 681,
+        "endChar": 5
+      },
+      "revId": "fff4d1b962fe7d175487e1858da46aa355dadfa0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8fbd8490_3e4f5e48",
         "filename": "test/mock_ethernet_interface.hpp",
         "patchSetId": 4
