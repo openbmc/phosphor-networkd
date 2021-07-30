@@ -1,0 +1,8 @@
+Code-Review+2: William A. Kennington III <wak@google.com>
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Ok-To-Test+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Submitted-by: Alexander Filippov <a.filippov@yadro.com>
+Submitted-at: Fri, 30 Jul 2021 10:47:32 +0000
+Reviewed-on: https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-networkd/+/41643
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
