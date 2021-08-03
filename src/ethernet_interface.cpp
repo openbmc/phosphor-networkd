@@ -126,6 +126,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     EthernetInterfaceIntf::ntpServers(getNTPServersFromConf());
 
     EthernetInterfaceIntf::linkUp(linkUp());
+    EthernetInterfaceIntf::mtu(mtu());
 
 #ifdef NIC_SUPPORTS_ETHTOOL
     InterfaceInfo ifInfo = EthernetInterface::getInterfaceInfo();
@@ -369,11 +370,13 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
     DuplexMode duplex = {};
     LinkUp linkState = {};
     NICEnabled enabled = {};
+    MTU mtuSize = {};
     EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
 
     if (eifSocket.sock < 0)
     {
-        return std::make_tuple(speed, duplex, autoneg, linkState, enabled);
+        return std::make_tuple(speed, duplex, autoneg, linkState, enabled,
+                               mtuSize);
     }
 
     std::strncpy(ifr.ifr_name, interfaceName().c_str(), IFNAMSIZ - 1);
@@ -389,8 +392,9 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
 
     enabled = nicEnabled();
     linkState = linkUp();
+    mtuSize = mtu();
 
-    return std::make_tuple(speed, duplex, autoneg, linkState, enabled);
+    return std::make_tuple(speed, duplex, autoneg, linkState, enabled, mtuSize);
 }
 #endif
 
@@ -595,6 +599,68 @@ bool EthernetInterface::linkUp() const
         log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
                         entry("ERROR=%s", strerror(errno)));
     }
+    return value;
+}
+
+size_t EthernetInterface::mtu() const
+{
+    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+    size_t value = EthernetInterfaceIntf::mtu();
+
+    if (eifSocket.sock < 0)
+    {
+        return value;
+    }
+
+    ifreq ifr = {};
+    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
+    if (ioctl(eifSocket.sock, SIOCGIFMTU, &ifr) == 0)
+    {
+        value = ifr.ifr_mtu;
+    }
+    else
+    {
+        log<level::ERR>("ioctl failed for SIOCGIFMTU:",
+                        entry("ERROR=%s", strerror(errno)));
+    }
+    return value;
+}
+
+size_t EthernetInterface::mtu(size_t value)
+{
+    if (value == EthernetInterfaceIntf::mtu())
+    {
+        return value;
+    }
+    else if (value == 0)
+    {
+        return EthernetInterfaceIntf::mtu();
+    }
+
+    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+    if (eifSocket.sock < 0)
+    {
+        return EthernetInterfaceIntf::mtu();
+    }
+
+    ifreq ifr = {};
+    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
+    if (ioctl(eifSocket.sock, SIOCGIFMTU, &ifr) != 0)
+    {
+        log<level::ERR>("ioctl failed for SIOCGIFMTU:",
+                        entry("ERROR=%s", strerror(errno)));
+        return EthernetInterfaceIntf::mtu();
+    }
+
+    ifr.ifr_mtu = value;
+    if (ioctl(eifSocket.sock, SIOCSIFMTU, &ifr) != 0)
+    {
+        log<level::ERR>("ioctl failed for SIOCSIFMTU:",
+                        entry("ERROR=%s", strerror(errno)));
+        return EthernetInterfaceIntf::mtu();
+    }
+    EthernetInterfaceIntf::mtu(value);
+
     return value;
 }
 
