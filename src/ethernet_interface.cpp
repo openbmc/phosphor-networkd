@@ -1077,22 +1077,6 @@ void EthernetInterface::writeConfigurationFile()
         stream << "Gateway=" << gateway6 << "\n";
     }
 
-    if (manager.getSystemConf())
-    {
-        const auto& gateway = manager.getSystemConf()->defaultGateway();
-        if (!gateway.empty())
-        {
-            stream << "[Route]\n";
-            stream << "Gateway=" << gateway << "\n";
-        }
-        const auto& gateway6 = manager.getSystemConf()->defaultGateway6();
-        if (!gateway6.empty())
-        {
-            stream << "[Route]\n";
-            stream << "Gateway=" << gateway6 << "\n";
-        }
-    }
-
     // Write the neighbor sections
     for (const auto& neighbor : staticNeighbors)
     {
