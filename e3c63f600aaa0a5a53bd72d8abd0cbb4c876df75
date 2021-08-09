@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0ee9ebee_3e657528",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-09T04:01:53Z",
+      "side": 1,
+      "message": "No attrs in the base bios table. Will make the error message clear",
+      "parentUuid": "055dc6df_15e05ccd",
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5219626_0e296797",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 7
@@ -33,6 +51,24 @@
       "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83a903f5_61a2824a",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-09T04:01:53Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d5219626_0e296797",
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "13a45635_93cb0110",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-09T04:01:53Z",
+      "side": 1,
+      "message": "This will be updated in the third commit of this commit chain, where we create eth objects based on the intfCount..",
+      "parentUuid": "09aaeadb_e116fe43",
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1f00a742_95f36ff7",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.hpp",
         "patchSetId": 7
@@ -67,6 +121,24 @@
       "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6690bc17_f1b2aaaa",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-09T04:01:53Z",
+      "side": 1,
+      "message": "This is the setter method for biosTableAttrs data member.\nSo what this method does is, \n1. read \"ALL\" the bios table attributes from the dbus call\n2. push the attr name and value to the biosTableAttrs (which is of type map datatype)\n\n\nWhile the below method is to set the particular attribute in the bios table with a value.",
+      "parentUuid": "1f00a742_95f36ff7",
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
