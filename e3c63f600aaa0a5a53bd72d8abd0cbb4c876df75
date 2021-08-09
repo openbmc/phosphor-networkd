@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "a8277f93_d08aa7fa",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-08-09T08:24:08Z",
+      "side": 1,
+      "message": "Seems like this method pulls only the vmi attributes?",
+      "range": {
+        "startLine": 64,
+        "startChar": 20,
+        "endLine": 64,
+        "endChar": 37
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "055dc6df_15e05ccd",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 7
@@ -34,6 +57,52 @@
       "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5991b83_5134a756",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-08-09T08:24:08Z",
+      "side": 1,
+      "message": "A string type check is needed here",
+      "range": {
+        "startLine": 99,
+        "startChar": 16,
+        "endLine": 99,
+        "endChar": 20
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7938ff39_2c91cff4",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-08-09T08:24:08Z",
+      "side": 1,
+      "message": "Add a else case to return \"unexpected data type\" error",
+      "range": {
+        "startLine": 104,
+        "startChar": 15,
+        "endLine": 104,
+        "endChar": 17
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     },
     {
       "key": {
@@ -107,6 +176,47 @@
     },
     {
       "key": {
+        "uuid": "62545af1_5b092a6d",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-08-09T08:24:08Z",
+      "side": 1,
+      "message": "Please add a TODO here mentioning the same. In this commit there are only traces for each case.",
+      "parentUuid": "13a45635_93cb0110",
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1519e395_a5d5c44b",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-08-09T08:24:08Z",
+      "side": 1,
+      "message": "How this case is handled ?",
+      "range": {
+        "startLine": 140,
+        "startChar": 23,
+        "endLine": 140,
+        "endChar": 49
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1f00a742_95f36ff7",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.hpp",
         "patchSetId": 7
@@ -139,6 +249,93 @@
       "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9c3f6e3_aa6b4118",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-08-09T08:24:08Z",
+      "side": 1,
+      "message": "Can you please update the method description with this explanation?\nYou may change the name to setAllBiosTableAttrs",
+      "parentUuid": "6690bc17_f1b2aaaa",
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c7192c9_f6392862",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-08-09T08:24:08Z",
+      "side": 1,
+      "message": "Change the name to setBIOSTableAttr",
+      "range": {
+        "startLine": 119,
+        "startChar": 9,
+        "endLine": 119,
+        "endChar": 26
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fb7b50c_a2b178ee",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager_main.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-08-09T08:24:08Z",
+      "side": 1,
+      "message": "DEFAULT_HYP_NETWORK_OBJPATH is more appropriate",
+      "range": {
+        "startLine": 5,
+        "startChar": 15,
+        "endLine": 5,
+        "endChar": 34
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e35d16c_730be7e7",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager_main.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2021-08-09T08:24:08Z",
+      "side": 1,
+      "message": "HYP_DEFAULT_NETWORK_BUSNAME",
+      "range": {
+        "startLine": 7,
+        "startChar": 15,
+        "endLine": 7,
+        "endChar": 34
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
