@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "29f15082_491cfd3f",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-10T06:52:50Z",
+      "side": 1,
+      "message": "yes. This is the setter method that sets the data member (biosTableAttrs) of this class with the vmi attributes and their values",
+      "parentUuid": "a8277f93_d08aa7fa",
+      "range": {
+        "startLine": 64,
+        "startChar": 20,
+        "endLine": 64,
+        "endChar": 37
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "055dc6df_15e05ccd",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 7
@@ -83,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "53b27cef_0684d47c",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-10T06:52:50Z",
+      "side": 1,
+      "message": "Same as below",
+      "parentUuid": "f5991b83_5134a756",
+      "range": {
+        "startLine": 99,
+        "startChar": 16,
+        "endLine": 99,
+        "endChar": 20
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7938ff39_2c91cff4",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 7
@@ -94,6 +142,30 @@
       "writtenOn": "2021-08-09T08:24:08Z",
       "side": 1,
       "message": "Add a else case to return \"unexpected data type\" error",
+      "range": {
+        "startLine": 104,
+        "startChar": 15,
+        "endLine": 104,
+        "endChar": 17
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5cd3b1ff_a250073b",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-10T06:52:50Z",
+      "side": 1,
+      "message": "actually all the enum values are also considered as string. may be i can add a check for both string and enum and an else here.",
+      "parentUuid": "7938ff39_2c91cff4",
       "range": {
         "startLine": 104,
         "startChar": 15,
@@ -194,6 +266,24 @@
     },
     {
       "key": {
+        "uuid": "788bb3f2_87009273",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-10T06:52:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "62545af1_5b092a6d",
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1519e395_a5d5c44b",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 7
@@ -205,6 +295,30 @@
       "writtenOn": "2021-08-09T08:24:08Z",
       "side": 1,
       "message": "How this case is handled ?",
+      "range": {
+        "startLine": 140,
+        "startChar": 23,
+        "endLine": 140,
+        "endChar": 49
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3f2358d_c3313cf5",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-10T06:52:50Z",
+      "side": 1,
+      "message": "RN, It just logs an error and returns without creating any objects",
+      "parentUuid": "1519e395_a5d5c44b",
       "range": {
         "startLine": 140,
         "startChar": 23,
@@ -270,6 +384,24 @@
     },
     {
       "key": {
+        "uuid": "6b00b370_7dbddbb4",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-10T06:52:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d9c3f6e3_aa6b4118",
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c7192c9_f6392862",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.hpp",
         "patchSetId": 7
@@ -290,6 +422,30 @@
       "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce2142f2_817cf0f2",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-10T06:52:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8c7192c9_f6392862",
+      "range": {
+        "startLine": 119,
+        "startChar": 9,
+        "endLine": 119,
+        "endChar": 26
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
@@ -316,6 +472,30 @@
     },
     {
       "key": {
+        "uuid": "0f9f1531_b3f93bff",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager_main.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-10T06:52:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8fb7b50c_a2b178ee",
+      "range": {
+        "startLine": 5,
+        "startChar": 15,
+        "endLine": 5,
+        "endChar": 34
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e35d16c_730be7e7",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager_main.cpp",
         "patchSetId": 7
@@ -336,6 +516,30 @@
       "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4d6cc73_70400921",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager_main.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-08-10T06:52:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0e35d16c_730be7e7",
+      "range": {
+        "startLine": 7,
+        "startChar": 15,
+        "endLine": 7,
+        "endChar": 34
+      },
+      "revId": "e3c63f600aaa0a5a53bd72d8abd0cbb4c876df75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
