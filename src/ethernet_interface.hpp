@@ -276,6 +276,7 @@ class EthernetInterface : public Ifaces
      *  @param[in] ipAddress - IP address.
      *  @param[in] prefixLength - Length of prefix.
      *  @param[in] gateway - Gateway address.
+     *  @param[in] origin - The origin entry of the IP::Address
 
      *  @return path of the address object.
      */
@@ -283,7 +284,8 @@ class EthernetInterface : public Ifaces
     std::string generateObjectPath(IP::Protocol addressType,
                                    const std::string& ipAddress,
                                    uint8_t prefixLength,
-                                   const std::string& gateway) const;
+                                   const std::string& gateway,
+                                   IP::AddressOrigin origin) const;
 
     std::string
         generateStaticNeighborObjectPath(const std::string& ipAddress,
@@ -294,12 +296,14 @@ class EthernetInterface : public Ifaces
      *  @param[in] ipAddress - IP address.
      *  @param[in] prefixLength - Length of prefix.
      *  @param[in] gateway - Gateway address.
+     *  @param[in] origin - The string of the address origin
      *  @return hash string.
      */
 
     static std::string generateId(const std::string& ipAddress,
                                   uint8_t prefixLength,
-                                  const std::string& gateway);
+                                  const std::string& gateway,
+                                  const std::string& origin);
 
     /** @brief generates the id by doing hash of ipAddress
      *         and the mac address.

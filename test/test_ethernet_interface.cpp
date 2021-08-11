@@ -90,12 +90,13 @@ class TestEthernetInterface : public testing::Test
     }
 
     std::string getObjectPath(const std::string& ipaddress, uint8_t subnetMask,
-                              const std::string& gateway)
+                              const std::string& gateway,
+                              IP::AddressOrigin origin)
     {
         IP::Protocol addressType = IP::Protocol::IPv4;
 
         return interface.generateObjectPath(addressType, ipaddress, subnetMask,
-                                            gateway);
+                                            gateway, origin);
     }
 
     void createIPObject(IP::Protocol addressType, const std::string& ipaddress,
@@ -147,6 +148,7 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
     std::string ipaddress = "10.10.10.10";
     uint8_t prefix = 16;
     std::string gateway = "10.10.10.1";
+    IP::AddressOrigin origin = IP::AddressOrigin::Static;
 
     std::string expectedObjectPath = "/xyz/openbmc_test/network/test0/ipv4/";
     std::stringstream hexId;
@@ -154,11 +156,17 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
     std::string hashString = ipaddress;
     hashString += std::to_string(prefix);
     hashString += gateway;
+    hashString += convertForMessage(origin);
 
     hexId << std::hex << ((std::hash<std::string>{}(hashString)) & 0xFFFFFFFF);
     expectedObjectPath += hexId.str();
 
-    EXPECT_EQ(expectedObjectPath, getObjectPath(ipaddress, prefix, gateway));
+    EXPECT_EQ(expectedObjectPath,
+              getObjectPath(ipaddress, prefix, gateway, origin));
+
+    origin = IP::AddressOrigin::DHCP;
+    EXPECT_NE(expectedObjectPath,
+              getObjectPath(ipaddress, prefix, gateway, origin));
 }
 
 TEST_F(TestEthernetInterface, addStaticNameServers)

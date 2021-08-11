@@ -235,7 +235,7 @@ void EthernetInterface::createIPAddressObjects()
         std::string gateway = "";
 
         std::string ipAddressObjectPath = generateObjectPath(
-            addressType, addr.ipaddress, addr.prefix, gateway);
+            addressType, addr.ipaddress, addr.prefix, gateway, origin);
 
         this->addrs.insert_or_assign(
             addr.ipaddress,
@@ -315,7 +315,7 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
     }
 
     std::string objectPath =
-        generateObjectPath(protType, ipaddress, prefixLength, gateway);
+        generateObjectPath(protType, ipaddress, prefixLength, gateway, origin);
     this->addrs.insert_or_assign(ipaddress,
                                  std::make_shared<phosphor::network::IPAddress>(
                                      bus, objectPath.c_str(), *this, protType,
@@ -426,12 +426,14 @@ std::string
 
 std::string EthernetInterface::generateId(const std::string& ipaddress,
                                           uint8_t prefixLength,
-                                          const std::string& gateway)
+                                          const std::string& gateway,
+                                          const std::string& origin)
 {
     std::stringstream hexId;
     std::string hashString = ipaddress;
     hashString += std::to_string(prefixLength);
     hashString += gateway;
+    hashString += origin;
 
     // Only want 8 hex digits.
     hexId << std::hex << ((std::hash<std::string>{}(hashString)) & 0xFFFFFFFF);
@@ -528,7 +530,8 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
 
 std::string EthernetInterface::generateObjectPath(
     IP::Protocol addressType, const std::string& ipaddress,
-    uint8_t prefixLength, const std::string& gateway) const
+    uint8_t prefixLength, const std::string& gateway,
+    IP::AddressOrigin origin) const
 {
     std::string type = convertForMessage(addressType);
     type = type.substr(type.rfind('.') + 1);
@@ -537,7 +540,8 @@ std::string EthernetInterface::generateObjectPath(
     std::filesystem::path objectPath;
     objectPath /= objPath;
     objectPath /= type;
-    objectPath /= generateId(ipaddress, prefixLength, gateway);
+    objectPath /=
+        generateId(ipaddress, prefixLength, gateway, convertForMessage(origin));
     return objectPath.string();
 }
 
