@@ -1059,18 +1059,24 @@ void EthernetInterface::writeConfigurationFile()
         }
     }
 
-    auto gateway = EthernetInterfaceIntf::defaultGateway();
-    if (!gateway.empty())
+    if (!dhcpIsEnabled(IP::Protocol::IPv4))
     {
-        stream << "[Route]\n";
-        stream << "Gateway=" << gateway << "\n";
+        auto gateway = EthernetInterfaceIntf::defaultGateway();
+        if (!gateway.empty())
+        {
+            stream << "[Route]\n";
+            stream << "Gateway=" << gateway << "\n";
+        }
     }
 
-    auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
-    if (!gateway6.empty())
+    if (!dhcpIsEnabled(IP::Protocol::IPv6))
     {
-        stream << "[Route]\n";
-        stream << "Gateway=" << gateway6 << "\n";
+        auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
+        if (!gateway6.empty())
+        {
+            stream << "[Route]\n";
+            stream << "Gateway=" << gateway6 << "\n";
+        }
     }
 
     // Write the neighbor sections
