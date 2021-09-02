@@ -14,10 +14,6 @@
 #include <vector>
 #include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
 
-#ifndef SDBUSPP_NEW_CAMELCASE
-#define vlan vLAN
-#endif
-
 namespace phosphor
 {
 namespace network

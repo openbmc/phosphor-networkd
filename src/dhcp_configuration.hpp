@@ -7,11 +7,6 @@
 #include <string>
 #include <xyz/openbmc_project/Network/DHCPConfiguration/server.hpp>
 
-#ifndef SDBUSPP_NEW_CAMELCASE
-#define dnsEnabled dNSEnabled
-#define ntpEnabled nTPEnabled
-#endif
-
 namespace phosphor
 {
 namespace network

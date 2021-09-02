@@ -13,16 +13,6 @@
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 #include <xyz/openbmc_project/Network/MACAddress/server.hpp>
 
-#ifndef SDBUSPP_NEW_CAMELCASE
-#define dhcpEnabled dHCPEnabled
-#define ip iP
-#define ipAddress iPAddress
-#define ipv6AcceptRA iPv6AcceptRA
-#define macAddress mACAddress
-#define nicEnabled nICEnabled
-#define ntpServers nTPServers
-#endif
-
 namespace phosphor
 {
 namespace network
