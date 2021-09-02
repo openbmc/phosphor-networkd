@@ -16,6 +16,24 @@
       "revId": "671d9621a8536d97c67cf235c552b7dcd358461a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8640025f_e1f50282",
+        "filename": "0001-use-new-sdbus-camelcase.patch",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-09-02T19:07:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cafee305_c52be1ec",
+      "revId": "671d9621a8536d97c67cf235c552b7dcd358461a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
