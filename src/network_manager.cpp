@@ -271,7 +271,7 @@ void Manager::restartSystemdUnit(const std::string& unit)
         method.append(unit);
         bus.call_noreply(method);
     }
-    catch (const sdbusplus::exception::SdBusError& ex)
+    catch (const sdbusplus::exception::exception& ex)
     {
         log<level::ERR>("Failed to reset failed unit",
                         entry("UNIT=%s", unit.c_str()),
@@ -286,7 +286,7 @@ void Manager::restartSystemdUnit(const std::string& unit)
         method.append(unit.c_str(), "replace");
         bus.call_noreply(method);
     }
-    catch (const sdbusplus::exception::SdBusError& ex)
+    catch (const sdbusplus::exception::exception& ex)
     {
         log<level::ERR>("Failed to restart service", entry("ERR=%s", ex.what()),
                         entry("UNIT=%s", unit.c_str()));

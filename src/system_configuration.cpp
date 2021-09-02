@@ -96,7 +96,7 @@ std::string SystemConfiguration::getHostNameFromSystem() const
         reply.read(name);
         return std::get<std::string>(name);
     }
-    catch (const sdbusplus::exception::SdBusError& ex)
+    catch (const sdbusplus::exception::exception& ex)
     {
         log<level::ERR>(
             "Failed to get the hostname from systemd-hostnamed service",
