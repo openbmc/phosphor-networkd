@@ -1,0 +1,60 @@
+From 8173e02d5b223ff8680cd7ad2bda41bc02726f21 Mon Sep 17 00:00:00 2001
+From: Patrick Williams <patrick@stwcx.xyz>
+Date: Sat, 1 May 2021 06:39:41 -0500
+Subject: [PATCH] use new sdbus++ camelcase
+
+Change I17a8d7479556596a3cf252b3f4eae9c8df547189 will change
+how sdbus++ generates names which start with an acronym.
+Prepare for this by keying off the SDBUSPP_NEW_CAMELCASE
+define to use the new format.
+
+Changes:
+    vLAN -> vlan
+
+Signed-off-by: Patrick Williams <patrick@stwcx.xyz>
+Change-Id: I3c5c1d0d14c7f7b0e99da57477aa117c39114021
+---
+ network_manager.cpp | 2 +-
+ network_manager.hpp | 6 +++++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/network_manager.cpp b/network_manager.cpp
+index 10a2573..881b767 100644
+--- a/network_manager.cpp
++++ b/network_manager.cpp
+@@ -180,7 +180,7 @@ void Manager::createChildObjects()
+         bus, objPath.string(), *this);
+ }
+ 
+-ObjectPath Manager::vLAN(IntfName interfaceName, uint32_t id)
++ObjectPath Manager::vlan(IntfName interfaceName, uint32_t id)
+ {
+     return interfaces[interfaceName]->createVLAN(id);
+ }
+diff --git a/network_manager.hpp b/network_manager.hpp
+index 6815d3f..227955c 100644
+--- a/network_manager.hpp
++++ b/network_manager.hpp
+@@ -14,6 +14,10 @@
+ #include <vector>
+ #include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
+ 
++#ifndef SDBUSPP_NEW_CAMELCASE
++#define vlan vLAN
++#endif
++
+ namespace phosphor
+ {
+ namespace network
+@@ -56,7 +60,7 @@ class Manager : public details::VLANCreateIface
+     Manager(sdbusplus::bus::bus& bus, const char* objPath,
+             const std::string& dir);
+ 
+-    ObjectPath vLAN(IntfName interfaceName, uint32_t id) override;
++    ObjectPath vlan(IntfName interfaceName, uint32_t id) override;
+ 
+     /** @brief write the network conf file with the in-memory objects.
+      */
+-- 
+2.26.3
+

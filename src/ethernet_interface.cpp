@@ -818,7 +818,7 @@ ServerList EthernetInterface::getNameServerFromResolvd()
     {
         reply.read(name);
     }
-    catch (const sdbusplus::exception::SdBusError& e)
+    catch (const sdbusplus::exception::exception& e)
     {
         log<level::ERR>("Failed to get DNS information from Systemd-Resolved");
     }
