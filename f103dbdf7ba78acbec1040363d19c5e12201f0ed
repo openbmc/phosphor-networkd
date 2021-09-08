@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a48a2b53_e732a36d",
+        "filename": "meson.build",
+        "patchSetId": 11
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2021-09-08T06:14:23Z",
+      "side": 1,
+      "message": "this should be completely ibm specific functionality. does oem-ibm makes sense ? do you see any other companies using it ?",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 5
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68cdd152_ea4a494e",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2021-09-08T06:14:23Z",
+      "side": 1,
+      "message": "what about enum attributes ?",
+      "range": {
+        "startLine": 49,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 51
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb31efb5_b9399e2e",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2021-09-08T06:14:23Z",
+      "side": 1,
+      "message": "would you wanna use mapper to get the service name ?and dynamically discover the service rather than hardcoding it .",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 70,
+        "endChar": 78
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d4e4d8f_b0b9518c",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2021-09-08T06:14:23Z",
+      "side": 1,
+      "message": "how do you guarantee that the bios attributes will start with vmi ? the bios attributes name can be anything. this also makes me think that is ibm only feature.",
+      "range": {
+        "startLine": 84,
+        "startChar": 12,
+        "endLine": 84,
+        "endChar": 54
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5567e4e5_9e460d20",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2021-09-08T06:14:23Z",
+      "side": 1,
+      "message": "i dont see boost as a dependency in meson file, where is it coming from ?",
+      "range": {
+        "startLine": 89,
+        "startChar": 19,
+        "endLine": 89,
+        "endChar": 37
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67eab314_1bb70759",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2021-09-08T06:14:23Z",
+      "side": 1,
+      "message": "null check missing",
+      "range": {
+        "startLine": 91,
+        "startChar": 35,
+        "endLine": 91,
+        "endChar": 44
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56d7ceb6_0e22f724",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2021-09-08T06:14:23Z",
+      "side": 1,
+      "message": "none of this logic is generic for other companies. why dont you make it configurable via json file or some thing so that you dont need to hardcode the attribute names and the types?\n\nDid we check if other companies have such requirements ?",
+      "range": {
+        "startLine": 82,
+        "startChar": 7,
+        "endLine": 112,
+        "endChar": 9
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
