@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f6e24fa1_761e426a",
+        "filename": "meson.build",
+        "patchSetId": 11
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000206
+      },
+      "writtenOn": "2021-09-14T12:25:29Z",
+      "side": 1,
+      "message": "\u003e Anyone wanting to use this app can enable this flag, provided they must be using the appropriate bios attribute names (vmi_ is the prefix in this case, as per the changes).\n\nThis is what makes me think it is oem-ibm, why are we dictating requirements to other systems(non-IBM) that their bios attributes needs to be in a certain way ? i still dont feel that it is a generic code which can be leveraged by other companies.\n\n\nBut i would leave this call to the maintainers of this repository.",
+      "parentUuid": "eefa3d3b_03ddc6f1",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 5
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "68cdd152_ea4a494e",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 11
