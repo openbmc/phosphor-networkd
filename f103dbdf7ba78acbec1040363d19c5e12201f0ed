@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "251d8098_4deeb7c8",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-09-14T18:37:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "051b6fb7_199a5767",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 70,
+        "endChar": 78
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d4e4d8f_b0b9518c",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 11
@@ -296,6 +320,30 @@
       "side": 1,
       "message": "Ack",
       "parentUuid": "67eab314_1bb70759",
+      "range": {
+        "startLine": 91,
+        "startChar": 35,
+        "endLine": 91,
+        "endChar": 44
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6f4ed78a_0c1449cd",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-09-14T18:37:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4de2d046_681f74da",
       "range": {
         "startLine": 91,
         "startChar": 35,
