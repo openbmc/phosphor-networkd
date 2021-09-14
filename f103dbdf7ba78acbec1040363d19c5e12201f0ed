@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "eefa3d3b_03ddc6f1",
+        "filename": "meson.build",
+        "patchSetId": 11
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-09-14T09:53:27Z",
+      "side": 1,
+      "message": "This is an app to manage the hypervisor network configurations.\n\nBasically an intermediate application to communicate with the hypervisor via the bios config manager. \nIBM has implemented the hypervisor ethernet interface configuration. This app is to handle those settings via bmc.\n\nSystems that need their hypervisor / hosts to get configured with separate interfaces can use this app.\nThe hypervisor is already modelled as a ComputerSystem. This need not be an OEM implementation.\n\nAnyone wanting to use this app can enable this flag, provided they must be using the appropriate bios attribute names (vmi_ is the prefix in this case, as per the changes).",
+      "parentUuid": "a48a2b53_e732a36d",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 5
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "68cdd152_ea4a494e",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 11
@@ -36,6 +60,30 @@
       "writtenOn": "2021-09-08T06:14:23Z",
       "side": 1,
       "message": "what about enum attributes ?",
+      "range": {
+        "startLine": 49,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 51
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7caa3166_0dab3bff",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-09-14T09:53:27Z",
+      "side": 1,
+      "message": "Till now, the enum values are treated the same way as string. So this method will be called appropriately. This is called at one place (where an ip address updation is done) in the third commit in this commit chain.",
+      "parentUuid": "68cdd152_ea4a494e",
       "range": {
         "startLine": 49,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "051b6fb7_199a5767",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-09-14T09:53:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fb31efb5_b9399e2e",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 70,
+        "endChar": 78
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d4e4d8f_b0b9518c",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 11
@@ -82,6 +154,30 @@
       "writtenOn": "2021-09-08T06:14:23Z",
       "side": 1,
       "message": "how do you guarantee that the bios attributes will start with vmi ? the bios attributes name can be anything. this also makes me think that is ibm only feature.",
+      "range": {
+        "startLine": 84,
+        "startChar": 12,
+        "endLine": 84,
+        "endChar": 54
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a8505f1_295044f0",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-09-14T09:53:27Z",
+      "side": 1,
+      "message": "Yes. This change is made w.r.t ibm-specific attribute names in the bios table",
+      "parentUuid": "4d4e4d8f_b0b9518c",
       "range": {
         "startLine": 84,
         "startChar": 12,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "ec5a690a_9fa00f89",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-09-14T09:53:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5567e4e5_9e460d20",
+      "range": {
+        "startLine": 89,
+        "startChar": 19,
+        "endLine": 89,
+        "endChar": 37
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67eab314_1bb70759",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 11
@@ -137,6 +257,30 @@
       "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4de2d046_681f74da",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-09-14T09:53:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "67eab314_1bb70759",
+      "range": {
+        "startLine": 91,
+        "startChar": 35,
+        "endLine": 91,
+        "endChar": 44
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
