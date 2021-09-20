@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "8b58bc4a_d237c7f4",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-09-20T12:49:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7caa3166_0dab3bff",
+      "range": {
+        "startLine": 49,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 51
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb31efb5_b9399e2e",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 11
@@ -235,6 +259,30 @@
       "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27e832e0_005a3b02",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-09-20T12:49:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a8505f1_295044f0",
+      "range": {
+        "startLine": 84,
+        "startChar": 12,
+        "endLine": 84,
+        "endChar": 54
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     },
     {
       "key": {
@@ -376,6 +424,30 @@
       "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15ec7fac_070aff71",
+        "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-09-20T12:49:50Z",
+      "side": 1,
+      "message": "This will be enabled by the feature flag (ibm-hyp-nw-mgr) only",
+      "parentUuid": "56d7ceb6_0e22f724",
+      "range": {
+        "startLine": 82,
+        "startChar": 7,
+        "endLine": 112,
+        "endChar": 9
+      },
+      "revId": "f103dbdf7ba78acbec1040363d19c5e12201f0ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
