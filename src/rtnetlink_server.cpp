@@ -87,6 +87,9 @@ static int eventHandler(sd_event_source* /*es*/, int fd, uint32_t /*revents*/,
 
         } // end for
 
+        std::memset(buffer, '\0', sizeof(buffer));
+
+        netLinkHeader = reinterpret_cast<struct nlmsghdr*>(buffer);
     } // end while
 
     return 0;
