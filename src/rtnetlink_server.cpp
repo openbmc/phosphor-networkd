@@ -59,10 +59,11 @@ static bool shouldRefresh(const struct nlmsghdr& hdr, std::string_view data)
 static int eventHandler(sd_event_source* /*es*/, int fd, uint32_t /*revents*/,
                         void* /*userdata*/)
 {
-    char buffer[phosphor::network::rtnetlink::BUFSIZE]{};
+    std::array<char,phosphor::network::rtnetlink::BUFSIZE> buffer = {};
     int len{};
 
-    auto netLinkHeader = reinterpret_cast<struct nlmsghdr*>(buffer);
+    auto netLinkHeader = reinterpret_cast<struct nlmsghdr*>(buffer.data());
+
     while ((len = recv(fd, netLinkHeader, phosphor::network::rtnetlink::BUFSIZE,
                        0)) > 0)
     {
@@ -87,6 +88,9 @@ static int eventHandler(sd_event_source* /*es*/, int fd, uint32_t /*revents*/,
 
         } // end for
 
+        buffer.fill('\0');
+
+        netLinkHeader = reinterpret_cast<struct nlmsghdr*>(buffer.data());
     } // end while
 
     return 0;
