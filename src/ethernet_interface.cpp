@@ -822,6 +822,7 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
 void EthernetInterface::loadNameServers()
 {
     EthernetInterfaceIntf::nameservers(getNameServerFromResolvd());
+    EthernetInterfaceIntf::domainName(getDomainsFromResolvd());
     EthernetInterfaceIntf::staticNameServers(getstaticNameServerFromConf());
 }
 
@@ -922,6 +923,38 @@ ServerList EthernetInterface::getNameServerFromResolvd()
                 break;
         }
     }
+    return servers;
+}
+
+ServerList EthernetInterface::getDomainsFromResolvd()
+{
+    ServerList servers;
+    std::string OBJ_PATH = RESOLVED_SERVICE_PATH + std::to_string(ifIndex());
+
+    using type = std::vector<std::tuple<std::string, bool>>;
+    std::variant<type> name;
+    auto method = bus.new_method_call(RESOLVED_SERVICE, OBJ_PATH.c_str(),
+                                      PROPERTY_INTERFACE, METHOD_GET);
+
+    method.append(RESOLVED_INTERFACE, "Domains");
+    auto reply = bus.call(method);
+
+    try
+    {
+        reply.read(name);
+    }
+    catch (const sdbusplus::exception::SdBusError& e)
+    {
+        log<level::ERR>(
+            "Failed to get domain information from Systemd-Resolved");
+    }
+    auto tupleVector = std::get_if<type>(&name);
+    for (auto i = tupleVector->begin(); i != tupleVector->end(); ++i)
+    {
+        std::string domain = std::get<0>(*i);
+        servers.push_back(domain);
+    }
+
     return servers;
 }
 
@@ -1174,6 +1207,9 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
 
         value = manager.getDHCPConf()->ntpEnabled() ? "true"s : "false"s;
         stream << "UseNTP="s + value + "\n";
+
+        value = manager.getDHCPConf()->domainEnabled() ? "true"s : "false"s;
+        stream << "UseDomains="s + value + "\n";
 
         value = manager.getDHCPConf()->hostNameEnabled() ? "true"s : "false"s;
         stream << "UseHostname="s + value + "\n";

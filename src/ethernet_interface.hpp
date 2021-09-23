@@ -240,6 +240,7 @@ class EthernetInterface : public Ifaces
     std::string defaultGateway6(std::string gateway) override;
 
     using EthernetInterfaceIntf::dhcpEnabled;
+    using EthernetInterfaceIntf::domainName;
     using EthernetInterfaceIntf::interfaceName;
     using EthernetInterfaceIntf::linkUp;
     using EthernetInterfaceIntf::mtu;
@@ -325,6 +326,11 @@ class EthernetInterface : public Ifaces
      */
     virtual ServerList getNameServerFromResolvd();
     ServerList getstaticNameServerFromConf();
+
+    /** @brief get the domain name details from the network conf
+     *
+     */
+    virtual ServerList getDomainsFromResolvd();
 
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;

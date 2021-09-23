@@ -74,6 +74,20 @@ bool Configuration::dnsEnabled(bool value)
     return dns;
 }
 
+bool Configuration::domainEnabled(bool value)
+{
+    if (value == domainEnabled())
+    {
+        return value;
+    }
+
+    auto dns = ConfigIntf::domainEnabled(value);
+    manager.writeToConfigurationFile();
+    manager.restartSystemdUnit(phosphor::network::networkdService);
+
+    return dns;
+}
+
 bool Configuration::getDHCPPropFromConf(const std::string& prop)
 {
     fs::path confPath = manager.getConfDir();
@@ -84,9 +98,9 @@ bool Configuration::getDHCPPropFromConf(const std::string& prop)
                     systemd::config::networkFileSuffix;
 
     confPath /= fileName;
-    // systemd default behaviour is all DHCP fields should be enabled by
-    // default.
-    auto propValue = true;
+    // systemd default behaviour is all DHCP fields except for UseDomains
+    // should be enabled by default.
+    auto propValue = prop == "UseDomains" ? false : true;
     config::Parser parser(confPath);
 
     auto rc = config::ReturnCode::SUCCESS;
@@ -100,10 +114,7 @@ bool Configuration::getDHCPPropFromConf(const std::string& prop)
         return propValue;
     }
 
-    if (values[0] == "false")
-    {
-        propValue = false;
-    }
+    propValue = values[0] == "true" ? true : false;
     return propValue;
 }
 } // namespace dhcp

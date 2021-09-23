@@ -49,6 +49,7 @@ class Configuration : public Iface
     {
         ConfigIntf::dnsEnabled(getDHCPPropFromConf("UseDNS"));
         ConfigIntf::ntpEnabled(getDHCPPropFromConf("UseNTP"));
+        ConfigIntf::domainEnabled(getDHCPPropFromConf("UseDomains"));
         ConfigIntf::hostNameEnabled(getDHCPPropFromConf("UseHostname"));
         ConfigIntf::sendHostNameEnabled(getDHCPPropFromConf("SendHostname"));
         emit_object_added();
@@ -68,6 +69,13 @@ class Configuration : public Iface
      *                     else false.
      */
     bool ntpEnabled(bool value) override;
+
+    /** @brief If true then domain names received from the DHCP server
+               will be used by systemd-resolved.
+     *  @param[in] value - true if domain name needed from DHCP server
+     *                     else false.
+     */
+    bool domainEnabled(bool value) override;
 
     /** @brief If true then Hostname received from the DHCP server will
      *         be set as the hostname of the system
@@ -95,6 +103,7 @@ class Configuration : public Iface
      *
      */
     using ConfigIntf::dnsEnabled;
+    using ConfigIntf::domainEnabled;
     using ConfigIntf::hostNameEnabled;
     using ConfigIntf::ntpEnabled;
     using ConfigIntf::sendHostNameEnabled;
