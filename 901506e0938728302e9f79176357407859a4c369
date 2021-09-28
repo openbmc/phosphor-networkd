@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "dab01c3e_c3debdf8",
+        "filename": "src/rtnetlink_server.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1001006
+      },
+      "writtenOn": "2021-09-28T12:01:04Z",
+      "side": 1,
+      "message": "In other places of code in network-manager code, i could see the same standard of initializing the buffer before usage is being done. Just for reference routing_table.cpp \"getRoutes\" member function does the same before receiving the data and during time of declaration too.",
+      "parentUuid": "755dcfc3_03de5d63",
+      "revId": "901506e0938728302e9f79176357407859a4c369",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7882de89_f04aba8c",
         "filename": "src/rtnetlink_server.cpp",
         "patchSetId": 5
