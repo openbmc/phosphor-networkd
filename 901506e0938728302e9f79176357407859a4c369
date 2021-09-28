@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "755dcfc3_03de5d63",
+        "filename": "src/rtnetlink_server.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1001006
+      },
+      "writtenOn": "2021-09-28T11:49:19Z",
+      "side": 1,
+      "message": "Buffer was initialized already with the previous declarations of this variable. One advantage i see is that using a debugger such as gdb or other memory tools to inspect the code to identify/isolate issue and printing the buffer at this point of time may be helpful if we initialize the buffer during the time of declaration to avoid garbage values in it. In later case if we need to implement or re-use the same code then it will be helpful i think.",
+      "parentUuid": "5437b055_ec9327d8",
+      "revId": "901506e0938728302e9f79176357407859a4c369",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7882de89_f04aba8c",
         "filename": "src/rtnetlink_server.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2021-09-28T08:45:12Z",
       "side": 1,
       "message": "Same here, we just need to re-adjust the pointer. The buffer contents are irrelevant and the size is used everywhere.",
+      "revId": "901506e0938728302e9f79176357407859a4c369",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b366f85_ea7e4582",
+        "filename": "src/rtnetlink_server.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1001006
+      },
+      "writtenOn": "2021-09-28T11:49:19Z",
+      "side": 1,
+      "message": "Agree that the buffer contents are irrelevant and the same point mentioned above applies here as well.",
+      "parentUuid": "7882de89_f04aba8c",
       "revId": "901506e0938728302e9f79176357407859a4c369",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
