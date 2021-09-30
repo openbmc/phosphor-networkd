@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39e8de2b_646d244f",
+        "filename": "meson.build",
+        "patchSetId": 15
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-09-30T17:31:46Z",
+      "side": 1,
+      "message": "Move this into the src/meson.build file",
+      "revId": "ec19a2239f75a917d354b3a6f5353d20b9047e06",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4cab1c5_612ecb0a",
+        "filename": "meson_options.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-09-30T17:31:46Z",
+      "side": 1,
+      "message": "It doesn\u0027t have any additional dependencies, so you should just make it a boolean. I\u0027d think we would want this to default to `true` so that we know via CI and use builds whether or not the code compiles. We can make it a packageconfig option in the bitbake build and exclude it in the default option set.",
+      "revId": "ec19a2239f75a917d354b3a6f5353d20b9047e06",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
