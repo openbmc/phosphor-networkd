@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "251cf764_6c47edaa",
+        "filename": "meson.build",
+        "patchSetId": 15
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-10-04T18:02:01Z",
+      "side": 1,
+      "message": "I don\u0027t really care either way, an IBM folder is fine. Just put the include at the least common ancestor meson.build file.",
+      "parentUuid": "7d6fb1b8_104b3f1a",
+      "revId": "ec19a2239f75a917d354b3a6f5353d20b9047e06",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f4cab1c5_612ecb0a",
         "filename": "meson_options.txt",
         "patchSetId": 15
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "\u003e It doesn\u0027t have any additional dependencies, so you should just make it a boolean.\nAck\n\n\u003e I\u0027d think we would want this to default to `true`\nBut since this is something IBM-specific, do you think we should default it to true?",
       "parentUuid": "f4cab1c5_612ecb0a",
+      "revId": "ec19a2239f75a917d354b3a6f5353d20b9047e06",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0328a578_373ce821",
+        "filename": "meson_options.txt",
+        "patchSetId": 15
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-10-04T18:02:01Z",
+      "side": 1,
+      "message": "For the sake of the build I would like to make sure it continues building when going through CI. Otherwise we can make commits that will break builds for say `witherspoon` when they try to get SRCREV bumped. If we leave it default enabled then we will have better build coverage in CI. We can setup the recipe so that it doesn\u0027t get built for other machines in bitbake.",
+      "parentUuid": "96fa682b_9fa2d0a1",
       "revId": "ec19a2239f75a917d354b3a6f5353d20b9047e06",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
