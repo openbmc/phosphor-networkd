@@ -55,7 +55,7 @@ void VlanInterface::writeDeviceFile()
     {
         stream.open(confPath.c_str(), std::fstream::out);
     }
-    catch (std::ios_base::failure& e)
+    catch (const std::ios_base::failure& e)
     {
         log<level::ERR>("Unable to open the VLAN device file",
                         entry("FILE=%s", confPath.c_str()),

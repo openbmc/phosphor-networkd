@@ -34,7 +34,7 @@ Table::Table()
     {
         getRoutes();
     }
-    catch (InternalFailure& e)
+    catch (const InternalFailure& e)
     {
         commit<InternalFailure>();
     }

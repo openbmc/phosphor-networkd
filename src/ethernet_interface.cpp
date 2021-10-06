@@ -509,7 +509,7 @@ void EthernetInterface::deleteVLANFromSystem(const std::string& interface)
     {
         deleteInterface(interface);
     }
-    catch (InternalFailure& e)
+    catch (const InternalFailure& e)
     {
         commit<InternalFailure>();
     }
@@ -812,7 +812,7 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
         // network file.
         manager.restartSystemdUnit(networkdService);
     }
-    catch (InternalFailure& e)
+    catch (const InternalFailure& e)
     {
         log<level::ERR>("Exception processing DNS entries");
     }
@@ -1191,7 +1191,7 @@ std::string EthernetInterface::macAddress(std::string value)
     {
         newMAC = mac_address::fromString(value);
     }
-    catch (std::invalid_argument&)
+    catch (const std::invalid_argument&)
     {
         log<level::ERR>("MACAddress is not valid.",
                         entry("MAC=%s", value.c_str()));

@@ -95,7 +95,7 @@ bool Manager::createDefaultNetworkFiles(bool force)
             }
         }
     }
-    catch (std::exception& e)
+    catch (const std::exception& e)
     {
         log<level::ERR>("Unable to create the default network file");
     }
