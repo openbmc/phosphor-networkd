@@ -67,6 +67,52 @@
       "revId": "0f86eed5506fa4d1044e260f17f0c762f797bcf1",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0710b587_bdaef602",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-10-07T04:32:32Z",
+      "side": 1,
+      "message": "Do we need to override the function domainName():which always fetches the configured domain names from the Resolved?\nRight now it is happening only in the case of when the interface object gets created..",
+      "range": {
+        "startLine": 243,
+        "startChar": 3,
+        "endLine": 243,
+        "endChar": 44
+      },
+      "revId": "0f86eed5506fa4d1044e260f17f0c762f797bcf1",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4144dd7_0d6c8bef",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-10-07T04:32:32Z",
+      "side": 1,
+      "message": "Is it network conf? Function name suggest you are getting the domain names from resolvd..",
+      "range": {
+        "startLine": 330,
+        "startChar": 3,
+        "endLine": 332,
+        "endChar": 7
+      },
+      "revId": "0f86eed5506fa4d1044e260f17f0c762f797bcf1",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
