@@ -4,6 +4,21 @@ phosphor_logging_dep = dependency(
 
 src_includes = include_directories('.')
 
+fmt_dep = dependency('fmt', required: false)
+if not fmt_dep.found()
+  fmt_opts = import('cmake').subproject_options()
+  fmt_opts.add_cmake_defines({
+    'CMAKE_POSITION_INDEPENDENT_CODE': 'ON',
+    'MASTER_PROJECT': 'OFF',
+  })
+  fmt_proj = import('cmake').subproject(
+    'fmt',
+    options: fmt_opts,
+    required: false)
+  assert(fmt_proj.found(), 'fmtlib is required')
+  fmt_dep = fmt_proj.dependency('fmt')
+endif
+
 executable(
   'ncsi-netlink',
   'argument.cpp',
@@ -12,7 +27,7 @@ executable(
   implicit_include_directories: false,
   include_directories: src_includes,
   dependencies: [
-    dependency('fmt'),
+    fmt_dep,
     dependency('libnl-3.0'),
     dependency('libnl-genl-3.0'),
     phosphor_dbus_interfaces_dep,
