@@ -46,6 +46,7 @@ class MockManager : public phosphor::network::Manager
         }
     }
     MOCK_METHOD1(restartSystemdUnit, void(const std::string& service));
+    MOCK_METHOD(void, reloadConfigs, (), (override));
 };
 
 } // namespace network

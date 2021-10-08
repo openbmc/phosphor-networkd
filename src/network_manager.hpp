@@ -132,6 +132,10 @@ class Manager : public details::VLANCreateIface
      */
     virtual void restartSystemdUnit(const std::string& unit);
 
+    /** @brief Tell systemd-network to reload all of the network configurations
+     */
+    virtual void reloadConfigs();
+
     /** @brief Returns the number of interfaces under this manager.
      *
      * @return the number of interfaces managed by this manager.

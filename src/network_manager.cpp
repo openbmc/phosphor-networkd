@@ -26,6 +26,10 @@ constexpr char SYSTEMD_PATH[] = "/org/freedesktop/systemd1";
 constexpr char SYSTEMD_INTERFACE[] = "org.freedesktop.systemd1.Manager";
 constexpr auto FirstBootFile = "/var/lib/network/firstBoot_";
 
+constexpr char NETWORKD_BUSNAME[] = "org.freedesktop.network1";
+constexpr char NETWORKD_PATH[] = "/org/freedesktop/network1";
+constexpr char NETWORKD_INTERFACE[] = "org.freedesktop.network1.Manager";
+
 namespace phosphor
 {
 namespace network
@@ -290,6 +294,22 @@ void Manager::restartSystemdUnit(const std::string& unit)
     {
         log<level::ERR>("Failed to restart service", entry("ERR=%s", ex.what()),
                         entry("UNIT=%s", unit.c_str()));
+        elog<InternalFailure>();
+    }
+}
+
+void Manager::reloadConfigs()
+{
+    try
+    {
+        auto method = bus.new_method_call(NETWORKD_BUSNAME, NETWORKD_PATH,
+                                          NETWORKD_INTERFACE, "Reload");
+        bus.call_noreply(method);
+    }
+    catch (const sdbusplus::exception::exception& ex)
+    {
+        log<level::ERR>("Failed to reload configuration",
+                        entry("ERR=%s", ex.what()));
         elog<InternalFailure>();
     }
 }
