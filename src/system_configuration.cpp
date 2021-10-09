@@ -122,7 +122,10 @@ std::string SystemConfiguration::defaultGateway(std::string gateway)
             InvalidArgumentMetadata::ARGUMENT_VALUE(gateway.c_str()));
     }
     gw = SystemConfigIntf::defaultGateway(gateway);
+
     manager.writeToConfigurationFile();
+    manager.reloadConfigs();
+
     return gw;
 }
 
@@ -143,7 +146,10 @@ std::string SystemConfiguration::defaultGateway6(std::string gateway)
             InvalidArgumentMetadata::ARGUMENT_VALUE(gateway.c_str()));
     }
     gw = SystemConfigIntf::defaultGateway6(gateway);
+
     manager.writeToConfigurationFile();
+    manager.reloadConfigs();
+
     return gw;
 }
 

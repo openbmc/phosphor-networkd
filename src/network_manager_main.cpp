@@ -309,13 +309,9 @@ int main(int /*argc*/, char** /*argv*/)
     // is not there for any interface.
     // Parameter false means don't create the network
     // files forcefully.
-    if (!phosphor::network::manager->createDefaultNetworkFiles(false))
+    if (phosphor::network::manager->createDefaultNetworkFiles(false))
     {
-        // this will add the additional fixes which is needed
-        // in the existing network file.
-        phosphor::network::manager->writeToConfigurationFile();
-        // whenever the configuration file gets written it restart
-        // the network which creates the network objects
+        phosphor::network::manager->reloadConfigs();
     }
 
     // RtnetLink socket
@@ -331,5 +327,9 @@ int main(int /*argc*/, char** /*argv*/)
     in >> configJson;
     phosphor::network::watchEthernetInterface(bus, configJson);
 #endif
+
+    // Trigger the initial object scan
+    phosphor::network::refreshObjects();
+
     sd_event_loop(eventPtr.get());
 }
