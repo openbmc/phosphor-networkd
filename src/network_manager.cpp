@@ -36,7 +36,6 @@ namespace network
 {
 
 extern std::unique_ptr<Timer> refreshObjectTimer;
-extern std::unique_ptr<Timer> restartTimer;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
@@ -246,48 +245,6 @@ void Manager::setFistBootMACOnInterface(
 }
 
 #endif
-
-void Manager::restartTimers()
-{
-    using namespace std::chrono;
-    if (refreshObjectTimer && restartTimer)
-    {
-        restartTimer->restartOnce(restartTimeout);
-        refreshObjectTimer->restartOnce(refreshTimeout);
-    }
-}
-
-void Manager::restartSystemdUnit(const std::string& unit)
-{
-    try
-    {
-        auto method = bus.new_method_call(SYSTEMD_BUSNAME, SYSTEMD_PATH,
-                                          SYSTEMD_INTERFACE, "ResetFailedUnit");
-        method.append(unit);
-        bus.call_noreply(method);
-    }
-    catch (const sdbusplus::exception::exception& ex)
-    {
-        log<level::ERR>("Failed to reset failed unit",
-                        entry("UNIT=%s", unit.c_str()),
-                        entry("ERR=%s", ex.what()));
-        elog<InternalFailure>();
-    }
-
-    try
-    {
-        auto method = bus.new_method_call(SYSTEMD_BUSNAME, SYSTEMD_PATH,
-                                          SYSTEMD_INTERFACE, "RestartUnit");
-        method.append(unit.c_str(), "replace");
-        bus.call_noreply(method);
-    }
-    catch (const sdbusplus::exception::exception& ex)
-    {
-        log<level::ERR>("Failed to restart service", entry("ERR=%s", ex.what()),
-                        entry("UNIT=%s", unit.c_str()));
-        elog<InternalFailure>();
-    }
-}
 
 void Manager::reloadConfigs()
 {
