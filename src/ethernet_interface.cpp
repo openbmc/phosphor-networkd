@@ -322,7 +322,9 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
                                      bus, objectPath.c_str(), *this, protType,
                                      ipaddress, origin, prefixLength, gateway));
 
-    manager.writeToConfigurationFile();
+    writeConfigurationFile();
+    manager.reloadConfigs();
+
     return objectPath;
 }
 
@@ -350,7 +352,10 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                             std::make_shared<phosphor::network::Neighbor>(
                                 bus, objectPath.c_str(), *this, ipAddress,
                                 macAddress, Neighbor::State::Permanent));
-    manager.writeToConfigurationFile();
+
+    writeConfigurationFile();
+    manager.reloadConfigs();
+
     return objectPath;
 }
 
@@ -464,7 +469,9 @@ void EthernetInterface::deleteObject(const std::string& ipaddress)
         return;
     }
     this->addrs.erase(it);
-    manager.writeToConfigurationFile();
+
+    writeConfigurationFile();
+    manager.reloadConfigs();
 }
 
 void EthernetInterface::deleteStaticNeighborObject(const std::string& ipAddress)
@@ -477,7 +484,9 @@ void EthernetInterface::deleteStaticNeighborObject(const std::string& ipAddress)
         return;
     }
     staticNeighbors.erase(it);
-    manager.writeToConfigurationFile();
+
+    writeConfigurationFile();
+    manager.reloadConfigs();
 }
 
 void EthernetInterface::deleteVLANFromSystem(const std::string& interface)
@@ -529,7 +538,8 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
     // delete the interface
     vlanInterfaces.erase(it);
 
-    manager.writeToConfigurationFile();
+    writeConfigurationFile();
+    manager.reloadConfigs();
 }
 
 std::string EthernetInterface::generateObjectPath(
@@ -566,7 +576,10 @@ bool EthernetInterface::ipv6AcceptRA(bool value)
         return value;
     }
     EthernetInterfaceIntf::ipv6AcceptRA(value);
-    manager.writeToConfigurationFile();
+
+    writeConfigurationFile();
+    manager.reloadConfigs();
+
     return value;
 }
 
@@ -576,9 +589,11 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
     {
         return value;
     }
-
     EthernetInterfaceIntf::dhcpEnabled(value);
-    manager.writeToConfigurationFile();
+
+    writeConfigurationFile();
+    manager.reloadConfigs();
+
     return value;
 }
 
@@ -779,7 +794,9 @@ bool EthernetInterface::nicEnabled(bool value)
         return EthernetInterfaceIntf::nicEnabled();
     }
     EthernetInterfaceIntf::nicEnabled(value);
+
     writeConfigurationFile();
+    manager.reloadConfigs();
 
     return value;
 }
@@ -807,10 +824,9 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
     try
     {
         EthernetInterfaceIntf::staticNameServers(value);
+
         writeConfigurationFile();
-        // resolved reads the DNS server configuration from the
-        // network file.
-        manager.restartSystemdUnit(networkdService);
+        manager.reloadConfigs();
     }
     catch (const InternalFailure& e)
     {
@@ -963,8 +979,9 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
     vlanIntf->writeDeviceFile();
 
     this->vlanInterfaces.emplace(vlanInterfaceName, std::move(vlanIntf));
-    // write the new vlan device entry to the configuration(network) file.
-    manager.writeToConfigurationFile();
+
+    writeConfigurationFile();
+    manager.reloadConfigs();
 
     return path;
 }
@@ -1016,9 +1033,8 @@ ServerList EthernetInterface::ntpServers(ServerList servers)
     auto ntpServers = EthernetInterfaceIntf::ntpServers(servers);
 
     writeConfigurationFile();
-    // timesynchd reads the NTP server configuration from the
-    // network file.
-    manager.restartSystemdUnit(networkdService);
+    manager.reloadConfigs();
+
     return ntpServers;
 }
 // Need to merge the below function with the code which writes the
@@ -1225,7 +1241,8 @@ std::string EthernetInterface::macAddress(std::string value)
         //      through https://github.com/systemd/systemd/issues/6696
         execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(),
                 "down");
-        manager.writeToConfigurationFile();
+        writeConfigurationFile();
+        manager.reloadConfigs();
     }
 
 #ifdef HAVE_UBOOT_ENV
@@ -1253,7 +1270,9 @@ void EthernetInterface::deleteAll()
 
     // clear all the ip on the interface
     addrs.clear();
-    manager.writeToConfigurationFile();
+
+    writeConfigurationFile();
+    manager.reloadConfigs();
 }
 
 std::string EthernetInterface::defaultGateway(std::string gateway)
@@ -1272,7 +1291,10 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
                               Argument::ARGUMENT_VALUE(gateway.c_str()));
     }
     gw = EthernetInterfaceIntf::defaultGateway(gateway);
-    manager.writeToConfigurationFile();
+
+    writeConfigurationFile();
+    manager.reloadConfigs();
+
     return gw;
 }
 
@@ -1292,7 +1314,10 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
                               Argument::ARGUMENT_VALUE(gateway.c_str()));
     }
     gw = EthernetInterfaceIntf::defaultGateway6(gateway);
-    manager.writeToConfigurationFile();
+
+    writeConfigurationFile();
+    manager.reloadConfigs();
+
     return gw;
 }
 } // namespace network
