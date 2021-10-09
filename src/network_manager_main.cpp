@@ -48,7 +48,6 @@ namespace network
 
 std::unique_ptr<phosphor::network::Manager> manager = nullptr;
 std::unique_ptr<Timer> refreshObjectTimer = nullptr;
-std::unique_ptr<Timer> restartTimer = nullptr;
 
 #ifdef SYNC_MAC_FROM_INVENTORY
 std::unique_ptr<sdbusplus::bus::match::match> EthInterfaceMatch = nullptr;
@@ -244,21 +243,11 @@ void refreshObjects()
     }
 }
 
-/** @brief restart the systemd networkd. */
-void restartNetwork()
-{
-    if (manager)
-    {
-        manager->restartSystemdUnit(phosphor::network::networkdService);
-    }
-}
-
 void initializeTimers()
 {
     auto event = sdeventplus::Event::get_default();
     refreshObjectTimer =
         std::make_unique<Timer>(event, std::bind(refreshObjects));
-    restartTimer = std::make_unique<Timer>(event, std::bind(restartNetwork));
 }
 
 } // namespace network
