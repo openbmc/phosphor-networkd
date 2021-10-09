@@ -45,7 +45,7 @@ class MockManager : public phosphor::network::Manager
                 std::make_pair(std::move(interface), std::move(intf)));
         }
     }
-    MOCK_METHOD1(restartSystemdUnit, void(const std::string& service));
+
     MOCK_METHOD(void, reloadConfigs, (), (override));
 };
 
