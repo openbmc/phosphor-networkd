@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5dcb1054_6630d790",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-10-13T12:20:40Z",
+      "side": 0,
+      "message": "Seems we are using this function multiple places.\nhttps://github.com/openbmc/phosphor-networkd/blob/master/src/dhcp_configuration.cpp#L43 \nhttps://github.com/openbmc/phosphor-networkd/blob/master/src/dhcp_configuration.cpp#L57\n\nhttps://github.com/openbmc/phosphor-networkd/blob/master/src/network_manager.cpp#L108\n..\n..",
+      "range": {
+        "startLine": 259,
+        "startChar": 0,
+        "endLine": 290,
+        "endChar": 1
+      },
+      "revId": "bd649af91ed1fe74efd745e398d5640f4ab6e5af",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
