@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b5d73ca_1f2da183",
+        "filename": "src/dhcp_configuration.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-10-14T14:54:33Z",
+      "side": 0,
+      "message": "This is going to fail, Reload configs doesn\u0027t start/reload the timesyncd service.",
+      "range": {
+        "startLine": 58,
+        "startChar": 2,
+        "endLine": 58,
+        "endChar": 69
+      },
+      "revId": "56ecc78a734ba3f6379392f399240f0702dcd290",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
