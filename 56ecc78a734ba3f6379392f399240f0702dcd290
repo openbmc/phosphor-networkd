@@ -22,6 +22,30 @@
       "revId": "56ecc78a734ba3f6379392f399240f0702dcd290",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e8b46be_8074071c",
+        "filename": "src/dhcp_configuration.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-10-14T18:20:59Z",
+      "side": 0,
+      "message": "It doesn\u0027t have to restart timesyncd, it gets picked up over d-bus automatically.",
+      "parentUuid": "5b5d73ca_1f2da183",
+      "range": {
+        "startLine": 58,
+        "startChar": 2,
+        "endLine": 58,
+        "endChar": 69
+      },
+      "revId": "56ecc78a734ba3f6379392f399240f0702dcd290",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
