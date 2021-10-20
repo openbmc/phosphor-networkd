@@ -486,6 +486,8 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
 {
     EthernetInterfaceIntf::DHCPConf dhcp =
         EthernetInterfaceIntf::DHCPConf::none;
+    bool ipv6AcceptRA{};
+    bool dhcpv6Client{};
     // Get the interface mode value from systemd conf
     // using namespace std::string_literals;
     fs::path confPath = confDir;
@@ -494,28 +496,71 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
     confPath /= fileName;
 
     auto rc = config::ReturnCode::SUCCESS;
-    config::ValueList values;
+    config::ValueList dhcpList, ipv6AcceptRAList, dhcpv6ClientList;
     config::Parser parser(confPath.string());
 
-    std::tie(rc, values) = parser.getValues("Network", "DHCP");
+    std::tie(rc, dhcpList) = parser.getValues("Network", "DHCP");
     if (rc != config::ReturnCode::SUCCESS)
     {
         log<level::DEBUG>("Unable to get the value for Network[DHCP]",
                           entry("RC=%d", rc));
-        return dhcp;
+        dhcpList[0] = "false";
     }
+
+    std::tie(rc, ipv6AcceptRAList) =
+        parser.getValues("Network", "IPv6AcceptRA");
+    if (rc != config::ReturnCode::SUCCESS)
+    {
+        log<level::DEBUG>("Unable to get the value for Network[IPv6AcceptRA]",
+                          entry("RC=%d", rc));
+        // This should never happen in OpenBMC, as IPv6AcceptRA is always
+        // created during system initialization.
+        ipv6AcceptRA = false;
+    }
+    else
+    {
+        ipv6AcceptRA = (ipv6AcceptRAList[0] == "true");
+    }
+
+    std::tie(rc, dhcpv6ClientList) =
+        parser.getValues("IPv6AcceptRA", "DHCPv6Client");
+    if (rc != config::ReturnCode::SUCCESS)
+    {
+        log<level::DEBUG>(
+            "Unable to get the value for IPv6AcceptRA[DHCPv6Client]",
+            entry("RC=%d", rc));
+        dhcpv6Client = false;
+    }
+    else
+    {
+        dhcpv6Client = (dhcpv6ClientList[0] == "true") ||
+                       (dhcpv6ClientList[0] == "always");
+    }
+
     // There will be only single value for DHCP key.
-    if (values[0] == "true")
+    if (((dhcpList[0] == "true") || (dhcpList[0] == "ipv4")) &&
+        (ipv6AcceptRA && dhcpv6Client))
     {
         dhcp = EthernetInterfaceIntf::DHCPConf::both;
     }
-    else if (values[0] == "ipv4")
+    else if (((dhcpList[0] == "true") || (dhcpList[0] == "ipv4")) &&
+             (ipv6AcceptRA && !dhcpv6Client))
+    {
+        dhcp = EthernetInterfaceIntf::DHCPConf::v4v6stateless;
+    }
+    else if ((dhcpList[0] == "ipv4") || (dhcpList[0] == "true"))
     {
         dhcp = EthernetInterfaceIntf::DHCPConf::v4;
     }
-    else if (values[0] == "ipv6")
+    else if (((dhcpList[0] == "ipv6") || (dhcpList[0] == "false")) &&
+             (ipv6AcceptRA && dhcpv6Client))
     {
         dhcp = EthernetInterfaceIntf::DHCPConf::v6;
+    }
+    else if (((dhcpList[0] == "ipv6") || (dhcpList[0] == "false")) &&
+             (ipv6AcceptRA && !dhcpv6Client))
+    {
+        dhcp = EthernetInterfaceIntf::DHCPConf::v6stateless;
     }
     return dhcp;
 }
