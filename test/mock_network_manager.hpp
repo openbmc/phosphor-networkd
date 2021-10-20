@@ -3,6 +3,7 @@
 #include "config.h"
 
 #include "mock_ethernet_interface.hpp"
+#include "network_config.hpp"
 #include "network_manager.hpp"
 
 #include <gmock/gmock.h>
@@ -34,6 +35,11 @@ class MockManager : public phosphor::network::Manager
             fs::path objPath = objectPath;
             // normal ethernet interface
             objPath /= interface;
+            std::string fileName = systemd::config::networkFilePrefix +
+                                   +interface +
+                                   +systemd::config::networkFileSuffix;
+            fs::path dhcpPath = confDir / fileName;
+            phosphor::network::bmc::writeDHCPDefault(dhcpPath, interface);
             auto dhcp = getDHCPValue(confDir, interface);
             auto intf =
                 std::make_shared<phosphor::network::MockEthernetInterface>(
