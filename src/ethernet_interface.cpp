@@ -45,11 +45,32 @@ constexpr auto PROPERTY_INTERFACE = "org.freedesktop.DBus.Properties";
 constexpr auto RESOLVED_SERVICE_PATH = "/org/freedesktop/resolve1/link/";
 constexpr auto METHOD_GET = "Get";
 
-std::map<EthernetInterface::DHCPConf, std::string> mapDHCPToSystemd = {
-    {EthernetInterface::DHCPConf::both, "true"},
-    {EthernetInterface::DHCPConf::v4, "ipv4"},
-    {EthernetInterface::DHCPConf::v6, "ipv6"},
-    {EthernetInterface::DHCPConf::none, "false"}};
+struct DHCPNetworkOptions
+{
+    // See https://systemd.network/systemd.network.html for valid settings
+    const char *DHCP, *IPv6AcceptRA, *DHCPv6Client;
+};
+
+static const std::unordered_map<EthernetInterface::DHCPConf, DHCPNetworkOptions>
+    mapDHCPToSystemd = {
+        {EthernetInterface::DHCPConf::both,
+         DHCPNetworkOptions{
+             .DHCP = "yes", .IPv6AcceptRA = "true", .DHCPv6Client = "always"}},
+        {EthernetInterface::DHCPConf::v4v6stateless,
+         DHCPNetworkOptions{
+             .DHCP = "ipv4", .IPv6AcceptRA = "true", .DHCPv6Client = "false"}},
+        {EthernetInterface::DHCPConf::v4,
+         DHCPNetworkOptions{
+             .DHCP = "ipv4", .IPv6AcceptRA = "false", .DHCPv6Client = "false"}},
+        {EthernetInterface::DHCPConf::v6,
+         DHCPNetworkOptions{
+             .DHCP = "yes", .IPv6AcceptRA = "true", .DHCPv6Client = "always"}},
+        {EthernetInterface::DHCPConf::v6stateless,
+         DHCPNetworkOptions{
+             .DHCP = "no", .IPv6AcceptRA = "true", .DHCPv6Client = "false"}},
+        {EthernetInterface::DHCPConf::none,
+         DHCPNetworkOptions{
+             .DHCP = "no", .IPv6AcceptRA = "false", .DHCPv6Client = "false"}}};
 
 static stdplus::Fd& getIFSock()
 {
@@ -142,38 +163,68 @@ static IP::Protocol convertFamily(int family)
 
 void EthernetInterface::disableDHCP(IP::Protocol protocol)
 {
-    DHCPConf dhcpState = EthernetInterfaceIntf::dhcpEnabled();
-    if (dhcpState == EthernetInterface::DHCPConf::both)
+    const DHCPConf dhcpState = EthernetInterfaceIntf::dhcpEnabled();
+    switch (dhcpState)
     {
-        if (protocol == IP::Protocol::IPv4)
-        {
-            dhcpEnabled(EthernetInterface::DHCPConf::v6);
-        }
-        else if (protocol == IP::Protocol::IPv6)
-        {
-            dhcpEnabled(EthernetInterface::DHCPConf::v4);
-        }
-    }
-    else if ((dhcpState == EthernetInterface::DHCPConf::v4) &&
-             (protocol == IP::Protocol::IPv4))
-    {
-        dhcpEnabled(EthernetInterface::DHCPConf::none);
-    }
-    else if ((dhcpState == EthernetInterface::DHCPConf::v6) &&
-             (protocol == IP::Protocol::IPv6))
-    {
-        dhcpEnabled(EthernetInterface::DHCPConf::none);
+        case EthernetInterface::DHCPConf::both:
+            switch (protocol)
+            {
+                case IP::Protocol::IPv4:
+                    dhcpEnabled(EthernetInterface::DHCPConf::v6);
+                    break;
+                case IP::Protocol::IPv6:
+                    dhcpEnabled(EthernetInterface::DHCPConf::v4);
+                default:
+                    break;
+            }
+            break;
+        case EthernetInterface::DHCPConf::v4v6stateless:
+            switch (protocol)
+            {
+                case IP::Protocol::IPv4:
+                    dhcpEnabled(EthernetInterface::DHCPConf::v6stateless);
+                    break;
+                case IP::Protocol::IPv6:
+                    dhcpEnabled(EthernetInterface::DHCPConf::v4);
+                default:
+                    break;
+            }
+            break;
+        case EthernetInterface::DHCPConf::v6:
+        case EthernetInterface::DHCPConf::v6stateless:
+            if (protocol == IP::Protocol::IPv6)
+            {
+                dhcpEnabled(EthernetInterface::DHCPConf::none);
+            }
+            break;
+        case EthernetInterface::DHCPConf::v4:
+            if (protocol == IP::Protocol::IPv4)
+            {
+                dhcpEnabled(EthernetInterface::DHCPConf::none);
+            }
+            break;
+        default:
+            break;
     }
 }
 
 bool EthernetInterface::dhcpIsEnabled(IP::Protocol family)
 {
-    const auto cur = EthernetInterfaceIntf::dhcpEnabled();
-    return cur == EthernetInterface::DHCPConf::both ||
-           (family == IP::Protocol::IPv6 &&
-            cur == EthernetInterface::DHCPConf::v6) ||
-           (family == IP::Protocol::IPv4 &&
-            cur == EthernetInterface::DHCPConf::v4);
+    switch (EthernetInterfaceIntf::dhcpEnabled())
+    {
+        case EthernetInterface::DHCPConf::both:
+            return true;
+        case EthernetInterface::DHCPConf::v4v6stateless:
+            return ((family == IP::Protocol::IPv4) ||
+                    (family == IP::Protocol::IPv6));
+        case EthernetInterface::DHCPConf::v6stateless:
+        case EthernetInterface::DHCPConf::v6:
+            return (family == IP::Protocol::IPv6);
+        case EthernetInterface::DHCPConf::v4:
+            return (family == IP::Protocol::IPv4);
+        default:
+            return false;
+    }
 }
 
 bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
@@ -533,15 +584,7 @@ std::string EthernetInterface::generateStaticNeighborObjectPath(
 
 bool EthernetInterface::ipv6AcceptRA(bool value)
 {
-    if (value == EthernetInterfaceIntf::ipv6AcceptRA())
-    {
-        return value;
-    }
-    EthernetInterfaceIntf::ipv6AcceptRA(value);
-
-    writeConfigurationFile();
-    manager.reloadConfigs();
-
+    // Deprecated: Do nothing. This is handled directly in dhcpEnabled.
     return value;
 }
 
@@ -994,9 +1037,6 @@ void EthernetInterface::writeConfigurationFile()
 #else
     stream << "LinkLocalAddressing=no\n";
 #endif
-    stream << std::boolalpha
-           << "IPv6AcceptRA=" << EthernetInterfaceIntf::ipv6AcceptRA() << "\n";
-
     // Add the VLAN entry
     for (const auto& intf : vlanInterfaces)
     {
@@ -1015,14 +1055,17 @@ void EthernetInterface::writeConfigurationFile()
         stream << "DNS=" << dns << "\n";
     }
 
-    // Add the DHCP entry
-    stream << "DHCP="s +
-                  mapDHCPToSystemd[EthernetInterfaceIntf::dhcpEnabled()] + "\n";
+    const auto& dhcpOptions =
+        mapDHCPToSystemd.at(EthernetInterfaceIntf::dhcpEnabled());
+
+    // Enable/disable DHCPv4 using the DHCP= entry
+    stream << "DHCP=" << dhcpOptions.DHCP << "\n";
+
+    // Control DHCPv6 using IPv6AcceptRA and DHCPv6Client
+    stream << "IPv6AcceptRA=" << dhcpOptions.IPv6AcceptRA << "\n";
 
     stream << "[IPv6AcceptRA]\n";
-    stream << "DHCPv6Client=";
-    stream << (dhcpIsEnabled(IP::Protocol::IPv6) ? "true" : "false");
-    stream << "\n";
+    stream << "DHCPv6Client=" << dhcpOptions.DHCPv6Client << "\n";
 
     // Static IP addresses
     for (const auto& addr : addrs)

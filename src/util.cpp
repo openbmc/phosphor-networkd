@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include "util.hpp"
 
 #include "config_parser.hpp"
@@ -481,62 +483,95 @@ std::optional<std::string> interfaceToUbootEthAddr(const char* intf)
     return "eth" + std::to_string(idx) + "addr";
 }
 
+struct DHCP
+{
+    bool v4, v6;
+};
+static std::optional<DHCP> systemdParseDHCP(std::string_view str)
+{
+    if (config::icaseeq(str, "ipv4"))
+    {
+        return DHCP{.v4 = true, .v6 = false};
+    }
+    if (config::icaseeq(str, "ipv6"))
+    {
+        return DHCP{.v4 = false, .v6 = true};
+    }
+    if (auto b = config::parseBool(str); b)
+    {
+        return DHCP{.v4 = *b, .v6 = *b};
+    }
+    return std::nullopt;
+}
+
+static std::optional<bool> systemdParseIPv6AcceptRA(std::string_view str)
+{
+    return config::parseBool(str);
+}
+
+static std::optional<bool> systemdParseDhcpv6Client(std::string_view str)
+{
+    if (config::icaseeq(str, "always"))
+    {
+        return true;
+    }
+    return config::parseBool(str);
+}
+
+inline auto systemdParseLast(const config::Parser& config,
+                             std::string_view section, std::string_view key,
+                             auto&& fun)
+{
+    if (auto str = config.map.getLastValueString(section, key); str == nullptr)
+    {
+        auto err = fmt::format("Unable to get the value of {}[{}] from {}",
+                               section, key, config.getFilename().native());
+        log<level::NOTICE>(err.c_str(),
+                           entry("FILE=%s", config.getFilename().c_str()));
+    }
+    else if (auto val = fun(*str); !val)
+    {
+        auto err = fmt::format("Invalid value of {}[{}] from {}: {}", section,
+                               key, config.getFilename().native(), *str);
+        log<level::NOTICE>(err.c_str(), entry("VALUE=%s", str->c_str()),
+                           entry("FILE=%s", config.getFilename().c_str()));
+    }
+    else
+    {
+        return val;
+    }
+    return decltype(fun(std::string_view{}))(std::nullopt);
+}
+
 bool getIPv6AcceptRA(const config::Parser& config)
 {
-    auto value = config.map.getLastValueString("Network", "IPv6AcceptRA");
-    if (value == nullptr)
-    {
-        auto msg = fmt::format(
-            "Unable to get the value for Network[IPv6AcceptRA] from {}",
-            config.getFilename().native());
-        log<level::NOTICE>(msg.c_str(),
-                           entry("FILE=%s", config.getFilename().c_str()));
-        return false;
-    }
-    auto ret = config::parseBool(*value);
-    if (!ret.has_value())
-    {
-        auto msg = fmt::format(
-            "Failed to parse section Network[IPv6AcceptRA] from {}: `{}`",
-            config.getFilename().native(), *value);
-        log<level::NOTICE>(msg.c_str(),
-                           entry("FILE=%s", config.getFilename().c_str()),
-                           entry("VALUE=%s", value->c_str()));
-    }
-    return ret.value_or(false);
+    return systemdParseLast(config, "Network", "IPv6AcceptRA",
+                            systemdParseIPv6AcceptRA)
+        .value_or(true);
 }
 
 EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
 {
-    const auto value = config.map.getLastValueString("Network", "DHCP");
-    if (value == nullptr)
+    // Default values mirrored from src/network_config.cpp
+    auto dhcp = systemdParseLast(config, "Network", "DHCP", systemdParseDHCP)
+                    .value_or(DHCP{.v4 = true, .v6 = true});
+    auto ipv6AcceptRA = getIPv6AcceptRA(config);
+    // We can't default to `true`, as this value was never written in the past
+    // This is not used yet, but will be checked in a future change
+    // auto dhcpv6Client =
+    systemdParseLast(config, "IPv6AcceptRA", "DHCPv6Client",
+                     systemdParseDhcpv6Client);
+
+    using DHCPConf = EthernetInterfaceIntf::DHCPConf;
+    if (dhcp.v6)
     {
-        auto msg =
-            fmt::format("Unable to get the value for Network[DHCP] from {}",
-                        config.getFilename().native());
-        log<level::NOTICE>(msg.c_str(),
-                           entry("FILE=%s", config.getFilename().c_str()));
-        return EthernetInterfaceIntf::DHCPConf::none;
+        return dhcp.v4 ? DHCPConf::both : DHCPConf::v6;
     }
-    if (config::icaseeq(*value, "ipv4"))
+    else if (dhcp.v4)
     {
-        return EthernetInterfaceIntf::DHCPConf::v4;
+        return ipv6AcceptRA ? DHCPConf::v4v6stateless : DHCPConf::v4;
     }
-    if (config::icaseeq(*value, "ipv6"))
-    {
-        return EthernetInterfaceIntf::DHCPConf::v6;
-    }
-    auto ret = config::parseBool(*value);
-    if (!ret.has_value())
-    {
-        auto str = fmt::format("Unable to parse Network[DHCP] from {}: `{}`",
-                               config.getFilename().native(), *value);
-        log<level::NOTICE>(str.c_str(),
-                           entry("FILE=%s", config.getFilename().c_str()),
-                           entry("VALUE=%s", value->c_str()));
-    }
-    return ret.value_or(false) ? EthernetInterfaceIntf::DHCPConf::both
-                               : EthernetInterfaceIntf::DHCPConf::none;
+    return ipv6AcceptRA ? DHCPConf::v6stateless : DHCPConf::none;
 }
 
 namespace mac_address
