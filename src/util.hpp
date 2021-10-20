@@ -128,17 +128,18 @@ bool getIPv6AcceptRA(const config::Parser& config);
 /** @brief read the DHCP value from the configuration file
  *  @param[in] config - The parsed configuration.
  */
-struct DHCPVal
-{
-    bool v4, v6;
-};
-DHCPVal getDHCPValue(const config::Parser& config);
+bool getDHCPValue(const config::Parser& config);
 
 /** @brief Read a boolean DHCP property from a conf file
  *  @param[in] config - The parsed configuration.
  *  @param[in] key - The property name.
  */
 bool getDHCPProp(const config::Parser& config, std::string_view key);
+
+/** @brief read the DHCPv6Client entry in the IPv6AcceptRA subsection
+ *  @param[in] config - The parsed configuration.
+ */
+bool getDHCPv6Client(const config::Parser& config);
 
 namespace internal
 {

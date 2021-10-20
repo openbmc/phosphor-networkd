@@ -162,10 +162,6 @@ class EthernetInterface : public Ifaces
     /** Set value of DHCPEnabled */
     DHCPConf dhcpEnabled() const override;
     DHCPConf dhcpEnabled(DHCPConf value) override;
-    using EthernetInterfaceIntf::dhcp4;
-    bool dhcp4(bool value) override;
-    using EthernetInterfaceIntf::dhcp6;
-    bool dhcp6(bool value) override;
 
     /** Retrieve Link State */
     bool linkUp() const override;
@@ -351,8 +347,17 @@ class EthernetInterface : public Ifaces
      */
     bool queryNicEnabled() const;
 
+    /** @brief Translates systemd.network DHCP values into DHCPConf
+     *  values
+     *  @returns DHCPConf state based on systemd.network contents
+     *           Ex: DHCPConf::v4v6stateless
+     */
+    DHCPConf initDHCPEnabled() const;
+
     std::string vlanIntfName(VlanId id) const;
     std::string vlanObjPath(VlanId id) const;
+
+    bool dhcpv6Client{true};
 };
 
 } // namespace network

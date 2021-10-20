@@ -351,19 +351,15 @@ std::optional<std::string> interfaceToUbootEthAddr(std::string_view intf)
     return fmt::format(FMT_COMPILE("eth{}addr"), idx);
 }
 
-static std::optional<DHCPVal> systemdParseDHCP(std::string_view str)
+static std::optional<bool> systemdParseDHCP(std::string_view str)
 {
     if (config::icaseeq(str, "ipv4"))
     {
-        return DHCPVal{.v4 = true, .v6 = false};
-    }
-    if (config::icaseeq(str, "ipv6"))
-    {
-        return DHCPVal{.v4 = false, .v6 = true};
+        return true;
     }
     if (auto b = config::parseBool(str); b)
     {
-        return DHCPVal{.v4 = *b, .v6 = *b};
+        return b;
     }
     return std::nullopt;
 }
@@ -405,15 +401,22 @@ bool getIPv6AcceptRA(const config::Parser& config)
         .value_or(def);
 }
 
-DHCPVal getDHCPValue(const config::Parser& config)
+bool getDHCPValue(const config::Parser& config)
 {
     return systemdParseLast(config, "Network", "DHCP", systemdParseDHCP)
-        .value_or(DHCPVal{.v4 = true, .v6 = true});
+        .value_or(true);
 }
 
 bool getDHCPProp(const config::Parser& config, std::string_view key)
 {
     return systemdParseLast(config, "DHCP", key, config::parseBool)
+        .value_or(true);
+}
+
+bool getDHCPv6Client(const config::Parser& config)
+{
+    return systemdParseLast(config, "IPv6AcceptRA", "DHCPv6Client",
+                            config::parseBool)
         .value_or(true);
 }
 
