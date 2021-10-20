@@ -164,8 +164,10 @@ void EthernetInterface::disableDHCP(IP::Protocol protocol)
         {
             dhcpEnabled(EthernetInterface::DHCPConf::v6);
         }
-        else if (protocol == IP::Protocol::IPv6)
+        else if (protocol == IP::Protocol::IPv6 &&
+                 !EthernetInterfaceIntf::ipv6AcceptRA())
         {
+            // systemd-networkd defacto enables DHCPv6 when RA is enabled
             dhcpEnabled(EthernetInterface::DHCPConf::v4);
         }
     }
@@ -175,22 +177,28 @@ void EthernetInterface::disableDHCP(IP::Protocol protocol)
         dhcpEnabled(EthernetInterface::DHCPConf::none);
     }
     else if ((dhcpState == EthernetInterface::DHCPConf::v6) &&
-             (protocol == IP::Protocol::IPv6))
+             ((protocol == IP::Protocol::IPv6) &&
+              !EthernetInterfaceIntf::ipv6AcceptRA()))
     {
+        // systemd-networkd defacto enables DHCPv6 when RA is enabled
         dhcpEnabled(EthernetInterface::DHCPConf::none);
     }
 }
 
 bool EthernetInterface::dhcpIsEnabled(IP::Protocol family, bool ignoreProtocol)
 {
-    return ((EthernetInterfaceIntf::dhcpEnabled() ==
-             EthernetInterface::DHCPConf::both) ||
-            ((EthernetInterfaceIntf::dhcpEnabled() ==
-              EthernetInterface::DHCPConf::v6) &&
-             ((family == IP::Protocol::IPv6) || ignoreProtocol)) ||
-            ((EthernetInterfaceIntf::dhcpEnabled() ==
-              EthernetInterface::DHCPConf::v4) &&
-             ((family == IP::Protocol::IPv4) || ignoreProtocol)));
+    bool dhcpv6Enabled = ((EthernetInterfaceIntf::dhcpEnabled() ==
+                           EthernetInterface::DHCPConf::both)) ||
+                         (((EthernetInterfaceIntf::dhcpEnabled() ==
+                            EthernetInterface::DHCPConf::v6)) &&
+                          ((family == IP::Protocol::IPv6) || ignoreProtocol)) ||
+                         EthernetInterfaceIntf::ipv6AcceptRA();
+    bool dhcpv4Enabled = ((EthernetInterfaceIntf::dhcpEnabled() ==
+                           EthernetInterface::DHCPConf::both)) ||
+                         ((EthernetInterfaceIntf::dhcpEnabled() ==
+                           EthernetInterface::DHCPConf::v4) &&
+                          ((family == IP::Protocol::IPv4) || ignoreProtocol));
+    return dhcpv6Enabled || dhcpv4Enabled;
 }
 
 bool EthernetInterface::dhcpToBeEnabled(IP::Protocol family,
@@ -576,6 +584,21 @@ bool EthernetInterface::ipv6AcceptRA(bool value)
         return value;
     }
     EthernetInterfaceIntf::ipv6AcceptRA(value);
+    if (value)
+    {
+        // Per systemd-networkd(5) enabling IPv6AcceptRA automatically implies
+        // DHCPv6 is true. Do not rely on the implied state, explicitly assign
+        // it until systemd-networkd changes its behavior.
+        DHCPConf dhcpState = EthernetInterfaceIntf::dhcpEnabled();
+        if (dhcpState == EthernetInterface::DHCPConf::v4)
+        {
+            dhcpEnabled(EthernetInterface::DHCPConf::both);
+        }
+        else if (dhcpState == EthernetInterface::DHCPConf::none)
+        {
+            dhcpEnabled(EthernetInterface::DHCPConf::v6);
+        }
+    }
 
     writeConfigurationFile();
     manager.reloadConfigs();
