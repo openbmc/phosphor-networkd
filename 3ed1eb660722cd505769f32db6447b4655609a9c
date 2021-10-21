@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa389296_30638bc2",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-10-21T21:37:39Z",
+      "side": 1,
+      "message": "No, it implies the other way around. You can\u0027t do DHCPv6 without parsing RAs, but you can parse RAs and use the information without DHCPv6.",
+      "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
