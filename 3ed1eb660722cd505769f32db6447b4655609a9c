@@ -16,6 +16,24 @@
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f1d80be_66efa3ac",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2021-10-22T15:01:21Z",
+      "side": 1,
+      "message": "William,\nHow do you reconcile that statement against this directly from systemd-network:\n\u0027DHCP\u003d\n.....\nNote that DHCPv6 will by default be triggered by Router\nAdvertisement, if that is enabled, regardless of this parameter.\u0027\n\nIf I set DHCP\u003dv4 or DHCP\u003dnone, systemd-networkd still performs RA, and assigns a DHCPv6 address. So when RA is enabled, \u0027none/ipv4\u0027 is ignored by systemd-networkd.",
+      "parentUuid": "fa389296_30638bc2",
+      "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
