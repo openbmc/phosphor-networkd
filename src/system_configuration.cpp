@@ -3,7 +3,6 @@
 #include "system_configuration.hpp"
 
 #include "network_manager.hpp"
-#include "routing_table.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
@@ -36,11 +35,10 @@ SystemConfiguration::SystemConfiguration(sdbusplus::bus::bus& bus,
     bus(bus), manager(parent)
 {
     auto name = getHostNameFromSystem();
-    route::Table routingTable;
 
     SystemConfigIntf::hostName(name);
-    auto gatewayList = routingTable.getDefaultGateway();
-    auto gateway6List = routingTable.getDefaultGateway6();
+    const auto& gatewayList = manager.getRouteTable().getDefaultGateway();
+    const auto& gateway6List = manager.getRouteTable().getDefaultGateway6();
     // Assign first entry of gateway list
     std::string gateway;
     std::string gateway6;
