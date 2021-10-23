@@ -2,6 +2,7 @@
 
 #include "dhcp_configuration.hpp"
 #include "ethernet_interface.hpp"
+#include "routing_table.hpp"
 #include "system_configuration.hpp"
 #include "vlan_interface.hpp"
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
@@ -155,6 +156,15 @@ class Manager : public details::VLANCreateIface
         return (interfaces.find(intf) != interfaces.end());
     }
 
+    /** @brief Get the routing table owned by the manager
+     *
+     * @return Routing table reference.
+     */
+    inline const auto& getRouteTable() const
+    {
+        return rt;
+    }
+
   protected:
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;
@@ -177,6 +187,9 @@ class Manager : public details::VLANCreateIface
 
     /** @brief Network Configuration directory. */
     fs::path confDir;
+
+    /** @brief The routing table */
+    route::Table rt;
 };
 
 } // namespace network

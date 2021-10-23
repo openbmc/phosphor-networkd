@@ -5,7 +5,6 @@
 #include "config_parser.hpp"
 #include "neighbor.hpp"
 #include "network_manager.hpp"
-#include "routing_table.hpp"
 #include "vlan_interface.hpp"
 
 #include <arpa/inet.h>
@@ -91,13 +90,12 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     EthernetInterfaceIntf::dhcpEnabled(dhcpEnabled);
     EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRAFromConf());
     EthernetInterfaceIntf::nicEnabled(enabled ? *enabled : queryNicEnabled());
-    route::Table routingTable;
-    auto gatewayList = routingTable.getDefaultGateway();
-    auto gateway6List = routingTable.getDefaultGateway6();
+    const auto& gatewayList = manager.getRouteTable().getDefaultGateway();
+    const auto& gateway6List = manager.getRouteTable().getDefaultGateway6();
     std::string defaultGateway;
     std::string defaultGateway6;
 
-    for (auto& gateway : gatewayList)
+    for (const auto& gateway : gatewayList)
     {
         if (gateway.first == intfName)
         {
@@ -106,7 +104,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
         }
     }
 
-    for (auto& gateway6 : gateway6List)
+    for (const auto& gateway6 : gateway6List)
     {
         if (gateway6.first == intfName)
         {
