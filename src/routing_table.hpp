@@ -1,14 +1,9 @@
 #pragma once
-
-#include <asm/types.h>
 #include <linux/netlink.h>
-#include <sys/socket.h>
 
-#include <iostream>
-#include <list>
 #include <map>
 #include <string>
-#include <vector>
+#include <string_view>
 
 namespace phosphor
 {
@@ -54,13 +49,6 @@ class Table
     Table& operator=(Table&&) = default;
 
     /**
-     * @brief gets the list of routes.
-     *
-     * @returns list of routes.
-     */
-    Map getRoutes();
-
-    /**
      * @brief gets the default v4 gateway.
      *
      * @returns the default v4 gateway list.
@@ -82,18 +70,11 @@ class Table
 
   private:
     /**
-     * @brief read the routing data from the socket and fill the buffer.
-     *
-     * @param[in] bufPtr - unique pointer to confidentiality algorithm
-     *                     instance
-     */
-    int readNetLinkSock(int sockFd, std::array<char, BUFSIZE>& buff);
-    /**
      * @brief Parse the route and add it to the route list.
      *
      * @param[in] nlHdr - net link message header.
      */
-    void parseRoutes(const struct nlmsghdr* nlHdr);
+    void parseRoutes(const struct nlmsghdr& nlHdr, std::string_view msg);
 
     std::map<std::string, std::string> defaultGateway;  // default gateway list
     std::map<std::string, std::string> defaultGateway6; // default gateway list
