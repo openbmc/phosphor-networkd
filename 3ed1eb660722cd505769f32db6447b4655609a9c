@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "80a673c2_3198dd11",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000900
+      },
+      "writtenOn": "2021-10-23T01:49:09Z",
+      "side": 1,
+      "message": "Is it really \"systemd-networkd(5)\" for you? It\u0027s systemd.network(5) on my system for the configuration options.",
+      "range": {
+        "startLine": 13,
+        "startChar": 26,
+        "endLine": 13,
+        "endChar": 42
+      },
+      "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9b24a42_5962ae27",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000900
+      },
+      "writtenOn": "2021-10-23T01:49:09Z",
+      "side": 1,
+      "message": "I think \"may\" is the key word. We might get an RA which does not indicate DHCPv6. Or I suppose isn\u0027t it possible we may not get an RA at all even if we accept them? So setting IPv6AcceptRA does not mean that we\u0027ll use DHCPv6.",
+      "range": {
+        "startLine": 21,
+        "startChar": 7,
+        "endLine": 21,
+        "endChar": 10
+      },
+      "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fa389296_30638bc2",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 1
