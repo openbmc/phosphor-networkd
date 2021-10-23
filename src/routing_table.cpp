@@ -23,7 +23,7 @@ namespace route
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-Table::Table()
+void Table::refresh()
 {
     try
     {

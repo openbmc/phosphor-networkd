@@ -167,6 +167,8 @@ void Manager::createInterfaces()
 
 void Manager::createChildObjects()
 {
+    routeTable.refresh();
+
     // creates the ethernet interface dbus object.
     createInterfaces();
 
