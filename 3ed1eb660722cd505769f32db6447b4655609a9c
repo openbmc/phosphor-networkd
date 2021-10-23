@@ -80,6 +80,24 @@
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "712cab87_91f45dbb",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-10-23T23:37:30Z",
+      "side": 1,
+      "message": "It looks like it would make more sense to just set the value of `IPv6AcceptRA.DHCPv6Client` based on the value of DHCPv6 enablement. This would be less surprising than enabling DHCP when the user enables RA.",
+      "parentUuid": "1f1d80be_66efa3ac",
+      "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
