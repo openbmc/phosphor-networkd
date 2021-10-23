@@ -41,29 +41,25 @@ using Map = std::map<std::string, struct Entry>;
 class Table
 {
   public:
-    Table();
-    ~Table() = default;
-    Table(const Table&) = default;
-    Table& operator=(const Table&) = default;
-    Table(Table&&) = default;
-    Table& operator=(Table&&) = default;
+    /** @brief Rebuilds the routing table from the kernel */
+    void refresh();
 
     /**
      * @brief gets the default v4 gateway.
      *
      * @returns the default v4 gateway list.
      */
-    std::map<std::string, std::string> getDefaultGateway() const
+    inline const auto& getDefaultGateway() const
     {
         return defaultGateway;
-    };
+    }
 
     /**
      * @brief gets the default v6 gateway.
      *
      * @returns the default v6 gateway list.
      */
-    std::map<std::string, std::string> getDefaultGateway6() const
+    inline const auto& getDefaultGateway6() const
     {
         return defaultGateway6;
     };
