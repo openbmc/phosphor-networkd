@@ -760,6 +760,28 @@ bool EthernetInterface::queryNicEnabled() const
     return *ret;
 }
 
+static void setNICAdminState(int fd, const char *intf, bool up)
+{
+    ifreq ifr = {};
+    std::strncpy(ifr.ifr_name, intf, IF_NAMESIZE - 1);
+    if (ioctl(fd, SIOCGIFFLAGS, &ifr) != 0)
+    {
+        log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
+                        entry("ERROR=%s", strerror(errno)));
+        elog<InternalFailure>();
+    }
+
+    ifr.ifr_flags &= ~IFF_UP;
+    ifr.ifr_flags |= up ? IFF_UP : 0;
+
+    if (ioctl(fd, SIOCSIFFLAGS, &ifr) != 0)
+    {
+        log<level::ERR>("ioctl failed for SIOCSIFFLAGS:",
+                        entry("ERROR=%s", strerror(errno)));
+        elog<InternalFailure>();
+    }
+}
+
 bool EthernetInterface::nicEnabled(bool value)
 {
     if (value == EthernetInterfaceIntf::nicEnabled())
@@ -772,25 +794,9 @@ bool EthernetInterface::nicEnabled(bool value)
     {
         return EthernetInterfaceIntf::nicEnabled();
     }
+    auto ifname = interfaceName();
+    setNICAdminState(eifSocket.sock, ifname.c_str(), value);
 
-    ifreq ifr = {};
-    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
-    if (ioctl(eifSocket.sock, SIOCGIFFLAGS, &ifr) != 0)
-    {
-        log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
-                        entry("ERROR=%s", strerror(errno)));
-        return EthernetInterfaceIntf::nicEnabled();
-    }
-
-    ifr.ifr_flags &= ~IFF_UP;
-    ifr.ifr_flags |= value ? IFF_UP : 0;
-
-    if (ioctl(eifSocket.sock, SIOCSIFFLAGS, &ifr) != 0)
-    {
-        log<level::ERR>("ioctl failed for SIOCSIFFLAGS:",
-                        entry("ERROR=%s", strerror(errno)));
-        return EthernetInterfaceIntf::nicEnabled();
-    }
     EthernetInterfaceIntf::nicEnabled(value);
 
     writeConfigurationFile();
@@ -1234,11 +1240,23 @@ std::string EthernetInterface::macAddress(std::string value)
         }
         MacAddressIntf::macAddress(validMAC);
 
-        // TODO: would remove the call below and
-        //      just restart systemd-netwokd
-        //      through https://github.com/systemd/systemd/issues/6696
-        execute("/sbin/ip", "ip", "link", "set", "dev", interface.c_str(),
-                "down");
+        // Ensure that the interface gets updated, we need to bring the
+        // interface down and up around assignment to ensure that LLADDRs
+        // get regenerated.
+        EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+        setNICAdminState(eifSocket.sock, interface.c_str(), false);
+        ifreq ifr = {};
+        ifr.ifr_hwaddr.sa_family = ARPHRD_ETHER;
+        std::memcpy(ifr.ifr_hwaddr.sa_data, &newMAC, sizeof(newMAC));
+        std::strncpy(ifr.ifr_name, interface.c_str(), IFNAMSIZ - 1);
+        if (ioctl(eifSocket.sock, SIOCSIFHWADDR, &ifr) != 0)
+        {
+            log<level::ERR>("ioctl failed for SIOCSIFHWADDR:",
+                            entry("ERROR=%s", strerror(errno)));
+            elog<InternalFailure>();
+        }
+        setNICAdminState(eifSocket.sock, interface.c_str(), nicEnabled());
+
         writeConfigurationFile();
         manager.reloadConfigs();
     }
