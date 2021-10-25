@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75ffb7f7_d5713b15",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 782,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-10-25T10:21:48Z",
+      "side": 1,
+      "message": "Can we merge both the calls? I don\u0027t see any difference in the error path..\nWe can set the ifname and the ifr_flags and call the single ioctl call.",
+      "range": {
+        "startLine": 767,
+        "startChar": 1,
+        "endLine": 782,
+        "endChar": 5
+      },
+      "revId": "c13ec340013d775c8616b100c2d4c3579161078e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
