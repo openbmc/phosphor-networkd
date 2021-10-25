@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db093729_39d8837d",
+        "filename": "src/routing_table.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-10-25T03:33:38Z",
+      "side": 0,
+      "message": "I thought it was a guideline that we should be explicitly mention that we are using the default methods.",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 40
+      },
+      "revId": "94e15ab181b39602ee48e0ef9665e54a27b22f26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dd12b885_8ff5d324",
+        "filename": "src/network_manager.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-10-25T03:33:38Z",
+      "side": 1,
+      "message": "descriptive name?",
+      "range": {
+        "startLine": 192,
+        "startChar": 17,
+        "endLine": 192,
+        "endChar": 19
+      },
+      "revId": "1c1d1ee60df7f3ad713d62150f052cf1c056c1af",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6fec7d18_fcebecf4",
+        "filename": "src/routing_table.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-10-25T03:33:38Z",
+      "side": 1,
+      "message": "We are still building the whole table again, I was confused by reading the commit message.\nSeems we are using the same object now by keeping the routing table instance in the network manager?",
+      "range": {
+        "startLine": 28,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 5
+      },
+      "revId": "1c1d1ee60df7f3ad713d62150f052cf1c056c1af",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
