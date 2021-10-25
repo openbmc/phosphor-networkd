@@ -22,6 +22,30 @@
       "revId": "94e15ab181b39602ee48e0ef9665e54a27b22f26",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b1fb1a0_e7737748",
+        "filename": "src/routing_table.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-10-25T04:19:14Z",
+      "side": 0,
+      "message": "That\u0027s implied by default, we don\u0027t need to specify this. Only deleted methods need to be specified.",
+      "parentUuid": "db093729_39d8837d",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 40
+      },
+      "revId": "94e15ab181b39602ee48e0ef9665e54a27b22f26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }

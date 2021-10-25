@@ -45,6 +45,30 @@
       "revId": "1c1d1ee60df7f3ad713d62150f052cf1c056c1af",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c1bfab1_428f361a",
+        "filename": "src/routing_table.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-10-25T04:19:14Z",
+      "side": 1,
+      "message": "Yes, we only refresh the routing table a single time now when a change causes are refresh to occur. If you look at how the code behaved before, it would build a routing table object and query the kernel for every Ethernet interface. On our systems with 7+ interfaces it would rebuild the table 8+ times.",
+      "parentUuid": "6fec7d18_fcebecf4",
+      "range": {
+        "startLine": 28,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 5
+      },
+      "revId": "1c1d1ee60df7f3ad713d62150f052cf1c056c1af",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
