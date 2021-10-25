@@ -22,6 +22,30 @@
       "revId": "c13ec340013d775c8616b100c2d4c3579161078e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f12f5b8_a511ab7d",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 782,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-10-25T18:22:36Z",
+      "side": 1,
+      "message": "Get flags + Set Flags. You need the current set of flags so that you only overwrite the admin state and not the rest of them.",
+      "parentUuid": "75ffb7f7_d5713b15",
+      "range": {
+        "startLine": 767,
+        "startChar": 1,
+        "endLine": 782,
+        "endChar": 5
+      },
+      "revId": "c13ec340013d775c8616b100c2d4c3579161078e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
