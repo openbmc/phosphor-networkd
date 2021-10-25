@@ -46,6 +46,30 @@
       "revId": "94e15ab181b39602ee48e0ef9665e54a27b22f26",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4cf033a7_4bb1a67a",
+        "filename": "src/routing_table.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-10-25T10:15:15Z",
+      "side": 0,
+      "message": "It is good to have this as it improves readability and easy to maintain.\nI understand but I can see other places in the project where it is being followed.\nhttps://github.com/openbmc/sdbusplus/blob/master/include/sdbusplus/bus.hpp#L138.\nJust a suggestion, you can ignore it",
+      "parentUuid": "2b1fb1a0_e7737748",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 40
+      },
+      "revId": "94e15ab181b39602ee48e0ef9665e54a27b22f26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
