@@ -50,13 +50,13 @@ class Neighbor;
 using LinkSpeed = uint16_t;
 using DuplexMode = uint8_t;
 using Autoneg = uint8_t;
-using LinkUp = bool;
+using LinkState = EthernetInterfaceIntf::EthernetLinkState;
 using NICEnabled = bool;
 using MTU = size_t;
 using VlanId = uint32_t;
 using InterfaceName = std::string;
 using InterfaceInfo =
-    std::tuple<LinkSpeed, DuplexMode, Autoneg, LinkUp, NICEnabled, MTU>;
+    std::tuple<LinkSpeed, DuplexMode, Autoneg, LinkState, NICEnabled, MTU>;
 using AddressMap = std::map<std::string, std::shared_ptr<IPAddress>>;
 using NeighborMap = std::map<std::string, std::shared_ptr<Neighbor>>;
 using VlanInterfaceMap =
@@ -167,7 +167,7 @@ class EthernetInterface : public Ifaces
     void disableDHCP(IP::Protocol protocol);
 
     /** Retrieve Link State */
-    bool linkUp() const override;
+    LinkState linkStatus() const override;
 
     /** Retrieve MTU Size */
     size_t mtu() const override;
@@ -241,7 +241,7 @@ class EthernetInterface : public Ifaces
 
     using EthernetInterfaceIntf::dhcpEnabled;
     using EthernetInterfaceIntf::interfaceName;
-    using EthernetInterfaceIntf::linkUp;
+    using EthernetInterfaceIntf::linkStatus;
     using EthernetInterfaceIntf::mtu;
     using EthernetInterfaceIntf::nicEnabled;
     using MacAddressIntf::macAddress;
