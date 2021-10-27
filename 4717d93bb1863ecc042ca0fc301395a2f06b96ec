@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "80bacf83_8d33fb20",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-10-27T05:31:52Z",
+      "side": 0,
+      "message": "BTW you should keep the ioctl call, you can get all 3 states from this if we were to change it\nIFF_UP / IFF_RUNNING flags convey all the info.",
+      "revId": "4717d93bb1863ecc042ca0fc301395a2f06b96ec",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
