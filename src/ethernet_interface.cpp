@@ -123,7 +123,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
     }
     EthernetInterfaceIntf::ntpServers(getNTPServersFromConf());
 
-    EthernetInterfaceIntf::linkUp(linkUp());
+    EthernetInterfaceIntf::linkStatus(linkStatus());
     EthernetInterfaceIntf::mtu(mtu());
 
 #ifdef NIC_SUPPORTS_ETHTOOL
@@ -371,7 +371,7 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
     LinkSpeed speed = {};
     Autoneg autoneg = {};
     DuplexMode duplex = {};
-    LinkUp linkState = {};
+    LinkState linkState = {};
     NICEnabled enabled = {};
     MTU mtuSize = {};
     EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
@@ -394,7 +394,7 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
     }
 
     enabled = nicEnabled();
-    linkState = linkUp();
+    linkState = linkStatus();
     mtuSize = mtu();
 
     return std::make_tuple(speed, duplex, autoneg, linkState, enabled, mtuSize);
@@ -595,26 +595,34 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
     return value;
 }
 
-bool EthernetInterface::linkUp() const
+LinkState EthernetInterface::linkStatus() const
 {
-    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
-    bool value = EthernetInterfaceIntf::linkUp();
+    LinkState value = EthernetInterfaceIntf::linkStatus();
+    std::string carrierStatusPath = {"/sys/class/net/"};
+    char carrierInfo;
 
-    if (eifSocket.sock < 0)
+    carrierStatusPath =
+        carrierStatusPath + std::string(interfaceName().c_str()) + "/carrier";
+    std::fstream carrierStatus(carrierStatusPath);
+    if (carrierStatus.is_open())
     {
-        return value;
-    }
-
-    ifreq ifr = {};
-    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
-    if (ioctl(eifSocket.sock, SIOCGIFFLAGS, &ifr) == 0)
-    {
-        value = static_cast<bool>(ifr.ifr_flags & IFF_RUNNING);
+        carrierStatus >> carrierInfo;
+        if (carrierInfo == '1')
+        {
+            value = EthernetInterface::EthernetLinkState::linkup;
+        }
+        else if (carrierInfo == '0')
+        {
+            value = EthernetInterface::EthernetLinkState::nolink;
+        }
+        else
+        {
+            value = EthernetInterface::EthernetLinkState::linkdown;
+        }
     }
     else
     {
-        log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
-                        entry("ERROR=%s", strerror(errno)));
+        value = EthernetInterface::EthernetLinkState::linkdown;
     }
     return value;
 }
