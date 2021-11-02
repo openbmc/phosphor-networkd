@@ -156,6 +156,12 @@ class Manager : public details::VLANCreateIface
         return routeTable;
     }
 
+    /** supported privilege list **/
+    std::vector<std::string> supportedPrivList;
+
+    /** @brief initializes the supportedPrivilege List */
+    void initSupportedPrivilges();
+
   protected:
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;
@@ -181,6 +187,9 @@ class Manager : public details::VLANCreateIface
 
     /** @brief The routing table */
     route::Table routeTable;
+
+    /** Get the user management service name dynamically **/
+    std::string getUserServiceName();
 };
 
 } // namespace network
