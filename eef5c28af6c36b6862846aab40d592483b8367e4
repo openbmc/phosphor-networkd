@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f9cb3ca6_e7949cdf",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-11-02T16:14:07Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fabd5ef7_bbe3ae72",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 63
+      },
+      "revId": "eef5c28af6c36b6862846aab40d592483b8367e4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7ba08ce_efcc39b4",
         "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 20
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "41efa786_0a8913a9",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-11-02T16:14:07Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b7ba08ce_efcc39b4",
+      "range": {
+        "startLine": 59,
+        "startChar": 3,
+        "endLine": 59,
+        "endChar": 50
+      },
+      "revId": "eef5c28af6c36b6862846aab40d592483b8367e4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b71e25ce_0173e75b",
         "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 20
@@ -59,6 +107,30 @@
       "writtenOn": "2021-10-28T12:58:51Z",
       "side": 1,
       "message": "ahh, these are the BIOS attr name, if there are two or more companies wanted to use the BIOS infrastructure but the BIOS attributes names are different then how can we use this code?\nIs it possible to have some mapping in yaml eg: IntfCount \u003d vmi_if_count and this mapping can be in the meta layer itself?\n\nWilliam, what is your view?",
+      "range": {
+        "startLine": 173,
+        "startChar": 43,
+        "endLine": 173,
+        "endChar": 55
+      },
+      "revId": "eef5c28af6c36b6862846aab40d592483b8367e4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e625467f_986891ca",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-11-02T16:14:07Z",
+      "side": 1,
+      "message": "This was one of the discussions we had earlier.\nEither this code needs to be generic for others to use else put it under company specific flag.\nWe went with the latter..",
+      "parentUuid": "b71e25ce_0173e75b",
       "range": {
         "startLine": 173,
         "startChar": 43,
@@ -91,6 +163,30 @@
       "revId": "eef5c28af6c36b6862846aab40d592483b8367e4",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d849d632_3d25c14a",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-11-02T16:14:07Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f0af2c17_375e4191",
+      "range": {
+        "startLine": 17,
+        "startChar": 31,
+        "endLine": 17,
+        "endChar": 42
+      },
+      "revId": "eef5c28af6c36b6862846aab40d592483b8367e4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
