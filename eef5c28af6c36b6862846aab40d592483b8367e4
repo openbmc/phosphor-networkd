@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "55fc5798_48af1eab",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-11-03T09:06:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9cb3ca6_e7949cdf",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 63
+      },
+      "revId": "eef5c28af6c36b6862846aab40d592483b8367e4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7ba08ce_efcc39b4",
         "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
         "patchSetId": 20
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "Ack",
       "parentUuid": "b7ba08ce_efcc39b4",
+      "range": {
+        "startLine": 59,
+        "startChar": 3,
+        "endLine": 59,
+        "endChar": 50
+      },
+      "revId": "eef5c28af6c36b6862846aab40d592483b8367e4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f6c64dd_d9ed6abd",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-11-03T09:06:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "41efa786_0a8913a9",
       "range": {
         "startLine": 59,
         "startChar": 3,
@@ -178,6 +226,30 @@
       "side": 1,
       "message": "Ack",
       "parentUuid": "f0af2c17_375e4191",
+      "range": {
+        "startLine": 17,
+        "startChar": 31,
+        "endLine": 17,
+        "endChar": 42
+      },
+      "revId": "eef5c28af6c36b6862846aab40d592483b8367e4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8b5ebdc_4d08ec28",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-11-03T09:06:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d849d632_3d25c14a",
       "range": {
         "startLine": 17,
         "startChar": 31,
