@@ -1,6 +1,7 @@
 [Unit]
 Description=Phosphor Network Manager
 After=obmc-mapper.target
+After=systemd-network.service
 
 [Service]
 ExecStart=/usr/bin/env phosphor-network-manager
