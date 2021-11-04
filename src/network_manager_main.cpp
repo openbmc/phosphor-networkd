@@ -318,7 +318,10 @@ int main(int /*argc*/, char** /*argv*/)
 #endif
 
     // Trigger the initial object scan
-    phosphor::network::refreshObjects();
+    // This is intentionally deferred, to ensure that systemd-networkd is
+    // fully configured.
+    phosphor::network::refreshObjectTimer->restartOnce(
+        phosphor::network::refreshTimeout);
 
     sd_event_loop(eventPtr.get());
 }
