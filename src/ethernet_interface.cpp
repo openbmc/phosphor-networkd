@@ -224,6 +224,10 @@ void EthernetInterface::createIPAddressObjects()
     auto currentAddrs = getCurrentAddresses(filter);
     for (const auto& addr : currentAddrs)
     {
+        if (addr.flags & IFA_F_DEPRECATED)
+        {
+            continue;
+        }
         auto address = toString(addr.address);
         IP::Protocol addressType = getProtocol(addr.address);
         IP::AddressOrigin origin = IP::AddressOrigin::Static;
