@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e956a38_15e3d80c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-11-08T14:16:13Z",
+      "side": 1,
+      "message": "Why do we need this in the phosphor-networkd?",
+      "range": {
+        "startLine": 9,
+        "startChar": 2,
+        "endLine": 11,
+        "endChar": 34
+      },
+      "revId": "27e6bf5dd761fa79b8234a6a6b035da50eefdde5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af75b651_ddba7e2a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-11-08T14:16:13Z",
+      "side": 1,
+      "message": "Phosphor-networkd is a wrapper over systemd-networkd, I don\u0027t see the channel specific privileges in the systemd-networkd",
+      "range": {
+        "startLine": 12,
+        "startChar": 2,
+        "endLine": 12,
+        "endChar": 60
+      },
+      "revId": "27e6bf5dd761fa79b8234a6a6b035da50eefdde5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
