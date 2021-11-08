@@ -146,6 +146,24 @@
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08cec233_33e17ebf",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2021-11-08T16:36:22Z",
+      "side": 1,
+      "message": "I began to look at this William. Fundamentally the issue is still the same. The IPMI API does not have an independent way of controlling the RA vs the DHCP entry. That issue has been discussed internally. The expectation is that an ad-hoc solution to work around the IPMI API limitation may not be accepted upstream. I\u0027d like to get guidance from the maintainers concerning this implementation.\n\nIPMI can directly control enabling RA.\nIPMI can directly control enabling DHCP. It does not have independent control of IPv4 vs IPv6.\n\nThis lack of control leaves odd corner cases to handle implicitly. If I follow your suggestion and use IPMI to enable RA, yet leave DHCPv6Client \u003d\u003d false, then IPv6 addrs don\u0027t get assigned. What mechanism should be used to assign DHCPv6Client \u003d\u003d true? If such a mechanism existed in IPMI now, we could always assign DHCPv6Client \u003d\u003d false, and then control the primary DHCP\u003d entry per the rules that the existing code follows now.\n\nI see the following options:\n1. Leave the phosphor-network handling as-is prior to this commit, and don\u0027t support IPMI correctly announcing DHCPv6 state.\n2. Implement what I have submitted, and have an ad-hoc solution to the problem.\n3. Create an OEM extension to SetLan, GetLan that controls DHCPv6 explicitly. Which is basically an ad-hoc solution, just in a different repo (i.e. phoshpor-ipmi-host, or intel-ipmi-oem).",
+      "parentUuid": "712cab87_91f45dbb",
+      "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
