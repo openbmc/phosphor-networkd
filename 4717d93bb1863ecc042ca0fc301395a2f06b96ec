@@ -16,6 +16,24 @@
       "revId": "4717d93bb1863ecc042ca0fc301395a2f06b96ec",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94babf87_c0a59775",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2021-11-08T17:08:02Z",
+      "side": 0,
+      "message": "My experience with the NCSI link is that the ioctl does not report the correct state. When you physically remove the cable from the NCSI channel the ioctl continues to report the IFF_UP, because the BMC MII link is always \"up\". \n\nWhen I investigated this I could not identify a method for determining what the actual state of the link was for the non-NCSI side of the NIC.\nThe ioctl works fine for our BMC dedicated NIC, which is not NCSI.",
+      "parentUuid": "80bacf83_8d33fb20",
+      "revId": "4717d93bb1863ecc042ca0fc301395a2f06b96ec",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
