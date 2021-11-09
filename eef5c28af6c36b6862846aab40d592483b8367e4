@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "88687283_11f98c5e",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-11-09T07:55:40Z",
+      "side": 1,
+      "message": "Asmitha, I was thinking if we can make it generic and others can also use it by making the changes in the yaml.",
+      "parentUuid": "e625467f_986891ca",
+      "range": {
+        "startLine": 173,
+        "startChar": 43,
+        "endLine": 173,
+        "endChar": 55
+      },
+      "revId": "eef5c28af6c36b6862846aab40d592483b8367e4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f0af2c17_375e4191",
         "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
         "patchSetId": 20
