@@ -103,13 +103,9 @@ class Manager : public details::VLANCreateIface
     }
 
     /** @brief create the default network files for each interface
-     *  @detail if force param is true then forcefully create the network
-     *          files otherwise if network file doesn't exist then
-     *          create it.
-     *  @param[in] force - forcefully create the file
      *  @return true if network file created else false
      */
-    bool createDefaultNetworkFiles(bool force);
+    bool createDefaultNetworkFiles();
 
     /** @brief This function gets the MAC address from the VPD and
      *  sets it on the corresponding ethernet interface during first
