@@ -1241,9 +1241,11 @@ std::string EthernetInterface::macAddress(std::string value)
         MacAddressIntf::macAddress(validMAC);
 
         writeConfigurationFile();
-        // The MAC and LLADDRs will only update if the NIC is already down
-        EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
-        setNICAdminState(eifSocket.sock, interface.c_str(), false);
+        manager.addReloadPreHook([interface]() {
+            // The MAC and LLADDRs will only update if the NIC is already down
+            EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+            setNICAdminState(eifSocket.sock, interface.c_str(), false);
+        });
         manager.reloadConfigs();
     }
 
