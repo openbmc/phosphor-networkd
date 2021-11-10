@@ -250,6 +250,19 @@ void Manager::setFistBootMACOnInterface(
 
 void Manager::reloadConfigs()
 {
+    for (auto& hook : reloadPre)
+    {
+        try
+        {
+            hook();
+        }
+        catch (const std::exception& ex)
+        {
+            log<level::ERR>("Failed executing reload hook, ignoring",
+                            entry("ERR=%s", ex.what()));
+        }
+    }
+    reloadPre.clear();
     try
     {
         auto method = bus.new_method_call(NETWORKD_BUSNAME, NETWORKD_PATH,
