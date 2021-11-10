@@ -795,11 +795,18 @@ bool EthernetInterface::nicEnabled(bool value)
         return EthernetInterfaceIntf::nicEnabled();
     }
     auto ifname = interfaceName();
-    setNICAdminState(eifSocket.sock, ifname.c_str(), value);
-
-    EthernetInterfaceIntf::nicEnabled(value);
 
     writeConfigurationFile();
+    if (!value)
+    {
+        // We only need to bring down the interface, networkd will always bring
+        // up managed interfaces
+        manager.addReloadPreHook(
+            [ifname = std::move(ifname), eifSocket = std::move(eifSocket)]() {
+                setNICAdminState(eifSocket.sock, ifname.c_str(), false);
+            });
+    }
+    EthernetInterfaceIntf::nicEnabled(value);
     manager.reloadConfigs();
 
     return value;
