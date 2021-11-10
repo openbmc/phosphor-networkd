@@ -34,6 +34,24 @@
       "revId": "4717d93bb1863ecc042ca0fc301395a2f06b96ec",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8569e916_0b58a2c0",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-11-10T11:31:01Z",
+      "side": 0,
+      "message": "But /sys/class/net/{if}/carrier is hooked up to your NCSI stack and not one of the ioctl values? There must be an ioctl method for querying the same info... or maybe rtnetlink.",
+      "parentUuid": "94babf87_c0a59775",
+      "revId": "4717d93bb1863ecc042ca0fc301395a2f06b96ec",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
