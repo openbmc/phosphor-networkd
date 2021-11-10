@@ -49,27 +49,11 @@ Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath,
     setConfDir(confDir);
 }
 
-bool Manager::createDefaultNetworkFiles(bool force)
+bool Manager::createDefaultNetworkFiles()
 {
     auto isCreated = false;
     try
     {
-        // Directory would have created before with
-        // setConfDir function.
-        if (force)
-        {
-            // Factory Reset case
-            // we need to forcefully write the files
-            // so delete the existing ones.
-            if (fs::is_directory(confDir))
-            {
-                for (const auto& file : fs::directory_iterator(confDir))
-                {
-                    fs::remove(file.path());
-                }
-            }
-        }
-
         auto interfaceStrList = getInterfaces();
         for (const auto& interface : interfaceStrList)
         {
@@ -87,10 +71,8 @@ bool Manager::createDefaultNetworkFiles(bool force)
             filePath /= fileName;
 
             // create the interface specific network file
-            // if not exist or we forcefully wants to write
-            // the network file.
-
-            if (force || !fs::is_regular_file(filePath.string()))
+            // if not existing.
+            if (!fs::is_regular_file(filePath.string()))
             {
                 bmc::writeDHCPDefault(filePath.string(), interface);
                 log<level::INFO>("Created the default network file.",
@@ -194,14 +176,15 @@ ObjectPath Manager::vlan(IntfName interfaceName, uint32_t id)
 
 void Manager::reset()
 {
-    if (!createDefaultNetworkFiles(true))
+    if (fs::is_directory(confDir))
     {
-        log<level::ERR>("Network Factory Reset failed.");
-        return;
-        // TODO: openbmc/openbmc#1721 - Log ResetFailed error here.
+        for (const auto& file : fs::directory_iterator(confDir))
+        {
+            fs::remove(file.path());
+        }
     }
-
-    log<level::INFO>("Network Factory Reset done.");
+    createDefaultNetworkFiles();
+    log<level::INFO>("Network Factory Reset queued.");
 }
 
 // Need to merge the below function with the code which writes the
