@@ -374,5 +374,8 @@ class EthernetInterface : public Ifaces
     bool queryNicEnabled() const;
 };
 
+/** @brief Sets the adminstrative state of the interface */
+void setNICAdminState(int fd, const char* intf, bool up);
+
 } // namespace network
 } // namespace phosphor

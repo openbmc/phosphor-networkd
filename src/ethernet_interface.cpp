@@ -760,7 +760,7 @@ bool EthernetInterface::queryNicEnabled() const
     return *ret;
 }
 
-static void setNICAdminState(int fd, const char* intf, bool up)
+void setNICAdminState(int fd, const char* intf, bool up)
 {
     ifreq ifr = {};
     std::strncpy(ifr.ifr_name, intf, IF_NAMESIZE - 1);
