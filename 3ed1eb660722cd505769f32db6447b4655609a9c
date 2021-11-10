@@ -164,6 +164,24 @@
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10e06538_1601aae0",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-11-10T10:30:08Z",
+      "side": 1,
+      "message": "My opinion would be to keep these independent options at the dbus level, so that other client can configure them independently but have IPMI set them both to the same value when \"IPv6 Router Address Configuration Control\" is set. It\u0027s pretty clear in the IPMI spec that they expect DHCPv6 to be a possible option when dynamic router control is enabled. Having it disabled should then disable DHCPv6 too.\n\nIt would be really nice to decouple DHCPv6 from the DHCPv4 settings in the lan config.",
+      "parentUuid": "08cec233_33e17ebf",
+      "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
