@@ -125,9 +125,14 @@ class Manager : public details::VLANCreateIface
     void setFistBootMACOnInterface(
         const std::pair<std::string, std::string>& ethPair);
 
-    /** @brief Tell systemd-network to reload all of the network configurations
+    /** @brief Arms a timer to tell systemd-network to reload all of the network
+     * configurations
      */
     virtual void reloadConfigs();
+
+    /** @brief Tell systemd-network to reload all of the network configurations
+     */
+    void doReloadConfigs();
 
     /** @brief Returns the number of interfaces under this manager.
      *

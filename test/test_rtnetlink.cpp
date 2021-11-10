@@ -21,7 +21,6 @@ namespace network
 sdbusplus::bus::bus bus(sdbusplus::bus::new_default());
 extern std::unique_ptr<MockManager> manager;
 extern std::unique_ptr<Timer> refreshObjectTimer;
-extern std::unique_ptr<Timer> restartTimer;
 EventPtr eventPtr = nullptr;
 
 class TestRtNetlink : public testing::Test

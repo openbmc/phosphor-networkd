@@ -35,7 +35,7 @@ namespace phosphor
 namespace network
 {
 
-extern std::unique_ptr<Timer> refreshObjectTimer;
+extern std::unique_ptr<Timer> reloadTimer;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
@@ -249,6 +249,14 @@ void Manager::setFistBootMACOnInterface(
 #endif
 
 void Manager::reloadConfigs()
+{
+    if (!reloadTimer->isEnabled())
+    {
+        reloadTimer->restartOnce(reloadTimeout);
+    }
+}
+
+void Manager::doReloadConfigs()
 {
     for (auto& hook : reloadPre)
     {
