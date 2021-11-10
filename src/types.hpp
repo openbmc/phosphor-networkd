@@ -30,9 +30,9 @@ using namespace std::chrono_literals;
 // wait for three seconds before reloading systemd-networkd
 constexpr auto reloadTimeout = 3s;
 
-// refresh the objets after five seconds as network
-// configuration takes 3-4 sec after systemd-networkd restart.
-constexpr auto refreshTimeout = reloadTimeout + 7s;
+// refresh the objets after four seconds as network
+// configuration takes 3-4 sec to reconfigure at most.
+constexpr auto refreshTimeout = 4s;
 
 namespace systemd
 {

@@ -35,6 +35,7 @@ namespace phosphor
 namespace network
 {
 
+extern std::unique_ptr<Timer> refreshObjectTimer;
 extern std::unique_ptr<Timer> reloadTimer;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
@@ -251,6 +252,8 @@ void Manager::setFistBootMACOnInterface(
 void Manager::reloadConfigs()
 {
     reloadTimer->restartOnce(reloadTimeout);
+    // Ensure that the next refresh happens after reconfiguration
+    refreshObjectTimer->setRemaining(reloadTimeout + refreshTimeout);
 }
 
 void Manager::doReloadConfigs()
@@ -280,6 +283,8 @@ void Manager::doReloadConfigs()
                         entry("ERR=%s", ex.what()));
         elog<InternalFailure>();
     }
+    // Ensure reconfiguration has enough time
+    refreshObjectTimer->setRemaining(refreshTimeout);
 }
 
 } // namespace network
