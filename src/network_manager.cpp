@@ -187,8 +187,30 @@ ObjectPath Manager::vlan(IntfName interfaceName, uint32_t id)
     return interfaces[interfaceName]->createVLAN(id);
 }
 
+static void disableAllInterfaces()
+{
+    auto interfaceStrList = getInterfaces();
+    int sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
+    for (const auto& interface : interfaceStrList)
+    {
+        try
+        {
+            setNICAdminState(sock, interface.c_str(), false);
+        }
+        catch (const std::exception& ex)
+        {
+            log<level::ERR>("Failed to disable interface",
+                            entry("ERROR=%s", ex.what()),
+                            entry("INTERFACE=%s", interface.c_str()));
+        }
+    }
+    close(sock);
+}
+
 void Manager::reset()
 {
+    log<level::INFO>("Network Factory Reset begin.");
+
     if (fs::is_directory(confDir))
     {
         for (const auto& file : fs::directory_iterator(confDir))
@@ -197,7 +219,15 @@ void Manager::reset()
         }
     }
     createDefaultNetworkFiles();
-    log<level::INFO>("Network Factory Reset queued.");
+    disableAllInterfaces();
+    reloadPre.clear();
+    doReloadConfigs();
+
+    interfaces.clear();
+    systemConf.reset();
+    dhcpConf.reset();
+
+    log<level::INFO>("Network Factory Reset done.");
 }
 
 // Need to merge the below function with the code which writes the
