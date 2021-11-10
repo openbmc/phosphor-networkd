@@ -308,9 +308,7 @@ int main(int /*argc*/, char** /*argv*/)
 
     // create the default network files if the network file
     // is not there for any interface.
-    // Parameter false means don't create the network
-    // files forcefully.
-    if (phosphor::network::manager->createDefaultNetworkFiles(false))
+    if (phosphor::network::manager->createDefaultNetworkFiles())
     {
         phosphor::network::manager->reloadConfigs();
     }
