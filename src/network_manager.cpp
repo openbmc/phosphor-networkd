@@ -30,6 +30,8 @@ constexpr char NETWORKD_BUSNAME[] = "org.freedesktop.network1";
 constexpr char NETWORKD_PATH[] = "/org/freedesktop/network1";
 constexpr char NETWORKD_INTERFACE[] = "org.freedesktop.network1.Manager";
 
+constexpr char DEFAULT_CONF_DIR[] = "/usr/share/phosphor-networkd/default/";
+
 namespace phosphor
 {
 namespace network
@@ -73,9 +75,20 @@ bool Manager::createDefaultNetworkFiles()
             // if not existing.
             if (!fs::is_regular_file(filePath.string()))
             {
-                bmc::writeDHCPDefault(filePath.string(), interface);
-                log<level::INFO>("Created the default network file.",
-                                 entry("INTERFACE=%s", interface.c_str()));
+                // Use a template if possible, otherwise fallback to generation
+                fs::path defPath = confDir / fileName;
+                std::error_code ec;
+                if (fs::exists(defPath) && fs::copy_file(defPath, filePath, ec))
+                {
+                    log<level::INFO>("Copied default network file.",
+                                     entry("INTERFACE=%s", interface.c_str()));
+                }
+                else
+                {
+                    bmc::writeDHCPDefault(filePath.string(), interface);
+                    log<level::INFO>("Created the default network file.",
+                                     entry("INTERFACE=%s", interface.c_str()));
+                }
                 isCreated = true;
             }
         }
