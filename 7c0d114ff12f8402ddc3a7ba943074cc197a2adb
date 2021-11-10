@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48d58d38_bf27cd71",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000044
+      },
+      "writtenOn": "2021-11-10T02:27:49Z",
+      "side": 1,
+      "message": "This should be using DEFAULT_CONF_DIR instead of confDir.",
+      "revId": "7c0d114ff12f8402ddc3a7ba943074cc197a2adb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
