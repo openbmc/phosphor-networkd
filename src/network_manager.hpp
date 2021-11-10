@@ -8,10 +8,11 @@
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
 
 #include <filesystem>
-#include <list>
+#include <function2/function2.hpp>
 #include <memory>
 #include <sdbusplus/bus.hpp>
 #include <string>
+#include <utility>
 #include <vector>
 #include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
 
@@ -156,6 +157,15 @@ class Manager : public details::VLANCreateIface
         return routeTable;
     }
 
+    /** @brief Adds a hook that runs immediately prior to reloading
+     *
+     *  @param[in] hook - The hook to execute before reloading
+     */
+    inline void addReloadPreHook(fu2::unique_function<void()>&& hook)
+    {
+        reloadPreHooks.push_back(std::move(hook));
+    }
+
   protected:
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;
@@ -181,6 +191,9 @@ class Manager : public details::VLANCreateIface
 
     /** @brief The routing table */
     route::Table routeTable;
+
+    /** @brief List of hooks to execute during the next reload */
+    std::vector<fu2::unique_function<void()>> reloadPreHooks;
 };
 
 } // namespace network
