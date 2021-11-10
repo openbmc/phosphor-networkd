@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c0a9b516_de6a1a0b",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-11-10T04:45:01Z",
+      "side": 1,
+      "message": "I thought this was the old behavior and merely tried to keep in consistent. Yeah, apparently refresh and restart timers had different behavior. Originally I had it the way you suggested.\n\nDone.",
+      "parentUuid": "c687d82d_bea5eef9",
+      "revId": "ebd2abc2c9094ffbd3b14c1231c6c19d8c91c15f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a92ab68_2309c525",
         "filename": "src/types.hpp",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "ebd2abc2c9094ffbd3b14c1231c6c19d8c91c15f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b98e205a_49f77746",
+        "filename": "src/types.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-11-10T04:45:01Z",
+      "side": 1,
+      "message": "Split this into another change.",
+      "parentUuid": "8a92ab68_2309c525",
+      "revId": "ebd2abc2c9094ffbd3b14c1231c6c19d8c91c15f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
