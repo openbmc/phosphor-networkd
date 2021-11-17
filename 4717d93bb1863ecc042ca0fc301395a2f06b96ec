@@ -52,6 +52,24 @@
       "revId": "4717d93bb1863ecc042ca0fc301395a2f06b96ec",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ad5d572_b2717fc0",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1001244
+      },
+      "writtenOn": "2021-11-17T04:41:07Z",
+      "side": 0,
+      "message": "My observation was also, the ioctl was not giving correct status, when cable was removed for both dedicated and shared NIC (aka NC-SI). I will update here, which flags will be reported by ioctl when NIC cable is removed.",
+      "parentUuid": "8569e916_0b58a2c0",
+      "revId": "4717d93bb1863ecc042ca0fc301395a2f06b96ec",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
