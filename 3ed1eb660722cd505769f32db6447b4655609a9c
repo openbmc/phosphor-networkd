@@ -96,6 +96,29 @@
     },
     {
       "key": {
+        "uuid": "fa97867f_47379d8a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-11-18T10:39:39Z",
+      "side": 1,
+      "message": "Jonathan, Ipv6acceptRA is for accepting any RA messages(SLAAC configuration.)\n\nIn RA message, if M(managed) flag is set: Then BMC should discard the prefix given by the autoconf router(radvd) and send the solicit message to DHCP server and get the IP from the DHCP server.\n\nRA is needed in both the cases(Stateful/Stateless) either you get the IP from DHCP server or not as it depends on the RA payload.\n\nAre your proposal is to treat both stateless and stateful dhcp should be treated as DHCP.",
+      "range": {
+        "startLine": 16,
+        "startChar": 1,
+        "endLine": 21,
+        "endChar": 58
+      },
+      "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fa389296_30638bc2",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 1
