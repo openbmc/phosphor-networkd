@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "dda1cd28_8f9a9170",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-11-18T10:43:55Z",
+      "side": 1,
+      "message": "Can you share your radvd.conf and dhcpv6d.conf? I was trying to test the stateful but BMC is not sending the DHCPv6 solicit messages even if the RA message contains the M flag as true.",
+      "parentUuid": "fa97867f_47379d8a",
+      "range": {
+        "startLine": 16,
+        "startChar": 1,
+        "endLine": 21,
+        "endChar": 58
+      },
+      "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fa389296_30638bc2",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 1
