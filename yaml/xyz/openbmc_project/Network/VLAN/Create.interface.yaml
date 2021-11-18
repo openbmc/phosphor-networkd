@@ -17,3 +17,5 @@ methods:
           type: path
           description: >
             The path for the created VLAN object.
+      errors:
+        - xyz.openbmc_project.Common.Error.ResourceNotFound
