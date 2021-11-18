@@ -188,6 +188,11 @@ void Manager::createChildObjects()
 
 ObjectPath Manager::vlan(IntfName interfaceName, uint32_t id)
 {
+    if (!hasInterface(interfaceName.c_str()))
+    {
+        elog<ResourceNotFound>();
+    }
+
     return interfaces[interfaceName]->createVLAN(id);
 }
 
