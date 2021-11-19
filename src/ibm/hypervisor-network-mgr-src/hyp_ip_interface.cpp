@@ -38,6 +38,49 @@ HypIPAddress::HypIPAddress(sdbusplus::bus::bus& bus, const char* objPath,
 
     this->objectPath = objPath;
     this->intf = intf;
+
+    // De-serialize the persisted data and set the dbus property
+    persistdata::deserialize(nwIPConfigList, intf);
+    setEnabledProp();
+}
+
+void HypIPAddress::setEnabledProp()
+{
+    auto itr = nwIPConfigList.find("Enabled");
+    if (itr != nwIPConfigList.end())
+    {
+        HypIPAddress::enabled(std::get<bool>(itr->second));
+    }
+}
+
+bool HypIPAddress::enabled(bool value)
+{
+    log<level::INFO>("Changing value of enabled property");
+
+    if (value == HypEnableIntf::enabled())
+    {
+        return value;
+    }
+
+    HypEnableIntf::enabled(value);
+
+    std::string propName = "Enabled";
+
+    auto mapItr = nwIPConfigList.find(propName);
+
+    if (mapItr != nwIPConfigList.end())
+    {
+        // Update the value of the key (DHCPEnabled) to true
+        mapItr->second = value;
+    }
+    else
+    {
+        // Insert the key value pair (DHCPEnabled, true)
+        nwIPConfigList.insert(std::pair<std::string, bool>(propName, value));
+    }
+    // serialize the data
+    persistdata::serialize(nwIPConfigList, intf);
+    return value;
 }
 
 std::string HypIPAddress::getObjPath()
