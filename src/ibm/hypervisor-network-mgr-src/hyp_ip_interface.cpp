@@ -55,7 +55,73 @@ HypIPAddress::HypIPAddress(sdbusplus::bus::bus& bus,
     HypIP::origin(origin, true);
     HypIP::gateway(gateway);
 
+    std::string addressType;
+    if (HypIP::type() == HypIP::Protocol::IPv4)
+    {
+        addressType = "ipv4";
+    }
+    else if (HypIP::type() == HypIP::Protocol::IPv6)
+    {
+        addressType = "ipv6";
+    }
+
+    // De-serialize the persisted data and set the dbus property
+    persistdata::deserialize(nwIPConfigList, intf, addressType);
+    setEnabledProp();
     emit_object_added();
+}
+
+void HypIPAddress::setEnabledProp()
+{
+    auto itr = nwIPConfigList.find("Enabled");
+    if (itr != nwIPConfigList.end())
+    {
+        HypIPAddress::enabled(std::get<bool>(itr->second));
+    }
+}
+
+bool HypIPAddress::enabled(bool value)
+{
+    bool oldValue = HypEnableIntf::enabled();
+    lg2::info(
+        "Changing value of enabled property. Interface: {INTF}, Old Value: {OLDVAL}, New Value: {NEWVAL}",
+        "INTF", intf, "OLDVAL", oldValue, "NEWVAL", value);
+
+    if (value == oldValue)
+    {
+        return value;
+    }
+
+    HypEnableIntf::enabled(value);
+
+    std::string propName = "Enabled";
+
+    auto mapItr = nwIPConfigList.find(propName);
+
+    if (mapItr != nwIPConfigList.end())
+    {
+        // Update the value of the key (Enabled) to true
+        mapItr->second = value;
+    }
+    else
+    {
+        // Insert the key value pair (Enabled, true)
+        nwIPConfigList.insert(std::pair<std::string, bool>(propName, value));
+    }
+
+    std::string type;
+    if (HypIP::type() == HypIP::Protocol::IPv4)
+    {
+        type = "ipv4";
+    }
+    else if (HypIP::type() == HypIP::Protocol::IPv6)
+    {
+        type = "ipv6";
+    }
+
+    // serialize the data
+    persistdata::serialize(nwIPConfigList, intf, type);
+    return value;
 }
 
 std::string HypIPAddress::getHypPrefix()
