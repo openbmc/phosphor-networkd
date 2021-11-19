@@ -18,6 +18,7 @@ executable(
   'hyp_sys_config.cpp',
   'hyp_ethernet_interface.cpp',
   'hyp_ip_interface.cpp',
+  'hyp_nw_config_serialize.cpp',
   implicit_include_directories: false,
   dependencies: networkd_dep,
   install: true,
