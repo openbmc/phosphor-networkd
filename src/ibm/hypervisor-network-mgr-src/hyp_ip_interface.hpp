@@ -1,6 +1,7 @@
 #pragma once
 
 #include "hyp_ethernet_interface.hpp"
+#include "hyp_nw_config_serialize.hpp"
 #include "util.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>
@@ -24,6 +25,7 @@ using HypIPIfaces = sdbusplus::server::object::object<
     sdbusplus::xyz::openbmc_project::Object::server::Enable>;
 
 using HypIP = sdbusplus::xyz::openbmc_project::Network::server::IP;
+using HypEnableIntf = sdbusplus::xyz::openbmc_project::Object::server::Enable;
 
 using PendingAttributesType =
     std::map<std::string,
@@ -110,6 +112,20 @@ class HypIPAddress : public HypIPIfaces
      */
     stdplus::InAnyAddr getIpAddress();
 
+    /** @brief Method to set the enabled prop onto dbus from the
+     *         persisted file whenever the service starts
+     */
+    void setEnabledProp();
+
+    /** @brief Method to set the enabled prop. xyz.openbmc_project.Object.Enable
+     *         interface consists of "Enabled" property.
+     *  @param[in] value - true/false indicating if the host consumes the ip
+     *  @result true/false
+     */
+    bool enabled(bool value) override;
+
+    using HypEnableIntf::enabled;
+
     using HypIP::address;
     using HypIP::gateway;
     using HypIP::origin;
@@ -119,6 +135,9 @@ class HypIPAddress : public HypIPIfaces
   private:
     /** @brief Hypervisor ethernet interface id. */
     std::string intf;
+
+    /** @brief List of the properties to be persisted */
+    persistdata::NwConfigPropMap nwIPConfigList;
 
     /** @brief Parent Object. */
     stdplus::PinnedRef<HypEthInterface> parent;
