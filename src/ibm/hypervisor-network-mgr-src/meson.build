@@ -19,6 +19,7 @@ hyp_networkd_lib = static_library(
   'hyp_sys_config.cpp',
   'hyp_ethernet_interface.cpp',
   'hyp_ip_interface.cpp',
+  'hyp_nw_config_serialize.cpp',
   implicit_include_directories: false,
   include_directories: [src_includes, hyp_src_includes],
   dependencies: networkd_deps)
