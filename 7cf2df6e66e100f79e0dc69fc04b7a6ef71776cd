@@ -22,6 +22,30 @@
       "revId": "7cf2df6e66e100f79e0dc69fc04b7a6ef71776cd",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e331840_ecad4b77",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2021-11-22T21:27:05Z",
+      "side": 1,
+      "message": "Unmanaged\u003dyes doesn\u0027t cause networkd to turn the interface off, it just tells it to ignore it. We still need to turn it off.",
+      "parentUuid": "1d436378_3d9a9c3b",
+      "range": {
+        "startLine": 804,
+        "startChar": 6,
+        "endLine": 807,
+        "endChar": 15
+      },
+      "revId": "7cf2df6e66e100f79e0dc69fc04b7a6ef71776cd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
