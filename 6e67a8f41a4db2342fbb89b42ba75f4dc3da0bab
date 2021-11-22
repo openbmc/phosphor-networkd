@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d85ba18f_7f6d1842",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-11-22T13:57:53Z",
+      "side": 1,
+      "message": "why do we want this function which is not doing any abstraction, You could have made the system conf pointer scope as public.",
+      "range": {
+        "startLine": 127,
+        "startChar": 1,
+        "endLine": 130,
+        "endChar": 5
+      },
+      "revId": "6e67a8f41a4db2342fbb89b42ba75f4dc3da0bab",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
