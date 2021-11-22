@@ -22,6 +22,30 @@
       "revId": "6e67a8f41a4db2342fbb89b42ba75f4dc3da0bab",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8388b37d_5caa9661",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2021-11-22T17:09:14Z",
+      "side": 1,
+      "message": "Since I have put this as a member of this class and as private, i had a getter method for the same. I think i should have declared \u0026 defined this method as public.\n\nIf this is the case (move this method to public), will this do? or do you still think making the pointer as public?",
+      "parentUuid": "d85ba18f_7f6d1842",
+      "range": {
+        "startLine": 127,
+        "startChar": 1,
+        "endLine": 130,
+        "endChar": 5
+      },
+      "revId": "6e67a8f41a4db2342fbb89b42ba75f4dc3da0bab",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
