@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "79bad7c8_5ca89d93",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-11-22T12:08:23Z",
+      "side": 1,
+      "message": "Changes looks good to me, How it is going to be used? Can you just get me an example?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 63
+      },
+      "revId": "3d06421505a1c7cf283faa2dd6bd61d1f2eb4305",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8fcd825c_1122c8b9",
         "filename": "src/network_manager.cpp",
         "patchSetId": 1
@@ -83,6 +106,30 @@
       "writtenOn": "2021-11-10T02:50:08Z",
       "side": 1,
       "message": "Possibly rename to something like addPreReloadHook(), or addPreReloadHandler(), for better understanding.",
+      "range": {
+        "startLine": 164,
+        "startChar": 16,
+        "endLine": 164,
+        "endChar": 28
+      },
+      "revId": "3d06421505a1c7cf283faa2dd6bd61d1f2eb4305",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be59ccbc_59c13509",
+        "filename": "src/network_manager.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-11-22T12:08:23Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "328c7f6f_ad67b433",
       "range": {
         "startLine": 164,
         "startChar": 16,
