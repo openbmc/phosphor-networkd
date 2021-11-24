@@ -70,6 +70,24 @@
       "revId": "4717d93bb1863ecc042ca0fc301395a2f06b96ec",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c636b03_5ab3725d",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1001244
+      },
+      "writtenOn": "2021-11-24T13:10:04Z",
+      "side": 0,
+      "message": "Yes, @William A. Kennington III : Using IFF_UP / IFF_RUNNING we can get the link status. I have fixed this issue.\n\n@Johnathan Mantey : You are right. On NCSI port when the ethernet cable is removed CARRIER is still available. So the code will report administrative status for NCSI port even though when the cable is removed.",
+      "parentUuid": "3ad5d572_b2717fc0",
+      "revId": "4717d93bb1863ecc042ca0fc301395a2f06b96ec",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
     }
   ]
 }
