@@ -88,6 +88,24 @@
       "revId": "4717d93bb1863ecc042ca0fc301395a2f06b96ec",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13752440_b04a8bf4",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1001244
+      },
+      "writtenOn": "2021-11-24T13:51:32Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "2c636b03_5ab3725d",
+      "revId": "4717d93bb1863ecc042ca0fc301395a2f06b96ec",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": false
     }
   ]
 }
