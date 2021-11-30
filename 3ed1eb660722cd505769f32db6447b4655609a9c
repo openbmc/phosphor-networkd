@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "0b247515_31c6fe96",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2021-11-30T19:20:46Z",
+      "side": 1,
+      "message": "Ratan,\nI don\u0027t, as yet, understand how Stateless/Stateful are supposed to operate. Right now the OBMC really only performs stateful DHCPv6. \n\nMy radvd.conf:\ninterface enp3s0 {\n        AdvSendAdvert on;\n        AdvManagedFlag on;\n        MinRtrAdvInterval 3;\n        MaxRtrAdvInterval 10;\n        prefix 2112:1020:1::/64 {\n                AdvOnLink on;\n                AdvAutonomous off;\n                AdvRouterAddr on;\n        };\n\n\nMost of my dhcpdv6.conf file is an unmodified isc-dhcpv6-server as created on my Ubuntu 20.04 system. I left the lease times alone. I do not define any name server/domain search lists. The business end of address assignment is done by the lines below:\nhost otherclient {                 \n        # This host entry is hopefully matched if the client supplies a DUID-LL              \n        # or DUID-LLT containing this MAC address.                                           \n        host-identifier option                \n                dhcp6.client-id 00:02:00:00:ab:11:4d:f5:b2:75:58:2a:25:37;                   \n                fixed-address6 2112:1020:1::3;                                               \n}\nsubnet6 2112:1020:1::/64 {                                                                                                                                                                \n        range6 2112:1020:1::2 2112:1020:1::3;                                                \n}\n\nI think this config is technically in error, as the \"host otherhost\" should not have a fixed address inside the dynamically assigned subnet6 range. I also need to change this to a fdxx local address assignment space.",
+      "parentUuid": "dda1cd28_8f9a9170",
+      "range": {
+        "startLine": 16,
+        "startChar": 1,
+        "endLine": 21,
+        "endChar": 58
+      },
+      "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fa389296_30638bc2",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 1
