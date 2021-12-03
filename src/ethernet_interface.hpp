@@ -353,13 +353,6 @@ class EthernetInterface : public Ifaces
      */
     bool dhcpIsEnabled(IP::Protocol protocol);
 
-    /** @brief Determines if DHCP will be active following next reconfig
-     *  @param[in] protocol - Either IPv4 or IPv6
-     *  @param[in] nextDHCPState - The new DHCP mode to take affect
-     *  @returns true/false value if DHCP is active for the input protocol
-     */
-    bool dhcpToBeEnabled(IP::Protocol family, const std::string& nextDHCPState);
-
     /** @brief Determines if the address is manually assigned
      *  @param[in] origin - The origin entry of the IP::Address
      *  @returns true/false value if the address is static
