@@ -179,16 +179,14 @@ void EthernetInterface::disableDHCP(IP::Protocol protocol)
     }
 }
 
-bool EthernetInterface::dhcpIsEnabled(IP::Protocol family, bool ignoreProtocol)
+bool EthernetInterface::dhcpIsEnabled(IP::Protocol family)
 {
-    return ((EthernetInterfaceIntf::dhcpEnabled() ==
-             EthernetInterface::DHCPConf::both) ||
-            ((EthernetInterfaceIntf::dhcpEnabled() ==
-              EthernetInterface::DHCPConf::v6) &&
-             ((family == IP::Protocol::IPv6) || ignoreProtocol)) ||
-            ((EthernetInterfaceIntf::dhcpEnabled() ==
-              EthernetInterface::DHCPConf::v4) &&
-             ((family == IP::Protocol::IPv4) || ignoreProtocol)));
+    const auto cur = EthernetInterfaceIntf::dhcpEnabled();
+    return cur == EthernetInterface::DHCPConf::both ||
+           (family == IP::Protocol::IPv6 &&
+            cur == EthernetInterface::DHCPConf::v6) ||
+           (family == IP::Protocol::IPv4 &&
+            cur == EthernetInterface::DHCPConf::v4);
 }
 
 bool EthernetInterface::dhcpToBeEnabled(IP::Protocol family,
@@ -1273,12 +1271,6 @@ std::string EthernetInterface::macAddress(std::string value)
 
 void EthernetInterface::deleteAll()
 {
-    if (dhcpIsEnabled(IP::Protocol::IPv4, true))
-    {
-        log<level::INFO>("DHCP enabled on the interface"),
-            entry("INTERFACE=%s", interfaceName().c_str());
-    }
-
     // clear all the ip on the interface
     addrs.clear();
 

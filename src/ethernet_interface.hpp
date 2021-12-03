@@ -349,11 +349,9 @@ class EthernetInterface : public Ifaces
   private:
     /** @brief Determines if DHCP is active for the IP::Protocol supplied.
      *  @param[in] protocol - Either IPv4 or IPv6
-     *  @param[in] ignoreProtocol - Allows IPv4 and IPv6 to be checked using a
-     *                              single call.
      *  @returns true/false value if DHCP is active for the input protocol
      */
-    bool dhcpIsEnabled(IP::Protocol protocol, bool ignoreProtocol = false);
+    bool dhcpIsEnabled(IP::Protocol protocol);
 
     /** @brief Determines if DHCP will be active following next reconfig
      *  @param[in] protocol - Either IPv4 or IPv6
