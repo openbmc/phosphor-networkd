@@ -1131,6 +1131,9 @@ void EthernetInterface::writeConfigurationFile()
     stream << "DHCP="s +
                   mapDHCPToSystemd[EthernetInterfaceIntf::dhcpEnabled()] + "\n";
 
+    stream << "[IPv6AcceptRA]\n";
+    stream << "DHCPv6Client=" << dhcpIsEnabled(IP::Protocol::IPv6) ? "true" : "false";
+
     // Static IP addresses
     for (const auto& addr : addrs)
     {
