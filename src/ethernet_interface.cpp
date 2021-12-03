@@ -189,14 +189,6 @@ bool EthernetInterface::dhcpIsEnabled(IP::Protocol family)
             cur == EthernetInterface::DHCPConf::v4);
 }
 
-bool EthernetInterface::dhcpToBeEnabled(IP::Protocol family,
-                                        const std::string& nextDHCPState)
-{
-    return ((nextDHCPState == "true") ||
-            ((nextDHCPState == "ipv6") && (family == IP::Protocol::IPv6)) ||
-            ((nextDHCPState == "ipv4") && (family == IP::Protocol::IPv4)));
-}
-
 bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
 {
     return (
