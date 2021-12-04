@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f241b5c1_cd073126",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1135,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2021-12-04T02:19:27Z",
+      "side": 1,
+      "message": "Seems clang-format error here.",
+      "range": {
+        "startLine": 1135,
+        "startChar": 64,
+        "endLine": 1135,
+        "endChar": 85
+      },
+      "revId": "6bd6a8f4a0651861f71abd25acc6ccfcd456a36b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
