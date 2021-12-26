@@ -20,6 +20,7 @@
 #endif
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
+#include <regex>
 #include <stdexcept>
 #include <stdplus/raw.hpp>
 #include <string>
@@ -635,12 +636,33 @@ ether_addr getfromInventory(sdbusplus::bus::bus& bus,
 
 ether_addr fromString(const char* str)
 {
-    struct ether_addr* mac = ether_aton(str);
-    if (mac == nullptr)
+    struct ether_addr mac;
+
+    if (ether_aton_r(str, &mac) != nullptr)
     {
-        throw std::invalid_argument("Invalid MAC Address");
+        return mac;
     }
-    return *mac;
+
+    // MAC address from hex string
+    if (strlen(str) == 12 &&
+        std::regex_match(str, std::regex("^[a-fA-F0-9]{12}")))
+    {
+        unsigned int mac_addr_uint[6];
+        if (sscanf(str, "%02x%02x%02x%02x%02x%02x", &mac_addr_uint[0],
+                   &mac_addr_uint[1], &mac_addr_uint[2], &mac_addr_uint[3],
+                   &mac_addr_uint[4], &mac_addr_uint[5]) == 6)
+        {
+            mac.ether_addr_octet[0] = mac_addr_uint[0];
+            mac.ether_addr_octet[1] = mac_addr_uint[1];
+            mac.ether_addr_octet[2] = mac_addr_uint[2];
+            mac.ether_addr_octet[3] = mac_addr_uint[3];
+            mac.ether_addr_octet[4] = mac_addr_uint[4];
+            mac.ether_addr_octet[5] = mac_addr_uint[5];
+            return mac;
+        }
+    }
+
+    throw std::invalid_argument("Invalid MAC Address");
 }
 
 std::string toString(const ether_addr& mac)
