@@ -633,14 +633,31 @@ ether_addr getfromInventory(sdbusplus::bus::bus& bus,
     return fromString(std::get<std::string>(value));
 }
 
-ether_addr fromString(const char* str)
+ether_addr fromString(std::string_view str)
 {
-    struct ether_addr* mac = ether_aton(str);
-    if (mac == nullptr)
+    std::string mac_str{};
+    ether_addr mac{};
+
+    auto mac_c_str = str.data();
+
+    // MAC address without colons
+    if (str.size() == 12 && str.find(":") == std::string::npos)
     {
-        throw std::invalid_argument("Invalid MAC Address");
+        mac_str = std::string(str.substr(0, 2)) + ":" +
+                  std::string(str.substr(2, 2)) + ":" +
+                  std::string(str.substr(4, 2)) + ":" +
+                  std::string(str.substr(6, 2)) + ":" +
+                  std::string(str.substr(8, 2)) + ":" +
+                  std::string(str.substr(10, 2));
+        mac_c_str = mac_str.c_str();
     }
-    return *mac;
+
+    if (ether_aton_r(mac_c_str, &mac) != nullptr)
+    {
+        return mac;
+    }
+
+    throw std::invalid_argument("Invalid MAC Address");
 }
 
 std::string toString(const ether_addr& mac)
