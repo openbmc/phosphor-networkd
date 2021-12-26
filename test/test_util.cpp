@@ -269,6 +269,9 @@ TEST(MacFromString, Bad)
     EXPECT_THROW(fromString("0x:00:00:00:00:00"), std::invalid_argument);
     EXPECT_THROW(fromString("00:00:00:00:00"), std::invalid_argument);
     EXPECT_THROW(fromString(""), std::invalid_argument);
+    EXPECT_THROW(fromString("123456789XYZ"), std::invalid_argument);
+    EXPECT_THROW(fromString("123456789AB"), std::invalid_argument);
+    EXPECT_THROW(fromString("123456789ABCD"), std::invalid_argument);
 }
 
 TEST(MacFromString, Valid)
@@ -281,6 +284,15 @@ TEST(MacFromString, Valid)
     EXPECT_TRUE(
         stdplus::raw::equal(ether_addr{0x00, 0x01, 0x02, 0x03, 0x04, 0x05},
                             fromString("0:1:2:3:4:5")));
+    EXPECT_TRUE(
+        stdplus::raw::equal(ether_addr{0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0xff},
+                            fromString("A:B:C:D:E:FF")));
+    EXPECT_TRUE(
+        stdplus::raw::equal(ether_addr{0x01, 0x23, 0x45, 0x67, 0x89, 0xab},
+                            fromString("0123456789AB")));
+    EXPECT_TRUE(
+        stdplus::raw::equal(ether_addr{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa},
+                            fromString("FFEEDDccbbaa")));
 }
 
 TEST(MacToString, Valid)
