@@ -44,10 +44,10 @@ ether_addr getfromInventory(sdbusplus::bus::bus& bus,
  *  @returns A mac address in network byte order
  *  @throws std::runtime_error for bad mac
  */
-ether_addr fromString(const char* str);
-inline ether_addr fromString(const std::string& str)
+ether_addr fromString(const std::string& str);
+inline ether_addr fromString(const char* str)
 {
-    return fromString(str.c_str());
+    return fromString(std::string(str));
 }
 
 /** @brief Converts the given mac address bytes into a string
