@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db524570_38bf6b00",
+        "filename": "src/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-12-27T12:57:59Z",
+      "side": 1,
+      "message": "regex is pretty expensive from a code-generation standpoint.  Then in the if branch we end up essentially reimplementing ether_aton_r.\n\nCan we do something like this:\n\n1. Have fromString take std::string.  Most callers of it seem to have a std::string already anyhow and there is already an alias that allows it to be called that way.\n\n2. If str.size() \u003d\u003d 12:\n2a. Insert colons every 2 characters.\n\n3. Call ether_aton_r(str.c_str(), mac);",
+      "revId": "18e9af234373ec3eccb5a2df819aa52994ba7e11",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d0a6b7a_389c29aa",
+        "filename": "src/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-12-27T12:57:59Z",
+      "side": 1,
+      "message": "We need to add some test cases to test/test_util.cpp for coverage of the non-colon case.  There are lots of test cases already in that file.",
+      "revId": "18e9af234373ec3eccb5a2df819aa52994ba7e11",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
+      "unresolved": true
+    }
+  ]
+}
