@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "ed9a2a6d_bf88ff8d",
         "filename": "src/util.cpp",
@@ -14,8 +15,25 @@
       "side": 1,
       "message": "just notice this,\nit might not work if only check length equal to 12\nfor example, MAC string like this \"0:1:2:3:4:56\"\n\nI think also need valid char checking (a-f, A-F, 0-9)",
       "revId": "2f359ed8504121be2705a14c5dba3e9bc02963a4",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "980fe628_d494b034",
+        "filename": "src/util.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2021-12-28T22:37:28Z",
+      "side": 1,
+      "message": "That really shouldn\u0027t matter.  If someone puts in a garbage string ether_aton_r will catch it.",
+      "parentUuid": "ed9a2a6d_bf88ff8d",
+      "revId": "2f359ed8504121be2705a14c5dba3e9bc02963a4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
