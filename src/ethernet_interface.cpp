@@ -958,6 +958,7 @@ void EthernetInterface::loadVLAN(VlanId id)
     // and create the dbus object.
     vlanIntf->createIPAddressObjects();
     vlanIntf->createStaticNeighborObjects();
+    vlanIntf->loadNameServers();
 
     this->vlanInterfaces.emplace(std::move(vlanInterfaceName),
                                  std::move(vlanIntf));
