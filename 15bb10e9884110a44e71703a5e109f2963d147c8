@@ -22,6 +22,30 @@
       },
       "revId": "15bb10e9884110a44e71703a5e109f2963d147c8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51c02ea4_7f032fa0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-01-03T13:07:27Z",
+      "side": 1,
+      "message": "The MAC typically comes from inventory.  ie. EEPROM data.  Not all EEPROM formats have colons.  So, we have to do a conversion either:\n\n* In the inventory collector (fru-device in this case).\n* In phosphor-networkd.\n\nIt seems that phosphor-networkd is a more central location to do this conversion than having to special case in every inventory collector type.  Eventually you\u0027ll find MAC address data coming from PLDM and probably IPMB as well.",
+      "parentUuid": "3eaa4a50_7183d7d3",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 66
+      },
+      "revId": "15bb10e9884110a44e71703a5e109f2963d147c8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
