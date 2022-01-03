@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3eaa4a50_7183d7d3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-01-03T04:33:34Z",
+      "side": 1,
+      "message": "Earlier assumption was, let the caller sends the string in the ether_aton format. Any reason why we are allowing the caller to send the mac address string without colon too.\n\nCan you get me the use case?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 66
+      },
+      "revId": "15bb10e9884110a44e71703a5e109f2963d147c8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
