@@ -51,6 +51,24 @@
       "message": "I\u0027ll let the maintainers decide what they think about this manual unrolling.  It is seems small enough to be reasonable to me.  The alternative is something like this, which doesn\u0027t seem as readable:\n\n  auto i \u003d std::begin(mac_str);\n  do\n  {\n    std::advance(i, 2);\n    if (i \u003d\u003d std::end(mac_str))\n    {\n        break;\n    }\n    i \u003d std::insert(i, \u0027:\u0027);\n    ++i;\n\n  } while(true);",
       "revId": "05ba87dde9cfc54e33d94bb0d097295b793666fa",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd9fb191_23f74f56",
+        "filename": "src/util.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-01-04T04:57:19Z",
+      "side": 1,
+      "message": "I agree with you that changes which is there now, it is more readable.",
+      "parentUuid": "74ab8260_e3a85c11",
+      "revId": "05ba87dde9cfc54e33d94bb0d097295b793666fa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
