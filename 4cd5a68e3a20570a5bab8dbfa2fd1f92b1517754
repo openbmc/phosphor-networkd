@@ -70,6 +70,30 @@
       },
       "revId": "4cd5a68e3a20570a5bab8dbfa2fd1f92b1517754",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2e55991_3dbbf6f1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001252
+      },
+      "writtenOn": "2022-01-04T07:19:20Z",
+      "side": 1,
+      "message": "Hi, I think this is not what I\u0027d like to express, this fix fixes below 2 issues on vlan interfaces:\n\n1. Nameservers assigned by DHCP cannot be read from networkd dbus.\n2. Set static nameserver, then restart networkd service, and the value disappears on networkd dbus.\n\nHow about:\n\nCurrently, nameservers of VLAN interfaces assigned by DHCP will not be populated on DBus, and static nameservers previously set disappears on DBus. This patch fixes this issue by loading nameserver\ninfo when creating VLAN interface, same as how physical one does",
+      "parentUuid": "9c4187ee_fc6aa605",
+      "range": {
+        "startLine": 10,
+        "startChar": 19,
+        "endLine": 11,
+        "endChar": 15
+      },
+      "revId": "4cd5a68e3a20570a5bab8dbfa2fd1f92b1517754",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
