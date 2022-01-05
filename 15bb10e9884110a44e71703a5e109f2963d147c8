@@ -89,6 +89,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9645e090_27cb2151",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-01-05T11:53:04Z",
+      "side": 1,
+      "message": "Changing the score as william has posted the comment.",
+      "revId": "15bb10e9884110a44e71703a5e109f2963d147c8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "04c557c1_ab71fd73",
