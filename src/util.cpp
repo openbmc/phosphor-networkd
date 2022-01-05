@@ -5,6 +5,8 @@
 
 #include <arpa/inet.h>
 #include <dirent.h>
+#include <fmt/compile.h>
+#include <fmt/format.h>
 #include <net/if.h>
 #include <sys/wait.h>
 
@@ -633,31 +635,27 @@ ether_addr getfromInventory(sdbusplus::bus::bus& bus,
     return fromString(std::get<std::string>(value));
 }
 
-ether_addr fromString(std::string_view str)
+ether_addr fromString(const char* str)
 {
-    std::string mac_str{};
-    ether_addr mac{};
-
-    auto mac_c_str = str.data();
+    std::string genstr;
 
     // MAC address without colons
-    if (str.size() == 12 && str.find(":") == std::string::npos)
+    std::string_view strv = str;
+    if (strv.size() == 12 && strv.find(":") == strv.npos)
     {
-        mac_str = std::string(str.substr(0, 2)) + ":" +
-                  std::string(str.substr(2, 2)) + ":" +
-                  std::string(str.substr(4, 2)) + ":" +
-                  std::string(str.substr(6, 2)) + ":" +
-                  std::string(str.substr(8, 2)) + ":" +
-                  std::string(str.substr(10, 2));
-        mac_c_str = mac_str.c_str();
+        genstr =
+            fmt::format(FMT_COMPILE("{}:{}:{}:{}:{}:{}"), strv.substr(0, 2),
+                        strv.substr(2, 2), strv.substr(4, 2), strv.substr(6, 2),
+                        strv.substr(8, 2), strv.substr(10, 2));
+        str = genstr.c_str();
     }
 
-    if (ether_aton_r(mac_c_str, &mac) != nullptr)
+	ether_addr addr;
+    if (ether_aton_r(str, &addr) == nullptr)
     {
-        return mac;
+        throw std::invalid_argument("Invalid MAC Address");
     }
-
-    throw std::invalid_argument("Invalid MAC Address");
+    return addr;
 }
 
 std::string toString(const ether_addr& mac)
