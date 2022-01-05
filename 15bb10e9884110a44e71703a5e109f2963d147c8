@@ -87,6 +87,23 @@
       "message": "Let\u0027s wait for a day so that William can also take a look, Otherwise we will merge it tomorrow",
       "revId": "15bb10e9884110a44e71703a5e109f2963d147c8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04c557c1_ab71fd73",
+        "filename": "src/util.hpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-01-05T10:23:37Z",
+      "side": 1,
+      "message": "You should drop both of these forms (and avoid the extra copy) and make a single signature that takes a string_view.",
+      "revId": "15bb10e9884110a44e71703a5e109f2963d147c8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
