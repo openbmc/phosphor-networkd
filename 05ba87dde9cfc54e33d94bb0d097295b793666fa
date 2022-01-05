@@ -69,6 +69,24 @@
       "parentUuid": "74ab8260_e3a85c11",
       "revId": "05ba87dde9cfc54e33d94bb0d097295b793666fa",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d7d479e_edc60087",
+        "filename": "src/util.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-01-05T21:28:57Z",
+      "side": 1,
+      "message": "It\u0027s fine.",
+      "parentUuid": "fd9fb191_23f74f56",
+      "revId": "05ba87dde9cfc54e33d94bb0d097295b793666fa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
