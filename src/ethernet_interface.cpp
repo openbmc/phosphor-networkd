@@ -45,6 +45,11 @@ constexpr auto RESOLVED_SERVICE = "org.freedesktop.resolve1";
 constexpr auto RESOLVED_INTERFACE = "org.freedesktop.resolve1.Link";
 constexpr auto PROPERTY_INTERFACE = "org.freedesktop.DBus.Properties";
 constexpr auto RESOLVED_SERVICE_PATH = "/org/freedesktop/resolve1/link/";
+
+constexpr auto TIMESYNCD_SERVICE = "org.freedesktop.timesync1";
+constexpr auto TIMESYNCD_INTERFACE = "org.freedesktop.timesync1.Manager";
+constexpr auto TIMESYNCD_SERVICE_PATH = "/org/freedesktop/timesync1";
+
 constexpr auto METHOD_GET = "Get";
 
 static stdplus::Fd& getIFSock()
@@ -910,7 +915,12 @@ void EthernetInterface::loadVLAN(VlanId id)
     // and create the dbus object.
     vlanIntf->createIPAddressObjects();
     vlanIntf->createStaticNeighborObjects();
+<<<<<<< HEAD
     vlanIntf->loadNameServers(config);
+=======
+    vlanIntf->loadNameServers();
+    vlanIntf->loadNTPServers();
+>>>>>>> e86fc6c... Set static & dhcp sent ntp server ip on ethernet obj
 
     this->vlanInterfaces.emplace(std::move(vlanInterfaceName),
                                  std::move(vlanIntf));
@@ -947,14 +957,76 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
     return path;
 }
 
+<<<<<<< HEAD
 ServerList EthernetInterface::ntpServers(ServerList servers)
+=======
+bool EthernetInterface::getIPv6AcceptRAFromConf()
 {
-    auto ntpServers = EthernetInterfaceIntf::ntpServers(servers);
+    fs::path confPath = manager.getConfDir();
 
-    writeConfigurationFile();
-    manager.reloadConfigs();
+    std::string fileName = systemd::config::networkFilePrefix +
+                           interfaceName() + systemd::config::networkFileSuffix;
+    confPath /= fileName;
+    config::ValueList values;
+    config::Parser parser(confPath.string());
+    auto rc = config::ReturnCode::SUCCESS;
+    std::tie(rc, values) = parser.getValues("Network", "IPv6AcceptRA");
+    if (rc != config::ReturnCode::SUCCESS)
+    {
+        log<level::DEBUG>("Unable to get the value for Network[IPv6AcceptRA]",
+                          entry("rc=%d", rc));
+        return false;
+    }
+    return (values[0] == "true");
+}
 
-    return ntpServers;
+ServerList EthernetInterface::getstaticNTPServersFromConf()
+{
+    fs::path confPath = manager.getConfDir();
+
+    std::string fileName = systemd::config::networkFilePrefix +
+                           interfaceName() + systemd::config::networkFileSuffix;
+    confPath /= fileName;
+
+    ServerList servers;
+    config::Parser parser(confPath.string());
+    auto rc = config::ReturnCode::SUCCESS;
+
+    std::tie(rc, servers) = parser.getValues("Network", "NTP");
+    if (rc != config::ReturnCode::SUCCESS)
+    {
+        log<level::DEBUG>("Unable to get the value for Network[NTP]",
+                          entry("rc=%d", rc));
+    }
+
+    return servers;
+}
+
+ServerList EthernetInterface::staticNTPServers(ServerList value)
+>>>>>>> e86fc6c... Set static & dhcp sent ntp server ip on ethernet obj
+{
+    try
+    {
+        EthernetInterfaceIntf::staticNTPServers(value);
+
+        writeConfigurationFile();
+        manager.reloadConfigs();
+    }
+    catch (InternalFailure& e)
+    {
+        log<level::ERR>("Exception processing NTP entries");
+    }
+    return EthernetInterfaceIntf::staticNTPServers();
+}
+
+ServerList EthernetInterface::getNtpServers()
+{
+    return EthernetInterfaceIntf::ntpServers();
+}
+
+ServerList EthernetInterface::ntpServers(ServerList /*servers*/)
+{
+    elog<NotAllowed>(NotAllowedArgument::REASON("ReadOnly Property"));
 }
 // Need to merge the below function with the code which writes the
 // config file during factory reset.
@@ -991,9 +1063,47 @@ void EthernetInterface::writeConfigurationFile()
 #else
         lla.emplace_back("no");
 #endif
+<<<<<<< HEAD
         network["IPv6AcceptRA"].emplace_back(ipv6AcceptRA() ? "true" : "false");
         network["DHCP"].emplace_back(dhcp4() ? (dhcp6() ? "true" : "ipv4")
                                              : (dhcp6() ? "ipv6" : "false"));
+=======
+    stream << std::boolalpha
+           << "IPv6AcceptRA=" << EthernetInterfaceIntf::ipv6AcceptRA() << "\n";
+
+    // Add the VLAN entry
+    for (const auto& intf : vlanInterfaces)
+    {
+        stream << "VLAN=" << intf.second->EthernetInterface::interfaceName()
+               << "\n";
+    }
+    // Add the NTP server
+    for (const auto& ntp : EthernetInterfaceIntf::staticNTPServers())
+    {
+        stream << "NTP=" << ntp << "\n";
+    }
+
+    // Add the DNS entry
+    for (const auto& dns : EthernetInterfaceIntf::staticNameServers())
+    {
+        stream << "DNS=" << dns << "\n";
+    }
+
+    // Add the DHCP entry
+    stream << "DHCP="s +
+                  mapDHCPToSystemd[EthernetInterfaceIntf::dhcpEnabled()] + "\n";
+
+    stream << "[IPv6AcceptRA]\n";
+    stream << "DHCPv6Client=";
+    stream << (dhcpIsEnabled(IP::Protocol::IPv6) ? "true" : "false");
+    stream << "\n";
+
+    // Static IP addresses
+    for (const auto& addr : addrs)
+    {
+        if (originIsManuallyAssigned(addr.second->origin()) &&
+            !dhcpIsEnabled(addr.second->type()))
+>>>>>>> e86fc6c... Set static & dhcp sent ntp server ip on ethernet obj
         {
             auto& vlans = network["VLAN"];
             for (const auto& intf : vlanInterfaces)
