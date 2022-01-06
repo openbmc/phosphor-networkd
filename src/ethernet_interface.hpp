@@ -91,6 +91,10 @@ class EthernetInterface : public Ifaces
                       bool emitSignal = true,
                       std::optional<bool> enabled = std::nullopt);
 
+    /** @brief Function used to load the ntpservers
+     */
+    virtual void loadNTPServers();
+
     /** @brief Function used to load the nameservers.
      */
     virtual void loadNameServers();
@@ -198,6 +202,11 @@ class EthernetInterface : public Ifaces
      *  @param[in] value - vector of NTP servers.
      */
     ServerList ntpServers(ServerList value) override;
+
+    /** @brief sets the static NTP servers.
+     *  @param[in] value - vector of NTP servers.
+     */
+    ServerList staticNTPServers(ServerList value) override;
 
     /** @brief sets the DNS/nameservers.
      *  @param[in] value - vector of DNS servers.
@@ -315,10 +324,15 @@ class EthernetInterface : public Ifaces
     /** @brief write the dhcp section **/
     void writeDHCPSection(std::fstream& stream);
 
+    /** @brief get the NTP server list from the timsyncd dbus obj
+     *
+     */
+    ServerList getNTPServerFromTimeSyncd();
+
     /** @brief get the NTP server list from the network conf
      *
      */
-    ServerList getNTPServersFromConf();
+    ServerList getstaticNTPServersFromConf();
 
     /** @brief get the name server details from the network conf
      *
