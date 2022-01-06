@@ -22,6 +22,30 @@
       },
       "revId": "1c77602280a0079f998e093a19d9160f60454c6e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f89344dc_a6bef26e",
+        "filename": "src/util.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-01-06T23:17:28Z",
+      "side": 1,
+      "message": "Just to avoid a copy, in the other change it always copies a string. Since we use the zstring directly in some instances here, we can\u0027t use a string_view as it doesn\u0027t guarantee null termination.",
+      "parentUuid": "95fa6a39_0a73ca5b",
+      "range": {
+        "startLine": 48,
+        "startChar": 29,
+        "endLine": 48,
+        "endChar": 51
+      },
+      "revId": "1c77602280a0079f998e093a19d9160f60454c6e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
