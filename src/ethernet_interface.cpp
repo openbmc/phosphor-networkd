@@ -45,6 +45,11 @@ constexpr auto RESOLVED_SERVICE = "org.freedesktop.resolve1";
 constexpr auto RESOLVED_INTERFACE = "org.freedesktop.resolve1.Link";
 constexpr auto PROPERTY_INTERFACE = "org.freedesktop.DBus.Properties";
 constexpr auto RESOLVED_SERVICE_PATH = "/org/freedesktop/resolve1/link/";
+
+constexpr auto TIMESYNCD_SERVICE = "org.freedesktop.timesync1";
+constexpr auto TIMESYNCD_INTERFACE = "org.freedesktop.timesync1.Manager";
+constexpr auto TIMESYNCD_SERVICE_PATH = "/org/freedesktop/timesync1";
+
 constexpr auto METHOD_GET = "Get";
 
 static stdplus::Fd& getIFSock()
@@ -911,6 +916,7 @@ void EthernetInterface::loadVLAN(VlanId id)
     vlanIntf->createIPAddressObjects();
     vlanIntf->createStaticNeighborObjects();
     vlanIntf->loadNameServers(config);
+    vlanIntf->loadNTPServers();
 
     this->vlanInterfaces.emplace(std::move(vlanInterfaceName),
                                  std::move(vlanIntf));
@@ -949,12 +955,28 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
 
 ServerList EthernetInterface::ntpServers(ServerList servers)
 {
-    auto ntpServers = EthernetInterfaceIntf::ntpServers(servers);
+    try
+    {
+        EthernetInterfaceIntf::staticNTPServers(value);
 
-    writeConfigurationFile();
-    manager.reloadConfigs();
+        writeConfigurationFile();
+        manager.reloadConfigs();
+    }
+    catch (InternalFailure& e)
+    {
+        log<level::ERR>("Exception processing NTP entries");
+    }
+    return EthernetInterfaceIntf::staticNTPServers();
+}
 
-    return ntpServers;
+ServerList EthernetInterface::getNtpServers()
+{
+    return EthernetInterfaceIntf::ntpServers();
+}
+
+ServerList EthernetInterface::ntpServers(ServerList /*servers*/)
+{
+    elog<NotAllowed>(NotAllowedArgument::REASON("ReadOnly Property"));
 }
 // Need to merge the below function with the code which writes the
 // config file during factory reset.
@@ -1004,7 +1026,7 @@ void EthernetInterface::writeConfigurationFile()
         }
         {
             auto& ntps = network["NTP"];
-            for (const auto& ntp : EthernetInterfaceIntf::ntpServers())
+            for (const auto& ntp : EthernetInterfaceIntf::staticNTPServers())
             {
                 ntps.emplace_back(ntp);
             }
