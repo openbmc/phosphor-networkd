@@ -21,6 +21,7 @@ class MockEthernetInterface : public EthernetInterface
     }
 
     MOCK_METHOD((ServerList), getNameServerFromResolvd, (), (override));
+    MOCK_METHOD((ServerList), getNTPServerFromTimeSyncd, (), (override));
     friend class TestEthernetInterface;
 };
 } // namespace network
