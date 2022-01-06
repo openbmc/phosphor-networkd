@@ -159,6 +159,7 @@ void Manager::createInterfaces()
         intf->createIPAddressObjects();
         intf->createStaticNeighborObjects();
         intf->loadNameServers();
+        intf->loadNTPServers();
 
         this->interfaces.emplace(
             std::make_pair(std::move(interface), std::move(intf)));
