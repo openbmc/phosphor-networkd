@@ -138,6 +138,7 @@ void Manager::createInterfaces()
         intf->createIPAddressObjects();
         intf->createStaticNeighborObjects();
         intf->loadNameServers(config);
+        intf->loadNTPServers();
 
         this->interfaces.emplace(std::move(interface), std::move(intf));
     }
