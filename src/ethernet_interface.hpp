@@ -79,6 +79,10 @@ class EthernetInterface : public Ifaces
                       bool emitSignal = true,
                       std::optional<bool> enabled = std::nullopt);
 
+    /** @brief Function used to load the ntpservers
+     */
+    void loadNTPServers(const config::Parser& config);
+
     /** @brief Function used to load the nameservers.
      */
     void loadNameServers(const config::Parser& config);
@@ -176,10 +180,20 @@ class EthernetInterface : public Ifaces
     bool ipv6AcceptRA(bool value) override;
     using EthernetInterfaceIntf::ipv6AcceptRA;
 
+    /** @brief gets the NTP servers.
+     *  @returns list of NTP servers.
+     */
+    ServerList getNtpServers();
+
     /** @brief sets the NTP servers.
      *  @param[in] value - vector of NTP servers.
      */
     ServerList ntpServers(ServerList value) override;
+
+    /** @brief sets the static NTP servers.
+     *  @param[in] value - vector of NTP servers.
+     */
+    ServerList staticNTPServers(ServerList value) override;
 
     /** @brief sets the Static DNS/nameservers.
      *  @param[in] value - vector of DNS servers.
@@ -255,10 +269,10 @@ class EthernetInterface : public Ifaces
         generateStaticNeighborObjectPath(std::string_view ipAddress,
                                          std::string_view macAddress) const;
 
-    /** @brief get the NTP server list from the network conf
+    /** @brief get the NTP server list from the timsyncd dbus obj
      *
      */
-    ServerList getNTPServersFromConf();
+    virtual ServerList getNTPServerFromTimeSyncd();
 
     /** @brief get the name server details from the network conf
      *
