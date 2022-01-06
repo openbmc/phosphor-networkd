@@ -46,6 +46,11 @@ constexpr auto RESOLVED_SERVICE = "org.freedesktop.resolve1";
 constexpr auto RESOLVED_INTERFACE = "org.freedesktop.resolve1.Link";
 constexpr auto PROPERTY_INTERFACE = "org.freedesktop.DBus.Properties";
 constexpr auto RESOLVED_SERVICE_PATH = "/org/freedesktop/resolve1/link/";
+
+constexpr auto TIMESYNCD_SERVICE = "org.freedesktop.timesync1";
+constexpr auto TIMESYNCD_INTERFACE = "org.freedesktop.timesync1.Manager";
+constexpr auto TIMESYNCD_SERVICE_PATH = "/org/freedesktop/timesync1";
+
 constexpr auto METHOD_GET = "Get";
 
 struct EthernetIntfSocket
@@ -836,10 +841,42 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
     return EthernetInterfaceIntf::staticNameServers();
 }
 
+void EthernetInterface::loadNTPServers()
+{
+    EthernetInterfaceIntf::ntpServers(getNTPServerFromTimeSyncd());
+    writeConfigurationFile();
+}
+
 void EthernetInterface::loadNameServers()
 {
     EthernetInterfaceIntf::nameservers(getNameServerFromResolvd());
     EthernetInterfaceIntf::staticNameServers(getstaticNameServerFromConf());
+}
+
+ServerList EthernetInterface::getNTPServerFromTimeSyncd()
+{
+    ServerList servers; // Variable to capture the NTP Server IPs
+    std::string OBJ_PATH = RESOLVED_SERVICE_PATH + std::to_string(ifIndex());
+
+    auto method = bus.new_method_call(TIMESYNCD_SERVICE, TIMESYNCD_SERVICE_PATH,
+                                      PROPERTY_INTERFACE, METHOD_GET);
+
+    method.append(TIMESYNCD_INTERFACE, "LinkNTPServers");
+    auto reply = bus.call(method);
+
+    try
+    {
+        std::variant<ServerList> response;
+        reply.read(response);
+        servers = std::get<ServerList>(response);
+    }
+    catch (const sdbusplus::exception::SdBusError& e)
+    {
+        log<level::ERR>(
+            "Failed to get NTP server information from Systemd-Timesyncd");
+    }
+
+    return servers;
 }
 
 ServerList EthernetInterface::getstaticNameServerFromConf()
@@ -959,6 +996,7 @@ void EthernetInterface::loadVLAN(VlanId id)
     vlanIntf->createIPAddressObjects();
     vlanIntf->createStaticNeighborObjects();
     vlanIntf->loadNameServers();
+    vlanIntf->loadNTPServers();
 
     this->vlanInterfaces.emplace(std::move(vlanInterfaceName),
                                  std::move(vlanIntf));
