@@ -13,6 +13,7 @@
 #include <fstream>
 #include <sdbusplus/bus.hpp>
 #include <stdplus/gtest/tmp.hpp>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gtest/gtest.h>
 
@@ -87,6 +88,12 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
                         uint8_t subnetMask, const std::string& gateway)
     {
         interface.ip(addressType, ipaddress, subnetMask, gateway);
+    }
+
+    void setNTPServers()
+    {
+        ServerList ntpServers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};
+        interface.EthernetInterfaceIntf::ntpServers(ntpServers);
     }
 };
 
@@ -172,15 +179,29 @@ TEST_F(TestEthernetInterface, getDynamicNameServers)
     EXPECT_EQ(interface.getNameServerFromResolvd(), servers);
 }
 
-TEST_F(TestEthernetInterface, addNTPServers)
+TEST_F(TestEthernetInterface, addStaticNTPServers)
 {
     ServerList servers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};
     EXPECT_CALL(manager, reloadConfigs());
-    interface.ntpServers(servers);
+    interface.staticNTPServers(servers);
     fs::path filePath = confDir;
     filePath /= "00-bmc-test0.network";
     config::Parser parser(filePath.string());
     EXPECT_EQ(servers, parser.map.getValueStrings("Network", "NTP"));
+}
+
+TEST_F(TestEthernetInterface, addNTPServers)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+    ServerList servers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};
+    EXPECT_THROW(interface.ntpServers(servers), NotAllowed);
+}
+
+TEST_F(TestEthernetInterface, getNTPServers)
+{
+    ServerList servers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};
+    setNTPServers();
+    EXPECT_EQ(interface.getNtpServers(), servers);
 }
 
 TEST_F(TestEthernetInterface, addGateway)
