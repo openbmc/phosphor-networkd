@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "704edc47_32c2f346",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-01-07T05:08:06Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 9,
+        "startChar": 20,
+        "endLine": 9,
+        "endChar": 24
+      },
+      "revId": "c2843c3f0b79bea3cbc3cac31e4b1e8b46f8dc4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e3f4ae2_af9aad54",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-01-07T05:08:06Z",
+      "side": 1,
+      "message": "I think output of this command need not be pasted in the commit message. This makes it too long",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 70
+      },
+      "revId": "c2843c3f0b79bea3cbc3cac31e4b1e8b46f8dc4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e0e73d6_9272727a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-01-07T05:08:06Z",
+      "side": 1,
+      "message": "Just explaining the logic should be good enough. \nLike:\nEthernet interface network config files will be updated with the NTP\u003d\u003cip addresses\u003e",
+      "range": {
+        "startLine": 143,
+        "startChar": 2,
+        "endLine": 143,
+        "endChar": 55
+      },
+      "revId": "c2843c3f0b79bea3cbc3cac31e4b1e8b46f8dc4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64666c29_4fc226c7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-01-07T05:08:06Z",
+      "side": 1,
+      "message": "Please fix the CI failure as well",
+      "revId": "c2843c3f0b79bea3cbc3cac31e4b1e8b46f8dc4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f37da08_be417216",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-01-07T05:08:06Z",
+      "side": 1,
+      "message": "Is this enabled by default on BMC ?",
+      "range": {
+        "startLine": 51,
+        "startChar": 38,
+        "endLine": 51,
+        "endChar": 71
+      },
+      "revId": "c2843c3f0b79bea3cbc3cac31e4b1e8b46f8dc4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68584e3f_a007330c",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-01-07T05:08:06Z",
+      "side": 1,
+      "message": "This can be a new method - loadNtpServers",
+      "range": {
+        "startLine": 846,
+        "startChar": 0,
+        "endLine": 847,
+        "endChar": 29
+      },
+      "revId": "c2843c3f0b79bea3cbc3cac31e4b1e8b46f8dc4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
