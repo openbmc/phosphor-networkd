@@ -46,6 +46,30 @@
       },
       "revId": "1c77602280a0079f998e093a19d9160f60454c6e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c46cf5e9_9135c873",
+        "filename": "src/util.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-01-07T04:51:37Z",
+      "side": 1,
+      "message": "ACK",
+      "parentUuid": "f89344dc_a6bef26e",
+      "range": {
+        "startLine": 48,
+        "startChar": 29,
+        "endLine": 48,
+        "endChar": 51
+      },
+      "revId": "1c77602280a0079f998e093a19d9160f60454c6e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
