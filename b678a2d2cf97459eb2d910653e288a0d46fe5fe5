@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a918d6e_6c4fc3f7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-01-10T16:59:03Z",
+      "side": 1,
+      "message": "Which config file? \nIf you mentioning about network file, Then we don\u0027t need to update the config file for the info which BMC(Dhcp client) receives through DHCP server.",
+      "range": {
+        "startLine": 11,
+        "startChar": 10,
+        "endLine": 11,
+        "endChar": 45
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa411d97_7835c265",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-01-10T16:59:03Z",
+      "side": 1,
+      "message": "How do we know that the NTP servers are for the eth0 or eth1 interface?",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 68
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6767268_f2ae7c77",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-01-10T16:59:03Z",
+      "side": 1,
+      "message": "see the above commentary.",
+      "range": {
+        "startLine": 18,
+        "startChar": 1,
+        "endLine": 18,
+        "endChar": 22
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e5a3869_69da2d73",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-01-10T16:59:03Z",
+      "side": 1,
+      "message": "How we are going to differentiate between the static NTP servers v/s NTP servers got through DHCP.\n\nPlease have a look at how it has been done for the NameServers.",
+      "range": {
+        "startLine": 846,
+        "startChar": 0,
+        "endLine": 847,
+        "endChar": 29
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
