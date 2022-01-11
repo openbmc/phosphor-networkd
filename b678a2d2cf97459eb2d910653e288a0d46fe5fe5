@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "20911dfc_9920850d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-01-11T17:14:07Z",
+      "side": 1,
+      "message": "Yes. bmc-00-eth\u003c0/1\u003e.network\n\n\u003eThen we don\u0027t need to update the config file for the info which BMC(Dhcp client) receives through DHCP server.\n\nAck",
+      "parentUuid": "8a918d6e_6c4fc3f7",
+      "range": {
+        "startLine": 11,
+        "startChar": 10,
+        "endLine": 11,
+        "endChar": 45
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa411d97_7835c265",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-01-10T16:59:03Z",
       "side": 1,
       "message": "How do we know that the NTP servers are for the eth0 or eth1 interface?",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 68
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3931517a_3c9ec0ac",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-01-11T17:14:07Z",
+      "side": 1,
+      "message": "I thought ntp server details were not specific to any interface as such (eth0/1)\n\nPlease correct me if i am wrong.",
+      "parentUuid": "aa411d97_7835c265",
       "range": {
         "startLine": 13,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6972455b_62174329",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-01-11T17:14:07Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b6767268_f2ae7c77",
+      "range": {
+        "startLine": 18,
+        "startChar": 1,
+        "endLine": 18,
+        "endChar": 22
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7e5a3869_69da2d73",
@@ -83,6 +155,30 @@
       "writtenOn": "2022-01-10T16:59:03Z",
       "side": 1,
       "message": "How we are going to differentiate between the static NTP servers v/s NTP servers got through DHCP.\n\nPlease have a look at how it has been done for the NameServers.",
+      "range": {
+        "startLine": 846,
+        "startChar": 0,
+        "endLine": 847,
+        "endChar": 29
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a636469a_ac2b2959",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-01-11T17:14:07Z",
+      "side": 1,
+      "message": "When i tested, i saw that there was one static ntp server ip set using patch on NetworkProtocol.\n\nWhen there was dhcp ip sent, as per above comments, only static ip was stored in the network config file. That way one can differentiate between static \u0026 dhcp (one in config file is static and the others are dhcp)? Or is there any other way?\n\nAlso, may i know if there is a path where we read static ntp servers other than this config file?",
+      "parentUuid": "7e5a3869_69da2d73",
       "range": {
         "startLine": 846,
         "startChar": 0,
