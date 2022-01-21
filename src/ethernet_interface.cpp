@@ -786,6 +786,7 @@ bool EthernetInterface::nicEnabled(bool value)
     }
     auto ifname = interfaceName();
 
+    EthernetInterfaceIntf::nicEnabled(value);
     writeConfigurationFile();
     if (!value)
     {
@@ -796,7 +797,6 @@ bool EthernetInterface::nicEnabled(bool value)
                 setNICAdminState(eifSocket.sock, ifname.c_str(), false);
             });
     }
-    EthernetInterfaceIntf::nicEnabled(value);
     manager.reloadConfigs();
 
     return value;
