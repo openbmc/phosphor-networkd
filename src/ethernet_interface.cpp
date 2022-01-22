@@ -25,6 +25,7 @@
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus/match.hpp>
 #include <sstream>
+#include <stdplus/fd/create.hpp>
 #include <stdplus/raw.hpp>
 #include <string>
 #include <string_view>
@@ -48,33 +49,20 @@ constexpr auto PROPERTY_INTERFACE = "org.freedesktop.DBus.Properties";
 constexpr auto RESOLVED_SERVICE_PATH = "/org/freedesktop/resolve1/link/";
 constexpr auto METHOD_GET = "Get";
 
-struct EthernetIntfSocket
-{
-    EthernetIntfSocket(int domain, int type, int protocol)
-    {
-        if ((sock = socket(domain, type, protocol)) < 0)
-        {
-            log<level::ERR>("socket creation failed:",
-                            entry("ERROR=%s", strerror(errno)));
-        }
-    }
-
-    ~EthernetIntfSocket()
-    {
-        if (sock >= 0)
-        {
-            close(sock);
-        }
-    }
-
-    int sock{-1};
-};
-
 std::map<EthernetInterface::DHCPConf, std::string> mapDHCPToSystemd = {
     {EthernetInterface::DHCPConf::both, "true"},
     {EthernetInterface::DHCPConf::v4, "ipv4"},
     {EthernetInterface::DHCPConf::v6, "ipv6"},
     {EthernetInterface::DHCPConf::none, "false"}};
+
+static stdplus::Fd& getIFSock()
+{
+    static auto fd =
+        stdplus::fd::socket(static_cast<stdplus::fd::SocketDomain>(PF_INET),
+                            static_cast<stdplus::fd::SocketType>(SOCK_DGRAM),
+                            static_cast<stdplus::fd::SocketProto>(IPPROTO_IP));
+    return fd;
+}
 
 EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
                                      const std::string& objPath,
@@ -364,23 +352,20 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
     LinkUp linkState = {};
     NICEnabled enabled = {};
     MTU mtuSize = {};
-    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
-
-    if (eifSocket.sock < 0)
-    {
-        return std::make_tuple(speed, duplex, autoneg, linkState, enabled,
-                               mtuSize);
-    }
 
     std::strncpy(ifr.ifr_name, interfaceName().c_str(), IFNAMSIZ - 1);
     ifr.ifr_data = reinterpret_cast<char*>(&edata);
 
     edata.cmd = ETHTOOL_GSET;
-    if (ioctl(eifSocket.sock, SIOCETHTOOL, &ifr) >= 0)
+    try
     {
+        getIFSock().ioctl(SIOCETHTOOL, &ifr);
         speed = edata.speed;
         duplex = edata.duplex;
         autoneg = edata.autoneg;
+    }
+    catch (const std::exception& e)
+    {
     }
 
     enabled = nicEnabled();
@@ -399,19 +384,17 @@ std::string
     EthernetInterface::getMACAddress(const std::string& interfaceName) const
 {
     std::string activeMACAddr = MacAddressIntf::macAddress();
-    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
-
-    if (eifSocket.sock < 0)
-    {
-        return activeMACAddr;
-    }
 
     ifreq ifr = {};
     std::strncpy(ifr.ifr_name, interfaceName.c_str(), IFNAMSIZ - 1);
-    if (ioctl(eifSocket.sock, SIOCGIFHWADDR, &ifr) != 0)
+    try
+    {
+        getIFSock().ioctl(SIOCGIFHWADDR, &ifr);
+    }
+    catch (const std::exception& e)
     {
         log<level::ERR>("ioctl failed for SIOCGIFHWADDR:",
-                        entry("ERROR=%s", strerror(errno)));
+                        entry("ERROR=%s", e.what()));
         elog<InternalFailure>();
     }
 
@@ -587,48 +570,38 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
 
 bool EthernetInterface::linkUp() const
 {
-    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
     bool value = EthernetInterfaceIntf::linkUp();
-
-    if (eifSocket.sock < 0)
-    {
-        return value;
-    }
 
     ifreq ifr = {};
     std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
-    if (ioctl(eifSocket.sock, SIOCGIFFLAGS, &ifr) == 0)
+    try
     {
+        getIFSock().ioctl(SIOCGIFFLAGS, &ifr);
         value = static_cast<bool>(ifr.ifr_flags & IFF_RUNNING);
     }
-    else
+    catch (const std::exception& e)
     {
         log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
-                        entry("ERROR=%s", strerror(errno)));
+                        entry("ERROR=%s", e.what()));
     }
     return value;
 }
 
 size_t EthernetInterface::mtu() const
 {
-    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
     size_t value = EthernetInterfaceIntf::mtu();
-
-    if (eifSocket.sock < 0)
-    {
-        return value;
-    }
 
     ifreq ifr = {};
     std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
-    if (ioctl(eifSocket.sock, SIOCGIFMTU, &ifr) == 0)
+    try
     {
+        getIFSock().ioctl(SIOCGIFMTU, &ifr);
         value = ifr.ifr_mtu;
     }
-    else
+    catch (const std::exception& e)
     {
         log<level::ERR>("ioctl failed for SIOCGIFMTU:",
-                        entry("ERROR=%s", strerror(errno)));
+                        entry("ERROR=%s", e.what()));
     }
     return value;
 }
@@ -644,24 +617,22 @@ size_t EthernetInterface::mtu(size_t value)
         return EthernetInterfaceIntf::mtu();
     }
 
-    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
-    if (eifSocket.sock < 0)
-    {
-        return EthernetInterfaceIntf::mtu();
-    }
-
     ifreq ifr = {};
     std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
     ifr.ifr_mtu = value;
 
-    if (ioctl(eifSocket.sock, SIOCSIFMTU, &ifr) != 0)
+    try
+    {
+        getIFSock().ioctl(SIOCSIFMTU, &ifr);
+    }
+    catch (const std::exception& e)
     {
         log<level::ERR>("ioctl failed for SIOCSIFMTU:",
                         entry("ERROR=%s", strerror(errno)));
         return EthernetInterfaceIntf::mtu();
     }
-    EthernetInterfaceIntf::mtu(value);
 
+    EthernetInterfaceIntf::mtu(value);
     return value;
 }
 
@@ -750,26 +721,15 @@ bool EthernetInterface::queryNicEnabled() const
     return *ret;
 }
 
-static void setNICAdminState(int fd, const char* intf, bool up)
+static void setNICAdminState(const char* intf, bool up)
 {
     ifreq ifr = {};
     std::strncpy(ifr.ifr_name, intf, IF_NAMESIZE - 1);
-    if (ioctl(fd, SIOCGIFFLAGS, &ifr) != 0)
-    {
-        log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
-                        entry("ERROR=%s", strerror(errno)));
-        elog<InternalFailure>();
-    }
+    getIFSock().ioctl(SIOCGIFFLAGS, &ifr);
 
     ifr.ifr_flags &= ~IFF_UP;
     ifr.ifr_flags |= up ? IFF_UP : 0;
-
-    if (ioctl(fd, SIOCSIFFLAGS, &ifr) != 0)
-    {
-        log<level::ERR>("ioctl failed for SIOCSIFFLAGS:",
-                        entry("ERROR=%s", strerror(errno)));
-        elog<InternalFailure>();
-    }
+    getIFSock().ioctl(SIOCSIFFLAGS, &ifr);
 }
 
 bool EthernetInterface::nicEnabled(bool value)
@@ -779,22 +739,15 @@ bool EthernetInterface::nicEnabled(bool value)
         return value;
     }
 
-    EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
-    if (eifSocket.sock < 0)
-    {
-        return EthernetInterfaceIntf::nicEnabled();
-    }
-
     EthernetInterfaceIntf::nicEnabled(value);
     writeConfigurationFile();
     if (!value)
     {
         // We only need to bring down the interface, networkd will always bring
         // up managed interfaces
-        manager.addReloadPreHook(
-            [ifname = interfaceName(), eifSocket = std::move(eifSocket)]() {
-                setNICAdminState(eifSocket.sock, ifname.c_str(), false);
-            });
+        manager.addReloadPreHook([ifname = interfaceName()]() {
+            setNICAdminState(ifname.c_str(), false);
+        });
     }
     manager.reloadConfigs();
 
@@ -1245,8 +1198,7 @@ std::string EthernetInterface::macAddress(std::string value)
         writeConfigurationFile();
         manager.addReloadPreHook([interface]() {
             // The MAC and LLADDRs will only update if the NIC is already down
-            EthernetIntfSocket eifSocket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
-            setNICAdminState(eifSocket.sock, interface.c_str(), false);
+            setNICAdminState(interface.c_str(), false);
         });
         manager.reloadConfigs();
     }
