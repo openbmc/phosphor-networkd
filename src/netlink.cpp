@@ -1,14 +1,12 @@
 #include "netlink.hpp"
 
-#include "util.hpp"
-
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
-#include <sys/socket.h>
-#include <unistd.h>
 
 #include <array>
 #include <stdexcept>
+#include <stdplus/fd/create.hpp>
+#include <stdplus/fd/ops.hpp>
 #include <stdplus/raw.hpp>
 #include <system_error>
 
@@ -144,22 +142,16 @@ static void requestSend(int sock, void* data, size_t size)
     }
 }
 
-static int newRequestSocket(int protocol)
+static stdplus::ManagedFd makeSocket(int protocol)
 {
-    int sock = socket(AF_NETLINK, SOCK_RAW, protocol);
-    if (sock < 0)
-    {
-        throw std::system_error(errno, std::generic_category(), "netlink open");
-    }
+    using namespace stdplus::fd;
+
+    auto sock = socket(SocketDomain::Netlink, SocketType::Raw,
+                       static_cast<stdplus::fd::SocketProto>(protocol));
 
     sockaddr_nl local{};
     local.nl_family = AF_NETLINK;
-    int r = bind(sock, reinterpret_cast<sockaddr*>(&local), sizeof(local));
-    if (r < 0)
-    {
-        close(sock);
-        throw std::system_error(errno, std::generic_category(), "netlink bind");
-    }
+    bind(sock, local);
 
     return sock;
 }
@@ -167,9 +159,9 @@ static int newRequestSocket(int protocol)
 void performRequest(int protocol, void* data, size_t size,
                     const ReceiveCallback& cb)
 {
-    Descriptor sock(newRequestSocket(protocol));
-    requestSend(sock(), data, size);
-    receive(sock(), cb);
+    auto sock = makeSocket(protocol);
+    requestSend(sock.get(), data, size);
+    receive(sock.get(), cb);
 }
 
 } // namespace detail
