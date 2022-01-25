@@ -28,7 +28,7 @@ class TestRtNetlink : public testing::Test
 
   public:
     std::string confDir;
-    phosphor::Descriptor smartSock;
+    std::optional<rtnetlink::Server> svr;
 
     TestRtNetlink()
     {
@@ -42,7 +42,7 @@ class TestRtNetlink : public testing::Test
         initializeTimers();
         createNetLinkSocket();
         bus.attach_event(eventPtr.get(), SD_EVENT_PRIORITY_NORMAL);
-        rtnetlink::Server svr(eventPtr, smartSock);
+        svr.emplace(eventPtr);
     }
 
     ~TestRtNetlink()
@@ -58,13 +58,6 @@ class TestRtNetlink : public testing::Test
         char tmp[] = "/tmp/NetworkManager.XXXXXX";
         confDir = mkdtemp(tmp);
         manager->setConfDir(confDir);
-    }
-
-    void createNetLinkSocket()
-    {
-        // RtnetLink socket
-        auto fd = socket(PF_NETLINK, SOCK_RAW | SOCK_NONBLOCK, NETLINK_ROUTE);
-        smartSock.set(fd);
     }
 };
 
@@ -89,7 +82,7 @@ TEST_F(TestRtNetlink, WithSingleInterface)
 
     EXPECT_EQ(false, manager->hasInterface("igb5"));
     // Send the request
-    send(smartSock(), nlMsg, nlMsg->nlmsg_len, 0);
+    send(svr->sock(), nlMsg, nlMsg->nlmsg_len, 0);
 
     int i = 3;
     while (i--)
