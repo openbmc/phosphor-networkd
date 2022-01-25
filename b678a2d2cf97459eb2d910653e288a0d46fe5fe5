@@ -187,6 +187,30 @@
       },
       "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f51125a8_6d21b226",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-01-25T03:50:27Z",
+      "side": 1,
+      "message": "My query was regarding the https://github.com/openbmc/phosphor-dbus-interfaces/blob/master/yaml/xyz/openbmc_project/Network/EthernetInterface.interface.yaml\nWhere we have\n 1) nameservers: which shows all the namse servers configured on the system(Read only).\n2) Static Nameservers: which shows all the static nameservers configured on the system(Read/write).\n\nNow when you have a single D-bus property how you are going to differentiate? Say user wants to patch the Ntp servers property and delete the Ntp servers which BMC got it through DHCP.\n\nHow we are going to control that?",
+      "parentUuid": "a636469a_ac2b2959",
+      "range": {
+        "startLine": 846,
+        "startChar": 0,
+        "endLine": 847,
+        "endChar": 29
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
