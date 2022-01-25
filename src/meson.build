@@ -83,7 +83,6 @@ networkd_lib = static_library(
   'vlan_interface.cpp',
   'rtnetlink_server.cpp',
   'dns_updater.cpp',
-  'watch.cpp',
   implicit_include_directories: false,
   include_directories: src_includes,
   dependencies: networkd_deps)
