@@ -97,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4db7d072_3ed1fb99",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-01-25T03:53:20Z",
+      "side": 1,
+      "message": "You can have ntp server specific to the intreface.\nhttps://www.freedesktop.org/software/systemd/man/systemd.network.html",
+      "parentUuid": "3931517a_3c9ec0ac",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 68
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b6767268_f2ae7c77",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
