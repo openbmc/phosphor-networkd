@@ -1,19 +1,15 @@
 #include "rtnetlink_server.hpp"
 
-#include "types.hpp"
-#include "util.hpp"
-
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
-#include <net/if.h>
 #include <netinet/in.h>
-#include <sys/types.h>
-#include <systemd/sd-daemon.h>
-#include <unistd.h>
 
 #include <memory>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
+#include <stdplus/fd/create.hpp>
+#include <stdplus/fd/ops.hpp>
+#include <stdplus/signal.hpp>
 #include <string_view>
 #include <xyz/openbmc_project/Common/error.hpp>
 
@@ -96,64 +92,49 @@ static int eventHandler(sd_event_source* /*es*/, int fd, uint32_t /*revents*/,
     return 0;
 }
 
-Server::Server(EventPtr& eventPtr, const phosphor::Descriptor& smartSock)
+static stdplus::ManagedFd makeSock()
+{
+    using namespace stdplus::fd;
+
+    auto sock = socket(SocketDomain::Netlink, SocketType::Raw,
+                       static_cast<stdplus::fd::SocketProto>(NETLINK_ROUTE));
+
+    sock.fcntlSetfl(sock.fcntlGetfl().set(FileFlag::NonBlock));
+
+    sockaddr_nl local{};
+    local.nl_family = AF_NETLINK;
+    local.nl_groups = RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR |
+                      RTMGRP_IPV4_ROUTE | RTMGRP_IPV6_ROUTE | RTMGRP_NEIGH;
+    bind(sock, local);
+
+    return sock;
+}
+
+Server::Server(EventPtr& eventPtr) : sock(makeSock())
 {
     using namespace phosphor::logging;
     using InternalFailure =
         sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
-    struct sockaddr_nl addr
-    {
-    };
     int r{};
-
-    sigset_t ss{};
-    // check that the given socket is valid or not.
-    if (smartSock() < 0)
-    {
-        r = -EBADF;
-        goto finish;
-    }
-
-    if (sigemptyset(&ss) < 0 || sigaddset(&ss, SIGTERM) < 0 ||
-        sigaddset(&ss, SIGINT) < 0)
-    {
-        r = -errno;
-        goto finish;
-    }
-    /* Block SIGTERM first, so that the event loop can handle it */
-    if (sigprocmask(SIG_BLOCK, &ss, NULL) < 0)
-    {
-        r = -errno;
-        goto finish;
-    }
 
     /* Let's make use of the default handler and "floating"
        reference features of sd_event_add_signal() */
 
+    stdplus::signal::block(SIGTERM);
     r = sd_event_add_signal(eventPtr.get(), NULL, SIGTERM, NULL, NULL);
     if (r < 0)
     {
         goto finish;
     }
 
+    stdplus::signal::block(SIGINT);
     r = sd_event_add_signal(eventPtr.get(), NULL, SIGINT, NULL, NULL);
     if (r < 0)
     {
         goto finish;
     }
 
-    std::memset(&addr, 0, sizeof(addr));
-    addr.nl_family = AF_NETLINK;
-    addr.nl_groups = RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR |
-                     RTMGRP_IPV4_ROUTE | RTMGRP_IPV6_ROUTE | RTMGRP_NEIGH;
-
-    if (bind(smartSock(), (struct sockaddr*)&addr, sizeof(addr)) < 0)
-    {
-        r = -errno;
-        goto finish;
-    }
-
-    r = sd_event_add_io(eventPtr.get(), nullptr, smartSock(), EPOLLIN,
+    r = sd_event_add_io(eventPtr.get(), nullptr, sock.get(), EPOLLIN,
                         eventHandler, nullptr);
     if (r < 0)
     {
