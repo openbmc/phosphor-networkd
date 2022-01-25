@@ -1,9 +1,8 @@
 #pragma once
 
 #include "types.hpp"
-#include "util.hpp"
 
-#include <systemd/sd-event.h>
+#include <stdplus/fd/managed.hpp>
 
 namespace phosphor
 {
@@ -31,14 +30,10 @@ class Server
      *  @param[in] eventPtr - Unique ptr reference to sd_event.
      *  @param[in] socket - netlink socket.
      */
-    Server(EventPtr& eventPtr, const phosphor::Descriptor& socket);
+    Server(EventPtr& eventPtr);
 
-    Server() = delete;
-    ~Server() = default;
-    Server(const Server&) = delete;
-    Server& operator=(const Server&) = delete;
-    Server(Server&&) = default;
-    Server& operator=(Server&&) = default;
+  private:
+    stdplus::ManagedFd sock;
 };
 
 } // namespace rtnetlink
