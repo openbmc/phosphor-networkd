@@ -28,7 +28,7 @@ class TestRtNetlink : public TestWithTmp
 {
 
   public:
-    phosphor::Descriptor smartSock;
+    std::optional<rtnetlink::Server> svr;
 
     TestRtNetlink()
     {
@@ -41,8 +41,9 @@ class TestRtNetlink : public TestWithTmp
         initializeTimers();
         createNetLinkSocket();
         bus.attach_event(eventPtr.get(), SD_EVENT_PRIORITY_NORMAL);
-        rtnetlink::Server svr(eventPtr, smartSock);
+        svr.emplace(eventPtr);
     }
+
     void createNetLinkSocket()
     {
         // RtnetLink socket
@@ -72,7 +73,7 @@ TEST_F(TestRtNetlink, WithSingleInterface)
 
     EXPECT_EQ(false, manager->hasInterface("igb5"));
     // Send the request
-    send(smartSock(), nlMsg, nlMsg->nlmsg_len, 0);
+    send(svr->getSock(), nlMsg, nlMsg->nlmsg_len, 0);
 
     int i = 3;
     while (i--)

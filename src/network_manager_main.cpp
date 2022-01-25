@@ -265,19 +265,6 @@ void initializeTimers()
 } // namespace network
 } // namespace phosphor
 
-void createNetLinkSocket(phosphor::Descriptor& smartSock)
-{
-    // RtnetLink socket
-    auto fd = socket(PF_NETLINK, SOCK_RAW | SOCK_NONBLOCK, NETLINK_ROUTE);
-    if (fd < 0)
-    {
-        log<level::ERR>("Unable to create the net link socket",
-                        entry("ERRNO=%d", errno));
-        elog<InternalFailure>();
-    }
-    smartSock.set(fd);
-}
-
 int main(int /*argc*/, char** /*argv*/)
 {
     phosphor::network::initializeTimers();
@@ -315,12 +302,8 @@ int main(int /*argc*/, char** /*argv*/)
         phosphor::network::manager->reloadConfigs();
     }
 
-    // RtnetLink socket
-    phosphor::Descriptor smartSock;
-    createNetLinkSocket(smartSock);
-
     // RTNETLINK event handler
-    phosphor::network::rtnetlink::Server svr(eventPtr, smartSock);
+    phosphor::network::rtnetlink::Server svr(eventPtr);
 
 #ifdef SYNC_MAC_FROM_INVENTORY
     std::ifstream in(configFile);
