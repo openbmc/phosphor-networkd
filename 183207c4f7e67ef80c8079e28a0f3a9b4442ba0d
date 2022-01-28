@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3424b91a_adc15b2b",
+        "filename": "src/network_manager_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-01-28T06:03:17Z",
+      "side": 0,
+      "message": "If I remember correctly, it was done to unit test the rtnet link code, which has been commented out since long.",
+      "range": {
+        "startLine": 318,
+        "startChar": 1,
+        "endLine": 323,
+        "endChar": 64
+      },
+      "revId": "183207c4f7e67ef80c8079e28a0f3a9b4442ba0d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
