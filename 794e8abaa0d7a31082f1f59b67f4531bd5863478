@@ -16,6 +16,24 @@
       "message": "Can you squash both the commits the one before and this one?",
       "revId": "794e8abaa0d7a31082f1f59b67f4531bd5863478",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "556276a7_13fdab08",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-01-29T00:35:43Z",
+      "side": 1,
+      "message": "Sure",
+      "parentUuid": "5a282afb_38dff8a6",
+      "revId": "794e8abaa0d7a31082f1f59b67f4531bd5863478",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
