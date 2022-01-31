@@ -121,6 +121,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "73247d67_3eaf33cc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-01-31T11:33:04Z",
+      "side": 1,
+      "message": "Yes. systemd has it at interface level. But redfish does not have an interface level command to PATCH the nameservers. Its at the system level, and that made us to copy the same value to both interfaces. \n\nWe need a way from redfish to allow setting the ntp servers at EthernetInterface schema. Not at the NetworkProtocol schema.",
+      "parentUuid": "4db7d072_3ed1fb99",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 68
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b6767268_f2ae7c77",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
