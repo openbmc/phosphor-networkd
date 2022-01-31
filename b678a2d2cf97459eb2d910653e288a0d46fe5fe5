@@ -145,6 +145,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c620189a_2ee9b0be",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-01-31T11:44:36Z",
+      "side": 1,
+      "message": "On second thought - Ratan, should the NTP server be at interface level ? or its good to be at system level ? \nNTP is for the time management and it does not matter if the time comes down to the system via eth0 or eth1. Single time should be given to the system.\nExample - If both interfaces have different NTP servers attached, then which NTP server\u0027s time is going to be consumed by the system?",
+      "parentUuid": "73247d67_3eaf33cc",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 68
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b6767268_f2ae7c77",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
