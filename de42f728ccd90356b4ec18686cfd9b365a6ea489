@@ -18,6 +18,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ccbd278d_c13606a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-02-02T16:49:52Z",
+      "side": 1,
+      "message": "I\u0027d like to defer implementation of my suggestions in favor of moving this commit into the main line.",
+      "revId": "de42f728ccd90356b4ec18686cfd9b365a6ea489",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "65aaf4f6_d305537d",
