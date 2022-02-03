@@ -169,6 +169,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d4867c2b_91a9e235",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-02-03T04:42:18Z",
+      "side": 1,
+      "message": "@sunitha: Can you get the opinion from the systemd-networkd by opening a issue in the systemd-repo?\nPhopshor-networkd is a wrapper over systemd-networkd, We are not taking our decision by looking at the external interface level protocols. \n\n\u003e  But redfish does not have an interface level command to PATCH the nameservers.\n\nRedfish is having the interface level command to patch the nameservers.\n\n\u003e On second thought - Ratan, should the NTP server be at interface level ? or its good to be at system level ? \nNTP is for the time management and it does not matter if the time comes down to the system via eth0 or eth1. Single time should be given to the system.\n\nYour point is correct but that should be same for the namserver and the ntpserver both.\n\nI think we need to get some opinion from the systemd-networkd.",
+      "parentUuid": "c620189a_2ee9b0be",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 68
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b6767268_f2ae7c77",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
