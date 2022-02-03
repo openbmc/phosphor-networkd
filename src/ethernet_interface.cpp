@@ -1029,10 +1029,12 @@ void EthernetInterface::writeConfigurationFile()
     // Write the link section
     stream << "[Link]\n";
     auto mac = MacAddressIntf::macAddress();
+#ifdef DEFAULT_WRITE_MAC
     if (!mac.empty())
     {
         stream << "MACAddress=" << mac << "\n";
     }
+#endif
 
     if (!EthernetInterfaceIntf::nicEnabled())
     {
