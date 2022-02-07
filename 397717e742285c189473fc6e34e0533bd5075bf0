@@ -16,6 +16,24 @@
       "message": "Get rid of `default-enable`. Also I\u0027d prefer `persist` as opposed to `write`. Same with the CAPS variable below.",
       "revId": "397717e742285c189473fc6e34e0533bd5075bf0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d7ee336_8900d1aa",
+        "filename": "meson_options.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-02-07T21:56:58Z",
+      "side": 1,
+      "message": "Do you mean you want \"MAC\" to be \"mac\" despite it being an industry standard term?",
+      "parentUuid": "33d01a6d_1d03a004",
+      "revId": "397717e742285c189473fc6e34e0533bd5075bf0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
