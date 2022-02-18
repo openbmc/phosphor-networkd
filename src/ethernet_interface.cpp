@@ -1028,8 +1028,8 @@ void EthernetInterface::writeConfigurationFile()
 
     // Write the link section
     stream << "[Link]\n";
-    auto mac = MacAddressIntf::macAddress();
 #ifdef PERSIST_MAC
+    auto mac = MacAddressIntf::macAddress();
     if (!mac.empty())
     {
         stream << "MACAddress=" << mac << "\n";
@@ -1156,8 +1156,9 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
     }
 }
 
-std::string EthernetInterface::macAddress(std::string value)
+std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
 {
+#if PERSIST_MAC
     ether_addr newMAC;
     try
     {
@@ -1213,6 +1214,9 @@ std::string EthernetInterface::macAddress(std::string value)
 #endif // HAVE_UBOOT_ENV
 
     return value;
+#else
+    elog<NotAllowed>(NotAllowedArgument::REASON("Writing MAC address is not allowed"));
+#endif // PERSIST_MAC
 }
 
 void EthernetInterface::deleteAll()
