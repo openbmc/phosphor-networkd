@@ -50,6 +50,23 @@
       "message": "Looks good to me.",
       "revId": "82cb9a307418c16baf1d216d036091a735cb896f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd20c002_b4a2aa89",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001252
+      },
+      "writtenOn": "2022-02-19T06:26:39Z",
+      "side": 1,
+      "message": "phosphor-dbus-interface changes has been merged",
+      "revId": "82cb9a307418c16baf1d216d036091a735cb896f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
