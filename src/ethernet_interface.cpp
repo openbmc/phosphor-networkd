@@ -43,6 +43,9 @@ constexpr auto RESOLVED_SERVICE = "org.freedesktop.resolve1";
 constexpr auto RESOLVED_INTERFACE = "org.freedesktop.resolve1.Link";
 constexpr auto PROPERTY_INTERFACE = "org.freedesktop.DBus.Properties";
 constexpr auto RESOLVED_SERVICE_PATH = "/org/freedesktop/resolve1/link/";
+constexpr char SYSTEMD_SERVICE[] = "org.freedesktop.systemd1";
+constexpr char SYSTEMD_PATH[] = "/org/freedesktop/systemd1";
+constexpr char SYSTEMD_INTERFACE[] = "org.freedesktop.systemd1.Manager";
 constexpr auto METHOD_GET = "Get";
 
 std::map<EthernetInterface::DHCPConf, std::string> mapDHCPToSystemd = {
@@ -505,7 +508,10 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
     vlanInterfaces.erase(it);
 
     writeConfigurationFile();
+    checkNetIpmidServiceToRestart(interface);
+
     manager.reloadConfigs();
+    manager.restartNetIpmid();
 }
 
 std::string EthernetInterface::generateObjectPath(
@@ -911,6 +917,43 @@ void EthernetInterface::loadVLAN(VlanId id)
                                  std::move(vlanIntf));
 }
 
+void EthernetInterface::checkNetIpmidServiceToRestart(
+    const std::string& interface)
+{
+    using ListUnitsType = std::vector<
+        std::tuple<std::string, std::string, std::string, std::string,
+                   std::string, std::string, sdbusplus::message::object_path,
+                   uint32_t, std::string, sdbusplus::message::object_path>>;
+    constexpr int subStateIndex = 4;
+
+    const std::string instanceName = interface.substr(0, interface.find("."));
+    const std::string serviceName =
+        "phosphor-ipmi-net@" + instanceName + ".service";
+
+    ListUnitsType listUnits;
+    try
+    {
+        auto method =
+            bus.new_method_call(SYSTEMD_SERVICE, SYSTEMD_PATH,
+                                SYSTEMD_INTERFACE, "ListUnitsByNames");
+        method.append(std::vector<std::string>({serviceName}));
+        auto reply = bus.call(method);
+        reply.read(listUnits);
+    }
+    catch (const sdbusplus::exception::exception& ex)
+    {
+        log<level::ERR>("Failed to get phosphor-ipmi-net service status",
+                        entry("ERR=%s", ex.what()));
+        elog<InternalFailure>();
+    }
+
+    if (!listUnits.empty() &&
+        std::get<subStateIndex>(listUnits[0]) == "running")
+    {
+        manager.addNetIpmidToRestart(serviceName);
+    }
+}
+
 ObjectPath EthernetInterface::createVLAN(VlanId id)
 {
     std::string vlanInterfaceName = interfaceName() + "." + std::to_string(id);
@@ -930,7 +973,10 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
     this->vlanInterfaces.emplace(vlanInterfaceName, std::move(vlanIntf));
 
     writeConfigurationFile();
+    checkNetIpmidServiceToRestart(interfaceName());
+
     manager.reloadConfigs();
+    manager.restartNetIpmid();
 
     return path;
 }

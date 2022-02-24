@@ -36,6 +36,7 @@ namespace network
 {
 
 extern std::unique_ptr<Timer> reloadTimer;
+extern std::unique_ptr<Timer> restartNetIpmidTimer;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
@@ -258,6 +259,11 @@ void Manager::reloadConfigs()
     reloadTimer->restartOnce(reloadTimeout);
 }
 
+void Manager::restartNetIpmid()
+{
+    restartNetIpmidTimer->restartOnce(refreshTimeout);
+}
+
 void Manager::doReloadConfigs()
 {
     for (auto& hook : reloadPreHooks)
@@ -285,6 +291,28 @@ void Manager::doReloadConfigs()
                         entry("ERR=%s", ex.what()));
         elog<InternalFailure>();
     }
+}
+
+void Manager::doRestartNetIpmid()
+{
+    for (auto& service : netIpmidToRestart)
+    {
+        try
+        {
+            auto method = bus.new_method_call(SYSTEMD_BUSNAME, SYSTEMD_PATH,
+                                              SYSTEMD_INTERFACE, "RestartUnit");
+            method.append(service, "replace");
+            bus.call_noreply(method);
+        }
+        catch (const sdbusplus::exception::exception& ex)
+        {
+            log<level::ERR>("Failed to restart phosphor-ipmi-net service",
+                            entry("SERVICE=%s", service.c_str()),
+                            entry("ERR=%s", ex.what()));
+            elog<InternalFailure>();
+        }
+    }
+    netIpmidToRestart.clear();
 }
 
 } // namespace network

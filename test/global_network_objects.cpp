@@ -12,6 +12,7 @@ namespace network
 std::unique_ptr<MockManager> manager = nullptr;
 std::unique_ptr<Timer> refreshObjectTimer = nullptr;
 std::unique_ptr<Timer> reloadTimer = nullptr;
+std::unique_ptr<Timer> restartNetIpmidTimer = nullptr;
 
 /** @brief refresh the network objects. */
 void refreshObjects()
