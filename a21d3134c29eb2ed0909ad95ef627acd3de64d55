@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d27fdaf0_2164bd22",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-02-24T17:41:54Z",
+      "side": 1,
+      "message": "I\u0027m pretty against having functionality like this in phosphor-networkd. phosphor-ipmi-net could bind to all interfaces or read netlink events to see if it should reconfigure. It should not be the job of phosphor-networkd to try and guess what needs to be restarted based on upcoming networking changes.",
+      "revId": "a21d3134c29eb2ed0909ad95ef627acd3de64d55",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
