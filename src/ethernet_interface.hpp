@@ -363,6 +363,12 @@ class EthernetInterface : public Ifaces
      *  @returns true/false value if the NIC is enabled
      */
     bool queryNicEnabled() const;
+
+    /** @brief Check the status of phosphor-ipmi-net service on given interface.
+     *         If it is running, add it to the restart queue.
+     *  @param[in] interface - Interface, can be a vlan interface.
+     */
+    void checkNetIpmidServiceToRestart(const std::string& interface);
 };
 
 } // namespace network
