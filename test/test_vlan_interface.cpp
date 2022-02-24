@@ -26,7 +26,7 @@ class TestVlanInterface : public testing::Test
   public:
     sdbusplus::bus::bus bus;
     MockManager manager;
-    EthernetInterface interface;
+    MockEthernetInterface interface;
     std::string confDir;
     TestVlanInterface() :
         bus(sdbusplus::bus::new_default()),
@@ -45,8 +45,8 @@ class TestVlanInterface : public testing::Test
         }
     }
 
-    static EthernetInterface makeInterface(sdbusplus::bus::bus& bus,
-                                           MockManager& manager)
+    static MockEthernetInterface makeInterface(sdbusplus::bus::bus& bus,
+                                               MockManager& manager)
     {
         mock_clear();
         mock_addIF("test0", 1);

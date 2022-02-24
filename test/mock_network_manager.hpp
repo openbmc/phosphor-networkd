@@ -47,6 +47,7 @@ class MockManager : public phosphor::network::Manager
     }
 
     MOCK_METHOD(void, reloadConfigs, (), (override));
+    MOCK_METHOD(void, restartNetIpmid, (), (override));
 };
 
 } // namespace network
