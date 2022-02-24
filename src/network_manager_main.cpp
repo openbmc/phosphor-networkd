@@ -49,6 +49,7 @@ namespace network
 std::unique_ptr<phosphor::network::Manager> manager = nullptr;
 std::unique_ptr<Timer> refreshObjectTimer = nullptr;
 std::unique_ptr<Timer> reloadTimer = nullptr;
+std::unique_ptr<Timer> restartNetIpmidTimer = nullptr;
 
 #ifdef SYNC_MAC_FROM_INVENTORY
 std::unique_ptr<sdbusplus::bus::match::match> EthInterfaceMatch = nullptr;
@@ -254,12 +255,24 @@ void reloadNetworkd()
     }
 }
 
+void restartNetIpmid()
+{
+    if (manager)
+    {
+        log<level::INFO>("Restarting phosphor-ipmi-net");
+        manager->doRestartNetIpmid();
+        log<level::INFO>("Done phosphor-ipmi-net reload");
+    }
+}
+
 void initializeTimers()
 {
     auto event = sdeventplus::Event::get_default();
     refreshObjectTimer =
         std::make_unique<Timer>(event, std::bind(refreshObjects));
     reloadTimer = std::make_unique<Timer>(event, std::bind(reloadNetworkd));
+    restartNetIpmidTimer =
+        std::make_unique<Timer>(event, std::bind(restartNetIpmid));
 }
 
 } // namespace network

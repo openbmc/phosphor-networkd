@@ -130,9 +130,19 @@ class Manager : public details::VLANCreateIface
      */
     virtual void reloadConfigs();
 
+    /** @brief Arms a timer to tell systemd to restart phosphor-ipmi-net service
+     * on given interfaces
+     */
+    virtual void restartNetIpmid();
+
     /** @brief Tell systemd-network to reload all of the network configurations
      */
     void doReloadConfigs();
+
+    /** @brief Tell systemd to restart phosphor-ipmi-net service on given
+     * interfaces
+     */
+    void doRestartNetIpmid();
 
     /** @brief Returns the number of interfaces under this manager.
      *
@@ -171,6 +181,16 @@ class Manager : public details::VLANCreateIface
         reloadPreHooks.push_back(std::move(hook));
     }
 
+    /** @brief Adds a phosphor-ipmi-net service to be retarted after reloading
+     *
+     *  @param[in] string - The phosphor-ipmi-net to be restarted after
+     * reloading
+     */
+    inline void addNetIpmidToRestart(const std::string& service)
+    {
+        netIpmidToRestart.push_back(service);
+    }
+
   protected:
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;
@@ -199,6 +219,9 @@ class Manager : public details::VLANCreateIface
 
     /** @brief List of hooks to execute during the next reload */
     std::vector<fu2::unique_function<void()>> reloadPreHooks;
+
+    /** @brief List of interfaces needed restart IPMI service */
+    std::vector<std::string> netIpmidToRestart;
 };
 
 } // namespace network
