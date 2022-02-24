@@ -21,6 +21,8 @@ class MockEthernetInterface : public EthernetInterface
     }
 
     MOCK_METHOD((ServerList), getNameServerFromResolvd, (), (override));
+    MOCK_METHOD(void, checkNetIpmidServiceToRestart, (const std::string&),
+                (override));
     friend class TestEthernetInterface;
 };
 } // namespace network
