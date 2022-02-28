@@ -16,6 +16,24 @@
       "message": "I\u0027m pretty against having functionality like this in phosphor-networkd. phosphor-ipmi-net could bind to all interfaces or read netlink events to see if it should reconfigure. It should not be the job of phosphor-networkd to try and guess what needs to be restarted based on upcoming networking changes.",
       "revId": "a21d3134c29eb2ed0909ad95ef627acd3de64d55",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d387f521_35f9020b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001252
+      },
+      "writtenOn": "2022-02-28T03:44:57Z",
+      "side": 1,
+      "message": "Actually, I also think this is not a good solution, but it seems currently there is no better solution than this. The cleanest solution I think is monitor changes in phosphor-ipmi-net and reconfigure itself like you said, but there is lots of limitations there.\n\nIPMI spec says the IPMI over LAN service should be only working on one VLAN of a interface, which is against Linux\u0027s being able to have multiple VLANs. And phosphor-ipmi-net only supports binding to interfaces on start, it cannot reconfigure itself at runtime, so to reconfigure it, either using another application or making architectural changes are required.\n\nThough the initial VLAN support commit of phosphor-ipmi-net says it should be restarted by phosphor-host-ipmid when making VLAN changes, but Redfish can also configure VLANs, that\u0027s why I make this into phosphor-networkd.\n\nMaybe this can be made as an optional feature of phosphor-networkd? Or simply abandon this patch. Someone can find this when dealing with the IPMI VLAN issue.",
+      "parentUuid": "d27fdaf0_2164bd22",
+      "revId": "a21d3134c29eb2ed0909ad95ef627acd3de64d55",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
