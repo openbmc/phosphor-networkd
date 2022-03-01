@@ -34,6 +34,29 @@
       "parentUuid": "d27fdaf0_2164bd22",
       "revId": "a21d3134c29eb2ed0909ad95ef627acd3de64d55",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8a6b3db_72fd59eb",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 976,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-03-01T06:20:16Z",
+      "side": 1,
+      "message": "I am not getting why the netIPMID can\u0027t watch for INTERFACE added on the VLAN interface?",
+      "range": {
+        "startLine": 976,
+        "startChar": 1,
+        "endLine": 976,
+        "endChar": 51
+      },
+      "revId": "a21d3134c29eb2ed0909ad95ef627acd3de64d55",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
