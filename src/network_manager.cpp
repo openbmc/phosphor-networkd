@@ -190,7 +190,9 @@ ObjectPath Manager::vlan(IntfName interfaceName, uint32_t id)
 {
     if (!hasInterface(interfaceName))
     {
-        elog<ResourceNotFound>();
+        using ResourceErr =
+            phosphor::logging::xyz::openbmc_project::Common::ResourceNotFound;
+        elog<ResourceNotFound>(ResourceErr::RESOURCE(interfaceName.c_str()));
     }
 
     return interfaces[interfaceName]->createVLAN(id);
