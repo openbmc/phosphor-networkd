@@ -84,6 +84,24 @@
       "message": "Where is the requirement for \"disable writing of MAC address\"? I am not sure PERSIST_MAC\u003dfalse is the same as disable write. To me PERSIST_MAC\u003dfalse can be MAC is writable but not remembered cross power cycle and maybe reset.\n",
       "revId": "82cb9a307418c16baf1d216d036091a735cb896f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b71cf82_e558b624",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001252
+      },
+      "writtenOn": "2022-03-19T03:34:59Z",
+      "side": 1,
+      "message": "Actually, I also think \"persist-mac\" is not a good name for this feature.\n\nIn Jonathan\u0027s original patch https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-networkd/+/50902 , this option disallows writing MAC address in systemd-networkd config file, keeping the MAC address always being the hardware MAC.\n\nA better name for this is \"allow-mac-change\" or \"persist-hardware-mac\"?",
+      "parentUuid": "123c81fa_2199cecf",
+      "revId": "82cb9a307418c16baf1d216d036091a735cb896f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
