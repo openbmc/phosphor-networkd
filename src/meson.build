@@ -1,6 +1,4 @@
-phosphor_logging_dep = dependency(
-  'phosphor-logging',
-  fallback: ['phosphor-logging', 'phosphor_logging_dep'])
+phosphor_logging_dep = dependency('phosphor-logging')
 
 src_includes = include_directories('.')
 
@@ -45,10 +43,7 @@ if get_option('sync-mac')
     'nlohmann::json::string_t',
     required: false)
   if not has_json
-    json_dep = dependency(
-      'nlohmann_json',
-      fallback: ['nlohmann_json', 'nlohmann_json_dep'],
-      required: true)
+    json_dep = dependency('nlohmann_json')
   endif
 endif
 
@@ -58,8 +53,8 @@ networkd_deps = [
   phosphor_logging_dep,
   networkd_dbus_dep,
   sdbusplus_dep,
-  dependency('sdeventplus', fallback: ['sdeventplus', 'sdeventplus_dep']),
-  dependency('stdplus', fallback: ['stdplus', 'stdplus_dep']),
+  dependency('sdeventplus'),
+  dependency('stdplus'),
 ]
 
 conf_header = configure_file(

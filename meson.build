@@ -23,16 +23,9 @@ conf_data.set('NIC_SUPPORTS_ETHTOOL', get_option('nic-ethtool'))
 conf_data.set('SYNC_MAC_FROM_INVENTORY', get_option('sync-mac'))
 conf_data.set('PERSIST_MAC', get_option('persist-mac'))
 
-sdbusplus_dep = dependency('sdbusplus', required: false)
-if sdbusplus_dep.found() and sdbusplus_dep.type_name() != 'internal'
-  sdbusplusplus_prog = find_program('sdbus++', native: true)
-  sdbuspp_gen_meson_prog = find_program('sdbus++-gen-meson', native: true)
-else
-  sdbusplus_proj = subproject('sdbusplus', required: true)
-  sdbusplus_dep = sdbusplus_proj.get_variable('sdbusplus_dep')
-  sdbusplusplus_prog = sdbusplus_proj.get_variable('sdbusplusplus_prog')
-  sdbuspp_gen_meson_prog = sdbusplus_proj.get_variable('sdbuspp_gen_meson_prog')
-endif
+sdbusplus_dep = dependency('sdbusplus')
+sdbusplusplus_prog = find_program('sdbus++', native: true)
+sdbuspp_gen_meson_prog = find_program('sdbus++-gen-meson', native: true)
 
 generated_sources = []
 generated_others = []
@@ -41,9 +34,7 @@ subdir('gen')
 subdir('gen/xyz')
 networkd_dbus_includes = include_directories('gen')
 
-phosphor_dbus_interfaces_dep = dependency(
-  'phosphor-dbus-interfaces',
-  fallback: ['phosphor-dbus-interfaces', 'phosphor_dbus_interfaces_dep'])
+phosphor_dbus_interfaces_dep = dependency('phosphor-dbus-interfaces')
 
 networkd_dbus_deps = [
   phosphor_dbus_interfaces_dep,
