@@ -102,6 +102,23 @@
       "parentUuid": "123c81fa_2199cecf",
       "revId": "82cb9a307418c16baf1d216d036091a735cb896f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ca50c7d_fa268800",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-03-21T14:48:37Z",
+      "side": 1,
+      "message": "Zhikui,\nAs you know, Intel has specific methods for changing the MAC address that are more strict than other vendors. I submitted the change to allow Intel\u0027s more strict model to block the systemd.networkd model used by every other OBMC consumer. Jiaqing\u0027s change is closing a loophole in my original commit.\n\nThe PERSIST_MAC compile time switch name was recommended by William Kennington, who is a maintainer of the repo. I had no strong opinion concerning the name change, and used the name suggested by William.",
+      "revId": "82cb9a307418c16baf1d216d036091a735cb896f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
