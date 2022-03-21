@@ -119,6 +119,42 @@
       "message": "Zhikui,\nAs you know, Intel has specific methods for changing the MAC address that are more strict than other vendors. I submitted the change to allow Intel\u0027s more strict model to block the systemd.networkd model used by every other OBMC consumer. Jiaqing\u0027s change is closing a loophole in my original commit.\n\nThe PERSIST_MAC compile time switch name was recommended by William Kennington, who is a maintainer of the repo. I had no strong opinion concerning the name change, and used the name suggested by William.",
       "revId": "82cb9a307418c16baf1d216d036091a735cb896f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38e69b64_5d34adc2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000559
+      },
+      "writtenOn": "2022-03-21T18:34:11Z",
+      "side": 1,
+      "message": "Thank you for the background info. Since the name is blessed by the maintainer, I am OK with it as a reviewer.",
+      "parentUuid": "0ca50c7d_fa268800",
+      "revId": "82cb9a307418c16baf1d216d036091a735cb896f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3f6fa3f_56b2b795",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000559
+      },
+      "writtenOn": "2022-03-21T18:34:11Z",
+      "side": 1,
+      "message": "Thanks for the reference.",
+      "parentUuid": "2b71cf82_e558b624",
+      "revId": "82cb9a307418c16baf1d216d036091a735cb896f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
