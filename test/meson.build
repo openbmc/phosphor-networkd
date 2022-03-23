@@ -60,5 +60,6 @@ foreach t : tests
       t.underscorify(),
       'test_' + t + '.cpp',
       implicit_include_directories: false,
-      dependencies: test_dep))
+      dependencies: test_dep),
+      timeout: 90)
 endforeach
