@@ -1,6 +1,7 @@
 #pragma once
 
 #include <span>
+#include <string>
 
 namespace phosphor
 {
@@ -11,6 +12,7 @@ namespace ncsi
 
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
+inline std::string ncsiVer;
 
 /* @brief  This function will ask underlying NCSI driver
  *         to send an OEM command (command type 0x50) with
