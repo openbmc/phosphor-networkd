@@ -88,7 +88,7 @@ std::vector<NeighborInfo> getCurrentNeighbors(const NeighborFilter& filter)
 Neighbor::Neighbor(sdbusplus::bus::bus& bus, const char* objPath,
                    EthernetInterface& parent, const std::string& ipAddress,
                    const std::string& macAddress, State state) :
-    NeighborObj(bus, objPath, true),
+    NeighborObj(bus, objPath, NeighborObj::action::defer_emit),
     parent(parent)
 {
     this->ipAddress(ipAddress);
