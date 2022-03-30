@@ -1,0 +1,12 @@
+[Unit]
+Description=NIC card informations
+
+[Service]
+ExecStart=/usr/bin/env phosphor-ncsi-info
+Restart=always
+SyslogIdentifier=phosphor-ncsi-info
+Type=dbus
+BusName=@BUSNAME@
+
+[Install]
+WantedBy=@SYSTEMD_TARGET@
