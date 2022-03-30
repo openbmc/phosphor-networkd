@@ -98,3 +98,19 @@ executable(
 if (get_option('hyp-nw-config') == true)
   subdir('ibm')
 endif
+
+executable(
+  'phosphor-ncsi-info',
+  'ncsi_info_main.cpp',
+  'ncsi_util.cpp',
+  implicit_include_directories: false,
+  include_directories: src_includes,
+  dependencies: [
+    fmt_dep,
+    dependency('libnl-3.0'),
+    dependency('libnl-genl-3.0'),
+    phosphor_dbus_interfaces_dep,
+    phosphor_logging_dep,
+  ],
+  install: true,
+  install_dir: get_option('bindir'))

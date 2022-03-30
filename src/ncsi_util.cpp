@@ -181,6 +181,7 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
                 auto str =
                     nla_get_string(channeltb[NCSI_CHANNEL_ATTR_VERSION_STR]);
                 std::cout << "Channel Version Str :" << str << std::endl;
+                ncsiVer = str;
             }
             if (channeltb[NCSI_CHANNEL_ATTR_LINK_STATE])
             {
