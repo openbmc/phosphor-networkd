@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "556a8140_659e6e84",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-03-31T20:15:21Z",
+      "side": 1,
+      "message": "Patchset 5 fixes an issue in the unit tests.\nThe test was trying to read contents from a file that didn\u0027t exist.\nThe test needs to create the default file, in the same way as the actual network manager code.",
+      "revId": "5cd98d4554e19e92354046c0c6fcf18918886e81",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
