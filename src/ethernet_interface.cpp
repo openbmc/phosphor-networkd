@@ -1143,6 +1143,7 @@ void EthernetInterface::writeDHCPSection(std::fstream& stream)
     {
         auto value = manager.getDHCPConf()->dnsEnabled() ? "true"s : "false"s;
         stream << "UseDNS="s + value + "\n";
+        stream << "UseDomains="s + value + "\n";
 
         value = manager.getDHCPConf()->ntpEnabled() ? "true"s : "false"s;
         stream << "UseNTP="s + value + "\n";
