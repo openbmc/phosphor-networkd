@@ -38,7 +38,11 @@ void writeDHCPDefault(const std::string& filename, const std::string& interface)
                 "IPv6AcceptRA=false\n"
 
 #endif
-                "[DHCP]\nClientIdentifier=mac\n";
+                "[DHCP]\nClientIdentifier=mac\n"
+                "UseDNS=true\nUseDomains=true\n"
+                "UseNTP=true\nUseHostname=true\n"
+                "SendHostname=true\n";
+
     filestream.close();
 }
 } // namespace bmc
