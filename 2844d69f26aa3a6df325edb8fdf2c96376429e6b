@@ -54,6 +54,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3689c326_3c6356c1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-04-06T16:36:29Z",
+      "side": 1,
+      "message": "I\u0027m still not okay with this for the comment I left before. We have use cases where we use DHCP\u003dfalse and IPv6AcceptRA\u003dtrue managed by phosphor-netowrkd, so this change can\u0027t work for us.\n\nI don\u0027t see why we can\u0027t fix this in IPMI and redfish layers to smooth out any issues an end user would run into. We should be able to just set both properties when changing the DHCPv6 state.",
+      "parentUuid": "bfb91d26_122c5f9f",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f75c9f8c_dee81485",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 7
