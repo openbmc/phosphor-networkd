@@ -16,6 +16,23 @@
       "message": "I am good with the changes, Let william also take a look.",
       "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f75c9f8c_dee81485",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1001317
+      },
+      "writtenOn": "2022-04-06T04:41:50Z",
+      "side": 1,
+      "message": "It would be good if we break before default case.",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
