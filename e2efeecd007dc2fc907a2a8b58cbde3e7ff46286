@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d765ee7a_b7d6dfd0",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1020,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-04-07T10:29:41Z",
+      "side": 1,
+      "message": "As I said in the dbus interface review, this attempted validation is wrong. it makes total sense for a DHCP server but it does not make sense for an NTP server. \n\nDHCP is the name resolution so you cannot put a name here and it MUST be an up address. \nNTP uses name resolution and is, in practice, rarely an IP address.",
+      "revId": "e2efeecd007dc2fc907a2a8b58cbde3e7ff46286",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
