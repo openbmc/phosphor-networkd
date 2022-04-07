@@ -25,6 +25,8 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 void Table::refresh()
 {
+    defaultGateway.clear();
+    defaultGateway6.clear();
     try
     {
         rtmsg msg{};

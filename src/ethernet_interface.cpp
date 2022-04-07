@@ -1234,7 +1234,7 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
         return gw;
     }
 
-    if (!isValidIP(AF_INET, gateway))
+    if (!isValidIP(AF_INET, gateway) && !gateway.empty())
     {
         log<level::ERR>("Not a valid v4 Gateway",
                         entry("GATEWAY=%s", gateway.c_str()));
@@ -1257,7 +1257,7 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
         return gw;
     }
 
-    if (!isValidIP(AF_INET6, gateway))
+    if (!isValidIP(AF_INET6, gateway) && !gateway.empty())
     {
         log<level::ERR>("Not a valid v6 Gateway",
                         entry("GATEWAY=%s", gateway.c_str()));

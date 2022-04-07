@@ -217,6 +217,8 @@ TEST_F(TestEthernetInterface, addGateway)
     std::string gateway = "10.3.3.3";
     interface.defaultGateway(gateway);
     EXPECT_EQ(interface.defaultGateway(), gateway);
+    interface.defaultGateway("");
+    EXPECT_EQ(interface.defaultGateway(), "");
 }
 
 TEST_F(TestEthernetInterface, addGateway6)
@@ -224,6 +226,8 @@ TEST_F(TestEthernetInterface, addGateway6)
     std::string gateway6 = "ffff:ffff:ffff:fe80::1";
     interface.defaultGateway6(gateway6);
     EXPECT_EQ(interface.defaultGateway6(), gateway6);
+    interface.defaultGateway6("");
+    EXPECT_EQ(interface.defaultGateway6(), "");
 }
 
 } // namespace network
