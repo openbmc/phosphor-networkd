@@ -108,6 +108,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "595dfc56_0ec32c24",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-04-07T19:06:36Z",
+      "side": 1,
+      "message": "Which this commit supports.\nThe D-Bus value v6stateless turns off DHCPv4, and assigns IPv6AcceptRA\u003dt and DHCPv6Client\u003df. This blocks the BMC from trying to find a DHCPv6 server.\n\nThe current code performs a weird action where IPv6AcceptRA\u003df, and assigns a value to DHCPv6Client\u003df, which doesn\u0027t do anything. DHCPv6Client only matters when IPv6AcceptRA\u003dt.\n\nDHCP\u003dipv6 is effectively DHCP\u003dfalse. I was surprised to see the DHCP\u003dipv6 even occur in my recent testing. The map is supposed to set it false.",
+      "parentUuid": "250bb07b_20ecb8b5",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f75c9f8c_dee81485",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 7
