@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "250bb07b_20ecb8b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-04-07T18:52:34Z",
+      "side": 1,
+      "message": "Just no DHCP at all. SLAAC with RA and we intentionally don\u0027t want to send DHCP requests.",
+      "parentUuid": "da5e8a86_0640a74c",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f75c9f8c_dee81485",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 7
