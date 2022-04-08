@@ -36,6 +36,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd698083_86e47c7b",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1020,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-04-08T16:04:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32a6fa76_15170474",
+      "revId": "e2efeecd007dc2fc907a2a8b58cbde3e7ff46286",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "29fc0244_8dcb0e25",
@@ -49,6 +67,24 @@
       "writtenOn": "2022-04-07T18:13:52Z",
       "side": 1,
       "message": "elog already throws. There is no need to return here.",
+      "revId": "e2efeecd007dc2fc907a2a8b58cbde3e7ff46286",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6d20d08_5564e51b",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-04-08T16:04:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29fc0244_8dcb0e25",
       "revId": "e2efeecd007dc2fc907a2a8b58cbde3e7ff46286",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }

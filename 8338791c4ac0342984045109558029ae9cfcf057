@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c6640be_14d3608e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-04-08T16:04:14Z",
+      "side": 1,
+      "message": "Once the dbus interfaces change go in, the CI will pass.",
+      "revId": "8338791c4ac0342984045109558029ae9cfcf057",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
