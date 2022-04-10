@@ -8,9 +8,7 @@
 
 #include <iomanip>
 #include <iostream>
-#include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
-#include <xyz/openbmc_project/Common/error.hpp>
+#include <vector>
 
 namespace phosphor
 {
@@ -18,9 +16,6 @@ namespace network
 {
 namespace ncsi
 {
-
-using namespace phosphor::logging;
-using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 using CallBack = int (*)(struct nl_msg* msg, void* arg);
 
@@ -253,7 +248,7 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
     nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
     if (socket == nullptr)
     {
-        log<level::ERR>("Unable to allocate memory for the socket.");
+        std::cerr << "Unable to allocate memory for the socket" << std::endl;
         return -ENOMEM;
     }
 
@@ -274,7 +269,7 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
     nlMsgPtr msg(nlmsg_alloc(), &::nlmsg_free);
     if (msg == nullptr)
     {
-        log<level::ERR>("Unable to allocate memory for the message.");
+        std::cerr << "Unable to allocate memory for the message" << std::endl;
         return -ENOMEM;
     }
 
