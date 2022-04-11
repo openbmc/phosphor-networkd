@@ -144,6 +144,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "87711844_252d5645",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-04-11T14:02:32Z",
+      "side": 1,
+      "message": "@william: We already have the acceptRA property, which can be used to accept only the RA but don\u0027t start the DHCP, That can be fixed here to support the stateless IP without DHCP.\n\n\u003e We should probably just fix the d-bus schema to get rid of the enum combinatoric chaos.\n\nWhat is the chaos here? We should support all the enum configuration.\n         - name: both\n          - name: v4v6stateless\n          - name: v6\n          - name: v6stateless\n          - name: v4\n          - name: none",
+      "parentUuid": "2460cff7_ad1cf3f2",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f75c9f8c_dee81485",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 7
