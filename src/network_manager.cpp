@@ -180,7 +180,7 @@ void Manager::createChildObjects()
 
     // create the system conf object.
     systemConf = std::make_unique<phosphor::network::SystemConfiguration>(
-        bus, objPath.string(), *this);
+        bus, objPath.string());
     // create the dhcp conf object.
     objPath /= "dhcp";
     dhcpConf = std::make_unique<phosphor::network::dhcp::Configuration>(
