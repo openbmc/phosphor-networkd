@@ -37,27 +37,12 @@ class SystemConfiguration : public Iface
      *  @param[in] objPath - Path to attach at.
      *  @param[in] parent - Parent object.
      */
-    SystemConfiguration(sdbusplus::bus::bus& bus, const std::string& objPath,
-                        Manager& parent);
+    SystemConfiguration(sdbusplus::bus::bus& bus, const std::string& objPath);
 
     /** @brief set the hostname of the system.
      *  @param[in] name - host name of the system.
      */
     std::string hostName(std::string name) override;
-
-    /** @brief set the default v4 gateway of the system.
-     *  @param[in] gateway - default v4 gateway of the system.
-     */
-    std::string defaultGateway(std::string gateway) override;
-
-    using SystemConfigIntf::defaultGateway;
-
-    /** @brief set the default v6 gateway of the system.
-     *  @param[in] gateway - default v6 gateway of the system.
-     */
-    std::string defaultGateway6(std::string gateway) override;
-
-    using SystemConfigIntf::defaultGateway6;
 
   private:
     /** @brief get the hostname from the system by doing
@@ -67,9 +52,6 @@ class SystemConfiguration : public Iface
 
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus::bus& bus;
-
-    /** @brief Network Manager object. */
-    Manager& manager;
 };
 
 } // namespace network
