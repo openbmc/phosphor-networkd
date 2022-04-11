@@ -16,6 +16,23 @@
       "message": "Requires https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-dbus-interfaces/+/52785 being merged first",
       "revId": "5aa2912961bda7a1b48df36052601d1f5a01aaa7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a858be9_f64ed527",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-04-11T13:48:41Z",
+      "side": 1,
+      "message": "I am good with the changes. Seems we already have the test code for this, we are good here.\nLet\u0027s wait for other reviewers to take a look. ",
+      "revId": "5aa2912961bda7a1b48df36052601d1f5a01aaa7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
