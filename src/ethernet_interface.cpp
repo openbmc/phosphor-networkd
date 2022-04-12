@@ -771,18 +771,12 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
                 Argument::ARGUMENT_VALUE(nameserverip.c_str()));
         }
     }
-    try
-    {
-        EthernetInterfaceIntf::staticNameServers(value);
+    EthernetInterfaceIntf::staticNameServers(value);
 
-        writeConfigurationFile();
-        manager.reloadConfigs();
-    }
-    catch (const InternalFailure& e)
-    {
-        log<level::ERR>("Exception processing DNS entries");
-    }
-    return EthernetInterfaceIntf::staticNameServers();
+    writeConfigurationFile();
+    manager.reloadConfigs();
+
+    return value;
 }
 
 void EthernetInterface::loadNameServers()
