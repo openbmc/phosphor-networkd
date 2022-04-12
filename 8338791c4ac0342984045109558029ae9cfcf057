@@ -16,6 +16,23 @@
       "message": "Once the dbus interfaces change go in, the CI will pass.",
       "revId": "8338791c4ac0342984045109558029ae9cfcf057",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1376b441_6085450d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-04-12T21:33:13Z",
+      "side": 1,
+      "message": "I merged the phosphor-dbus-interfaces change but it appears that you have testcase failure that need to be worked out.",
+      "revId": "8338791c4ac0342984045109558029ae9cfcf057",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
