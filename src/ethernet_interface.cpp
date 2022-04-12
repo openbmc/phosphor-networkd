@@ -916,12 +916,20 @@ void EthernetInterface::loadVLAN(VlanId id)
 ObjectPath EthernetInterface::createVLAN(VlanId id)
 {
     std::string vlanInterfaceName = interfaceName() + "." + std::to_string(id);
+
+    if (this->vlanInterfaces.count(vlanInterfaceName))
+    {
+        log<level::ERR>("VLAN already exists", entry("VLANID=%u", id));
+        elog<InvalidArgument>(
+            Argument::ARGUMENT_NAME("VLANId"),
+            Argument::ARGUMENT_VALUE(std::to_string(id).c_str()));
+    }
+
     std::string path = objPath;
     path += "_" + std::to_string(id);
 
     // Pass the parents nicEnabled property, so that the child
     // VLAN interface can inherit.
-
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
         bus, path.c_str(), EthernetInterface::DHCPConf::none,
         EthernetInterfaceIntf::nicEnabled(), id, *this, manager);
