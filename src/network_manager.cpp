@@ -38,6 +38,7 @@ namespace network
 extern std::unique_ptr<Timer> reloadTimer;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
 Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath,
                  const std::string& path) :
@@ -194,6 +195,14 @@ ObjectPath Manager::vlan(IntfName interfaceName, uint32_t id)
         using ResourceErr =
             phosphor::logging::xyz::openbmc_project::Common::ResourceNotFound;
         elog<ResourceNotFound>(ResourceErr::RESOURCE(interfaceName.c_str()));
+    }
+
+    if (id == 0 || id >= 4095)
+    {
+        log<level::ERR>("VLAN ID is not valid", entry("VLANID=%u", id));
+        elog<InvalidArgument>(
+            Argument::ARGUMENT_NAME("VLANId"),
+            Argument::ARGUMENT_VALUE(std::to_string(id).c_str()));
     }
 
     return interfaces[interfaceName]->createVLAN(id);

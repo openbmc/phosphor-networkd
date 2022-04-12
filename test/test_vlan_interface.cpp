@@ -11,6 +11,7 @@
 #include <exception>
 #include <filesystem>
 #include <sdbusplus/bus.hpp>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gtest/gtest.h>
 
@@ -20,6 +21,8 @@ namespace network
 {
 
 namespace fs = std::filesystem;
+using InvalidArgument =
+    sdbusplus::xyz::openbmc_project::Common::Error::InvalidArgument;
 
 class TestVlanInterface : public testing::Test
 {
@@ -206,6 +209,13 @@ TEST_F(TestVlanInterface, createMultipleVLAN)
 
     deleteVlan("test0.50");
     deleteVlan("test0.60");
+}
+
+TEST_F(TestVlanInterface, createInvalidVLAN)
+{
+    EXPECT_THROW(createVlan(0), InvalidArgument);
+    EXPECT_THROW(createVlan(4095), InvalidArgument);
+    EXPECT_THROW(createVlan(9999), InvalidArgument);
 }
 
 } // namespace network
