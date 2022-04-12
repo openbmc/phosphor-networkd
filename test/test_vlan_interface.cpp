@@ -218,5 +218,12 @@ TEST_F(TestVlanInterface, createInvalidVLAN)
     EXPECT_THROW(createVlan(9999), InvalidArgument);
 }
 
+TEST_F(TestVlanInterface, createDuplicateVLAN)
+{
+    createVlan(50);
+    EXPECT_THROW(createVlan(50);, InvalidArgument);
+    deleteVlan("test0.50");
+}
+
 } // namespace network
 } // namespace phosphor
