@@ -34,6 +34,24 @@
       "parentUuid": "97b79055_62119e2d",
       "revId": "cfa23c83887d521282853c769ea19b7043e19667",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20444f96_662d9045",
+        "filename": "test/test_ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-04-19T12:46:36Z",
+      "side": 1,
+      "message": "No, What I am asking that you have mentioned that the test cases is Expecting this call getNTPServerFromTimeSyncd, \n\nHow the getNTPServerFromTimeSyncd is going to be called if we are creating the interface object?",
+      "parentUuid": "c5470c76_6801f6c0",
+      "revId": "cfa23c83887d521282853c769ea19b7043e19667",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
