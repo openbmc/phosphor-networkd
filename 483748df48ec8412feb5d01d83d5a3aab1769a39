@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "69ae025e_4b2b83a8",
         "filename": "/COMMIT_MSG",
@@ -14,10 +15,10 @@
       "side": 1,
       "message": "Can use eth0 instead of if0\nthis makes it unique, and easy to consume in bmcweb",
       "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "b4528f0a_a601ca34",
         "filename": "/COMMIT_MSG",
@@ -32,10 +33,10 @@
       "message": "Done",
       "parentUuid": "69ae025e_4b2b83a8",
       "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "895b8b35_156d3919",
         "filename": "/COMMIT_MSG",
@@ -49,10 +50,10 @@
       "side": 1,
       "message": "can we use int starting from 1 as ID instead of random number?",
       "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "71034c9a_8a88e6bd",
         "filename": "/COMMIT_MSG",
@@ -67,10 +68,10 @@
       "message": "Done\nadded \"addr0\"",
       "parentUuid": "895b8b35_156d3919",
       "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "001edd07_7fa9aeb4",
         "filename": "/COMMIT_MSG",
@@ -84,10 +85,28 @@
       "side": 1,
       "message": "we need to handle invalid argument errors, seems its crashing\nbusctl set-property xyz.openbmc_project.Network.Hypervisor /xyz/openbmc_project/network/hypervisor/if0/ipv4/1 xyz.openbmc_project.Network.IP Address s \"0.0.0\" \nterminate called after throwing an instance of \u0027sdbusplus::xyz::openbmc_project::Common::Error::InvalidArgument\u0027\n  what():  xyz.openbmc_project.Common.Error.InvalidArgument: Invalid argument was given.\nFailed to set property Address on interface xyz.openbmc_project.Network.IP: Remote peer disconnected\n[1]+  Aborted                 (core dumped) ./hyp-network-manager",
       "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ec75be3_9b6dbd20",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-04-21T04:59:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "001edd07_7fa9aeb4",
+      "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "a900f47c_4250d51f",
         "filename": "/COMMIT_MSG",
@@ -101,10 +120,10 @@
       "side": 1,
       "message": "are we persisting these D-bus objects?",
       "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "c7331d6a_21cc76de",
         "filename": "src/hypervisor-network-mgr-src/hyp_ip_interface.hpp",
@@ -118,10 +137,10 @@
       "side": 1,
       "message": "can we implement one more interface Enabled?\nwhich tell if its consumed by host or not",
       "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "1fcd03ab_2ab24e95",
         "filename": "src/hypervisor-network-mgr-src/hyp_ip_interface.hpp",
@@ -136,10 +155,10 @@
       "message": "Done",
       "parentUuid": "c7331d6a_21cc76de",
       "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "d02124e3_456a3a5f",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
@@ -153,10 +172,10 @@
       "side": 1,
       "message": "we need  a property for \"vmi_hostname\" as well\ncan we think about including property at manager level.",
       "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "160addcc_831a5c79",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
@@ -171,10 +190,10 @@
       "message": "Existing Networkd app hosts interface at /xyz/openbmc_project/network/config\nFor hostname. I think we may need same for vmi host name\n\nxyz.openbmc_project.Network.SystemConfiguration interface -         -                         -\n.DefaultGateway                                 property  s         \"10.10.10.10\"                emits-change writable\n.DefaultGateway6                                property  s         \"\"                        emits-change writable\n.HostName                                       property  s         \"Witherspoon\" emits-change writable",
       "parentUuid": "d02124e3_456a3a5f",
       "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "68d46bce_1aa68c3b",
         "filename": "src/hypervisor-network-mgr-src/hyp_network_manager.cpp",
@@ -189,8 +208,7 @@
       "message": "Done",
       "parentUuid": "160addcc_831a5c79",
       "revId": "483748df48ec8412feb5d01d83d5a3aab1769a39",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
