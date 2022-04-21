@@ -62,3 +62,7 @@ foreach t : tests
       implicit_include_directories: false,
       dependencies: test_dep))
 endforeach
+
+if (get_option('hyp-nw-config') == true)
+  subdir('ibm/hypervisor-network-mgr-test')
+endif
