@@ -162,6 +162,41 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "37eb4a43_adb4790c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-04-21T20:48:30Z",
+      "side": 1,
+      "message": "William, what is your specific proposal to modify?\n\nThe code change submitted here encapsulates the management of the systemd.network configuration files to be fully controlled by phosphor-network. The prior code change that allowed IPv6AcceptRA leaked implementation details for systemd.network to both IPMI and Redfish.\n\nThe IPMI and Redfish code should request state changes, and allow phosphor-network to achieve those state changes. Performing the task with the enumerations above allows both IPMI and Redfish to request new state without knowledge of the underlying components. The whole of systemd-network could be replaced with some other IP stack and IPMI/Redfish requests would still operate the same.\n\nThe current upstream code can\u0027t even properly manage SLAAC.\nIf IPv6 DHCP is on, then DHCPv6Client is true, and thus is not performing SLAAC. \n    stream \u003c\u003c \"[IPv6AcceptRA]\\n\";\n    stream \u003c\u003c \"DHCPv6Client\u003d\";\n    stream \u003c\u003c (dhcpIsEnabled(IP::Protocol::IPv6) ? \"true\" : \"false\");\n\nIf a BMC is getting a SLAAC, then the RA has to be configured in a way to prevent the \"Managed\" bit from being returned to the submitter.\n\nWith the current upstream code there\u0027s no way to have IPv6 true and DHCPv6Client assigned false. This is the definition of SLAAC operation.\n\n\nThe changes I\u0027ve submitted, explicitly control DHCP, IPv6AcceptRA, and DHCPv6Client without relying on, or trying to divine correct operation, from current state.\n\nWith the changes proposed here even with the RA advertising the \"Managed\" bit, assigning IPv6AcceptRA\u003dtrue, DHCPClientv6\u003dfalse makes the BMC IP stack self assign.",
+      "parentUuid": "87711844_252d5645",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c05f595a_5992e512",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-04-21T20:48:30Z",
+      "side": 1,
+      "message": "Maintainers,\nPlease suggest actionable changes, or approve the commit.",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f75c9f8c_dee81485",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 7
