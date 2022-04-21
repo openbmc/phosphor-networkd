@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "d85ba18f_7f6d1842",
         "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
@@ -20,10 +21,10 @@
         "endChar": 5
       },
       "revId": "6e67a8f41a4db2342fbb89b42ba75f4dc3da0bab",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "8388b37d_5caa9661",
         "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
@@ -44,8 +45,31 @@
         "endChar": 5
       },
       "revId": "6e67a8f41a4db2342fbb89b42ba75f4dc3da0bab",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ebfdbd1_8365ba59",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-04-21T04:58:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8388b37d_5caa9661",
+      "range": {
+        "startLine": 127,
+        "startChar": 1,
+        "endLine": 130,
+        "endChar": 5
+      },
+      "revId": "6e67a8f41a4db2342fbb89b42ba75f4dc3da0bab",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
