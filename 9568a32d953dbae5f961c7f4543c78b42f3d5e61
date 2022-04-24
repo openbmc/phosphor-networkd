@@ -16,6 +16,29 @@
       "message": "Hi Reviewers, any feedback ?",
       "revId": "9568a32d953dbae5f961c7f4543c78b42f3d5e61",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9acedd19_2476344d",
+        "filename": "src/network_config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-04-24T16:04:33Z",
+      "side": 1,
+      "message": "Why send host name \u003d true here?\nRest of the options, I can understand that we want to consume the info from the DHCP server",
+      "range": {
+        "startLine": 41,
+        "startChar": 108,
+        "endLine": 41,
+        "endChar": 125
+      },
+      "revId": "9568a32d953dbae5f961c7f4543c78b42f3d5e61",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
