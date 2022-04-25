@@ -47,9 +47,9 @@ std::string VlanInterface::macAddress(std::string)
 void VlanInterface::writeDeviceFile()
 {
     using namespace std::string_literals;
-    fs::path confPath = manager.getConfDir();
-    std::string fileName = EthernetInterface::interfaceName() + ".netdev"s;
-    confPath /= fileName;
+    fs::path confPath =
+        manager.getConfDir() /
+        systemd::config::deviceFilename(EthernetInterface::interfaceName());
     std::fstream stream;
     try
     {

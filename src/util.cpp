@@ -487,10 +487,7 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const fs::path& confDir,
     EthernetInterfaceIntf::DHCPConf dhcp =
         EthernetInterfaceIntf::DHCPConf::none;
     // Get the interface mode value from systemd conf
-    fs::path confPath = confDir;
-    std::string fileName = systemd::config::networkFilePrefix + intf +
-                           systemd::config::networkFileSuffix;
-    confPath /= fileName;
+    fs::path confPath = confDir / systemd::config::networkFilename(intf);
 
     auto rc = config::ReturnCode::SUCCESS;
     config::ValueList values;

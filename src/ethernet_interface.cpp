@@ -460,12 +460,9 @@ void EthernetInterface::deleteStaticNeighborObject(const std::string& ipAddress)
 void EthernetInterface::deleteVLANFromSystem(const std::string& interface)
 {
     auto confDir = manager.getConfDir();
-    fs::path networkFile = confDir;
-    networkFile /= systemd::config::networkFilePrefix + interface +
-                   systemd::config::networkFileSuffix;
-
-    fs::path deviceFile = confDir;
-    deviceFile /= interface + systemd::config::deviceFileSuffix;
+    fs::path networkFile =
+        confDir / systemd::config::networkFilename(interface);
+    fs::path deviceFile = confDir / systemd::config::deviceFilename(interface);
 
     // delete the vlan network file
     if (fs::is_regular_file(networkFile))
@@ -793,11 +790,8 @@ void EthernetInterface::loadNameServers()
 
 ServerList EthernetInterface::getstaticNameServerFromConf()
 {
-    fs::path confPath = manager.getConfDir();
-
-    std::string fileName = systemd::config::networkFilePrefix +
-                           interfaceName() + systemd::config::networkFileSuffix;
-    confPath /= fileName;
+    fs::path confPath = manager.getConfDir() /
+                        systemd::config::networkFilename(interfaceName());
     ServerList servers;
     config::Parser parser(confPath.string());
     auto rc = config::ReturnCode::SUCCESS;
@@ -939,11 +933,8 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
 
 bool EthernetInterface::getIPv6AcceptRAFromConf()
 {
-    fs::path confPath = manager.getConfDir();
-
-    std::string fileName = systemd::config::networkFilePrefix +
-                           interfaceName() + systemd::config::networkFileSuffix;
-    confPath /= fileName;
+    fs::path confPath = manager.getConfDir() /
+                        systemd::config::networkFilename(interfaceName());
     config::ValueList values;
     config::Parser parser(confPath.string());
     auto rc = config::ReturnCode::SUCCESS;
@@ -959,12 +950,8 @@ bool EthernetInterface::getIPv6AcceptRAFromConf()
 
 ServerList EthernetInterface::getNTPServersFromConf()
 {
-    fs::path confPath = manager.getConfDir();
-
-    std::string fileName = systemd::config::networkFilePrefix +
-                           interfaceName() + systemd::config::networkFileSuffix;
-    confPath /= fileName;
-
+    fs::path confPath = manager.getConfDir() /
+                        systemd::config::networkFilename(interfaceName());
     ServerList servers;
     config::Parser parser(confPath.string());
     auto rc = config::ReturnCode::SUCCESS;
@@ -1007,11 +994,9 @@ void EthernetInterface::writeConfigurationFile()
         intf.second->writeConfigurationFile();
     }
 
-    fs::path confPath = manager.getConfDir();
+    fs::path confPath = manager.getConfDir() /
+                        systemd::config::networkFilename(interfaceName());
 
-    std::string fileName = systemd::config::networkFilePrefix +
-                           interfaceName() + systemd::config::networkFileSuffix;
-    confPath /= fileName;
     std::fstream stream;
 
     stream.open(confPath.c_str(), std::fstream::out);

@@ -81,8 +81,7 @@ bool Configuration::getDHCPPropFromConf(const std::string& prop)
     auto interfaceStrList = getInterfaces();
     // get the first interface name, we need it to know config file name.
     auto interface = *interfaceStrList.begin();
-    auto fileName = systemd::config::networkFilePrefix + interface +
-                    systemd::config::networkFileSuffix;
+    auto fileName = systemd::config::networkFilename(interface);
 
     confPath /= fileName;
     // systemd default behaviour is all DHCP fields should be enabled by

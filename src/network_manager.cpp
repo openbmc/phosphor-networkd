@@ -80,11 +80,8 @@ bool Manager::createDefaultNetworkFiles(bool force)
                 continue;
             }
 
-            auto fileName = systemd::config::networkFilePrefix + interface +
-                            systemd::config::networkFileSuffix;
-
-            fs::path filePath = confDir;
-            filePath /= fileName;
+            fs::path filePath =
+                confDir / systemd::config::networkFilename(interface);
 
             // create the interface specific network file
             // if not exist or we forcefully wants to write

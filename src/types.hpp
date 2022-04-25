@@ -43,6 +43,16 @@ constexpr auto networkFilePrefix = "00-bmc-";
 constexpr auto networkFileSuffix = ".network";
 constexpr auto deviceFileSuffix = ".netdev";
 
+inline std::string networkFilename(const std::string& interface)
+{
+    return networkFilePrefix + interface + networkFileSuffix;
+}
+
+inline std::string deviceFilename(const std::string& interface)
+{
+    return interface + deviceFileSuffix;
+}
+
 } // namespace config
 } // namespace systemd
 
