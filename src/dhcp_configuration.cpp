@@ -77,6 +77,18 @@ bool Configuration::dnsEnabled(bool value)
 
 bool Configuration::getDHCPPropFromConf(const std::string& prop)
 {
+    // systemd default behaviour is all DHCP fields should be enabled by
+    // default.
+    auto propValue = true;
+
+    auto interfaceStrList = getInterfaces();
+    if (interfaceStrList.empty())
+    {
+        log<level::WARNING>("No interface found on system, using default value",
+                            entry("PROP=%s", prop.c_str()));
+        return propValue;
+    };
+
     fs::path confPath = manager.getConfDir();
     auto interfaceStrList = getInterfaces();
     // get the first interface name, we need it to know config file name.
@@ -85,9 +97,7 @@ bool Configuration::getDHCPPropFromConf(const std::string& prop)
                     systemd::config::networkFileSuffix;
 
     confPath /= fileName;
-    // systemd default behaviour is all DHCP fields should be enabled by
-    // default.
-    auto propValue = true;
+
     config::Parser parser(confPath);
 
     auto rc = config::ReturnCode::SUCCESS;
