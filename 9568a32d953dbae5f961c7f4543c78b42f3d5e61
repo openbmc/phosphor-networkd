@@ -39,6 +39,30 @@
       },
       "revId": "9568a32d953dbae5f961c7f4543c78b42f3d5e61",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91bf93b3_89e233e1",
+        "filename": "src/network_config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-04-25T03:47:50Z",
+      "side": 1,
+      "message": "As per https://www.freedesktop.org/software/systemd/man/systemd.network.html ; the initial DHCP request can contain the hostname of the dhcp client if the dhcp client has a valid hostname.\n\nSendHostname\u003d\nWhen true (the default), the machine\u0027s hostname (or the value specified with Hostname\u003d, described below) will be sent to the DHCP server. Note that the hostname must consist only of 7-bit ASCII lower-case characters and no spaces or dots, and be formatted as a valid DNS domain name. Otherwise, the hostname is not sent even if this option is true.",
+      "parentUuid": "9acedd19_2476344d",
+      "range": {
+        "startLine": 41,
+        "startChar": 108,
+        "endLine": 41,
+        "endChar": 125
+      },
+      "revId": "9568a32d953dbae5f961c7f4543c78b42f3d5e61",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
