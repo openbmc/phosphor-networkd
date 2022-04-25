@@ -50,6 +50,23 @@
       "message": "Can we get this to merge ? ",
       "revId": "bce29831976fa35e9189e0fe2f8850794f55f9f4",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e829b45d_2019a9df",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001252
+      },
+      "writtenOn": "2022-04-25T07:07:50Z",
+      "side": 1,
+      "message": "Looks good",
+      "revId": "bce29831976fa35e9189e0fe2f8850794f55f9f4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
