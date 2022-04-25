@@ -898,7 +898,7 @@ void EthernetInterface::loadVLAN(VlanId id)
     path += "_" + std::to_string(id);
 
     DHCPConf dhcpEnabled =
-        getDHCPValue(manager.getConfDir().string(), vlanInterfaceName);
+        getDHCPValue(manager.getConfDir(), vlanInterfaceName);
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
         bus, path.c_str(), dhcpEnabled, EthernetInterfaceIntf::nicEnabled(), id,
         *this, manager);

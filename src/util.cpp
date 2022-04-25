@@ -481,13 +481,12 @@ std::optional<std::string> interfaceToUbootEthAddr(const char* intf)
     return "eth" + std::to_string(idx) + "addr";
 }
 
-EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
+EthernetInterfaceIntf::DHCPConf getDHCPValue(const fs::path& confDir,
                                              const std::string& intf)
 {
     EthernetInterfaceIntf::DHCPConf dhcp =
         EthernetInterfaceIntf::DHCPConf::none;
     // Get the interface mode value from systemd conf
-    // using namespace std::string_literals;
     fs::path confPath = confDir;
     std::string fileName = systemd::config::networkFilePrefix + intf +
                            systemd::config::networkFileSuffix;
