@@ -9,11 +9,14 @@
 #include <unistd.h>
 
 #include <cstring>
+#include <filesystem>
 #include <optional>
 #include <sdbusplus/bus.hpp>
 #include <string>
 #include <string_view>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
+
+namespace fs = std::filesystem;
 
 namespace phosphor
 {
@@ -156,7 +159,7 @@ std::optional<std::string> interfaceToUbootEthAddr(const char* intf);
  *  @param[in] confDir - Network configuration directory.
  *  @param[in] intf - Interface name.
  */
-EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
+EthernetInterfaceIntf::DHCPConf getDHCPValue(const fs::path& confDir,
                                              const std::string& intf);
 
 namespace internal
