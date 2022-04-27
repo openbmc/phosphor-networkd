@@ -231,6 +231,41 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce5e4509_15b8410b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-04-27T17:40:08Z",
+      "side": 1,
+      "message": "I don\u0027t understand your comment:\n\u0027You have stopped allowing the user to change this property and it can be only controlled through DHCP option, which is breaking the old code.\u0027\n\nThis portion of the interface was being used by BMCWeb and phosphor-ipmi-host to directly control IPv6AcceptRA.\n\nI have created two other patches in those repos that perform the correct action.\n\nAre you saying someone may be using a method that invokes this function outside of IPMI and Redfish? This, IMO, validates that we have the incorrect API present on D-Bus.\n\nThe whole point of this change is to eliminate the leak of how systemd.network performs the work of getting DHCPv4 and v6 configured. Making the IPv6AcceptRA element visible on D-Bus was a mistake. It enables only part of the control necessary to correctly manage IPv6 address assignment. It needs to be ditched, IMO.\n\n\"in the RA message if A bit is set(M and O is not set) then you don\u0027t need DHCP, You only need the advertised  prefix from the router and do the SLAAC.\"\n\nWhat happens when those bits ARE set and you don\u0027t want DHCP? Having the ability to explicitly write DHCPv6Client true/false allows the BMC to choose to accept or to ignore those bits. I\u0027ve configured my radvd to enable both of those, and with IPv6AcceptRA\u003dtrue/DHCPv6Client\u003dtrue you get both DHCPv6 and SLAAC addresses. Using the \"v6stateless\" enum changes the combination to \"true/false\" and the BMC only performs a SLAAC assignment. This seems to me to be the correct operation.\n\nIf the directive from the maintainers is to make the flagged function continue to work, and to keep the technical debt associated, then an actionable recommendation has been provided.\n\nIs keeping that D-Bus entry active and performing some action the direction the maintainers wish?",
+      "parentUuid": "6ef14cd8_16991525",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb038d4e_d19c0948",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-04-27T17:40:08Z",
+      "side": 1,
+      "message": "Thank you for your specific objection/observation.",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f75c9f8c_dee81485",
