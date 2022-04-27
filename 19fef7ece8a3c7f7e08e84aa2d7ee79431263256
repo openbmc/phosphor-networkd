@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b464c57d_ac43cd91",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_sys_config.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-04-27T14:04:48Z",
+      "side": 1,
+      "message": "Just followed how it is being used in other places of the code",
+      "parentUuid": "5c10dc8b_25273bd2",
+      "range": {
+        "startLine": 14,
+        "startChar": 10,
+        "endLine": 14,
+        "endChar": 13
+      },
+      "revId": "19fef7ece8a3c7f7e08e84aa2d7ee79431263256",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "678102cd_620a7a12",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7e4702e_237080ee",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_sys_config.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-04-27T14:04:48Z",
+      "side": 1,
+      "message": "Thanks Andrew.\n\nDone",
+      "parentUuid": "678102cd_620a7a12",
+      "range": {
+        "startLine": 27,
+        "startChar": 32,
+        "endLine": 27,
+        "endChar": 36
+      },
+      "revId": "19fef7ece8a3c7f7e08e84aa2d7ee79431263256",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b1f11030_23cfca49",
@@ -60,6 +108,30 @@
       "writtenOn": "2022-04-21T13:17:30Z",
       "side": 1,
       "message": "should this be a reference type?",
+      "range": {
+        "startLine": 35,
+        "startChar": 47,
+        "endLine": 35,
+        "endChar": 51
+      },
+      "revId": "19fef7ece8a3c7f7e08e84aa2d7ee79431263256",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ff0c034_94563ae9",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_sys_config.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-04-27T14:04:48Z",
+      "side": 1,
+      "message": "Can be, but since followed how it is being used in other places of the code",
+      "parentUuid": "b1f11030_23cfca49",
       "range": {
         "startLine": 35,
         "startChar": 47,
