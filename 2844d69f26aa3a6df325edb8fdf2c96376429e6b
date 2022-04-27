@@ -195,6 +195,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "293c8b13_bdaa38f4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-04-27T15:26:23Z",
+      "side": 1,
+      "message": "@jonathan : What is broken now with this patch:  If user wants only the router published address and don\u0027t want any DHCP configuration then it will not work and that is breaking the old code..\n\nhttps://gerrit.openbmc-project.xyz/c/openbmc/phosphor-networkd/+/48040/7/src/ethernet_interface.cpp#574\n\nYou have stopped allowing the user to change this property and it can be only controlled through DHCP option, which is breaking the old code.",
+      "parentUuid": "c05f595a_5992e512",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f75c9f8c_dee81485",
