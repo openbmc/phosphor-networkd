@@ -213,6 +213,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ef14cd8_16991525",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-04-27T15:30:12Z",
+      "side": 1,
+      "message": "in the RA message if A bit is set(M and O is not set) then you don\u0027t need DHCP, You only need the advertised  prefix from the router and do the SLAAC.",
+      "parentUuid": "293c8b13_bdaa38f4",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f75c9f8c_dee81485",
