@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "48d475e6_b5ce730e",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2022-04-27T15:39:23Z",
+      "side": 1,
+      "message": "Please move the bus.call() inside the try/catch block, or this change causes the network app to core dump in non-NTP systems (TimeSyncMethod set to Manual),",
+      "revId": "cfa23c83887d521282853c769ea19b7043e19667",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "97b79055_62119e2d",
         "filename": "test/test_ethernet_interface.cpp",
         "patchSetId": 9
