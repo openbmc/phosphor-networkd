@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffc9e01d_64d1d384",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-04-28T11:58:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48d475e6_b5ce730e",
+      "revId": "cfa23c83887d521282853c769ea19b7043e19667",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "97b79055_62119e2d",
@@ -67,6 +85,24 @@
       "side": 1,
       "message": "No, What I am asking that you have mentioned that the test cases is Expecting this call getNTPServerFromTimeSyncd, \n\nHow the getNTPServerFromTimeSyncd is going to be called if we are creating the interface object?",
       "parentUuid": "c5470c76_6801f6c0",
+      "revId": "cfa23c83887d521282853c769ea19b7043e19667",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d920cb0b_b6521eb3",
+        "filename": "test/test_ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-04-28T11:58:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20444f96_662d9045",
       "revId": "cfa23c83887d521282853c769ea19b7043e19667",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
