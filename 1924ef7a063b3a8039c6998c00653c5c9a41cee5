@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05bffcd7_5dc050db",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 874,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-04-28T09:42:19Z",
+      "side": 1,
+      "message": "Please move this line into try block as well",
+      "range": {
+        "startLine": 874,
+        "startChar": 0,
+        "endLine": 874,
+        "endChar": 34
+      },
+      "revId": "1924ef7a063b3a8039c6998c00653c5c9a41cee5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e731e2d_36f009bd",
+        "filename": "test/mock_ethernet_interface.hpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-04-28T09:42:19Z",
+      "side": 1,
+      "message": "You need to mock getNTPServerFromTimeSyncd only",
+      "range": {
+        "startLine": 24,
+        "startChar": 22,
+        "endLine": 24,
+        "endChar": 36
+      },
+      "revId": "1924ef7a063b3a8039c6998c00653c5c9a41cee5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "963debfa_4ea20983",
+        "filename": "test/test_ethernet_interface.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-04-28T09:42:19Z",
+      "side": 1,
+      "message": "expect call to getNTPServerFromTimeSyncd",
+      "range": {
+        "startLine": 225,
+        "startChar": 27,
+        "endLine": 225,
+        "endChar": 41
+      },
+      "revId": "1924ef7a063b3a8039c6998c00653c5c9a41cee5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "287cb7e4_6230c609",
+        "filename": "test/test_ethernet_interface.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-04-28T09:42:19Z",
+      "side": 1,
+      "message": "this source code just returns the ntpServers list. So no need to test this.",
+      "range": {
+        "startLine": 226,
+        "startChar": 24,
+        "endLine": 226,
+        "endChar": 37
+      },
+      "revId": "1924ef7a063b3a8039c6998c00653c5c9a41cee5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
