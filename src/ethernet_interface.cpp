@@ -346,9 +346,6 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
     LinkSpeed speed = {};
     Autoneg autoneg = {};
     DuplexMode duplex = {};
-    LinkUp linkState = {};
-    NICEnabled enabled = {};
-    MTU mtuSize = {};
 
     std::strncpy(ifr.ifr_name, interfaceName().c_str(), IFNAMSIZ - 1);
     ifr.ifr_data = reinterpret_cast<char*>(&edata);
@@ -365,11 +362,7 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
     {
     }
 
-    enabled = nicEnabled();
-    linkState = linkUp();
-    mtuSize = mtu();
-
-    return std::make_tuple(speed, duplex, autoneg, linkState, enabled, mtuSize);
+    return std::make_tuple(speed, duplex, autoneg);
 }
 #endif
 

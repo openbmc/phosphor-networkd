@@ -55,8 +55,7 @@ using NICEnabled = bool;
 using MTU = size_t;
 using VlanId = uint32_t;
 using InterfaceName = std::string;
-using InterfaceInfo =
-    std::tuple<LinkSpeed, DuplexMode, Autoneg, LinkUp, NICEnabled, MTU>;
+using InterfaceInfo = std::tuple<LinkSpeed, DuplexMode, Autoneg>;
 using AddressMap = std::map<std::string, std::shared_ptr<IPAddress>>;
 using NeighborMap = std::map<std::string, std::shared_ptr<Neighbor>>;
 using VlanInterfaceMap =
