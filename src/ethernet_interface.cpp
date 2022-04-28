@@ -114,8 +114,9 @@ EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
 #ifdef NIC_SUPPORTS_ETHTOOL
     InterfaceInfo ifInfo = EthernetInterface::getInterfaceInfo();
 
-    EthernetInterfaceIntf::autoNeg(std::get<2>(ifInfo));
     EthernetInterfaceIntf::speed(std::get<0>(ifInfo));
+    EthernetInterfaceIntf::fullDuplex(std::get<1>(ifInfo) == DUPLEX_FULL);
+    EthernetInterfaceIntf::autoNeg(std::get<2>(ifInfo));
 #endif
 
     // Emit deferred signal.
