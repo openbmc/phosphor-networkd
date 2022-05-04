@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64d8664a_6ab4cc39",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 28
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-05-04T09:51:26Z",
+      "side": 1,
+      "message": "commit message is too lengthy. Please remove the outputs of the commands etc ",
+      "revId": "3fbafa1d2b36baac2e532f1b7f1220ebb56f9a7a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
