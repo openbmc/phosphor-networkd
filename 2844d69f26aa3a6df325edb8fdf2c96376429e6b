@@ -289,6 +289,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "401b2592_235b8f4b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-05-04T17:24:16Z",
+      "side": 1,
+      "message": "@jonathan : Before this patch we were having following types of IPv6 addresses supported.\n- DHCP stateful\n- DHCP stateless\n- Auto Configure address(SLAAC).\n\nWith this patch we are losing the third type of address.\n\nSay if user has disabled the DHCP, Can BMC get the SLAAC address (published by radvd where M, O is not set and  A bit is set), If not that is the concern.\n\n‘A’ flag set to 1 means a system will derive its IPv6 address based on the prefix information provided by a router  \n\n\u003e What happens when those bits(M \u0026 O) ARE set and you don\u0027t want DHCP? \n\nThat means disable the DHCP, However if the A bit is also set then BMC should get the SLAAC(Auto Configure address) and you can only get if the AcceptRa is true.\n\nHere is the meaning of certain flags:\n\nManaged (M flag) \u003d ‘1’ means the address is provided by stateful DHCPv6.\n\nOther (O flag) \u003d ‘1’ means that the address is provided by Stateless DHCPv6, useful for providing options when the client is doing SLAAC–Stateless Address Autoconfiguration. (Note, there is no option for a default gateway).\n\nAddress Autoconfiguration (A flag) \u003d ‘1’ means that it suggests the host creates its own IPv6 address using SLAAC.",
+      "parentUuid": "ce5e4509_15b8410b",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f75c9f8c_dee81485",
