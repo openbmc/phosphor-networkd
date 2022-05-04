@@ -98,6 +98,30 @@
       "parentUuid": "40b6306b_c046ede4",
       "revId": "9568a32d953dbae5f961c7f4543c78b42f3d5e61",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "909814b2_26f93272",
+        "filename": "src/network_config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-05-04T16:56:14Z",
+      "side": 1,
+      "message": "Are you saying that in your dhcp server configuration, you have specific configuration which is based on the hostname, Normally there is a mac address based IP address configuration.",
+      "parentUuid": "91bf93b3_89e233e1",
+      "range": {
+        "startLine": 41,
+        "startChar": 108,
+        "endLine": 41,
+        "endChar": 125
+      },
+      "revId": "9568a32d953dbae5f961c7f4543c78b42f3d5e61",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
