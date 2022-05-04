@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3ecd0c7a_dc46eced",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 874,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-05-04T07:43:12Z",
+      "side": 1,
+      "message": "Please push a separate commit for moving this into the try block",
+      "parentUuid": "05bffcd7_5dc050db",
+      "range": {
+        "startLine": 874,
+        "startChar": 0,
+        "endLine": 874,
+        "endChar": 34
+      },
+      "revId": "1924ef7a063b3a8039c6998c00653c5c9a41cee5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0e731e2d_36f009bd",
         "filename": "test/mock_ethernet_interface.hpp",
         "patchSetId": 14
