@@ -307,6 +307,41 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e765b73_7b09c46e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-05-04T18:22:36Z",
+      "side": 1,
+      "message": "What has been lost?\nCurrent upstream behavior:\nDirect enum control of the DHCP entry, with \"none\", \"ipv4\" and \"true\" the only valid values. The \"true\" value only impacts DHCPv4.\nDirect D-Bus control of IPv6AcceptRA\nNo control of DHCPv6Client. If IPv6AcceptRA \u003d true, then DHCPv6Client\u003dtrue, which only allows \"stateful\" address assignment. If \"stateless\" or \"slaac\" are happening with this setting it is the result of how the RA daemon is configured.\nThis model is \"working\".\n\nMy new code:\nControl of DHCP, IPv6AcceptRA, and DHCPv6Client via defined enums.\nVia the enums DHCP, IPv6AcceptRA, and DHCPv6Client can be set exactly as desired.\nAll 8 possible states are controllable with intent, not due to side-effects.\nThere has only been a gain in capability, not a loss.\n\nAt present BMCWeb does not implement any of the StatelessAddressAutoConfiguration schema. Thus OBMC has no direct way to instruct phosphor-network/systemd-networkd to configure SLAAC with intent.",
+      "parentUuid": "401b2592_235b8f4b",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5585ff37_2c46d58f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-05-04T18:22:36Z",
+      "side": 1,
+      "message": "Ratan,\nThanks for your response.\nPlease see my explanation/defense of the submission below.\nI do not see any loss of capability, only an improvement in capability.",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f75c9f8c_dee81485",
