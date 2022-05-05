@@ -361,6 +361,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bea20bb7_e8a7be17",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2022-05-05T13:58:21Z",
+      "side": 1,
+      "message": "I think we need to identify specific origin for SLAAC/DHCP v6 addresses to map with right redfish enum and display correct AddressOrigin \nfor SLAAC address displaying as \"AddressOrigin\": \"DHCPv6\" does not look correct to me.",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27e1859a_44732410",
         "filename": "src/network_config.cpp",
         "patchSetId": 7
