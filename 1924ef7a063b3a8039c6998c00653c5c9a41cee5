@@ -48,6 +48,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0bde1411_cd6a8ef0",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 874,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-05T05:53:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "05bffcd7_5dc050db",
+      "range": {
+        "startLine": 874,
+        "startChar": 0,
+        "endLine": 874,
+        "endChar": 34
+      },
+      "revId": "1924ef7a063b3a8039c6998c00653c5c9a41cee5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e731e2d_36f009bd",
@@ -61,6 +85,30 @@
       "writtenOn": "2022-04-28T09:42:19Z",
       "side": 1,
       "message": "You need to mock getNTPServerFromTimeSyncd only",
+      "range": {
+        "startLine": 24,
+        "startChar": 22,
+        "endLine": 24,
+        "endChar": 36
+      },
+      "revId": "1924ef7a063b3a8039c6998c00653c5c9a41cee5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0975a94f_921de2b9",
+        "filename": "test/mock_ethernet_interface.hpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-05T05:53:58Z",
+      "side": 1,
+      "message": "The latest PS contains the changes",
+      "parentUuid": "0e731e2d_36f009bd",
       "range": {
         "startLine": 24,
         "startChar": 22,
@@ -94,6 +142,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad15e1a8_03856ecd",
+        "filename": "test/test_ethernet_interface.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-05T05:53:58Z",
+      "side": 1,
+      "message": "The latest PS contains the changes",
+      "parentUuid": "963debfa_4ea20983",
+      "range": {
+        "startLine": 225,
+        "startChar": 27,
+        "endLine": 225,
+        "endChar": 41
+      },
+      "revId": "1924ef7a063b3a8039c6998c00653c5c9a41cee5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "287cb7e4_6230c609",
@@ -107,6 +179,30 @@
       "writtenOn": "2022-04-28T09:42:19Z",
       "side": 1,
       "message": "this source code just returns the ntpServers list. So no need to test this.",
+      "range": {
+        "startLine": 226,
+        "startChar": 24,
+        "endLine": 226,
+        "endChar": 37
+      },
+      "revId": "1924ef7a063b3a8039c6998c00653c5c9a41cee5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a198e8e_6d5a3c56",
+        "filename": "test/test_ethernet_interface.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-05T05:53:58Z",
+      "side": 1,
+      "message": "The latest PS contains the changes",
+      "parentUuid": "287cb7e4_6230c609",
       "range": {
         "startLine": 226,
         "startChar": 24,
