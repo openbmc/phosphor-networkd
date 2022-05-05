@@ -215,6 +215,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a5e0845_d61fb339",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-05-05T03:53:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4da5cae8_afc064d2",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 68
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b6767268_f2ae7c77",
@@ -419,6 +443,30 @@
       "side": 1,
       "message": "It should load the DHCP provided IPs from the timesyncd and the static ips from the configuration file. There should not be a write to config call here",
       "parentUuid": "468d677f_437e3408",
+      "range": {
+        "startLine": 846,
+        "startChar": 0,
+        "endLine": 847,
+        "endChar": 29
+      },
+      "revId": "b678a2d2cf97459eb2d910653e288a0d46fe5fe5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04a251fb_d8b8d6da",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-05-05T03:53:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45899ef7_5c420315",
       "range": {
         "startLine": 846,
         "startChar": 0,
