@@ -82,6 +82,27 @@ void HypNetworkMgr::setBIOSTableAttr(
     }
 }
 
+void HypNetworkMgr::setIf0DefaultBIOSTableAttrs()
+{
+    biosTableAttrs.emplace("vmi_if0_ipv4_ipaddr", "0.0.0.0");
+    biosTableAttrs.emplace("vmi_if0_ipv4_gateway", "0.0.0.0");
+    biosTableAttrs.emplace("vmi_if0_ipv4_prefix_length", 0);
+    biosTableAttrs.emplace("vmi_if0_ipv4_method", "IPv4Static");
+}
+
+void HypNetworkMgr::setIf1DefaultBIOSTableAttrs()
+{
+    biosTableAttrs.emplace("vmi_if1_ipv4_ipaddr", "0.0.0.0");
+    biosTableAttrs.emplace("vmi_if1_ipv4_gateway", "0.0.0.0");
+    biosTableAttrs.emplace("vmi_if1_ipv4_prefix_length", 0);
+    biosTableAttrs.emplace("vmi_if1_ipv4_method", "IPv4Static");
+}
+
+void HypNetworkMgr::setDefaultHostnameInBIOSTableAttrs()
+{
+    biosTableAttrs.emplace("vmi_hostname", "");
+}
+
 void HypNetworkMgr::setBIOSTableAttrs()
 {
     try
@@ -176,10 +197,6 @@ void HypNetworkMgr::setBIOSTableAttrs()
                         &std::get<biosBaseCurrValue>(item.second));
                     if (currValue != nullptr)
                     {
-                        if (item.first == "vmi_if_count")
-                        {
-                            intfCount = *currValue;
-                        }
                         biosTableAttrs.emplace(item.first, *currValue);
                     }
                 }
@@ -210,11 +227,6 @@ void HypNetworkMgr::setBIOSTableAttrs()
     }
 }
 
-uint16_t HypNetworkMgr::getIntfCount()
-{
-    return intfCount;
-}
-
 biosTableType HypNetworkMgr::getBIOSTableAttrs()
 {
     return biosTableAttrs;
@@ -224,21 +236,23 @@ void HypNetworkMgr::createIfObjects()
 {
     setBIOSTableAttrs();
 
-    if (intfCount == 1)
+    if ((getBIOSTableAttrs()).size() == 0)
     {
-        // TODO: create eth0 object
-        log<level::INFO>("Create eth0 object");
+        setDefaultHostnameInBIOSTableAttrs();
     }
-    else if (intfCount == 2)
-    {
-        // TODO: create eth0 and eth1 objects
-        log<level::INFO>("Create eth0 and eth1 objects");
-    }
-    else
-    {
-        log<level::ERR>("More than 2 Interfaces");
-        return;
-    }
+
+    // The hypervisor can support maximum of
+    // 2 ethernet interfaces. Both eth0/1 objects are
+    // created during init time to support the static
+    // network configurations on the both.
+    // create eth0 and eth1 objects
+    log<level::INFO>("Creating eth0 and eth1 objects");
+    interfaces.emplace("eth0",
+                       std::make_shared<phosphor::network::HypEthInterface>(
+                           bus, (objectPath + "/eth0").c_str(), "eth0", *this));
+    interfaces.emplace("eth1",
+                       std::make_shared<phosphor::network::HypEthInterface>(
+                           bus, (objectPath + "/eth1").c_str(), "eth1", *this));
 }
 
 } // namespace network
