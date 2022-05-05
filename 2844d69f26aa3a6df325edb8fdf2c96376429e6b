@@ -342,6 +342,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "67617405_f96de6b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000163
+      },
+      "writtenOn": "2022-05-05T22:07:23Z",
+      "side": 1,
+      "message": "@William, I do not understand how this will break the network for your requirements. If that is the case, can you be explicit on what part of this change is the problem?\n\nJohnathan created this change because the network configuration is not currently working for our needs. Rather than make a little fix that would probably necessitate further changes in the future, he made this change more complete, filling in all the possibilities.\n\nThe options offered in the patch not only provide a way to put the BMC into any of the dynamic addressing modes (all combinations of DHCPv4, DHCPv6, SLAAC, and NONE), but also does so in a very straightforward interface that is independent of IPMI and Redfish.\n\nSomehow both you and Ratan have come to the conclusion that this does not support v6 stateless (SLAAC). I am not sure how that conclusion was reached, given that this is explicitly one of the options available. If you disagree with that, please let Johnathan know how it does not fulfill your interpretation of this requirement.\n\nIf you are still not convinced, I would invite you to test the code in your environment and provide specific feedback on what is not working so we can move this patch forward.",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f75c9f8c_dee81485",
@@ -361,6 +378,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "113632a1_cb8addb0",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1000163
+      },
+      "writtenOn": "2022-05-05T22:07:23Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "f75c9f8c_dee81485",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bea20bb7_e8a7be17",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 7
@@ -372,6 +407,24 @@
       "writtenOn": "2022-05-05T13:58:21Z",
       "side": 1,
       "message": "I think we need to identify specific origin for SLAAC/DHCP v6 addresses to map with right redfish enum and display correct AddressOrigin \nfor SLAAC address displaying as \"AddressOrigin\": \"DHCPv6\" does not look correct to me.",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0360313e_5687d083",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1000163
+      },
+      "writtenOn": "2022-05-05T22:07:23Z",
+      "side": 1,
+      "message": "This is networking code, not Redfish code. The network configuration daemon should provide an interface that is independent of all the clients that would call into it. The interfaces should work for IPMI and Redfish, but should not have anything specific to either of them.",
+      "parentUuid": "bea20bb7_e8a7be17",
       "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
