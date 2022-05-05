@@ -24,6 +24,9 @@ int main(int /*argc*/, char** /*argv*/)
     phosphor::network::HypNetworkMgr manager(bus, event,
                                              DEFAULT_HYP_NW_OBJPATH);
 
+    // Create the hypervisor eth interface objects
+    manager.createIfObjects();
+
     bus.request_name(HYP_DEFAULT_NETWORK_BUSNAME);
 
     event.loop();
