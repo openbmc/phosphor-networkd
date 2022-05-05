@@ -867,10 +867,10 @@ ServerList EthernetInterface::getNameServerFromResolvd()
                                       PROPERTY_INTERFACE, METHOD_GET);
 
     method.append(RESOLVED_INTERFACE, "DNS");
-    auto reply = bus.call(method);
 
     try
     {
+        auto reply = bus.call(method);
         reply.read(name);
     }
     catch (const sdbusplus::exception_t& e)
