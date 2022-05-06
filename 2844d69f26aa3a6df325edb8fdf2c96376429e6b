@@ -395,6 +395,41 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "efd94b4b_7a391855",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-05-06T14:54:35Z",
+      "side": 1,
+      "message": "Ratan, Ravi,\nThank you for your time to help move this commit forward.\nI hope that my explanation of the \u0027v6stateless\u0027 enum puts to rest any concern about SLAAC no being supported.\n",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "013bd653_c1a5b75d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-05-06T14:54:35Z",
+      "side": 1,
+      "message": "Ratan,\nThat is the correct reading of the final entry of the tuple.\n\nThe systemd.networkd \"DHCP\u003d\" only controls IPv4.\nYou can assign the \"DHCP\u003d\" to \"ipv6\" and nothing changes in the IPv6 network stack. Thus there are only two states for \"DHCP\u003d\", and they only control IPv4.\n\nThe only time the IPv6 network stack performs any auto-config is when the \"IPv6AcceptRA\u003d\" entry is \"true\". The default behavior is for systemd.network to automatically enable \"DHCPv6Client\u003dtrue\", which is \"stateful\" operation.\n\nTo achieve \"stateless\" operation the systemd.network configuration file has to explicitly set \"DHCPv6Client\u003dfalse\" to prevent the stack from searching for a DHCPv6 server on the local network segment.\n\nTo get into the state you are requesting the D-Bus \"v6stateless\" state is sent. I\u0027ve mentioned this, and Vernon mentioned this yesterday. This assigns:\n\"DHCP\u003dfalse\"  # IPv4 DHCP is inactive\n\"IPv6AcceptRA\u003dtrue\" # IPv6 DHCP is enabled because you can\u0027t \"DHCP\" without a Routing Advertisement server on the local segment.\n\"DHCPv6Client\u003dfalse\" # Prevent the BMC network stack from searching the local segment for a DHCPv6 server (ala isc-dhcp-server6)\n\nI tested this before submitting this commit. \nMy SUT has this in the systemd.network config file:\nDHCP\u003dfalse\nIPv6AcceptRA\u003dtrue\n[IPv6AcceptRA]\nDHCPv6Client\u003dfalse\n\nMy SUT has the following behavior as a result:\neth1: \u003cBROADCAST,MULTICAST,UP,LOWER_UP\u003e mtu 1500 qdisc pfifo_fast qlen 1000\n    link/ether a4:xx:xx:xx:xx:cf brd ff:ff:ff:ff:ff:ff\n\n# No IPv4 DHCP address, this is Link Local\n    inet 169.254.105.183/16 brd 169.254.255.255 scope link eth1\n       valid_lft forever preferred_lft forever\n\n# IPv6 self assigned address\n    inet6 fd54:2112:1812:0:a6xx:xxf:fexx:xxcf/64 scope global dynamic noprefixroute flags 100 \n       valid_lft 86397sec preferred_lft 14397sec\n\n# Link Local IPv6 address\n    inet6 fe80::a6xx:xxf:fexx:xxcf/64 scope link \n       valid_lft forever preferred_lft forever\n\n\n\nChanging DHCPv6Client to true gets the following:\n\neth1: \u003cBROADCAST,MULTICAST,UP,LOWER_UP\u003e mtu 1500 qdisc pfifo_fast qlen 1000\n    link/ether a4:xx:xx:xx:xx:cf brd ff:ff:ff:ff:ff:ff\n# No change to IPv4 state\n    inet 169.254.105.183/16 brd 169.254.255.255 scope link eth1\n       valid_lft forever preferred_lft forever\n\n# Stateful IPv6 DHCP address assignment from the RA and DHCPv6 servers\n    inet6 fd54:2112:1812::4130/128 scope global dynamic noprefixroute \n       valid_lft 2591972sec preferred_lft 604772sec\n\n# Link local IPv6 address\n    inet6 fe80::a6xx:xxf:fexx:xxcf/64 scope link \n       valid_lft forever preferred_lft forever",
+      "parentUuid": "5bb09438_44a5f0f5",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f75c9f8c_dee81485",
@@ -497,6 +532,24 @@
       "side": 1,
       "message": "I get that, but Networkd should be able to identify DHCP address IP vs SLAAC IP and populate  correct origin enum on D-bus object right?\nThere is a enum defined for SLAAC but Networkd does not use.\nhttps://github.com/openbmc/phosphor-dbus-interfaces/blob/master/yaml/xyz/openbmc_project/Network/IP.interface.yaml#L65",
       "parentUuid": "7c242b8a_70914e21",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba889094_2e1e3f4f",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-05-06T14:54:35Z",
+      "side": 1,
+      "message": "There is a commit that William has pending. One that I\u0027d like to see merged. It uses netlink to query the assignment source for each address on the NIC. IMO using netlink is the superior method for detecting how the IP address was actually assigned. Inferring assignment based on DHCP enablement is flawed.\n\nIPv6 can have multiple IP addresses on the NIC. One could be statically assigned, one SLAAC, and one Stateful. Using the current logic all of these instances would be flagged \"DHCP\" assigned, when there\u0027s at least one that is statically assigned.\n\nThe results from netlink only announce \"static\" and \"dynamic\". There\u0027s only a single bit. IMO this is enough. Stateful and Stateless/SLAAC required no human interaction on the client to acquire an IPv6 address. This is DHCP. If, on the other hand, you used a UI, and explicitly typed in an IPv6 address, and all the other IPv6 network configuration data, you\u0027ve used a static assignment.\n\nAs to the D-Bus interfaces entry. Sometimes entries get made that ultimately turn out to be an \"appendix\". Nobody can figure out what the human appendix is good for, but it\u0027s there anyway.\n\nAdditionally, the two reporting/control protocols OBMC uses, IPMI and Redfish, up to this point have not had an interface providing visibility/control over IPv6 SLAAC.\n\nSo far as I can determine, there\u0027s no way other than parsing IPv6 addresses for a specific pattern to determine if an address is SLAAC. The netlink API won\u0027t tell you. Inferring from the systemd.network configuration won\u0027t tell you, and parsing IPv6 addresses is a marginal idea to figure it out. Without a reliable method of identifying the IP address assignment mode I don\u0027t expect anyone is going to go out of their way to announce an IPv6 address as SLAAC assigned when, in the majority of use cases, reporting DHCP is enough.",
+      "parentUuid": "fb6fc1b8_5901dca1",
       "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
