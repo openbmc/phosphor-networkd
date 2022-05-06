@@ -359,6 +359,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a53a0cb_f4e79069",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000276
+      },
+      "writtenOn": "2022-05-06T02:13:14Z",
+      "side": 1,
+      "message": "+1\nIt would be good if we can figure out how to move this patch forward.  Thanks!",
+      "parentUuid": "67617405_f96de6b9",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f75c9f8c_dee81485",
@@ -425,6 +443,24 @@
       "side": 1,
       "message": "This is networking code, not Redfish code. The network configuration daemon should provide an interface that is independent of all the clients that would call into it. The interfaces should work for IPMI and Redfish, but should not have anything specific to either of them.",
       "parentUuid": "bea20bb7_e8a7be17",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c242b8a_70914e21",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1000276
+      },
+      "writtenOn": "2022-05-06T02:13:14Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "0360313e_5687d083",
       "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
