@@ -432,6 +432,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1b79d4ec_c399e5a6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-05-07T06:01:57Z",
+      "side": 1,
+      "message": "Jonathan, Now while we are discussing, I see one more issue here.\ntuple elements: DHCP, IPv6AcceptRA, DHCPv6Client\n\n1)  {EthernetInterface::DHCPConf::v6stateless, {\"false\", \"true\", \"false\"}}\n\nThat means for the DHCPv6 stateless IP we are not starting the DHCPv6 client and as per me it is not correct, we should start the DHCPv6 client. Why?\n\nBecause for DHCPv6 stateless,  BMC will get the IP from the router but the other info like NTP,DNS details will be taken from the DHCP server.\n\nPlease refer the link below.\nhttps://www.networkacademy.io/ccna/ipv6/stateless-dhcpv6#:~:text\u003dStateless%20DHCPv6%20is%20used%20by,some%20other%20mechanism%20usually%20SLAAC.\n\n2) Now say I don\u0027t need DHCP at all, however I need the stateless auto config address.\n\nSay user has disabled DHCP by following busctl cmd(cmd may be syntactically wrong).\n\nbusctl call  xyz.openbmc_project.Network/xyz/openbmc_project/network/eth0 org.freedesktop.DBus.Properties Set ss xyz.openbmc_project.Network.EthernetInterface DHCP EthernetInterface::DHCPConf::none.\n\nNow user still want the SLAAC address, What should he do?\n\nWe don\u0027t want the DHCP API here, as we don\u0027t need to start the DHCP client here.\n\nIn all other cases of DHCP v6(Stateful or Stateless) we need to start the DHCpV6 client.\n\nDHCPv6 stateless(we still need dhcp client here) is different than autoconfigured address(we don\u0027t need DHCP at all).",
+      "parentUuid": "013bd653_c1a5b75d",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f75c9f8c_dee81485",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 7
