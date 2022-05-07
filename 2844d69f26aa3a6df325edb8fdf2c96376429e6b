@@ -450,6 +450,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4f8f7a53_9c77e7f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-05-07T11:28:31Z",
+      "side": 1,
+      "message": "More Info:\n\nFollowing is a list of the typical combinations of address configuration bits set within the RA message sent by the local router.\n\nA\u003d1, M\u003d0, O\u003d0\n\nEnd host uses stateless auto-configuration(NO DHCP)\n\nA\u003d1, M\u003d0, O\u003d1\n\nEnd host uses SLAAC and stateless DHCPv6, autoconfigured address but DNS and other information is added from DHCPv6 server.\n\nA\u003d0, M\u003d1, O\u003d1\no   End host uses DHCPv6 for all information",
+      "parentUuid": "1b79d4ec_c399e5a6",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f75c9f8c_dee81485",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 7
