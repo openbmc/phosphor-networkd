@@ -27,8 +27,7 @@ VlanInterface::VlanInterface(sdbusplus::bus::bus& bus,
                              EthernetInterface& intf, Manager& parent) :
     VlanIface(bus, objPath.c_str()),
     DeleteIface(bus, objPath.c_str()),
-    EthernetInterface(bus, objPath, dhcpEnabled, parent, /*emitSignal=*/false,
-                      nicEnabled),
+    EthernetInterface(bus, objPath, dhcpEnabled, parent, true, nicEnabled),
     parentInterface(intf)
 {
     id(vlanID);
