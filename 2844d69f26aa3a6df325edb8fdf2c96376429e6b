@@ -466,6 +466,41 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "365a9c06_63ad9156",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-05-09T16:21:24Z",
+      "side": 1,
+      "message": "Extensive reply.",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eacec461_88a9dde0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-05-09T16:21:24Z",
+      "side": 1,
+      "message": "Ratan,\n\nYou\u0027re proving that my configuration is correct.\n\n\u003e1)  {EthernetInterface::DHCPConf::v6stateless, {\"false\", \"true\", \"false\"}}\n\u003e That means for the DHCPv6 stateless IP we are not starting the DHCPv6 client \n\u003e and as per me it is not correct, we should start the DHCPv6 client. Why?\n\nStateless operation, by definition is configuration based solely on the Routing Advertisment Server on the local link. A DHCPv6 Server on the local link is **not** to be consulted.\n\nThe link you provided states the \"Routing Advertisement Server\" on the local link can send an \"O\u003d1\" response. This tells the BMC IPv6 stack to go find the \"Other\" source for DNS/NTP. This is \"Stateless with DHCPv6\" mode **forced** by the RA Server on the local link. It is a network infrastructure choice, made by the network link admin. The RA is specifically saying \"I don\u0027t care if you\u0027ve turned off DHCPv6 locally, do some/all of the RFC compliant DHCPv6 actions\".\n\n\u003e2) Now say I don\u0027t need DHCP at all, however I need the stateless auto config\n\u003e address.\n\nYou don\u0027t send \"none\". That explicitly tells the BMC networking stack you don\u0027t want IPv4 or any form of IPv6 address auto-config.\n\nThe Routing Advertisement Server on the local link has to be configured to not send the \"O\u003d1\" bit. You still have to have IPv6AcceptRA asserted to have any IPv6 \"auto configuration\" action to occur, whether Stateful, or Stateless. \n\nThis is, once again, a network infrastructure choice made by the network admin for the local link.\n\nIf IPv6AcceptRA is false, all IPv6 address assignment has to be done using static assignment. If IPv6AcceptRA is false it doesn\u0027t matter what you set DHCPv6Client to, it is ignored.\n\nIf the BMC has IPv6AcceptRA\u003dtrue and DHCPv6Client\u003dtrue then V6 Stateful operation is being performed. This is the \"v6\" enumeration. What happens still depends on how the RA Server and the DHCPv6 server are configured. In my testing, even if I had both of these values active, if the DHCPv6 server was misconfigured you still would not get a **stateful** assignment.\n\nFor this to work **ALL** of the individual servers and configuration variables must be set correctly.\n\nThat we are having this kind of detailed discussion of the guts of the OBMC IPv6 configuration leaves me to believe that exposing the individual pieces of the configuration options will lead to many users being unable to correctly configure their IPv6 OBMC/RA/DHCPv6 stack. The consensus will quickly build that OBMC cannot perform dynamic IPv6 address assignment. The defects will be filed in due time.\n\n\n\u003eFollowing is a list of the typical combinations of address configuration bits\n\u003e set within the RA message sent by the local router.\n\n\u003eA\u003d1, M\u003d0, O\u003d0\n\u003eEnd host uses stateless auto-configuration(NO DHCP)\nIPv6Stateless w/o DHCPv6. DHCPv6Client must be false.\n\n\u003eA\u003d1, M\u003d0, O\u003d1\n\u003eEnd host uses SLAAC and stateless DHCPv6, autoconfigured address but DNS and\n\u003e other information is added from DHCPv6 server.\nIPv6Stateless RA forcing DHCPv6 override.  DHCPv6Client must be false.\n\n\u003eA\u003d0, M\u003d1, O\u003d1\n\u003e End host uses DHCPv6 for all information\nIPv6 Stateful, DHCPv6Client must be true. RA is explicitly stating SLAAC is not being used.",
+      "parentUuid": "4f8f7a53_9c77e7f1",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f75c9f8c_dee81485",
