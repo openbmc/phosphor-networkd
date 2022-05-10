@@ -519,6 +519,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d99718b_8e8ebf1d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-05-10T08:53:11Z",
+      "side": 1,
+      "message": "Sorry, we are not in agreement here, We should have the configuration for all.\n\n- DHCP stateless: Where BMC have to start the DHCPv6client for the other info(i.e DHCPv6 stateless)\n\n- DHCP Stateful : Where IP as well as other DHCP info BMC will be getting through the DHCP server, BMC have to start the DHCP client.\n \n- Stateless AutoConf IP: where BMC will not start the DHCP Client, only router advertised prefix will be used to address \n\nIf we have the configuration for all , we are good, otherwise not.",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f75c9f8c_dee81485",
