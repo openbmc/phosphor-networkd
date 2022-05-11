@@ -41,6 +41,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "187f34e0_42d45b3c",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_sys_config.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-11T13:02:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5189232e_8ea7b625",
+      "range": {
+        "startLine": 70,
+        "startChar": 11,
+        "endLine": 70,
+        "endChar": 14
+      },
+      "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5224f9d3_075d9ffe",
@@ -54,6 +78,24 @@
       "writtenOn": "2022-05-11T07:26:21Z",
       "side": 1,
       "message": "Query : is this C header ..?",
+      "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "915280ca_4d0db4a3",
+        "filename": "test/ibm/hypervisor-network-mgr-test/mock_hyp_sys_config.hpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-11T13:02:25Z",
+      "side": 1,
+      "message": "same as below",
+      "parentUuid": "5224f9d3_075d9ffe",
       "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -75,6 +117,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdf80d43_462c59fd",
+        "filename": "test/ibm/hypervisor-network-mgr-test/mock_hyp_sys_config.hpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-11T13:02:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "174f9cd4_09537cbe",
+      "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8495a2d4_dd7f4eb3",
@@ -88,6 +148,24 @@
       "writtenOn": "2022-05-11T07:26:21Z",
       "side": 1,
       "message": "Query : is this C header ..?",
+      "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c27fcf6_ab2c40c7",
+        "filename": "test/ibm/hypervisor-network-mgr-test/test_hyp_sys_config.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-11T13:02:25Z",
+      "side": 1,
+      "message": "yes,used in other places of the code.\nThis cleaning up and restructuring of the code can be taken as a separate commit.",
+      "parentUuid": "8495a2d4_dd7f4eb3",
       "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
