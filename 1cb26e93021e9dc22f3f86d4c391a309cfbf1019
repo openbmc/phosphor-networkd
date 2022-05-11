@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b45011f0_2a0f1725",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-11T13:04:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4558fc68_8ec699aa",
+      "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5189232e_8ea7b625",
@@ -100,6 +118,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca9afd9b_d29a826f",
+        "filename": "test/ibm/hypervisor-network-mgr-test/mock_hyp_sys_config.hpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-11T13:04:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "915280ca_4d0db4a3",
+      "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "174f9cd4_09537cbe",
@@ -166,6 +202,24 @@
       "side": 1,
       "message": "yes,used in other places of the code.\nThis cleaning up and restructuring of the code can be taken as a separate commit.",
       "parentUuid": "8495a2d4_dd7f4eb3",
+      "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2910827e_72ec7772",
+        "filename": "test/ibm/hypervisor-network-mgr-test/test_hyp_sys_config.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-11T13:04:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c27fcf6_ab2c40c7",
       "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
