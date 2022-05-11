@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4558fc68_8ec699aa",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1001048
+      },
+      "writtenOn": "2022-05-11T07:26:21Z",
+      "side": 1,
+      "message": "Extra space ..?",
+      "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5189232e_8ea7b625",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_sys_config.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1001048
+      },
+      "writtenOn": "2022-05-11T07:26:21Z",
+      "side": 1,
+      "message": "nit : Instead ,you can use string.empty()",
+      "range": {
+        "startLine": 70,
+        "startChar": 11,
+        "endLine": 70,
+        "endChar": 14
+      },
+      "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5224f9d3_075d9ffe",
+        "filename": "test/ibm/hypervisor-network-mgr-test/mock_hyp_sys_config.hpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1001048
+      },
+      "writtenOn": "2022-05-11T07:26:21Z",
+      "side": 1,
+      "message": "Query : is this C header ..?",
+      "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "174f9cd4_09537cbe",
+        "filename": "test/ibm/hypervisor-network-mgr-test/mock_hyp_sys_config.hpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1001048
+      },
+      "writtenOn": "2022-05-11T07:26:21Z",
+      "side": 1,
+      "message": "can this function be constant ..?",
+      "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8495a2d4_dd7f4eb3",
+        "filename": "test/ibm/hypervisor-network-mgr-test/test_hyp_sys_config.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1001048
+      },
+      "writtenOn": "2022-05-11T07:26:21Z",
+      "side": 1,
+      "message": "Query : is this C header ..?",
+      "revId": "1cb26e93021e9dc22f3f86d4c391a309cfbf1019",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
