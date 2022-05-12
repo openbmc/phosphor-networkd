@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d74f3a5e_13dbc59f",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-05-12T12:34:38Z",
+      "side": 1,
+      "message": "Hardcoding the interface specific API, You should make the API generic.",
+      "range": {
+        "startLine": 93,
+        "startChar": 2,
+        "endLine": 99,
+        "endChar": 0
+      },
+      "revId": "76a219b9fe675c47f79cf35b5ccc8a9489967a86",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf12b958_6b37e5d9",
+        "filename": "test/ibm/hypervisor-network-mgr-test/mock_hyp_network_manager.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-05-12T12:34:38Z",
+      "side": 1,
+      "message": "Why this class is here? What you are mocking here?",
+      "range": {
+        "startLine": 14,
+        "startChar": 1,
+        "endLine": 30,
+        "endChar": 2
+      },
+      "revId": "76a219b9fe675c47f79cf35b5ccc8a9489967a86",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
