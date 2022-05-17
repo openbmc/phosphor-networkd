@@ -16,6 +16,46 @@
       "message": "Hi Reviewers,\nCan you please give your votes for this change?\n\nThanks.",
       "revId": "3b385cf1105726de0b96e36194b8ecd891fe4725",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aefe7459_e9564f95",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-05-17T13:05:51Z",
+      "side": 1,
+      "message": "I have little opinion on the changes since PS9 as they are mostly test cases.  They seem reasonable.  I left a minor nit but otherwise +1.",
+      "revId": "3b385cf1105726de0b96e36194b8ecd891fe4725",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd034685_a66221e2",
+        "filename": "test/test_ethernet_interface.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2022-05-17T13:05:51Z",
+      "side": 1,
+      "message": "nit: Typically we\u0027d do this as \u0027ntpServers\u0027.  I did a bunch of work last year in the sdbusplus bindings to ensure we never had unusual cases like this because they\u0027re so jarring to read.",
+      "range": {
+        "startLine": 110,
+        "startChar": 19,
+        "endLine": 110,
+        "endChar": 29
+      },
+      "revId": "3b385cf1105726de0b96e36194b8ecd891fe4725",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
