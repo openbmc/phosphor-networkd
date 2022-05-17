@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e23f9d5f_2cd8c5d2",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_sys_config.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-05-17T08:52:00Z",
+      "side": 1,
+      "message": "Can we use std::move?",
+      "range": {
+        "startLine": 29,
+        "startChar": 28,
+        "endLine": 29,
+        "endChar": 32
+      },
+      "revId": "0ae677e704a65b31c307d31f6ae74a927f2f6a0d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "caee25e0_b3ce2e51",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_sys_config.hpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-05-17T08:52:00Z",
+      "side": 1,
+      "message": "Can we take it as a refrence?",
+      "range": {
+        "startLine": 66,
+        "startChar": 27,
+        "endLine": 66,
+        "endChar": 41
+      },
+      "revId": "0ae677e704a65b31c307d31f6ae74a927f2f6a0d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
