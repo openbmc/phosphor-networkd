@@ -272,6 +272,16 @@ std::string toString(const InAddrAny& addr)
     throw std::runtime_error("Invalid addr type");
 }
 
+std::string ifnameFromIndex(int ifindex)
+{
+    char ifname[IF_NAMESIZE] = {};
+    if (if_indextoname(ifindex, ifname) == nullptr)
+    {
+        throw std::runtime_error("Failed to convert ifindex to ifname");
+    }
+    return std::string(ifname);
+}
+
 bool isLinkLocalIP(const std::string& address)
 {
     return address.find(IPV4_PREFIX) == 0 || address.find(IPV6_PREFIX) == 0;
