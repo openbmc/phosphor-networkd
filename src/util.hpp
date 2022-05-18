@@ -80,6 +80,11 @@ constexpr auto timeSynchdService = "systemd-timesyncd.service";
  */
 InAddrAny addrFromBuf(int addressFamily, std::string_view buf);
 
+/** @brief Get the interface name by index number
+ *  @param[in] ifindex - Index of the interface
+ */
+std::string ifnameFromIndex(int ifindex);
+
 /* @brief converts the ip bytes into a string representation
  * @param[in] addr - input ip address to convert.
  * @returns String representation of the ip.

@@ -36,6 +36,15 @@ void performRequest(int protocol, void* data, size_t size, ReceiveCallback cb);
  */
 std::tuple<rtattr, std::string_view> extractRtAttr(std::string_view& data);
 
+/** @brief Call on a block of rtnexthops to parse a single one out
+ *         Updates the input to remove the nexthop parsed out.
+ *
+ * @param[in,out] data - The buffer holding the rtnexthop to parse
+ * @return A tuple of struct rtnexthop + data buffer for its payload
+ */
+std::tuple<rtnexthop, std::string_view>
+    extractRtNextHop(std::string_view& data);
+
 /** @brief Performs a netlink request of the specified type with the given
  *  message Calls the callback upon receiving
  *

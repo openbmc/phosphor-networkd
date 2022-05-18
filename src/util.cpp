@@ -227,6 +227,16 @@ std::string toString(const InAddrAny& addr)
     throw std::runtime_error("Invalid addr type");
 }
 
+std::string ifnameFromIndex(int ifindex)
+{
+    char ifname[IF_NAMESIZE] = {};
+    if (if_indextoname(ifindex, ifname) == nullptr)
+    {
+        throw std::runtime_error("Failed to convert ifindex to ifname");
+    }
+    return std::string(ifname);
+}
+
 bool isValidIP(int addressFamily, stdplus::const_zstring address)
 {
     unsigned char buf[sizeof(struct in6_addr)];
