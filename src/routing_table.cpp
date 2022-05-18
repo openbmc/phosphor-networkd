@@ -5,7 +5,6 @@
 
 #include <net/if.h>
 
-#include <optional>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <stdexcept>
@@ -32,7 +31,7 @@ void Table::refresh()
         rtmsg msg{};
         netlink::performRequest(NETLINK_ROUTE, RTM_GETROUTE, NLM_F_DUMP, msg,
                                 [&](const nlmsghdr& hdr, std::string_view msg) {
-                                    this->parseRoutes(hdr, msg);
+                                    this->handleRtmGetRoute(hdr, msg);
                                 });
     }
     catch (const std::exception& e)
@@ -42,12 +41,8 @@ void Table::refresh()
     }
 }
 
-void Table::parseRoutes(const nlmsghdr& hdr, std::string_view msg)
+void Table::handleRtmGetRoute(const nlmsghdr& hdr, std::string_view msg)
 {
-    std::optional<InAddrAny> dstAddr;
-    std::optional<InAddrAny> gateWayAddr;
-    char ifName[IF_NAMESIZE] = {};
-
     if (hdr.nlmsg_type != RTM_NEWROUTE)
     {
         throw std::runtime_error("Not a route msg");
@@ -60,44 +55,62 @@ void Table::parseRoutes(const nlmsghdr& hdr, std::string_view msg)
         return;
     }
 
+    parseRtAttrs(msg, rtm.rtm_family);
+}
+
+void Table::parseRtaMultipath(std::string_view msg, int family)
+{
+    while (!msg.empty())
+    {
+        auto [hdr, data] = netlink::extractRtNextHop(msg);
+        parseRtAttrs(data, family, hdr.rtnh_ifindex);
+    }
+}
+
+// Parse routes from Routing Atrributes (RTA)
+void Table::parseRtAttrs(std::string_view msg, int family,
+                         std::optional<int> ifindex)
+{
+    std::optional<InAddrAny> dstAddr;
+    std::optional<InAddrAny> gatewayAddr;
+
     while (!msg.empty())
     {
         auto [hdr, data] = netlink::extractRtAttr(msg);
         switch (hdr.rta_type)
         {
             case RTA_OIF:
-                if_indextoname(stdplus::raw::copyFrom<int>(data), ifName);
+                ifindex = stdplus::raw::copyFrom<int>(data);
                 break;
             case RTA_GATEWAY:
-                gateWayAddr = addrFromBuf(rtm.rtm_family, data);
+                gatewayAddr = addrFromBuf(family, data);
                 break;
             case RTA_DST:
-                dstAddr = addrFromBuf(rtm.rtm_family, data);
+                dstAddr = addrFromBuf(family, data);
+                break;
+            case RTA_MULTIPATH:
+                parseRtaMultipath(data, family);
                 break;
         }
     }
 
-    std::string dstStr;
-    if (dstAddr)
+    if (ifindex && gatewayAddr && !dstAddr)
     {
-        dstStr = toString(*dstAddr);
+        updateGateway(family, ifnameFromIndex(*ifindex),
+                      toString(*gatewayAddr));
     }
-    std::string gatewayStr;
-    if (gateWayAddr)
+}
+
+void Table::updateGateway(int family, const std::string& ifname,
+                          const std::string& gateway)
+{
+    if (family == AF_INET)
     {
-        gatewayStr = toString(*gateWayAddr);
+        defaultGateway[ifname] = gateway;
     }
-    if (rtm.rtm_dst_len == 0 && gateWayAddr)
+    else if (family == AF_INET6)
     {
-        std::string ifNameStr(ifName);
-        if (rtm.rtm_family == AF_INET)
-        {
-            defaultGateway[ifNameStr] = gatewayStr;
-        }
-        else if (rtm.rtm_family == AF_INET6)
-        {
-            defaultGateway6[ifNameStr] = gatewayStr;
-        }
+        defaultGateway6[ifname] = gateway;
     }
 }
 

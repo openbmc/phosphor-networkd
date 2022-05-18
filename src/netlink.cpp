@@ -181,6 +181,22 @@ std::tuple<rtattr, std::string_view> extractRtAttr(std::string_view& data)
     return {hdr, attr};
 }
 
+std::tuple<rtnexthop, std::string_view> extractRtNextHop(std::string_view& data)
+{
+    auto hdr = stdplus::raw::copyFrom<rtnexthop>(data);
+    if (hdr.rtnh_len < RTNH_LENGTH(0))
+    {
+        throw std::runtime_error("Invalid rtnexthop length");
+    }
+    if (data.size() < hdr.rtnh_len)
+    {
+        throw std::runtime_error("Not enough data for rtnexthop");
+    }
+    auto nexthop = data.substr(RTNH_LENGTH(0), hdr.rtnh_len - RTNH_LENGTH(0));
+    data.remove_prefix(RTNH_ALIGN(hdr.rtnh_len));
+    return {hdr, nexthop};
+}
+
 } // namespace netlink
 } // namespace network
 } // namespace phosphor
