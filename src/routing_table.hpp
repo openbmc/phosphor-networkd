@@ -2,6 +2,7 @@
 #include <linux/netlink.h>
 
 #include <map>
+#include <optional>
 #include <string>
 #include <string_view>
 
@@ -39,11 +40,38 @@ class Table
 
   private:
     /**
-     * @brief Parse the route and add it to the route list.
+     * @brief Handle the response of RTM_GETLINK netlink message.
      *
-     * @param[in] nlHdr - net link message header.
+     * @param[in] hdr - netlink message header.
      */
-    void parseRoutes(const struct nlmsghdr& nlHdr, std::string_view msg);
+    void handleRtmGetRoute(const nlmsghdr& hdr, std::string_view msg);
+
+    /**
+     * @brief Parse routing attributes in a message.
+     *
+     * @param[in] family - address family.
+     * @param[in] ifindex - (optional) interface index, used for handling nested
+     *                      RTAs in RTA_MULTIPATH.
+     */
+    void parseRtAttrs(std::string_view msg, int family,
+                      std::optional<int> ifindex = std::nullopt);
+
+    /**
+     * @brief Parse the content of RTA_MULTIPATH routing attribute.
+     *
+     * @param[in] family - address family.
+     */
+    void parseRtaMultipath(std::string_view msg, int family);
+
+    /**
+     * @brief Update the default gateway list.
+     *
+     * @param[in] family - address family.
+     * @param[in] ifname - interface name.
+     * @param[in] gateway - gateway address string.
+     */
+    void updateGateway(int family, const std::string& ifname,
+                       const std::string& gateway);
 
     std::map<std::string, std::string> defaultGateway;  // default gateway list
     std::map<std::string, std::string> defaultGateway6; // default gateway list

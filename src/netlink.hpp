@@ -36,6 +36,8 @@ void performRequest(int protocol, void* data, size_t size,
  */
 std::tuple<rtattr, std::string_view> extractRtAttr(std::string_view& data);
 
+std::tuple<rtnexthop, std::string_view> extractRtNextHop(std::string_view& data);
+
 /** @brief Performs a netlink request of the specified type with the given
  *  message Calls the callback upon receiving
  *
