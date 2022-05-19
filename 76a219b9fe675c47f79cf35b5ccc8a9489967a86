@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "beb3bc60_944e75f3",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-19T08:24:43Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d74f3a5e_13dbc59f",
+      "range": {
+        "startLine": 93,
+        "startChar": 2,
+        "endLine": 99,
+        "endChar": 0
+      },
+      "revId": "76a219b9fe675c47f79cf35b5ccc8a9489967a86",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bf12b958_6b37e5d9",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-05-12T12:34:38Z",
       "side": 1,
       "message": "Why this class is here? What you are mocking here?",
+      "range": {
+        "startLine": 14,
+        "startChar": 1,
+        "endLine": 30,
+        "endChar": 2
+      },
+      "revId": "76a219b9fe675c47f79cf35b5ccc8a9489967a86",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42a1c398_71c36210",
+        "filename": "test/ibm/hypervisor-network-mgr-test/mock_hyp_network_manager.hpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-19T08:24:43Z",
+      "side": 1,
+      "message": "Havent mocked any mthod from the base class in the latest PS. Just added a method in this class to call a sequence of base class methods\n\nBut yeah, i have removed this file and called these methods directly from the test file.",
+      "parentUuid": "bf12b958_6b37e5d9",
       "range": {
         "startLine": 14,
         "startChar": 1,
