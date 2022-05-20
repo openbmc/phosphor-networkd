@@ -538,6 +538,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b15bb677_ce6ba5f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-05-20T06:41:45Z",
+      "side": 1,
+      "message": "Stateless AutoConf IP (A\u003d1, M\u003d0, O\u003d0)\n\u003d\u003d\u003e this is covered with below options\n{EthernetInterface::DHCPConf::v6stateless, {\"false\", \"true\", \"false\"}},\n{EthernetInterface::DHCPConf::v4v6stateless, {\"true\", \"true\", \"false\"}}\n\nDHCP stateless (A\u003d1, M\u003d0, O\u003d1)\n\u003d\u003d\u003e Not covered\n@Johnathan, Is this because, when you enable the DHCPv6 client, it overrides the RA provided IP and BMC gets the IP from DHCPv6 server?\n\nDHCP Stateful (A\u003d0, M\u003d1, O\u003d1)\n\u003d\u003d\u003e this is covered with below option\n{EthernetInterface::DHCPConf::v6, {\"false\", \"true\", \"true\"}},",
+      "parentUuid": "1d99718b_8e8ebf1d",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f75c9f8c_dee81485",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 7
@@ -656,6 +674,29 @@
       "side": 1,
       "message": "There is a commit that William has pending. One that I\u0027d like to see merged. It uses netlink to query the assignment source for each address on the NIC. IMO using netlink is the superior method for detecting how the IP address was actually assigned. Inferring assignment based on DHCP enablement is flawed.\n\nIPv6 can have multiple IP addresses on the NIC. One could be statically assigned, one SLAAC, and one Stateful. Using the current logic all of these instances would be flagged \"DHCP\" assigned, when there\u0027s at least one that is statically assigned.\n\nThe results from netlink only announce \"static\" and \"dynamic\". There\u0027s only a single bit. IMO this is enough. Stateful and Stateless/SLAAC required no human interaction on the client to acquire an IPv6 address. This is DHCP. If, on the other hand, you used a UI, and explicitly typed in an IPv6 address, and all the other IPv6 network configuration data, you\u0027ve used a static assignment.\n\nAs to the D-Bus interfaces entry. Sometimes entries get made that ultimately turn out to be an \"appendix\". Nobody can figure out what the human appendix is good for, but it\u0027s there anyway.\n\nAdditionally, the two reporting/control protocols OBMC uses, IPMI and Redfish, up to this point have not had an interface providing visibility/control over IPv6 SLAAC.\n\nSo far as I can determine, there\u0027s no way other than parsing IPv6 addresses for a specific pattern to determine if an address is SLAAC. The netlink API won\u0027t tell you. Inferring from the systemd.network configuration won\u0027t tell you, and parsing IPv6 addresses is a marginal idea to figure it out. Without a reliable method of identifying the IP address assignment mode I don\u0027t expect anyone is going to go out of their way to announce an IPv6 address as SLAAC assigned when, in the majority of use cases, reporting DHCP is enough.",
       "parentUuid": "fb6fc1b8_5901dca1",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4f329a1_3f27c7b5",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1101,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-05-20T06:41:45Z",
+      "side": 1,
+      "message": "From the networkd file DHCP option can have below values.\n------------------------------------------------------------------\nDHCP\u003d\nEnables DHCPv4 and/or DHCPv6 client support. Accepts \"yes\", \"no\", \"ipv4\", or \"ipv6\". Defaults to \"no\".\n\nNote that DHCPv6 will by default be triggered by Router Advertisement, if that is enabled, regardless of this parameter. By enabling DHCPv6 support explicitly, the DHCPv6 client will be started regardless of the presence of routers on the link, or what flags the routers pass. See \"IPv6AcceptRA\u003d\".\n\nFurthermore, note that by default the domain name specified through DHCP is not used for name resolution. See option UseDomains\u003d below.\n\nSee the [DHCPv4] or [DHCPv6] sections below for further configuration options for the DHCP client support.\n\n------------------------------------------------------------------\n\nWhy are the mapped values set to true/false in this commit? This should take ipv4/ipv6 as well correct? Are you considering this flag only for IPv4DHCP enablement?",
+      "range": {
+        "startLine": 1097,
+        "startChar": 0,
+        "endLine": 1101,
+        "endChar": 19
+      },
       "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
