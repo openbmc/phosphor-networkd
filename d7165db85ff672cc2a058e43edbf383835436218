@@ -22,6 +22,30 @@
       },
       "revId": "d7165db85ff672cc2a058e43edbf383835436218",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "371d35ac_f5a8fff7",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-05-23T08:06:12Z",
+      "side": 1,
+      "message": "There will be a new commit on top of this commit chain to make this code generic for ipv4 and ipv6 and ipv6 support.",
+      "parentUuid": "e0c8c230_b3203b21",
+      "range": {
+        "startLine": 95,
+        "startChar": 27,
+        "endLine": 95,
+        "endChar": 39
+      },
+      "revId": "d7165db85ff672cc2a058e43edbf383835436218",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
