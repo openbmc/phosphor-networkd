@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ebca7959_549bcc1d",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ip_interface.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-05-24T06:20:53Z",
+      "side": 1,
+      "message": "Is this for DHCPEnabled property? Please correct the comments",
+      "range": {
+        "startLine": 76,
+        "startChar": 40,
+        "endLine": 76,
+        "endChar": 51
+      },
+      "revId": "763ccee0e77bb93aab83870795a4ccf57ab3c11d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
