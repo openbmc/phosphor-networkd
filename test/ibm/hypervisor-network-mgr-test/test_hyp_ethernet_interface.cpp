@@ -23,8 +23,10 @@ class TestHypEthernetInterface : public testing::Test
         manager(bus, event, "/xyz/openbmc_test/network/hypervisor"),
         interface(makeInterface(bus, manager))
     {
-        manager.setDefaultBIOSTableAttrsOnIntf("if0");
-        manager.setDefaultBIOSTableAttrsOnIntf("if1");
+        manager.setDefaultBIOSTableAttrsOnIntf("if0", "ipv4");
+        manager.setDefaultBIOSTableAttrsOnIntf("if0", "ipv6");
+        manager.setDefaultBIOSTableAttrsOnIntf("if1", "ipv4");
+        manager.setDefaultBIOSTableAttrsOnIntf("if1", "ipv6");
         manager.setDefaultHostnameInBIOSTableAttrs();
         interface.createIPAddrObj();
     }
