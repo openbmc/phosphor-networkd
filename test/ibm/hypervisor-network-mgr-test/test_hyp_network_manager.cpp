@@ -25,8 +25,10 @@ class TestHypNetworkManager : public testing::Test
         // method call to set default values in the local copy
         // of the bios attributes should be called for ipv6 as well
 
-        manager.setDefaultBIOSTableAttrsOnIntf("if0");
-        manager.setDefaultBIOSTableAttrsOnIntf("if1");
+        manager.setDefaultBIOSTableAttrsOnIntf("if0", "ipv4");
+        manager.setDefaultBIOSTableAttrsOnIntf("if0", "ipv6");
+        manager.setDefaultBIOSTableAttrsOnIntf("if1", "ipv4");
+        manager.setDefaultBIOSTableAttrsOnIntf("if1", "ipv6");
         manager.setDefaultHostnameInBIOSTableAttrs();
     }
 
