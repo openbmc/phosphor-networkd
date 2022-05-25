@@ -30,15 +30,15 @@ void serialize(const NwConfigPropMap& list, std::string intf, std::string type)
         {
             if (auto value = std::get_if<bool>(&itr->second))
             {
-                serializeFile << itr->first << " " << *value;
+                serializeFile << itr->first << " " << *value << "\n";
             }
             else if (auto value = std::get_if<std::string>(&itr->second))
             {
-                serializeFile << itr->first << " " << *value;
+                serializeFile << itr->first << " " << *value << "\n";
             }
             else if (auto value = std::get_if<int64_t>(&itr->second))
             {
-                serializeFile << itr->first << " " << *value;
+                serializeFile << itr->first << " " << *value << "\n";
             }
         }
         serializeFile.close();
