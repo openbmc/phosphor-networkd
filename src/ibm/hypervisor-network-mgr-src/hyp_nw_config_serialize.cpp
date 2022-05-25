@@ -1,12 +1,7 @@
 #include "hyp_nw_config_serialize.hpp"
 
-//#include <fmt/core.h>
-
-//#include <cereal/archives/binary.hpp>
-//#include <cereal/types/set.hpp>
 #include <fstream>
 #include <phosphor-logging/log.hpp>
-//#include <sstream>
 
 namespace phosphor
 {
@@ -44,15 +39,15 @@ void serialize(const NwConfigPropMap& list, std::string intf)
         {
             if (auto value = std::get_if<bool>(&itr->second))
             {
-                serializeFile << itr->first << " " << *value;
+                serializeFile << itr->first << " " << *value << "\n";
             }
             else if (auto value = std::get_if<std::string>(&itr->second))
             {
-                serializeFile << itr->first << " " << *value;
+                serializeFile << itr->first << " " << *value << "\n";
             }
             else if (auto value = std::get_if<int64_t>(&itr->second))
             {
-                serializeFile << itr->first << " " << *value;
+                serializeFile << itr->first << " " << *value << "\n";
             }
         }
         serializeFile.close();
@@ -63,7 +58,7 @@ void serialize(const NwConfigPropMap& list, std::string intf)
     }
 }
 
-bool deserialize(NwConfigPropMap& list, std::string intf)
+bool deserialize(NwConfigPropMap& list, std::string intf, std::string protocol)
 {
     std::string filePath;
     if (intf == "if0")
@@ -96,7 +91,7 @@ bool deserialize(NwConfigPropMap& list, std::string intf)
                 // TODO: Bool and string types are handled here. Int types to be
                 // handled when there is a property of type int is to be
                 // persisted
-                if (key == "Enabled")
+                if (key == protocol + "Enabled")
                 {
                     if (std::stoi(value))
                     {

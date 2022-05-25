@@ -3,6 +3,7 @@
 #include "ethernet_interface.hpp"
 #include "hyp_ip_interface.hpp"
 #include "hyp_network_manager.hpp"
+#include "hyp_nw_config_serialize.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>
@@ -21,6 +22,7 @@ class HypNetworkMgr; // forward declaration of hypervisor network manager.
 class HypIPAddress;
 
 using namespace phosphor::logging;
+using namespace phosphor::network::persistdata;
 using HypIP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 
 using CreateIface = sdbusplus::server::object::object<
@@ -68,6 +70,12 @@ class HypEthInterface : public CreateIface
         bus(bus), objectPath(path), manager(parent)
     {
         HypEthernetIntf::interfaceName(intfName);
+
+        // Call deserialise method to get the persisted properties in
+        // the persistence file and populate them in the map
+        std::string intfLabel = this->getIntfLabel();
+        deserialize(nwIPConfigList, intfLabel, "v4");
+        deserialize(nwIPConfigList, intfLabel, "v6");
     };
 
     /* @brief Method to return the value of the input attribute
@@ -171,6 +179,8 @@ class HypEthInterface : public CreateIface
     HypEthernetIntf::DHCPConf
         dhcpEnabled(HypEthernetIntf::DHCPConf value) override;
 
+    NwConfigPropMap& getNwConfigPropMap();
+
     using HypEthernetIntf::dhcpEnabled;
     using HypEthernetIntf::interfaceName;
 
@@ -183,6 +193,8 @@ class HypEthInterface : public CreateIface
 
     /** @brief Parent of this object */
     HypNetworkMgr& manager;
+
+    NwConfigPropMap nwIPConfigList;
 
     /** @brief List of the ipaddress and the ip dbus objects */
     std::map<std::string, std::shared_ptr<HypIPAddress>> addrs;

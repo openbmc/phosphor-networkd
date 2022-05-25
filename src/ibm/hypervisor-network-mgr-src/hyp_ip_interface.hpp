@@ -1,7 +1,6 @@
 #pragma once
 
 #include "hyp_ethernet_interface.hpp"
-#include "hyp_nw_config_serialize.hpp"
 #include "ipaddress.hpp"
 #include "util.hpp"
 
@@ -139,9 +138,6 @@ class HypIPAddress : public HypIPIfaces
 
     /** @brief Hypervisor eth interface id. */
     std::string intf;
-
-    /** @brief List of the properties to be persisted */
-    persistdata::NwConfigPropMap nwIPConfigList;
 
     /** @brief Parent Object. */
     HypEthInterface& parent;
