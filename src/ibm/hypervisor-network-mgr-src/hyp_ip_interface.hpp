@@ -72,6 +72,13 @@ class HypIPAddress : public HypIPIfaces
      */
     void delete_() override;
 
+    /** @brief Returns the dbus object path.
+     */
+    std::string getObjectPath()
+    {
+        return objectPath.str;
+    }
+
     /** @brief Get bios table property's prefix based on the protocol.
      *  @result prefix of bios table properties
      */
@@ -103,8 +110,9 @@ class HypIPAddress : public HypIPIfaces
     void resetIPObjProps();
 
     /** @brief Method to reset the base bios table attributes
+     *  @param[in] protocol - IPv4/IPv6
      */
-    void resetBaseBiosTableAttrs();
+    void resetBaseBiosTableAttrs(std::string protocol);
 
     /** @brief Method to convert ip address to InAddrAny type
      *  @param[in] ip - ip address of type string
