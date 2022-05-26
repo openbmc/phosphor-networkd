@@ -4,7 +4,7 @@ After=obmc-mapper.target
 After=systemd-networkd.service
 
 [Service]
-ExecStart=/usr/bin/env phosphor-network-manager
+ExecStart=/usr/bin/phosphor-network-manager
 SyslogIdentifier=phosphor-network-manager
 Restart=always
 Type=dbus
