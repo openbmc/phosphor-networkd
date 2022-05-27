@@ -22,6 +22,30 @@
       },
       "revId": "c2e061f2ce0f5ece2deb7a8c4bbd1e4c06e2cfcb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c67c8d05_b98f9148",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1001252
+      },
+      "writtenOn": "2022-05-27T11:37:05Z",
+      "side": 0,
+      "message": "Got it. writeConfigurationFile may throw InternalFailure when it fails to open the file to write. This InternalFailure exceptions should be caught all methods that calls writeConfigurationFile. I submitted phosphor-dbus-interfaces patches to catch them. Please help review at:\n\nhttps://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/54075\nhttps://gerrit.openbmc.org/c/openbmc/phosphor-dbus-interfaces/+/54076",
+      "parentUuid": "5b2cad77_c5cd7f12",
+      "range": {
+        "startLine": 774,
+        "startChar": 0,
+        "endLine": 785,
+        "endChar": 54
+      },
+      "revId": "c2e061f2ce0f5ece2deb7a8c4bbd1e4c06e2cfcb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
