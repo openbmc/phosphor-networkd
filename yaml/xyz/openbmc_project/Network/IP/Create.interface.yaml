@@ -27,3 +27,4 @@ methods:
             The path for the created ipaddress object.
       errors:
         - xyz.openbmc_project.Common.Error.InvalidArgument
+        - xyz.openbmc_project.Common.Error.InternalFailure
