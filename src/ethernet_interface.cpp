@@ -51,8 +51,8 @@ std::map<EthernetInterface::DHCPConf,
     mapDHCPToSystemd = {
         {EthernetInterface::DHCPConf::both, {"true", "true", "true"}},
         {EthernetInterface::DHCPConf::v4v6stateless, {"true", "true", "false"}},
-        {EthernetInterface::DHCPConf::v4, {"true", "false", "false"}},
-        {EthernetInterface::DHCPConf::v6, {"false", "true", "true"}},
+        {EthernetInterface::DHCPConf::v4, {"ipv4", "false", "false"}},
+        {EthernetInterface::DHCPConf::v6, {"ipv6", "true", "true"}},
         {EthernetInterface::DHCPConf::v6stateless, {"false", "true", "false"}},
         {EthernetInterface::DHCPConf::none, {"false", "false", "false"}}};
 
