@@ -16,6 +16,24 @@
       "message": "Merge this with https://gerrit.openbmc.org/c/openbmc/phosphor-dbus-interfaces/+/54076",
       "revId": "046f51a87c5115a3816e15837bba3e6c8344b7e4",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea63be9e_8b82a9fc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001252
+      },
+      "writtenOn": "2022-05-31T09:55:06Z",
+      "side": 1,
+      "message": "It cannot be done, these files are placed in different repos. Maybe we can move these yamls to phosphor-dbus-interfaces? But I don\u0027t know the reason for putting here at first, is there any backgrounds?",
+      "parentUuid": "c25c0544_5104a84d",
+      "revId": "046f51a87c5115a3816e15837bba3e6c8344b7e4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
