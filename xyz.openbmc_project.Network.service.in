@@ -5,7 +5,6 @@ After=systemd-networkd.service
 
 [Service]
 ExecStart=/usr/bin/phosphor-network-manager
-SyslogIdentifier=phosphor-network-manager
 Restart=always
 Type=dbus
 BusName=@DEFAULT_BUSNAME@

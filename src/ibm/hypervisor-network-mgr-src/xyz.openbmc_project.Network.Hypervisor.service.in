@@ -4,7 +4,6 @@ After=xyz.openbmc_project.biosconfig_manager.service
 
 [Service]
 ExecStart=/usr/bin/hyp-network-manager
-SyslogIdentifier=hyp-network-manager
 Restart=always
 Type=dbus
 BusName=xyz.openbmc_project.Network.Hypervisor
