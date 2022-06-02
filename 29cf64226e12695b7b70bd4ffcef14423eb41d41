@@ -20,6 +20,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "14eb6f8a_263fe622",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-06-02T06:31:33Z",
+      "side": 1,
+      "message": "@Johnathan - Can you please reply to the questions which i had? We are also willing to consume this commit for our systems and we are looking for your thoughts on our questions ",
+      "revId": "29cf64226e12695b7b70bd4ffcef14423eb41d41",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0fbe2faf_c24751ee",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 10
