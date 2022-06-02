@@ -35,6 +35,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6942c4d_e8a24c0d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-06-02T15:38:36Z",
+      "side": 1,
+      "message": "See below",
+      "revId": "29cf64226e12695b7b70bd4ffcef14423eb41d41",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0fbe2faf_c24751ee",
@@ -48,6 +65,30 @@
       "writtenOn": "2022-05-31T07:12:17Z",
       "side": 1,
       "message": "Please refer to https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/54112",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 69
+      },
+      "revId": "29cf64226e12695b7b70bd4ffcef14423eb41d41",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0c951c8_1906baa2",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-06-02T15:38:36Z",
+      "side": 1,
+      "message": "See my review comments. I believe 54112 makes no functional change to the DHCP behavior. I will incorporate the changes here, plus some, in an attempt to make intent more clear.",
+      "parentUuid": "0fbe2faf_c24751ee",
       "range": {
         "startLine": 54,
         "startChar": 0,

@@ -556,6 +556,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3c3986f6_c0dfe81c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-06-02T15:38:36Z",
+      "side": 1,
+      "message": "\u003eDHCP stateless (A\u003d1, M\u003d0, O\u003d1)\n\u003e\u003d\u003d\u003e Not covered\n\nNot covered is vague. What explicitly did not work?\nDid you confirm the RA and DHCPv6 servers on the local link were properly configured?\nWhat is the expected outcome?",
+      "parentUuid": "b15bb677_ce6ba5f5",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f75c9f8c_dee81485",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 7
@@ -691,6 +709,30 @@
       "writtenOn": "2022-05-20T06:41:45Z",
       "side": 1,
       "message": "From the networkd file DHCP option can have below values.\n------------------------------------------------------------------\nDHCP\u003d\nEnables DHCPv4 and/or DHCPv6 client support. Accepts \"yes\", \"no\", \"ipv4\", or \"ipv6\". Defaults to \"no\".\n\nNote that DHCPv6 will by default be triggered by Router Advertisement, if that is enabled, regardless of this parameter. By enabling DHCPv6 support explicitly, the DHCPv6 client will be started regardless of the presence of routers on the link, or what flags the routers pass. See \"IPv6AcceptRA\u003d\".\n\nFurthermore, note that by default the domain name specified through DHCP is not used for name resolution. See option UseDomains\u003d below.\n\nSee the [DHCPv4] or [DHCPv6] sections below for further configuration options for the DHCP client support.\n\n------------------------------------------------------------------\n\nWhy are the mapped values set to true/false in this commit? This should take ipv4/ipv6 as well correct? Are you considering this flag only for IPv4DHCP enablement?",
+      "range": {
+        "startLine": 1097,
+        "startChar": 0,
+        "endLine": 1101,
+        "endChar": 19
+      },
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "879ff318_b3f32558",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1101,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-06-02T15:38:36Z",
+      "side": 1,
+      "message": "See my comments in https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/54112\nI\u0027ve discussed all of this in the prior review comments.\nIn short: DHCP\u003d only controls IPv4, IPv6AcceptRA only controls SLAAC/DHCPv6.\nThis commit gave full, explicit control over the DHCP/IPv6AcceptRA/DHCPv6Client entries. Current code can\u0027t even turn off DHCPv6Client and have IPv6AcceptRA active, due to an erroneous implicit state check.",
+      "parentUuid": "b4f329a1_3f27c7b5",
       "range": {
         "startLine": 1097,
         "startChar": 0,
