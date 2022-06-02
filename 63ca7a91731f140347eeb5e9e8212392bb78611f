@@ -52,6 +52,46 @@
       "parentUuid": "0422e115_d59f0508",
       "revId": "63ca7a91731f140347eeb5e9e8212392bb78611f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28ecbbfe_8f984a3b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-06-02T15:07:26Z",
+      "side": 1,
+      "message": "I will collect the changes here in my commit for sake of clarity of intent.",
+      "revId": "63ca7a91731f140347eeb5e9e8212392bb78611f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f639474b_c34351e5",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-06-02T15:07:26Z",
+      "side": 1,
+      "message": "In testing this did you see any change in the behavior of systemd-networkd?\nAccording to systemd.network(5), \n\" Note that DHCPv6 will by default be triggered by Router\n  Advertisement, if that is enabled, regardless of this parameter. By\n  enabling DHCPv6 support explicitly, the DHCPv6 client will be\n  started regardless of the presence of routers on the link, or what\n  flags the routers pass. See \"IPv6AcceptRA\u003d\".\"\n  \nThe enumerations I laid out in the prior commit explicitly control IPv6AcceptRA and DHCPv6Client. It does not rely on implied functionality. Thus if ::v4 continues to use \"true\" (aka \"yes\"), the explicit control of IPv6AcceptRA ensures V6 dynamic assignment is blocked.  IMO line 54 only helps the casual reader have a level of comfort they\u0027ve only enabled DHCPv4. In all other aspects this is a NOP.\n\nThe same is true of v6stateless.\n\nI will update my phosp-net commit for the sole purpose that the enums shown clarify intent without changing the actual behavior.",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 0
+      },
+      "revId": "63ca7a91731f140347eeb5e9e8212392bb78611f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
