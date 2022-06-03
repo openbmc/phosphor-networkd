@@ -574,6 +574,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "47f0c442_fa1d7a23",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-06-03T08:13:51Z",
+      "side": 1,
+      "message": "This combination should assign the ip address from RA, and the DNS etc from the DHCP server. \n\nAt our setup, we got the DHCPv6 server\u0027s assigned IP which overrid the RA\u0027s IP. \nSo question is how did this get combination work with this commit ?",
+      "parentUuid": "3c3986f6_c0dfe81c",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f75c9f8c_dee81485",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 7
@@ -733,6 +751,30 @@
       "side": 1,
       "message": "See my comments in https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/54112\nI\u0027ve discussed all of this in the prior review comments.\nIn short: DHCP\u003d only controls IPv4, IPv6AcceptRA only controls SLAAC/DHCPv6.\nThis commit gave full, explicit control over the DHCP/IPv6AcceptRA/DHCPv6Client entries. Current code can\u0027t even turn off DHCPv6Client and have IPv6AcceptRA active, due to an erroneous implicit state check.",
       "parentUuid": "b4f329a1_3f27c7b5",
+      "range": {
+        "startLine": 1097,
+        "startChar": 0,
+        "endLine": 1101,
+        "endChar": 19
+      },
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "823e0134_921e6eb8",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1101,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-06-03T08:13:51Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "879ff318_b3f32558",
       "range": {
         "startLine": 1097,
         "startChar": 0,
