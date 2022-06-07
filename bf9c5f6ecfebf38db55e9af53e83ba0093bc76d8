@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf441dd3_3c5b529c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-06-07T18:31:14Z",
+      "side": 1,
+      "message": "Updated to merge a portion of commit 54112.",
+      "revId": "bf9c5f6ecfebf38db55e9af53e83ba0093bc76d8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
