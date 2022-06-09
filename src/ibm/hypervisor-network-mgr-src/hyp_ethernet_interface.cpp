@@ -562,7 +562,18 @@ void HypEthInterface::disableDHCP(HypIP::Protocol protocol)
     {
         dhcpEnabled(HypEthInterface::DHCPConf::none);
     }
-    else if ((dhcpState == HypEthInterface::DHCPConf::v6) &&
+    else if ((dhcpState == HypEthInterface::DHCPConf::v4v6stateless) &&
+             (protocol == HypIP::Protocol::IPv4))
+    {
+        dhcpEnabled(HypEthInterface::DHCPConf::v6stateless);
+    }
+    else if ((dhcpState == HypEthInterface::DHCPConf::v4v6stateless) &&
+             (protocol == HypIP::Protocol::IPv6))
+    {
+        dhcpEnabled(HypEthInterface::DHCPConf::v4);
+    }
+    else if (((dhcpState == HypEthInterface::DHCPConf::v6) ||
+              (dhcpState == HypEthInterface::DHCPConf::v6stateless)) &&
              (protocol == HypIP::Protocol::IPv6))
     {
         dhcpEnabled(HypEthInterface::DHCPConf::none);
@@ -573,7 +584,11 @@ bool HypEthInterface::isDHCPEnabled(HypIP::Protocol family, bool ignoreProtocol)
 {
     return (
         (HypEthernetIntf::dhcpEnabled() == HypEthInterface::DHCPConf::both) ||
-        ((HypEthernetIntf::dhcpEnabled() == HypEthInterface::DHCPConf::v6) &&
+        (HypEthernetIntf::dhcpEnabled() ==
+         HypEthInterface::DHCPConf::v4v6stateless) ||
+        (((HypEthernetIntf::dhcpEnabled() == HypEthInterface::DHCPConf::v6) ||
+          (HypEthernetIntf::dhcpEnabled() ==
+           HypEthInterface::DHCPConf::v6stateless)) &&
          ((family == HypIP::Protocol::IPv6) || ignoreProtocol)) ||
         ((HypEthernetIntf::dhcpEnabled() == HypEthInterface::DHCPConf::v4) &&
          ((family == HypIP::Protocol::IPv4) || ignoreProtocol)));
