@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "80a673c2_3198dd11",
         "filename": "/COMMIT_MSG",
@@ -20,10 +21,10 @@
         "endChar": 42
       },
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "ea5adeb4_62d6721a",
         "filename": "/COMMIT_MSG",
@@ -44,10 +45,10 @@
         "endChar": 42
       },
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "b9b24a42_5962ae27",
         "filename": "/COMMIT_MSG",
@@ -67,10 +68,10 @@
         "endChar": 10
       },
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "e1ad8112_879cc2be",
         "filename": "/COMMIT_MSG",
@@ -91,10 +92,10 @@
         "endChar": 10
       },
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "fa97867f_47379d8a",
         "filename": "/COMMIT_MSG",
@@ -114,10 +115,10 @@
         "endChar": 58
       },
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "dda1cd28_8f9a9170",
         "filename": "/COMMIT_MSG",
@@ -138,10 +139,10 @@
         "endChar": 58
       },
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "0b247515_31c6fe96",
         "filename": "/COMMIT_MSG",
@@ -162,10 +163,34 @@
         "endChar": 58
       },
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d8789ab_5f140276",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-06-17T04:07:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e1ad8112_879cc2be",
+      "range": {
+        "startLine": 21,
+        "startChar": 7,
+        "endLine": 21,
+        "endChar": 10
+      },
+      "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "fa389296_30638bc2",
         "filename": "src/ethernet_interface.cpp",
@@ -179,10 +204,10 @@
       "side": 1,
       "message": "No, it implies the other way around. You can\u0027t do DHCPv6 without parsing RAs, but you can parse RAs and use the information without DHCPv6.",
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "1f1d80be_66efa3ac",
         "filename": "src/ethernet_interface.cpp",
@@ -197,10 +222,10 @@
       "message": "William,\nHow do you reconcile that statement against this directly from systemd-network:\n\u0027DHCP\u003d\n.....\nNote that DHCPv6 will by default be triggered by Router\nAdvertisement, if that is enabled, regardless of this parameter.\u0027\n\nIf I set DHCP\u003dv4 or DHCP\u003dnone, systemd-networkd still performs RA, and assigns a DHCPv6 address. So when RA is enabled, \u0027none/ipv4\u0027 is ignored by systemd-networkd.",
       "parentUuid": "fa389296_30638bc2",
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "712cab87_91f45dbb",
         "filename": "src/ethernet_interface.cpp",
@@ -215,10 +240,10 @@
       "message": "It looks like it would make more sense to just set the value of `IPv6AcceptRA.DHCPv6Client` based on the value of DHCPv6 enablement. This would be less surprising than enabling DHCP when the user enables RA.",
       "parentUuid": "1f1d80be_66efa3ac",
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "08cec233_33e17ebf",
         "filename": "src/ethernet_interface.cpp",
@@ -233,10 +258,10 @@
       "message": "I began to look at this William. Fundamentally the issue is still the same. The IPMI API does not have an independent way of controlling the RA vs the DHCP entry. That issue has been discussed internally. The expectation is that an ad-hoc solution to work around the IPMI API limitation may not be accepted upstream. I\u0027d like to get guidance from the maintainers concerning this implementation.\n\nIPMI can directly control enabling RA.\nIPMI can directly control enabling DHCP. It does not have independent control of IPv4 vs IPv6.\n\nThis lack of control leaves odd corner cases to handle implicitly. If I follow your suggestion and use IPMI to enable RA, yet leave DHCPv6Client \u003d\u003d false, then IPv6 addrs don\u0027t get assigned. What mechanism should be used to assign DHCPv6Client \u003d\u003d true? If such a mechanism existed in IPMI now, we could always assign DHCPv6Client \u003d\u003d false, and then control the primary DHCP\u003d entry per the rules that the existing code follows now.\n\nI see the following options:\n1. Leave the phosphor-network handling as-is prior to this commit, and don\u0027t support IPMI correctly announcing DHCPv6 state.\n2. Implement what I have submitted, and have an ad-hoc solution to the problem.\n3. Create an OEM extension to SetLan, GetLan that controls DHCPv6 explicitly. Which is basically an ad-hoc solution, just in a different repo (i.e. phoshpor-ipmi-host, or intel-ipmi-oem).",
       "parentUuid": "712cab87_91f45dbb",
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "10e06538_1601aae0",
         "filename": "src/ethernet_interface.cpp",
@@ -251,8 +276,7 @@
       "message": "My opinion would be to keep these independent options at the dbus level, so that other client can configure them independently but have IPMI set them both to the same value when \"IPv6 Router Address Configuration Control\" is set. It\u0027s pretty clear in the IPMI spec that they expect DHCPv6 to be a possible option when dynamic router control is enabled. Having it disabled should then disable DHCPv6 too.\n\nIt would be really nice to decouple DHCPv6 from the DHCPv4 settings in the lan config.",
       "parentUuid": "08cec233_33e17ebf",
       "revId": "3ed1eb660722cd505769f32db6447b4655609a9c",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
