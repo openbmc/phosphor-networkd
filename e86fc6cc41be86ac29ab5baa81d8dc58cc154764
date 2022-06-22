@@ -33,6 +33,23 @@
       "message": "Waiting on another change. I will submit this once that\u0027s done.",
       "revId": "e86fc6cc41be86ac29ab5baa81d8dc58cc154764",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d110c691_87dd54e1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-06-22T10:48:39Z",
+      "side": 1,
+      "message": "Yet not submitted, any issues which you got it.",
+      "revId": "e86fc6cc41be86ac29ab5baa81d8dc58cc154764",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
