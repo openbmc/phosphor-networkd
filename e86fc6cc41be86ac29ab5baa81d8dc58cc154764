@@ -50,6 +50,24 @@
       "message": "Yet not submitted, any issues which you got it.",
       "revId": "e86fc6cc41be86ac29ab5baa81d8dc58cc154764",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae87993b_c23b6b1d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-06-22T11:03:38Z",
+      "side": 1,
+      "message": "Read-only flag on the NTPServers dbus property was removed by https://github.com/openbmc/phosphor-dbus-interfaces/commit/998c7beda3100c37b8931e8e2fafe7d40311297a . That will need changes in this commit as well.\nI just pushed https://gerrit.openbmc.org/c/openbmc/phosphor-dbus-interfaces/+/54797 now. We will need a property name change here in this commit as per that.\nPlease share your comments/votes on the new change.",
+      "parentUuid": "d110c691_87dd54e1",
+      "revId": "e86fc6cc41be86ac29ab5baa81d8dc58cc154764",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
