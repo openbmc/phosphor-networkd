@@ -694,6 +694,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4d837c09_7629c9c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-06-29T14:20:13Z",
+      "side": 1,
+      "message": "Hi Ratan, your latest question relates to this thread. When we tested, we were not able to see this combination of (A\u003d1, M\u003d0, O\u003d1) working. Seems like this needs more investigations and tests. \n\nI believe that should not stop this commit to go ahead, as this commit has major functionalities which are needed for multiple other usecases and they work fine.",
+      "parentUuid": "95cf57e2_ab8ebb5d",
+      "revId": "2844d69f26aa3a6df325edb8fdf2c96376429e6b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f75c9f8c_dee81485",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 7
