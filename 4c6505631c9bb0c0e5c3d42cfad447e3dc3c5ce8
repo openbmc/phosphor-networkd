@@ -52,6 +52,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9963b9ce_0fd6ec66",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-06-29T14:39:38Z",
+      "side": 1,
+      "message": "I\u0027ve spent some time over the last few days performing more tests on this commit. I still have additional testing to perform, primarily around the \u0027O\u0027 bit.",
+      "revId": "4c6505631c9bb0c0e5c3d42cfad447e3dc3c5ce8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "90cf4a22_74b9f294",
@@ -65,6 +82,30 @@
       "writtenOn": "2022-06-29T10:31:48Z",
       "side": 1,
       "message": "DHCP stateless (A\u003d1, M\u003d0, O\u003d1): Outcome of this is get the IP address from the autoconf router and other info should get from the DHCP server.\n\nWhich combination from the above table, which will work here?",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 74
+      },
+      "revId": "4c6505631c9bb0c0e5c3d42cfad447e3dc3c5ce8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a61c670c_64e2ac7d",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-06-29T14:39:38Z",
+      "side": 1,
+      "message": "This case is covered by \"both\", and \"v6\", which is the state the current BMC configures the IPv6 behavior when IPv6AcceptRA\u003dtrue. The current implementation of BMC has no ability to disable DHCPv6Client.\n\nWhat appears to be the sticking point now is the naming of the enums?",
+      "parentUuid": "90cf4a22_74b9f294",
       "range": {
         "startLine": 63,
         "startChar": 0,
