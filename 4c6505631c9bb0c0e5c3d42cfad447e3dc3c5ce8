@@ -138,6 +138,30 @@
       },
       "revId": "4c6505631c9bb0c0e5c3d42cfad447e3dc3c5ce8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fa69367_d4dd8891",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-06-30T06:35:23Z",
+      "side": 1,
+      "message": "\u003e This case is covered by \"both\", and \"v6\"\nYes. This is correct. The flags corresponding to ipv6 DHCP stateful and stateless should be true to achieve this.\n\nThis combination of A\u003d1, M\u003d0, O\u003d1 can not be controlled at the BMC side. This is a setup to be done at the radvd and dhcpd6 configuration files. The radvd.conf should mention \u0027AdvOtherConfigFlag on\u0027 + \u0027AdvManagedFlag off\u0027",
+      "parentUuid": "0776442f_f40ae024",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 74
+      },
+      "revId": "4c6505631c9bb0c0e5c3d42cfad447e3dc3c5ce8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
