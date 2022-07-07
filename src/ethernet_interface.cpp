@@ -262,6 +262,9 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
         log<level::INFO>("DHCP enabled on the interface"),
             entry("INTERFACE=%s", interfaceName().c_str());
         disableDHCP(protType);
+        // Delete DHCP entry immediately, so that it allows
+        // static IP configuration of the same DHCP IP.
+        deleteObject(ipaddress);
     }
 
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
