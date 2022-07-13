@@ -4,3 +4,4 @@ revision = HEAD
 
 [provide]
 stdplus = stdplus_dep
+stdplus-gtest = stdplus_gtest_dep
