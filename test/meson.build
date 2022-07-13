@@ -33,6 +33,7 @@ test_lib = static_library(
   'networkd-test',
   'mock_syscall.cpp',
   'global_network_objects.cpp',
+  'testutil.cpp',
   implicit_include_directories: false,
   include_directories: test_headers,
   dependencies: test_deps)
@@ -56,9 +57,11 @@ tests = [
 foreach t : tests
   test(
     t,
-    executable(
+    files('run_with_tmp.sh'),
+    args: executable(
       t.underscorify(),
       'test_' + t + '.cpp',
       implicit_include_directories: false,
-      dependencies: test_dep))
+      dependencies: test_dep),
+    env: {'TMPTMPL': 'phosphor-networkd-test.XXXXXXXXXX'})
 endforeach
