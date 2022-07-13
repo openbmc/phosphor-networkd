@@ -12,6 +12,7 @@
 #include <exception>
 #include <fstream>
 #include <sdbusplus/bus.hpp>
+#include <stdplus/gtest/tmp.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gtest/gtest.h>
@@ -21,35 +22,19 @@ namespace phosphor
 namespace network
 {
 
-class TestEthernetInterface : public testing::Test
+class TestEthernetInterface : public stdplus::gtest::TestWithTmp
 {
   public:
     sdbusplus::bus::bus bus;
+    std::string confDir;
     MockManager manager;
     MockEthernetInterface interface;
-    std::string confDir;
     TestEthernetInterface() :
-        bus(sdbusplus::bus::new_default()),
-        manager(bus, "/xyz/openbmc_test/network", "/tmp/"),
+        bus(sdbusplus::bus::new_default()), confDir(CaseTmpDir()),
+        manager(bus, "/xyz/openbmc_test/network", confDir),
         interface(makeInterface(bus, manager))
 
     {
-        setConfDir();
-    }
-
-    void setConfDir()
-    {
-        char tmp[] = "/tmp/EthernetInterface.XXXXXX";
-        confDir = mkdtemp(tmp);
-        manager.setConfDir(confDir);
-    }
-
-    ~TestEthernetInterface()
-    {
-        if (confDir != "")
-        {
-            fs::remove_all(confDir);
-        }
     }
 
     static constexpr ether_addr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};

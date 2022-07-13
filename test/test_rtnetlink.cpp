@@ -10,6 +10,7 @@
 #include <functional>
 #include <sdbusplus/bus.hpp>
 #include <sdeventplus/event.hpp>
+#include <testutil.hpp>
 
 #include <gtest/gtest.h>
 
@@ -23,43 +24,25 @@ extern std::unique_ptr<MockManager> manager;
 extern std::unique_ptr<Timer> refreshObjectTimer;
 EventPtr eventPtr = nullptr;
 
-class TestRtNetlink : public testing::Test
+class TestRtNetlink : public TestWithTmp
 {
 
   public:
-    std::string confDir;
     phosphor::Descriptor smartSock;
 
     TestRtNetlink()
     {
-        manager =
-            std::make_unique<MockManager>(bus, "/xyz/openbmc_test/bcd", "/tmp");
+        manager = std::make_unique<MockManager>(bus, "/xyz/openbmc_test/bcd",
+                                                CaseTmpDir());
         sd_event* events;
         sd_event_default(&events);
         eventPtr.reset(events);
         events = nullptr;
-        setConfDir();
         initializeTimers();
         createNetLinkSocket();
         bus.attach_event(eventPtr.get(), SD_EVENT_PRIORITY_NORMAL);
         rtnetlink::Server svr(eventPtr, smartSock);
     }
-
-    ~TestRtNetlink()
-    {
-        if (confDir.empty())
-        {
-            fs::remove_all(confDir);
-        }
-    }
-
-    void setConfDir()
-    {
-        char tmp[] = "/tmp/NetworkManager.XXXXXX";
-        confDir = mkdtemp(tmp);
-        manager->setConfDir(confDir);
-    }
-
     void createNetLinkSocket()
     {
         // RtnetLink socket
