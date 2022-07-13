@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include <xyz/openbmc_project/Common/error.hpp>
 
+#include <testutil.hpp>
+#include <fmt/format.h>
 #include <gtest/gtest.h>
 
 namespace phosphor
@@ -15,19 +17,19 @@ namespace phosphor
 namespace network
 {
 
-class TestConfigParser : public testing::Test
+class TestConfigParser : public TestWithTmp
 {
   public:
     config::Parser parser;
     TestConfigParser()
     {
-        remove("/tmp/eth0.network");
-        std::ofstream filestream("/tmp/eth0.network");
+		auto filename = fmt::format("{}/eth0.network", CaseTmpDir());
+        std::ofstream filestream(filename);
 
         filestream << "[Match]\nName=eth0\n"
                    << "[Network]\nDHCP=true\n[DHCP]\nClientIdentifier= mac\n";
         filestream.close();
-        parser.setFile("/tmp/eth0.network");
+        parser.setFile(filename);
     }
 
     bool isValueFound(const std::vector<std::string>& values,
@@ -79,7 +81,6 @@ TEST_F(TestConfigParser, KeyNotFound)
     config::ValueList values;
     std::tie(rc, values) = parser.getValues("Network", "abc");
     EXPECT_EQ(config::ReturnCode::KEY_NOT_FOUND, rc);
-    remove("/tmp/eth0.network");
 }
 
 } // namespace network

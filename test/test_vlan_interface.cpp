@@ -12,6 +12,7 @@
 #include <filesystem>
 #include <sdbusplus/bus.hpp>
 
+#include <testutil.hpp>
 #include <gtest/gtest.h>
 
 namespace phosphor
@@ -21,28 +22,20 @@ namespace network
 
 namespace fs = std::filesystem;
 
-class TestVlanInterface : public testing::Test
+class TestVlanInterface : public TestWithTmp
 {
   public:
     sdbusplus::bus::bus bus;
+    std::string confDir;
     MockManager manager;
     EthernetInterface interface;
-    std::string confDir;
     TestVlanInterface() :
         bus(sdbusplus::bus::new_default()),
-        manager(bus, "/xyz/openbmc_test/network", "/tmp"),
+		confDir(CaseTmpDir()),
+        manager(bus, "/xyz/openbmc_test/network", confDir),
         interface(makeInterface(bus, manager))
 
     {
-        setConfDir();
-    }
-
-    ~TestVlanInterface()
-    {
-        if (confDir != "")
-        {
-            fs::remove_all(confDir);
-        }
     }
 
     static EthernetInterface makeInterface(sdbusplus::bus::bus& bus,
@@ -56,13 +49,6 @@ class TestVlanInterface : public testing::Test
                 manager,
                 false,
                 true};
-    }
-
-    void setConfDir()
-    {
-        char tmp[] = "/tmp/VlanInterface.XXXXXX";
-        confDir = mkdtemp(tmp);
-        manager.setConfDir(confDir);
     }
 
     void createVlan(VlanId id)
