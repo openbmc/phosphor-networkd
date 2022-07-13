@@ -4,3 +4,5 @@ revision = HEAD
 
 [provide]
 stdplus = stdplus_dep
+stdplus-gtest = stdplus_gtest_dep
+program_names = run_with_tmp

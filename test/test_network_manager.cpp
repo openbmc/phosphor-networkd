@@ -9,6 +9,7 @@
 #include <exception>
 #include <filesystem>
 #include <sdbusplus/bus.hpp>
+#include <stdplus/gtest/tmp.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gtest/gtest.h>
@@ -20,32 +21,15 @@ namespace network
 
 namespace fs = std::filesystem;
 
-class TestNetworkManager : public testing::Test
+class TestNetworkManager : public stdplus::gtest::TestWithTmp
 {
   public:
     sdbusplus::bus::bus bus;
     MockManager manager;
-    std::string confDir;
     TestNetworkManager() :
         bus(sdbusplus::bus::new_default()),
-        manager(bus, "/xyz/openbmc_test/abc", "/tmp")
+        manager(bus, "/xyz/openbmc_test/abc", CaseTmpDir())
     {
-        setConfDir();
-    }
-
-    ~TestNetworkManager()
-    {
-        if (confDir != "")
-        {
-            fs::remove_all(confDir);
-        }
-    }
-
-    void setConfDir()
-    {
-        char tmp[] = "/tmp/NetworkManager.XXXXXX";
-        confDir = mkdtemp(tmp);
-        manager.setConfDir(confDir);
     }
 
     void createInterfaces()
