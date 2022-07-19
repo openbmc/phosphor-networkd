@@ -1,8 +1,9 @@
-inc_dir = include_directories('../../../src/ibm/hypervisor-network-mgr-src/')
+inc_dir = include_directories('.', '../../../src/ibm/hypervisor-network-mgr-src/')
 
 hyp_tests = [
   'hyp_network_manager',
   'hyp_sys_config',
+  'hyp_ethernet_interface',
 ]
 
 foreach t : hyp_tests
