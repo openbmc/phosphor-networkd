@@ -1,7 +1,5 @@
 #include "hyp_sys_config.hpp"
 
-#include "hyp_network_manager.hpp"
-
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>

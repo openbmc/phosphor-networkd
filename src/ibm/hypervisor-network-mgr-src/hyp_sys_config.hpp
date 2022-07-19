@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sdbusplus/bus.hpp>
+#include <sdbusplus/server.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <stdplus/pinned.hpp>
 #include <xyz/openbmc_project/Network/SystemConfiguration/server.hpp>
