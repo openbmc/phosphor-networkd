@@ -207,6 +207,11 @@ void HypNetworkMgr::setBIOSTableAttrs()
     }
 }
 
+const ethIntfMapType& HypNetworkMgr::getEthIntfList()
+{
+    return interfaces;
+}
+
 void HypNetworkMgr::createIfObjects()
 {
     setBIOSTableAttrs();
@@ -236,6 +241,10 @@ void HypNetworkMgr::createIfObjects()
     // Create ip address objects for each ethernet interface
     interfaces["eth0"]->createIPAddressObjects();
     interfaces["eth1"]->createIPAddressObjects();
+
+    // Call watch method to register for properties changed signal
+    // This method can be called only once
+    interfaces["eth0"]->watchBaseBiosTable();
 }
 
 void HypNetworkMgr::createSysConfObj()
