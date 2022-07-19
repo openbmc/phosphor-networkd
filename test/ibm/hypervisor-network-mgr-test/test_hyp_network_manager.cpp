@@ -1,5 +1,7 @@
 #include "hyp_network_manager.hpp"
 
+#include "hyp_ethernet_interface.hpp"
+
 #include <net/if.h>
 
 #include <sdbusplus/bus.hpp>

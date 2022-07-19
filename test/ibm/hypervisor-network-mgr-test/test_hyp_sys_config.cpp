@@ -1,5 +1,7 @@
 #include "mock_hyp_sys_config.hpp"
 
+#include "hyp_ethernet_interface.hpp"
+
 #include <net/if.h>
 
 #include <sdbusplus/bus.hpp>

@@ -1,3 +1,4 @@
+#include "hyp_ethernet_interface.hpp"
 #include "hyp_network_manager.hpp"
 
 #include <sdeventplus/event.hpp>
