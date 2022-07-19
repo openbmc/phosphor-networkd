@@ -18,10 +18,10 @@ hyp_networkd_lib = static_library(
     'hyp_network_manager.cpp',
     'hyp_sys_config.cpp',
     'hyp_ethernet_interface.cpp',
+    'hyp_ip_interface.cpp',
     implicit_include_directories: false,
     include_directories: [src_includes, hyp_src_includes],
-    dependencies: networkd_deps,
-)
+    dependencies: networkd_deps)
 
 executable(
     'hyp-network-manager',
