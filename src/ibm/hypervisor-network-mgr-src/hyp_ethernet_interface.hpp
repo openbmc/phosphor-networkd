@@ -82,6 +82,26 @@ class HypEthInterface : public CreateIface
      */
     biosTableType getBiosAttrsMap();
 
+    /* @brief Returns the dhcp enabled property
+     * @param[in] protocol - ipv4/ipv6
+     * @return bool - true if dhcpEnabled
+     */
+    bool isDHCPEnabled(IP::Protocol protocol);
+
+    /** Set value of DHCPEnabled */
+    HypEthernetIntf::DHCPConf dhcpEnabled() const override;
+    HypEthernetIntf::DHCPConf dhcpEnabled(DHCPConf value) override;
+    using HypEthernetIntf::dhcp4;
+    bool dhcp4(bool value) override;
+    using HypEthernetIntf::dhcp6;
+    bool dhcp6(bool value) override;
+
+    /** @brief check conf file for Router Advertisements
+     *
+     */
+    bool ipv6AcceptRA(bool value) override;
+    using HypEthernetIntf::ipv6AcceptRA;
+
     using HypEthernetIntf::interfaceName;
 
   protected:
@@ -93,6 +113,13 @@ class HypEthInterface : public CreateIface
 
     /** @brief Parent of this object */
     HypNetworkMgr& manager;
+
+  private:
+    /** @brief Determines if DHCP is active for the IP::Protocol supplied.
+     *  @param[in] protocol - Either IPv4 or IPv6
+     *  @returns true/false value if DHCP is active for the input protocol
+     */
+    bool dhcpIsEnabled(IP::Protocol protocol);
 };
 
 } // namespace network
