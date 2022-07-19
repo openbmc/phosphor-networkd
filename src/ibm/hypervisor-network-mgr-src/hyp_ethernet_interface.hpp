@@ -82,6 +82,17 @@ class HypEthInterface : public CreateIface
      */
     biosTableType getBiosAttrsMap();
 
+    /* @brief Returns the dhcp enabled property
+     * @param[in] protocol - ipv4/ipv6
+     * @return bool - true if dhcpEnabled
+     */
+    bool isDHCPEnabled(IP::Protocol protocol);
+
+    /* @brief Disables DHCP conf
+     * @param[in] protocol - ipv4/ipv6
+     */
+    void disableDHCP(IP::Protocol protocol);
+
     /* @brief Set value of DHCPEnabled
      * @param[in] value - value that determines if the dhcp is enabled/not
      *                    possible values: both, none, v4, v6
