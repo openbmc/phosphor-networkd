@@ -99,10 +99,7 @@ class HypNetworkMgr
      *
      * @return ethernet interfaces list
      */
-    inline const auto& getEthIntfList()
-    {
-        return interfaces;
-    }
+    const ethIntfMapType& getEthIntfList();
 
     /** @brief Method to set all the interface 0 attributes
      *         to its default value in biosTableAttrs data member
