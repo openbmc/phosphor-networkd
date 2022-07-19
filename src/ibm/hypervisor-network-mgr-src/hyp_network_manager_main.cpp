@@ -1,5 +1,7 @@
 #include "hyp_network_manager.hpp"
 
+#include "hyp_ethernet_interface.hpp"
+
 #include <sdeventplus/event.hpp>
 #include <stdplus/pinned.hpp>
 #include <stdplus/print.hpp>
