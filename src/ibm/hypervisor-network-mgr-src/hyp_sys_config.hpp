@@ -1,7 +1,6 @@
 #pragma once
 
 #include "hyp_network_manager.hpp"
-#include "system_configuration.hpp"
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
