@@ -89,9 +89,9 @@ class HypNetworkMgr
      * @param[in] attrType  - attribute type
      *
      */
-    inline void setBIOSTableAttr(std::string attrName,
-                                 std::variant<std::string, int64_t> attrValue,
-                                 std::string attrType);
+    void setBIOSTableAttr(std::string attrName,
+                          std::variant<std::string, int64_t> attrValue,
+                          std::string attrType);
 
     /** @brief Get the ethernet interfaces list data member
      *
