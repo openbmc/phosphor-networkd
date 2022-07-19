@@ -28,14 +28,14 @@ int main()
     bus.attach_event(event.get(), SD_EVENT_PRIORITY_NORMAL);
 
     // Create hypervisor network manager dbus object
-    auto manager = std::make_unique<HypNetworkMgr>(bus, DEFAULT_HYP_NW_OBJPATH);
+    stdplus::Pinned<HypNetworkMgr> manager(bus, DEFAULT_HYP_NW_OBJPATH);
 
     // Create the hypervisor eth interface objects
-    manager->createIfObjects();
+    manager.createIfObjects();
 
     // Create the hypervisor system config object
-    manager->createSysConfObj();
-    const SystemConfPtr& systemConfigObj = manager->getSystemConf();
+    manager.createSysConfObj();
+    const SystemConfPtr& systemConfigObj = manager.getSystemConf();
     systemConfigObj->setHostName();
 
     bus.request_name(HYP_DEFAULT_NETWORK_BUSNAME);
