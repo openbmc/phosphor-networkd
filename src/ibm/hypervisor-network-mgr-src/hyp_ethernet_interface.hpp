@@ -28,6 +28,8 @@ using CreateIface = sdbusplus::server::object::object<
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface,
     sdbusplus::xyz::openbmc_project::Network::IP::server::Create>;
 
+using biosTableRetAttrValueType = std::variant<std::string, int64_t>;
+
 using biosTableType = std::map<std::string, std::variant<int64_t, std::string>>;
 
 using HypEthernetIntf =
@@ -67,6 +69,19 @@ class HypEthInterface : public CreateIface
         HypEthernetIntf::interfaceName(intfName.data(), true);
         emit_object_added();
     };
+
+    /* @brief Method to return the value of the input attribute
+     *        from the BaseBIOSTable
+     *  @param[in] attrName - name of the bios attribute
+     *  @param[out] - value of the bios attribute
+     */
+    biosTableRetAttrValueType getAttrFromBiosTable(const std::string& attrName);
+
+    /* @brief Function to watch the Base Bios Table for ip
+     *        address change from the host and refresh the hypervisor networkd
+     * service
+     */
+    void watchBaseBiosTable();
 
     /* @brief creates the IP dbus object
      */
