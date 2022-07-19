@@ -77,6 +77,12 @@ class HypEthInterface : public CreateIface
      */
     biosTableRetAttrValueType getAttrFromBiosTable(const std::string& attrName);
 
+    /* @brief Function to watch the Base Bios Table for ip
+     *        address change from the host and refresh the hypervisor networkd
+     * service
+     */
+    void watchBaseBiosTable();
+
     /* @brief creates the IP dbus object
      */
     virtual void createIPAddressObjects();
