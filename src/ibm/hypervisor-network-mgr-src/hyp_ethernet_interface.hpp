@@ -72,6 +72,19 @@ class HypEthInterface : public CreateIface
         HypEthernetIntf::interfaceName(intfName);
     };
 
+    /* @brief Method to return the value of the input attribute
+     *        from the BaseBIOSTable
+     *  @param[in] attrName - name of the bios attribute
+     *  @param[out] - value of the bios attribute
+     */
+    biosTableRetAttrValueType getAttrFromBiosTable(const std::string& attrName);
+
+    /* @brief Function to watch the Base Bios Table for ip
+     *        address change from the host and refresh the hypervisor networkd
+     * service
+     */
+    void watchBaseBiosTable();
+
     /* @brief creates the IP dbus object
      */
     virtual void createIPAddressObjects();
