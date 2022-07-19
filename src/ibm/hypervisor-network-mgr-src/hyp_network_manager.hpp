@@ -1,6 +1,5 @@
 #pragma once
 
-#include "hyp_ethernet_interface.hpp"
 #include "hyp_sys_config.hpp"
 
 #include <sdbusplus/bus.hpp>
@@ -13,6 +12,8 @@ namespace phosphor
 {
 namespace network
 {
+
+class HypEthInterface;
 
 using biosAttrName = std::string;
 using biosAttrType = std::string;

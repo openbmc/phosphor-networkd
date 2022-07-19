@@ -1,7 +1,5 @@
 #include "hyp_sys_config.hpp"
 
-#include "hyp_network_manager.hpp"
-
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -16,7 +14,6 @@ constexpr auto BIOS_OBJPATH = "/xyz/openbmc_project/bios_config/manager";
 constexpr auto BIOS_MGR_INTF = "xyz.openbmc_project.BIOSConfig.Manager";
 
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
-using InvalidArgumentMetadata = xyz::openbmc_project::Common::InvalidArgument;
 
 using SysConfigIntf =
     sdbusplus::xyz::openbmc_project::Network::server::SystemConfiguration;
