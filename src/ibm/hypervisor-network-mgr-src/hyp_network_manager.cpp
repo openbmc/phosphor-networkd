@@ -1,5 +1,7 @@
 #include "hyp_network_manager.hpp"
 
+#include "hyp_ethernet_interface.hpp"
+
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/elog.hpp>
 #include <phosphor-logging/lg2.hpp>
@@ -13,6 +15,7 @@ namespace phosphor
 {
 namespace network
 {
+using namespace phosphor::logging;
 using InternalFailure =
     sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
 
@@ -232,6 +235,10 @@ void HypNetworkMgr::createIfObjects()
         std::make_unique<HypEthInterface>(
             bus, sdbusplus::message::object_path(objectPath.str + "/eth1"),
             "eth1", *this));
+
+    // Create ip address objects for each ethernet interface
+    interfaces["eth0"]->createIPAddressObjects();
+    interfaces["eth1"]->createIPAddressObjects();
 }
 
 void HypNetworkMgr::createSysConfObj()
