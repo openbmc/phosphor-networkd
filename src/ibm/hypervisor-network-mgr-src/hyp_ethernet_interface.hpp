@@ -1,7 +1,9 @@
 #pragma once
 
 #include "ethernet_interface.hpp"
+#include "hyp_ip_interface.hpp"
 #include "hyp_network_manager.hpp"
+#include "types.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>
@@ -17,8 +19,9 @@ namespace network
 
 class HypNetworkMgr; // forward declaration of hypervisor network manager.
 
+class HypIPAddress;
+
 using namespace phosphor::logging;
-using HypIP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 
 using CreateIface = sdbusplus::server::object::object<
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface,
@@ -35,7 +38,11 @@ using PendingAttributesType =
 using HypEthernetIntf =
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface;
 
+using HypIP = sdbusplus::xyz::openbmc_project::Network::server::IP;
+
 using ObjectPath = sdbusplus::message::object_path;
+
+using ipAddrMapType = string_umap<std::unique_ptr<HypIPAddress>>;
 
 static std::shared_ptr<sdbusplus::bus::match::match> matchBIOSAttrUpdate;
 
@@ -65,6 +72,10 @@ class HypEthInterface : public CreateIface
         HypEthernetIntf::interfaceName(intfName);
     };
 
+    /* @brief creates the IP dbus object
+     */
+    virtual void createIPAddressObjects();
+
     /** @brief Function to create ipAddress dbus object.
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipAddress- IP address.
@@ -78,15 +89,40 @@ class HypEthInterface : public CreateIface
         return std::string();
     };
 
+    /* @brief Function to delete the IP dbus object
+     *  @param[in] ipaddress - ipaddress to delete.
+     */
+    bool deleteObject(const std::string& ipaddress);
+
+    /* @brief Returns interface id
+     * @param[out] - if0/if1
+     */
+    std::string getIntfLabel();
+
+    /* @brief Function to update the ip address property in
+              the dbus object
+     * @detail if there is a change in ip address in bios
+               table, the ip is updated in the dbus obj path
+     * @param[in] updatedIp - ip to update
+     */
+    void updateIPAddress(std::string ip, std::string updatedIp);
+
     /* @brief Function that returns parent's bios attrs map
      */
     biosTableType getBiosAttrsMap();
 
-    /* @brief Returns the dhcp enabled property
-     * @param[in] protocol - ipv4/ipv6
-     * @return bool - true if dhcpEnabled
+    /* @brief Function to set ip address properties in
+              the parent's bios attrs map
+     * @detail if there is a change in any properties either in bios
+               table or on the dbus object, the bios attrs map data member
+               of the parent should be updated with the latest value
+     * @param[in] attrName - attrName for which there is a change in value
+     * @param[in] attrValue - updated value
+     * @param[in] attrType - type of the attrValue (string/integer)
      */
-    bool isDHCPEnabled(IP::Protocol protocol);
+    void setIpPropsInMap(std::string attrName,
+                         std::variant<std::string, int64_t> attrValue,
+                         std::string attrType);
 
     /** Set value of DHCPEnabled */
     HypEthernetIntf::DHCPConf dhcpEnabled() const override;
@@ -114,12 +150,15 @@ class HypEthInterface : public CreateIface
     /** @brief Parent of this object */
     HypNetworkMgr& manager;
 
-  private:
-    /** @brief Determines if DHCP is active for the IP::Protocol supplied.
+  protected:
+    /** @brief Determines if DHCP is active for the HypIP::Protocol supplied.
      *  @param[in] protocol - Either IPv4 or IPv6
      *  @returns true/false value if DHCP is active for the input protocol
      */
-    bool dhcpIsEnabled(IP::Protocol protocol);
+    bool dhcpIsEnabled(HypIP::Protocol protocol);
+
+    /** @brief List of the ipaddress and the ip dbus objects */
+    ipAddrMapType addrs;
 };
 
 } // namespace network
