@@ -1,3 +1,4 @@
+#include "hyp_ethernet_interface.hpp"
 #include "mock_hyp_sys_config.hpp"
 
 #include <net/if.h>
