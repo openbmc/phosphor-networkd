@@ -235,6 +235,10 @@ void HypNetworkMgr::createIfObjects()
     interfaces.emplace("eth1",
                        std::make_unique<HypEthInterface>(
                            bus, (objectPath + "/eth1").c_str(), "eth1", *this));
+
+    // Create ip address objects for each ethernet interface
+    interfaces["eth0"]->createIPAddressObjects();
+    interfaces["eth1"]->createIPAddressObjects();
 }
 
 void HypNetworkMgr::createSysConfObj()
