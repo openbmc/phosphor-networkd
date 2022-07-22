@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46173ea1_cecc1e8a",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-07-22T06:07:24Z",
+      "side": 1,
+      "message": "This can go as global",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 76
+      },
+      "revId": "76e3ef9c51b751bbfd99dc37c81516d40184a144",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ab88ca2_88ca1a30",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-07-22T06:07:24Z",
+      "side": 1,
+      "message": "This part of the comment can be removed. Not all the systems will have vmi string.",
+      "range": {
+        "startLine": 163,
+        "startChar": 1,
+        "endLine": 164,
+        "endChar": 39
+      },
+      "revId": "76e3ef9c51b751bbfd99dc37c81516d40184a144",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87e316dd_6866ab13",
+        "filename": "test/ibm/hypervisor-network-mgr-test/test_hyp_ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-07-22T06:07:24Z",
+      "side": 1,
+      "message": "There should be no dependency on the 1st IP address creation to get the 2nd one created.\nBoth can be created independently, and the 2nd IP create should verify that the Hypervisor network gets the IP overwritten",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 5
+      },
+      "revId": "76e3ef9c51b751bbfd99dc37c81516d40184a144",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a040718_3a2774e4",
+        "filename": "test/ibm/hypervisor-network-mgr-test/test_hyp_ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-07-22T06:07:24Z",
+      "side": 1,
+      "message": "Here probably you can also expect that the IP address is all zeros",
+      "range": {
+        "startLine": 106,
+        "startChar": 2,
+        "endLine": 106,
+        "endChar": 5
+      },
+      "revId": "76e3ef9c51b751bbfd99dc37c81516d40184a144",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
