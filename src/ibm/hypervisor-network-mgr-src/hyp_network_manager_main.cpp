@@ -12,7 +12,7 @@ int main(int /*argc*/, char** /*argv*/)
     auto bus = sdbusplus::bus::new_default();
 
     // Add sdbusplus ObjectManager
-    sdbusplus::server::manager::manager objManager(bus, DEFAULT_HYP_NW_OBJPATH);
+    sdbusplus::server::manager_t objManager(bus, DEFAULT_HYP_NW_OBJPATH);
 
     // Get default event loop
     auto event = sdeventplus::Event::get_default();

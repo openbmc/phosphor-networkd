@@ -20,7 +20,7 @@ namespace dhcp
 using ConfigIntf =
     sdbusplus::xyz::openbmc_project::Network::server::DHCPConfiguration;
 
-using Iface = sdbusplus::server::object::object<ConfigIntf>;
+using Iface = sdbusplus::server::object_t<ConfigIntf>;
 
 /** @class Configuration
  *  @brief DHCP configuration.
@@ -42,7 +42,7 @@ class Configuration : public Iface
      *  @param[in] objPath - Path to attach at.
      *  @param[in] parent - Parent object.
      */
-    Configuration(sdbusplus::bus::bus& bus, const std::string& objPath,
+    Configuration(sdbusplus::bus_t& bus, const std::string& objPath,
                   Manager& parent) :
         Iface(bus, objPath.c_str(), Iface::action::defer_emit),
         bus(bus), manager(parent)
@@ -101,7 +101,7 @@ class Configuration : public Iface
 
   private:
     /** @brief sdbusplus DBus bus connection. */
-    sdbusplus::bus::bus& bus;
+    sdbusplus::bus_t& bus;
 
     /** @brief Network Manager object. */
     phosphor::network::Manager& manager;

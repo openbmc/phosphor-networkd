@@ -24,7 +24,7 @@ namespace fs = std::filesystem;
 class TestNetworkManager : public stdplus::gtest::TestWithTmp
 {
   public:
-    sdbusplus::bus::bus bus;
+    sdbusplus::bus_t bus;
     MockManager manager;
     TestNetworkManager() :
         bus(sdbusplus::bus::new_default()),

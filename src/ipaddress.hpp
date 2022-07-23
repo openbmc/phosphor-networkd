@@ -11,7 +11,7 @@ namespace phosphor
 namespace network
 {
 
-using IPIfaces = sdbusplus::server::object::object<
+using IPIfaces = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::server::IP,
     sdbusplus::xyz::openbmc_project::Object::server::Delete>;
 
@@ -45,7 +45,7 @@ class IPAddress : public IPIfaces
      *  @param[in] prefixLength - Length of prefix.
      *  @param[in] gateway - gateway address.
      */
-    IPAddress(sdbusplus::bus::bus& bus, const char* objPath,
+    IPAddress(sdbusplus::bus_t& bus, const char* objPath,
               EthernetInterface& parent, IP::Protocol type,
               const std::string& ipAddress, IP::AddressOrigin origin,
               uint8_t prefixLength, const std::string& gateway);

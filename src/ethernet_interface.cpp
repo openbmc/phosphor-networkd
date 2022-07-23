@@ -59,7 +59,7 @@ static stdplus::Fd& getIFSock()
     return fd;
 }
 
-EthernetInterface::EthernetInterface(sdbusplus::bus::bus& bus,
+EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
                                      const std::string& objPath,
                                      DHCPConf dhcpEnabled, Manager& parent,
                                      bool emitSignal,
@@ -658,13 +658,13 @@ bool EthernetInterface::queryNicEnabled() const
 
     // Build a matcher before making the property call to ensure we
     // can eventually get the value.
-    sdbusplus::bus::match::match match(
+    sdbusplus::bus::match_t match(
         bus,
         fmt::format("type='signal',sender='{}',path='{}',interface='{}',member="
                     "'PropertiesChanged',arg0='{}',",
                     svc, path, PROPERTY_INTERFACE, intf)
             .c_str(),
-        [&](sdbusplus::message::message& m) {
+        [&](sdbusplus::message_t& m) {
             std::string intf;
             std::unordered_map<std::string, std::variant<std::string>> values;
             try
@@ -847,7 +847,7 @@ ServerList EthernetInterface::getNameServerFromResolvd()
     {
         reply.read(name);
     }
-    catch (const sdbusplus::exception::exception& e)
+    catch (const sdbusplus::exception_t& e)
     {
         log<level::ERR>("Failed to get DNS information from Systemd-Resolved");
     }

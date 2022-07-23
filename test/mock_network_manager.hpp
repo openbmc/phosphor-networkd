@@ -18,7 +18,7 @@ void refreshObjects();
 class MockManager : public phosphor::network::Manager
 {
   public:
-    MockManager(sdbusplus::bus::bus& bus, const char* path,
+    MockManager(sdbusplus::bus_t& bus, const char* path,
                 const std::string& dir) :
         phosphor::network::Manager(bus, path, dir)
     {

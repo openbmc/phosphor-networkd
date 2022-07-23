@@ -15,7 +15,7 @@ namespace network
 class TestHypSysConfig : public testing::Test
 {
   public:
-    sdbusplus::bus::bus bus;
+    sdbusplus::bus_t bus;
     HypNetworkMgr manager;
     MockHypSysConfig sysConfigObj;
     sdeventplus::Event event = sdeventplus::Event::get_default();

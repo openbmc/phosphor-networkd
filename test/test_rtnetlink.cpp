@@ -19,7 +19,7 @@ namespace phosphor
 
 namespace network
 {
-sdbusplus::bus::bus bus(sdbusplus::bus::new_default());
+sdbusplus::bus_t bus(sdbusplus::bus::new_default());
 extern std::unique_ptr<MockManager> manager;
 extern std::unique_ptr<Timer> refreshObjectTimer;
 EventPtr eventPtr = nullptr;

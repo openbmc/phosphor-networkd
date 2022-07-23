@@ -22,7 +22,7 @@ namespace network
 
 using NeighborIntf = sdbusplus::xyz::openbmc_project::Network::server::Neighbor;
 
-using NeighborObj = sdbusplus::server::object::object<
+using NeighborObj = sdbusplus::server::object_t<
     NeighborIntf, sdbusplus::xyz::openbmc_project::Object::server::Delete>;
 
 class EthernetInterface;
@@ -80,7 +80,7 @@ class Neighbor : public NeighborObj
      *  @param[in] macAddress - Low level MAC address.
      *  @param[in] state - The state of the neighbor entry.
      */
-    Neighbor(sdbusplus::bus::bus& bus, const char* objPath,
+    Neighbor(sdbusplus::bus_t& bus, const char* objPath,
              EthernetInterface& parent, const std::string& ipAddress,
              const std::string& macAddress, State state);
 

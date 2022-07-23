@@ -40,7 +40,7 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
-Manager::Manager(sdbusplus::bus::bus& bus, const char* objPath,
+Manager::Manager(sdbusplus::bus_t& bus, const char* objPath,
                  const std::string& path) :
     details::VLANCreateIface(bus, objPath,
                              details::VLANCreateIface::action::defer_emit),
@@ -291,7 +291,7 @@ void Manager::doReloadConfigs()
                                           NETWORKD_INTERFACE, "Reload");
         bus.call_noreply(method);
     }
-    catch (const sdbusplus::exception::exception& ex)
+    catch (const sdbusplus::exception_t& ex)
     {
         log<level::ERR>("Failed to reload configuration",
                         entry("ERR=%s", ex.what()));

@@ -68,7 +68,7 @@ class HypNetworkMgr
      *  @param[in] event - event.
      *  @param[in] path - Path to attach at.
      */
-    HypNetworkMgr(sdbusplus::bus::bus& bus, sdeventplus::Event& event,
+    HypNetworkMgr(sdbusplus::bus_t& bus, sdeventplus::Event& event,
                   const char* path) :
         bus(bus),
         event(event), objectPath(path){};
@@ -141,7 +141,7 @@ class HypNetworkMgr
     void setBIOSTableAttrs();
 
     /** @brief sdbusplus DBus bus connection. */
-    sdbusplus::bus::bus& bus;
+    sdbusplus::bus_t& bus;
 
     /**  sdevent Event handle. */
     sdeventplus::Event& event;

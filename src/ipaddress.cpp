@@ -18,7 +18,7 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using NotAllowed = sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
 using Reason = xyz::openbmc_project::Common::NotAllowed::REASON;
 
-IPAddress::IPAddress(sdbusplus::bus::bus& bus, const char* objPath,
+IPAddress::IPAddress(sdbusplus::bus_t& bus, const char* objPath,
                      EthernetInterface& parent, IP::Protocol type,
                      const std::string& ipaddress, IP::AddressOrigin origin,
                      uint8_t prefixLength, const std::string& gateway) :

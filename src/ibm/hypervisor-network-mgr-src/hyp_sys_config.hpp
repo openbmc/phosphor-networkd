@@ -16,7 +16,7 @@ namespace network
 using SysConfigIntf =
     sdbusplus::xyz::openbmc_project::Network::server::SystemConfiguration;
 
-using Iface = sdbusplus::server::object::object<SysConfigIntf>;
+using Iface = sdbusplus::server::object_t<SysConfigIntf>;
 
 class HypNetworkMgr; // forward declaration of network manager.
 
@@ -40,7 +40,7 @@ class HypSysConfig : public Iface
      *  @param[in] objPath - Path to attach at.
      *  @param[in] parent - Parent object.
      */
-    HypSysConfig(sdbusplus::bus::bus& bus, const std::string& objPath,
+    HypSysConfig(sdbusplus::bus_t& bus, const std::string& objPath,
                  HypNetworkMgr& parent) :
         Iface(bus, objPath.c_str(), Iface::action::defer_emit),
         bus(bus), manager(parent){};
@@ -66,7 +66,7 @@ class HypSysConfig : public Iface
     void setHostNameInBios(const std::string& name);
 
     /** @brief Persistent sdbusplus DBus bus connection. */
-    sdbusplus::bus::bus& bus;
+    sdbusplus::bus_t& bus;
 
     /** @brief Hyp Network Manager object. */
     HypNetworkMgr& manager;

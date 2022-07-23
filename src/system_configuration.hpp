@@ -13,7 +13,7 @@ namespace network
 using SystemConfigIntf =
     sdbusplus::xyz::openbmc_project::Network::server::SystemConfiguration;
 
-using Iface = sdbusplus::server::object::object<SystemConfigIntf>;
+using Iface = sdbusplus::server::object_t<SystemConfigIntf>;
 
 class Manager; // forward declaration of network manager.
 
@@ -37,7 +37,7 @@ class SystemConfiguration : public Iface
      *  @param[in] objPath - Path to attach at.
      *  @param[in] parent - Parent object.
      */
-    SystemConfiguration(sdbusplus::bus::bus& bus, const std::string& objPath);
+    SystemConfiguration(sdbusplus::bus_t& bus, const std::string& objPath);
 
     /** @brief set the hostname of the system.
      *  @param[in] name - host name of the system.
@@ -51,7 +51,7 @@ class SystemConfiguration : public Iface
     std::string getHostNameFromSystem() const;
 
     /** @brief Persistent sdbusplus DBus bus connection. */
-    sdbusplus::bus::bus& bus;
+    sdbusplus::bus_t& bus;
 };
 
 } // namespace network

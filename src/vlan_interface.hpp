@@ -46,7 +46,7 @@ class VlanInterface : public VlanIface,
      *
      *  This constructor is called during loading the VLAN Interface
      */
-    VlanInterface(sdbusplus::bus::bus& bus, const std::string& objPath,
+    VlanInterface(sdbusplus::bus_t& bus, const std::string& objPath,
                   DHCPConf dhcpEnabled, bool nicEnabled, uint32_t vlanID,
                   EthernetInterface& intf, Manager& parent);
 

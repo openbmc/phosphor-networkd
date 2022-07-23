@@ -25,7 +25,7 @@ namespace network
 class TestEthernetInterface : public stdplus::gtest::TestWithTmp
 {
   public:
-    sdbusplus::bus::bus bus;
+    sdbusplus::bus_t bus;
     std::string confDir;
     MockManager manager;
     MockEthernetInterface interface;
@@ -39,7 +39,7 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
 
     static constexpr ether_addr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};
 
-    static MockEthernetInterface makeInterface(sdbusplus::bus::bus& bus,
+    static MockEthernetInterface makeInterface(sdbusplus::bus_t& bus,
                                                MockManager& manager)
     {
         mock_clear();

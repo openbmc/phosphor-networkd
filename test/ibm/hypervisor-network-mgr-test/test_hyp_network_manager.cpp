@@ -15,7 +15,7 @@ namespace network
 class TestHypNetworkManager : public testing::Test
 {
   public:
-    sdbusplus::bus::bus bus;
+    sdbusplus::bus_t bus;
     HypNetworkMgr manager;
     sdeventplus::Event event = sdeventplus::Event::get_default();
     TestHypNetworkManager() :

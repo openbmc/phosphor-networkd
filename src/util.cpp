@@ -541,8 +541,7 @@ constexpr auto invNetworkIntf =
     "xyz.openbmc_project.Inventory.Item.NetworkInterface";
 constexpr auto invRoot = "/xyz/openbmc_project/inventory";
 
-ether_addr getfromInventory(sdbusplus::bus::bus& bus,
-                            const std::string& intfName)
+ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
 {
 
     std::string interfaceName = intfName;

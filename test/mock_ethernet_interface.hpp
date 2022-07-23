@@ -12,7 +12,7 @@ namespace network
 class MockEthernetInterface : public EthernetInterface
 {
   public:
-    MockEthernetInterface(sdbusplus::bus::bus& bus, const std::string& objPath,
+    MockEthernetInterface(sdbusplus::bus_t& bus, const std::string& objPath,
                           DHCPConf dhcpEnabled, Manager& parent,
                           bool emitSignal) :
         EthernetInterface(bus, objPath, dhcpEnabled, parent, emitSignal,

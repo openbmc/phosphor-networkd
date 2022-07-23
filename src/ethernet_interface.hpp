@@ -18,7 +18,7 @@ namespace phosphor
 namespace network
 {
 
-using Ifaces = sdbusplus::server::object::object<
+using Ifaces = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface,
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress,
     sdbusplus::xyz::openbmc_project::Network::IP::server::Create,
@@ -86,7 +86,7 @@ class EthernetInterface : public Ifaces
      *                          send.
      *  @param[in] enabled - Override the lookup of nicEnabled
      */
-    EthernetInterface(sdbusplus::bus::bus& bus, const std::string& objPath,
+    EthernetInterface(sdbusplus::bus_t& bus, const std::string& objPath,
                       DHCPConf dhcpEnabled, Manager& parent,
                       bool emitSignal = true,
                       std::optional<bool> enabled = std::nullopt);
@@ -327,7 +327,7 @@ class EthernetInterface : public Ifaces
     ServerList getstaticNameServerFromConf();
 
     /** @brief Persistent sdbusplus DBus bus connection. */
-    sdbusplus::bus::bus& bus;
+    sdbusplus::bus_t& bus;
 
     /** @brief Network Manager object. */
     Manager& manager;

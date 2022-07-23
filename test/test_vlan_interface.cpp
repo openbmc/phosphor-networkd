@@ -25,7 +25,7 @@ namespace fs = std::filesystem;
 class TestVlanInterface : public stdplus::gtest::TestWithTmp
 {
   public:
-    sdbusplus::bus::bus bus;
+    sdbusplus::bus_t bus;
     std::string confDir;
     MockManager manager;
     EthernetInterface interface;
@@ -37,7 +37,7 @@ class TestVlanInterface : public stdplus::gtest::TestWithTmp
     {
     }
 
-    static EthernetInterface makeInterface(sdbusplus::bus::bus& bus,
+    static EthernetInterface makeInterface(sdbusplus::bus_t& bus,
                                            MockManager& manager)
     {
         mock_clear();

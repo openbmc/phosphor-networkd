@@ -25,7 +25,7 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using SystemConfigIntf =
     sdbusplus::xyz::openbmc_project::Network::server::SystemConfiguration;
 
-SystemConfiguration::SystemConfiguration(sdbusplus::bus::bus& bus,
+SystemConfiguration::SystemConfiguration(sdbusplus::bus_t& bus,
                                          const std::string& objPath) :
     Iface(bus, objPath.c_str(), Iface::action::defer_emit),
     bus(bus)
@@ -72,7 +72,7 @@ std::string SystemConfiguration::getHostNameFromSystem() const
         reply.read(name);
         return std::get<std::string>(name);
     }
-    catch (const sdbusplus::exception::exception& ex)
+    catch (const sdbusplus::exception_t& ex)
     {
         log<level::ERR>(
             "Failed to get the hostname from systemd-hostnamed service",
