@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "62d81b62_af00711e",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-07-25T07:59:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ec31b5e_5464401e",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 0
+      },
+      "revId": "229a7026b85de1c47a5c2b6491fcf65120c2025a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "25768f46_c470ccbf",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2027413_642926fb",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-07-25T07:59:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25768f46_c470ccbf",
+      "range": {
+        "startLine": 88,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 64
+      },
+      "revId": "229a7026b85de1c47a5c2b6491fcf65120c2025a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b614d84d_0174ccc4",
@@ -60,6 +108,30 @@
       "writtenOn": "2022-07-22T07:10:24Z",
       "side": 1,
       "message": "What about eth1 interface",
+      "range": {
+        "startLine": 260,
+        "startChar": 4,
+        "endLine": 260,
+        "endChar": 45
+      },
+      "revId": "229a7026b85de1c47a5c2b6491fcf65120c2025a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5be1f8e_aa14e3c9",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-07-25T07:59:52Z",
+      "side": 1,
+      "message": "This method can be called only once by either of the interface. so just used eth0",
+      "parentUuid": "b614d84d_0174ccc4",
       "range": {
         "startLine": 260,
         "startChar": 4,
