@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bcf9986e_c6c30568",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-07-28T14:20:53Z",
+      "side": 1,
+      "message": "Please add a comment here saying why do you need to delete the object and then add the user supplied ip again",
+      "range": {
+        "startLine": 137,
+        "startChar": 0,
+        "endLine": 142,
+        "endChar": 9
+      },
+      "revId": "b55cd75ddab6e9bcf59e3ef3340a900f932ca5f2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a299a867_439b707d",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-07-28T14:20:53Z",
+      "side": 1,
+      "message": "make this a macro",
+      "range": {
+        "startLine": 199,
+        "startChar": 32,
+        "endLine": 199,
+        "endChar": 33
+      },
+      "revId": "b55cd75ddab6e9bcf59e3ef3340a900f932ca5f2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7f276ca_62f47d76",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-07-28T14:20:53Z",
+      "side": 1,
+      "message": "what is the value of objectPath here ?",
+      "range": {
+        "startLine": 399,
+        "startChar": 26,
+        "endLine": 399,
+        "endChar": 36
+      },
+      "revId": "b55cd75ddab6e9bcf59e3ef3340a900f932ca5f2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60ff9348_204f7ad5",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-07-28T14:20:53Z",
+      "side": 1,
+      "message": "can these common lines be moved out ?",
+      "range": {
+        "startLine": 478,
+        "startChar": 0,
+        "endLine": 480,
+        "endChar": 0
+      },
+      "revId": "b55cd75ddab6e9bcf59e3ef3340a900f932ca5f2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
