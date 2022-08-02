@@ -56,16 +56,25 @@ tests = [
 
 run_with_tmp = find_program('run_with_tmp', native: true)
 
+add_test_setup(
+  'networkd',
+  exe_wrapper: run_with_tmp,
+  env: {'TMPTMPL': 'phosphor-networkd-test.XXXXXXXXXX'},
+  is_default: true)
+
+add_test_setup(
+  'valgrind',
+  exe_wrapper: [run_with_tmp, 'valgrind'],
+  env: {'TMPTMPL': 'phosphor-networkd-test.XXXXXXXXXX'})
+
 foreach t : tests
   test(
     t,
-    run_with_tmp,
-    args: executable(
+    executable(
       t.underscorify(),
       'test_' + t + '.cpp',
       implicit_include_directories: false,
-      dependencies: test_dep),
-    env: {'TMPTMPL': 'phosphor-networkd-test.XXXXXXXXXX'})
+      dependencies: test_dep))
 endforeach
 
 if (get_option('hyp-nw-config') == true)
