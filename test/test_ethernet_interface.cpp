@@ -162,10 +162,7 @@ TEST_F(TestEthernetInterface, addStaticNameServers)
     fs::path filePath = confDir;
     filePath /= "00-bmc-test0.network";
     config::Parser parser(filePath.string());
-    config::ReturnCode rc = config::ReturnCode::SUCCESS;
-    config::ValueList values;
-    std::tie(rc, values) = parser.getValues("Network", "DNS");
-    EXPECT_EQ(servers, values);
+    EXPECT_EQ(servers, parser.getValues("Network", "DNS"));
 }
 
 TEST_F(TestEthernetInterface, addDynamicNameServers)
@@ -191,10 +188,7 @@ TEST_F(TestEthernetInterface, addNTPServers)
     fs::path filePath = confDir;
     filePath /= "00-bmc-test0.network";
     config::Parser parser(filePath.string());
-    config::ReturnCode rc = config::ReturnCode::SUCCESS;
-    config::ValueList values;
-    std::tie(rc, values) = parser.getValues("Network", "NTP");
-    EXPECT_EQ(servers, values);
+    EXPECT_EQ(servers, parser.getValues("Network", "NTP"));
 }
 
 TEST_F(TestEthernetInterface, addGateway)

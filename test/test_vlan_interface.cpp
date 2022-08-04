@@ -8,7 +8,6 @@
 #include <net/if.h>
 #include <netinet/in.h>
 
-#include <exception>
 #include <filesystem>
 #include <sdbusplus/bus.hpp>
 #include <stdplus/gtest/tmp.hpp>
@@ -94,19 +93,6 @@ class TestVlanInterface : public stdplus::gtest::TestWithTmp
     {
         interface.ip(addressType, ipaddress, subnetMask, gateway);
     }
-
-    bool isValueFound(const std::vector<std::string>& values,
-                      const std::string& expectedValue)
-    {
-        for (const auto& value : values)
-        {
-            if (expectedValue == value)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 };
 
 TEST_F(TestVlanInterface, createVLAN)
@@ -116,23 +102,11 @@ TEST_F(TestVlanInterface, createVLAN)
     filePath /= "test0.50.netdev";
 
     config::Parser parser(filePath.string());
-    config::ReturnCode rc = config::ReturnCode::SUCCESS;
-    config::ValueList values;
 
-    std::tie(rc, values) = parser.getValues("NetDev", "Name");
-    std::string expectedValue = "test0.50";
-    bool found = isValueFound(values, expectedValue);
-    EXPECT_EQ(found, true);
-
-    std::tie(rc, values) = parser.getValues("NetDev", "Kind");
-    expectedValue = "vlan";
-    found = isValueFound(values, expectedValue);
-    EXPECT_EQ(found, true);
-
-    std::tie(rc, values) = parser.getValues("VLAN", "Id");
-    expectedValue = "50";
-    found = isValueFound(values, expectedValue);
-    EXPECT_EQ(found, true);
+    EXPECT_EQ(parser.getValues("NetDev", "Name"),
+              (config::ValueList{"test0.50"}));
+    EXPECT_EQ(parser.getValues("NetDev", "Kind"), (config::ValueList{"vlan"}));
+    EXPECT_EQ(parser.getValues("VLAN", "Id"), (config::ValueList{"50"}));
 }
 
 TEST_F(TestVlanInterface, deleteVLAN)
@@ -158,36 +132,18 @@ TEST_F(TestVlanInterface, createMultipleVLAN)
     fs::path filePath = confDir;
     filePath /= "test0.50.netdev";
     config::Parser parser(filePath.string());
-    config::ReturnCode rc = config::ReturnCode::SUCCESS;
-    config::ValueList values;
-
-    std::tie(rc, values) = parser.getValues("NetDev", "Name");
-    std::string expectedValue = "test0.50";
-    bool found = isValueFound(values, expectedValue);
-    EXPECT_EQ(found, true);
-
-    std::tie(rc, values) = parser.getValues("NetDev", "Kind");
-    expectedValue = "vlan";
-    found = isValueFound(values, expectedValue);
-    EXPECT_EQ(found, true);
-
-    std::tie(rc, values) = parser.getValues("VLAN", "Id");
-    expectedValue = "50";
-    found = isValueFound(values, expectedValue);
-    EXPECT_EQ(found, true);
+    EXPECT_EQ(parser.getValues("NetDev", "Name"),
+              (config::ValueList{"test0.50"}));
+    EXPECT_EQ(parser.getValues("NetDev", "Kind"), (config::ValueList{"vlan"}));
+    EXPECT_EQ(parser.getValues("VLAN", "Id"), (config::ValueList{"50"}));
 
     filePath = confDir;
     filePath /= "test0.60.netdev";
     parser.setFile(filePath.string());
-    std::tie(rc, values) = parser.getValues("NetDev", "Name");
-    expectedValue = "test0.60";
-    found = isValueFound(values, expectedValue);
-    EXPECT_EQ(found, true);
-
-    std::tie(rc, values) = parser.getValues("VLAN", "Id");
-    expectedValue = "60";
-    found = isValueFound(values, expectedValue);
-    EXPECT_EQ(found, true);
+    EXPECT_EQ(parser.getValues("NetDev", "Name"),
+              (config::ValueList{"test0.60"}));
+    EXPECT_EQ(parser.getValues("NetDev", "Kind"), (config::ValueList{"vlan"}));
+    EXPECT_EQ(parser.getValues("VLAN", "Id"), (config::ValueList{"60"}));
 
     deleteVlan("test0.50");
     deleteVlan("test0.60");
