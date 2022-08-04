@@ -809,17 +809,8 @@ ServerList EthernetInterface::getstaticNameServerFromConf()
     std::string fileName = systemd::config::networkFilePrefix +
                            interfaceName() + systemd::config::networkFileSuffix;
     confPath /= fileName;
-    ServerList servers;
     config::Parser parser(confPath.string());
-    auto rc = config::ReturnCode::SUCCESS;
-
-    std::tie(rc, servers) = parser.getValues("Network", "DNS");
-    if (rc != config::ReturnCode::SUCCESS)
-    {
-        log<level::DEBUG>("Unable to get the value for network[DNS]",
-                          entry("RC=%d", rc));
-    }
-    return servers;
+    return parser.getValues("Network", "DNS");
 }
 
 ServerList EthernetInterface::getNameServerFromResolvd()
@@ -963,17 +954,14 @@ bool EthernetInterface::getIPv6AcceptRAFromConf()
     std::string fileName = systemd::config::networkFilePrefix +
                            interfaceName() + systemd::config::networkFileSuffix;
     confPath /= fileName;
-    config::ValueList values;
-    config::Parser parser(confPath.string());
-    auto rc = config::ReturnCode::SUCCESS;
-    std::tie(rc, values) = parser.getValues("Network", "IPv6AcceptRA");
-    if (rc != config::ReturnCode::SUCCESS)
+    config::Parser parser(confPath);
+    const auto& values = parser.getValues("Network", "IPv6AcceptRA");
+    if (values.empty())
     {
-        log<level::DEBUG>("Unable to get the value for Network[IPv6AcceptRA]",
-                          entry("rc=%d", rc));
+        log<level::NOTICE>("Unable to get the value for Network[IPv6AcceptRA]");
         return false;
     }
-    return (values[0] == "true");
+    return values.back() == "true";
 }
 
 ServerList EthernetInterface::getNTPServersFromConf()
@@ -984,18 +972,8 @@ ServerList EthernetInterface::getNTPServersFromConf()
                            interfaceName() + systemd::config::networkFileSuffix;
     confPath /= fileName;
 
-    ServerList servers;
     config::Parser parser(confPath.string());
-    auto rc = config::ReturnCode::SUCCESS;
-
-    std::tie(rc, servers) = parser.getValues("Network", "NTP");
-    if (rc != config::ReturnCode::SUCCESS)
-    {
-        log<level::DEBUG>("Unable to get the value for Network[NTP]",
-                          entry("rc=%d", rc));
-    }
-
-    return servers;
+    return parser.getValues("Network", "NTP");
 }
 
 ServerList EthernetInterface::ntpServers(ServerList servers)
