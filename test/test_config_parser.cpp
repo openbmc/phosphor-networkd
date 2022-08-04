@@ -1,5 +1,3 @@
-#include "config.h"
-
 #include "config_parser.hpp"
 
 #include <fmt/format.h>
@@ -11,78 +9,48 @@
 #include <stdplus/gtest/tmp.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 namespace phosphor
 {
 namespace network
 {
+namespace config
+{
+
+using testing::ElementsAre;
 
 class TestConfigParser : public stdplus::gtest::TestWithTmp
 {
   public:
-    config::Parser parser;
-    TestConfigParser()
+    std::string filename = fmt::format("{}/eth0.network", CaseTmpDir());
+    Parser parser;
+
+    void WriteSampleFile()
     {
-        auto filename = fmt::format("{}/eth0.network", CaseTmpDir());
         std::ofstream filestream(filename);
-
-        filestream << "[Match]\nName=eth0\n"
-                   << "[Network]\nDHCP=true\n[DHCP]\nClientIdentifier= mac\n";
+        filestream << "\n\n\n\nBad=key\n[Match]\n  # K=v \nName =eth0\n"
+                   << "[Network\nDHCP=true\n[DHCP]\nClientIdentifier= mac\n"
+                   << "[Network] a\nDHCP=false #hi\n\n\nDHCP  =   yes   \n"
+                   << " [ SEC ] \n'DHCP#'=\"#hi\"\nDHCP#=ho\n[Network]\n"
+                   << "Key=val\nAddress=::/0\n[]\n=\nKey";
         filestream.close();
-        parser.setFile(filename);
-    }
-
-    bool isValueFound(const std::vector<std::string>& values,
-                      const std::string& expectedValue)
-    {
-        for (const auto& value : values)
-        {
-            if (expectedValue == value)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 };
 
 TEST_F(TestConfigParser, ReadConfigDataFromFile)
 {
-    config::ReturnCode rc = config::ReturnCode::SUCCESS;
-    config::ValueList values;
+    WriteSampleFile();
+    parser.setFile(filename);
 
-    std::tie(rc, values) = parser.getValues("Network", "DHCP");
-    std::string expectedValue = "true";
-    bool found = isValueFound(values, expectedValue);
-    EXPECT_EQ(found, true);
-
-    std::tie(rc, values) = parser.getValues("DHCP", "ClientIdentifier");
-    expectedValue = "mac";
-    found = isValueFound(values, expectedValue);
-    EXPECT_EQ(found, true);
-
-    std::tie(rc, values) = parser.getValues("Match", "Name");
-    expectedValue = "eth0";
-    found = isValueFound(values, expectedValue);
-    EXPECT_EQ(found, true);
+    EXPECT_THAT(parser.getValues("Match", "Name"), ElementsAre("eth0"));
+    EXPECT_THAT(parser.getValues("DHCP", "ClientIdentifier"),
+                ElementsAre("mac"));
+    EXPECT_THAT(parser.getValues("Blah", "nil"), ElementsAre());
+    EXPECT_THAT(parser.getValues("Network", "nil"), ElementsAre());
 }
 
-TEST_F(TestConfigParser, SectionNotExist)
-{
-    config::ReturnCode rc = config::ReturnCode::SUCCESS;
-    config::ValueList values;
-    std::tie(rc, values) = parser.getValues("abc", "ipaddress");
-    EXPECT_EQ(config::ReturnCode::SECTION_NOT_FOUND, rc);
-}
-
-TEST_F(TestConfigParser, KeyNotFound)
-{
-    config::ReturnCode rc = config::ReturnCode::SUCCESS;
-    config::ValueList values;
-    std::tie(rc, values) = parser.getValues("Network", "abc");
-    EXPECT_EQ(config::ReturnCode::KEY_NOT_FOUND, rc);
-}
-
+} // namespace config
 } // namespace network
 } // namespace phosphor

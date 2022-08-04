@@ -4,6 +4,8 @@
 
 #include "network_manager.hpp"
 
+#include <fmt/format.h>
+
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -87,25 +89,16 @@ bool Configuration::getDHCPPropFromConf(const std::string& prop)
     confPath /= fileName;
     // systemd default behaviour is all DHCP fields should be enabled by
     // default.
-    auto propValue = true;
     config::Parser parser(confPath);
 
-    auto rc = config::ReturnCode::SUCCESS;
-    config::ValueList values{};
-    std::tie(rc, values) = parser.getValues("DHCP", prop);
-
-    if (rc != config::ReturnCode::SUCCESS)
+    const auto& values = parser.getValues("DHCP", prop);
+    if (values.empty())
     {
-        log<level::DEBUG>("Unable to get the value from section DHCP",
-                          entry("PROP=%s", prop.c_str()), entry("RC=%d", rc));
-        return propValue;
+        auto msg = fmt::format("Missing config section DHCP[{}]", prop);
+        log<level::NOTICE>(msg.c_str(), entry("PROP=%s", prop.c_str()));
+        return true;
     }
-
-    if (values[0] == "false")
-    {
-        propValue = false;
-    }
-    return propValue;
+    return values.back() != "false";
 }
 } // namespace dhcp
 } // namespace network
