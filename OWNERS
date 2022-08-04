@@ -38,6 +38,7 @@ owners:
 reviewers:
 - anoo@us.ibm.com
 - ngorugan@in.ibm.com
+- sunithaharish04@gmail.com
 
 matchers:
 
@@ -54,3 +55,6 @@ openbmc:
 - name: William Kennington
   email: wak@google.com
   discord: wak
+- name: Sunitha Harish
+  email: sunithaharish04@gmail.com
+  discord: Sunitha Harish
