@@ -493,27 +493,22 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
                            systemd::config::networkFileSuffix;
     confPath /= fileName;
 
-    auto rc = config::ReturnCode::SUCCESS;
-    config::ValueList values;
     config::Parser parser(confPath.string());
-
-    std::tie(rc, values) = parser.getValues("Network", "DHCP");
-    if (rc != config::ReturnCode::SUCCESS)
+    const auto& values = parser.getValues("Network", "DHCP");
+    if (values.empty())
     {
-        log<level::DEBUG>("Unable to get the value for Network[DHCP]",
-                          entry("RC=%d", rc));
+        log<level::NOTICE>("Unable to get the value for Network[DHCP]");
         return dhcp;
     }
-    // There will be only single value for DHCP key.
-    if (values[0] == "true")
+    if (values.back() == "true")
     {
         dhcp = EthernetInterfaceIntf::DHCPConf::both;
     }
-    else if (values[0] == "ipv4")
+    else if (values.back() == "ipv4")
     {
         dhcp = EthernetInterfaceIntf::DHCPConf::v4;
     }
-    else if (values[0] == "ipv6")
+    else if (values.back() == "ipv6")
     {
         dhcp = EthernetInterfaceIntf::DHCPConf::v6;
     }
