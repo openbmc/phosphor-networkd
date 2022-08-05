@@ -25,6 +25,30 @@ namespace config
 
 using testing::ElementsAre;
 
+TEST(TestConvert, iCaseEq)
+{
+    EXPECT_TRUE(icaseeq("VaL", "val"));
+    EXPECT_TRUE(icaseeq("[ab1", "[ab1"));
+}
+
+TEST(TestConvert, ParseBool)
+{
+    EXPECT_TRUE(parseBool("tRue").value());
+    EXPECT_FALSE(parseBool("tru").has_value());
+    EXPECT_TRUE(parseBool("t").value());
+    EXPECT_TRUE(parseBool("Yes").value());
+    EXPECT_FALSE(parseBool("ye").has_value());
+    EXPECT_TRUE(parseBool("y").value());
+    EXPECT_TRUE(parseBool("oN").value());
+
+    EXPECT_FALSE(parseBool("fAlse").value());
+    EXPECT_FALSE(parseBool("fal").has_value());
+    EXPECT_FALSE(parseBool("f").value());
+    EXPECT_FALSE(parseBool("No").value());
+    EXPECT_FALSE(parseBool("n").value());
+    EXPECT_FALSE(parseBool("oFf").value());
+}
+
 class TestConfigParser : public stdplus::gtest::TestWithTmp
 {
   public:
