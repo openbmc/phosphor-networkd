@@ -98,7 +98,14 @@ bool Configuration::getDHCPPropFromConf(const std::string& prop)
         log<level::NOTICE>(msg.c_str(), entry("PROP=%s", prop.c_str()));
         return true;
     }
-    return values.back() != "false";
+    auto ret = config::parseBool(values.back());
+    if (!ret.has_value())
+    {
+        auto msg = fmt::format("Failed to parse section DHCP[{}]: `{}`", prop,
+                               values.back());
+        log<level::NOTICE>(msg.c_str(), entry("PROP=%s", prop.c_str()));
+    }
+    return ret.value_or(true);
 }
 } // namespace dhcp
 } // namespace network
