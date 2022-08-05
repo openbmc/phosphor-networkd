@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -12,6 +13,11 @@ namespace network
 {
 namespace config
 {
+
+/** @brief Compare in (case insensitive) vs expected (sensitive) */
+bool icaseeq(std::string_view in, std::string_view expected) noexcept;
+/** @brief Turns a systemd bool string into a c++ bool */
+std::optional<bool> parseBool(std::string_view in) noexcept;
 
 struct string_hash : public std::hash<std::string_view>
 {

@@ -12,6 +12,29 @@ namespace network
 namespace config
 {
 
+using std::literals::string_view_literals::operator""sv;
+
+bool icaseeq(std::string_view in, std::string_view expected) noexcept
+{
+    return std::equal(in.begin(), in.end(), expected.begin(), expected.end(),
+                      [](auto a, auto b) { return tolower(a) == b; });
+}
+
+std::optional<bool> parseBool(std::string_view in) noexcept
+{
+    if (in == "1"sv || icaseeq(in, "yes"sv) || icaseeq(in, "y"sv) ||
+        icaseeq(in, "true"sv) || icaseeq(in, "t"sv) || icaseeq(in, "on"sv))
+    {
+        return true;
+    }
+    if (in == "0"sv || icaseeq(in, "no"sv) || icaseeq(in, "n"sv) ||
+        icaseeq(in, "false"sv) || icaseeq(in, "f"sv) || icaseeq(in, "off"sv))
+    {
+        return false;
+    }
+    return std::nullopt;
+}
+
 Parser::Parser(const fs::path& filename)
 {
     setFile(filename);
