@@ -367,8 +367,6 @@ std::optional<std::string> interfaceToUbootEthAddr(const char* intf)
 EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
                                              const std::string& intf)
 {
-    EthernetInterfaceIntf::DHCPConf dhcp =
-        EthernetInterfaceIntf::DHCPConf::none;
     // Get the interface mode value from systemd conf
     // using namespace std::string_literals;
     fs::path confPath = confDir;
@@ -381,21 +379,25 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
     if (values.empty())
     {
         log<level::NOTICE>("Unable to get the value for Network[DHCP]");
-        return dhcp;
+        return EthernetInterfaceIntf::DHCPConf::none;
     }
-    if (values.back() == "true")
+    if (config::icaseeq(values.back(), "ipv4"))
     {
-        dhcp = EthernetInterfaceIntf::DHCPConf::both;
+        return EthernetInterfaceIntf::DHCPConf::v4;
     }
-    else if (values.back() == "ipv4")
+    if (config::icaseeq(values.back(), "ipv6"))
     {
-        dhcp = EthernetInterfaceIntf::DHCPConf::v4;
+        return EthernetInterfaceIntf::DHCPConf::v6;
     }
-    else if (values.back() == "ipv6")
+    auto ret = config::parseBool(values.back());
+    if (!ret.has_value())
     {
-        dhcp = EthernetInterfaceIntf::DHCPConf::v6;
+        auto str =
+            fmt::format("Unable to parse Network[DHCP]: `{}`", values.back());
+        log<level::NOTICE>(str.c_str());
     }
-    return dhcp;
+    return ret.value_or(false) ? EthernetInterfaceIntf::DHCPConf::both
+                               : EthernetInterfaceIntf::DHCPConf::none;
 }
 
 namespace mac_address

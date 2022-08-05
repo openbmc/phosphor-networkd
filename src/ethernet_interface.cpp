@@ -955,7 +955,15 @@ bool EthernetInterface::getIPv6AcceptRAFromConf()
         log<level::NOTICE>("Unable to get the value for Network[IPv6AcceptRA]");
         return false;
     }
-    return values.back() == "true";
+    auto ret = config::parseBool(values.back());
+    if (!ret.has_value())
+    {
+        auto msg =
+            fmt::format("Failed to parse section Network[IPv6AcceptRA]: `{}`",
+                        values.back());
+        log<level::NOTICE>(msg.c_str());
+    }
+    return ret.value_or(false);
 }
 
 ServerList EthernetInterface::getNTPServersFromConf()
