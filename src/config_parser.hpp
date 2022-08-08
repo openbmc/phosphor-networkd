@@ -19,6 +19,11 @@ bool icaseeq(std::string_view in, std::string_view expected) noexcept;
 /** @brief Turns a systemd bool string into a c++ bool */
 std::optional<bool> parseBool(std::string_view in) noexcept;
 
+namespace fs = std::filesystem;
+
+fs::path pathForIntfConf(const fs::path& dir, std::string_view intf);
+fs::path pathForIntfDev(const fs::path& dir, std::string_view intf);
+
 struct string_hash : public std::hash<std::string_view>
 {
     using is_transparent = void;
@@ -33,8 +38,6 @@ using KeyValuesMap =
 using SectionMap =
     std::unordered_map<Section, KeyValuesMap, string_hash, std::equal_to<>>;
 
-namespace fs = std::filesystem;
-
 class Parser
 {
   public:
@@ -43,7 +46,6 @@ class Parser
     /** @brief Constructor
      *  @param[in] filename - Absolute path of the file which will be parsed.
      */
-
     Parser(const fs::path& filename);
 
     /** @brief Get the values of the given key and section.
@@ -62,12 +64,21 @@ class Parser
         return warnings;
     }
 
+    /** @brief Get the filename last parsed successfully
+     *  @return file path
+     */
+    inline const fs::path& getFilename() const noexcept
+    {
+        return filename;
+    }
+
     /** @brief Set the file name and parse it.
      *  @param[in] filename - Absolute path of the file.
      */
     void setFile(const fs::path& filename);
 
   private:
+    fs::path filename;
     SectionMap sections;
     size_t warnings = 0;
 };
