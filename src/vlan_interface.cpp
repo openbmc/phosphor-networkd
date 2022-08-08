@@ -22,12 +22,13 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 VlanInterface::VlanInterface(sdbusplus::bus_t& bus, const std::string& objPath,
-                             DHCPConf dhcpEnabled, bool nicEnabled,
-                             uint32_t vlanID, EthernetInterface& intf,
-                             Manager& parent) :
+                             const config::Parser& config, DHCPConf dhcpEnabled,
+                             bool nicEnabled, uint32_t vlanID,
+                             EthernetInterface& intf, Manager& parent) :
     VlanIface(bus, objPath.c_str()),
     DeleteIface(bus, objPath.c_str()),
-    EthernetInterface(bus, objPath, dhcpEnabled, parent, true, nicEnabled),
+    EthernetInterface(bus, objPath, config, dhcpEnabled, parent, true,
+                      nicEnabled),
     parentInterface(intf)
 {
     id(vlanID);
@@ -45,29 +46,24 @@ std::string VlanInterface::macAddress(std::string)
 
 void VlanInterface::writeDeviceFile()
 {
-    using namespace std::string_literals;
-    fs::path confPath = manager.getConfDir();
-    std::string fileName = EthernetInterface::interfaceName() + ".netdev"s;
-    confPath /= fileName;
-    std::fstream stream;
-    try
-    {
-        stream.open(confPath.c_str(), std::fstream::out);
-    }
-    catch (const std::ios_base::failure& e)
-    {
-        log<level::ERR>("Unable to open the VLAN device file",
-                        entry("FILE=%s", confPath.c_str()),
-                        entry("ERROR=%s", e.what()));
-        elog<InternalFailure>();
-    }
+    auto confPath = config::pathForIntfDev(manager.getConfDir(),
+                                           EthernetInterface::interfaceName());
+    std::fstream stream(confPath.c_str(), std::fstream::out);
 
     stream << "[NetDev]\n";
     stream << "Name=" << EthernetInterface::interfaceName() << "\n";
     stream << "Kind=vlan\n";
     stream << "[VLAN]\n";
     stream << "Id=" << id() << "\n";
+
     stream.close();
+
+    if (!stream.good())
+    {
+        log<level::ERR>("Unable to write the VLAN device file",
+                        entry("FILE=%s", confPath.c_str()));
+        elog<InternalFailure>();
+    }
 }
 
 void VlanInterface::delete_()
