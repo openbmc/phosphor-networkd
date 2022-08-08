@@ -10,6 +10,7 @@
 #include "vlan_interface.hpp"
 
 #include <arpa/inet.h>
+#include <fmt/compile.h>
 #include <fmt/format.h>
 #include <linux/ethtool.h>
 #include <linux/rtnetlink.h>
@@ -63,6 +64,7 @@ static stdplus::Fd& getIFSock()
 
 EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
                                      const std::string& objPath,
+                                     const config::Parser& config,
                                      DHCPConf dhcpEnabled, Manager& parent,
                                      bool emitSignal,
                                      std::optional<bool> enabled) :
@@ -75,7 +77,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
     EthernetInterfaceIntf::dhcpEnabled(dhcpEnabled);
-    EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRAFromConf());
+    EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRA(config));
     EthernetInterfaceIntf::nicEnabled(enabled ? *enabled : queryNicEnabled());
     const auto& gatewayList = manager.getRouteTable().getDefaultGateway();
     const auto& gateway6List = manager.getRouteTable().getDefaultGateway6();
@@ -108,7 +110,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
     {
         MacAddressIntf::macAddress(getMACAddress(intfName));
     }
-    EthernetInterfaceIntf::ntpServers(getNTPServersFromConf());
+    EthernetInterfaceIntf::ntpServers(config.getValues("Network", "NTP"));
 
     EthernetInterfaceIntf::linkUp(linkUp());
     EthernetInterfaceIntf::mtu(mtu());
@@ -470,25 +472,14 @@ void EthernetInterface::deleteStaticNeighborObject(const std::string& ipAddress)
 
 void EthernetInterface::deleteVLANFromSystem(const std::string& interface)
 {
-    auto confDir = manager.getConfDir();
-    fs::path networkFile = confDir;
-    networkFile /= systemd::config::networkFilePrefix + interface +
-                   systemd::config::networkFileSuffix;
-
-    fs::path deviceFile = confDir;
-    deviceFile /= interface + systemd::config::deviceFileSuffix;
+    const auto& confDir = manager.getConfDir();
+    auto networkFile = config::pathForIntfConf(confDir, interface);
+    auto deviceFile = config::pathForIntfDev(confDir, interface);
 
     // delete the vlan network file
-    if (fs::is_regular_file(networkFile))
-    {
-        fs::remove(networkFile);
-    }
-
-    // delete the vlan device file
-    if (fs::is_regular_file(deviceFile))
-    {
-        fs::remove(deviceFile);
-    }
+    std::error_code ec;
+    fs::remove(networkFile, ec);
+    fs::remove(deviceFile, ec);
 
     // TODO  systemd doesn't delete the virtual network interface
     // even after deleting all the related configuartion.
@@ -796,21 +787,11 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
     return EthernetInterfaceIntf::staticNameServers();
 }
 
-void EthernetInterface::loadNameServers()
+void EthernetInterface::loadNameServers(const config::Parser& config)
 {
     EthernetInterfaceIntf::nameservers(getNameServerFromResolvd());
-    EthernetInterfaceIntf::staticNameServers(getstaticNameServerFromConf());
-}
-
-ServerList EthernetInterface::getstaticNameServerFromConf()
-{
-    fs::path confPath = manager.getConfDir();
-
-    std::string fileName = systemd::config::networkFilePrefix +
-                           interfaceName() + systemd::config::networkFileSuffix;
-    confPath /= fileName;
-    config::Parser parser(confPath.string());
-    return parser.getValues("Network", "DNS");
+    EthernetInterfaceIntf::staticNameServers(
+        config.getValues("Network", "DNS"));
 }
 
 ServerList EthernetInterface::getNameServerFromResolvd()
@@ -893,23 +874,33 @@ ServerList EthernetInterface::getNameServerFromResolvd()
     return servers;
 }
 
+std::string EthernetInterface::vlanIntfName(VlanId id) const
+{
+    return fmt::format(FMT_COMPILE("{}.{}"), interfaceName(), id);
+}
+
+std::string EthernetInterface::vlanObjPath(VlanId id) const
+{
+    return fmt::format(FMT_COMPILE("{}_{}"), objPath, id);
+}
+
 void EthernetInterface::loadVLAN(VlanId id)
 {
-    std::string vlanInterfaceName = interfaceName() + "." + std::to_string(id);
-    std::string path = objPath;
-    path += "_" + std::to_string(id);
+    auto vlanInterfaceName = vlanIntfName(id);
+    auto path = vlanObjPath(id);
 
-    DHCPConf dhcpEnabled =
-        getDHCPValue(manager.getConfDir().string(), vlanInterfaceName);
+    config::Parser config(
+        config::pathForIntfConf(manager.getConfDir(), vlanInterfaceName));
+
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, path.c_str(), dhcpEnabled, EthernetInterfaceIntf::nicEnabled(), id,
-        *this, manager);
+        bus, path.c_str(), config, getDHCPValue(config),
+        EthernetInterfaceIntf::nicEnabled(), id, *this, manager);
 
     // Fetch the ip address from the system
     // and create the dbus object.
     vlanIntf->createIPAddressObjects();
     vlanIntf->createStaticNeighborObjects();
-    vlanIntf->loadNameServers();
+    vlanIntf->loadNameServers(config);
 
     this->vlanInterfaces.emplace(std::move(vlanInterfaceName),
                                  std::move(vlanIntf));
@@ -917,9 +908,9 @@ void EthernetInterface::loadVLAN(VlanId id)
 
 ObjectPath EthernetInterface::createVLAN(VlanId id)
 {
-    std::string vlanInterfaceName = interfaceName() + "." + std::to_string(id);
-
-    if (this->vlanInterfaces.count(vlanInterfaceName))
+    auto vlanInterfaceName = vlanIntfName(id);
+    if (this->vlanInterfaces.find(vlanInterfaceName) !=
+        this->vlanInterfaces.end())
     {
         log<level::ERR>("VLAN already exists", entry("VLANID=%u", id));
         elog<InvalidArgument>(
@@ -927,13 +918,12 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
             Argument::ARGUMENT_VALUE(std::to_string(id).c_str()));
     }
 
-    std::string path = objPath;
-    path += "_" + std::to_string(id);
+    auto path = vlanObjPath(id);
 
     // Pass the parents nicEnabled property, so that the child
     // VLAN interface can inherit.
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, path.c_str(), EthernetInterface::DHCPConf::none,
+        bus, path.c_str(), config::Parser(), EthernetInterface::DHCPConf::none,
         EthernetInterfaceIntf::nicEnabled(), id, *this, manager);
 
     // write the device file for the vlan interface.
@@ -945,43 +935,6 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
     manager.reloadConfigs();
 
     return path;
-}
-
-bool EthernetInterface::getIPv6AcceptRAFromConf()
-{
-    fs::path confPath = manager.getConfDir();
-
-    std::string fileName = systemd::config::networkFilePrefix +
-                           interfaceName() + systemd::config::networkFileSuffix;
-    confPath /= fileName;
-    config::Parser parser(confPath);
-    const auto& values = parser.getValues("Network", "IPv6AcceptRA");
-    if (values.empty())
-    {
-        log<level::NOTICE>("Unable to get the value for Network[IPv6AcceptRA]");
-        return false;
-    }
-    auto ret = config::parseBool(values.back());
-    if (!ret.has_value())
-    {
-        auto msg =
-            fmt::format("Failed to parse section Network[IPv6AcceptRA]: `{}`",
-                        values.back());
-        log<level::NOTICE>(msg.c_str());
-    }
-    return ret.value_or(false);
-}
-
-ServerList EthernetInterface::getNTPServersFromConf()
-{
-    fs::path confPath = manager.getConfDir();
-
-    std::string fileName = systemd::config::networkFilePrefix +
-                           interfaceName() + systemd::config::networkFileSuffix;
-    confPath /= fileName;
-
-    config::Parser parser(confPath.string());
-    return parser.getValues("Network", "NTP");
 }
 
 ServerList EthernetInterface::ntpServers(ServerList servers)
@@ -1012,18 +965,12 @@ void EthernetInterface::writeConfigurationFile()
         intf.second->writeConfigurationFile();
     }
 
-    fs::path confPath = manager.getConfDir();
-
-    std::string fileName = systemd::config::networkFilePrefix +
-                           interfaceName() + systemd::config::networkFileSuffix;
-    confPath /= fileName;
-    std::fstream stream;
-
-    stream.open(confPath.c_str(), std::fstream::out);
+    auto path = config::pathForIntfConf(manager.getConfDir(), interfaceName());
+    std::fstream stream(path.c_str(), std::fstream::out);
     if (!stream.is_open())
     {
         log<level::ERR>("Unable to open the file",
-                        entry("FILE=%s", confPath.c_str()));
+                        entry("FILE=%s", path.c_str()));
         elog<InternalFailure>();
     }
 
@@ -1135,8 +1082,8 @@ void EthernetInterface::writeConfigurationFile()
     writeDHCPSection(stream);
 
     stream.close();
-    auto msg = fmt::format("Wrote networkd file: {}", confPath.native());
-    log<level::INFO>(msg.c_str(), entry("FILE=%s", confPath.c_str()));
+    auto msg = fmt::format("Wrote networkd file: {}", path.native());
+    log<level::INFO>(msg.c_str(), entry("FILE=%s", path.c_str()));
 }
 
 void EthernetInterface::writeDHCPSection(std::fstream& stream)
