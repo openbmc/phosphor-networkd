@@ -80,7 +80,7 @@ class Manager : public details::VLANCreateIface
 
     /** @brief gets the network conf directory.
      */
-    fs::path getConfDir()
+    const fs::path& getConfDir() const
     {
         return confDir;
     }
