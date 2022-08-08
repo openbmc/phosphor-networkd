@@ -1,5 +1,8 @@
 #include "config_parser.hpp"
 
+#include <fmt/compile.h>
+#include <fmt/format.h>
+
 #include <functional>
 #include <iterator>
 #include <stdplus/exception.hpp>
@@ -35,6 +38,16 @@ std::optional<bool> parseBool(std::string_view in) noexcept
         return false;
     }
     return std::nullopt;
+}
+
+fs::path pathForIntfConf(const fs::path& dir, std::string_view intf)
+{
+    return dir / fmt::format(FMT_COMPILE("00-bmc-{}.network"), intf);
+}
+
+fs::path pathForIntfDev(const fs::path& dir, std::string_view intf)
+{
+    return dir / fmt::format(FMT_COMPILE("{}.netdev"), intf);
 }
 
 Parser::Parser(const fs::path& filename)
@@ -209,6 +222,7 @@ void Parser::setFile(const fs::path& filename)
             fmt::format("{}: Read error: {}", filename.native(), e.what()));
     }
 
+    this->filename = filename;
     this->sections = std::move(parse.sections);
     this->warnings = std::move(parse.warnings);
 }

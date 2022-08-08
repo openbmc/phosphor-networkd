@@ -1,5 +1,6 @@
 #pragma once
 
+#include "config_parser.hpp"
 #include "ethernet_interface.hpp"
 #include "types.hpp"
 #include "xyz/openbmc_project/Network/VLAN/server.hpp"
@@ -39,6 +40,7 @@ class VlanInterface : public VlanIface,
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
      *  @param[in] objPath - Path to attach at.
+     *  @param[in] config - The parsed configuation file.
      *  @param[in] dhcpEnabled - DHCP enable value.
      *  @param[in] vlanID - vlan identifier.
      *  @param[in] intf - ethernet interface object.
@@ -47,8 +49,9 @@ class VlanInterface : public VlanIface,
      *  This constructor is called during loading the VLAN Interface
      */
     VlanInterface(sdbusplus::bus_t& bus, const std::string& objPath,
-                  DHCPConf dhcpEnabled, bool nicEnabled, uint32_t vlanID,
-                  EthernetInterface& intf, Manager& parent);
+                  const config::Parser& config, DHCPConf dhcpEnabled,
+                  bool nicEnabled, uint32_t vlanID, EthernetInterface& intf,
+                  Manager& parent);
 
     /** @brief Delete this d-bus object.
      */
