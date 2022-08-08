@@ -34,18 +34,6 @@ constexpr auto reloadTimeout = 3s;
 // configuration takes 3-4 sec after systemd-networkd restart.
 constexpr auto refreshTimeout = reloadTimeout + 7s;
 
-namespace systemd
-{
-namespace config
-{
-
-constexpr auto networkFilePrefix = "00-bmc-";
-constexpr auto networkFileSuffix = ".network";
-constexpr auto deviceFileSuffix = ".netdev";
-
-} // namespace config
-} // namespace systemd
-
 using IntfName = std::string;
 
 struct AddrInfo

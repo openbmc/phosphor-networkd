@@ -9,6 +9,7 @@
 #include <unistd.h>
 
 #include <cstring>
+#include <filesystem>
 #include <optional>
 #include <sdbusplus/bus.hpp>
 #include <string>
@@ -151,12 +152,15 @@ void deleteInterface(const std::string& intf);
  */
 std::optional<std::string> interfaceToUbootEthAddr(const char* intf);
 
-/** @brief read the DHCP value from the configuration file
- *  @param[in] confDir - Network configuration directory.
- *  @param[in] intf - Interface name.
+/** @brief read the IPv6AcceptRA value from the configuration file
+ *  @param[in] config - The parsed configuration.
  */
-EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
-                                             const std::string& intf);
+bool getIPv6AcceptRA(const config::Parser& config);
+
+/** @brief read the DHCP value from the configuration file
+ *  @param[in] config - The parsed configuration.
+ */
+EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config);
 
 namespace internal
 {

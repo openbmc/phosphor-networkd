@@ -81,11 +81,7 @@ bool Manager::createDefaultNetworkFiles(bool force)
                 continue;
             }
 
-            auto fileName = systemd::config::networkFilePrefix + interface +
-                            systemd::config::networkFileSuffix;
-
-            fs::path filePath = confDir;
-            filePath /= fileName;
+            fs::path filePath = config::pathForIntfConf(confDir, interface);
 
             // create the interface specific network file
             // if not exist or we forcefully wants to write
@@ -151,18 +147,16 @@ void Manager::createInterfaces()
         }
         // normal ethernet interface
         objPath /= interface;
-
-        auto dhcp = getDHCPValue(confDir, interface);
+        config::Parser config(config::pathForIntfConf(confDir, interface));
 
         auto intf = std::make_shared<phosphor::network::EthernetInterface>(
-            bus, objPath.string(), dhcp, *this);
+            bus, objPath.string(), config, getDHCPValue(config), *this);
 
         intf->createIPAddressObjects();
         intf->createStaticNeighborObjects();
-        intf->loadNameServers();
+        intf->loadNameServers(config);
 
-        this->interfaces.emplace(
-            std::make_pair(std::move(interface), std::move(intf)));
+        this->interfaces.emplace(std::move(interface), std::move(intf));
     }
 }
 
