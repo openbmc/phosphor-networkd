@@ -1,5 +1,6 @@
 #pragma once
 
+#include "config_parser.hpp"
 #include "types.hpp"
 #include "util.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
@@ -80,6 +81,7 @@ class EthernetInterface : public Ifaces
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
      *  @param[in] objPath - Path to attach at.
+     *  @param[in] config - The parsed configuation file.
      *  @param[in] dhcpEnabled - is dhcp enabled(true/false).
      *  @param[in] parent - parent object.
      *  @param[in] emitSignal - true if the object added signal needs to be
@@ -87,13 +89,13 @@ class EthernetInterface : public Ifaces
      *  @param[in] enabled - Override the lookup of nicEnabled
      */
     EthernetInterface(sdbusplus::bus_t& bus, const std::string& objPath,
-                      DHCPConf dhcpEnabled, Manager& parent,
-                      bool emitSignal = true,
+                      const config::Parser& config, DHCPConf dhcpEnabled,
+                      Manager& parent, bool emitSignal = true,
                       std::optional<bool> enabled = std::nullopt);
 
     /** @brief Function used to load the nameservers.
      */
-    virtual void loadNameServers();
+    void loadNameServers(const config::Parser& config);
 
     /** @brief Function to create ipAddress dbus object.
      *  @param[in] addressType - Type of ip address.
@@ -183,11 +185,6 @@ class EthernetInterface : public Ifaces
      *  @returns macAddress of the interface or throws an error.
      */
     std::string macAddress(std::string value) override;
-
-    /** @brief get the IPv6AcceptRA flag from the network configuration file
-     *
-     */
-    bool getIPv6AcceptRAFromConf();
 
     /** @brief check conf file for Router Advertisements
      *
@@ -319,7 +316,6 @@ class EthernetInterface : public Ifaces
      *
      */
     virtual ServerList getNameServerFromResolvd();
-    ServerList getstaticNameServerFromConf();
 
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus_t& bus;
@@ -358,6 +354,9 @@ class EthernetInterface : public Ifaces
      *  @returns true/false value if the NIC is enabled
      */
     bool queryNicEnabled() const;
+
+    std::string vlanIntfName(VlanId id) const;
+    std::string vlanObjPath(VlanId id) const;
 };
 
 } // namespace network

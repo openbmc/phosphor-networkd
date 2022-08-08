@@ -79,17 +79,11 @@ bool Configuration::dnsEnabled(bool value)
 
 bool Configuration::getDHCPPropFromConf(const std::string& prop)
 {
-    fs::path confPath = manager.getConfDir();
     auto interfaceStrList = getInterfaces();
-    // get the first interface name, we need it to know config file name.
-    auto interface = *interfaceStrList.begin();
-    auto fileName = systemd::config::networkFilePrefix + interface +
-                    systemd::config::networkFileSuffix;
-
-    confPath /= fileName;
     // systemd default behaviour is all DHCP fields should be enabled by
     // default.
-    config::Parser parser(confPath);
+    config::Parser parser(config::pathForIntfConf(manager.getConfDir(),
+                                                  *interfaceStrList.begin()));
 
     const auto& values = parser.getValues("DHCP", prop);
     if (values.empty())

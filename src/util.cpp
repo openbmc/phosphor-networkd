@@ -364,21 +364,41 @@ std::optional<std::string> interfaceToUbootEthAddr(const char* intf)
     return "eth" + std::to_string(idx) + "addr";
 }
 
-EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
-                                             const std::string& intf)
+bool getIPv6AcceptRA(const config::Parser& config)
 {
-    // Get the interface mode value from systemd conf
-    // using namespace std::string_literals;
-    fs::path confPath = confDir;
-    std::string fileName = systemd::config::networkFilePrefix + intf +
-                           systemd::config::networkFileSuffix;
-    confPath /= fileName;
-
-    config::Parser parser(confPath.string());
-    const auto& values = parser.getValues("Network", "DHCP");
+    const auto& values = config.getValues("Network", "IPv6AcceptRA");
     if (values.empty())
     {
-        log<level::NOTICE>("Unable to get the value for Network[DHCP]");
+        auto msg = fmt::format(
+            "Unable to get the value for Network[IPv6AcceptRA] from {}",
+            config.getFilename().native());
+        log<level::NOTICE>(msg.c_str(),
+                           entry("FILE=%s", config.getFilename().c_str()));
+        return false;
+    }
+    auto ret = config::parseBool(values.back());
+    if (!ret.has_value())
+    {
+        auto msg = fmt::format(
+            "Failed to parse section Network[IPv6AcceptRA] from {}: `{}`",
+            config.getFilename().native(), values.back());
+        log<level::NOTICE>(msg.c_str(),
+                           entry("FILE=%s", config.getFilename().c_str()),
+                           entry("VALUE=%s", values.back().c_str()));
+    }
+    return ret.value_or(false);
+}
+
+EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
+{
+    const auto& values = config.getValues("Network", "DHCP");
+    if (values.empty())
+    {
+        auto msg =
+            fmt::format("Unable to get the value for Network[DHCP] from {}",
+                        config.getFilename().native());
+        log<level::NOTICE>(msg.c_str(),
+                           entry("FILE=%s", config.getFilename().c_str()));
         return EthernetInterfaceIntf::DHCPConf::none;
     }
     if (config::icaseeq(values.back(), "ipv4"))
@@ -392,9 +412,11 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const std::string& confDir,
     auto ret = config::parseBool(values.back());
     if (!ret.has_value())
     {
-        auto str =
-            fmt::format("Unable to parse Network[DHCP]: `{}`", values.back());
-        log<level::NOTICE>(str.c_str());
+        auto str = fmt::format("Unable to parse Network[DHCP] from {}: `{}`",
+                               config.getFilename().native(), values.back());
+        log<level::NOTICE>(str.c_str(),
+                           entry("FILE=%s", config.getFilename().c_str()),
+                           entry("VALUE=%s", values.back().c_str()));
     }
     return ret.value_or(false) ? EthernetInterfaceIntf::DHCPConf::both
                                : EthernetInterfaceIntf::DHCPConf::none;
