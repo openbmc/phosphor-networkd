@@ -61,18 +61,39 @@ class TestConfigParser : public stdplus::gtest::TestWithTmp
                    << "Key=val\nAddress=::/0\n[]\n=\nKey";
         filestream.close();
     }
+
+    void ValidateSectionMap()
+    {
+        EXPECT_THAT(
+            parser.getMap(),
+            testing::ContainerEq(SectionMap(SectionMapInt{
+                {"Match", {{{"Name", {"eth0"}}}}},
+                {"Network",
+                 {
+                     {{"DHCP", {"true"}}},
+                     {{"DHCP", {"false #hi", "yes"}}},
+                     {{"Key", {"val"}}, {"Address", {"::/0"}}},
+                 }},
+                {"DHCP", {{{"ClientIdentifier", {"mac"}}}}},
+                {" SEC ", {{{"'DHCP#'", {"\"#hi\""}}, {"DHCP#", {"ho"}}}}},
+                {"", {{{"", {""}}}}},
+            })));
+    }
 };
 
 TEST_F(TestConfigParser, EmptyObject)
 {
     EXPECT_TRUE(parser.getFilename().empty());
     EXPECT_EQ(0, parser.getWarnings());
+    EXPECT_EQ(SectionMap(), parser.getMap());
 }
 
 TEST_F(TestConfigParser, ReadDirectory)
 {
     parser.setFile("/");
+    EXPECT_EQ("/", parser.getFilename());
     EXPECT_EQ(1, parser.getWarnings());
+    EXPECT_EQ(SectionMap(), parser.getMap());
 }
 
 TEST_F(TestConfigParser, ReadConfigDataMissingFile)
@@ -80,6 +101,7 @@ TEST_F(TestConfigParser, ReadConfigDataMissingFile)
     parser.setFile("/no-such-path");
     EXPECT_EQ("/no-such-path", parser.getFilename());
     EXPECT_EQ(1, parser.getWarnings());
+    EXPECT_EQ(SectionMap(), parser.getMap());
 }
 
 TEST_F(TestConfigParser, ReadConfigDataFromFile)
@@ -88,15 +110,25 @@ TEST_F(TestConfigParser, ReadConfigDataFromFile)
     parser.setFile(filename);
     EXPECT_EQ(filename, parser.getFilename());
     EXPECT_EQ(parser.getWarnings(), 4);
+    ValidateSectionMap();
 
-    EXPECT_THAT(parser.getValues("Match", "Name"), ElementsAre("eth0"));
-    EXPECT_THAT(parser.getValues("DHCP", "ClientIdentifier"),
+    const auto& map = parser.getMap();
+
+    EXPECT_EQ("eth0", *map.getLastValueString("Match", "Name"));
+    EXPECT_EQ("yes", *map.getLastValueString("Network", "DHCP"));
+    EXPECT_EQ(nullptr, map.getLastValueString("Match", "BadKey"));
+    EXPECT_EQ(nullptr, map.getLastValueString("BadSec", "Name"));
+    EXPECT_EQ(nullptr, map.getLastValueString("BadSec", "Name"));
+
+    EXPECT_THAT(map.getValueStrings("Match", "Name"), ElementsAre("eth0"));
+    EXPECT_THAT(map.getValueStrings("DHCP", "ClientIdentifier"),
                 ElementsAre("mac"));
-    EXPECT_THAT(parser.getValues("Network", "DHCP"),
+    EXPECT_THAT(map.getValueStrings("Network", "DHCP"),
                 ElementsAre("true", "false #hi", "yes"));
-    EXPECT_THAT(parser.getValues(" SEC ", "'DHCP#'"), ElementsAre("\"#hi\""));
-    EXPECT_THAT(parser.getValues("Blah", "nil"), ElementsAre());
-    EXPECT_THAT(parser.getValues("Network", "nil"), ElementsAre());
+    EXPECT_THAT(map.getValueStrings(" SEC ", "'DHCP#'"),
+                ElementsAre("\"#hi\""));
+    EXPECT_THAT(map.getValueStrings("Blah", "nil"), ElementsAre());
+    EXPECT_THAT(map.getValueStrings("Network", "nil"), ElementsAre());
 }
 
 } // namespace config
