@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <functional>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -35,8 +36,41 @@ using Value = std::string;
 using ValueList = std::vector<Value>;
 using KeyValuesMap =
     std::unordered_map<Key, ValueList, string_hash, std::equal_to<>>;
-using SectionMap =
-    std::unordered_map<Section, KeyValuesMap, string_hash, std::equal_to<>>;
+using KeyValuesMapList = std::vector<KeyValuesMap>;
+using SectionMapInt =
+    std::unordered_map<Section, KeyValuesMapList, string_hash, std::equal_to<>>;
+
+class SectionMap : public SectionMapInt
+{
+  public:
+    const std::string* getLastValueString(std::string_view section,
+                                          std::string_view key) const noexcept;
+    inline auto getValues(std::string_view section, std::string_view key,
+                          auto&& conv) const
+    {
+        std::vector<std::invoke_result_t<decltype(conv), const Value&>> values;
+        auto sit = find(section);
+        if (sit == end())
+        {
+            return values;
+        }
+        for (const auto& secv : sit->second)
+        {
+            auto kit = secv.find(key);
+            if (kit == secv.end())
+            {
+                continue;
+            }
+            for (auto v : kit->second)
+            {
+                values.push_back(conv(v));
+            }
+        }
+        return values;
+    }
+    std::vector<std::string> getValueStrings(std::string_view section,
+                                             std::string_view key) const;
+};
 
 class Parser
 {
@@ -48,13 +82,11 @@ class Parser
      */
     Parser(const fs::path& filename);
 
-    /** @brief Get the values of the given key and section.
-     *  @param[in] section - section name.
-     *  @param[in] key - key to look for.
-     *  @returns   The ValueList or nullptr if no key + section exists.
-     */
-    const ValueList& getValues(std::string_view section,
-                               std::string_view key) const noexcept;
+    /** @brief Retrieve the map of all values in the file */
+    inline const SectionMap& getMap() const noexcept
+    {
+        return sections;
+    }
 
     /** @brief Determine if there were warnings parsing the file
      *  @return The number of parsing issues in the file
