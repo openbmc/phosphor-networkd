@@ -102,27 +102,25 @@ TEST_F(TestVlanInterface, createVLAN)
     fs::path filePath = confDir;
     filePath /= "test0.50.netdev";
 
-    config::Parser parser(filePath.string());
-
-    EXPECT_EQ(parser.getValues("NetDev", "Name"),
-              (config::ValueList{"test0.50"}));
-    EXPECT_EQ(parser.getValues("NetDev", "Kind"), (config::ValueList{"vlan"}));
-    EXPECT_EQ(parser.getValues("VLAN", "Id"), (config::ValueList{"50"}));
+    config::Parser parser(filePath);
+    EXPECT_EQ(parser.getMap(),
+              config::SectionMap(config::SectionMapInt{
+                  {"NetDev",
+                   {
+                       {{"Name", {"test0.50"}}, {"Kind", {"vlan"}}},
+                   }},
+                  {"VLAN", {{{"Id", {"50"}}}}},
+              }));
 }
 
 TEST_F(TestVlanInterface, deleteVLAN)
 {
     createVlan(50);
     deleteVlan("test0.50");
-    bool fileFound = false;
 
     fs::path filePath = confDir;
     filePath /= "test0.50.netdev";
-    if (fs::is_regular_file(filePath.string()))
-    {
-        fileFound = true;
-    }
-    EXPECT_EQ(fileFound, false);
+    EXPECT_FALSE(fs::is_regular_file(filePath));
 }
 
 TEST_F(TestVlanInterface, createMultipleVLAN)
@@ -132,19 +130,27 @@ TEST_F(TestVlanInterface, createMultipleVLAN)
 
     fs::path filePath = confDir;
     filePath /= "test0.50.netdev";
-    config::Parser parser(filePath.string());
-    EXPECT_EQ(parser.getValues("NetDev", "Name"),
-              (config::ValueList{"test0.50"}));
-    EXPECT_EQ(parser.getValues("NetDev", "Kind"), (config::ValueList{"vlan"}));
-    EXPECT_EQ(parser.getValues("VLAN", "Id"), (config::ValueList{"50"}));
+    config::Parser parser(filePath);
+    EXPECT_EQ(parser.getMap(),
+              config::SectionMap(config::SectionMapInt{
+                  {"NetDev",
+                   {
+                       {{"Name", {"test0.50"}}, {"Kind", {"vlan"}}},
+                   }},
+                  {"VLAN", {{{"Id", {"50"}}}}},
+              }));
 
     filePath = confDir;
     filePath /= "test0.60.netdev";
-    parser.setFile(filePath.string());
-    EXPECT_EQ(parser.getValues("NetDev", "Name"),
-              (config::ValueList{"test0.60"}));
-    EXPECT_EQ(parser.getValues("NetDev", "Kind"), (config::ValueList{"vlan"}));
-    EXPECT_EQ(parser.getValues("VLAN", "Id"), (config::ValueList{"60"}));
+    parser.setFile(filePath);
+    EXPECT_EQ(parser.getMap(),
+              config::SectionMap(config::SectionMapInt{
+                  {"NetDev",
+                   {
+                       {{"Name", {"test0.60"}}, {"Kind", {"vlan"}}},
+                   }},
+                  {"VLAN", {{{"Id", {"60"}}}}},
+              }));
 
     deleteVlan("test0.50");
     deleteVlan("test0.60");
