@@ -366,8 +366,8 @@ std::optional<std::string> interfaceToUbootEthAddr(const char* intf)
 
 bool getIPv6AcceptRA(const config::Parser& config)
 {
-    const auto& values = config.getValues("Network", "IPv6AcceptRA");
-    if (values.empty())
+    auto value = config.getMap().getLastValueString("Network", "IPv6AcceptRA");
+    if (value == nullptr)
     {
         auto msg = fmt::format(
             "Unable to get the value for Network[IPv6AcceptRA] from {}",
@@ -376,23 +376,23 @@ bool getIPv6AcceptRA(const config::Parser& config)
                            entry("FILE=%s", config.getFilename().c_str()));
         return false;
     }
-    auto ret = config::parseBool(values.back());
+    auto ret = config::parseBool(*value);
     if (!ret.has_value())
     {
         auto msg = fmt::format(
             "Failed to parse section Network[IPv6AcceptRA] from {}: `{}`",
-            config.getFilename().native(), values.back());
+            config.getFilename().native(), *value);
         log<level::NOTICE>(msg.c_str(),
                            entry("FILE=%s", config.getFilename().c_str()),
-                           entry("VALUE=%s", values.back().c_str()));
+                           entry("VALUE=%s", value->c_str()));
     }
     return ret.value_or(false);
 }
 
 EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
 {
-    const auto& values = config.getValues("Network", "DHCP");
-    if (values.empty())
+    const auto value = config.getMap().getLastValueString("Network", "DHCP");
+    if (value == nullptr)
     {
         auto msg =
             fmt::format("Unable to get the value for Network[DHCP] from {}",
@@ -401,22 +401,22 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
                            entry("FILE=%s", config.getFilename().c_str()));
         return EthernetInterfaceIntf::DHCPConf::none;
     }
-    if (config::icaseeq(values.back(), "ipv4"))
+    if (config::icaseeq(*value, "ipv4"))
     {
         return EthernetInterfaceIntf::DHCPConf::v4;
     }
-    if (config::icaseeq(values.back(), "ipv6"))
+    if (config::icaseeq(*value, "ipv6"))
     {
         return EthernetInterfaceIntf::DHCPConf::v6;
     }
-    auto ret = config::parseBool(values.back());
+    auto ret = config::parseBool(*value);
     if (!ret.has_value())
     {
         auto str = fmt::format("Unable to parse Network[DHCP] from {}: `{}`",
-                               config.getFilename().native(), values.back());
+                               config.getFilename().native(), *value);
         log<level::NOTICE>(str.c_str(),
                            entry("FILE=%s", config.getFilename().c_str()),
-                           entry("VALUE=%s", values.back().c_str()));
+                           entry("VALUE=%s", value->c_str()));
     }
     return ret.value_or(false) ? EthernetInterfaceIntf::DHCPConf::both
                                : EthernetInterfaceIntf::DHCPConf::none;

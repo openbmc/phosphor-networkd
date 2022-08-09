@@ -110,7 +110,8 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
     {
         MacAddressIntf::macAddress(getMACAddress(intfName));
     }
-    EthernetInterfaceIntf::ntpServers(config.getValues("Network", "NTP"));
+    EthernetInterfaceIntf::ntpServers(
+        config.getMap().getValueStrings("Network", "NTP"));
 
     EthernetInterfaceIntf::linkUp(linkUp());
     EthernetInterfaceIntf::mtu(mtu());
@@ -791,7 +792,7 @@ void EthernetInterface::loadNameServers(const config::Parser& config)
 {
     EthernetInterfaceIntf::nameservers(getNameServerFromResolvd());
     EthernetInterfaceIntf::staticNameServers(
-        config.getValues("Network", "DNS"));
+        config.getMap().getValueStrings("Network", "DNS"));
 }
 
 ServerList EthernetInterface::getNameServerFromResolvd()

@@ -6,6 +6,7 @@
 #include <stdplus/exception.hpp>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/line.hpp>
+#include <string>
 #include <utility>
 
 namespace phosphor
@@ -48,28 +49,37 @@ fs::path pathForIntfDev(const fs::path& dir, std::string_view intf)
     return dir / fmt::format(FMT_COMPILE("{}.netdev"), intf);
 }
 
+const std::string*
+    SectionMap::getLastValueString(std::string_view section,
+                                   std::string_view key) const noexcept
+{
+    auto sit = find(section);
+    if (sit == end())
+    {
+        return nullptr;
+    }
+    for (auto it = sit->second.rbegin(); it != sit->second.rend(); ++it)
+    {
+        auto kit = it->find(key);
+        if (kit == it->end() || kit->second.empty())
+        {
+            continue;
+        }
+        return &kit->second.back();
+    }
+    return nullptr;
+}
+
+std::vector<std::string> SectionMap::getValueStrings(std::string_view section,
+                                                     std::string_view key) const
+{
+    return getValues(section, key,
+                     [](const Value& v) { return std::string(v); });
+}
+
 Parser::Parser(const fs::path& filename)
 {
     setFile(filename);
-}
-
-const ValueList& Parser::getValues(std::string_view section,
-                                   std::string_view key) const noexcept
-{
-    static const ValueList empty;
-    auto sit = sections.find(section);
-    if (sit == sections.end())
-    {
-        return empty;
-    }
-
-    auto kit = sit->second.find(key);
-    if (kit == sit->second.end())
-    {
-        return empty;
-    }
-
-    return kit->second;
 }
 
 inline bool isspace(char c) noexcept
@@ -124,9 +134,9 @@ struct Parse
         if (it == sections.end())
         {
             std::tie(it, std::ignore) =
-                sections.emplace(Section(s), KeyValuesMap{});
+                sections.emplace(Section(s), KeyValuesMapList{});
         }
-        section = &it->second;
+        section = &it->second.emplace_back();
     }
 
     void pumpKV(std::string_view line)
