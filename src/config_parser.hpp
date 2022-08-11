@@ -190,6 +190,10 @@ class Parser
      */
     void setFile(const fs::path& filename);
 
+    /** @brief Write the current config to a file */
+    void writeFile() const;
+    void writeFile(const fs::path& filename);
+
   private:
     fs::path filename;
 <<<<<<< HEAD
