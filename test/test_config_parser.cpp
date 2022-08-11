@@ -156,6 +156,20 @@ TEST_F(TestConfigParser, ReadConfigDataFromFile)
     EXPECT_THAT(map.getValueStrings("Network", "nil"), ElementsAre());
 }
 
+TEST_F(TestConfigParser, WriteConfigFile)
+{
+    WriteSampleFile();
+    parser.setFile(filename);
+    EXPECT_EQ(parser.getWarnings(), 4);
+    ValidateSectionMap();
+
+    parser.writeFile();
+
+    parser.setFile(filename);
+    EXPECT_EQ(parser.getWarnings(), 0);
+    ValidateSectionMap();
+}
+
 } // namespace config
 } // namespace network
 } // namespace phosphor
