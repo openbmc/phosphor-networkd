@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9b82ef7_e2765830",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 18
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-08-11T09:56:57Z",
+      "side": 1,
+      "message": "Please rephrase to split this to smaller sentences. Or remove since this is redundant explanation",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 29
+      },
+      "revId": "b310f865ec8b180228b7796e7118a913efed6d09",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d325606f_5809a1d5",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ip_interface.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-08-11T09:56:57Z",
+      "side": 1,
+      "message": "DHCP ?",
+      "range": {
+        "startLine": 81,
+        "startChar": 38,
+        "endLine": 81,
+        "endChar": 49
+      },
+      "revId": "b310f865ec8b180228b7796e7118a913efed6d09",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0942ae03_52aa1251",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_nw_config_serialize.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-08-11T09:56:57Z",
+      "side": 1,
+      "message": "Please remove the commented lines",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 33
+      },
+      "revId": "b310f865ec8b180228b7796e7118a913efed6d09",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d53ad989_c04ce0d9",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_nw_config_serialize.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-08-11T09:56:57Z",
+      "side": 1,
+      "message": "Since this is internal to the BMC\u0027s file system, its ok if the file path just says if0 and if1. I dont think this mapping to eth0 and eth1 etc are needed.\nfilePath \u003d HYP_NW_CONFIG_PERSIST_PATH + intf + \"_network\"\n\nSame at deserialize",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 5
+      },
+      "revId": "b310f865ec8b180228b7796e7118a913efed6d09",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9692f451_f73cd3ae",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_nw_config_serialize.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-08-11T09:56:57Z",
+      "side": 1,
+      "message": "Is this expected to be implemented in future ? If not, TODO is not needed",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 28
+      },
+      "revId": "b310f865ec8b180228b7796e7118a913efed6d09",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
