@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8224ab2_4218aff6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-08-11T09:39:14Z",
+      "side": 1,
+      "message": "This paragraph is not needed. This is already covered in your initial description, that any change in the Bios table is signaled and consumed at this app.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 22
+      },
+      "revId": "523d812544078c14145c456524859e6fed2877d9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d18d8699_01bb5eb8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-08-11T09:39:14Z",
+      "side": 1,
+      "message": "Please correct the line breaks",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 13
+      },
+      "revId": "523d812544078c14145c456524859e6fed2877d9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d719da2d_0d0e06b2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-08-11T09:39:14Z",
+      "side": 1,
+      "message": "Remove this part",
+      "range": {
+        "startLine": 27,
+        "startChar": 19,
+        "endLine": 27,
+        "endChar": 35
+      },
+      "revId": "523d812544078c14145c456524859e6fed2877d9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ec96ffb_c1168fbd",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-08-11T09:39:14Z",
+      "side": 1,
+      "message": "can this be changed to a meaningful name?",
+      "range": {
+        "startLine": 158,
+        "startChar": 29,
+        "endLine": 158,
+        "endChar": 31
+      },
+      "revId": "523d812544078c14145c456524859e6fed2877d9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
