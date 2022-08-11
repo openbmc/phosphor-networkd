@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <stdplus/exception.hpp>
 #include <stdplus/fd/create.hpp>
+#include <stdplus/fd/fmt.hpp>
 #include <stdplus/fd/line.hpp>
 #include <string>
 #include <utility>
@@ -252,6 +253,37 @@ void Parser::setFile(const fs::path& filename)
     this->map = std::move(parse.map);
     this->filename = filename;
     this->warnings = parse.warnings;
+}
+
+static void writeFileInt(const SectionMap& map, const fs::path& filename)
+{
+    stdplus::fd::FormatToFile out;
+    for (const auto& [section, maps] : map)
+    {
+        for (const auto& map : maps)
+        {
+            out.append("[{}]\n", section.get());
+            for (const auto& [key, vals] : map)
+            {
+                for (const auto& val : vals)
+                {
+                    out.append("{}={}\n", key.get(), val.get());
+                }
+            }
+        }
+    }
+    out.commit(filename);
+}
+
+void Parser::writeFile() const
+{
+    writeFileInt(map, filename);
+}
+
+void Parser::writeFile(const fs::path& filename)
+{
+    writeFileInt(map, filename);
+    this->filename = filename;
 }
 
 } // namespace config
