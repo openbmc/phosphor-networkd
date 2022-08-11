@@ -7,7 +7,9 @@
 #include <iterator>
 #include <stdexcept>
 #include <stdplus/exception.hpp>
+#include <stdplus/fd/atomic.hpp>
 #include <stdplus/fd/create.hpp>
+#include <stdplus/fd/fmt.hpp>
 #include <stdplus/fd/line.hpp>
 #include <string>
 #include <utility>
@@ -273,6 +275,39 @@ void Parser::setFile(const fs::path& filename)
     this->map = std::move(parse.map);
     this->filename = filename;
     this->warnings = std::move(parse.warnings);
+}
+
+static void writeFileInt(const SectionMap& map, const fs::path& filename)
+{
+    stdplus::fd::AtomicWriter writer(filename, 0644);
+    stdplus::fd::FormatBuffer out(writer);
+    for (const auto& [section, maps] : map)
+    {
+        for (const auto& map : maps)
+        {
+            out.append(FMT_COMPILE("[{}]\n"), section.get());
+            for (const auto& [key, vals] : map)
+            {
+                for (const auto& val : vals)
+                {
+                    out.append(FMT_COMPILE("{}={}\n"), key.get(), val.get());
+                }
+            }
+        }
+    }
+    out.flush();
+    writer.commit();
+}
+
+void Parser::writeFile() const
+{
+    writeFileInt(map, filename);
+}
+
+void Parser::writeFile(const fs::path& filename)
+{
+    writeFileInt(map, filename);
+    this->filename = filename;
 }
 
 } // namespace config

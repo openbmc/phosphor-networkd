@@ -160,6 +160,20 @@ TEST_F(TestConfigParser, ReadConfigDataFromFile)
     EXPECT_THAT(map.getValueStrings("Network", "nil"), ElementsAre());
 }
 
+TEST_F(TestConfigParser, WriteConfigFile)
+{
+    WriteSampleFile();
+    parser.setFile(filename);
+    EXPECT_EQ(4, parser.getWarnings().size());
+    ValidateSectionMap();
+
+    parser.writeFile();
+
+    parser.setFile(filename);
+    EXPECT_EQ(0, parser.getWarnings().size());
+    ValidateSectionMap();
+}
+
 TEST_F(TestConfigParser, Perf)
 {
     GTEST_SKIP();
