@@ -85,6 +85,24 @@
       "message": "Any progress on this?",
       "revId": "e86fc6cc41be86ac29ab5baa81d8dc58cc154764",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a3cd402_fd802335",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-08-12T02:28:04Z",
+      "side": 1,
+      "message": "https://gerrit.openbmc.org/c/openbmc/bmcweb/+/52671 has implemented the soon to be released front-end change. \nThis commit can get merged together with the front end change.",
+      "parentUuid": "5d223f0f_8e080a9b",
+      "revId": "e86fc6cc41be86ac29ab5baa81d8dc58cc154764",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
