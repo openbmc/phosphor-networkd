@@ -6,6 +6,7 @@
 #include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <stdexcept>
+#include <stdplus/fd/fmt.hpp>
 #include <stdplus/gtest/tmp.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
@@ -168,6 +169,27 @@ TEST_F(TestConfigParser, WriteConfigFile)
     parser.setFile(filename);
     EXPECT_EQ(parser.getWarnings(), 0);
     ValidateSectionMap();
+}
+
+TEST_F(TestConfigParser, Perf)
+{
+    GTEST_SKIP();
+    std::string sec, kv;
+    stdplus::fd::FormatToFile fmt_file(
+        fmt::format("{}/tmp.XXXXXX", CaseTmpDir()));
+    for (size_t i = 0; i < 500; ++i)
+    {
+        sec.push_back('a');
+        fmt_file.append("[{}]\n", sec);
+        for (size_t j = 0; j < 70; j++)
+        {
+            kv.push_back('b');
+            fmt_file.append("{}={}\n", kv, kv);
+        }
+    }
+    fmt_file.commit(filename);
+
+    parser.setFile(filename);
 }
 
 } // namespace config
