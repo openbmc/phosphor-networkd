@@ -3,6 +3,7 @@
 #include <fmt/compile.h>
 #include <fmt/format.h>
 
+#include <stdexcept>
 #include <stdplus/exception.hpp>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/line.hpp>
@@ -65,7 +66,7 @@ const std::string*
         {
             continue;
         }
-        return &kit->second.back();
+        return &kit->second.back().get();
     }
     return nullptr;
 }
@@ -75,6 +76,42 @@ std::vector<std::string> SectionMap::getValueStrings(std::string_view section,
 {
     return getValues(section, key,
                      [](const Value& v) { return std::string(v); });
+}
+
+void KeyCheck::operator()(const std::string& s)
+{
+    for (auto c : s)
+    {
+        if (c == '\n' || c == '=')
+        {
+            throw std::invalid_argument(
+                fmt::format(FMT_COMPILE("Invalid Config Key: {}"), s));
+        }
+    }
+}
+
+void SectionCheck::operator()(const std::string& s)
+{
+    for (auto c : s)
+    {
+        if (c == '\n' || c == ']')
+        {
+            throw std::invalid_argument(
+                fmt::format(FMT_COMPILE("Invalid Config Section: {}"), s));
+        }
+    }
+}
+
+void ValueCheck::operator()(const std::string& s)
+{
+    for (auto c : s)
+    {
+        if (c == '\n')
+        {
+            throw std::invalid_argument(
+                fmt::format(FMT_COMPILE("Invalid Config Value: {}"), s));
+        }
+    }
 }
 
 Parser::Parser(const fs::path& filename)
@@ -133,8 +170,8 @@ struct Parse
         auto it = sections.find(s);
         if (it == sections.end())
         {
-            std::tie(it, std::ignore) =
-                sections.emplace(Section(s), KeyValuesMapList{});
+            std::tie(it, std::ignore) = sections.emplace(
+                Section(Section::unchecked(), s), KeyValuesMapList{});
         }
         section = &it->second.emplace_back();
     }
@@ -163,9 +200,10 @@ struct Parse
         auto it = section->find(k);
         if (it == section->end())
         {
-            std::tie(it, std::ignore) = section->emplace(Key(k), ValueList{});
+            std::tie(it, std::ignore) =
+                section->emplace(Key(Key::unchecked(), k), ValueList{});
         }
-        it->second.emplace_back(v);
+        it->second.emplace_back(Value::unchecked(), v);
     }
 
     void pump(std::string_view line)
