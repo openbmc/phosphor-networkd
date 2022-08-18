@@ -85,7 +85,7 @@ bool Configuration::getDHCPPropFromConf(const std::string& prop)
     config::Parser parser(config::pathForIntfConf(manager.getConfDir(),
                                                   *interfaceStrList.begin()));
 
-    auto value = parser.getMap().getLastValueString("DHCP", prop);
+    auto value = parser.map.getLastValueString("DHCP", prop);
     if (value == nullptr)
     {
         auto msg = fmt::format("Missing config section DHCP[{}]", prop);
