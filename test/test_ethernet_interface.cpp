@@ -165,7 +165,7 @@ TEST_F(TestEthernetInterface, addStaticNameServers)
     fs::path filePath = confDir;
     filePath /= "00-bmc-test0.network";
     config::Parser parser(filePath.string());
-    EXPECT_EQ(servers, parser.getMap().getValueStrings("Network", "DNS"));
+    EXPECT_EQ(servers, parser.map.getValueStrings("Network", "DNS"));
 }
 
 TEST_F(TestEthernetInterface, getDynamicNameServers)
@@ -184,7 +184,7 @@ TEST_F(TestEthernetInterface, addNTPServers)
     fs::path filePath = confDir;
     filePath /= "00-bmc-test0.network";
     config::Parser parser(filePath.string());
-    EXPECT_EQ(servers, parser.getMap().getValueStrings("Network", "NTP"));
+    EXPECT_EQ(servers, parser.map.getValueStrings("Network", "NTP"));
 }
 
 TEST_F(TestEthernetInterface, addGateway)
