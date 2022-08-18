@@ -366,7 +366,7 @@ std::optional<std::string> interfaceToUbootEthAddr(const char* intf)
 
 bool getIPv6AcceptRA(const config::Parser& config)
 {
-    auto value = config.getMap().getLastValueString("Network", "IPv6AcceptRA");
+    auto value = config.map.getLastValueString("Network", "IPv6AcceptRA");
     if (value == nullptr)
     {
         auto msg = fmt::format(
@@ -391,7 +391,7 @@ bool getIPv6AcceptRA(const config::Parser& config)
 
 EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
 {
-    const auto value = config.getMap().getLastValueString("Network", "DHCP");
+    const auto value = config.map.getLastValueString("Network", "DHCP");
     if (value == nullptr)
     {
         auto msg =
