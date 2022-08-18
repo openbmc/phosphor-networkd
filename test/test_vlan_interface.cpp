@@ -103,14 +103,13 @@ TEST_F(TestVlanInterface, createVLAN)
     filePath /= "test0.50.netdev";
 
     config::Parser parser(filePath);
-    EXPECT_EQ(parser.getMap(),
-              config::SectionMap(config::SectionMapInt{
-                  {"NetDev",
-                   {
-                       {{"Name", {"test0.50"}}, {"Kind", {"vlan"}}},
-                   }},
-                  {"VLAN", {{{"Id", {"50"}}}}},
-              }));
+    EXPECT_EQ(parser.map, config::SectionMap(config::SectionMapInt{
+                              {"NetDev",
+                               {
+                                   {{"Name", {"test0.50"}}, {"Kind", {"vlan"}}},
+                               }},
+                              {"VLAN", {{{"Id", {"50"}}}}},
+                          }));
 }
 
 TEST_F(TestVlanInterface, deleteVLAN)
@@ -131,26 +130,24 @@ TEST_F(TestVlanInterface, createMultipleVLAN)
     fs::path filePath = confDir;
     filePath /= "test0.50.netdev";
     config::Parser parser(filePath);
-    EXPECT_EQ(parser.getMap(),
-              config::SectionMap(config::SectionMapInt{
-                  {"NetDev",
-                   {
-                       {{"Name", {"test0.50"}}, {"Kind", {"vlan"}}},
-                   }},
-                  {"VLAN", {{{"Id", {"50"}}}}},
-              }));
+    EXPECT_EQ(parser.map, config::SectionMap(config::SectionMapInt{
+                              {"NetDev",
+                               {
+                                   {{"Name", {"test0.50"}}, {"Kind", {"vlan"}}},
+                               }},
+                              {"VLAN", {{{"Id", {"50"}}}}},
+                          }));
 
     filePath = confDir;
     filePath /= "test0.60.netdev";
     parser.setFile(filePath);
-    EXPECT_EQ(parser.getMap(),
-              config::SectionMap(config::SectionMapInt{
-                  {"NetDev",
-                   {
-                       {{"Name", {"test0.60"}}, {"Kind", {"vlan"}}},
-                   }},
-                  {"VLAN", {{{"Id", {"60"}}}}},
-              }));
+    EXPECT_EQ(parser.map, config::SectionMap(config::SectionMapInt{
+                              {"NetDev",
+                               {
+                                   {{"Name", {"test0.60"}}, {"Kind", {"vlan"}}},
+                               }},
+                              {"VLAN", {{{"Id", {"60"}}}}},
+                          }));
 
     deleteVlan("test0.50");
     deleteVlan("test0.60");

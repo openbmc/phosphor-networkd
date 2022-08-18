@@ -90,7 +90,7 @@ class TestConfigParser : public stdplus::gtest::TestWithTmp
     void ValidateSectionMap()
     {
         EXPECT_THAT(
-            parser.getMap(),
+            parser.map,
             testing::ContainerEq(SectionMap(SectionMapInt{
                 {"Match", {{{"Name", {"eth0"}}}}},
                 {"Network",
@@ -110,7 +110,7 @@ TEST_F(TestConfigParser, EmptyObject)
 {
     EXPECT_TRUE(parser.getFilename().empty());
     EXPECT_EQ(0, parser.getWarnings());
-    EXPECT_EQ(SectionMap(), parser.getMap());
+    EXPECT_EQ(SectionMap(), parser.map);
 }
 
 TEST_F(TestConfigParser, ReadDirectory)
@@ -118,7 +118,7 @@ TEST_F(TestConfigParser, ReadDirectory)
     parser.setFile("/");
     EXPECT_EQ("/", parser.getFilename());
     EXPECT_EQ(1, parser.getWarnings());
-    EXPECT_EQ(SectionMap(), parser.getMap());
+    EXPECT_EQ(SectionMap(), parser.map);
 }
 
 TEST_F(TestConfigParser, ReadConfigDataMissingFile)
@@ -126,7 +126,7 @@ TEST_F(TestConfigParser, ReadConfigDataMissingFile)
     parser.setFile("/no-such-path");
     EXPECT_EQ("/no-such-path", parser.getFilename());
     EXPECT_EQ(1, parser.getWarnings());
-    EXPECT_EQ(SectionMap(), parser.getMap());
+    EXPECT_EQ(SectionMap(), parser.map);
 }
 
 TEST_F(TestConfigParser, ReadConfigDataFromFile)
@@ -137,7 +137,7 @@ TEST_F(TestConfigParser, ReadConfigDataFromFile)
     EXPECT_EQ(parser.getWarnings(), 4);
     ValidateSectionMap();
 
-    const auto& map = parser.getMap();
+    const auto& map = parser.map;
 
     EXPECT_EQ("eth0", *map.getLastValueString("Match", "Name"));
     EXPECT_EQ("yes", *map.getLastValueString("Network", "DHCP"));
