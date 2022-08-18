@@ -48,14 +48,6 @@ class Parser
     const ValueList& getValues(std::string_view section,
                                std::string_view key) const noexcept;
 
-    /** @brief Set the value of the given key and section.
-     *  @param[in] section - section name.
-     *  @param[in] key - key name.
-     *  @param[in] value - value.
-     */
-    void setValue(const std::string& section, const std::string& key,
-                  const std::string& value);
-
     /** @brief Set the file name and parse it.
      *  @param[in] filename - Absolute path of the file.
      */
