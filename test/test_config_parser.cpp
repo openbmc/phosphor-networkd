@@ -1,11 +1,14 @@
 #include "config_parser.hpp"
 
+#include <fmt/compile.h>
 #include <fmt/format.h>
 
 #include <exception>
 #include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <stdexcept>
+#include <stdplus/fd/atomic.hpp>
+#include <stdplus/fd/fmt.hpp>
 #include <stdplus/gtest/tmp.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
@@ -168,6 +171,27 @@ TEST_F(TestConfigParser, WriteConfigFile)
     parser.setFile(filename);
     EXPECT_EQ(parser.getWarnings(), 0);
     ValidateSectionMap();
+}
+
+TEST_F(TestConfigParser, Perf)
+{
+    GTEST_SKIP();
+    stdplus::fd::AtomicWriter file(fmt::format("{}/tmp.XXXXXX", CaseTmpDir()),
+                                   0600);
+    stdplus::fd::FormatBuffer out(file);
+    for (size_t i = 0; i < 500; ++i)
+    {
+        out.append(FMT_COMPILE("[{:a>{}}]\n"), "", i + 1);
+        for (size_t j = 0; j < 70; j++)
+        {
+            const size_t es = i * 70 + j + 1;
+            out.append(FMT_COMPILE("{:b>{}}={:c>{}}\n"), "", es, "", es);
+        }
+    }
+    out.flush();
+    file.commit();
+
+    parser.setFile(filename);
 }
 
 } // namespace config
