@@ -147,7 +147,7 @@ static void removePadding(std::string_view& str) noexcept
 struct Parse
 {
     std::reference_wrapper<const fs::path> filename;
-    SectionMap sections;
+    SectionMap map;
     KeyValuesMap* section;
     std::vector<std::string> warnings;
     size_t lineno;
@@ -179,10 +179,10 @@ struct Parse
             }
         }
         auto s = line.substr(0, cpos);
-        auto it = sections.find(s);
-        if (it == sections.end())
+        auto it = map.find(s);
+        if (it == map.end())
         {
-            std::tie(it, std::ignore) = sections.emplace(
+            std::tie(it, std::ignore) = map.emplace(
                 Section(Section::unchecked(), s), KeyValuesMapList{});
         }
         section = &it->second.emplace_back();
@@ -270,8 +270,8 @@ void Parser::setFile(const fs::path& filename)
             fmt::format("{}: Read error: {}", filename.native(), e.what()));
     }
 
+    this->map = std::move(parse.map);
     this->filename = filename;
-    this->sections = std::move(parse.sections);
     this->warnings = std::move(parse.warnings);
 }
 
