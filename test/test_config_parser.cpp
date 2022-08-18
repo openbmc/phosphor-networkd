@@ -39,14 +39,35 @@ class TestConfigParser : public stdplus::gtest::TestWithTmp
     }
 };
 
+TEST_F(TestConfigParser, EmptyObject)
+{
+    EXPECT_EQ(0, parser.getWarnings());
+}
+
+TEST_F(TestConfigParser, ReadDirectory)
+{
+    parser.setFile("/");
+    EXPECT_EQ(1, parser.getWarnings());
+}
+
+TEST_F(TestConfigParser, ReadConfigDataMissingFile)
+{
+    parser.setFile("/no-such-path");
+    EXPECT_EQ(1, parser.getWarnings());
+}
+
 TEST_F(TestConfigParser, ReadConfigDataFromFile)
 {
     WriteSampleFile();
     parser.setFile(filename);
+    EXPECT_EQ(parser.getWarnings(), 4);
 
     EXPECT_THAT(parser.getValues("Match", "Name"), ElementsAre("eth0"));
     EXPECT_THAT(parser.getValues("DHCP", "ClientIdentifier"),
                 ElementsAre("mac"));
+    EXPECT_THAT(parser.getValues("Network", "DHCP"),
+                ElementsAre("true", "false #hi", "yes"));
+    EXPECT_THAT(parser.getValues(" SEC ", "'DHCP#'"), ElementsAre("\"#hi\""));
     EXPECT_THAT(parser.getValues("Blah", "nil"), ElementsAre());
     EXPECT_THAT(parser.getValues("Network", "nil"), ElementsAre());
 }

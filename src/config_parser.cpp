@@ -1,8 +1,9 @@
 #include "config_parser.hpp"
 
-#include <fstream>
-#include <regex>
-#include <string>
+#include <stdplus/exception.hpp>
+#include <stdplus/fd/create.hpp>
+#include <stdplus/fd/line.hpp>
+#include <utility>
 
 namespace phosphor
 {
@@ -35,57 +36,138 @@ const ValueList& Parser::getValues(std::string_view section,
     return kit->second;
 }
 
-void Parser::setValue(const std::string& section, const std::string& key,
-                      const std::string& value)
+inline bool isspace(char c) noexcept
 {
-    auto sit = sections.find(section);
-    if (sit == sections.end())
-    {
-        std::tie(sit, std::ignore) = sections.emplace(section, KeyValuesMap{});
-    }
-    auto kit = sit->second.find(key);
-    if (kit == sit->second.end())
-    {
-        std::tie(kit, std::ignore) = sit->second.emplace(key, ValueList{});
-    }
-    kit->second.push_back(value);
+    return c == ' ' || c == '\t';
 }
+
+inline bool iscomment(char c) noexcept
+{
+    return c == '#' || c == ';';
+}
+
+static void removePadding(std::string_view& str) noexcept
+{
+    size_t idx = str.size();
+    for (; idx > 0 && isspace(str[idx - 1]); idx--)
+        ;
+    str.remove_suffix(str.size() - idx);
+
+    idx = 0;
+    for (; idx < str.size() && isspace(str[idx]); idx++)
+        ;
+    str.remove_prefix(idx);
+}
+
+struct Parse
+{
+    SectionMap sections;
+    KeyValuesMap* section = nullptr;
+    size_t warnings = 0;
+
+    void pumpSection(std::string_view line)
+    {
+        auto cpos = line.find(']');
+        if (cpos == line.npos)
+        {
+            warnings++;
+        }
+        else
+        {
+            for (auto c : line.substr(cpos + 1))
+            {
+                if (!isspace(c))
+                {
+                    warnings++;
+                    break;
+                }
+            }
+        }
+        auto s = line.substr(0, cpos);
+        auto it = sections.find(s);
+        if (it == sections.end())
+        {
+            std::tie(it, std::ignore) =
+                sections.emplace(Section(s), KeyValuesMap{});
+        }
+        section = &it->second;
+    }
+
+    void pumpKV(std::string_view line)
+    {
+        auto epos = line.find('=');
+        size_t old_warnings = warnings;
+        if (epos == line.npos)
+        {
+            warnings++;
+        }
+        if (section == nullptr)
+        {
+            warnings++;
+        }
+        if (old_warnings != warnings)
+        {
+            return;
+        }
+        auto k = line.substr(0, epos);
+        removePadding(k);
+        auto v = line.substr(epos + 1);
+        removePadding(v);
+
+        auto it = section->find(k);
+        if (it == section->end())
+        {
+            std::tie(it, std::ignore) = section->emplace(Key(k), ValueList{});
+        }
+        it->second.emplace_back(v);
+    }
+
+    void pump(std::string_view line)
+    {
+        for (size_t i = 0; i < line.size(); ++i)
+        {
+            auto c = line[i];
+            if (iscomment(c))
+            {
+                return;
+            }
+            else if (c == '[')
+            {
+                return pumpSection(line.substr(i + 1));
+            }
+            else if (!isspace(c))
+            {
+                return pumpKV(line.substr(i));
+            }
+        }
+    }
+};
 
 void Parser::setFile(const fs::path& filename)
 {
-    std::fstream stream(filename, std::fstream::in);
-    if (!stream.is_open())
+    Parse parse;
+
+    try
     {
-        return;
-    }
-    // clear all the section data.
-    sections.clear();
-    static const std::regex commentRegex{R"x(\s*[;#])x"};
-    static const std::regex sectionRegex{R"x(\s*\[([^\]]+)\])x"};
-    static const std::regex valueRegex{R"x(\s*(\S[^ \t=]*)\s*=\s*(\S+)\s*$)x"};
-    std::string section;
-    std::smatch pieces;
-    for (std::string line; std::getline(stream, line);)
-    {
-        if (line.empty() || std::regex_match(line, pieces, commentRegex))
+        auto fd = stdplus::fd::open(filename.c_str(),
+                                    stdplus::fd::OpenAccess::ReadOnly);
+        stdplus::fd::LineReader reader(fd);
+        while (true)
         {
-            // skip comment lines and blank lines
-        }
-        else if (std::regex_match(line, pieces, sectionRegex))
-        {
-            if (pieces.size() == 2)
-            {
-                section = pieces[1].str();
-            }
-        }
-        else if (std::regex_match(line, pieces, valueRegex))
-        {
-            if (pieces.size() == 3)
-            {
-                setValue(section, pieces[1].str(), pieces[2].str());
-            }
+            parse.pump(*reader.readLine());
         }
     }
+    catch (const stdplus::exception::Eof&)
+    {
+    }
+    catch (...)
+    {
+        // TODO: Pass exceptions once callers can handle them
+        parse.warnings++;
+    }
+
+    this->sections = std::move(parse.sections);
+    this->warnings = parse.warnings;
 }
 
 } // namespace config
