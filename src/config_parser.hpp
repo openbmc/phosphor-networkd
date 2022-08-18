@@ -160,18 +160,14 @@ class SectionMap : public SectionMapInt
 class Parser
 {
   public:
+    SectionMap map;
+
     Parser() = default;
 
     /** @brief Constructor
      *  @param[in] filename - Absolute path of the file which will be parsed.
      */
     Parser(const fs::path& filename);
-
-    /** @brief Retrieve the map of all values in the file */
-    inline const SectionMap& getMap() const noexcept
-    {
-        return sections;
-    }
 
     /** @brief Determine if there were warnings parsing the file
      *  @return The number of parsing issues in the file
@@ -196,7 +192,6 @@ class Parser
 
   private:
     fs::path filename;
-    SectionMap sections;
     size_t warnings = 0;
 };
 
