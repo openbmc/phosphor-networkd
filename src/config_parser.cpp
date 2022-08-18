@@ -63,10 +63,26 @@ struct Parse
 {
     SectionMap sections;
     KeyValuesMap* section = nullptr;
+    size_t warnings = 0;
 
     void pumpSection(std::string_view line)
     {
         auto cpos = line.find(']');
+        if (cpos == line.npos)
+        {
+            warnings++;
+        }
+        else
+        {
+            for (auto c : line.substr(cpos + 1))
+            {
+                if (!isspace(c))
+                {
+                    warnings++;
+                    break;
+                }
+            }
+        }
         auto s = line.substr(0, cpos);
         auto it = sections.find(s);
         if (it == sections.end())
@@ -80,11 +96,16 @@ struct Parse
     void pumpKV(std::string_view line)
     {
         auto epos = line.find('=');
+        size_t old_warnings = warnings;
         if (epos == line.npos)
         {
-            return;
+            warnings++;
         }
         if (section == nullptr)
+        {
+            warnings++;
+        }
+        if (old_warnings != warnings)
         {
             return;
         }
@@ -136,12 +157,17 @@ void Parser::setFile(const fs::path& filename)
             parse.pump(*reader.readLine());
         }
     }
+    catch (const stdplus::exception::Eof&)
+    {
+    }
     catch (...)
     {
         // TODO: Pass exceptions once callers can handle them
+        parse.warnings++;
     }
 
     this->sections = std::move(parse.sections);
+    this->warnings = parse.warnings;
 }
 
 } // namespace config
