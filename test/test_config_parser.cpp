@@ -49,6 +49,31 @@ TEST(TestConvert, ParseBool)
     EXPECT_FALSE(parseBool("oFf").value());
 }
 
+TEST(TestTypeChecking, Section)
+{
+    Section("");
+    Section("fds#1!'\"");
+    EXPECT_THROW(Section("fds]sf"), std::invalid_argument);
+    EXPECT_THROW(Section("g\ng"), std::invalid_argument);
+}
+
+TEST(TestTypeChecking, Value)
+{
+    Value("");
+    Value("=fds1!'\"#=");
+    Value("fds]sf'' #");
+    EXPECT_THROW(Value("g\ng"), std::invalid_argument);
+}
+
+TEST(TestTypeChecking, Key)
+{
+    Key("");
+    Key("fds1!'\"#");
+    Key("fds]sf'' #");
+    EXPECT_THROW(Key("fds]sf'='"), std::invalid_argument);
+    EXPECT_THROW(Key("g\ng"), std::invalid_argument);
+}
+
 class TestConfigParser : public stdplus::gtest::TestWithTmp
 {
   public:
