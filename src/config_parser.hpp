@@ -48,6 +48,14 @@ class Parser
     const ValueList& getValues(std::string_view section,
                                std::string_view key) const noexcept;
 
+    /** @brief Determine if there were warnings parsing the file
+     *  @return The number of parsing issues in the file
+     */
+    inline size_t getWarnings() const noexcept
+    {
+        return warnings;
+    }
+
     /** @brief Set the file name and parse it.
      *  @param[in] filename - Absolute path of the file.
      */
@@ -55,6 +63,7 @@ class Parser
 
   private:
     SectionMap sections;
+    size_t warnings = 0;
 };
 
 } // namespace config
