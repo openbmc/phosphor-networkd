@@ -47,6 +47,9 @@ TEST_F(TestConfigParser, ReadConfigDataFromFile)
     EXPECT_THAT(parser.getValues("Match", "Name"), ElementsAre("eth0"));
     EXPECT_THAT(parser.getValues("DHCP", "ClientIdentifier"),
                 ElementsAre("mac"));
+    EXPECT_THAT(parser.getValues("Network", "DHCP"),
+                ElementsAre("true", "false #hi", "yes"));
+    EXPECT_THAT(parser.getValues(" SEC ", "'DHCP#'"), ElementsAre("\"#hi\""));
     EXPECT_THAT(parser.getValues("Blah", "nil"), ElementsAre());
     EXPECT_THAT(parser.getValues("Network", "nil"), ElementsAre());
 }
