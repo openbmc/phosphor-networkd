@@ -1,5 +1,7 @@
 #include "config_parser.hpp"
 
+#include <functional>
+#include <iterator>
 #include <stdplus/exception.hpp>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/line.hpp>
@@ -61,12 +63,38 @@ static void removePadding(std::string_view& str) noexcept
 
 struct Parse
 {
+    std::reference_wrapper<const fs::path> filename;
     SectionMap sections;
-    KeyValuesMap* section = nullptr;
+    KeyValuesMap* section;
+    std::vector<std::string> warnings;
+    size_t lineno;
+
+    inline Parse(const fs::path& filename) :
+        filename(filename), section(nullptr), lineno(0)
+    {
+    }
 
     void pumpSection(std::string_view line)
     {
         auto cpos = line.find(']');
+        if (cpos == line.npos)
+        {
+            warnings.emplace_back(fmt::format("{}:{}: Section missing ]",
+                                              filename.get().native(), lineno));
+        }
+        else
+        {
+            for (auto c : line.substr(cpos + 1))
+            {
+                if (!isspace(c))
+                {
+                    warnings.emplace_back(
+                        fmt::format("{}:{}: Characters outside section name",
+                                    filename.get().native(), lineno));
+                    break;
+                }
+            }
+        }
         auto s = line.substr(0, cpos);
         auto it = sections.find(s);
         if (it == sections.end())
@@ -80,16 +108,27 @@ struct Parse
     void pumpKV(std::string_view line)
     {
         auto epos = line.find('=');
+        std::vector<std::string> new_warnings;
         if (epos == line.npos)
         {
-            return;
-        }
-        if (section == nullptr)
-        {
-            return;
+            new_warnings.emplace_back(fmt::format(
+                "{}:{}: KV missing `=`", filename.get().native(), lineno));
         }
         auto k = line.substr(0, epos);
         removePadding(k);
+        if (section == nullptr)
+        {
+            new_warnings.emplace_back(
+                fmt::format("{}:{}: Key `{}` missing section",
+                            filename.get().native(), lineno, k));
+        }
+        if (!new_warnings.empty())
+        {
+            warnings.insert(warnings.end(),
+                            std::make_move_iterator(new_warnings.begin()),
+                            std::make_move_iterator(new_warnings.end()));
+            return;
+        }
         auto v = line.substr(epos + 1);
         removePadding(v);
 
@@ -103,6 +142,7 @@ struct Parse
 
     void pump(std::string_view line)
     {
+        lineno++;
         for (size_t i = 0; i < line.size(); ++i)
         {
             auto c = line[i];
@@ -124,7 +164,7 @@ struct Parse
 
 void Parser::setFile(const fs::path& filename)
 {
-    Parse parse;
+    Parse parse(filename);
 
     try
     {
@@ -136,12 +176,18 @@ void Parser::setFile(const fs::path& filename)
             parse.pump(*reader.readLine());
         }
     }
-    catch (...)
+    catch (const stdplus::exception::Eof&)
+    {
+    }
+    catch (const std::exception& e)
     {
         // TODO: Pass exceptions once callers can handle them
+        parse.warnings.emplace_back(
+            fmt::format("{}: Read error: {}", filename.native(), e.what()));
     }
 
     this->sections = std::move(parse.sections);
+    this->warnings = std::move(parse.warnings);
 }
 
 } // namespace config
