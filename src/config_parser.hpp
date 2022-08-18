@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <functional>
 #include <optional>
+#include <ostream>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -25,14 +26,98 @@ namespace fs = std::filesystem;
 fs::path pathForIntfConf(const fs::path& dir, std::string_view intf);
 fs::path pathForIntfDev(const fs::path& dir, std::string_view intf);
 
+template <typename T, typename Check>
+class Checked
+{
+  public:
+    struct unchecked
+    {
+    };
+
+    template <typename... Args>
+    inline constexpr Checked(Args&&... args) :
+        t(conCheck(std::forward<Args>(args)...))
+    {
+    }
+
+    template <typename... Args>
+    inline constexpr Checked(unchecked, Args&&... args) :
+        t(std::forward<Args>(args)...)
+    {
+    }
+
+    inline const T& get() const noexcept
+    {
+        return t;
+    }
+
+    inline constexpr operator const T&() const noexcept
+    {
+        return t;
+    }
+
+    inline constexpr bool operator==(const auto& rhs) const
+    {
+        return t == rhs;
+    }
+
+  private:
+    T t;
+
+    template <typename... Args>
+    inline static constexpr T conCheck(Args&&... args)
+    {
+        T t(std::forward<Args>(args)...);
+        Check{}(t);
+        return t;
+    }
+};
+
+template <typename T, typename Check>
+inline constexpr bool operator==(const auto& lhs, const Checked<T, Check>& rhs)
+{
+    return lhs == rhs.get();
+}
+
+template <typename T, typename Check>
+inline constexpr std::ostream& operator<<(std::ostream& s,
+                                          const Checked<T, Check>& rhs)
+{
+    return s << rhs.get();
+}
+
+struct KeyCheck
+{
+    void operator()(const std::string& s);
+};
+struct SectionCheck
+{
+    void operator()(const std::string& s);
+};
+struct ValueCheck
+{
+    void operator()(const std::string& s);
+};
+
 struct string_hash : public std::hash<std::string_view>
 {
     using is_transparent = void;
+
+    template <typename T>
+    inline size_t operator()(const Checked<std::string, T>& t) const
+    {
+        return static_cast<const std::hash<std::string_view>&>(*this)(t.get());
+    }
+    template <typename T>
+    inline size_t operator()(const T& t) const
+    {
+        return static_cast<const std::hash<std::string_view>&>(*this)(t);
+    }
 };
 
-using Key = std::string;
-using Section = std::string;
-using Value = std::string;
+using Key = Checked<std::string, KeyCheck>;
+using Section = Checked<std::string, SectionCheck>;
+using Value = Checked<std::string, ValueCheck>;
 using ValueList = std::vector<Value>;
 using KeyValuesMap =
     std::unordered_map<Key, ValueList, string_hash, std::equal_to<>>;
