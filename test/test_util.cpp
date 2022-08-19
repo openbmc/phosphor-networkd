@@ -230,7 +230,7 @@ TEST(IgnoredInterfaces, Empty)
 TEST(IgnoredInterfaces, NotEmpty)
 {
     using ::testing::ContainerEq;
-    std::set<std::string_view> expected = {"eth0"};
+    std::unordered_set<std::string_view> expected = {"eth0"};
     auto ret = internal::parseInterfaces("eth0");
     EXPECT_THAT(ret, ContainerEq(expected));
 

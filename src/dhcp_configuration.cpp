@@ -2,6 +2,7 @@
 
 #include "config_parser.hpp"
 #include "network_manager.hpp"
+#include "util.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>

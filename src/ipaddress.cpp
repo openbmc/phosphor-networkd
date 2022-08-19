@@ -1,5 +1,3 @@
-#include "config.h"
-
 #include "ipaddress.hpp"
 
 #include "ethernet_interface.hpp"

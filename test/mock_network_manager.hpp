@@ -1,6 +1,7 @@
 #pragma once
 #include "mock_ethernet_interface.hpp"
 #include "network_manager.hpp"
+#include "util.hpp"
 
 #include <gmock/gmock.h>
 
