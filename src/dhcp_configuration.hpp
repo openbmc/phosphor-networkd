@@ -43,16 +43,7 @@ class Configuration : public Iface
      *  @param[in] parent - Parent object.
      */
     Configuration(sdbusplus::bus_t& bus, const std::string& objPath,
-                  Manager& parent) :
-        Iface(bus, objPath.c_str(), Iface::action::defer_emit),
-        bus(bus), manager(parent)
-    {
-        ConfigIntf::dnsEnabled(getDHCPPropFromConf("UseDNS"));
-        ConfigIntf::ntpEnabled(getDHCPPropFromConf("UseNTP"));
-        ConfigIntf::hostNameEnabled(getDHCPPropFromConf("UseHostname"));
-        ConfigIntf::sendHostNameEnabled(getDHCPPropFromConf("SendHostname"));
-        emit_object_added();
-    }
+                  Manager& parent);
 
     /** @brief If true then DNS servers received from the DHCP server
      *         will be used and take precedence over any statically
@@ -83,11 +74,6 @@ class Configuration : public Iface
      *         in the DHCP packet.
      */
     bool sendHostNameEnabled(bool value) override;
-
-    /** @brief read the DHCP Prop value from the configuration file
-     *  @param[in] prop - DHCP Prop name.
-     */
-    bool getDHCPPropFromConf(const std::string& prop);
 
     /* @brief Network Manager needed the below function to know the
      *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled
