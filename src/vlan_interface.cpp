@@ -2,12 +2,10 @@
 
 #include "vlan_interface.hpp"
 
+#include "config_parser.hpp"
 #include "ethernet_interface.hpp"
 #include "network_manager.hpp"
 
-#include <algorithm>
-#include <filesystem>
-#include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <string>
@@ -46,24 +44,13 @@ std::string VlanInterface::macAddress(std::string)
 
 void VlanInterface::writeDeviceFile()
 {
-    auto confPath = config::pathForIntfDev(manager.getConfDir(),
-                                           EthernetInterface::interfaceName());
-    std::fstream stream(confPath.c_str(), std::fstream::out);
-
-    stream << "[NetDev]\n";
-    stream << "Name=" << EthernetInterface::interfaceName() << "\n";
-    stream << "Kind=vlan\n";
-    stream << "[VLAN]\n";
-    stream << "Id=" << id() << "\n";
-
-    stream.close();
-
-    if (!stream.good())
-    {
-        log<level::ERR>("Unable to write the VLAN device file",
-                        entry("FILE=%s", confPath.c_str()));
-        elog<InternalFailure>();
-    }
+    config::Parser config;
+    auto& netdev = config.map["NetDev"].emplace_back();
+    netdev["Name"].emplace_back(EthernetInterface::interfaceName());
+    netdev["Kind"].emplace_back("vlan");
+    config.map["VLAN"].emplace_back()["Id"].emplace_back(std::to_string(id()));
+    config.writeFile(config::pathForIntfDev(
+        manager.getConfDir(), EthernetInterface::interfaceName()));
 }
 
 void VlanInterface::delete_()
