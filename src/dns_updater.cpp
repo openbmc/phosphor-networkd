@@ -1,5 +1,3 @@
-#include "config.h"
-
 #include "dns_updater.hpp"
 
 #include <fstream>

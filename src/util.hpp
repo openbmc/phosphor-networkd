@@ -1,8 +1,5 @@
 #pragma once
-
-#include "config.h"
-
-#include "ethernet_interface.hpp"
+#include "config_parser.hpp"
 #include "types.hpp"
 
 #include <netinet/ether.h>
