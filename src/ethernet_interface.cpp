@@ -17,7 +17,6 @@
 
 #include <algorithm>
 #include <filesystem>
-#include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus/match.hpp>
@@ -958,150 +957,120 @@ void EthernetInterface::writeConfigurationFile()
         intf.second->writeConfigurationFile();
     }
 
-    auto path = config::pathForIntfConf(manager.getConfDir(), interfaceName());
-    std::fstream stream(path.c_str(), std::fstream::out);
-    if (!stream.is_open())
+    config::Parser config;
+    config.map["Match"].emplace_back()["Name"].emplace_back(interfaceName());
     {
-        log<level::ERR>("Unable to open the file",
-                        entry("FILE=%s", path.c_str()));
-        elog<InternalFailure>();
-    }
-
-    // Write the device
-    stream << "[Match]\n";
-    stream << "Name=" << interfaceName() << "\n";
-
-    auto addrs = getAddresses();
-
-    // Write the link section
-    stream << "[Link]\n";
+        auto& link = config.map["Link"].emplace_back();
 #ifdef PERSIST_MAC
-    auto mac = MacAddressIntf::macAddress();
-    if (!mac.empty())
-    {
-        stream << "MACAddress=" << mac << "\n";
-    }
+        auto mac = MacAddressIntf::macAddress();
+        if (!mac.empty())
+        {
+            link["MACAddress"].emplace_back(mac);
+        }
 #endif
-
-    if (!EthernetInterfaceIntf::nicEnabled())
-    {
-        stream << "Unmanaged=yes\n";
+        if (!EthernetInterfaceIntf::nicEnabled())
+        {
+            link["Unmanaged"].emplace_back("yes");
+        }
     }
-
-    // write the network section
-    stream << "[Network]\n";
+    {
+        auto& network = config.map["Network"].emplace_back();
+        auto &lla = network["LinkLocalAddressing"];
 #ifdef LINK_LOCAL_AUTOCONFIGURATION
-    stream << "LinkLocalAddressing=yes\n";
+        lla.emplace_back("yes");
 #else
-    stream << "LinkLocalAddressing=no\n";
+        lla.emplace_back("no");
 #endif
-    stream << std::boolalpha
-           << "IPv6AcceptRA=" << EthernetInterfaceIntf::ipv6AcceptRA() << "\n";
-
-    // Add the VLAN entry
-    for (const auto& intf : vlanInterfaces)
-    {
-        stream << "VLAN=" << intf.second->EthernetInterface::interfaceName()
-               << "\n";
-    }
-    // Add the NTP server
-    for (const auto& ntp : EthernetInterfaceIntf::ntpServers())
-    {
-        stream << "NTP=" << ntp << "\n";
-    }
-
-    // Add the DNS entry
-    for (const auto& dns : EthernetInterfaceIntf::staticNameServers())
-    {
-        stream << "DNS=" << dns << "\n";
-    }
-
-    // Add the DHCP entry
-    stream << "DHCP="s +
-                  mapDHCPToSystemd[EthernetInterfaceIntf::dhcpEnabled()] + "\n";
-
-    stream << "[IPv6AcceptRA]\n";
-    stream << "DHCPv6Client=";
-    stream << (dhcpIsEnabled(IP::Protocol::IPv6) ? "true" : "false");
-    stream << "\n";
-
-    // Static IP addresses
-    for (const auto& addr : addrs)
-    {
-        if (originIsManuallyAssigned(addr.second->origin()) &&
-            !dhcpIsEnabled(addr.second->type()))
+        network["IPv6AcceptRA"].emplace_back(
+            EthernetInterfaceIntf::ipv6AcceptRA() ? "true" : "false");
+        network["DHCP"].emplace_back(
+            mapDHCPToSystemd[EthernetInterfaceIntf::dhcpEnabled()]);
         {
-            // Process all static addresses
-            std::string address = addr.second->address() + "/" +
-                                  std::to_string(addr.second->prefixLength());
+            auto& vlans = network["VLAN"];
+            for (const auto& intf : vlanInterfaces)
+            {
+                vlans.emplace_back(
+                    intf.second->EthernetInterface::interfaceName());
+            }
+        }
+        {
+            auto& ntps = network["NTP"];
+            for (const auto& ntp : EthernetInterfaceIntf::ntpServers())
+            {
+                ntps.emplace_back(ntp);
+            }
+        }
+        {
+            auto& dnss = network["DNS"];
+            for (const auto& dns : EthernetInterfaceIntf::staticNameServers())
+            {
+                dnss.emplace_back(dns);
+            }
+        }
+        {
+            auto& address = network["Address"];
+            for (const auto& addr : getAddresses())
+            {
+                if (originIsManuallyAssigned(addr.second->origin()) &&
+                    !dhcpIsEnabled(addr.second->type()))
+                {
+                    address.emplace_back(
+                        fmt::format("{}/{}", addr.second->address(),
+                                    addr.second->prefixLength()));
+                }
+            }
+        }
+        {
+            auto& gateways = network["Gateway"];
+            if (!dhcpIsEnabled(IP::Protocol::IPv4))
+            {
+                auto gateway = EthernetInterfaceIntf::defaultGateway();
+                if (!gateway.empty())
+                {
+                    gateways.emplace_back(gateway);
+                }
+            }
 
-            // build the address entries. Do not use [Network] shortcuts to
-            // insert address entries.
-            stream << "[Address]\n";
-            stream << "Address=" << address << "\n";
+            if (!dhcpIsEnabled(IP::Protocol::IPv6))
+            {
+                auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
+                if (!gateway6.empty())
+                {
+                    gateways.emplace_back(gateway6);
+                }
+            }
+        }
+    }
+    config.map["IPv6AcceptRA"].emplace_back()["DHCPv6Client"].emplace_back(
+        dhcpIsEnabled(IP::Protocol::IPv6) ? "true" : "false");
+    {
+        auto& neighbors = config.map["Neighbor"];
+        for (const auto& sneighbor : staticNeighbors)
+        {
+            auto& neighbor = neighbors.emplace_back();
+            neighbor["Address"].emplace_back(sneighbor.second->ipAddress());
+            neighbor["MACAddress"].emplace_back(sneighbor.second->macAddress());
+        }
+    }
+    {
+        auto& dhcp = config.map["DHCP"].emplace_back();
+        dhcp["ClientIdentifier"].emplace_back("mac");
+        if (manager.getDHCPConf())
+        {
+            const auto& conf = *manager.getDHCPConf();
+            auto dns_enabled = conf.dnsEnabled() ? "true" : "false";
+            dhcp["UseDNS"].emplace_back(dns_enabled);
+            dhcp["UseDomains"].emplace_back(dns_enabled);
+            dhcp["UseNTP"].emplace_back(conf.ntpEnabled() ? "true" : "false");
+            dhcp["UseHostname"].emplace_back(conf.hostNameEnabled() ? "true"
+                                                                    : "false");
+            dhcp["SendHostname"].emplace_back(
+                conf.sendHostNameEnabled() ? "true" : "false");
         }
     }
 
-    if (!dhcpIsEnabled(IP::Protocol::IPv4))
-    {
-        auto gateway = EthernetInterfaceIntf::defaultGateway();
-        if (!gateway.empty())
-        {
-            stream << "[Route]\n";
-            stream << "Gateway=" << gateway << "\n";
-        }
-    }
-
-    if (!dhcpIsEnabled(IP::Protocol::IPv6))
-    {
-        auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
-        if (!gateway6.empty())
-        {
-            stream << "[Route]\n";
-            stream << "Gateway=" << gateway6 << "\n";
-        }
-    }
-
-    // Write the neighbor sections
-    for (const auto& neighbor : staticNeighbors)
-    {
-        stream << "[Neighbor]"
-               << "\n";
-        stream << "Address=" << neighbor.second->ipAddress() << "\n";
-        stream << "MACAddress=" << neighbor.second->macAddress() << "\n";
-    }
-
-    // Write the dhcp section irrespective of whether DHCP is enabled or not
-    writeDHCPSection(stream);
-
-    stream.close();
-}
-
-void EthernetInterface::writeDHCPSection(std::fstream& stream)
-{
-    using namespace std::string_literals;
-    // write the dhcp section
-    stream << "[DHCP]\n";
-
-    // Hardcoding the client identifier to mac, to address below issue
-    // https://github.com/openbmc/openbmc/issues/1280
-    stream << "ClientIdentifier=mac\n";
-    if (manager.getDHCPConf())
-    {
-        auto value = manager.getDHCPConf()->dnsEnabled() ? "true"s : "false"s;
-        stream << "UseDNS="s + value + "\n";
-        stream << "UseDomains="s + value + "\n";
-
-        value = manager.getDHCPConf()->ntpEnabled() ? "true"s : "false"s;
-        stream << "UseNTP="s + value + "\n";
-
-        value = manager.getDHCPConf()->hostNameEnabled() ? "true"s : "false"s;
-        stream << "UseHostname="s + value + "\n";
-
-        value =
-            manager.getDHCPConf()->sendHostNameEnabled() ? "true"s : "false"s;
-        stream << "SendHostname="s + value + "\n";
-    }
+    config.writeFile(
+        config::pathForIntfConf(manager.getConfDir(), interfaceName()));
 }
 
 std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
