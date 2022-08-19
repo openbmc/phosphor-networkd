@@ -5,12 +5,9 @@
 #include <systemd/sd-event.h>
 
 #include <chrono>
-#include <cstddef>
-#include <functional>
 #include <memory>
 #include <sdeventplus/clock.hpp>
 #include <sdeventplus/utility/timer.hpp>
-#include <set>
 #include <string>
 #include <variant>
 
@@ -52,13 +49,10 @@ struct EventDeleter
 };
 using EventPtr = std::unique_ptr<sd_event, EventDeleter>;
 
-template <typename T>
-using UniquePtr = std::unique_ptr<T, std::function<void(T*)>>;
-
 // Byte representations for common address types in network byte order
 using InAddrAny = std::variant<struct in_addr, struct in6_addr>;
 
-using InterfaceList = std::set<IntfName>;
+using InterfaceList = std::vector<IntfName>;
 
 using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
 

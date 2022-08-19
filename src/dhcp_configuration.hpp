@@ -1,7 +1,4 @@
 #pragma once
-
-#include "config_parser.hpp"
-
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <string>
