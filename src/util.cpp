@@ -16,7 +16,6 @@
 #include <cctype>
 #include <cstdlib>
 #include <cstring>
-#include <filesystem>
 #include <fstream>
 #include <list>
 #ifdef SYNC_MAC_FROM_INVENTORY
@@ -37,7 +36,6 @@ namespace network
 
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
-namespace fs = std::filesystem;
 
 namespace internal
 {
