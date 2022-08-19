@@ -5,6 +5,7 @@
 #include "config_parser.hpp"
 #include "neighbor.hpp"
 #include "network_manager.hpp"
+#include "util.hpp"
 #include "vlan_interface.hpp"
 
 #include <arpa/inet.h>
@@ -448,8 +449,8 @@ void EthernetInterface::deleteVLANFromSystem(const std::string& interface)
 
     // delete the vlan network file
     std::error_code ec;
-    fs::remove(networkFile, ec);
-    fs::remove(deviceFile, ec);
+    std::filesystem::remove(networkFile, ec);
+    std::filesystem::remove(deviceFile, ec);
 
     // TODO  systemd doesn't delete the virtual network interface
     // even after deleting all the related configuartion.
@@ -963,14 +964,6 @@ ServerList EthernetInterface::ntpServers(ServerList servers)
 
 void EthernetInterface::writeConfigurationFile()
 {
-    // write all the static ip address in the systemd-network conf file
-
-    using namespace std::string_literals;
-    namespace fs = std::filesystem;
-
-    // if there is vlan interafce then write the configuration file
-    // for vlan also.
-
     for (const auto& intf : vlanInterfaces)
     {
         intf.second->writeConfigurationFile();

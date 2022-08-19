@@ -1,15 +1,14 @@
 #pragma once
-
 #include "config_parser.hpp"
 #include "types.hpp"
-#include "util.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
 #include "xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp"
 
-#include <filesystem>
+#include <map>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <string>
+#include <vector>
 #include <xyz/openbmc_project/Collection/DeleteAll/server.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 #include <xyz/openbmc_project/Network/MACAddress/server.hpp>
@@ -35,8 +34,6 @@ using MacAddressIntf =
 
 using ServerList = std::vector<std::string>;
 using ObjectPath = sdbusplus::message::object_path;
-
-namespace fs = std::filesystem;
 
 class Manager; // forward declaration of network manager.
 
