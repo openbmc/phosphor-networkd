@@ -47,12 +47,6 @@ constexpr auto PROPERTY_INTERFACE = "org.freedesktop.DBus.Properties";
 constexpr auto RESOLVED_SERVICE_PATH = "/org/freedesktop/resolve1/link/";
 constexpr auto METHOD_GET = "Get";
 
-std::map<EthernetInterface::DHCPConf, std::string> mapDHCPToSystemd = {
-    {EthernetInterface::DHCPConf::both, "true"},
-    {EthernetInterface::DHCPConf::v4, "ipv4"},
-    {EthernetInterface::DHCPConf::v6, "ipv6"},
-    {EthernetInterface::DHCPConf::none, "false"}};
-
 static stdplus::Fd& getIFSock()
 {
     using namespace stdplus::fd;
@@ -74,7 +68,9 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
     auto intfName = objPath.substr(objPath.rfind("/") + 1);
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
-    EthernetInterfaceIntf::dhcpEnabled(getDHCPValue(config));
+    auto dhcpVal = getDHCPValue(config);
+    EthernetInterfaceIntf::dhcp4(dhcpVal.v4);
+    EthernetInterfaceIntf::dhcp6(dhcpVal.v6);
     EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRA(config));
     EthernetInterfaceIntf::nicEnabled(enabled ? *enabled : queryNicEnabled());
     const auto& gatewayList = manager.getRouteTable().getDefaultGateway();
@@ -142,40 +138,16 @@ static IP::Protocol getProtocol(const InAddrAny& addr)
     throw std::runtime_error("Invalid addr type");
 }
 
-void EthernetInterface::disableDHCP(IP::Protocol protocol)
-{
-    DHCPConf dhcpState = EthernetInterfaceIntf::dhcpEnabled();
-    if (dhcpState == EthernetInterface::DHCPConf::both)
-    {
-        if (protocol == IP::Protocol::IPv4)
-        {
-            dhcpEnabled(EthernetInterface::DHCPConf::v6);
-        }
-        else if (protocol == IP::Protocol::IPv6)
-        {
-            dhcpEnabled(EthernetInterface::DHCPConf::v4);
-        }
-    }
-    else if ((dhcpState == EthernetInterface::DHCPConf::v4) &&
-             (protocol == IP::Protocol::IPv4))
-    {
-        dhcpEnabled(EthernetInterface::DHCPConf::none);
-    }
-    else if ((dhcpState == EthernetInterface::DHCPConf::v6) &&
-             (protocol == IP::Protocol::IPv6))
-    {
-        dhcpEnabled(EthernetInterface::DHCPConf::none);
-    }
-}
-
 bool EthernetInterface::dhcpIsEnabled(IP::Protocol family)
 {
-    const auto cur = EthernetInterfaceIntf::dhcpEnabled();
-    return cur == EthernetInterface::DHCPConf::both ||
-           (family == IP::Protocol::IPv6 &&
-            cur == EthernetInterface::DHCPConf::v6) ||
-           (family == IP::Protocol::IPv4 &&
-            cur == EthernetInterface::DHCPConf::v4);
+    switch (family)
+    {
+        case IP::Protocol::IPv6:
+            return dhcp6();
+        case IP::Protocol::IPv4:
+            return dhcp4();
+    }
+    throw std::logic_error("Unreachable");
 }
 
 bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
@@ -268,9 +240,17 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
 {
     if (dhcpIsEnabled(protType))
     {
-        log<level::INFO>("DHCP enabled on the interface"),
+        log<level::INFO>("DHCP enabled on the interface, disabling"),
             entry("INTERFACE=%s", interfaceName().c_str());
-        disableDHCP(protType);
+        switch (protType)
+        {
+            case IP::Protocol::IPv4:
+                dhcp4(false);
+                break;
+            case IP::Protocol::IPv6:
+                dhcp6(false);
+                break;
+        }
         // Delete the IP address object and that reloads the networkd
         // to allow the same IP address to be set as Static IP
         deleteObject(ipaddress);
@@ -552,18 +532,59 @@ bool EthernetInterface::ipv6AcceptRA(bool value)
     return value;
 }
 
+bool EthernetInterface::dhcp4(bool value)
+{
+    if (dhcp4() != EthernetInterfaceIntf::dhcp4(value))
+    {
+        writeConfigurationFile();
+        manager.reloadConfigs();
+    }
+    return value;
+}
+
+bool EthernetInterface::dhcp6(bool value)
+{
+    if (dhcp6() != EthernetInterfaceIntf::dhcp6(value))
+    {
+        writeConfigurationFile();
+        manager.reloadConfigs();
+    }
+    return value;
+}
+
 EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
 {
-    if (value == EthernetInterfaceIntf::dhcpEnabled())
+    auto old4 = EthernetInterfaceIntf::dhcp4();
+    auto new4 = EthernetInterfaceIntf::dhcp4(value == DHCPConf::v4 ||
+                                             value == DHCPConf::v4v6stateless ||
+                                             value == DHCPConf::both);
+    auto old6 = EthernetInterfaceIntf::dhcp6();
+    auto new6 = EthernetInterfaceIntf::dhcp6(value == DHCPConf::v6 ||
+                                             value == DHCPConf::both);
+    auto oldra = EthernetInterfaceIntf::ipv6AcceptRA();
+    auto newra = EthernetInterfaceIntf::ipv6AcceptRA(
+        value == DHCPConf::v4v6stateless || value == DHCPConf::v6 ||
+        value == DHCPConf::both);
+
+    if (old4 != new4 || old6 != new6 || oldra != newra)
     {
-        return value;
+        writeConfigurationFile();
+        manager.reloadConfigs();
     }
-    EthernetInterfaceIntf::dhcpEnabled(value);
-
-    writeConfigurationFile();
-    manager.reloadConfigs();
-
     return value;
+}
+
+EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled() const
+{
+    if (dhcp6())
+    {
+        return dhcp4() ? DHCPConf::both : DHCPConf::v6;
+    }
+    else if (dhcp4())
+    {
+        return ipv6AcceptRA() ? DHCPConf::v4v6stateless : DHCPConf::v4;
+    }
+    return ipv6AcceptRA() ? DHCPConf::v6stateless : DHCPConf::none;
 }
 
 bool EthernetInterface::linkUp() const
@@ -982,10 +1003,9 @@ void EthernetInterface::writeConfigurationFile()
 #else
         lla.emplace_back("no");
 #endif
-        network["IPv6AcceptRA"].emplace_back(
-            EthernetInterfaceIntf::ipv6AcceptRA() ? "true" : "false");
-        network["DHCP"].emplace_back(
-            mapDHCPToSystemd[EthernetInterfaceIntf::dhcpEnabled()]);
+        network["IPv6AcceptRA"].emplace_back(ipv6AcceptRA() ? "true" : "false");
+        network["DHCP"].emplace_back(dhcp4() ? (dhcp6() ? "true" : "ipv4")
+                                             : (dhcp6() ? "ipv6" : "false"));
         {
             auto& vlans = network["VLAN"];
             for (const auto& intf : vlanInterfaces)
@@ -1023,7 +1043,7 @@ void EthernetInterface::writeConfigurationFile()
         }
         {
             auto& gateways = network["Gateway"];
-            if (!dhcpIsEnabled(IP::Protocol::IPv4))
+            if (!dhcp4())
             {
                 auto gateway = EthernetInterfaceIntf::defaultGateway();
                 if (!gateway.empty())
@@ -1032,7 +1052,7 @@ void EthernetInterface::writeConfigurationFile()
                 }
             }
 
-            if (!dhcpIsEnabled(IP::Protocol::IPv6))
+            if (!dhcp6())
             {
                 auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
                 if (!gateway6.empty())
@@ -1043,7 +1063,7 @@ void EthernetInterface::writeConfigurationFile()
         }
     }
     config.map["IPv6AcceptRA"].emplace_back()["DHCPv6Client"].emplace_back(
-        dhcpIsEnabled(IP::Protocol::IPv6) ? "true" : "false");
+        dhcp6() ? "true" : "false");
     {
         auto& neighbors = config.map["Neighbor"];
         for (const auto& sneighbor : staticNeighbors)
