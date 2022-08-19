@@ -82,15 +82,14 @@ class EthernetInterface : public Ifaces
      *  @param[in] bus - Bus to attach to.
      *  @param[in] objPath - Path to attach at.
      *  @param[in] config - The parsed configuation file.
-     *  @param[in] dhcpEnabled - is dhcp enabled(true/false).
      *  @param[in] parent - parent object.
      *  @param[in] emitSignal - true if the object added signal needs to be
      *                          send.
      *  @param[in] enabled - Override the lookup of nicEnabled
      */
     EthernetInterface(sdbusplus::bus_t& bus, const std::string& objPath,
-                      const config::Parser& config, DHCPConf dhcpEnabled,
-                      Manager& parent, bool emitSignal = true,
+                      const config::Parser& config, Manager& parent,
+                      bool emitSignal = true,
                       std::optional<bool> enabled = std::nullopt);
 
     /** @brief Function used to load the nameservers.
