@@ -43,12 +43,8 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     {
         mock_clear();
         mock_addIF("test0", 1, mac);
-        return {bus,
-                "/xyz/openbmc_test/network/test0",
-                config::Parser(),
-                EthernetInterface::DHCPConf::none,
-                manager,
-                true};
+        return {bus, "/xyz/openbmc_test/network/test0", config::Parser(),
+                manager, true};
     }
 
     int countIPObjects()
