@@ -160,7 +160,11 @@ bool getIPv6AcceptRA(const config::Parser& config);
 /** @brief read the DHCP value from the configuration file
  *  @param[in] config - The parsed configuration.
  */
-EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config);
+struct DHCPVal
+{
+    bool v4, v6;
+};
+DHCPVal getDHCPValue(const config::Parser& config);
 
 namespace internal
 {
