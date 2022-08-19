@@ -166,6 +166,12 @@ struct DHCPVal
 };
 DHCPVal getDHCPValue(const config::Parser& config);
 
+/** @brief Read a boolean DHCP property from a conf file
+ *  @param[in] config - The parsed configuration.
+ *  @param[in] key - The property name.
+ */
+bool getDHCPProp(const config::Parser& config, std::string_view key);
+
 namespace internal
 {
 
