@@ -62,8 +62,7 @@ static stdplus::Fd& getIFSock()
 EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
                                      const std::string& objPath,
                                      const config::Parser& config,
-                                     DHCPConf dhcpEnabled, Manager& parent,
-                                     bool emitSignal,
+                                     Manager& parent, bool emitSignal,
                                      std::optional<bool> enabled) :
     Ifaces(bus, objPath.c_str(),
            emitSignal ? Ifaces::action::defer_emit
@@ -73,7 +72,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
     auto intfName = objPath.substr(objPath.rfind("/") + 1);
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
-    EthernetInterfaceIntf::dhcpEnabled(dhcpEnabled);
+    EthernetInterfaceIntf::dhcpEnabled(getDHCPValue(config));
     EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRA(config));
     EthernetInterfaceIntf::nicEnabled(enabled ? *enabled : queryNicEnabled());
     const auto& gatewayList = manager.getRouteTable().getDefaultGateway();
@@ -885,8 +884,8 @@ void EthernetInterface::loadVLAN(VlanId id)
         config::pathForIntfConf(manager.getConfDir(), vlanInterfaceName));
 
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, path.c_str(), config, getDHCPValue(config),
-        EthernetInterfaceIntf::nicEnabled(), id, *this, manager);
+        bus, path.c_str(), config, EthernetInterfaceIntf::nicEnabled(), id,
+        *this, manager);
 
     // Fetch the ip address from the system
     // and create the dbus object.
@@ -915,7 +914,7 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
     // Pass the parents nicEnabled property, so that the child
     // VLAN interface can inherit.
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, path.c_str(), config::Parser(), EthernetInterface::DHCPConf::none,
+        bus, path.c_str(), config::Parser(),
         EthernetInterfaceIntf::nicEnabled(), id, *this, manager);
 
     // write the device file for the vlan interface.
