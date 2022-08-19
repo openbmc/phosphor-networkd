@@ -514,9 +514,9 @@ bool getIPv6AcceptRA(const config::Parser& config)
     return ret.value_or(def);
 }
 
-EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
+DHCPVal getDHCPValue(const config::Parser& config)
 {
-    constexpr auto def = EthernetInterfaceIntf::DHCPConf::both;
+    constexpr auto def = DHCPVal{.v4 = true, .v6 = true};
 
     const auto value = config.map.getLastValueString("Network", "DHCP");
     if (value == nullptr)
@@ -530,11 +530,11 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
     }
     if (config::icaseeq(*value, "ipv4"))
     {
-        return EthernetInterfaceIntf::DHCPConf::v4;
+        return DHCPVal{.v4 = true, .v6 = false};
     }
     if (config::icaseeq(*value, "ipv6"))
     {
-        return EthernetInterfaceIntf::DHCPConf::v6;
+        return DHCPVal{.v4 = false, .v6 = true};
     }
     auto ret = config::parseBool(*value);
     if (!ret.has_value())
@@ -546,8 +546,8 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
                            entry("VALUE=%s", value->c_str()));
         return def;
     }
-    return *ret ? EthernetInterfaceIntf::DHCPConf::both
-                : EthernetInterfaceIntf::DHCPConf::none;
+    return *ret ? DHCPVal{.v4 = true, .v6 = true}
+                : DHCPVal{.v4 = false, .v6 = false};
 }
 
 namespace mac_address
