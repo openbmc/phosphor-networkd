@@ -34,8 +34,7 @@ class MockManager : public phosphor::network::Manager
             config::Parser config(config::pathForIntfConf(confDir, interface));
             auto intf =
                 std::make_shared<phosphor::network::MockEthernetInterface>(
-                    bus, objPath.string(), config, getDHCPValue(config), *this,
-                    true);
+                    bus, objPath.string(), config, *this, true);
             intf->createIPAddressObjects();
             intf->createStaticNeighborObjects();
             intf->loadNameServers(config);
