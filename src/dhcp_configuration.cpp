@@ -1,10 +1,7 @@
-#include "config.h"
-
 #include "dhcp_configuration.hpp"
 
+#include "config_parser.hpp"
 #include "network_manager.hpp"
-
-#include <fmt/format.h>
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
@@ -20,6 +17,29 @@ namespace dhcp
 using namespace phosphor::network;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
+Configuration::Configuration(sdbusplus::bus_t& bus, const std::string& objPath,
+                             Manager& parent) :
+    Iface(bus, objPath.c_str(), Iface::action::defer_emit),
+    bus(bus), manager(parent)
+{
+    config::Parser conf;
+    {
+        auto interfaceStrList = getInterfaces();
+        if (!interfaceStrList.empty())
+        {
+            conf.setFile(config::pathForIntfConf(manager.getConfDir(),
+                                                 *interfaceStrList.begin()));
+        }
+    }
+
+    ConfigIntf::dnsEnabled(getDHCPProp(conf, "UseDNS"));
+    ConfigIntf::ntpEnabled(getDHCPProp(conf, "UseNTP"));
+    ConfigIntf::hostNameEnabled(getDHCPProp(conf, "UseHostname"));
+    ConfigIntf::sendHostNameEnabled(getDHCPProp(conf, "SendHostname"));
+    emit_object_added();
+}
+
 bool Configuration::sendHostNameEnabled(bool value)
 {
     if (value == sendHostNameEnabled())
@@ -77,30 +97,6 @@ bool Configuration::dnsEnabled(bool value)
     return dns;
 }
 
-bool Configuration::getDHCPPropFromConf(const std::string& prop)
-{
-    auto interfaceStrList = getInterfaces();
-    // systemd default behaviour is all DHCP fields should be enabled by
-    // default.
-    config::Parser parser(config::pathForIntfConf(manager.getConfDir(),
-                                                  *interfaceStrList.begin()));
-
-    auto value = parser.map.getLastValueString("DHCP", prop);
-    if (value == nullptr)
-    {
-        auto msg = fmt::format("Missing config section DHCP[{}]", prop);
-        log<level::NOTICE>(msg.c_str(), entry("PROP=%s", prop.c_str()));
-        return true;
-    }
-    auto ret = config::parseBool(*value);
-    if (!ret.has_value())
-    {
-        auto msg =
-            fmt::format("Failed to parse section DHCP[{}]: `{}`", prop, *value);
-        log<level::NOTICE>(msg.c_str(), entry("PROP=%s", prop.c_str()));
-    }
-    return ret.value_or(true);
-}
 } // namespace dhcp
 } // namespace network
 } // namespace phosphor
