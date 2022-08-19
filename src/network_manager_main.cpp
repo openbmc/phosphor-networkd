@@ -12,6 +12,7 @@
 #include <memory>
 #ifdef SYNC_MAC_FROM_INVENTORY
 #include <nlohmann/json.hpp>
+#include "util.hpp"
 #endif
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
