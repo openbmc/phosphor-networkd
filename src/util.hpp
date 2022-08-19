@@ -1,8 +1,5 @@
 #pragma once
-
-#include "config.h"
-
-#include "ethernet_interface.hpp"
+#include "config_parser.hpp"
 #include "types.hpp"
 
 #include <netinet/ether.h>
@@ -14,6 +11,7 @@
 #include <sdbusplus/bus.hpp>
 #include <string>
 #include <string_view>
+#include <unordered_set>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 
 namespace phosphor
@@ -157,10 +155,11 @@ void executeCommandinChildProcess(const char* path, char** args);
 std::string_view getIgnoredInterfacesEnv();
 
 /** @brief Parse the comma separated interface names */
-std::set<std::string_view> parseInterfaces(std::string_view interfaces);
+std::unordered_set<std::string_view>
+    parseInterfaces(std::string_view interfaces);
 
 /** @brief Get the ignored interfaces */
-const std::set<std::string_view>& getIgnoredInterfaces();
+const std::unordered_set<std::string_view>& getIgnoredInterfaces();
 
 } // namespace internal
 

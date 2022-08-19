@@ -1,5 +1,3 @@
-#include "config.h"
-
 #include "neighbor.hpp"
 
 #include "ethernet_interface.hpp"

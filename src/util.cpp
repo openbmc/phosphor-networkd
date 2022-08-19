@@ -16,7 +16,6 @@
 #include <cctype>
 #include <cstdlib>
 #include <cstring>
-#include <filesystem>
 #include <fstream>
 #include <list>
 #ifdef SYNC_MAC_FROM_INVENTORY
@@ -37,7 +36,6 @@ namespace network
 
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
-namespace fs = std::filesystem;
 
 namespace internal
 {
@@ -110,9 +108,10 @@ std::string_view getIgnoredInterfacesEnv()
 }
 
 /** @brief Parse the comma separated interface names */
-std::set<std::string_view> parseInterfaces(std::string_view interfaces)
+std::unordered_set<std::string_view>
+    parseInterfaces(std::string_view interfaces)
 {
-    std::set<std::string_view> result;
+    std::unordered_set<std::string_view> result;
     while (true)
     {
         auto sep = interfaces.find(',');
@@ -139,7 +138,7 @@ std::set<std::string_view> parseInterfaces(std::string_view interfaces)
 }
 
 /** @brief Get the ignored interfaces */
-const std::set<std::string_view>& getIgnoredInterfaces()
+const std::unordered_set<std::string_view>& getIgnoredInterfaces()
 {
     static auto ignoredInterfaces = parseInterfaces(getIgnoredInterfacesEnv());
     return ignoredInterfaces;
@@ -294,7 +293,7 @@ InterfaceList getInterfaces()
         {
             continue;
         }
-        interfaces.emplace(ifa->ifa_name);
+        interfaces.emplace_back(ifa->ifa_name);
     }
     return interfaces;
 }
