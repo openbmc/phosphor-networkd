@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include "util.hpp"
 
 #include "config_parser.hpp"
@@ -483,6 +485,12 @@ std::optional<std::string> interfaceToUbootEthAddr(const char* intf)
 
 bool getIPv6AcceptRA(const config::Parser& config)
 {
+#ifdef ENABLE_IPV6_ACCEPT_RA
+    constexpr bool def = true;
+#else
+    constexpr bool def = false;
+#endif
+
     auto value = config.map.getLastValueString("Network", "IPv6AcceptRA");
     if (value == nullptr)
     {
@@ -491,7 +499,7 @@ bool getIPv6AcceptRA(const config::Parser& config)
             config.getFilename().native());
         log<level::NOTICE>(msg.c_str(),
                            entry("FILE=%s", config.getFilename().c_str()));
-        return false;
+        return def;
     }
     auto ret = config::parseBool(*value);
     if (!ret.has_value())
@@ -503,11 +511,13 @@ bool getIPv6AcceptRA(const config::Parser& config)
                            entry("FILE=%s", config.getFilename().c_str()),
                            entry("VALUE=%s", value->c_str()));
     }
-    return ret.value_or(false);
+    return ret.value_or(def);
 }
 
 EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
 {
+    constexpr auto def = EthernetInterfaceIntf::DHCPConf::both;
+
     const auto value = config.map.getLastValueString("Network", "DHCP");
     if (value == nullptr)
     {
@@ -516,7 +526,7 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
                         config.getFilename().native());
         log<level::NOTICE>(msg.c_str(),
                            entry("FILE=%s", config.getFilename().c_str()));
-        return EthernetInterfaceIntf::DHCPConf::none;
+        return def;
     }
     if (config::icaseeq(*value, "ipv4"))
     {
@@ -534,9 +544,10 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
         log<level::NOTICE>(str.c_str(),
                            entry("FILE=%s", config.getFilename().c_str()),
                            entry("VALUE=%s", value->c_str()));
+        return def;
     }
-    return ret.value_or(false) ? EthernetInterfaceIntf::DHCPConf::both
-                               : EthernetInterfaceIntf::DHCPConf::none;
+    return *ret ? EthernetInterfaceIntf::DHCPConf::both
+                : EthernetInterfaceIntf::DHCPConf::none;
 }
 
 namespace mac_address
