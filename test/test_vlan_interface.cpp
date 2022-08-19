@@ -44,7 +44,6 @@ class TestVlanInterface : public stdplus::gtest::TestWithTmp
         return {bus,
                 "/xyz/openbmc_test/network/test0",
                 config::Parser(),
-                EthernetInterface::DHCPConf::none,
                 manager,
                 false,
                 true};
