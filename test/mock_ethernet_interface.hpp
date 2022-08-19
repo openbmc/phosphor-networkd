@@ -13,9 +13,9 @@ class MockEthernetInterface : public EthernetInterface
 {
   public:
     MockEthernetInterface(sdbusplus::bus_t& bus, const std::string& objPath,
-                          const config::Parser& config, DHCPConf dhcpEnabled,
-                          Manager& parent, bool emitSignal) :
-        EthernetInterface(bus, objPath, config, dhcpEnabled, parent, emitSignal,
+                          const config::Parser& config, Manager& parent,
+                          bool emitSignal) :
+        EthernetInterface(bus, objPath, config, parent, emitSignal,
                           /*nicEnabled=*/true)
     {
     }
