@@ -309,9 +309,6 @@ class EthernetInterface : public Ifaces
     static std::string generateNeighborId(const std::string& ipAddress,
                                           const std::string& macAddress);
 
-    /** @brief write the dhcp section **/
-    void writeDHCPSection(std::fstream& stream);
-
     /** @brief get the NTP server list from the network conf
      *
      */
