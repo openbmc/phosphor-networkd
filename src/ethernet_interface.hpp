@@ -159,13 +159,12 @@ class EthernetInterface : public Ifaces
     }
 
     /** Set value of DHCPEnabled */
+    DHCPConf dhcpEnabled() const override;
     DHCPConf dhcpEnabled(DHCPConf value) override;
-
-    /** @brief Selectively disables DHCP
-     *  @param[in] protocol - The IPv4 or IPv6 protocol to return to static
-     *                        addressing mode
-     */
-    void disableDHCP(IP::Protocol protocol);
+    using EthernetInterfaceIntf::dhcP4;
+    bool dhcP4(bool value) override;
+    using EthernetInterfaceIntf::dhcP6;
+    bool dhcP6(bool value) override;
 
     /** Retrieve Link State */
     bool linkUp() const override;
@@ -189,6 +188,7 @@ class EthernetInterface : public Ifaces
      *
      */
     bool ipv6AcceptRA(bool value) override;
+    using EthernetInterfaceIntf::ipv6AcceptRA;
 
     /** @brief sets the NTP servers.
      *  @param[in] value - vector of NTP servers.
@@ -235,7 +235,6 @@ class EthernetInterface : public Ifaces
      */
     std::string defaultGateway6(std::string gateway) override;
 
-    using EthernetInterfaceIntf::dhcpEnabled;
     using EthernetInterfaceIntf::interfaceName;
     using EthernetInterfaceIntf::linkUp;
     using EthernetInterfaceIntf::mtu;
