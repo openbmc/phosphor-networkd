@@ -1,5 +1,3 @@
-#include "config.h"
-
 #include "system_configuration.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>

@@ -3,6 +3,9 @@
 #include "network_manager.hpp"
 #include "rtnetlink_server.hpp"
 #include "types.hpp"
+#ifdef SYNC_MAC_FROM_INVENTORY
+#include "util.hpp"
+#endif
 
 #include <linux/netlink.h>
 
