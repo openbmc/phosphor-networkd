@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include "util.hpp"
 
 #include "config_parser.hpp"
@@ -503,7 +505,13 @@ bool getIPv6AcceptRA(const config::Parser& config)
                            entry("FILE=%s", config.getFilename().c_str()),
                            entry("VALUE=%s", value->c_str()));
     }
-    return ret.value_or(false);
+#ifdef ENABLE_IPV6_ACCEPT_RA
+    constexpr bool def = true;
+#else
+    constexpr bool def = false;
+
+#endif
+    return ret.value_or(def);
 }
 
 EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
@@ -535,8 +543,8 @@ EthernetInterfaceIntf::DHCPConf getDHCPValue(const config::Parser& config)
                            entry("FILE=%s", config.getFilename().c_str()),
                            entry("VALUE=%s", value->c_str()));
     }
-    return ret.value_or(false) ? EthernetInterfaceIntf::DHCPConf::both
-                               : EthernetInterfaceIntf::DHCPConf::none;
+    return ret.value_or(true) ? EthernetInterfaceIntf::DHCPConf::both
+                              : EthernetInterfaceIntf::DHCPConf::none;
 }
 
 namespace mac_address
