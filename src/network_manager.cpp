@@ -150,7 +150,7 @@ void Manager::createInterfaces()
         config::Parser config(config::pathForIntfConf(confDir, interface));
 
         auto intf = std::make_shared<phosphor::network::EthernetInterface>(
-            bus, objPath.string(), config, getDHCPValue(config), *this);
+            bus, objPath.string(), config, *this);
 
         intf->createIPAddressObjects();
         intf->createStaticNeighborObjects();
