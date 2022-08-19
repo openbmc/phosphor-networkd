@@ -1,5 +1,3 @@
-#include "config.h"
-
 #include "vlan_interface.hpp"
 
 #include "config_parser.hpp"
