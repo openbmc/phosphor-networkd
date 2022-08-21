@@ -975,7 +975,7 @@ void EthernetInterface::writeConfigurationFile()
     }
     {
         auto& network = config.map["Network"].emplace_back();
-        auto &lla = network["LinkLocalAddressing"];
+        auto& lla = network["LinkLocalAddressing"];
 #ifdef LINK_LOCAL_AUTOCONFIGURATION
         lla.emplace_back("yes");
 #else
