@@ -87,9 +87,9 @@ bool Manager::createDefaultNetworkFiles(bool force)
             // if not exist or we forcefully wants to write
             // the network file.
 
-            if (force || !fs::is_regular_file(filePath.string()))
+            if (force || !fs::is_regular_file(filePath))
             {
-                bmc::writeDHCPDefault(filePath.string(), interface);
+                bmc::writeDHCPDefault(filePath, interface);
                 log<level::INFO>("Created the default network file.",
                                  entry("INTERFACE=%s", interface.c_str()));
                 isCreated = true;
