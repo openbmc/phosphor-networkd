@@ -39,6 +39,30 @@
       },
       "revId": "2f87165555dfaee46446eff62d8e0c1e3cd72085",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5199dc7f_0233eae9",
+        "filename": "src/network_manager_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-22T21:49:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2327f0b_fca49102",
+      "range": {
+        "startLine": 311,
+        "startChar": 0,
+        "endLine": 312,
+        "endChar": 24
+      },
+      "revId": "2f87165555dfaee46446eff62d8e0c1e3cd72085",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
