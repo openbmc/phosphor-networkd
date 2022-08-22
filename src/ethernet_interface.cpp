@@ -1141,6 +1141,8 @@ void EthernetInterface::writeConfigurationFile()
     writeDHCPSection(stream);
 
     stream.close();
+    auto msg = fmt::format("Wrote networkd file: {}", confPath.native());
+    log<level::INFO>(msg.c_str(), entry("FILE=%s", confPath.c_str()));
 }
 
 void EthernetInterface::writeDHCPSection(std::fstream& stream)
