@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70255392_066d9592",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-08-23T21:23:32Z",
+      "side": 1,
+      "message": "Need one line to be corrected.",
+      "revId": "d5e9b785d32bc6517540a4933acc791fe20327f9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b88885a4_0708b599",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-08-23T21:23:32Z",
+      "side": 1,
+      "message": "This entry is incorrect. \nThis enables IPv4 and RA/DHCPv6Client when only v6 DHCP was requested.",
+      "revId": "d5e9b785d32bc6517540a4933acc791fe20327f9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
