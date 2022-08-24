@@ -563,6 +563,16 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
         value == DHCPConf::v6stateless || value == DHCPConf::v4v6stateless ||
         value == DHCPConf::v6 || value == DHCPConf::both);
 
+    if (old4 && !new4)
+    {
+        EthernetInterfaceIntf::defaultGateway("");
+    }
+
+    if ((old6 && !new6) || (oldra && !newra))
+    {
+        EthernetInterfaceIntf::defaultGateway6("");
+    }
+
     if (old4 != new4 || old6 != new6 || oldra != newra)
     {
         writeConfigurationFile();
