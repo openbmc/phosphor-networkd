@@ -556,9 +556,23 @@ bool EthernetInterface::ipv6AcceptRA(bool value)
 
 EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
 {
-    if (value == EthernetInterfaceIntf::dhcpEnabled())
+    const DHCPConf currentDhcp = EthernetInterfaceIntf::dhcpEnabled();
+    if (value == currentDhcp)
     {
         return value;
+    }
+
+    // Clear the previously DHCP-assigned gateway to prevent it being written to
+    // config file
+    if ((currentDhcp == DHCPConf::both || currentDhcp == DHCPConf::v4) &&
+        (value == DHCPConf::v6 || value == DHCPConf::none))
+    {
+        EthernetInterfaceIntf::defaultGateway("");
+    }
+    if ((currentDhcp == DHCPConf::both || currentDhcp == DHCPConf::v6) &&
+        (value == DHCPConf::v4 || value == DHCPConf::none))
+    {
+        EthernetInterfaceIntf::defaultGateway6("");
     }
     EthernetInterfaceIntf::dhcpEnabled(value);
 
