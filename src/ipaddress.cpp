@@ -37,8 +37,6 @@ std::vector<AddressInfo> getCurrentAddresses(const AddressFilter& filter)
 
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
-using NotAllowed = sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
-using Reason = xyz::openbmc_project::Common::NotAllowed::REASON;
 
 IPAddress::IPAddress(sdbusplus::bus_t& bus, const char* objPath,
                      EthernetInterface& parent, IP::Protocol type,
@@ -57,26 +55,7 @@ IPAddress::IPAddress(sdbusplus::bus_t& bus, const char* objPath,
     // Emit deferred signal.
     emit_object_added();
 }
-std::string IPAddress::address(std::string /*ipAddress*/)
-{
-    elog<NotAllowed>(Reason("Property update is not allowed"));
-}
-uint8_t IPAddress::prefixLength(uint8_t /*value*/)
-{
-    elog<NotAllowed>(Reason("Property update is not allowed"));
-}
-std::string IPAddress::gateway(std::string /*gateway*/)
-{
-    elog<NotAllowed>(Reason("Property update is not allowed"));
-}
-IP::Protocol IPAddress::type(IP::Protocol /*type*/)
-{
-    elog<NotAllowed>(Reason("Property update is not allowed"));
-}
-IP::AddressOrigin IPAddress::origin(IP::AddressOrigin /*origin*/)
-{
-    elog<NotAllowed>(Reason("Property update is not allowed"));
-}
+
 void IPAddress::delete_()
 {
     if (origin() != IP::AddressOrigin::Static)
