@@ -295,13 +295,6 @@ int main(int /*argc*/, char** /*argv*/)
     phosphor::network::manager = std::make_unique<phosphor::network::Manager>(
         bus, DEFAULT_OBJPATH, NETWORK_CONF_DIR);
 
-    // create the default network files if the network file
-    // is not there for any interface.
-    if (phosphor::network::manager->createDefaultNetworkFiles())
-    {
-        phosphor::network::manager->reloadConfigs();
-    }
-
     // RTNETLINK event handler
     phosphor::network::rtnetlink::Server svr(eventPtr);
 
