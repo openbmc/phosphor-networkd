@@ -1,0 +1,16 @@
+[Match]
+Name=*
+Name=!lo
+[Network]
+DHCP=true
+LinkLocalAddressing=@LINK_LOCAL_AUTOCONFIGURATION@
+IPv6AcceptRA=@ENABLE_IPV6_ACCEPT_RA@
+[DHCP]
+ClientIdentifier=mac
+UseDNS=true
+UseDomains=true
+UseNTP=true
+UseHostname=true
+SendHostname=true
+[IPv6AcceptRA]
+DHCPv6Client=true
