@@ -2,7 +2,7 @@
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
-#include <functional>
+#include <function2/function2.hpp>
 #include <string_view>
 #include <tuple>
 #include <type_traits>
@@ -16,15 +16,15 @@ namespace netlink
 
 /* @brief Called on each nlmsg received on the socket
  */
-using ReceiveCallback = std::function<void(const nlmsghdr&, std::string_view)>;
+using ReceiveCallback = fu2::function_view<void(const nlmsghdr&, std::string_view)>;
 
 namespace detail
 {
 
-void processMsg(std::string_view& msgs, bool& done, const ReceiveCallback& cb);
+void processMsg(std::string_view& msgs, bool& done, ReceiveCallback cb);
 
 void performRequest(int protocol, void* data, size_t size,
-                    const ReceiveCallback& cb);
+                    ReceiveCallback cb);
 
 } // namespace detail
 
@@ -47,7 +47,7 @@ std::tuple<rtattr, std::string_view> extractRtAttr(std::string_view& data);
  */
 template <typename T>
 void performRequest(int protocol, uint16_t type, uint16_t flags, const T& msg,
-                    const ReceiveCallback& cb)
+                    ReceiveCallback cb)
 {
     static_assert(std::is_trivially_copyable_v<T>);
 
