@@ -101,11 +101,6 @@ class Manager : public details::VLANCreateIface
         return dhcpConf;
     }
 
-    /** @brief create the default network files for each interface
-     *  @return true if network file created else false
-     */
-    bool createDefaultNetworkFiles();
-
     /** @brief This function gets the MAC address from the VPD and
      *  sets it on the corresponding ethernet interface during first
      *  Boot, once it sets the MAC from VPD, it creates a file named
