@@ -22,6 +22,30 @@
       },
       "revId": "e5d6d3daa1d9fb4883c56f47a4b1aa541ac2d856",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e93bcecb_c18ca4bf",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-26T18:00:03Z",
+      "side": 1,
+      "message": "Not having any [Network]DNS entries isn\u0027t an error, this is a perfectly valid configuration so we don\u0027t need special handling.",
+      "parentUuid": "6791af6f_396df696",
+      "range": {
+        "startLine": 805,
+        "startChar": 11,
+        "endLine": 805,
+        "endChar": 46
+      },
+      "revId": "e5d6d3daa1d9fb4883c56f47a4b1aa541ac2d856",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
