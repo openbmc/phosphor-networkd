@@ -156,6 +156,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3cc0b6dd_31253156",
+        "filename": "src/ipaddress.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-26T09:27:57Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "42033103_0b863f13",
+      "revId": "de42f728ccd90356b4ec18686cfd9b365a6ea489",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "78657a9f_a378adf5",
@@ -173,6 +191,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2089c74_864f5544",
+        "filename": "src/ipaddress.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-26T09:27:57Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "78657a9f_a378adf5",
+      "revId": "de42f728ccd90356b4ec18686cfd9b365a6ea489",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "455ad66b_75b60ad1",
@@ -186,6 +222,24 @@
       "writtenOn": "2022-01-20T21:11:37Z",
       "side": 1,
       "message": "make a std::bitfield\u003c32\u003e ?\nThis will allow ethernet_address.cpp to identify static vs dynamic using\naddr.flags.test(7)",
+      "revId": "de42f728ccd90356b4ec18686cfd9b365a6ea489",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47cb54d3_02b0d537",
+        "filename": "src/ipaddress.hpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-26T09:27:57Z",
+      "side": 1,
+      "message": "Sure, but it kinda defeats the purpose of using the named constant. I\u0027d much rather use the well defined c type + bitmask than have to define my own constants that should match what the system is using.\n\nI played with it and it made the comparison way more ugly, it would be fine if bitset was more natively used for the netlink types, but it is more concise in c-style.",
+      "parentUuid": "455ad66b_75b60ad1",
       "revId": "de42f728ccd90356b4ec18686cfd9b365a6ea489",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
