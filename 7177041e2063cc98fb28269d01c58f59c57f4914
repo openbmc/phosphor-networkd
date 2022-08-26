@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "743dbad9_78b2777f",
         "filename": "ethernet_interface.cpp",
@@ -14,10 +15,10 @@
       "side": 1,
       "message": "Please change to:\n        IP::AddressOrigin origin \u003d addr.staticallyAssigned\n                                       ? IP::AddressOrigin::Static\n                                       : IP::AddressOrigin::DHCP;",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "19feeed2_7587a840",
         "filename": "ethernet_interface.cpp",
@@ -32,10 +33,10 @@
       "message": "Done",
       "parentUuid": "743dbad9_78b2777f",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "e8f4f8bd_a9faf763",
         "filename": "ethernet_interface.cpp",
@@ -50,10 +51,10 @@
       "message": "Patchset 9 did not include the requested change.",
       "parentUuid": "19feeed2_7587a840",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "db5c13fa_fec00b58",
         "filename": "ethernet_interface.cpp",
@@ -68,10 +69,10 @@
       "message": "Intentionally not changed since we are keeping all of the lines below.",
       "parentUuid": "e8f4f8bd_a9faf763",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "1f02015e_f715bcba",
         "filename": "ethernet_interface.cpp",
@@ -85,10 +86,10 @@
       "side": 1,
       "message": "With the preceding requested change this fragment can be removed.",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "366bf953_21fe163d",
         "filename": "ethernet_interface.cpp",
@@ -103,10 +104,10 @@
       "message": "Ack",
       "parentUuid": "1f02015e_f715bcba",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "c705f160_ec629cf4",
         "filename": "ethernet_interface.cpp",
@@ -121,10 +122,10 @@
       "message": "Patchset 9 did not include the requested change.",
       "parentUuid": "366bf953_21fe163d",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "aaf7cb0b_919cd383",
         "filename": "ethernet_interface.cpp",
@@ -139,10 +140,10 @@
       "message": "Intentionally not changed since we are keeping all of the lines below.",
       "parentUuid": "c705f160_ec629cf4",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "16b88c5e_0d8679d3",
         "filename": "ethernet_interface.cpp",
@@ -156,10 +157,10 @@
       "side": 1,
       "message": "How we are handling the Link local IP address here? how to fill the origin value for the link local IP address here?",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "5610b716_7310edeb",
         "filename": "ethernet_interface.cpp",
@@ -174,10 +175,10 @@
       "message": "Currently, we are ignoring the link local addresses by setting the `filter.scope \u003d RT_SCOPE_UNIVERSE`",
       "parentUuid": "16b88c5e_0d8679d3",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "9ab0e4b0_1b548524",
         "filename": "ethernet_interface.cpp",
@@ -192,10 +193,10 @@
       "message": "Is this going to cause issues for people who are using Link Local addresses in the same way as ordinary IPv4 addresses? Oskar Senft, at Google, is manually assigning Link Local addresses in the same way as one would statically assign an IPv4 address.",
       "parentUuid": "5610b716_7310edeb",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "f163e52b_2e916721",
         "filename": "ipaddress.cpp",
@@ -209,10 +210,10 @@
       "side": 1,
       "message": "Please add:\naddress.staticallyAssigned \u003d (bool)(ifaddr.ifa_flags \u0026 IFA_F_PERMANENT);",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "77609629_b93d2a3c",
         "filename": "ipaddress.cpp",
@@ -227,10 +228,10 @@
       "message": "That doesn\u0027t actually work for DHCP, systemd marks those addresses as IFA_F_PERMANENT. We currently don\u0027t have a better way to detect DHCP addresses or distinguish them from non-temporary SLAAC so I\u0027m leaving this behavior as it was for now.",
       "parentUuid": "f163e52b_2e916721",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "2022079b_1e90e9b7",
         "filename": "ipaddress.cpp",
@@ -245,10 +246,10 @@
       "message": "Ack",
       "parentUuid": "77609629_b93d2a3c",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "caa41eec_a25d7bd2",
         "filename": "ipaddress.hpp",
@@ -262,10 +263,10 @@
       "side": 1,
       "message": "please add:\nbool staticallyAssigned;",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "a826baae_0496176f",
         "filename": "ipaddress.hpp",
@@ -280,10 +281,10 @@
       "message": "Ack",
       "parentUuid": "caa41eec_a25d7bd2",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "8c655129_aa0f7f73",
         "filename": "ipaddress.hpp",
@@ -303,10 +304,10 @@
         "endChar": 74
       },
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "ac5b77bc_6fe78f11",
         "filename": "ipaddress.hpp",
@@ -327,10 +328,34 @@
         "endChar": 74
       },
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "755ffa59_ffb93fd1",
+        "filename": "ipaddress.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-26T09:30:20Z",
+      "side": 1,
+      "message": "I\u0027ll look into reorganizing the netlink stuff in the future.",
+      "parentUuid": "ac5b77bc_6fe78f11",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 74
+      },
+      "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "9989a79d_c4b5eeb3",
         "filename": "ipaddress.hpp",
@@ -344,10 +369,10 @@
       "side": 1,
       "message": "Why the new namespace?  Is this being used outside phosphor::network namespace?",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "f82f60a5_7ecfac9e",
         "filename": "ipaddress.hpp",
@@ -362,10 +387,10 @@
       "message": "It\u0027s not meant to be used outside of this file, it\u0027s a detail of the IPAddress module",
       "parentUuid": "9989a79d_c4b5eeb3",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "7eb16c96_f577c129",
         "filename": "ipaddress.hpp",
@@ -380,10 +405,10 @@
       "message": "Ack",
       "parentUuid": "f82f60a5_7ecfac9e",
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "4772c8fd_62e7b00f",
         "filename": "ipaddress.hpp",
@@ -403,10 +428,10 @@
         "endChar": 3
       },
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "6dc465f9_1d975828",
         "filename": "ipaddress.hpp",
@@ -427,8 +452,7 @@
         "endChar": 3
       },
       "revId": "7177041e2063cc98fb28269d01c58f59c57f4914",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": false
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }

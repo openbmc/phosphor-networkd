@@ -86,6 +86,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a114067_c63fb955",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-26T09:30:20Z",
+      "side": 1,
+      "message": "I\u0027ll change this in a follow up, I don\u0027t want to affect that behavior here so that we can revert a smaller change.",
+      "parentUuid": "65aaf4f6_d305537d",
+      "revId": "de42f728ccd90356b4ec18686cfd9b365a6ea489",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "050e12b1_0904a310",
@@ -135,6 +153,24 @@
       "side": 1,
       "message": "I understand that SLAAC is not link local.\n\nI am trying to figure out if there is  a way to differentiate DHCPv6 and SLAAC addresses",
       "parentUuid": "f3fd255f_8ae6d1a5",
+      "revId": "de42f728ccd90356b4ec18686cfd9b365a6ea489",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29964e1c_9c3f2bab",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-26T09:30:20Z",
+      "side": 1,
+      "message": "There isn\u0027t currently, you would have to be able to get the info from networkd (which it doesn\u0027t expose)",
+      "parentUuid": "bccba24d_68f9bb27",
       "revId": "de42f728ccd90356b4ec18686cfd9b365a6ea489",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
