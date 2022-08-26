@@ -288,13 +288,6 @@ int main()
 
     manager = std::make_unique<Manager>(bus, DEFAULT_OBJPATH, NETWORK_CONF_DIR);
 
-    // create the default network files if the network file
-    // is not there for any interface.
-    if (manager->createDefaultNetworkFiles())
-    {
-        manager->reloadConfigs();
-    }
-
     // RTNETLINK event handler
     rtnetlink::Server svr(event);
 

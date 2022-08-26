@@ -70,6 +70,14 @@ networkd_dbus_dep = declare_dependency(
 subdir('src')
 
 configure_file(
+  input: '60-networkd-default.network.in',
+  output: '60-networkd-default.network',
+  configuration: conf_data,
+  install: true,
+  install_dir: dependency('systemd').get_variable(
+    pkgconfig: 'systemdutildir') / 'network')
+
+configure_file(
   input: 'xyz.openbmc_project.Network.service.in',
   output: 'xyz.openbmc_project.Network.service',
   configuration: {
