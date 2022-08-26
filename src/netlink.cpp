@@ -19,7 +19,7 @@ namespace netlink
 namespace detail
 {
 
-void processMsg(std::string_view& msgs, bool& done, const ReceiveCallback& cb)
+void processMsg(std::string_view& msgs, bool& done, ReceiveCallback cb)
 {
     // Parse and update the message buffer
     auto hdr = stdplus::raw::copyFrom<nlmsghdr>(msgs);
@@ -73,7 +73,7 @@ void processMsg(std::string_view& msgs, bool& done, const ReceiveCallback& cb)
     }
 }
 
-static void receive(int sock, const ReceiveCallback& cb)
+static void receive(int sock, ReceiveCallback cb)
 {
     // We need to make sure we have enough room for an entire packet otherwise
     // it gets truncated. The netlink docs guarantee packets will not exceed 8K
@@ -156,8 +156,7 @@ static stdplus::ManagedFd makeSocket(int protocol)
     return sock;
 }
 
-void performRequest(int protocol, void* data, size_t size,
-                    const ReceiveCallback& cb)
+void performRequest(int protocol, void* data, size_t size, ReceiveCallback cb)
 {
     auto sock = makeSocket(protocol);
     requestSend(sock.get(), data, size);
