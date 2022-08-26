@@ -3,7 +3,6 @@
 #include "network_manager.hpp"
 
 #include "ipaddress.hpp"
-#include "network_config.hpp"
 #include "system_queries.hpp"
 #include "types.hpp"
 
@@ -41,43 +40,6 @@ Manager::Manager(sdbusplus::bus_t& bus, const char* objPath,
     bus(bus), objectPath(objPath)
 {
     setConfDir(confDir);
-}
-
-bool Manager::createDefaultNetworkFiles()
-{
-    auto isCreated = false;
-    try
-    {
-        for (const auto& interface : system::getInterfaces())
-        {
-            // if the interface has '.' in the name, it means that this is a
-            // VLAN - don't create the network file.
-            if (interface.name->find(".") != std::string::npos)
-            {
-                continue;
-            }
-
-            fs::path filePath =
-                config::pathForIntfConf(confDir, *interface.name);
-
-            // create the interface specific network file
-            // if not existing.
-            if (!fs::is_regular_file(filePath))
-            {
-                bmc::writeDHCPDefault(filePath, *interface.name);
-                log<level::INFO>(
-                    "Created the default network file.",
-                    entry("INTERFACE=%s", interface.name->c_str()));
-                isCreated = true;
-            }
-        }
-    }
-    catch (const std::exception& e)
-    {
-        log<level::ERR>("Unable to create the default network file");
-    }
-
-    return isCreated;
 }
 
 void Manager::setConfDir(const fs::path& dir)
@@ -195,7 +157,6 @@ void Manager::reset()
             fs::remove(file.path());
         }
     }
-    createDefaultNetworkFiles();
     log<level::INFO>("Network Factory Reset queued.");
 }
 
