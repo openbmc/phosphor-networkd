@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "78b549be_dae13f0d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-30T22:51:44Z",
+      "side": 1,
+      "message": "It\u0027s actually similar. Updated message.",
+      "parentUuid": "81952d06_233f56e6",
+      "range": {
+        "startLine": 9,
+        "startChar": 21,
+        "endLine": 9,
+        "endChar": 32
+      },
+      "revId": "f1495551aa49db11a0e05841e1c21d5d6ed35afa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "228da07d_6feec73e",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a62df847_e2f0abde",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-30T22:51:44Z",
+      "side": 1,
+      "message": "I mostly tested this by comparing what the behavior of systemd 251 was when parsing things like comments and other symbols and seeing what it would parse out. All of the edge cases have tests added in test/test_config_parser.cpp",
+      "parentUuid": "228da07d_6feec73e",
+      "range": {
+        "startLine": 10,
+        "startChar": 21,
+        "endLine": 10,
+        "endChar": 53
+      },
+      "revId": "f1495551aa49db11a0e05841e1c21d5d6ed35afa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a2be4ab9_0b91c506",
@@ -60,6 +108,24 @@
       "writtenOn": "2022-08-30T07:41:34Z",
       "side": 1,
       "message": "Tested by: Unit test ?",
+      "revId": "f1495551aa49db11a0e05841e1c21d5d6ed35afa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "35dd5a02_b5f09585",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-30T22:51:44Z",
+      "side": 1,
+      "message": "Unit tests are a given in the code, but I\u0027ll add something for runtime testing.",
+      "parentUuid": "a2be4ab9_0b91c506",
       "revId": "f1495551aa49db11a0e05841e1c21d5d6ed35afa",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
