@@ -70,6 +70,30 @@
       },
       "revId": "e5d6d3daa1d9fb4883c56f47a4b1aa541ac2d856",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "196e0fea_608fa6f6",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 805,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-30T20:05:15Z",
+      "side": 1,
+      "message": "I don\u0027t want notice logs though, the google BMCs will never have these addresses and would spam the logs due to them being missing.",
+      "parentUuid": "fa17efd0_618c2e33",
+      "range": {
+        "startLine": 805,
+        "startChar": 11,
+        "endLine": 805,
+        "endChar": 46
+      },
+      "revId": "e5d6d3daa1d9fb4883c56f47a4b1aa541ac2d856",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
