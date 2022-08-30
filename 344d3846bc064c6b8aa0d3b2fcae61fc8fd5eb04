@@ -16,6 +16,24 @@
       "message": "This commit gets the number of warnings / errors in the config file. But will it also help if there is some kind of log to say which line/content is wrong ?",
       "revId": "344d3846bc064c6b8aa0d3b2fcae61fc8fd5eb04",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4bda0845_a21d1e42",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-08-30T22:55:41Z",
+      "side": 1,
+      "message": "It would be possible, but I didn\u0027t want to add logging to this class directly so that it could be used more portably. The primary goal of this change is to make it possible in the future to rewrite the configuration files if we detect any issues.",
+      "parentUuid": "aa4bb0ae_4d094fba",
+      "revId": "344d3846bc064c6b8aa0d3b2fcae61fc8fd5eb04",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
