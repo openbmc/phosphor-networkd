@@ -88,6 +88,13 @@ class Neighbor : public NeighborObj
      */
     void delete_() override;
 
+    using NeighborObj::ipAddress;
+    std::string ipAddress(std::string) override;
+    using NeighborObj::macAddress;
+    std::string macAddress(std::string) override;
+    using NeighborObj::state;
+    State state(State) override;
+
   private:
     /** @brief Parent Object. */
     EthernetInterface& parent;
