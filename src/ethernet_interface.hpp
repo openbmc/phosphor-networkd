@@ -199,11 +199,6 @@ class EthernetInterface : public Ifaces
      */
     ServerList ntpServers(ServerList value) override;
 
-    /** @brief sets the DNS/nameservers.
-     *  @param[in] value - vector of DNS servers.
-     */
-    ServerList nameservers(ServerList value) override;
-
     /** @brief sets the Static DNS/nameservers.
      *  @param[in] value - vector of DNS servers.
      */
