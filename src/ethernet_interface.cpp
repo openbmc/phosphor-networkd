@@ -762,12 +762,6 @@ bool EthernetInterface::nicEnabled(bool value)
     return value;
 }
 
-ServerList EthernetInterface::nameservers(ServerList /*value*/)
-{
-    elog<NotAllowed>(NotAllowedArgument::REASON("ReadOnly Property"));
-    return EthernetInterfaceIntf::nameservers();
-}
-
 ServerList EthernetInterface::staticNameServers(ServerList value)
 {
     for (const auto& nameserverip : value)

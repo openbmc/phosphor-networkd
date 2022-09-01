@@ -13,7 +13,6 @@
 #include <fstream>
 #include <sdbusplus/bus.hpp>
 #include <stdplus/gtest/tmp.hpp>
-#include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gtest/gtest.h>
 
@@ -163,13 +162,6 @@ TEST_F(TestEthernetInterface, addStaticNameServers)
     filePath /= "00-bmc-test0.network";
     config::Parser parser(filePath.string());
     EXPECT_EQ(servers, parser.getValues("Network", "DNS"));
-}
-
-TEST_F(TestEthernetInterface, addDynamicNameServers)
-{
-    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
-    ServerList servers = {"9.1.1.1", "9.2.2.2", "9.3.3.3"};
-    EXPECT_THROW(interface.nameservers(servers), NotAllowed);
 }
 
 TEST_F(TestEthernetInterface, getDynamicNameServers)
