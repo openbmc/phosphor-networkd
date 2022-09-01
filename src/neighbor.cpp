@@ -13,11 +13,14 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
+#include <phosphor-logging/elog-errors.hpp>
+#include <phosphor-logging/elog.hpp>
 #include <stdexcept>
 #include <stdplus/raw.hpp>
 #include <string_view>
 #include <utility>
 #include <vector>
+#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {
@@ -102,6 +105,26 @@ Neighbor::Neighbor(sdbusplus::bus_t& bus, const char* objPath,
 void Neighbor::delete_()
 {
     parent.deleteStaticNeighborObject(ipAddress());
+}
+
+using sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
+using REASON =
+    phosphor::logging::xyz::openbmc_project::Common::NotAllowed::REASON;
+using phosphor::logging::elog;
+
+std::string Neighbor::ipAddress(std::string /*ipAddress*/)
+{
+    elog<NotAllowed>(REASON("Property update is not allowed"));
+}
+
+std::string Neighbor::macAddress(std::string /*macAddress*/)
+{
+    elog<NotAllowed>(REASON("Property update is not allowed"));
+}
+
+Neighbor::State Neighbor::state(State /*state*/)
+{
+    elog<NotAllowed>(REASON("Property update is not allowed"));
 }
 
 } // namespace network
