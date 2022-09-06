@@ -94,9 +94,9 @@ Neighbor::Neighbor(sdbusplus::bus_t& bus, const char* objPath,
     NeighborObj(bus, objPath, NeighborObj::action::defer_emit),
     parent(parent)
 {
-    this->ipAddress(ipAddress);
-    this->macAddress(macAddress);
-    this->state(state);
+    NeighborObj::ipAddress(ipAddress);
+    NeighborObj::macAddress(macAddress);
+    NeighborObj::state(state);
 
     // Emit deferred signal.
     emit_object_added();
