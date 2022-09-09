@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f07b73d_c5b54d45",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2022-09-09T16:18:26Z",
+      "side": 1,
+      "message": "Fixed the the \u0027v6\u0027 only enumeration.\nCould not get this to build locally due to stacked config_parser changes that have not been merged.",
+      "revId": "caa85eb1f1c13a8264b5947b0127d4bec74185ef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
