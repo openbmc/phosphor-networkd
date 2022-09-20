@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9633625_d5c35476",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-09-20T21:25:30Z",
+      "side": 1,
+      "message": "Purely a refactor, the unit tests pass and the code builds so this doesn\u0027t really need a hand test.",
+      "parentUuid": "00e22bcd_ec48ea1e",
+      "revId": "70614058b0c992bd6462d7006ae5157387f3770a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eb542b30_da5f119e",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-09-12T11:24:13Z",
       "side": 1,
       "message": "This is just replacing the variable name, how is it helping?",
+      "revId": "70614058b0c992bd6462d7006ae5157387f3770a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b831d7f_6e194434",
+        "filename": "src/config_parser.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-09-20T21:25:30Z",
+      "side": 1,
+      "message": "This just makes it more in line with the previous external api, calling it `getMap()` -\u003e `map`",
+      "parentUuid": "eb542b30_da5f119e",
       "revId": "70614058b0c992bd6462d7006ae5157387f3770a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -52,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "21200d25_62064f50",
+        "filename": "test/test_vlan_interface.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-09-20T21:25:30Z",
+      "side": 1,
+      "message": "Yes, it passed the CI so it has been formatted. I can\u0027t really restructure it by hand as it will just get reformatted back.",
+      "parentUuid": "bab50da1_0eba0ca8",
+      "revId": "70614058b0c992bd6462d7006ae5157387f3770a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1e4357ca_d6127a42",
@@ -69,6 +123,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "03edc77b_2d58cae7",
+        "filename": "test/test_vlan_interface.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-09-20T21:25:30Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1e4357ca_d6127a42",
+      "revId": "70614058b0c992bd6462d7006ae5157387f3770a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a85217b_e7a89fb8",
@@ -82,6 +154,24 @@
       "writtenOn": "2022-09-12T11:24:13Z",
       "side": 1,
       "message": "formatting issue.",
+      "revId": "70614058b0c992bd6462d7006ae5157387f3770a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e250f56_7847b709",
+        "filename": "test/test_vlan_interface.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-09-20T21:25:30Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9a85217b_e7a89fb8",
       "revId": "70614058b0c992bd6462d7006ae5157387f3770a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
