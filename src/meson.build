@@ -36,6 +36,8 @@ networkd_deps = [
   networkd_dbus_dep,
   sdbusplus_dep,
   stdplus_dep,
+  dependency('libnl-3.0'),
+  dependency('libnl-genl-3.0'),
 ]
 
 conf_header = configure_file(
@@ -47,6 +49,8 @@ networkd_lib = static_library(
   conf_header,
   'ethernet_interface.cpp',
   'neighbor.cpp',
+  'ncsi_info.cpp',
+  'ncsi_util.cpp',
   'ipaddress.cpp',
   'netlink.cpp',
   'network_manager.cpp',
