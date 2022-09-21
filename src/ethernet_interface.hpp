@@ -48,6 +48,10 @@ class IPAddress;
 
 class Neighbor;
 
+class ncsiPackIntf;
+
+class ncsiChlIntf;
+
 using LinkSpeed = uint16_t;
 using DuplexMode = uint8_t;
 using Autoneg = uint8_t;
@@ -60,6 +64,8 @@ using InterfaceInfo =
     std::tuple<LinkSpeed, DuplexMode, Autoneg, LinkUp, NICEnabled, MTU>;
 using AddressMap = std::map<std::string, std::shared_ptr<IPAddress>>;
 using NeighborMap = std::map<std::string, std::shared_ptr<Neighbor>>;
+using NcsiPackMap = std::map<int, std::shared_ptr<ncsiPackIntf>>;
+using NcsiChlMap = std::map<int, std::shared_ptr<ncsiChlIntf>>;
 using VlanInterfaceMap =
     std::map<InterfaceName, std::unique_ptr<VlanInterface>>;
 
@@ -243,6 +249,11 @@ class EthernetInterface : public Ifaces
     /** @brief Absolute path of the resolv conf file */
     static constexpr auto resolvConfFile = "/etc/resolv.conf";
 
+    /* @brief creates the dbus object(NcsiPackage and NcsiChannel) given in the
+     * Ncsi list.
+     */
+    void createNcsiObjects();
+
   protected:
     /** @brief get the info of the ethernet interface.
      *  @return tuple having the link speed,autonegotiation,duplexmode .
@@ -328,6 +339,12 @@ class EthernetInterface : public Ifaces
 
     /** @brief Persistent map of Neighbor dbus objects and their names */
     NeighborMap staticNeighbors;
+
+    /** @brief Persistent map of NcsiPackage dbus objects and their names */
+    NcsiPackMap ncsiPack;
+
+    /** @brief Persistent map of NcsiChannel dbus objects and their names */
+    NcsiChlMap ncsiChl;
 
     /** @brief Persistent map of VLAN interface dbus objects and their names */
     VlanInterfaceMap vlanInterfaces;

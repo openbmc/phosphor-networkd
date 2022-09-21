@@ -2,6 +2,7 @@
 
 #include "network_manager.hpp"
 
+#include "ncsi_info.hpp"
 #include "ipaddress.hpp"
 #include "network_config.hpp"
 #include "types.hpp"
@@ -138,6 +139,7 @@ void Manager::createInterfaces()
         intf->createIPAddressObjects();
         intf->createStaticNeighborObjects();
         intf->loadNameServers(config);
+        intf->createNcsiObjects();
 
         this->interfaces.emplace(std::move(interface), std::move(intf));
     }
