@@ -5,6 +5,7 @@
 #include "routing_table.hpp"
 #include "system_configuration.hpp"
 #include "vlan_interface.hpp"
+#include "ncsi_info.hpp"
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
 
 #include <filesystem>
