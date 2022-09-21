@@ -4,6 +4,8 @@
 
 #include "config_parser.hpp"
 #include "ipaddress.hpp"
+#include "ncsi_info.hpp"
+#include "ncsi_util.hpp"
 #include "neighbor.hpp"
 #include "network_manager.hpp"
 #include "types.hpp"
@@ -1226,5 +1228,46 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
 
     return gw;
 }
+
+void EthernetInterface::createNcsiObjects()
+{
+    ncsiPack.clear();
+    ncsiChl.clear();
+
+    std::filesystem::path objectPath;
+    objectPath /= objPath;
+    objectPath /= "ncsi";
+
+    unsigned filter;
+    filter = ifIndex();
+    for (int packageInt = 0; packageInt <= 4; packageInt++)
+    {
+        int ret = phosphor::network::ncsi::getInfo(static_cast<int>(filter),
+                                                   packageInt);
+
+        if (ret == 0)
+        {
+            {
+                objectPath /= "package" + std::to_string(packageInt);
+                this->ncsiPack.insert_or_assign(
+                    packageInt,
+                    std::make_shared<phosphor::network::ncsiPackIntf>(
+                        bus, objectPath.c_str(), *this));
+
+                for (auto& channel : phosphor::network::ncsi::actPackage)
+                {
+                    objectPath /= "channel" + std::to_string(channel);
+
+                    this->ncsiChl.insert_or_assign(
+                        channel,
+                        std::make_shared<phosphor::network::ncsiChlIntf>(
+                            bus, objectPath.c_str(), *this));
+                }
+            }
+            objectPath = objPath + "/ncsi";
+        }
+    }
+}
+
 } // namespace network
 } // namespace phosphor

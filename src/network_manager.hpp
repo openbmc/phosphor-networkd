@@ -2,6 +2,7 @@
 
 #include "dhcp_configuration.hpp"
 #include "ethernet_interface.hpp"
+#include "ncsi_info.hpp"
 #include "routing_table.hpp"
 #include "system_configuration.hpp"
 #include "vlan_interface.hpp"
