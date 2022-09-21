@@ -127,6 +127,7 @@ EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     {
         addStaticNeigh(neigh);
     }
+    addNcsi();
 }
 
 void EthernetInterface::updateInfo(const InterfaceInfo& info, bool skipSignal)
@@ -210,6 +211,44 @@ void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
                                                 bus, std::string_view(objPath),
                                                 *this, *info.addr, *info.mac,
                                                 Neighbor::State::Permanent));
+    }
+}
+
+void EthernetInterface::addNcsi()
+{
+    ncsiPack.clear();
+    ncsiChl.clear();
+
+    std::filesystem::path objectPath;
+    objectPath /= objPath;
+    objectPath /= "ncsi";
+
+    for (int packageInt = 0; packageInt <= 4; packageInt++)
+    {
+        int ret = phosphor::network::ncsi::getInfo(static_cast<int>(ifIdx),
+                                                   packageInt);
+
+        if (ret == 0)
+        {
+            {
+                objectPath /= "package" + std::to_string(packageInt);
+                this->ncsiPack.insert_or_assign(
+                    packageInt,
+                    std::make_shared<phosphor::network::ncsiPackIntf>(
+                        bus, objectPath.c_str(), *this));
+
+                for (auto& channel : phosphor::network::ncsi::actPackage)
+                {
+                    objectPath /= "channel" + std::to_string(channel);
+
+                    this->ncsiChl.insert_or_assign(
+                        channel,
+                        std::make_shared<phosphor::network::ncsiChlIntf>(
+                            bus, objectPath.c_str(), *this));
+                }
+            }
+            objectPath = objPath + "/ncsi";
+        }
     }
 }
 
@@ -931,6 +970,7 @@ void EthernetInterface::VlanProperties::delete_()
     }
 
     eth.get().manager.get().reloadConfigs();
+=======
 }
 
 } // namespace network

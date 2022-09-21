@@ -1,5 +1,7 @@
 #pragma once
 #include "ipaddress.hpp"
+#include "ncsi_info.hpp"
+#include "ncsi_util.hpp"
 #include "neighbor.hpp"
 #include "types.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
@@ -55,6 +57,8 @@ namespace config
 {
 class Parser;
 }
+using NcsiPackMap = std::unordered_map<int, std::shared_ptr<ncsiPackIntf>>;
+using NcsiChlMap = std::unordered_map<int, std::shared_ptr<ncsiChlIntf>>;
 
 /** @class EthernetInterface
  *  @brief OpenBMC Ethernet Interface implementation.
@@ -92,6 +96,11 @@ class EthernetInterface : public Ifaces
 
     void addAddr(const AddressInfo& info);
     void addStaticNeigh(const NeighborInfo& info);
+
+    /* @brief creates the dbus object(NcsiPackage and NcsiChannel) given in the
+     * Ncsi list.
+     */
+    void addNcsi();
 
     /** @brief Updates the interface information based on new InterfaceInfo */
     void updateInfo(const InterfaceInfo& info, bool skipSignal = false);
@@ -239,6 +248,11 @@ class EthernetInterface : public Ifaces
 
     friend class TestEthernetInterface;
     friend class TestNetworkManager;
+
+    /** @brief Persistent map of NcsiPackage dbus objects and their names */
+    NcsiPackMap ncsiPack;
+    /** @brief Persistent map of NcsiChannel dbus objects and their names */
+    NcsiChlMap ncsiChl;
 
   private:
     EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,

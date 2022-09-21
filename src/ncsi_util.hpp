@@ -1,6 +1,8 @@
 #pragma once
 
+#include <cstdint>
 #include <span>
+#include <vector>
 
 namespace phosphor
 {
@@ -11,6 +13,7 @@ namespace ncsi
 
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
+inline std::vector<uint8_t> actPackage;
 
 /* @brief  This function will ask underlying NCSI driver
  *         to send an OEM command (command type 0x50) with

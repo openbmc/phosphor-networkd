@@ -145,6 +145,7 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
                 {
                     std::cout << "Channel Active : " << std::hex << channel
                               << std::endl;
+                    actPackage.push_back(static_cast<uint8_t>(channel));
                 }
                 else
                 {
