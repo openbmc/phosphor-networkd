@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <charconv>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -34,34 +35,22 @@ namespace phosphor
 namespace network
 {
 
+using std::literals::string_view_literals::operator""sv;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 namespace internal
 {
 
-void executeCommandinChildProcess(const char* path, char** args)
+void executeCommandinChildProcess(stdplus::const_zstring path, char** args)
 {
     using namespace std::string_literals;
     pid_t pid = fork();
-    int status{};
 
     if (pid == 0)
     {
-        execv(path, args);
-        auto error = errno;
-        // create the command from var args.
-        std::string command = path + " "s;
-
-        for (int i = 0; args[i]; i++)
-        {
-            command += args[i] + " "s;
-        }
-
-        log<level::ERR>("Couldn't exceute the command",
-                        entry("ERRNO=%d", error),
-                        entry("CMD=%s", command.c_str()));
-        elog<InternalFailure>();
+        execv(path.c_str(), args);
+        exit(255);
     }
     else if (pid < 0)
     {
@@ -71,10 +60,11 @@ void executeCommandinChildProcess(const char* path, char** args)
     }
     else if (pid > 0)
     {
+        int status;
         while (waitpid(pid, &status, 0) == -1)
         {
             if (errno != EINTR)
-            { // Error other than EINTR
+            {
                 status = -1;
                 break;
             }
@@ -82,14 +72,15 @@ void executeCommandinChildProcess(const char* path, char** args)
 
         if (status < 0)
         {
-            std::string command = path + " "s;
-            for (int i = 0; args[i]; i++)
+            fmt::memory_buffer buf;
+            fmt::format_to(fmt::appender(buf), "`{}`", path);
+            for (size_t i = 0; args[i] != nullptr; ++i)
             {
-                command += args[i] + " "s;
+                fmt::format_to(fmt::appender(buf), " `{}`", args[i]);
             }
-
+            buf.push_back('\0');
             log<level::ERR>("Unable to execute the command",
-                            entry("CMD=%s", command.c_str()),
+                            entry("CMD=%s", buf.data()),
                             entry("STATUS=%d", status));
             elog<InternalFailure>();
         }
@@ -236,10 +227,9 @@ std::string toString(const InAddrAny& addr)
     throw std::runtime_error("Invalid addr type");
 }
 
-bool isValidIP(int addressFamily, const std::string& address)
+bool isValidIP(int addressFamily, stdplus::const_zstring address)
 {
     unsigned char buf[sizeof(struct in6_addr)];
-
     return inet_pton(addressFamily, address.c_str(), buf) > 0;
 }
 
@@ -298,7 +288,7 @@ InterfaceList getInterfaces()
     return interfaces;
 }
 
-void deleteInterface(const std::string& intf)
+void deleteInterface(stdplus::const_zstring intf)
 {
     pid_t pid = fork();
     int status{};
@@ -339,22 +329,18 @@ void deleteInterface(const std::string& intf)
     }
 }
 
-std::optional<std::string> interfaceToUbootEthAddr(const char* intf)
+std::optional<std::string> interfaceToUbootEthAddr(std::string_view intf)
 {
-    constexpr char ethPrefix[] = "eth";
-    constexpr size_t ethPrefixLen = sizeof(ethPrefix) - 1;
-    if (strncmp(ethPrefix, intf, ethPrefixLen) != 0)
+    constexpr auto pfx = "eth"sv;
+    if (!intf.starts_with(pfx))
     {
         return std::nullopt;
     }
-    const auto intfSuffix = intf + ethPrefixLen;
-    if (intfSuffix[0] == '\0')
-    {
-        return std::nullopt;
-    }
-    char* end;
-    unsigned long idx = strtoul(intfSuffix, &end, 10);
-    if (end[0] != '\0')
+    intf.remove_prefix(pfx.size());
+    auto last = intf.data() + intf.size();
+    unsigned long idx;
+    auto res = std::from_chars(intf.data(), last, idx);
+    if (res.ec != std::errc() || res.ptr != last)
     {
         return std::nullopt;
     }
@@ -362,7 +348,7 @@ std::optional<std::string> interfaceToUbootEthAddr(const char* intf)
     {
         return "ethaddr";
     }
-    return "eth" + std::to_string(idx) + "addr";
+    return fmt::format(FMT_COMPILE("eth{}addr"), idx);
 }
 
 static std::optional<DHCPVal> systemdParseDHCP(std::string_view str)
@@ -545,23 +531,22 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
     return fromString(std::get<std::string>(value));
 }
 
-ether_addr fromString(const char* str)
+ether_addr fromString(stdplus::zstring_view str)
 {
     std::string genstr;
 
     // MAC address without colons
-    std::string_view strv = str;
-    if (strv.size() == 12 && strv.find(":") == strv.npos)
+    if (str.size() == 12 && str.find(":") == str.npos)
     {
         genstr =
-            fmt::format(FMT_COMPILE("{}:{}:{}:{}:{}:{}"), strv.substr(0, 2),
-                        strv.substr(2, 2), strv.substr(4, 2), strv.substr(6, 2),
-                        strv.substr(8, 2), strv.substr(10, 2));
-        str = genstr.c_str();
+            fmt::format(FMT_COMPILE("{}:{}:{}:{}:{}:{}"), str.substr(0, 2),
+                        str.substr(2, 2), str.substr(4, 2), str.substr(6, 2),
+                        str.substr(8, 2), str.substr(10, 2));
+        str = genstr;
     }
 
     ether_addr addr;
-    if (ether_aton_r(str, &addr) == nullptr)
+    if (ether_aton_r(str.c_str(), &addr) == nullptr)
     {
         throw std::invalid_argument("Invalid MAC Address");
     }
@@ -570,12 +555,8 @@ ether_addr fromString(const char* str)
 
 std::string toString(const ether_addr& mac)
 {
-    char buf[18] = {0};
-    snprintf(buf, 18, "%02x:%02x:%02x:%02x:%02x:%02x", mac.ether_addr_octet[0],
-             mac.ether_addr_octet[1], mac.ether_addr_octet[2],
-             mac.ether_addr_octet[3], mac.ether_addr_octet[4],
-             mac.ether_addr_octet[5]);
-    return buf;
+    return fmt::format(FMT_COMPILE("{:02x}"),
+                       fmt::join(mac.ether_addr_octet, ":"));
 }
 
 bool isEmpty(const ether_addr& mac)

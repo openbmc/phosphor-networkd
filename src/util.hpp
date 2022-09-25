@@ -9,6 +9,8 @@
 #include <filesystem>
 #include <optional>
 #include <sdbusplus/bus.hpp>
+#include <stdplus/zstring.hpp>
+#include <stdplus/zstring_view.hpp>
 #include <string>
 #include <string_view>
 #include <unordered_set>
@@ -40,11 +42,7 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName);
  *  @returns A mac address in network byte order
  *  @throws std::runtime_error for bad mac
  */
-ether_addr fromString(const char* str);
-inline ether_addr fromString(const std::string& str)
-{
-    return fromString(str.c_str());
-}
+ether_addr fromString(stdplus::zstring_view str);
 
 /** @brief Converts the given mac address bytes into a string
  *  @param[in] mac - The mac address
@@ -95,7 +93,7 @@ std::string toString(const struct in6_addr& addr);
  * @param[in] address - IP address.
  * @returns true if it is valid otherwise false.
  */
-bool isValidIP(int addressFamily, const std::string& address);
+bool isValidIP(int addressFamily, stdplus::const_zstring address);
 
 /* @brief checks that the given prefix is valid or not.
  * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
@@ -112,7 +110,7 @@ InterfaceList getInterfaces();
 /** @brief Delete the given interface.
  *  @param[in] intf - interface name.
  */
-void deleteInterface(const std::string& intf);
+void deleteInterface(stdplus::const_zstring intf);
 
 /** @brief Converts the interface name into a u-boot environment
  *         variable that would hold its ethernet address.
@@ -120,7 +118,7 @@ void deleteInterface(const std::string& intf);
  *  @param[in] intf - interface name
  *  @return The name of th environment key
  */
-std::optional<std::string> interfaceToUbootEthAddr(const char* intf);
+std::optional<std::string> interfaceToUbootEthAddr(std::string_view intf);
 
 /** @brief read the IPv6AcceptRA value from the configuration file
  *  @param[in] config - The parsed configuration.
@@ -149,7 +147,7 @@ namespace internal
  * @param[in] path - path of the binary file which needs to be execeuted.
  * @param[in] args - arguments of the command.
  */
-void executeCommandinChildProcess(const char* path, char** args);
+void executeCommandinChildProcess(stdplus::const_zstring path, char** args);
 
 /** @brief Get ignored interfaces from environment */
 std::string_view getIgnoredInterfacesEnv();
@@ -168,7 +166,7 @@ const std::unordered_set<std::string_view>& getIgnoredInterfaces();
  * @param[in] tArgs - arguments of the command.
  */
 template <typename... ArgTypes>
-void execute(const char* path, ArgTypes&&... tArgs)
+void execute(stdplus::const_zstring path, ArgTypes&&... tArgs)
 {
     using expandType = char*[];
 
