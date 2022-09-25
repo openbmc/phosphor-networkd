@@ -1122,7 +1122,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
 
 #ifdef HAVE_UBOOT_ENV
     // Ensure that the valid address is stored in the u-boot-env
-    auto envVar = interfaceToUbootEthAddr(interface.c_str());
+    auto envVar = interfaceToUbootEthAddr(interface);
     if (envVar)
     {
         // Trimming MAC addresses that are out of range. eg: AA:FF:FF:FF:FF:100;
