@@ -25,6 +25,7 @@
 #include <sstream>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/raw.hpp>
+#include <stdplus/zstring.hpp>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -719,10 +720,10 @@ bool EthernetInterface::queryNicEnabled() const
     return *ret;
 }
 
-static void setNICAdminState(const char* intf, bool up)
+static void setNICAdminState(stdplus::const_zstring intf, bool up)
 {
     ifreq ifr = {};
-    std::strncpy(ifr.ifr_name, intf, IF_NAMESIZE - 1);
+    std::strncpy(ifr.ifr_name, intf.data(), IF_NAMESIZE - 1);
     getIFSock().ioctl(SIOCGIFFLAGS, &ifr);
 
     ifr.ifr_flags &= ~IFF_UP;
@@ -743,9 +744,8 @@ bool EthernetInterface::nicEnabled(bool value)
     {
         // We only need to bring down the interface, networkd will always bring
         // up managed interfaces
-        manager.addReloadPreHook([ifname = interfaceName()]() {
-            setNICAdminState(ifname.c_str(), false);
-        });
+        manager.addReloadPreHook(
+            [ifname = interfaceName()]() { setNICAdminState(ifname, false); });
     }
     manager.reloadConfigs();
 
@@ -1115,14 +1115,14 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         writeConfigurationFile();
         manager.addReloadPreHook([interface]() {
             // The MAC and LLADDRs will only update if the NIC is already down
-            setNICAdminState(interface.c_str(), false);
+            setNICAdminState(interface, false);
         });
         manager.reloadConfigs();
     }
 
 #ifdef HAVE_UBOOT_ENV
     // Ensure that the valid address is stored in the u-boot-env
-    auto envVar = interfaceToUbootEthAddr(interface.c_str());
+    auto envVar = interfaceToUbootEthAddr(interface);
     if (envVar)
     {
         // Trimming MAC addresses that are out of range. eg: AA:FF:FF:FF:FF:100;
