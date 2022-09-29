@@ -23,6 +23,8 @@
 #include <sdbusplus/bus/match.hpp>
 #include <sdbusplus/server/manager.hpp>
 #include <sdeventplus/event.hpp>
+#include <sdeventplus/source/signal.hpp>
+#include <stdplus/signal.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 using phosphor::logging::elog;
@@ -255,34 +257,30 @@ void reloadNetworkd()
     }
 }
 
-void initializeTimers()
+void initializeTimers(sdeventplus::Event& event)
 {
-    auto event = sdeventplus::Event::get_default();
     refreshObjectTimer =
         std::make_unique<Timer>(event, std::bind(refreshObjects));
     reloadTimer = std::make_unique<Timer>(event, std::bind(reloadNetworkd));
 }
 
+void termCb(sdeventplus::source::Signal& signal, const struct signalfd_siginfo*)
+{
+    log<level::NOTICE>("Got TERM, exiting");
+    signal.get_event().exit(0);
+}
+
 int main()
 {
-    initializeTimers();
+    auto event = sdeventplus::Event::get_default();
+    stdplus::signal::block(SIGTERM);
+    sdeventplus::source::Signal(event, SIGTERM, termCb).set_floating(true);
+
+    initializeTimers(event);
 
     auto bus = sdbusplus::bus::new_default();
-
-    // Need sd_event to watch for OCC device errors
-    sd_event* event = nullptr;
-    auto r = sd_event_default(&event);
-    if (r < 0)
-    {
-        log<level::ERR>("Error creating a default sd_event handler");
-        return r;
-    }
-
-    EventPtr eventPtr{event};
-    event = nullptr;
-
     // Attach the bus to sd_event to service user requests
-    bus.attach_event(eventPtr.get(), SD_EVENT_PRIORITY_NORMAL);
+    bus.attach_event(event.get(), SD_EVENT_PRIORITY_NORMAL);
 
     // Add sdbusplus Object Manager for the 'root' path of the network manager.
     sdbusplus::server::manager_t objManager(bus, DEFAULT_OBJPATH);
@@ -298,7 +296,7 @@ int main()
     }
 
     // RTNETLINK event handler
-    rtnetlink::Server svr(eventPtr);
+    rtnetlink::Server svr(event);
 
 #ifdef SYNC_MAC_FROM_INVENTORY
     std::ifstream in(configFile);
@@ -312,7 +310,7 @@ int main()
     // fully configured.
     refreshObjectTimer->restartOnce(refreshTimeout);
 
-    return sd_event_loop(eventPtr.get());
+    return event.loop();
 }
 
 } // namespace network
