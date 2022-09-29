@@ -2,7 +2,6 @@
 
 #include <ifaddrs.h>
 #include <netinet/in.h>
-#include <systemd/sd-event.h>
 
 #include <chrono>
 #include <memory>
@@ -38,16 +37,6 @@ struct AddrDeleter
 };
 
 using AddrPtr = std::unique_ptr<ifaddrs, AddrDeleter>;
-
-/* Need a custom deleter for freeing up sd_event */
-struct EventDeleter
-{
-    void operator()(sd_event* event) const
-    {
-        sd_event_unref(event);
-    }
-};
-using EventPtr = std::unique_ptr<sd_event, EventDeleter>;
 
 // Byte representations for common address types in network byte order
 using InAddrAny = std::variant<struct in_addr, struct in6_addr>;
