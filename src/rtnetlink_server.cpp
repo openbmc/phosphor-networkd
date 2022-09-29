@@ -1,17 +1,15 @@
 #include "rtnetlink_server.hpp"
 
+#include "types.hpp"
+
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 #include <netinet/in.h>
 
 #include <memory>
-#include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/ops.hpp>
-#include <stdplus/signal.hpp>
 #include <string_view>
-#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {
@@ -52,16 +50,14 @@ static bool shouldRefresh(const struct nlmsghdr& hdr, std::string_view data)
 }
 
 /* Call Back for the sd event loop */
-static int eventHandler(sd_event_source* /*es*/, int fd, uint32_t /*revents*/,
-                        void* /*userdata*/)
+static void eventHandler(sdeventplus::source::IO&, int fd, uint32_t)
 {
-    std::array<char, phosphor::network::rtnetlink::BUFSIZE> buffer = {};
+    std::array<char, BUFSIZE> buffer = {};
     int len{};
 
     auto netLinkHeader = reinterpret_cast<struct nlmsghdr*>(buffer.data());
 
-    while ((len = recv(fd, netLinkHeader, phosphor::network::rtnetlink::BUFSIZE,
-                       0)) > 0)
+    while ((len = recv(fd, netLinkHeader, buffer.size(), 0)) > 0)
     {
         for (; (NLMSG_OK(netLinkHeader, len)) &&
                (netLinkHeader->nlmsg_type != NLMSG_DONE);
@@ -88,8 +84,6 @@ static int eventHandler(sd_event_source* /*es*/, int fd, uint32_t /*revents*/,
 
         netLinkHeader = reinterpret_cast<struct nlmsghdr*>(buffer.data());
     } // end while
-
-    return 0;
 }
 
 static stdplus::ManagedFd makeSock()
@@ -110,45 +104,9 @@ static stdplus::ManagedFd makeSock()
     return sock;
 }
 
-Server::Server(EventPtr& eventPtr) : sock(makeSock())
+Server::Server(sdeventplus::Event& event) :
+    sock(makeSock()), io(event, sock.get(), EPOLLIN | EPOLLET, eventHandler)
 {
-    using namespace phosphor::logging;
-    using InternalFailure =
-        sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
-    int r{};
-
-    /* Let's make use of the default handler and "floating"
-       reference features of sd_event_add_signal() */
-
-    stdplus::signal::block(SIGTERM);
-    r = sd_event_add_signal(eventPtr.get(), NULL, SIGTERM, NULL, NULL);
-    if (r < 0)
-    {
-        goto finish;
-    }
-
-    stdplus::signal::block(SIGINT);
-    r = sd_event_add_signal(eventPtr.get(), NULL, SIGINT, NULL, NULL);
-    if (r < 0)
-    {
-        goto finish;
-    }
-
-    r = sd_event_add_io(eventPtr.get(), nullptr, sock.get(), EPOLLIN,
-                        eventHandler, nullptr);
-    if (r < 0)
-    {
-        goto finish;
-    }
-
-finish:
-
-    if (r < 0)
-    {
-        log<level::ERR>("Failure Occurred in starting of server:",
-                        entry("ERRNO=%d", errno));
-        elog<InternalFailure>();
-    }
 }
 
 } // namespace rtnetlink

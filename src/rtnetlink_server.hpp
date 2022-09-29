@@ -1,8 +1,12 @@
 #pragma once
-
-#include "types.hpp"
-
+#include <sdeventplus/event.hpp>
+#include <sdeventplus/source/io.hpp>
 #include <stdplus/fd/managed.hpp>
+
+namespace sdeventplus
+{
+class Event;
+}
 
 namespace phosphor
 {
@@ -30,7 +34,7 @@ class Server
      *  @param[in] eventPtr - Unique ptr reference to sd_event.
      *  @param[in] socket - netlink socket.
      */
-    Server(EventPtr& eventPtr);
+    Server(sdeventplus::Event& event);
 
     /** @brief Gets the socket associated with this netlink server */
     inline stdplus::Fd& getSock()
@@ -40,6 +44,7 @@ class Server
 
   private:
     stdplus::ManagedFd sock;
+    sdeventplus::source::IO io;
 };
 
 } // namespace rtnetlink
