@@ -2,12 +2,10 @@
 #include <fmt/core.h>
 #include <net/ethernet.h>
 #include <netinet/in.h>
-#include <systemd/sd-event.h>
 
 #include <algorithm>
 #include <array>
 #include <chrono>
-#include <memory>
 #include <sdeventplus/clock.hpp>
 #include <sdeventplus/utility/timer.hpp>
 #include <string>
@@ -30,16 +28,6 @@ constexpr auto reloadTimeout = 3s;
 // refresh the objets after four seconds as network
 // configuration takes 3-4 sec to reconfigure at most.
 constexpr auto refreshTimeout = 4s;
-
-/* Need a custom deleter for freeing up sd_event */
-struct EventDeleter
-{
-    void operator()(sd_event* event) const
-    {
-        sd_event_unref(event);
-    }
-};
-using EventPtr = std::unique_ptr<sd_event, EventDeleter>;
 
 // Byte representations for common address types in network byte order
 using InAddrAny = std::variant<in_addr, in6_addr>;
