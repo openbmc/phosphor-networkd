@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "082fee81_023eabef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-10-03T14:46:18Z",
+      "side": 1,
+      "message": "DHCP provided settings are read from the leases correct? are you referring to that file ?",
+      "range": {
+        "startLine": 11,
+        "startChar": 29,
+        "endLine": 12,
+        "endChar": 40
+      },
+      "revId": "16183fabaf392bf26e64910438bf729b6ea6c666",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "117ecd19_52177af0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-10-03T14:46:18Z",
+      "side": 1,
+      "message": "Tested by ?\n1. networkd restart\n2. factory reset of the box",
+      "revId": "16183fabaf392bf26e64910438bf729b6ea6c666",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd66acee_02a2f866",
+        "filename": "60-networkd-default.network.in",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-10-03T14:46:18Z",
+      "side": 1,
+      "message": "Why this name is chosen to the file?",
+      "revId": "16183fabaf392bf26e64910438bf729b6ea6c666",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
