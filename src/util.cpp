@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <charconv>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -26,6 +27,7 @@
 #include <stdexcept>
 #include <stdplus/raw.hpp>
 #include <string>
+#include <string_view>
 #include <variant>
 #include <xyz/openbmc_project/Common/error.hpp>
 
@@ -545,27 +547,46 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
     return fromString(std::get<std::string>(value));
 }
 
-ether_addr fromString(const char* str)
+static uint8_t decodeHex(std::string_view str)
 {
-    std::string genstr;
-
-    // MAC address without colons
-    std::string_view strv = str;
-    if (strv.size() == 12 && strv.find(":") == strv.npos)
+    uint8_t ret;
+    auto res = std::from_chars(str.begin(), str.end(), ret, 16);
+    if (res.ptr != str.end() || res.ec != std::errc())
     {
-        genstr =
-            fmt::format(FMT_COMPILE("{}:{}:{}:{}:{}:{}"), strv.substr(0, 2),
-                        strv.substr(2, 2), strv.substr(4, 2), strv.substr(6, 2),
-                        strv.substr(8, 2), strv.substr(10, 2));
-        str = genstr.c_str();
+        throw std::invalid_argument("Not hex");
     }
+    return ret;
+}
 
-    ether_addr addr;
-    if (ether_aton_r(str, &addr) == nullptr)
+ether_addr fromString(std::string_view str)
+{
+    ether_addr ret;
+    if (str.size() == 12 && str.find(":") == str.npos)
     {
-        throw std::invalid_argument("Invalid MAC Address");
+        for (size_t i = 0; i < 6; ++i)
+        {
+            ret.ether_addr_octet[i] = decodeHex(str.substr(i * 2, 2));
+        }
     }
-    return addr;
+    else
+    {
+        for (size_t i = 0; i < 5; ++i)
+        {
+            if (str.empty())
+            {
+                throw std::invalid_argument("Missing mac data");
+            }
+            auto loc = str.find(":");
+            ret.ether_addr_octet[i] = decodeHex(str.substr(0, loc));
+            str.remove_prefix(loc == str.npos ? str.size() : loc + 1);
+        }
+        if (str.empty())
+        {
+            throw std::invalid_argument("Missing mac data");
+        }
+        ret.ether_addr_octet[5] = decodeHex(str);
+    }
+    return ret;
 }
 
 std::string toString(const ether_addr& mac)
