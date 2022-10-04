@@ -147,6 +147,8 @@ TEST(MacFromString, Bad)
 {
     EXPECT_THROW(fromString("0x:00:00:00:00:00"), std::invalid_argument);
     EXPECT_THROW(fromString("00:00:00:00:00"), std::invalid_argument);
+    EXPECT_THROW(fromString("00:0:0:0:0"), std::invalid_argument);
+    EXPECT_THROW(fromString("00:00:00:00:00:00:00"), std::invalid_argument);
     EXPECT_THROW(fromString(""), std::invalid_argument);
     EXPECT_THROW(fromString("123456789XYZ"), std::invalid_argument);
     EXPECT_THROW(fromString("123456789AB"), std::invalid_argument);

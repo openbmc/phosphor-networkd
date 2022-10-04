@@ -10,7 +10,6 @@
 #include <optional>
 #include <sdbusplus/bus.hpp>
 #include <stdplus/zstring.hpp>
-#include <stdplus/zstring_view.hpp>
 #include <string>
 #include <string_view>
 #include <unordered_set>
@@ -42,7 +41,7 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName);
  *  @returns A mac address in network byte order
  *  @throws std::runtime_error for bad mac
  */
-ether_addr fromString(stdplus::zstring_view str);
+ether_addr fromString(std::string_view str);
 
 /** @brief Converts the given mac address bytes into a string
  *  @param[in] mac - The mac address
