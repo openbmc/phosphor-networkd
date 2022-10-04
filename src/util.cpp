@@ -27,6 +27,7 @@
 #include <stdexcept>
 #include <stdplus/raw.hpp>
 #include <string>
+#include <string_view>
 #include <variant>
 #include <xyz/openbmc_project/Common/error.hpp>
 
@@ -531,26 +532,42 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
     return fromString(std::get<std::string>(value));
 }
 
-ether_addr fromString(stdplus::zstring_view str)
+static uint8_t decodeHex(std::string_view str)
 {
-    std::string genstr;
+    uint8_t ret;
+    auto res = std::from_chars(str.begin(), str.end(), ret, 16);
+    if (res.ptr != str.end() || res.ec != std::errc())
+    {
+        throw std::invalid_argument("Not hex");
+    }
+    return ret;
+}
 
-    // MAC address without colons
+ether_addr fromString(std::string_view str)
+{
+    ether_addr ret;
     if (str.size() == 12 && str.find(":") == str.npos)
     {
-        genstr =
-            fmt::format(FMT_COMPILE("{}:{}:{}:{}:{}:{}"), str.substr(0, 2),
-                        str.substr(2, 2), str.substr(4, 2), str.substr(6, 2),
-                        str.substr(8, 2), str.substr(10, 2));
-        str = genstr;
+        for (size_t i = 0; i < 6; ++i)
+        {
+            ret.ether_addr_octet[i] = decodeHex(str.substr(i * 2, 2));
+        }
     }
-
-    ether_addr addr;
-    if (ether_aton_r(str.c_str(), &addr) == nullptr)
+    else
     {
-        throw std::invalid_argument("Invalid MAC Address");
+        for (size_t i = 0; i < 5; ++i)
+        {
+            auto loc = str.find(":");
+            ret.ether_addr_octet[i] = decodeHex(str.substr(0, loc));
+            str.remove_prefix(loc == str.npos ? str.size() : loc + 1);
+            if (str.empty())
+            {
+                throw std::invalid_argument("Missing mac data");
+            }
+        }
+        ret.ether_addr_octet[5] = decodeHex(str);
     }
-    return addr;
+    return ret;
 }
 
 std::string toString(const ether_addr& mac)
