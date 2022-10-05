@@ -1,9 +1,9 @@
 #pragma once
-
 #include "dhcp_configuration.hpp"
 #include "ethernet_interface.hpp"
 #include "routing_table.hpp"
 #include "system_configuration.hpp"
+#include "types.hpp"
 #include "vlan_interface.hpp"
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
 
@@ -12,7 +12,7 @@
 #include <memory>
 #include <sdbusplus/bus.hpp>
 #include <string>
-#include <utility>
+#include <string_view>
 #include <vector>
 #include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
 
@@ -57,7 +57,7 @@ class Manager : public details::VLANCreateIface
      */
     Manager(sdbusplus::bus_t& bus, const char* objPath, const std::string& dir);
 
-    ObjectPath vlan(IntfName interfaceName, uint32_t id) override;
+    ObjectPath vlan(std::string interfaceName, uint32_t id) override;
 
     /** @brief write the network conf file with the in-memory objects.
      */
@@ -143,9 +143,9 @@ class Manager : public details::VLANCreateIface
      * @param[in] intf - the interface name to check.
      * @return true if found, false otherwise.
      */
-    bool hasInterface(const std::string& intf)
+    inline bool hasInterface(std::string_view intf)
     {
-        return (interfaces.find(intf) != interfaces.end());
+        return interfaces.find(intf) != interfaces.end();
     }
 
     /** @brief Get the routing table owned by the manager
@@ -172,7 +172,7 @@ class Manager : public details::VLANCreateIface
 
     /** @brief Persistent map of EthernetInterface dbus objects and their names
      */
-    std::map<IntfName, std::shared_ptr<EthernetInterface>> interfaces;
+    string_umap<std::unique_ptr<EthernetInterface>> interfaces;
 
     /** @brief BMC network reset - resets network configuration for BMC. */
     void reset() override;

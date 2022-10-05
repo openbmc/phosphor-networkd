@@ -9,6 +9,7 @@
 #include <sdeventplus/clock.hpp>
 #include <sdeventplus/utility/timer.hpp>
 #include <string>
+#include <unordered_map>
 #include <variant>
 
 namespace phosphor
@@ -24,8 +25,6 @@ constexpr auto reloadTimeout = 3s;
 // refresh the objets after four seconds as network
 // configuration takes 3-4 sec to reconfigure at most.
 constexpr auto refreshTimeout = 4s;
-
-using IntfName = std::string;
 
 using Addr_t = ifaddrs*;
 
@@ -52,9 +51,17 @@ using EventPtr = std::unique_ptr<sd_event, EventDeleter>;
 // Byte representations for common address types in network byte order
 using InAddrAny = std::variant<struct in_addr, struct in6_addr>;
 
-using InterfaceList = std::vector<IntfName>;
+using InterfaceList = std::vector<std::string>;
 
 using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
+
+struct string_hash : public std::hash<std::string_view>
+{
+    using is_transparent = void;
+};
+template <typename V>
+using string_umap =
+    std::unordered_map<std::string, V, string_hash, std::equal_to<>>;
 
 } // namespace network
 } // namespace phosphor
