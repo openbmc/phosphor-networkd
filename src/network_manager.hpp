@@ -80,7 +80,7 @@ class Manager : public details::VLANCreateIface
 
     /** @brief gets the network conf directory.
      */
-    const fs::path& getConfDir() const
+    inline const fs::path& getConfDir() const
     {
         return confDir;
     }
@@ -88,7 +88,7 @@ class Manager : public details::VLANCreateIface
     /** @brief gets the system conf object.
      *
      */
-    const SystemConfPtr& getSystemConf()
+    inline const SystemConfPtr& getSystemConf()
     {
         return systemConf;
     }
@@ -96,7 +96,7 @@ class Manager : public details::VLANCreateIface
     /** @brief gets the dhcp conf object.
      *
      */
-    const DHCPConfPtr& getDHCPConf()
+    inline const DHCPConfPtr& getDHCPConf()
     {
         return dhcpConf;
     }
@@ -133,7 +133,7 @@ class Manager : public details::VLANCreateIface
      *
      * @return the number of interfaces managed by this manager.
      */
-    int getInterfaceCount()
+    inline size_t getInterfaceCount()
     {
         return interfaces.size();
     }
