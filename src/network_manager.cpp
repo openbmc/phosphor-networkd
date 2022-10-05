@@ -131,7 +131,7 @@ void Manager::createInterfaces()
                 log<level::ERR>(msg.c_str());
                 continue;
             }
-            auto it = interfaces.find(std::string(interfaceName));
+            auto it = interfaces.find(interfaceName);
             if (it == interfaces.end())
             {
                 auto msg = fmt::format("Missing interface({}) for VLAN({}): {}",
@@ -146,7 +146,7 @@ void Manager::createInterfaces()
         objPath /= interface;
         config::Parser config(config::pathForIntfConf(confDir, interface));
 
-        auto intf = std::make_shared<phosphor::network::EthernetInterface>(
+        auto intf = std::make_unique<phosphor::network::EthernetInterface>(
             bus, objPath.string(), config, *this);
 
         intf->createIPAddressObjects();

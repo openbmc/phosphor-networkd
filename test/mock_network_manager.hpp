@@ -13,12 +13,12 @@ namespace network
 void initializeTimers();
 void refreshObjects();
 
-class MockManager : public phosphor::network::Manager
+class MockManager : public Manager
 {
   public:
     MockManager(sdbusplus::bus_t& bus, const char* path,
                 const std::string& dir) :
-        phosphor::network::Manager(bus, path, dir)
+        Manager(bus, path, dir)
     {
     }
 
@@ -33,9 +33,8 @@ class MockManager : public phosphor::network::Manager
             // normal ethernet interface
             objPath /= interface;
             config::Parser config(config::pathForIntfConf(confDir, interface));
-            auto intf =
-                std::make_shared<phosphor::network::MockEthernetInterface>(
-                    bus, objPath.string(), config, *this, true);
+            auto intf = std::make_unique<MockEthernetInterface>(
+                bus, objPath.string(), config, *this, true);
             intf->createIPAddressObjects();
             intf->createStaticNeighborObjects();
             intf->loadNameServers(config);
