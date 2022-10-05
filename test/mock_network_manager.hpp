@@ -26,7 +26,7 @@ class MockManager : public Manager
     {
         // clear all the interfaces first
         interfaces.clear();
-        auto interfaceStrList = getInterfaces();
+        auto interfaceStrList = getSystemInterfaces();
         for (auto& interface : interfaceStrList)
         {
             fs::path objPath = objectPath;

@@ -55,7 +55,7 @@ bool Manager::createDefaultNetworkFiles()
     auto isCreated = false;
     try
     {
-        auto interfaceStrList = getInterfaces();
+        auto interfaceStrList = getSystemInterfaces();
         for (const auto& interface : interfaceStrList)
         {
             // if the interface has '.' in the name, it means that this is a
@@ -106,7 +106,7 @@ void Manager::createInterfaces()
     // clear all the interfaces first
     interfaces.clear();
 
-    auto interfaceStrList = getInterfaces();
+    auto interfaceStrList = getSystemInterfaces();
 
     for (auto& interface : interfaceStrList)
     {
@@ -181,13 +181,6 @@ void Manager::createChildObjects()
 
 ObjectPath Manager::vlan(std::string interfaceName, uint32_t id)
 {
-    if (!hasInterface(interfaceName))
-    {
-        using ResourceErr =
-            phosphor::logging::xyz::openbmc_project::Common::ResourceNotFound;
-        elog<ResourceNotFound>(ResourceErr::RESOURCE(interfaceName.c_str()));
-    }
-
     if (id == 0 || id >= 4095)
     {
         log<level::ERR>("VLAN ID is not valid", entry("VLANID=%u", id));
@@ -196,7 +189,14 @@ ObjectPath Manager::vlan(std::string interfaceName, uint32_t id)
             Argument::ARGUMENT_VALUE(std::to_string(id).c_str()));
     }
 
-    return interfaces[interfaceName]->createVLAN(id);
+    auto it = interfaces.find(interfaceName);
+    if (it == interfaces.end())
+    {
+        using ResourceErr =
+            phosphor::logging::xyz::openbmc_project::Common::ResourceNotFound;
+        elog<ResourceNotFound>(ResourceErr::RESOURCE(interfaceName.c_str()));
+    }
+    return it->second->createVLAN(id);
 }
 
 void Manager::reset()
