@@ -200,9 +200,9 @@ bool isValidPrefix(int family, uint8_t prefix)
         [=]<int f>() noexcept { return isValidPrefix<f>(prefix); }, family);
 }
 
-InterfaceList getInterfaces()
+string_uset getSystemInterfaces()
 {
-    InterfaceList interfaces{};
+    string_uset interfaces;
     struct ifaddrs* ifaddr = nullptr;
 
     // attempt to fill struct with ifaddrs

@@ -148,7 +148,7 @@ bool isValidPrefix(int family, uint8_t prefixLength);
 /** @brief Get all the interfaces from the system.
  *  @returns list of interface names.
  */
-InterfaceList getInterfaces();
+string_uset getSystemInterfaces();
 
 /** @brief Delete the given interface.
  *  @param[in] intf - interface name.
