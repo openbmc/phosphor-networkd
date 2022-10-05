@@ -12,10 +12,9 @@
 #include <net/if.h>
 
 #include <algorithm>
-#include <bitset>
+#include <charconv>
 #include <filesystem>
 #include <fstream>
-#include <map>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <string>
@@ -121,11 +120,26 @@ void Manager::createInterfaces()
         if (index != std::string::npos)
         {
             // it is vlan interface
-            auto interfaceName = interface.substr(0, index);
-            auto vlanid = interface.substr(index + 1);
-            uint32_t vlanInt = std::stoul(vlanid);
-
-            interfaces[interfaceName]->loadVLAN(vlanInt);
+            auto sv = std::string_view(interface);
+            auto interfaceName = sv.substr(0, index);
+            auto vlanStr = sv.substr(index + 1);
+            uint16_t vlanId;
+            auto res = std::from_chars(vlanStr.begin(), vlanStr.end(), vlanId);
+            if (res.ec != std::errc() || res.ptr != vlanStr.end())
+            {
+                auto msg = fmt::format("Invalid VLAN: {}", vlanStr);
+                log<level::ERR>(msg.c_str());
+                continue;
+            }
+            auto it = interfaces.find(std::string(interfaceName));
+            if (it == interfaces.end())
+            {
+                auto msg = fmt::format("Missing interface({}) for VLAN({}): {}",
+                                       interfaceName, vlanId, interface);
+                log<level::ERR>(msg.c_str());
+                continue;
+            }
+            it->second->loadVLAN(vlanId);
             continue;
         }
         // normal ethernet interface
@@ -165,7 +179,7 @@ void Manager::createChildObjects()
         bus, objPath.string(), *this);
 }
 
-ObjectPath Manager::vlan(IntfName interfaceName, uint32_t id)
+ObjectPath Manager::vlan(std::string interfaceName, uint32_t id)
 {
     if (!hasInterface(interfaceName))
     {
