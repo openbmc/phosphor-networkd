@@ -1,5 +1,4 @@
 #pragma once
-#include "config_parser.hpp"
 #include "types.hpp"
 
 #include <netinet/ether.h>
@@ -20,6 +19,10 @@ namespace phosphor
 {
 namespace network
 {
+namespace config
+{
+class Parser;
+}
 
 using EthernetInterfaceIntf =
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface;
