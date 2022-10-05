@@ -3,11 +3,8 @@
 #include "ethernet_interface.hpp"
 
 #include "config_parser.hpp"
-#include "ipaddress.hpp"
-#include "neighbor.hpp"
 #include "network_manager.hpp"
 #include "util.hpp"
-#include "vlan_interface.hpp"
 
 #include <arpa/inet.h>
 #include <fmt/compile.h>
@@ -195,7 +192,7 @@ void EthernetInterface::createIPAddressObjects()
             addressType, address, addr.prefix, gateway, origin);
 
         this->addrs.insert_or_assign(
-            address, std::make_shared<phosphor::network::IPAddress>(
+            address, std::make_unique<IPAddress>(
                          bus, ipAddressObjectPath.c_str(), *this, addressType,
                          address, origin, addr.prefix, gateway));
     }
@@ -218,10 +215,9 @@ void EthernetInterface::createStaticNeighborObjects()
         std::string ip = toString(neighbor.address);
         std::string mac = mac_address::toString(*neighbor.mac);
         std::string objectPath = generateStaticNeighborObjectPath(ip, mac);
-        staticNeighbors.emplace(ip,
-                                std::make_shared<phosphor::network::Neighbor>(
-                                    bus, objectPath.c_str(), *this, ip, mac,
-                                    Neighbor::State::Permanent));
+        staticNeighbors.emplace(
+            ip, std::make_unique<Neighbor>(bus, objectPath.c_str(), *this, ip,
+                                           mac, Neighbor::State::Permanent));
     }
 }
 
@@ -283,10 +279,10 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
 
     std::string objectPath =
         generateObjectPath(protType, ipaddress, prefixLength, gateway, origin);
-    this->addrs.insert_or_assign(ipaddress,
-                                 std::make_shared<phosphor::network::IPAddress>(
-                                     bus, objectPath.c_str(), *this, protType,
-                                     ipaddress, origin, prefixLength, gateway));
+    this->addrs.insert_or_assign(
+        ipaddress,
+        std::make_unique<IPAddress>(bus, objectPath.c_str(), *this, protType,
+                                    ipaddress, origin, prefixLength, gateway));
 
     writeConfigurationFile();
     manager.reloadConfigs();
@@ -314,10 +310,10 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
 
     std::string objectPath =
         generateStaticNeighborObjectPath(ipAddress, macAddress);
-    staticNeighbors.emplace(ipAddress,
-                            std::make_shared<phosphor::network::Neighbor>(
-                                bus, objectPath.c_str(), *this, ipAddress,
-                                macAddress, Neighbor::State::Permanent));
+    staticNeighbors.emplace(
+        ipAddress,
+        std::make_unique<Neighbor>(bus, objectPath.c_str(), *this, ipAddress,
+                                   macAddress, Neighbor::State::Permanent));
 
     writeConfigurationFile();
     manager.reloadConfigs();
