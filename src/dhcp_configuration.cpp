@@ -26,7 +26,7 @@ Configuration::Configuration(sdbusplus::bus_t& bus, const std::string& objPath,
 {
     config::Parser conf;
     {
-        auto interfaceStrList = getInterfaces();
+        auto interfaceStrList = getSystemInterfaces();
         if (!interfaceStrList.empty())
         {
             conf.setFile(config::pathForIntfConf(manager.getConfDir(),

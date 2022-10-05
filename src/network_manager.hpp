@@ -129,23 +129,13 @@ class Manager : public details::VLANCreateIface
      */
     void doReloadConfigs();
 
-    /** @brief Returns the number of interfaces under this manager.
+    /** @brief Get the interfaces owned by the manager
      *
-     * @return the number of interfaces managed by this manager.
+     * @return Interfaces reference.
      */
-    inline size_t getInterfaceCount()
+    inline const auto& getInterfaces() const
     {
-        return interfaces.size();
-    }
-
-    /** @brief Does the requested interface exist under this manager?
-     *
-     * @param[in] intf - the interface name to check.
-     * @return true if found, false otherwise.
-     */
-    inline bool hasInterface(std::string_view intf)
-    {
-        return interfaces.find(intf) != interfaces.end();
+        return interfaces;
     }
 
     /** @brief Get the routing table owned by the manager

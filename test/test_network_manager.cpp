@@ -56,8 +56,9 @@ TEST_F(TestNetworkManager, WithSingleInterface)
     // Now create the interfaces which will call the mocked getifaddrs
     // which returns the above interface detail.
     createInterfaces();
-    EXPECT_EQ(1, manager.getInterfaceCount());
-    EXPECT_EQ(true, manager.hasInterface("igb1"));
+    EXPECT_EQ(1, manager.getInterfaces().size());
+    EXPECT_NE(manager.getInterfaces().end(),
+              manager.getInterfaces().find("igb1"));
 }
 
 // getifaddrs returns two interfaces.
@@ -72,9 +73,11 @@ TEST_F(TestNetworkManager, WithMultipleInterfaces)
     mock_addIP("igb1", "192.0.2.3", "255.255.255.128", IFF_UP | IFF_RUNNING);
 
     createInterfaces();
-    EXPECT_EQ(2, manager.getInterfaceCount());
-    EXPECT_EQ(true, manager.hasInterface("igb0"));
-    EXPECT_EQ(true, manager.hasInterface("igb1"));
+    EXPECT_EQ(2, manager.getInterfaces().size());
+    EXPECT_NE(manager.getInterfaces().end(),
+              manager.getInterfaces().find("igb0"));
+    EXPECT_NE(manager.getInterfaces().end(),
+              manager.getInterfaces().find("igb1"));
 }
 } // namespace network
 } // namespace phosphor

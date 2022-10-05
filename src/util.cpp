@@ -257,9 +257,9 @@ bool isValidPrefix(int addressFamily, uint8_t prefixLength)
     return true;
 }
 
-InterfaceList getInterfaces()
+string_uset getSystemInterfaces()
 {
-    InterfaceList interfaces{};
+    string_uset interfaces;
     struct ifaddrs* ifaddr = nullptr;
 
     // attempt to fill struct with ifaddrs
