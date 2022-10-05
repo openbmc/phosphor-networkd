@@ -1,20 +1,12 @@
 #pragma once
 #include "types.hpp"
 
-#include <net/ethernet.h>
-#include <netinet/in.h>
-#include <unistd.h>
-
-#include <cstring>
-#include <filesystem>
 #include <optional>
-#include <sdbusplus/bus.hpp>
 #include <stdplus/raw.hpp>
 #include <stdplus/zstring.hpp>
 #include <string>
 #include <string_view>
 #include <unordered_set>
-#include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 
 namespace phosphor
 {
@@ -25,17 +17,8 @@ namespace config
 class Parser;
 }
 
-using EthernetInterfaceIntf =
-    sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface;
-
 namespace mac_address
 {
-
-/** @brief gets the MAC address from the Inventory.
- *  @param[in] bus - DBUS Bus Object.
- *  @param[in] intfName - Interface name
- */
-ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName);
 
 /** @brief Determines if the mac address is empty
  *  @param[in] mac - The mac address

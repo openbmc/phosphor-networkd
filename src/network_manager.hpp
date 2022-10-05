@@ -90,20 +90,6 @@ class Manager : public ManagerIface
         return *dhcpConf;
     }
 
-    /** @brief This function gets the MAC address from the VPD and
-     *  sets it on the corresponding ethernet interface during first
-     *  Boot, once it sets the MAC from VPD, it creates a file named
-     *  firstBoot under /var/lib to make sure we dont run this function
-     *  again.
-     *
-     *  @param[in] ethPair - Its a pair of ethernet interface name & the
-     * corresponding MAC Address from the VPD
-     *
-     *  return - NULL
-     */
-    void setFistBootMACOnInterface(
-        const std::pair<std::string, std::string>& ethPair);
-
     /** @brief Arms a timer to tell systemd-network to reload all of the network
      * configurations
      */

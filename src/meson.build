@@ -17,21 +17,20 @@ executable(
   install: true,
   install_dir: get_option('bindir'))
 
-json_dep = declare_dependency()
+main_deps = []
+main_srcs = []
 if get_option('sync-mac')
+  main_srcs += [
+    'inventory_mac.cpp',
+  ]
   # nlohmann_json might not have a pkg-config. It is header only so just make
   # sure we can access the needed symbols from the header.
-  has_json = meson.get_compiler('cpp').has_header_symbol(
-    'nlohmann/json.hpp',
-    'nlohmann::json::string_t',
-    required: false)
-  if not has_json
-    json_dep = dependency('nlohmann_json')
-  endif
+  main_deps += [
+    dependency('nlohmann_json', allow_fallback: true, required: false),
+  ]
 endif
 
 networkd_deps = [
-  json_dep,
   phosphor_dbus_interfaces_dep,
   dependency('phosphor-logging'),
   networkd_dbus_dep,
@@ -74,8 +73,9 @@ networkd_dep = declare_dependency(
 executable(
   'phosphor-network-manager',
   'network_manager_main.cpp',
+  main_srcs,
   implicit_include_directories: false,
-  dependencies: networkd_dep,
+  dependencies: [networkd_dep] + main_deps,
   install: true,
   install_dir: get_option('bindir'))
 

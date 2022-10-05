@@ -11,10 +11,6 @@
 
 #include <cctype>
 #include <charconv>
-#include <fstream>
-#ifdef SYNC_MAC_FROM_INVENTORY
-#include <nlohmann/json.hpp>
-#endif
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <string>
@@ -223,117 +219,6 @@ bool getDHCPProp(const config::Parser& config, std::string_view key)
 
 namespace mac_address
 {
-
-constexpr auto mapperBus = "xyz.openbmc_project.ObjectMapper";
-constexpr auto mapperObj = "/xyz/openbmc_project/object_mapper";
-constexpr auto mapperIntf = "xyz.openbmc_project.ObjectMapper";
-constexpr auto propIntf = "org.freedesktop.DBus.Properties";
-constexpr auto methodGet = "Get";
-constexpr auto configFile = "/usr/share/network/config.json";
-
-using DbusObjectPath = std::string;
-using DbusService = std::string;
-using DbusInterface = std::string;
-using ObjectTree =
-    std::map<DbusObjectPath, std::map<DbusService, std::vector<DbusInterface>>>;
-
-constexpr auto invBus = "xyz.openbmc_project.Inventory.Manager";
-constexpr auto invNetworkIntf =
-    "xyz.openbmc_project.Inventory.Item.NetworkInterface";
-constexpr auto invRoot = "/xyz/openbmc_project/inventory";
-
-ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
-{
-
-    std::string interfaceName = intfName;
-
-#ifdef SYNC_MAC_FROM_INVENTORY
-    // load the config JSON from the Read Only Path
-    std::ifstream in(configFile);
-    nlohmann::json configJson;
-    in >> configJson;
-    interfaceName = configJson[intfName];
-#endif
-
-    std::vector<DbusInterface> interfaces;
-    interfaces.emplace_back(invNetworkIntf);
-
-    auto depth = 0;
-
-    auto mapperCall =
-        bus.new_method_call(mapperBus, mapperObj, mapperIntf, "GetSubTree");
-
-    mapperCall.append(invRoot, depth, interfaces);
-
-    auto mapperReply = bus.call(mapperCall);
-    if (mapperReply.is_method_error())
-    {
-        log<level::ERR>("Error in mapper call");
-        elog<InternalFailure>();
-    }
-
-    ObjectTree objectTree;
-    mapperReply.read(objectTree);
-
-    if (objectTree.empty())
-    {
-        log<level::ERR>("No Object has implemented the interface",
-                        entry("INTERFACE=%s", invNetworkIntf));
-        elog<InternalFailure>();
-    }
-
-    DbusObjectPath objPath;
-    DbusService service;
-
-    if (1 == objectTree.size())
-    {
-        objPath = objectTree.begin()->first;
-        service = objectTree.begin()->second.begin()->first;
-    }
-    else
-    {
-        // If there are more than 2 objects, object path must contain the
-        // interface name
-        for (auto const& object : objectTree)
-        {
-            log<level::INFO>("interface",
-                             entry("INT=%s", interfaceName.c_str()));
-            log<level::INFO>("object", entry("OBJ=%s", object.first.c_str()));
-
-            if (std::string::npos != object.first.find(interfaceName.c_str()))
-            {
-                objPath = object.first;
-                service = object.second.begin()->first;
-                break;
-            }
-        }
-
-        if (objPath.empty())
-        {
-            log<level::ERR>("Can't find the object for the interface",
-                            entry("intfName=%s", interfaceName.c_str()));
-            elog<InternalFailure>();
-        }
-    }
-
-    auto method = bus.new_method_call(service.c_str(), objPath.c_str(),
-                                      propIntf, methodGet);
-
-    method.append(invNetworkIntf, "MACAddress");
-
-    auto reply = bus.call(method);
-    if (reply.is_method_error())
-    {
-        log<level::ERR>("Failed to get MACAddress",
-                        entry("PATH=%s", objPath.c_str()),
-                        entry("INTERFACE=%s", invNetworkIntf));
-        elog<InternalFailure>();
-    }
-
-    std::variant<std::string> value;
-    reply.read(value);
-    return ToAddr<ether_addr>{}(std::get<std::string>(value));
-}
 
 bool isEmpty(const ether_addr& mac)
 {
