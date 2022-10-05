@@ -1,5 +1,3 @@
-#include "config.h"
-
 #include "network_manager.hpp"
 
 #include "config_parser.hpp"
@@ -13,7 +11,6 @@
 #include <net/if.h>
 
 #include <filesystem>
-#include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/message.hpp>
@@ -22,7 +19,6 @@
 constexpr char SYSTEMD_BUSNAME[] = "org.freedesktop.systemd1";
 constexpr char SYSTEMD_PATH[] = "/org/freedesktop/systemd1";
 constexpr char SYSTEMD_INTERFACE[] = "org.freedesktop.systemd1.Manager";
-constexpr auto FirstBootFile = "/var/lib/network/firstBoot_";
 
 constexpr char NETWORKD_BUSNAME[] = "org.freedesktop.network1";
 constexpr char NETWORKD_PATH[] = "/org/freedesktop/network1";
@@ -466,39 +462,6 @@ void Manager::writeToConfigurationFile()
         intf.second->writeConfigurationFile();
     }
 }
-
-#ifdef SYNC_MAC_FROM_INVENTORY
-void Manager::setFistBootMACOnInterface(
-    const std::pair<std::string, std::string>& inventoryEthPair)
-{
-    for (const auto& interface : interfaces)
-    {
-        if (interface.first == inventoryEthPair.first)
-        {
-            auto returnMAC =
-                interface.second->macAddress(inventoryEthPair.second);
-            if (returnMAC == inventoryEthPair.second)
-            {
-                log<level::INFO>("Set the MAC on "),
-                    entry("interface : ", interface.first.c_str()),
-                    entry("MAC : ", inventoryEthPair.second.c_str());
-                std::error_code ec;
-                if (std::filesystem::is_directory("/var/lib/network", ec))
-                {
-                    std::ofstream persistentFile(FirstBootFile +
-                                                 interface.first);
-                }
-                break;
-            }
-            else
-            {
-                log<level::INFO>("MAC is Not Set on ethernet Interface");
-            }
-        }
-    }
-}
-
-#endif
 
 void Manager::reloadConfigs()
 {
