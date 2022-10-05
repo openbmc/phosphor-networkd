@@ -1,9 +1,10 @@
 #pragma once
+#include "ipaddress.hpp"
+#include "neighbor.hpp"
 #include "types.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
 #include "xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp"
 
-#include <map>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <string>
@@ -34,15 +35,11 @@ using MacAddressIntf =
 using ServerList = std::vector<std::string>;
 using ObjectPath = sdbusplus::message::object_path;
 
-class Manager; // forward declaration of network manager.
+class Manager;
 
 class TestEthernetInterface;
 
 class VlanInterface;
-
-class IPAddress;
-
-class Neighbor;
 
 namespace config
 {
@@ -59,10 +56,6 @@ using VlanId = uint32_t;
 using InterfaceName = std::string;
 using InterfaceInfo =
     std::tuple<LinkSpeed, DuplexMode, Autoneg, LinkUp, NICEnabled, MTU>;
-using AddressMap = std::map<std::string, std::shared_ptr<IPAddress>>;
-using NeighborMap = std::map<std::string, std::shared_ptr<Neighbor>>;
-using VlanInterfaceMap =
-    std::map<InterfaceName, std::unique_ptr<VlanInterface>>;
 
 /** @class EthernetInterface
  *  @brief OpenBMC Ethernet Interface implementation.
@@ -146,7 +139,7 @@ class EthernetInterface : public Ifaces
     /* @brief Gets all the ip addresses.
      * @returns the list of ipAddress.
      */
-    const AddressMap& getAddresses() const
+    inline const auto& getAddresses() const
     {
         return addrs;
     }
@@ -154,7 +147,7 @@ class EthernetInterface : public Ifaces
     /* @brief Gets all the static neighbor entries.
      * @returns Static neighbor map.
      */
-    const NeighborMap& getStaticNeighbors() const
+    inline const auto& getStaticNeighbors() const
     {
         return staticNeighbors;
     }
@@ -320,13 +313,13 @@ class EthernetInterface : public Ifaces
     Manager& manager;
 
     /** @brief Persistent map of IPAddress dbus objects and their names */
-    AddressMap addrs;
+    string_umap<std::unique_ptr<IPAddress>> addrs;
 
     /** @brief Persistent map of Neighbor dbus objects and their names */
-    NeighborMap staticNeighbors;
+    string_umap<std::unique_ptr<Neighbor>> staticNeighbors;
 
     /** @brief Persistent map of VLAN interface dbus objects and their names */
-    VlanInterfaceMap vlanInterfaces;
+    string_umap<std::unique_ptr<VlanInterface>> vlanInterfaces;
 
     /** @brief Dbus object path */
     std::string objPath;
