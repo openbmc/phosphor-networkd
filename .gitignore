@@ -1,2 +1,9 @@
 /build*/
-/subprojects/*/
+/subprojects/*
+!/subprojects/googletest.wrap
+!/subprojects/nlohmann_json.wrap
+!/subprojects/phosphor-dbus-interfaces.wrap
+!/subprojects/phosphor-logging.wrap
+!/subprojects/sdbusplus.wrap
+!/subprojects/sdeventplus.wrap
+!/subprojects/stdplus.wrap
