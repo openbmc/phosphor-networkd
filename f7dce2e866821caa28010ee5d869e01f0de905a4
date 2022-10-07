@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b1d8346_ba205a4a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-10-07T08:30:14Z",
+      "side": 1,
+      "message": "Oh, it\u0027s still using getifaddrs...",
+      "revId": "f7dce2e866821caa28010ee5d869e01f0de905a4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
