@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd1f6674_fa1cc03c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-10-07T08:50:18Z",
+      "side": 1,
+      "message": "They are read from the first file in `/etc/systemd/network`, sometimes creating new interfaces on new firmware will create a new \"first\" file that causes networkd to lose all the DHCP settings already configured.",
+      "parentUuid": "082fee81_023eabef",
+      "range": {
+        "startLine": 11,
+        "startChar": 29,
+        "endLine": 12,
+        "endChar": 40
+      },
+      "revId": "16183fabaf392bf26e64910438bf729b6ea6c666",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "117ecd19_52177af0",
@@ -43,6 +67,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "833bd5ed_24f332b5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-10-07T08:50:18Z",
+      "side": 1,
+      "message": "Yeah, I didn\u0027t add this yet because it\u0027s not done.",
+      "parentUuid": "117ecd19_52177af0",
+      "revId": "16183fabaf392bf26e64910438bf729b6ea6c666",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bd66acee_02a2f866",
         "filename": "60-networkd-default.network.in",
         "patchSetId": 2
@@ -54,6 +96,24 @@
       "writtenOn": "2022-10-03T14:46:18Z",
       "side": 1,
       "message": "Why this name is chosen to the file?",
+      "revId": "16183fabaf392bf26e64910438bf729b6ea6c666",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47b2aabe_ec313c5b",
+        "filename": "60-networkd-default.network.in",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-10-07T08:50:18Z",
+      "side": 1,
+      "message": "I should probably call it `phosphor-networkd-default` but the priority is 60 because of the other files that already exist to ensure that we override the systemd-networkd default but not any user provided or phosphor-networkd written files.",
+      "parentUuid": "bd66acee_02a2f866",
       "revId": "16183fabaf392bf26e64910438bf729b6ea6c666",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
