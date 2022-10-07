@@ -107,11 +107,11 @@ std::string toString(const struct in_addr& addr);
 std::string toString(const struct in6_addr& addr);
 
 /* @brief checks that the given ip address valid or not.
- * @param[in] addressFamily - IP address family(AF_INET/AF_INET6).
+ * @param[in] family - IP address family(AF_INET/AF_INET6).
  * @param[in] address - IP address.
  * @returns true if it is valid otherwise false.
  */
-bool isValidIP(int addressFamily, stdplus::const_zstring address);
+bool isValidIP(int family, stdplus::const_zstring address) noexcept;
 
 /* @brief checks that the given prefix is valid or not.
  * @param[in] family - IP address family(AF_INET/AF_INET6).
