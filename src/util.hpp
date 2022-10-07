@@ -81,12 +81,31 @@ template <>
 struct FamilyTraits<AF_INET>
 {
     using addr = in_addr;
+    static constexpr std::size_t strlen = INET_ADDRSTRLEN;
 };
 
 template <>
 struct FamilyTraits<AF_INET6>
 {
     using addr = in6_addr;
+    static constexpr std::size_t strlen = INET6_ADDRSTRLEN;
+};
+
+template <typename Addr>
+struct AddrToFamily
+{
+};
+
+template <>
+struct AddrToFamily<in_addr>
+{
+    static constexpr int value = AF_INET;
+};
+
+template <>
+struct AddrToFamily<in6_addr>
+{
+    static constexpr int value = AF_INET6;
 };
 
 /* @brief converts a sockaddr for the specified address family into
@@ -102,9 +121,9 @@ InAddrAny addrFromBuf(int family, std::string_view buf);
  * @param[in] addr - input ip address to convert.
  * @returns String representation of the ip.
  */
+template <typename Addr>
+std::string toString(const Addr& addr);
 std::string toString(const InAddrAny& addr);
-std::string toString(const struct in_addr& addr);
-std::string toString(const struct in6_addr& addr);
 
 /* @brief checks that the given ip address valid or not.
  * @param[in] family - IP address family(AF_INET/AF_INET6).

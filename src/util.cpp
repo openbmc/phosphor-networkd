@@ -164,44 +164,23 @@ InAddrAny addrFromBuf(int family, std::string_view buf)
         [=]<int f>() -> InAddrAny { return addrFromBuf<f>(buf); }, family);
 }
 
-std::string toString(const struct in_addr& addr)
+template <typename Addr>
+std::string toString(const Addr& addr)
 {
-    std::string ip(INET_ADDRSTRLEN, '\0');
-    if (inet_ntop(AF_INET, &addr, ip.data(), ip.size()) == nullptr)
+    static constexpr int family = AddrToFamily<Addr>::value;
+    std::string ret(FamilyTraits<family>::strlen, '\0');
+    if (inet_ntop(family, &addr, ret.data(), ret.size()) == nullptr)
     {
-        throw std::runtime_error("Failed to convert IP4 to string");
+        throw std::runtime_error("Failed to convert IP to string");
     }
 
-    ip.resize(strlen(ip.c_str()));
-    return ip;
-}
-
-std::string toString(const struct in6_addr& addr)
-{
-    std::string ip(INET6_ADDRSTRLEN, '\0');
-    if (inet_ntop(AF_INET6, &addr, ip.data(), ip.size()) == nullptr)
-    {
-        throw std::runtime_error("Failed to convert IP6 to string");
-    }
-
-    ip.resize(strlen(ip.c_str()));
-    return ip;
+    ret.resize(strlen(ret.c_str()));
+    return ret;
 }
 
 std::string toString(const InAddrAny& addr)
 {
-    if (std::holds_alternative<struct in_addr>(addr))
-    {
-        const auto& v = std::get<struct in_addr>(addr);
-        return toString(v);
-    }
-    else if (std::holds_alternative<struct in6_addr>(addr))
-    {
-        const auto& v = std::get<struct in6_addr>(addr);
-        return toString(v);
-    }
-
-    throw std::runtime_error("Invalid addr type");
+    return std::visit([](auto&& a) { return toString(a); }, addr);
 }
 
 bool isValidIP(int family, stdplus::const_zstring address) noexcept
