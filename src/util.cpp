@@ -151,30 +151,6 @@ constexpr auto familyVisit(auto&& visitor, int family)
     throw std::invalid_argument("Invalid addr family");
 }
 
-std::string toMask(int addressFamily, uint8_t prefix)
-{
-    if (addressFamily == AF_INET6)
-    {
-        // TODO:- conversion for v6
-        return "";
-    }
-
-    if (prefix < 1 || prefix > 30)
-    {
-        log<level::ERR>("Invalid Prefix", entry("PREFIX=%d", prefix));
-        return "";
-    }
-    /* Create the netmask from the number of bits */
-    unsigned long mask = 0;
-    for (auto i = 0; i < prefix; i++)
-    {
-        mask |= 1 << (31 - i);
-    }
-    struct in_addr netmask;
-    netmask.s_addr = htonl(mask);
-    return inet_ntoa(netmask);
-}
-
 InAddrAny addrFromBuf(int addressFamily, std::string_view buf)
 {
     if (addressFamily == AF_INET)
