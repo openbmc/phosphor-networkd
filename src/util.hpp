@@ -91,10 +91,12 @@ struct FamilyTraits<AF_INET6>
 
 /* @brief converts a sockaddr for the specified address family into
  *        a type_safe InAddrAny.
- * @param[in] addressFamily - The address family of the buf
+ * @param[in] family - The address family of the buf
  * @param[in] buf - The network byte order address
  */
-InAddrAny addrFromBuf(int addressFamily, std::string_view buf);
+template <int family>
+typename FamilyTraits<family>::addr addrFromBuf(std::string_view buf);
+InAddrAny addrFromBuf(int family, std::string_view buf);
 
 /* @brief converts the ip bytes into a string representation
  * @param[in] addr - input ip address to convert.
