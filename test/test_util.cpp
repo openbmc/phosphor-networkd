@@ -43,7 +43,7 @@ TEST_F(TestUtil, AddrFromBuf)
     EXPECT_EQ(0, memcmp(&ip1, &std::get<struct in_addr>(res1), sizeof(ip1)));
     EXPECT_THROW(addrFromBuf(AF_INET, tooSmall), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_INET, tooLarge), std::runtime_error);
-    EXPECT_THROW(addrFromBuf(AF_UNSPEC, buf1), std::runtime_error);
+    EXPECT_THROW(addrFromBuf(AF_UNSPEC, buf1), std::invalid_argument);
 
     struct in6_addr ip2;
     EXPECT_EQ(1, inet_pton(AF_INET6, "fdd8:b5ad:9d93:94ee::2:1", &ip2));
@@ -52,7 +52,7 @@ TEST_F(TestUtil, AddrFromBuf)
     EXPECT_EQ(0, memcmp(&ip2, &std::get<struct in6_addr>(res2), sizeof(ip2)));
     EXPECT_THROW(addrFromBuf(AF_INET6, tooSmall), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_INET6, tooLarge), std::runtime_error);
-    EXPECT_THROW(addrFromBuf(AF_UNSPEC, buf2), std::runtime_error);
+    EXPECT_THROW(addrFromBuf(AF_UNSPEC, buf2), std::invalid_argument);
 }
 
 TEST_F(TestUtil, IpToString)
