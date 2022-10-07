@@ -204,10 +204,10 @@ std::string toString(const InAddrAny& addr)
     throw std::runtime_error("Invalid addr type");
 }
 
-bool isValidIP(int addressFamily, stdplus::const_zstring address)
+bool isValidIP(int family, stdplus::const_zstring address) noexcept
 {
     unsigned char buf[sizeof(struct in6_addr)];
-    return inet_pton(addressFamily, address.c_str(), buf) > 0;
+    return inet_pton(family, address.c_str(), buf) > 0;
 }
 
 bool isValidPrefix(int family, uint8_t prefix)
