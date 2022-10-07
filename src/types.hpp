@@ -9,6 +9,7 @@
 #include <sdeventplus/clock.hpp>
 #include <sdeventplus/utility/timer.hpp>
 #include <string>
+#include <unordered_set>
 #include <variant>
 
 namespace phosphor
@@ -52,7 +53,7 @@ using EventPtr = std::unique_ptr<sd_event, EventDeleter>;
 // Byte representations for common address types in network byte order
 using InAddrAny = std::variant<struct in_addr, struct in6_addr>;
 
-using InterfaceList = std::vector<IntfName>;
+using InterfaceList = std::unordered_set<IntfName>;
 
 using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
 

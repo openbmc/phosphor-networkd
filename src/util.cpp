@@ -283,7 +283,7 @@ InterfaceList getInterfaces()
         {
             continue;
         }
-        interfaces.emplace_back(ifa->ifa_name);
+        interfaces.emplace(ifa->ifa_name);
     }
     return interfaces;
 }
