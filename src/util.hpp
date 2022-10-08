@@ -131,6 +131,7 @@ std::string toString(const InAddrAny& addr);
  * @returns true if it is valid otherwise false.
  */
 bool isValidIP(int family, stdplus::const_zstring address) noexcept;
+bool isValidIP(stdplus::const_zstring address) noexcept;
 
 /* @brief checks that the given prefix is valid or not.
  * @param[in] family - IP address family(AF_INET/AF_INET6).

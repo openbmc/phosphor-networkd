@@ -70,41 +70,32 @@ TEST_F(TestUtil, IpToString)
 
 TEST_F(TestUtil, IpValidation)
 {
-    std::string ipaddress = "0.0.0.0";
-    EXPECT_EQ(true, isValidIP(AF_INET, ipaddress));
+    EXPECT_TRUE(isValidIP(AF_INET, "0.0.0.0"));
+    EXPECT_TRUE(isValidIP("0.0.0.0"));
 
-    ipaddress = "9.3.185.83";
-    EXPECT_EQ(true, isValidIP(AF_INET, ipaddress));
+    EXPECT_TRUE(isValidIP(AF_INET, "9.3.185.83"));
 
-    ipaddress = "9.3.185.a";
-    EXPECT_EQ(false, isValidIP(AF_INET, ipaddress));
+    EXPECT_FALSE(isValidIP(AF_INET, "9.3.185.a"));
+    EXPECT_FALSE(isValidIP("9.3.185.a"));
 
-    ipaddress = "9.3.a.83";
-    EXPECT_EQ(false, isValidIP(AF_INET, ipaddress));
+    EXPECT_FALSE(isValidIP(AF_INET, "9.3.a.83"));
 
-    ipaddress = "x.x.x.x";
-    EXPECT_EQ(false, isValidIP(AF_INET, ipaddress));
+    EXPECT_FALSE(isValidIP(AF_INET, "x.x.x.x"));
 
-    ipaddress = "0:0:0:0:0:0:0:0";
-    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+    EXPECT_TRUE(isValidIP(AF_INET6, "0:0:0:0:0:0:0:0"));
+    EXPECT_TRUE(isValidIP("0:0:0:0:0:0:0:0"));
 
-    ipaddress = "1:0:0:0:0:0:0:8";
-    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+    EXPECT_TRUE(isValidIP(AF_INET6, "1:0:0:0:0:0:0:8"));
 
-    ipaddress = "1::8";
-    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+    EXPECT_TRUE(isValidIP(AF_INET6, "1::8"));
 
-    ipaddress = "0:0:0:0:0:FFFF:204.152.189.116";
-    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+    EXPECT_TRUE(isValidIP(AF_INET6, "0:0:0:0:0:FFFF:204.152.189.116"));
 
-    ipaddress = "::ffff:204.152.189.116";
-    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+    EXPECT_TRUE(isValidIP(AF_INET6, "::ffff:204.152.189.116"));
 
-    ipaddress = "a:0:0:0:0:FFFF:204.152.189.116";
-    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+    EXPECT_TRUE(isValidIP(AF_INET6, "a:0:0:0:0:FFFF:204.152.189.116"));
 
-    ipaddress = "1::8";
-    EXPECT_EQ(true, isValidIP(AF_INET6, ipaddress));
+    EXPECT_TRUE(isValidIP(AF_INET6, "1::8"));
 }
 
 TEST_F(TestUtil, PrefixValidation)
