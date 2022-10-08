@@ -27,7 +27,6 @@
 #include <stdplus/raw.hpp>
 #include <stdplus/zstring.hpp>
 #include <string>
-#include <string_view>
 #include <unordered_map>
 #include <variant>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -387,11 +386,8 @@ std::string
                         entry("ERROR=%s", e.what()));
         elog<InternalFailure>();
     }
-
-    static_assert(sizeof(ifr.ifr_hwaddr.sa_data) >= sizeof(ether_addr));
-    std::string_view hwaddr(reinterpret_cast<char*>(ifr.ifr_hwaddr.sa_data),
-                            sizeof(ifr.ifr_hwaddr.sa_data));
-    return mac_address::toString(stdplus::raw::copyFrom<ether_addr>(hwaddr));
+    return mac_address::toString(
+        stdplus::raw::refFrom<ether_addr>(ifr.ifr_hwaddr.sa_data));
 }
 
 std::string EthernetInterface::generateId(const std::string& ipaddress,
