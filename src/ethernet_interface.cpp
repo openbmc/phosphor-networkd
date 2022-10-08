@@ -297,7 +297,7 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
 ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                                        std::string macAddress)
 {
-    if (!isValidIP(AF_INET, ipAddress) && !isValidIP(AF_INET6, ipAddress))
+    if (!isValidIP(ipAddress))
     {
         log<level::ERR>("Not a valid IP address",
                         entry("ADDRESS=%s", ipAddress.c_str()));
@@ -773,8 +773,7 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
 {
     for (const auto& nameserverip : value)
     {
-        if (!isValidIP(AF_INET, nameserverip) &&
-            !isValidIP(AF_INET6, nameserverip))
+        if (!isValidIP(nameserverip))
         {
             log<level::ERR>("Not a valid IP address"),
                 entry("ADDRESS=%s", nameserverip.c_str());

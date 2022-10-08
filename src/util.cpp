@@ -189,6 +189,11 @@ bool isValidIP(int family, stdplus::const_zstring address) noexcept
     return inet_pton(family, address.c_str(), buf) > 0;
 }
 
+bool isValidIP(stdplus::const_zstring address) noexcept
+{
+    return isValidIP(AF_INET, address) || isValidIP(AF_INET6, address);
+}
+
 bool isValidPrefix(int family, uint8_t prefix)
 {
     return familyVisit(
