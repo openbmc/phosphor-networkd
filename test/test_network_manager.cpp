@@ -50,7 +50,6 @@ TEST_F(TestNetworkManager, WithSingleInterface)
 
     // Adds the following ip in the getifaddrs list.
     mock_addIF("igb1", /*idx=*/2);
-    mock_addIP("igb1", "192.0.2.3", "255.255.255.128");
 
     // Now create the interfaces which will call the mocked getifaddrs
     // which returns the above interface detail.
@@ -64,9 +63,7 @@ TEST_F(TestNetworkManager, WithMultipleInterfaces)
     mock_clear();
 
     mock_addIF("igb0", /*idx=*/1);
-    mock_addIP("igb0", "192.0.2.2", "255.255.255.128");
     mock_addIF("igb1", /*idx=*/2);
-    mock_addIP("igb1", "192.0.2.3", "255.255.255.128");
 
     createInterfaces();
     EXPECT_THAT(manager.getInterfaces(),

@@ -25,20 +25,18 @@ class MockManager : public Manager
 
     void createInterfaces() override
     {
-        // clear all the interfaces first
         interfaces.clear();
-        auto interfaceStrList = system::getInterfaces();
-        for (auto& interface : interfaceStrList)
+        for (auto& interface : system::getInterfaces())
         {
-            // normal ethernet interface
-            config::Parser config(config::pathForIntfConf(confDir, interface));
+            config::Parser config(
+                config::pathForIntfConf(confDir, *interface.name));
             auto intf = std::make_unique<MockEthernetInterface>(
-                bus, *this, getInterfaceInfo(interface), objectPath, config);
+                bus, *this, interface, objectPath, config);
             intf->createIPAddressObjects();
             intf->createStaticNeighborObjects();
             intf->loadNameServers(config);
             this->interfaces.emplace(
-                std::make_pair(std::move(interface), std::move(intf)));
+                std::make_pair(std::move(*interface.name), std::move(intf)));
         }
     }
 

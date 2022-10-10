@@ -3,6 +3,7 @@
 #include "config_parser.hpp"
 #include "ethernet_interface.hpp"
 #include "network_manager.hpp"
+#include "system_queries.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
@@ -18,7 +19,7 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 VlanInterface::VlanInterface(sdbusplus::bus_t& bus, Manager& manager,
-                             const InterfaceInfo& info,
+                             const system::InterfaceInfo& info,
                              std::string_view objRoot,
                              const config::Parser& config, uint16_t vlanID,
                              EthernetInterface& parent, bool emitSignal,
@@ -28,7 +29,7 @@ VlanInterface::VlanInterface(sdbusplus::bus_t& bus, Manager& manager,
     parentInterface(parent)
 {
     id(vlanID);
-    VlanIface::interfaceName(info.name);
+    VlanIface::interfaceName(*info.name);
     emit_object_added();
 }
 

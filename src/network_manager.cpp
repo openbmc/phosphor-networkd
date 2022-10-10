@@ -48,25 +48,26 @@ bool Manager::createDefaultNetworkFiles()
     auto isCreated = false;
     try
     {
-        auto interfaceStrList = system::getInterfaces();
-        for (const auto& interface : interfaceStrList)
+        for (const auto& interface : system::getInterfaces())
         {
             // if the interface has '.' in the name, it means that this is a
             // VLAN - don't create the network file.
-            if (interface.find(".") != std::string::npos)
+            if (interface.name->find(".") != std::string::npos)
             {
                 continue;
             }
 
-            fs::path filePath = config::pathForIntfConf(confDir, interface);
+            fs::path filePath =
+                config::pathForIntfConf(confDir, *interface.name);
 
             // create the interface specific network file
             // if not existing.
             if (!fs::is_regular_file(filePath))
             {
-                bmc::writeDHCPDefault(filePath, interface);
-                log<level::INFO>("Created the default network file.",
-                                 entry("INTERFACE=%s", interface.c_str()));
+                bmc::writeDHCPDefault(filePath, *interface.name);
+                log<level::INFO>(
+                    "Created the default network file.",
+                    entry("INTERFACE=%s", interface.name->c_str()));
                 isCreated = true;
             }
         }
@@ -98,19 +99,17 @@ void Manager::createInterfaces()
 {
     // clear all the interfaces first
     interfaces.clear();
-    auto interfaceStrList = system::getInterfaces();
-    for (auto& interface : interfaceStrList)
+    for (auto& interface : system::getInterfaces())
     {
-        auto index = interface.find(".");
-
         // interface can be of vlan type or normal ethernet interface.
         // vlan interface looks like "interface.vlanid",so here by looking
         // at the interface name we decide that we need
         // to create the vlaninterface or normal physical interface.
-        if (index != std::string::npos)
+        if (const auto index = interface.name->find(".");
+            index != std::string::npos)
         {
             // it is vlan interface
-            auto sv = std::string_view(interface);
+            auto sv = std::string_view(*interface.name);
             auto interfaceName = sv.substr(0, index);
             auto vlanStr = sv.substr(index + 1);
             uint16_t vlanId;
@@ -125,24 +124,22 @@ void Manager::createInterfaces()
             if (it == interfaces.end())
             {
                 auto msg = fmt::format("Missing interface({}) for VLAN({}): {}",
-                                       interfaceName, vlanId, interface);
+                                       interfaceName, vlanId, *interface.name);
                 log<level::ERR>(msg.c_str());
                 continue;
             }
-            it->second->loadVLAN(objectPath, vlanId);
+            it->second->loadVLAN(objectPath, vlanId, std::move(interface));
             continue;
         }
-        // normal ethernet interface
-        config::Parser config(config::pathForIntfConf(confDir, interface));
 
+        config::Parser config(
+            config::pathForIntfConf(confDir, *interface.name));
         auto intf = std::make_unique<phosphor::network::EthernetInterface>(
-            bus, *this, getInterfaceInfo(interface), objectPath, config);
-
+            bus, *this, interface, objectPath, config);
         intf->createIPAddressObjects();
         intf->createStaticNeighborObjects();
         intf->loadNameServers(config);
-
-        this->interfaces.emplace(std::move(interface), std::move(intf));
+        this->interfaces.emplace(std::move(*interface.name), std::move(intf));
     }
 }
 
