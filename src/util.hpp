@@ -1,7 +1,7 @@
 #pragma once
 #include "types.hpp"
 
-#include <netinet/ether.h>
+#include <net/ethernet.h>
 #include <netinet/in.h>
 #include <unistd.h>
 
