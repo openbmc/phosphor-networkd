@@ -10,7 +10,6 @@
 #include <fmt/format.h>
 #include <sys/wait.h>
 
-#include <algorithm>
 #include <cctype>
 #include <charconv>
 #include <fstream>
