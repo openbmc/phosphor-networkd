@@ -1,8 +1,8 @@
+#include "system_queries.hpp"
 #include "util.hpp"
 
 #include <arpa/inet.h>
 #include <dlfcn.h>
-#include <ifaddrs.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 #include <net/ethernet.h>
@@ -24,46 +24,15 @@
 #include <string_view>
 #include <vector>
 
-#define MAX_IFADDRS 5
-
-int debugging = false;
-
-/* Data for mocking getifaddrs */
-struct ifaddr_storage
-{
-    struct ifaddrs ifaddr;
-    struct sockaddr_storage addr;
-    struct sockaddr_storage mask;
-    struct sockaddr_storage bcast;
-} mock_ifaddr_storage[MAX_IFADDRS];
-
-struct ifaddrs* mock_ifaddrs = nullptr;
-
-int ifaddr_count = 0;
-
-/* Stub library functions */
-void freeifaddrs(ifaddrs* /*ifp*/)
-{
-    return;
-}
-
 std::map<int, std::queue<std::string>> mock_rtnetlinks;
 
-struct MockInfo
-{
-    unsigned idx;
-    unsigned flags;
-    std::optional<ether_addr> mac;
-    std::optional<unsigned> mtu;
-};
+using phosphor::network::system::InterfaceInfo;
 
-std::map<std::string, MockInfo> mock_if;
+std::map<std::string, InterfaceInfo> mock_if;
 std::map<int, std::string> mock_if_indextoname;
 
 void mock_clear()
 {
-    mock_ifaddrs = nullptr;
-    ifaddr_count = 0;
     mock_rtnetlinks.clear();
     mock_if.clear();
     mock_if_indextoname.clear();
@@ -78,38 +47,10 @@ void mock_addIF(const std::string& name, unsigned idx, unsigned flags,
     }
 
     mock_if.emplace(
-        name, MockInfo{.idx = idx, .flags = flags, .mac = mac, .mtu = mtu});
+        name,
+        InterfaceInfo{
+            .idx = idx, .flags = flags, .name = name, .mac = mac, .mtu = mtu});
     mock_if_indextoname.emplace(idx, name);
-}
-
-void mock_addIP(const char* name, const char* addr, const char* mask)
-{
-    struct ifaddrs* ifaddr = &mock_ifaddr_storage[ifaddr_count].ifaddr;
-
-    struct sockaddr_in* in =
-        reinterpret_cast<sockaddr_in*>(&mock_ifaddr_storage[ifaddr_count].addr);
-    struct sockaddr_in* mask_in =
-        reinterpret_cast<sockaddr_in*>(&mock_ifaddr_storage[ifaddr_count].mask);
-
-    in->sin_family = AF_INET;
-    in->sin_port = 0;
-    in->sin_addr.s_addr = inet_addr(addr);
-
-    mask_in->sin_family = AF_INET;
-    mask_in->sin_port = 0;
-    mask_in->sin_addr.s_addr = inet_addr(mask);
-
-    ifaddr->ifa_next = nullptr;
-    ifaddr->ifa_name = const_cast<char*>(name);
-    ifaddr->ifa_flags = 0;
-    ifaddr->ifa_addr = reinterpret_cast<struct sockaddr*>(in);
-    ifaddr->ifa_netmask = reinterpret_cast<struct sockaddr*>(mask_in);
-    ifaddr->ifa_data = nullptr;
-
-    if (ifaddr_count > 0)
-        mock_ifaddr_storage[ifaddr_count - 1].ifaddr.ifa_next = ifaddr;
-    ifaddr_count++;
-    mock_ifaddrs = &mock_ifaddr_storage[0].ifaddr;
 }
 
 void validateMsgHdr(const struct msghdr* msg)
@@ -132,36 +73,70 @@ void validateMsgHdr(const struct msghdr* msg)
     }
 }
 
+void appendRTAttr(std::string& msgBuf, unsigned short type,
+                  std::string_view data)
+{
+    const auto rta_begin = msgBuf.size();
+    msgBuf.append(RTA_SPACE(data.size()), '\0');
+    auto& rta = *reinterpret_cast<rtattr*>(msgBuf.data() + rta_begin);
+    rta.rta_len = RTA_LENGTH(data.size());
+    rta.rta_type = type;
+    std::copy(data.begin(), data.end(),
+              msgBuf.data() + rta_begin + RTA_LENGTH(0));
+}
+
 ssize_t sendmsg_link_dump(std::queue<std::string>& msgs, std::string_view in)
 {
-    const ssize_t ret = in.size();
-    const auto& hdrin = stdplus::raw::copyFrom<nlmsghdr>(in);
-    if (hdrin.nlmsg_type != RTM_GETLINK)
+    if (const auto& hdrin = *reinterpret_cast<const nlmsghdr*>(in.data());
+        hdrin.nlmsg_type != RTM_GETLINK)
     {
         return 0;
     }
 
+    std::string msgBuf;
+    msgBuf.reserve(8192);
     for (const auto& [name, i] : mock_if)
     {
-        ifinfomsg info{};
-        info.ifi_index = i.idx;
-        info.ifi_flags = i.flags;
-        nlmsghdr hdr{};
-        hdr.nlmsg_len = NLMSG_LENGTH(sizeof(info));
+        if (msgBuf.size() > 4096)
+        {
+            msgs.emplace(std::move(msgBuf));
+        }
+        const auto nlbegin = msgBuf.size();
+        msgBuf.append(NLMSG_SPACE(sizeof(ifinfomsg)), '\0');
+        {
+            auto& info = *reinterpret_cast<ifinfomsg*>(msgBuf.data() + nlbegin +
+                                                       NLMSG_HDRLEN);
+            info.ifi_index = i.idx;
+            info.ifi_flags = i.flags;
+        }
+        if (i.name)
+        {
+            appendRTAttr(msgBuf, IFLA_IFNAME, {name.data(), name.size() + 1});
+        }
+        if (i.mac)
+        {
+            appendRTAttr(msgBuf, IFLA_ADDRESS,
+                         stdplus::raw::asView<char>(*i.mac));
+        }
+        if (i.mtu)
+        {
+            appendRTAttr(msgBuf, IFLA_MTU, stdplus::raw::asView<char>(*i.mtu));
+        }
+        auto& hdr = *reinterpret_cast<nlmsghdr*>(msgBuf.data() + nlbegin);
+        hdr.nlmsg_len = msgBuf.size() - nlbegin;
         hdr.nlmsg_type = RTM_NEWLINK;
         hdr.nlmsg_flags = NLM_F_MULTI;
-        auto& out = msgs.emplace(hdr.nlmsg_len, '\0');
-        memcpy(out.data(), &hdr, sizeof(hdr));
-        memcpy(NLMSG_DATA(out.data()), &info, sizeof(info));
+        msgBuf.resize(NLMSG_ALIGN(msgBuf.size()), '\0');
     }
-
-    nlmsghdr hdr{};
+    const auto nlbegin = msgBuf.size();
+    msgBuf.append(NLMSG_SPACE(0), '\0');
+    auto& hdr = *reinterpret_cast<nlmsghdr*>(msgBuf.data() + nlbegin);
     hdr.nlmsg_len = NLMSG_LENGTH(0);
     hdr.nlmsg_type = NLMSG_DONE;
     hdr.nlmsg_flags = NLM_F_MULTI;
-    auto& out = msgs.emplace(hdr.nlmsg_len, '\0');
-    memcpy(out.data(), &hdr, sizeof(hdr));
-    return ret;
+
+    msgs.emplace(std::move(msgBuf));
+    return in.size();
 }
 
 ssize_t sendmsg_ack(std::queue<std::string>& msgs, std::string_view in)
@@ -177,23 +152,6 @@ ssize_t sendmsg_ack(std::queue<std::string>& msgs, std::string_view in)
 }
 
 extern "C" {
-
-int getifaddrs(ifaddrs** ifap)
-{
-    *ifap = mock_ifaddrs;
-    return 0;
-}
-
-unsigned if_nametoindex(const char* ifname)
-{
-    auto it = mock_if.find(ifname);
-    if (it == mock_if.end())
-    {
-        errno = ENXIO;
-        return 0;
-    }
-    return it->second.idx;
-}
 
 char* if_indextoname(unsigned ifindex, char* ifname)
 {
@@ -214,24 +172,7 @@ int ioctl(int fd, unsigned long int request, ...)
     va_end(vl);
 
     auto req = reinterpret_cast<ifreq*>(data);
-    if (request == SIOCGIFHWADDR)
-    {
-        auto it = mock_if.find(req->ifr_name);
-        if (it == mock_if.end())
-        {
-            errno = ENXIO;
-            return -1;
-        }
-        if (!it->second.mac)
-        {
-            errno = EOPNOTSUPP;
-            return -1;
-        }
-        std::memcpy(req->ifr_hwaddr.sa_data, &*it->second.mac,
-                    sizeof(*it->second.mac));
-        return 0;
-    }
-    else if (request == SIOCGIFFLAGS)
+    if (request == SIOCGIFFLAGS)
     {
         auto it = mock_if.find(req->ifr_name);
         if (it == mock_if.end())

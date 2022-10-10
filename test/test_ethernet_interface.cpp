@@ -2,6 +2,7 @@
 #include "ipaddress.hpp"
 #include "mock_network_manager.hpp"
 #include "mock_syscall.hpp"
+#include "system_queries.hpp"
 #include "util.hpp"
 
 #include <arpa/inet.h>
@@ -44,7 +45,8 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     {
         mock_clear();
         mock_addIF("test0", /*idx=*/1);
-        return {bus, manager, getInterfaceInfo("test0"),
+        return {bus, manager,
+                system::InterfaceInfo{.idx = 1, .flags = 0, .name = "test0"},
                 "/xyz/openbmc_test/network"sv, config::Parser()};
     }
 
@@ -101,7 +103,12 @@ TEST_F(TestEthernetInterface, Fields)
     constexpr unsigned mtu = 150;
 
     mock_addIF("test1", idx, IFF_RUNNING, mac, mtu);
-    MockEthernetInterface intf(bus, manager, getInterfaceInfo("test1"),
+    MockEthernetInterface intf(bus, manager,
+                               system::InterfaceInfo{.idx = idx,
+                                                     .flags = IFF_RUNNING,
+                                                     .name = "test1",
+                                                     .mac = mac,
+                                                     .mtu = mtu},
                                "/xyz/openbmc_test/network"sv, config::Parser());
 
     EXPECT_EQ(mtu, intf.mtu());

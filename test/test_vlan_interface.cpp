@@ -2,6 +2,7 @@
 #include "ipaddress.hpp"
 #include "mock_network_manager.hpp"
 #include "mock_syscall.hpp"
+#include "system_queries.hpp"
 #include "vlan_interface.hpp"
 
 #include <arpa/inet.h>
@@ -44,7 +45,7 @@ class TestVlanInterface : public stdplus::gtest::TestWithTmp
         mock_addIF("test0", /*idx=*/1);
         return {bus,
                 manager,
-                getInterfaceInfo("test0"),
+                system::InterfaceInfo{.idx = 1, .flags = 0, .name = "test0"},
                 "/xyz/openbmc_test/network"sv,
                 config::Parser(),
                 /*emitSignal=*/false,

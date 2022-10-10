@@ -27,11 +27,11 @@ Configuration::Configuration(sdbusplus::bus_t& bus,
 {
     config::Parser conf;
     {
-        auto interfaceStrList = system::getInterfaces();
-        if (!interfaceStrList.empty())
+        auto interfaces = system::getInterfaces();
+        if (!interfaces.empty())
         {
             conf.setFile(config::pathForIntfConf(manager.getConfDir(),
-                                                 *interfaceStrList.begin()));
+                                                 *interfaces[0].name));
         }
     }
 

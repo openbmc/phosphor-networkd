@@ -5,8 +5,6 @@
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
 #include "xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp"
 
-#include <netinet/ether.h>
-
 #include <optional>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
@@ -49,22 +47,10 @@ namespace config
 {
 class Parser;
 }
-
-/** @class InterfaceInfo
- *  @brief Information about interfaces from the kernel
- */
-struct InterfaceInfo
+namespace system
 {
-    bool running;
-    unsigned index;
-    std::string name;
-    std::optional<ether_addr> mac;
-    std::optional<unsigned> mtu;
+struct InterfaceInfo;
 };
-
-/** @brief Returns an InterfaceInfo for the given string name
- */
-InterfaceInfo getInterfaceInfo(stdplus::zstring_view ifname);
 
 /** @class EthernetInterface
  *  @brief OpenBMC Ethernet Interface implementation.
@@ -92,12 +78,13 @@ class EthernetInterface : public Ifaces
      *  @param[in] enabled - Override the lookup of nicEnabled
      */
     EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
-                      const InterfaceInfo& info, std::string_view objRoot,
-                      const config::Parser& config, bool emitSignal = true,
+                      const system::InterfaceInfo& info,
+                      std::string_view objRoot, const config::Parser& config,
+                      bool emitSignal = true,
                       std::optional<bool> enabled = std::nullopt);
 
     /** @brief Updates the interface information based on new InterfaceInfo */
-    void updateInfo(const InterfaceInfo& info);
+    void updateInfo(const system::InterfaceInfo& info);
 
     /** @brief Function used to load the nameservers.
      */
@@ -212,7 +199,8 @@ class EthernetInterface : public Ifaces
      *         and creates the ip address dbus objects.
      *  @param[in] vlanID- VLAN identifier.
      */
-    void loadVLAN(std::string_view objRoot, uint16_t vlanID);
+    void loadVLAN(std::string_view objRoot, uint16_t vlanID,
+                  system::InterfaceInfo&& info);
 
     /** @brief write the network conf file with the in-memory objects.
      */
@@ -299,7 +287,7 @@ class EthernetInterface : public Ifaces
 
   private:
     EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
-                      const InterfaceInfo& info, std::string&& objPath,
+                      const system::InterfaceInfo& info, std::string&& objPath,
                       const config::Parser& config, bool emitSignal,
                       std::optional<bool> enabled);
 
