@@ -1,9 +1,9 @@
 #include "system_queries.hpp"
 
+#include "netlink.hpp"
 #include "util.hpp"
 
 #include <fmt/format.h>
-#include <ifaddrs.h>
 #include <linux/ethtool.h>
 #include <linux/sockios.h>
 #include <net/if.h>
@@ -104,25 +104,6 @@ bool intfIsRunning(std::string_view ifname)
     return executeIFReq(ifname, SIOCGIFFLAGS).ifr_flags & IFF_RUNNING;
 }
 
-unsigned intfIndex(stdplus::const_zstring ifname)
-{
-    unsigned idx = if_nametoindex(ifname.c_str());
-    if (idx == 0)
-    {
-        auto msg = fmt::format("if_nametoindex({})", ifname);
-        throw std::system_error(errno, std::generic_category(), msg);
-    }
-    return idx;
-}
-
-std::optional<ether_addr> getMAC(stdplus::zstring_view ifname)
-{
-    return optionalIFReq(
-        ifname, SIOCGIFHWADDR, "IFHWADDR", [](const ifreq& ifr) {
-            return stdplus::raw::refFrom<ether_addr>(ifr.ifr_hwaddr.sa_data);
-        });
-}
-
 std::optional<unsigned> getMTU(stdplus::zstring_view ifname)
 {
     return optionalIFReq(ifname, SIOCGIFMTU, "GMTU",
@@ -144,21 +125,70 @@ void setNICUp(std::string_view ifname, bool up)
     getIFSock().ioctl(SIOCSIFFLAGS, &ifr);
 }
 
-string_uset getInterfaces()
+InterfaceInfo detail::parseInterface(const nlmsghdr& hdr, std::string_view msg)
 {
-    string_uset ret;
-    struct ifaddrs* root;
-    CHECK_ERRNO(getifaddrs(&root), "getifaddrs");
-    const auto& ignored = internal::getIgnoredInterfaces();
-    for (auto it = root; it != nullptr; it = it->ifa_next)
+    if (hdr.nlmsg_type != RTM_NEWLINK)
     {
-        if (!(it->ifa_flags & IFF_LOOPBACK) &&
-            ignored.find(it->ifa_name) == ignored.end())
+        throw std::runtime_error("Not an interface msg");
+    }
+    auto ifinfo = stdplus::raw::extract<ifinfomsg>(msg);
+    InterfaceInfo ret;
+    ret.flags = ifinfo.ifi_flags;
+    ret.idx = ifinfo.ifi_index;
+    while (!msg.empty())
+    {
+        auto [hdr, data] = netlink::extractRtAttr(msg);
+        if (hdr.rta_type == IFLA_IFNAME)
         {
-            ret.emplace(it->ifa_name);
+            ret.name.emplace(data.begin(), data.end() - 1);
+        }
+        else if (hdr.rta_type == IFLA_ADDRESS)
+        {
+            if (data.size() != sizeof(ether_addr))
+            {
+                // Some interfaces have IP addresses for their LLADDR
+                continue;
+            }
+            ret.mac.emplace(stdplus::raw::copyFrom<ether_addr>(data));
+        }
+        else if (hdr.rta_type == IFLA_MTU)
+        {
+            ret.mtu.emplace(stdplus::raw::copyFrom<unsigned>(data));
         }
     }
-    freeifaddrs(root);
+    return ret;
+}
+
+bool detail::validateNewInterface(const InterfaceInfo& info)
+{
+    if (info.flags & IFF_LOOPBACK)
+    {
+        return false;
+    }
+    if (!info.name)
+    {
+        throw std::invalid_argument("Interface Dump missing name");
+    }
+    const auto& ignored = internal::getIgnoredInterfaces();
+    if (ignored.find(*info.name) != ignored.end())
+    {
+        return false;
+    }
+    return true;
+}
+
+std::vector<InterfaceInfo> getInterfaces()
+{
+    std::vector<InterfaceInfo> ret;
+    auto cb = [&](const nlmsghdr& hdr, std::string_view msg) {
+        auto info = detail::parseInterface(hdr, msg);
+        if (detail::validateNewInterface(info))
+        {
+            ret.emplace_back(std::move(info));
+        }
+    };
+    ifinfomsg msg{};
+    netlink::performRequest(NETLINK_ROUTE, RTM_GETLINK, NLM_F_DUMP, msg, cb);
     return ret;
 }
 

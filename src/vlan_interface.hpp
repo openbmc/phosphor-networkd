@@ -16,6 +16,10 @@ namespace network
 
 class EthernetInterface;
 class Manager;
+namespace system
+{
+struct InterfaceInfo;
+}
 
 using DeleteIface = sdbusplus::xyz::openbmc_project::Object::server::Delete;
 using VlanIface = sdbusplus::xyz::openbmc_project::Network::server::VLAN;
@@ -51,7 +55,7 @@ class VlanInterface : public EthernetInterface,
      *  This constructor is called during loading the VLAN Interface
      */
     VlanInterface(sdbusplus::bus_t& bus, Manager& manager,
-                  const InterfaceInfo& info, std::string_view objRoot,
+                  const system::InterfaceInfo& info, std::string_view objRoot,
                   const config::Parser& config, uint16_t vlanID,
                   EthernetInterface& parent, bool emitSignal = true,
                   std::optional<bool> enabled = std::nullopt);
