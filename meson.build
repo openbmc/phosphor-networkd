@@ -19,7 +19,6 @@ conf_data.set(
 conf_data.set(
   'ENABLE_IPV6_ACCEPT_RA',
   get_option('default-ipv6-accept-ra'))
-conf_data.set('NIC_SUPPORTS_ETHTOOL', get_option('nic-ethtool'))
 conf_data.set('SYNC_MAC_FROM_INVENTORY', get_option('sync-mac'))
 conf_data.set('PERSIST_MAC', get_option('persist-mac'))
 

@@ -6,8 +6,6 @@ option('default-link-local-autoconf', type: 'boolean',
        description: 'Enable link local autoconfiguration by default')
 option('default-ipv6-accept-ra', type: 'boolean',
        description: 'Accept router advertisements by default')
-option('nic-ethtool', type: 'boolean',
-       description: 'Enable ethtool information lookup')
 option('sync-mac', type: 'boolean',
        description: 'Sync mac address with phosphor-inventory-manager')
 option('hyp-nw-config', type : 'boolean',
