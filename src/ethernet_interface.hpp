@@ -233,8 +233,6 @@ class EthernetInterface : public Ifaces
 
     using EthernetInterfaceIntf::defaultGateway;
     using EthernetInterfaceIntf::defaultGateway6;
-    /** @brief Absolute path of the resolv conf file */
-    static constexpr auto resolvConfFile = "/etc/resolv.conf";
 
   protected:
     /** @brief get the info of the ethernet interface.
