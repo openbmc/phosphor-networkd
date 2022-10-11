@@ -37,6 +37,8 @@ using MacAddressIntf =
 using ServerList = std::vector<std::string>;
 using ObjectPath = sdbusplus::message::object_path;
 
+using VlanId = uint32_t;
+
 class Manager;
 
 class TestEthernetInterface;
@@ -47,17 +49,6 @@ namespace config
 {
 class Parser;
 }
-
-using LinkSpeed = uint16_t;
-using DuplexMode = uint8_t;
-using Autoneg = uint8_t;
-using LinkUp = bool;
-using NICEnabled = bool;
-using MTU = size_t;
-using VlanId = uint32_t;
-using InterfaceName = std::string;
-using InterfaceInfo =
-    std::tuple<LinkSpeed, DuplexMode, Autoneg, LinkUp, NICEnabled, MTU>;
 
 /** @class EthernetInterface
  *  @brief OpenBMC Ethernet Interface implementation.
@@ -235,11 +226,6 @@ class EthernetInterface : public Ifaces
     using EthernetInterfaceIntf::defaultGateway6;
 
   protected:
-    /** @brief get the info of the ethernet interface.
-     *  @return tuple having the link speed,autonegotiation,duplexmode .
-     */
-    InterfaceInfo getInterfaceInfo() const;
-
     /* @brief delete the vlan interface from system.
      * @param[in] interface - vlan Interface.
      */
