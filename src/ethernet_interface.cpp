@@ -52,6 +52,48 @@ static stdplus::Fd& getIFSock()
     return fd;
 }
 
+struct LinkInfo
+{
+    bool autoneg;
+    uint16_t speed;
+};
+
+static LinkInfo getLinkInfo(stdplus::zstring_view ifname)
+{
+    LinkInfo ret;
+    try
+    {
+        ethtool_cmd edata = {};
+        edata.cmd = ETHTOOL_GSET;
+
+        ifreq ifr = {};
+        const auto copied = std::min<std::size_t>(ifname.size(), IFNAMSIZ - 1);
+        std::copy_n(ifname.begin(), copied, ifr.ifr_name);
+        ifr.ifr_data = reinterpret_cast<char*>(&edata);
+
+        getIFSock().ioctl(SIOCETHTOOL, &ifr);
+
+        ret.speed = edata.speed;
+        ret.autoneg = edata.autoneg;
+    }
+    catch (const std::system_error& e)
+    {
+        if (e.code() == std::errc::operation_not_supported)
+        {
+            auto msg = fmt::format("ETHTOOL not supported on {}", ifname);
+            log<level::NOTICE>(msg.c_str(),
+                               entry("INTERFACE=%s", ifname.c_str()));
+        }
+        else
+        {
+            auto msg =
+                fmt::format("ETHTOOL failed on {}: {}", ifname, e.what());
+            log<level::ERR>(msg.c_str(), entry("INTERFACE=%s", ifname.c_str()));
+        }
+    }
+    return ret;
+}
+
 EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
                                      stdplus::zstring_view objPath,
                                      const config::Parser& config,
@@ -107,9 +149,9 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
     EthernetInterfaceIntf::linkUp(linkUp());
     EthernetInterfaceIntf::mtu(mtu());
 
-    InterfaceInfo ifInfo = EthernetInterface::getInterfaceInfo();
-    EthernetInterfaceIntf::autoNeg(std::get<2>(ifInfo));
-    EthernetInterfaceIntf::speed(std::get<0>(ifInfo));
+    auto info = getLinkInfo(intfName);
+    EthernetInterfaceIntf::autoNeg(info.autoneg);
+    EthernetInterfaceIntf::speed(info.speed);
 
     // Emit deferred signal.
     if (emitSignal)
@@ -309,51 +351,6 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
     manager.reloadConfigs();
 
     return objectPath;
-}
-
-InterfaceInfo EthernetInterface::getInterfaceInfo() const
-{
-    ifreq ifr = {};
-    ethtool_cmd edata = {};
-    LinkSpeed speed = {};
-    Autoneg autoneg = {};
-    DuplexMode duplex = {};
-    LinkUp linkState = {};
-    NICEnabled enabled = {};
-    MTU mtuSize = {};
-
-    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IFNAMSIZ - 1);
-    ifr.ifr_data = reinterpret_cast<char*>(&edata);
-
-    edata.cmd = ETHTOOL_GSET;
-    try
-    {
-        getIFSock().ioctl(SIOCETHTOOL, &ifr);
-        speed = edata.speed;
-        duplex = edata.duplex;
-        autoneg = edata.autoneg;
-    }
-    catch (const std::system_error& e)
-    {
-        if (e.code() == std::errc::operation_not_supported)
-        {
-            auto msg = fmt::format("ETHTOOL not supported on {}", ifr.ifr_name);
-            log<level::NOTICE>(msg.c_str(),
-                               entry("INTERFACE=%s", ifr.ifr_name));
-        }
-        else
-        {
-            auto msg =
-                fmt::format("ETHTOOL failed on {}: {}", ifr.ifr_name, e.what());
-            log<level::ERR>(msg.c_str(), entry("INTERFACE=%s", ifr.ifr_name));
-        }
-    }
-
-    enabled = nicEnabled();
-    linkState = linkUp();
-    mtuSize = mtu();
-
-    return std::make_tuple(speed, duplex, autoneg, linkState, enabled, mtuSize);
 }
 
 /** @brief get the mac address of the interface.
