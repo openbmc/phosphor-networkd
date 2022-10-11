@@ -333,8 +333,20 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
         duplex = edata.duplex;
         autoneg = edata.autoneg;
     }
-    catch (const std::exception& e)
+    catch (const std::system_error& e)
     {
+        if (e.code() == std::errc::operation_not_supported)
+        {
+            auto msg = fmt::format("ETHTOOL not supported on {}", ifr.ifr_name);
+            log<level::NOTICE>(msg.c_str(),
+                               entry("INTERFACE=%s", ifr.ifr_name));
+        }
+        else
+        {
+            auto msg =
+                fmt::format("ETHTOOL failed on {}: {}", ifr.ifr_name, e.what());
+            log<level::ERR>(msg.c_str(), entry("INTERFACE=%s", ifr.ifr_name));
+        }
     }
 
     enabled = nicEnabled();
