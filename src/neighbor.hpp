@@ -1,5 +1,4 @@
 #pragma once
-
 #include "types.hpp"
 
 #include <linux/netlink.h>
@@ -9,7 +8,7 @@
 #include <optional>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
-#include <string>
+#include <stdplus/zstring.hpp>
 #include <string_view>
 #include <vector>
 #include <xyz/openbmc_project/Network/Neighbor/server.hpp>
@@ -80,9 +79,9 @@ class Neighbor : public NeighborObj
      *  @param[in] macAddress - Low level MAC address.
      *  @param[in] state - The state of the neighbor entry.
      */
-    Neighbor(sdbusplus::bus_t& bus, const char* objPath,
-             EthernetInterface& parent, const std::string& ipAddress,
-             const std::string& macAddress, State state);
+    Neighbor(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
+             EthernetInterface& parent, std::string_view ipAddress,
+             std::string_view macAddress, State state);
 
     /** @brief Delete this d-bus object.
      */

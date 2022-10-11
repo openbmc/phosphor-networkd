@@ -41,12 +41,11 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
 Manager::Manager(sdbusplus::bus_t& bus, const char* objPath,
-                 const std::string& path) :
+                 const fs::path& confDir) :
     details::VLANCreateIface(bus, objPath,
                              details::VLANCreateIface::action::defer_emit),
     bus(bus), objectPath(objPath)
 {
-    fs::path confDir(path);
     setConfDir(confDir);
 }
 

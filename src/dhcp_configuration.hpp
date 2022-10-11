@@ -1,7 +1,7 @@
 #pragma once
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
-#include <string>
+#include <stdplus/zstring.hpp>
 #include <xyz/openbmc_project/Network/DHCPConfiguration/server.hpp>
 
 namespace phosphor
@@ -39,7 +39,7 @@ class Configuration : public Iface
      *  @param[in] objPath - Path to attach at.
      *  @param[in] parent - Parent object.
      */
-    Configuration(sdbusplus::bus_t& bus, const std::string& objPath,
+    Configuration(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
                   Manager& parent);
 
     /** @brief If true then DNS servers received from the DHCP server

@@ -7,7 +7,7 @@
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
-#include <string>
+#include <stdplus/zstring.hpp>
 #include <xyz/openbmc_project/Object/Delete/server.hpp>
 
 namespace phosphor
@@ -47,7 +47,7 @@ class VlanInterface : public VlanIface,
      *
      *  This constructor is called during loading the VLAN Interface
      */
-    VlanInterface(sdbusplus::bus_t& bus, const std::string& objPath,
+    VlanInterface(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
                   const config::Parser& config, bool nicEnabled,
                   uint32_t vlanID, EthernetInterface& intf, Manager& parent);
 

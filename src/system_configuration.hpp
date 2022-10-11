@@ -2,6 +2,7 @@
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
+#include <stdplus/zstring.hpp>
 #include <string>
 #include <xyz/openbmc_project/Network/SystemConfiguration/server.hpp>
 
@@ -37,7 +38,7 @@ class SystemConfiguration : public Iface
      *  @param[in] objPath - Path to attach at.
      *  @param[in] parent - Parent object.
      */
-    SystemConfiguration(sdbusplus::bus_t& bus, const std::string& objPath);
+    SystemConfiguration(sdbusplus::bus_t& bus, stdplus::const_zstring objPath);
 
     /** @brief set the hostname of the system.
      *  @param[in] name - host name of the system.

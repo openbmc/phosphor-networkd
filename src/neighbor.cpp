@@ -15,6 +15,7 @@
 #include <phosphor-logging/elog.hpp>
 #include <stdexcept>
 #include <stdplus/raw.hpp>
+#include <string>
 #include <string_view>
 #include <utility>
 #include <vector>
@@ -86,14 +87,14 @@ std::vector<NeighborInfo> getCurrentNeighbors(const NeighborFilter& filter)
     return neighbors;
 }
 
-Neighbor::Neighbor(sdbusplus::bus_t& bus, const char* objPath,
-                   EthernetInterface& parent, const std::string& ipAddress,
-                   const std::string& macAddress, State state) :
-    NeighborObj(bus, objPath, NeighborObj::action::defer_emit),
+Neighbor::Neighbor(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
+                   EthernetInterface& parent, std::string_view ipAddress,
+                   std::string_view macAddress, State state) :
+    NeighborObj(bus, objPath.c_str(), NeighborObj::action::defer_emit),
     parent(parent)
 {
-    NeighborObj::ipAddress(ipAddress);
-    NeighborObj::macAddress(macAddress);
+    NeighborObj::ipAddress(std::string(ipAddress));
+    NeighborObj::macAddress(std::string(macAddress));
     NeighborObj::state(state);
 
     // Emit deferred signal.

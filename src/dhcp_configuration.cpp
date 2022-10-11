@@ -19,8 +19,8 @@ using namespace phosphor::network;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-Configuration::Configuration(sdbusplus::bus_t& bus, const std::string& objPath,
-                             Manager& parent) :
+Configuration::Configuration(sdbusplus::bus_t& bus,
+                             stdplus::const_zstring objPath, Manager& parent) :
     Iface(bus, objPath.c_str(), Iface::action::defer_emit),
     bus(bus), manager(parent)
 {

@@ -7,6 +7,8 @@
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
+#include <stdplus/zstring.hpp>
+#include <stdplus/zstring_view.hpp>
 #include <string>
 #include <vector>
 #include <xyz/openbmc_project/Collection/DeleteAll/server.hpp>
@@ -81,7 +83,7 @@ class EthernetInterface : public Ifaces
      *                          send.
      *  @param[in] enabled - Override the lookup of nicEnabled
      */
-    EthernetInterface(sdbusplus::bus_t& bus, const std::string& objPath,
+    EthernetInterface(sdbusplus::bus_t& bus, stdplus::zstring_view objPath,
                       const config::Parser& config, Manager& parent,
                       bool emitSignal = true,
                       std::optional<bool> enabled = std::nullopt);
@@ -109,18 +111,18 @@ class EthernetInterface : public Ifaces
     /* @brief delete the dbus object of the given ipAddress.
      * @param[in] ipAddress - IP address.
      */
-    void deleteObject(const std::string& ipAddress);
+    void deleteObject(std::string_view ipAddress);
 
     /* @brief delete the dbus object of the given ipAddress.
      * @param[in] ipAddress - IP address.
      */
-    void deleteStaticNeighborObject(const std::string& ipAddress);
+    void deleteStaticNeighborObject(std::string_view ipAddress);
 
     /* @brief delete the vlan dbus object of the given interface.
      *        Also deletes the device file and the network file.
      * @param[in] interface - VLAN Interface.
      */
-    void deleteVLANObject(const std::string& interface);
+    void deleteVLANObject(stdplus::zstring_view interface);
 
     /* @brief creates the dbus object(IPaddres) given in the address list.
      * @param[in] addrs - address list for which dbus objects needs
@@ -244,14 +246,14 @@ class EthernetInterface : public Ifaces
     /* @brief delete the vlan interface from system.
      * @param[in] interface - vlan Interface.
      */
-    void deleteVLANFromSystem(const std::string& interface);
+    void deleteVLANFromSystem(stdplus::zstring_view interface);
 
     /** @brief get the mac address of the interface.
      *  @param[in] interfaceName - Network interface name.
      *  @return macaddress on success
      */
 
-    std::string getMACAddress(const std::string& interfaceName) const;
+    std::string getMACAddress(stdplus::const_zstring interfaceName) const;
 
     /** @brief construct the ip address dbus object path.
      *  @param[in] addressType - Type of ip address.
@@ -264,14 +266,14 @@ class EthernetInterface : public Ifaces
      */
 
     std::string generateObjectPath(IP::Protocol addressType,
-                                   const std::string& ipAddress,
+                                   std::string_view ipAddress,
                                    uint8_t prefixLength,
-                                   const std::string& gateway,
+                                   std::string_view gateway,
                                    IP::AddressOrigin origin) const;
 
     std::string
-        generateStaticNeighborObjectPath(const std::string& ipAddress,
-                                         const std::string& macAddress) const;
+        generateStaticNeighborObjectPath(std::string_view ipAddress,
+                                         std::string_view macAddress) const;
 
     /** @brief generates the id by doing hash of ipAddress,
      *         prefixlength and the gateway.
@@ -282,10 +284,10 @@ class EthernetInterface : public Ifaces
      *  @return hash string.
      */
 
-    static std::string generateId(const std::string& ipAddress,
+    static std::string generateId(std::string_view ipAddress,
                                   uint8_t prefixLength,
-                                  const std::string& gateway,
-                                  const std::string& origin);
+                                  std::string_view gateway,
+                                  std::string_view origin);
 
     /** @brief generates the id by doing hash of ipAddress
      *         and the mac address.
@@ -293,8 +295,8 @@ class EthernetInterface : public Ifaces
      *  @param[in] macAddress - Gateway address.
      *  @return hash string.
      */
-    static std::string generateNeighborId(const std::string& ipAddress,
-                                          const std::string& macAddress);
+    static std::string generateNeighborId(std::string_view ipAddress,
+                                          std::string_view macAddress);
 
     /** @brief get the NTP server list from the network conf
      *

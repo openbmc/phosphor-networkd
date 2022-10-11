@@ -53,16 +53,16 @@ static stdplus::Fd& getIFSock()
 }
 
 EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
-                                     const std::string& objPath,
+                                     stdplus::zstring_view objPath,
                                      const config::Parser& config,
                                      Manager& parent, bool emitSignal,
                                      std::optional<bool> enabled) :
     Ifaces(bus, objPath.c_str(),
            emitSignal ? Ifaces::action::defer_emit
                       : Ifaces::action::emit_no_signals),
-    bus(bus), manager(parent), objPath(objPath)
+    bus(bus), manager(parent), objPath(objPath.c_str())
 {
-    auto intfName = objPath.substr(objPath.rfind("/") + 1);
+    auto intfName = std::string(objPath.substr(objPath.rfind('/') + 1));
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
     auto dhcpVal = getDHCPValue(config);
@@ -366,7 +366,7 @@ InterfaceInfo EthernetInterface::getInterfaceInfo() const
  */
 
 std::string
-    EthernetInterface::getMACAddress(const std::string& interfaceName) const
+    EthernetInterface::getMACAddress(stdplus::const_zstring interfaceName) const
 {
     std::string activeMACAddr = MacAddressIntf::macAddress();
 
@@ -386,13 +386,13 @@ std::string
         stdplus::raw::refFrom<ether_addr>(ifr.ifr_hwaddr.sa_data));
 }
 
-std::string EthernetInterface::generateId(const std::string& ipaddress,
+std::string EthernetInterface::generateId(std::string_view ipaddress,
                                           uint8_t prefixLength,
-                                          const std::string& gateway,
-                                          const std::string& origin)
+                                          std::string_view gateway,
+                                          std::string_view origin)
 {
     std::stringstream hexId;
-    std::string hashString = ipaddress;
+    std::string hashString = std::string(ipaddress);
     hashString += std::to_string(prefixLength);
     hashString += gateway;
     hashString += origin;
@@ -402,18 +402,19 @@ std::string EthernetInterface::generateId(const std::string& ipaddress,
     return hexId.str();
 }
 
-std::string EthernetInterface::generateNeighborId(const std::string& ipAddress,
-                                                  const std::string& macAddress)
+std::string EthernetInterface::generateNeighborId(std::string_view ipAddress,
+                                                  std::string_view macAddress)
 {
     std::stringstream hexId;
-    std::string hashString = ipAddress + macAddress;
+    std::string hashString = std::string(ipAddress);
+    hashString += macAddress;
 
     // Only want 8 hex digits.
     hexId << std::hex << ((std::hash<std::string>{}(hashString)) & 0xFFFFFFFF);
     return hexId.str();
 }
 
-void EthernetInterface::deleteObject(const std::string& ipaddress)
+void EthernetInterface::deleteObject(std::string_view ipaddress)
 {
     auto it = addrs.find(ipaddress);
     if (it == addrs.end())
@@ -427,7 +428,7 @@ void EthernetInterface::deleteObject(const std::string& ipaddress)
     manager.reloadConfigs();
 }
 
-void EthernetInterface::deleteStaticNeighborObject(const std::string& ipAddress)
+void EthernetInterface::deleteStaticNeighborObject(std::string_view ipAddress)
 {
     auto it = staticNeighbors.find(ipAddress);
     if (it == staticNeighbors.end())
@@ -442,7 +443,7 @@ void EthernetInterface::deleteStaticNeighborObject(const std::string& ipAddress)
     manager.reloadConfigs();
 }
 
-void EthernetInterface::deleteVLANFromSystem(const std::string& interface)
+void EthernetInterface::deleteVLANFromSystem(stdplus::zstring_view interface)
 {
     const auto& confDir = manager.getConfDir();
     auto networkFile = config::pathForIntfConf(confDir, interface);
@@ -466,7 +467,7 @@ void EthernetInterface::deleteVLANFromSystem(const std::string& interface)
     }
 }
 
-void EthernetInterface::deleteVLANObject(const std::string& interface)
+void EthernetInterface::deleteVLANObject(stdplus::zstring_view interface)
 {
     auto it = vlanInterfaces.find(interface);
     if (it == vlanInterfaces.end())
@@ -485,9 +486,8 @@ void EthernetInterface::deleteVLANObject(const std::string& interface)
 }
 
 std::string EthernetInterface::generateObjectPath(
-    IP::Protocol addressType, const std::string& ipaddress,
-    uint8_t prefixLength, const std::string& gateway,
-    IP::AddressOrigin origin) const
+    IP::Protocol addressType, std::string_view ipaddress, uint8_t prefixLength,
+    std::string_view gateway, IP::AddressOrigin origin) const
 {
     std::string type = convertForMessage(addressType);
     type = type.substr(type.rfind('.') + 1);
@@ -502,7 +502,7 @@ std::string EthernetInterface::generateObjectPath(
 }
 
 std::string EthernetInterface::generateStaticNeighborObjectPath(
-    const std::string& ipAddress, const std::string& macAddress) const
+    std::string_view ipAddress, std::string_view macAddress) const
 {
     std::filesystem::path objectPath;
     objectPath /= objPath;
@@ -657,7 +657,7 @@ bool EthernetInterface::queryNicEnabled() const
 
     // Store / Parser for the AdministrativeState return value
     std::optional<bool> ret;
-    auto cb = [&](const std::string& state) {
+    auto cb = [&](std::string_view state) {
         if (state != "initialized")
         {
             ret = state != "unmanaged";

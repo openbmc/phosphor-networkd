@@ -82,7 +82,7 @@ std::vector<std::string> SectionMap::getValueStrings(std::string_view section,
                      [](const Value& v) { return std::string(v); });
 }
 
-void KeyCheck::operator()(const std::string& s)
+void KeyCheck::operator()(std::string_view s)
 {
     for (auto c : s)
     {
@@ -94,7 +94,7 @@ void KeyCheck::operator()(const std::string& s)
     }
 }
 
-void SectionCheck::operator()(const std::string& s)
+void SectionCheck::operator()(std::string_view s)
 {
     for (auto c : s)
     {
@@ -106,7 +106,7 @@ void SectionCheck::operator()(const std::string& s)
     }
 }
 
-void ValueCheck::operator()(const std::string& s)
+void ValueCheck::operator()(std::string_view s)
 {
     for (auto c : s)
     {

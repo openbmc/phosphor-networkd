@@ -17,7 +17,8 @@ namespace network
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-VlanInterface::VlanInterface(sdbusplus::bus_t& bus, const std::string& objPath,
+VlanInterface::VlanInterface(sdbusplus::bus_t& bus,
+                             stdplus::const_zstring objPath,
                              const config::Parser& config, bool nicEnabled,
                              uint32_t vlanID, EthernetInterface& intf,
                              Manager& parent) :

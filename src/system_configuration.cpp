@@ -24,7 +24,7 @@ using SystemConfigIntf =
     sdbusplus::xyz::openbmc_project::Network::server::SystemConfiguration;
 
 SystemConfiguration::SystemConfiguration(sdbusplus::bus_t& bus,
-                                         const std::string& objPath) :
+                                         stdplus::const_zstring objPath) :
     Iface(bus, objPath.c_str(), Iface::action::defer_emit),
     bus(bus)
 {

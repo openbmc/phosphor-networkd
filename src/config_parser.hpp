@@ -88,15 +88,15 @@ inline constexpr std::ostream& operator<<(std::ostream& s,
 
 struct KeyCheck
 {
-    void operator()(const std::string& s);
+    void operator()(std::string_view s);
 };
 struct SectionCheck
 {
-    void operator()(const std::string& s);
+    void operator()(std::string_view s);
 };
 struct ValueCheck
 {
-    void operator()(const std::string& s);
+    void operator()(std::string_view s);
 };
 
 struct string_hash : public std::hash<std::string_view>
