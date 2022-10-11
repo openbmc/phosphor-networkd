@@ -9,10 +9,11 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 
+#include <charconv>
 #include <exception>
-#include <fstream>
 #include <sdbusplus/bus.hpp>
 #include <stdplus/gtest/tmp.hpp>
+#include <string_view>
 
 #include <gtest/gtest.h>
 
@@ -20,6 +21,8 @@ namespace phosphor
 {
 namespace network
 {
+
+using std::literals::string_view_literals::operator""sv;
 
 class TestEthernetInterface : public stdplus::gtest::TestWithTmp
 {
@@ -132,20 +135,19 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
     uint8_t prefix = 16;
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
 
-    std::string expectedObjectPath = "/xyz/openbmc_test/network/test0/ipv4/";
-    std::stringstream hexId;
+    auto path = getObjectPath(ipaddress, prefix, origin);
+    auto pathsv = std::string_view(path);
+    constexpr auto expectedPrefix = "/xyz/openbmc_test/network/test0/ipv4/"sv;
+    EXPECT_TRUE(pathsv.starts_with(expectedPrefix));
+    pathsv.remove_prefix(expectedPrefix.size());
+    uint32_t val;
+    auto [ptr, res] = std::from_chars(pathsv.begin(), pathsv.end(), val, 16);
+    EXPECT_EQ(res, std::errc());
+    EXPECT_EQ(ptr, pathsv.end());
 
-    std::string hashString = ipaddress;
-    hashString += std::to_string(prefix);
-    hashString += convertForMessage(origin);
-
-    hexId << std::hex << ((std::hash<std::string>{}(hashString)) & 0xFFFFFFFF);
-    expectedObjectPath += hexId.str();
-
-    EXPECT_EQ(expectedObjectPath, getObjectPath(ipaddress, prefix, origin));
-
+    EXPECT_EQ(path, getObjectPath(ipaddress, prefix, origin));
     origin = IP::AddressOrigin::DHCP;
-    EXPECT_NE(expectedObjectPath, getObjectPath(ipaddress, prefix, origin));
+    EXPECT_NE(path, getObjectPath(ipaddress, prefix, origin));
 }
 
 TEST_F(TestEthernetInterface, addStaticNameServers)

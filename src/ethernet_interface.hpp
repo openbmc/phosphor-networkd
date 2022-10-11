@@ -262,7 +262,6 @@ class EthernetInterface : public Ifaces
 
      *  @return path of the address object.
      */
-
     std::string generateObjectPath(IP::Protocol addressType,
                                    std::string_view ipAddress,
                                    uint8_t prefixLength,
@@ -271,26 +270,6 @@ class EthernetInterface : public Ifaces
     std::string
         generateStaticNeighborObjectPath(std::string_view ipAddress,
                                          std::string_view macAddress) const;
-
-    /** @brief generates the id by doing hash of ipAddress and prefixLength
-     *  @param[in] ipAddress - IP address.
-     *  @param[in] prefixLength - Length of prefix.
-     *  @param[in] origin - The string of the address origin
-     *  @return hash string.
-     */
-
-    static std::string generateId(std::string_view ipAddress,
-                                  uint8_t prefixLength,
-                                  std::string_view origin);
-
-    /** @brief generates the id by doing hash of ipAddress
-     *         and the mac address.
-     *  @param[in] ipAddress  - IP address.
-     *  @param[in] macAddress - Gateway address.
-     *  @return hash string.
-     */
-    static std::string generateNeighborId(std::string_view ipAddress,
-                                          std::string_view macAddress);
 
     /** @brief get the NTP server list from the network conf
      *

@@ -19,7 +19,6 @@
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus/match.hpp>
-#include <sstream>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/raw.hpp>
 #include <stdplus/zstring.hpp>
@@ -38,6 +37,7 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using NotAllowed = sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
 using NotAllowedArgument = xyz::openbmc_project::Common::NotAllowed;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
+using std::literals::string_view_literals::operator""sv;
 constexpr auto RESOLVED_SERVICE = "org.freedesktop.resolve1";
 constexpr auto RESOLVED_INTERFACE = "org.freedesktop.resolve1.Link";
 constexpr auto PROPERTY_INTERFACE = "org.freedesktop.DBus.Properties";
@@ -380,32 +380,6 @@ std::string
         stdplus::raw::refFrom<ether_addr>(ifr.ifr_hwaddr.sa_data));
 }
 
-std::string EthernetInterface::generateId(std::string_view ipaddress,
-                                          uint8_t prefixLength,
-                                          std::string_view origin)
-{
-    std::stringstream hexId;
-    std::string hashString = std::string(ipaddress);
-    hashString += std::to_string(prefixLength);
-    hashString += origin;
-
-    // Only want 8 hex digits.
-    hexId << std::hex << ((std::hash<std::string>{}(hashString)) & 0xFFFFFFFF);
-    return hexId.str();
-}
-
-std::string EthernetInterface::generateNeighborId(std::string_view ipAddress,
-                                                  std::string_view macAddress)
-{
-    std::stringstream hexId;
-    std::string hashString = std::string(ipAddress);
-    hashString += macAddress;
-
-    // Only want 8 hex digits.
-    hexId << std::hex << ((std::hash<std::string>{}(hashString)) & 0xFFFFFFFF);
-    return hexId.str();
-}
-
 void EthernetInterface::deleteObject(std::string_view ipaddress)
 {
     auto it = addrs.find(ipaddress);
@@ -477,30 +451,45 @@ void EthernetInterface::deleteVLANObject(stdplus::zstring_view interface)
     manager.reloadConfigs();
 }
 
+inline constexpr std::size_t hash_combine()
+{
+    return 0;
+}
+
+template <typename T, typename... Args>
+inline constexpr std::size_t hash_combine(const T& v, Args... args)
+{
+    const std::size_t seed = hash_combine(args...);
+    return seed ^ (std::hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2));
+}
+
 std::string EthernetInterface::generateObjectPath(
-    IP::Protocol addressType, std::string_view ipaddress, uint8_t prefixLength,
+    IP::Protocol addressType, std::string_view ipAddress, uint8_t prefixLength,
     IP::AddressOrigin origin) const
 {
-    std::string type = convertForMessage(addressType);
-    type = type.substr(type.rfind('.') + 1);
-    std::transform(type.begin(), type.end(), type.begin(), ::tolower);
-
-    std::filesystem::path objectPath;
-    objectPath /= objPath;
-    objectPath /= type;
-    objectPath /=
-        generateId(ipaddress, prefixLength, convertForMessage(origin));
-    return objectPath.string();
+    std::string_view type;
+    switch (addressType)
+    {
+        case IP::Protocol::IPv4:
+            type = "ipv4"sv;
+            break;
+        case IP::Protocol::IPv6:
+            type = "ipv6"sv;
+            break;
+    }
+    return fmt::format(
+        FMT_COMPILE("{}/{}/{:08x}"), objPath, type,
+        static_cast<uint32_t>(hash_combine(
+            ipAddress, prefixLength,
+            static_cast<std::underlying_type_t<IP::AddressOrigin>>(origin))));
 }
 
 std::string EthernetInterface::generateStaticNeighborObjectPath(
     std::string_view ipAddress, std::string_view macAddress) const
 {
-    std::filesystem::path objectPath;
-    objectPath /= objPath;
-    objectPath /= "static_neighbor";
-    objectPath /= generateNeighborId(ipAddress, macAddress);
-    return objectPath.string();
+    return fmt::format(
+        FMT_COMPILE("{}/static_neighbor/{:08x}"), objPath,
+        static_cast<uint32_t>(hash_combine(ipAddress, macAddress)));
 }
 
 bool EthernetInterface::ipv6AcceptRA(bool value)
