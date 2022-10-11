@@ -184,16 +184,14 @@ void EthernetInterface::createIPAddressObjects()
         {
             origin = IP::AddressOrigin::LinkLocal;
         }
-        // Obsolete parameter
-        std::string gateway = "";
 
-        std::string ipAddressObjectPath = generateObjectPath(
-            addressType, address, addr.prefix, gateway, origin);
+        auto ipAddressObjectPath =
+            generateObjectPath(addressType, address, addr.prefix, origin);
 
         this->addrs.insert_or_assign(
-            address, std::make_unique<IPAddress>(
-                         bus, ipAddressObjectPath.c_str(), *this, addressType,
-                         address, origin, addr.prefix, gateway));
+            address, std::make_unique<IPAddress>(bus, ipAddressObjectPath,
+                                                 *this, addressType, address,
+                                                 origin, addr.prefix));
     }
 }
 
@@ -211,12 +209,12 @@ void EthernetInterface::createStaticNeighborObjects()
         {
             continue;
         }
-        std::string ip = toString(neighbor.address);
-        std::string mac = mac_address::toString(*neighbor.mac);
-        std::string objectPath = generateStaticNeighborObjectPath(ip, mac);
+        auto ip = toString(neighbor.address);
+        auto mac = mac_address::toString(*neighbor.mac);
+        auto objectPath = generateStaticNeighborObjectPath(ip, mac);
         staticNeighbors.emplace(
-            ip, std::make_unique<Neighbor>(bus, objectPath.c_str(), *this, ip,
-                                           mac, Neighbor::State::Permanent));
+            ip, std::make_unique<Neighbor>(bus, objectPath, *this, ip, mac,
+                                           Neighbor::State::Permanent));
     }
 }
 
@@ -232,7 +230,7 @@ unsigned EthernetInterface::ifIndex() const
 }
 
 ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
-                                 uint8_t prefixLength, std::string gateway)
+                                 uint8_t prefixLength, std::string)
 {
     if (dhcpIsEnabled(protType))
     {
@@ -264,9 +262,6 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
                               Argument::ARGUMENT_VALUE(ipaddress.c_str()));
     }
 
-    // Gateway is an obsolete parameter
-    gateway = "";
-
     if (!isValidPrefix(addressFamily, prefixLength))
     {
         log<level::ERR>("PrefixLength is not correct "),
@@ -276,12 +271,12 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
             Argument::ARGUMENT_VALUE(std::to_string(prefixLength).c_str()));
     }
 
-    std::string objectPath =
-        generateObjectPath(protType, ipaddress, prefixLength, gateway, origin);
+    auto objectPath =
+        generateObjectPath(protType, ipaddress, prefixLength, origin);
     this->addrs.insert_or_assign(
         ipaddress,
-        std::make_unique<IPAddress>(bus, objectPath.c_str(), *this, protType,
-                                    ipaddress, origin, prefixLength, gateway));
+        std::make_unique<IPAddress>(bus, objectPath, *this, protType, ipaddress,
+                                    origin, prefixLength));
 
     writeConfigurationFile();
     manager.reloadConfigs();
@@ -307,11 +302,10 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                               Argument::ARGUMENT_VALUE(macAddress.c_str()));
     }
 
-    std::string objectPath =
-        generateStaticNeighborObjectPath(ipAddress, macAddress);
+    auto objectPath = generateStaticNeighborObjectPath(ipAddress, macAddress);
     staticNeighbors.emplace(
         ipAddress,
-        std::make_unique<Neighbor>(bus, objectPath.c_str(), *this, ipAddress,
+        std::make_unique<Neighbor>(bus, objectPath, *this, ipAddress,
                                    macAddress, Neighbor::State::Permanent));
 
     writeConfigurationFile();
@@ -388,13 +382,11 @@ std::string
 
 std::string EthernetInterface::generateId(std::string_view ipaddress,
                                           uint8_t prefixLength,
-                                          std::string_view gateway,
                                           std::string_view origin)
 {
     std::stringstream hexId;
     std::string hashString = std::string(ipaddress);
     hashString += std::to_string(prefixLength);
-    hashString += gateway;
     hashString += origin;
 
     // Only want 8 hex digits.
@@ -487,7 +479,7 @@ void EthernetInterface::deleteVLANObject(stdplus::zstring_view interface)
 
 std::string EthernetInterface::generateObjectPath(
     IP::Protocol addressType, std::string_view ipaddress, uint8_t prefixLength,
-    std::string_view gateway, IP::AddressOrigin origin) const
+    IP::AddressOrigin origin) const
 {
     std::string type = convertForMessage(addressType);
     type = type.substr(type.rfind('.') + 1);
@@ -497,7 +489,7 @@ std::string EthernetInterface::generateObjectPath(
     objectPath /= objPath;
     objectPath /= type;
     objectPath /=
-        generateId(ipaddress, prefixLength, gateway, convertForMessage(origin));
+        generateId(ipaddress, prefixLength, convertForMessage(origin));
     return objectPath.string();
 }
 

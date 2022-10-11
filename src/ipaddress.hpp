@@ -7,7 +7,7 @@
 #include <optional>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
-#include <string>
+#include <stdplus/zstring.hpp>
 #include <string_view>
 #include <vector>
 #include <xyz/openbmc_project/Network/IP/server.hpp>
@@ -74,12 +74,11 @@ class IPAddress : public IPIfaces
      *  @param[in] ipAddress - ipadress.
      *  @param[in] origin - origin of ipaddress(dhcp/static/SLAAC/LinkLocal).
      *  @param[in] prefixLength - Length of prefix.
-     *  @param[in] gateway - gateway address.
      */
-    IPAddress(sdbusplus::bus_t& bus, const char* objPath,
+    IPAddress(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
               EthernetInterface& parent, IP::Protocol type,
-              const std::string& ipAddress, IP::AddressOrigin origin,
-              uint8_t prefixLength, const std::string& gateway);
+              std::string_view ipAddress, IP::AddressOrigin origin,
+              uint8_t prefixLength);
 
     std::string address(std::string ipAddress) override;
     uint8_t prefixLength(uint8_t) override;

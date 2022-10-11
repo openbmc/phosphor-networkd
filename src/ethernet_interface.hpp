@@ -96,11 +96,10 @@ class EthernetInterface : public Ifaces
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipAddress- IP address.
      *  @param[in] prefixLength - Length of prefix.
-     *  @param[in] gateway - Gateway ip address.
      */
 
     ObjectPath ip(IP::Protocol addressType, std::string ipAddress,
-                  uint8_t prefixLength, std::string gateway) override;
+                  uint8_t prefixLength, std::string) override;
 
     /** @brief Function to create static neighbor dbus object.
      *  @param[in] ipAddress - IP address.
@@ -259,7 +258,6 @@ class EthernetInterface : public Ifaces
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipAddress - IP address.
      *  @param[in] prefixLength - Length of prefix.
-     *  @param[in] gateway - Gateway address.
      *  @param[in] origin - The origin entry of the IP::Address
 
      *  @return path of the address object.
@@ -268,25 +266,21 @@ class EthernetInterface : public Ifaces
     std::string generateObjectPath(IP::Protocol addressType,
                                    std::string_view ipAddress,
                                    uint8_t prefixLength,
-                                   std::string_view gateway,
                                    IP::AddressOrigin origin) const;
 
     std::string
         generateStaticNeighborObjectPath(std::string_view ipAddress,
                                          std::string_view macAddress) const;
 
-    /** @brief generates the id by doing hash of ipAddress,
-     *         prefixlength and the gateway.
+    /** @brief generates the id by doing hash of ipAddress and prefixLength
      *  @param[in] ipAddress - IP address.
      *  @param[in] prefixLength - Length of prefix.
-     *  @param[in] gateway - Gateway address.
      *  @param[in] origin - The string of the address origin
      *  @return hash string.
      */
 
     static std::string generateId(std::string_view ipAddress,
                                   uint8_t prefixLength,
-                                  std::string_view gateway,
                                   std::string_view origin);
 
     /** @brief generates the id by doing hash of ipAddress

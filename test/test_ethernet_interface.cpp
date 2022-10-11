@@ -74,19 +74,18 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     }
 
     std::string getObjectPath(const std::string& ipaddress, uint8_t subnetMask,
-                              const std::string& gateway,
                               IP::AddressOrigin origin)
     {
         IP::Protocol addressType = IP::Protocol::IPv4;
 
         return interface.generateObjectPath(addressType, ipaddress, subnetMask,
-                                            gateway, origin);
+                                            origin);
     }
 
     void createIPObject(IP::Protocol addressType, const std::string& ipaddress,
-                        uint8_t subnetMask, const std::string& gateway)
+                        uint8_t subnetMask)
     {
-        interface.ip(addressType, ipaddress, subnetMask, gateway);
+        interface.ip(addressType, ipaddress, subnetMask, "");
     }
 };
 
@@ -99,15 +98,15 @@ TEST_F(TestEthernetInterface, NoIPaddress)
 TEST_F(TestEthernetInterface, AddIPAddress)
 {
     IP::Protocol addressType = IP::Protocol::IPv4;
-    createIPObject(addressType, "10.10.10.10", 16, "10.10.10.1");
+    createIPObject(addressType, "10.10.10.10", 16);
     EXPECT_EQ(true, isIPObjectExist("10.10.10.10"));
 }
 
 TEST_F(TestEthernetInterface, AddMultipleAddress)
 {
     IP::Protocol addressType = IP::Protocol::IPv4;
-    createIPObject(addressType, "10.10.10.10", 16, "10.10.10.1");
-    createIPObject(addressType, "20.20.20.20", 16, "20.20.20.1");
+    createIPObject(addressType, "10.10.10.10", 16);
+    createIPObject(addressType, "20.20.20.20", 16);
     EXPECT_EQ(true, isIPObjectExist("10.10.10.10"));
     EXPECT_EQ(true, isIPObjectExist("20.20.20.20"));
 }
@@ -115,8 +114,8 @@ TEST_F(TestEthernetInterface, AddMultipleAddress)
 TEST_F(TestEthernetInterface, DeleteIPAddress)
 {
     IP::Protocol addressType = IP::Protocol::IPv4;
-    createIPObject(addressType, "10.10.10.10", 16, "10.10.10.1");
-    createIPObject(addressType, "20.20.20.20", 16, "20.20.20.1");
+    createIPObject(addressType, "10.10.10.10", 16);
+    createIPObject(addressType, "20.20.20.20", 16);
     deleteIPObject("10.10.10.10");
     EXPECT_EQ(false, isIPObjectExist("10.10.10.10"));
     EXPECT_EQ(true, isIPObjectExist("20.20.20.20"));
@@ -131,7 +130,6 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
 {
     std::string ipaddress = "10.10.10.10";
     uint8_t prefix = 16;
-    std::string gateway = "10.10.10.1";
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
 
     std::string expectedObjectPath = "/xyz/openbmc_test/network/test0/ipv4/";
@@ -139,18 +137,15 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
 
     std::string hashString = ipaddress;
     hashString += std::to_string(prefix);
-    hashString += gateway;
     hashString += convertForMessage(origin);
 
     hexId << std::hex << ((std::hash<std::string>{}(hashString)) & 0xFFFFFFFF);
     expectedObjectPath += hexId.str();
 
-    EXPECT_EQ(expectedObjectPath,
-              getObjectPath(ipaddress, prefix, gateway, origin));
+    EXPECT_EQ(expectedObjectPath, getObjectPath(ipaddress, prefix, origin));
 
     origin = IP::AddressOrigin::DHCP;
-    EXPECT_NE(expectedObjectPath,
-              getObjectPath(ipaddress, prefix, gateway, origin));
+    EXPECT_NE(expectedObjectPath, getObjectPath(ipaddress, prefix, origin));
 }
 
 TEST_F(TestEthernetInterface, addStaticNameServers)

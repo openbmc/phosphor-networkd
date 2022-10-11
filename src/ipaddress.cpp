@@ -38,17 +38,16 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using NotAllowed = sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
 using Reason = xyz::openbmc_project::Common::NotAllowed::REASON;
 
-IPAddress::IPAddress(sdbusplus::bus_t& bus, const char* objPath,
+IPAddress::IPAddress(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
                      EthernetInterface& parent, IP::Protocol type,
-                     const std::string& ipaddress, IP::AddressOrigin origin,
-                     uint8_t prefixLength, const std::string& gateway) :
-    IPIfaces(bus, objPath, IPIfaces::action::defer_emit),
+                     std::string_view ipaddress, IP::AddressOrigin origin,
+                     uint8_t prefixLength) :
+    IPIfaces(bus, objPath.c_str(), IPIfaces::action::defer_emit),
     parent(parent)
 {
 
-    IP::address(ipaddress);
+    IP::address(std::string(ipaddress));
     IP::prefixLength(prefixLength);
-    IP::gateway(gateway);
     IP::type(type);
     IP::origin(origin);
 
