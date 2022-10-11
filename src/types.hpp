@@ -64,5 +64,17 @@ using string_umap =
 using string_uset =
     std::unordered_set<std::string, string_hash, std::equal_to<>>;
 
+constexpr std::size_t hash_multi()
+{
+    return 0;
+}
+
+template <typename T, typename... Args>
+constexpr std::size_t hash_multi(const T& v, Args... args)
+{
+    const std::size_t seed = hash_multi(args...);
+    return seed ^ (std::hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2));
+}
+
 } // namespace network
 } // namespace phosphor
