@@ -417,6 +417,13 @@ bool getDHCPProp(const config::Parser& config, std::string_view key)
         .value_or(true);
 }
 
+bool getDHCPv6Client(const config::Parser& config)
+{
+    return systemdParseLast(config, "IPv6AcceptRA", "DHCPv6Client",
+                            config::parseBool)
+        .value_or(true);
+}
+
 namespace mac_address
 {
 

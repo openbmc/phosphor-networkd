@@ -206,43 +206,46 @@ TEST_F(TestEthernetInterface, DHCPEnabled)
     EXPECT_CALL(manager, reloadConfigs()).WillRepeatedly(testing::Return());
 
     using DHCPConf = EthernetInterfaceIntf::DHCPConf;
-    auto test = [&](DHCPConf conf, bool dhcp4, bool dhcp6, bool ra) {
+    auto test = [&](DHCPConf conf, bool dhcp4, bool dhcp6, bool cli) {
         EXPECT_EQ(conf, interface.dhcpEnabled());
         EXPECT_EQ(dhcp4, interface.dhcp4());
         EXPECT_EQ(dhcp6, interface.dhcp6());
-        EXPECT_EQ(ra, interface.ipv6AcceptRA());
+        EXPECT_EQ(cli, interface.dhcpv6Client);
     };
-    test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/true);
+    test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*cli=*/true);
 
-    auto set_test = [&](DHCPConf conf, bool dhcp4, bool dhcp6, bool ra) {
+    auto set_test = [&](DHCPConf conf, bool dhcp4, bool dhcp6, bool cli) {
         EXPECT_EQ(conf, interface.dhcpEnabled(conf));
-        test(conf, dhcp4, dhcp6, ra);
+        test(conf, dhcp4, dhcp6, cli);
     };
-    set_test(DHCPConf::none, /*dhcp4=*/false, /*dhcp6=*/false, /*ra=*/false);
-    set_test(DHCPConf::v4, /*dhcp4=*/true, /*dhcp6=*/false, /*ra=*/false);
-    set_test(DHCPConf::v6stateless, /*dhcp4=*/false, /*dhcp6=*/false,
-             /*ra=*/true);
-    set_test(DHCPConf::v6, /*dhcp4=*/false, /*dhcp6=*/true, /*ra=*/true);
-    set_test(DHCPConf::v4v6stateless, /*dhcp4=*/true, /*dhcp6=*/false,
-             /*ra=*/true);
-    set_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/true);
+    set_test(DHCPConf::none, /*dhcp4=*/false, /*dhcp6=*/false, /*cli=*/false);
+    set_test(DHCPConf::v4, /*dhcp4=*/true, /*dhcp6=*/false, /*cli=*/false);
+    set_test(DHCPConf::v6stateless, /*dhcp4=*/false, /*dhcp6=*/true,
+             /*cli=*/false);
+    set_test(DHCPConf::v6, /*dhcp4=*/false, /*dhcp6=*/true, /*cli=*/true);
+    set_test(DHCPConf::v4v6stateless, /*dhcp4=*/true, /*dhcp6=*/true,
+             /*cli=*/false);
+    set_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*cli=*/true);
 
-    auto ind_test = [&](DHCPConf conf, bool dhcp4, bool dhcp6, bool ra) {
+    auto ind_test = [&](DHCPConf conf, bool dhcp4, bool dhcp6, bool cli) {
+        interface.dhcpv6Client = cli;
         EXPECT_EQ(dhcp4, interface.dhcp4(dhcp4));
         EXPECT_EQ(dhcp6, interface.dhcp6(dhcp6));
-        EXPECT_EQ(ra, interface.ipv6AcceptRA(ra));
-        test(conf, dhcp4, dhcp6, ra);
+        test(conf, dhcp4, dhcp6, cli);
     };
-    ind_test(DHCPConf::none, /*dhcp4=*/false, /*dhcp6=*/false, /*ra=*/false);
-    ind_test(DHCPConf::v4, /*dhcp4=*/true, /*dhcp6=*/false, /*ra=*/false);
-    ind_test(DHCPConf::v6stateless, /*dhcp4=*/false, /*dhcp6=*/false,
-             /*ra=*/true);
-    ind_test(DHCPConf::v6, /*dhcp4=*/false, /*dhcp6=*/true, /*ra=*/false);
-    set_test(DHCPConf::v6, /*dhcp4=*/false, /*dhcp6=*/true, /*ra=*/true);
-    ind_test(DHCPConf::v4v6stateless, /*dhcp4=*/true, /*dhcp6=*/false,
-             /*ra=*/true);
-    ind_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/false);
-    set_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/true);
+    ind_test(DHCPConf::none, /*dhcp4=*/false, /*dhcp6=*/false,
+             /*cli=*/false);
+    ind_test(DHCPConf::v4, /*dhcp4=*/true, /*dhcp6=*/false,
+             /*cli=*/false);
+    ind_test(DHCPConf::v6stateless, /*dhcp4=*/false,
+             /*dhcp6=*/true,
+             /*cli=*/false);
+    ind_test(DHCPConf::v6, /*dhcp4=*/false, /*dhcp6=*/true, /*cli=*/true);
+    set_test(DHCPConf::v6, /*dhcp4=*/false, /*dhcp6=*/true, /*cli=*/true);
+    ind_test(DHCPConf::v4v6stateless, /*dhcp4=*/true, /*dhcp6=*/true,
+             /*cli=*/false);
+    ind_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*cli=*/true);
+    set_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*cli=*/true);
 }
 
 } // namespace network

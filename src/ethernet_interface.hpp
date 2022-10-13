@@ -242,6 +242,8 @@ class EthernetInterface : public Ifaces
     /** @brief Absolute path of the resolv conf file */
     static constexpr auto resolvConfFile = "/etc/resolv.conf";
 
+    bool dhcpv6Client{true};
+
   protected:
     /** @brief get the info of the ethernet interface.
      *  @return tuple having the link speed,autonegotiation,duplexmode .

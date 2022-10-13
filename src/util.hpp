@@ -140,6 +140,11 @@ DHCPVal getDHCPValue(const config::Parser& config);
  */
 bool getDHCPProp(const config::Parser& config, std::string_view key);
 
+/** @brief read the DHCPv6Client value from the configuration file
+ *  @param[in] config - The parsed configuration.
+ */
+bool getDHCPv6Client(const config::Parser& config);
+
 namespace internal
 {
 
