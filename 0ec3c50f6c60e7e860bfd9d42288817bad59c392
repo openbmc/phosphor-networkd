@@ -33,6 +33,23 @@
       "message": "I am fine with the changes.",
       "revId": "0ec3c50f6c60e7e860bfd9d42288817bad59c392",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "918137c0_c733736e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 25
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-10-13T14:05:46Z",
+      "side": 1,
+      "message": "William K: Do you have any concern here with the commit?",
+      "revId": "0ec3c50f6c60e7e860bfd9d42288817bad59c392",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
