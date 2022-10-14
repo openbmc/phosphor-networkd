@@ -39,15 +39,13 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     {
     }
 
-    static constexpr ether_addr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};
-
     static MockEthernetInterface makeInterface(sdbusplus::bus_t& bus,
                                                MockManager& manager)
     {
         mock_clear();
-        mock_addIF("test0", 1, mac);
+        mock_addIF("test0", /*idx=*/1);
         return {bus, "/xyz/openbmc_test/network/test0", config::Parser(),
-                manager, true};
+                manager};
     }
 
     int countIPObjects()
@@ -92,10 +90,28 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     }
 };
 
+TEST_F(TestEthernetInterface, Fields)
+{
+    EXPECT_EQ(0, interface.mtu());
+    EXPECT_EQ("", interface.macAddress());
+    EXPECT_FALSE(interface.linkUp());
+
+    constexpr unsigned idx = 2;
+    constexpr ether_addr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};
+    constexpr unsigned mtu = 150;
+
+    mock_addIF("test1", idx, IFF_RUNNING, mac, mtu);
+    MockEthernetInterface intf(bus, "/xyz/openbmc_test/network/test1",
+                               config::Parser(), manager);
+
+    EXPECT_EQ(mtu, intf.mtu());
+    EXPECT_EQ(mac_address::toString(mac), intf.macAddress());
+    EXPECT_TRUE(intf.linkUp());
+}
+
 TEST_F(TestEthernetInterface, NoIPaddress)
 {
     EXPECT_EQ(countIPObjects(), 0);
-    EXPECT_EQ(mac_address::toString(mac), interface.macAddress());
 }
 
 TEST_F(TestEthernetInterface, AddIPAddress)

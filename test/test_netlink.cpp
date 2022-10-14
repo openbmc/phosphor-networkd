@@ -298,7 +298,7 @@ class PerformRequest : public testing::Test
         mock_clear();
         for (size_t i = 0; i < ifs; ++i)
         {
-            mock_addIF("eth" + std::to_string(i), 1 + i);
+            mock_addIF(fmt::format("eth{}", i), /*idx=*/1 + i);
         }
 
         size_t cbCalls = 0;

@@ -1,4 +1,5 @@
 #pragma once
+#include "config_parser.hpp"
 #include "mock_ethernet_interface.hpp"
 #include "network_manager.hpp"
 #include "util.hpp"
@@ -34,7 +35,7 @@ class MockManager : public Manager
             objPath /= interface;
             config::Parser config(config::pathForIntfConf(confDir, interface));
             auto intf = std::make_unique<MockEthernetInterface>(
-                bus, objPath.string(), config, *this, true);
+                bus, objPath.string(), config, *this);
             intf->createIPAddressObjects();
             intf->createStaticNeighborObjects();
             intf->loadNameServers(config);
