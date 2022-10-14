@@ -39,6 +39,40 @@
       "message": "Adding Intel reviewers",
       "revId": "7a70b56c0bf0529a4789ac9af6b6f21db71a07fb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e77dccd7_e631d282",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-10-14T00:02:36Z",
+      "side": 1,
+      "message": "This change isn\u0027t really needed, phosphor-networkd never supported that setting in the past and doesn\u0027t actuate it independently from DHCP\u003d. I have a follow up change that rectifies config discrepencies but it doesn\u0027t propagate the value everywhere.",
+      "revId": "7a70b56c0bf0529a4789ac9af6b6f21db71a07fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10daf32b_0b6a41c8",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-10-14T00:02:36Z",
+      "side": 1,
+      "message": "Do not change this, I need to support this value being independent from dhcp. dhcpEnabled is deprecated.",
+      "revId": "7a70b56c0bf0529a4789ac9af6b6f21db71a07fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
