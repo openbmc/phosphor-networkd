@@ -40,13 +40,13 @@ class TestVlanInterface : public stdplus::gtest::TestWithTmp
                                            MockManager& manager)
     {
         mock_clear();
-        mock_addIF("test0", 1);
+        mock_addIF("test0", /*idx=*/1);
         return {bus,
                 "/xyz/openbmc_test/network/test0",
                 config::Parser(),
                 manager,
-                false,
-                true};
+                /*emitSignals=*/false,
+                /*nicEnabled=*/true};
     }
 
     void createVlan(VlanId id)

@@ -49,34 +49,40 @@ void freeifaddrs(ifaddrs* /*ifp*/)
 
 std::map<int, std::queue<std::string>> mock_rtnetlinks;
 
-std::map<std::string, int> mock_if_nametoindex;
+struct MockInfo
+{
+    unsigned idx;
+    unsigned flags;
+    std::optional<ether_addr> mac;
+    std::optional<unsigned> mtu;
+};
+
+std::map<std::string, MockInfo> mock_if;
 std::map<int, std::string> mock_if_indextoname;
-std::map<std::string, ether_addr> mock_macs;
 
 void mock_clear()
 {
     mock_ifaddrs = nullptr;
     ifaddr_count = 0;
     mock_rtnetlinks.clear();
-    mock_if_nametoindex.clear();
+    mock_if.clear();
     mock_if_indextoname.clear();
-    mock_macs.clear();
 }
 
-void mock_addIF(const std::string& name, int idx, const ether_addr& mac)
+void mock_addIF(const std::string& name, unsigned idx, unsigned flags,
+                std::optional<ether_addr> mac, std::optional<unsigned> mtu)
 {
     if (idx == 0)
     {
         throw std::invalid_argument("Bad interface index");
     }
 
-    mock_if_nametoindex[name] = idx;
-    mock_if_indextoname[idx] = name;
-    mock_macs[name] = mac;
+    mock_if.emplace(
+        name, MockInfo{.idx = idx, .flags = flags, .mac = mac, .mtu = mtu});
+    mock_if_indextoname.emplace(idx, name);
 }
 
-void mock_addIP(const char* name, const char* addr, const char* mask,
-                unsigned int flags)
+void mock_addIP(const char* name, const char* addr, const char* mask)
 {
     struct ifaddrs* ifaddr = &mock_ifaddr_storage[ifaddr_count].ifaddr;
 
@@ -95,7 +101,7 @@ void mock_addIP(const char* name, const char* addr, const char* mask,
 
     ifaddr->ifa_next = nullptr;
     ifaddr->ifa_name = const_cast<char*>(name);
-    ifaddr->ifa_flags = flags;
+    ifaddr->ifa_flags = 0;
     ifaddr->ifa_addr = reinterpret_cast<struct sockaddr*>(in);
     ifaddr->ifa_netmask = reinterpret_cast<struct sockaddr*>(mask_in);
     ifaddr->ifa_data = nullptr;
@@ -135,10 +141,11 @@ ssize_t sendmsg_link_dump(std::queue<std::string>& msgs, std::string_view in)
         return 0;
     }
 
-    for (const auto& [name, idx] : mock_if_nametoindex)
+    for (const auto& [name, i] : mock_if)
     {
         ifinfomsg info{};
-        info.ifi_index = idx;
+        info.ifi_index = i.idx;
+        info.ifi_flags = i.flags;
         nlmsghdr hdr{};
         hdr.nlmsg_len = NLMSG_LENGTH(sizeof(info));
         hdr.nlmsg_type = RTM_NEWLINK;
@@ -181,13 +188,13 @@ int getifaddrs(ifaddrs** ifap)
 
 unsigned if_nametoindex(const char* ifname)
 {
-    auto it = mock_if_nametoindex.find(ifname);
-    if (it == mock_if_nametoindex.end())
+    auto it = mock_if.find(ifname);
+    if (it == mock_if.end())
     {
         errno = ENXIO;
         return 0;
     }
-    return it->second;
+    return it->second.idx;
 }
 
 char* if_indextoname(unsigned ifindex, char* ifname)
@@ -208,16 +215,49 @@ int ioctl(int fd, unsigned long int request, ...)
     void* data = va_arg(vl, void*);
     va_end(vl);
 
+    auto req = reinterpret_cast<ifreq*>(data);
     if (request == SIOCGIFHWADDR)
     {
-        auto req = reinterpret_cast<ifreq*>(data);
-        auto it = mock_macs.find(req->ifr_name);
-        if (it == mock_macs.end())
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
         {
             errno = ENXIO;
             return -1;
         }
-        std::memcpy(req->ifr_hwaddr.sa_data, &it->second, sizeof(it->second));
+        if (!it->second.mac)
+        {
+            errno = EOPNOTSUPP;
+            return -1;
+        }
+        std::memcpy(req->ifr_hwaddr.sa_data, &*it->second.mac,
+                    sizeof(*it->second.mac));
+        return 0;
+    }
+    else if (request == SIOCGIFFLAGS)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        req->ifr_flags = it->second.flags;
+        return 0;
+    }
+    else if (request == SIOCGIFMTU)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        if (!it->second.mtu)
+        {
+            errno = EOPNOTSUPP;
+            return -1;
+        }
+        req->ifr_mtu = *it->second.mtu;
         return 0;
     }
 

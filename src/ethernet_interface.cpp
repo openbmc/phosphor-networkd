@@ -141,7 +141,17 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
     // would be same as parent interface.
     if (intfName.find(".") == std::string::npos)
     {
-        MacAddressIntf::macAddress(getMACAddress(intfName));
+        try
+        {
+            MacAddressIntf::macAddress(getMACAddress(intfName));
+        }
+        catch (const std::exception& e)
+        {
+            auto msg =
+                fmt::format("Failed to get MAC for {}: {}", intfName, e.what());
+            log<level::ERR>(msg.c_str(),
+                            entry("INTERFACE=%s", intfName.c_str()));
+        }
     }
     EthernetInterfaceIntf::ntpServers(
         config.map.getValueStrings("Network", "NTP"));

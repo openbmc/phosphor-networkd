@@ -19,6 +19,8 @@ namespace phosphor
 namespace network
 {
 
+using ::testing::Key;
+using ::testing::UnorderedElementsAre;
 namespace fs = std::filesystem;
 
 class TestNetworkManager : public stdplus::gtest::TestWithTmp
@@ -50,15 +52,13 @@ TEST_F(TestNetworkManager, WithSingleInterface)
     mock_clear();
 
     // Adds the following ip in the getifaddrs list.
-    mock_addIF("igb1", 2);
-    mock_addIP("igb1", "192.0.2.3", "255.255.255.128", IFF_UP | IFF_RUNNING);
+    mock_addIF("igb1", /*idx=*/2);
+    mock_addIP("igb1", "192.0.2.3", "255.255.255.128");
 
     // Now create the interfaces which will call the mocked getifaddrs
     // which returns the above interface detail.
     createInterfaces();
-    EXPECT_EQ(1, manager.getInterfaces().size());
-    EXPECT_NE(manager.getInterfaces().end(),
-              manager.getInterfaces().find("igb1"));
+    EXPECT_THAT(manager.getInterfaces(), UnorderedElementsAre(Key("igb1")));
 }
 
 // getifaddrs returns two interfaces.
@@ -66,18 +66,14 @@ TEST_F(TestNetworkManager, WithMultipleInterfaces)
 {
     mock_clear();
 
-    mock_addIF("igb0", 1);
-    mock_addIP("igb0", "192.0.2.2", "255.255.255.128", IFF_UP | IFF_RUNNING);
-
-    mock_addIF("igb1", 2);
-    mock_addIP("igb1", "192.0.2.3", "255.255.255.128", IFF_UP | IFF_RUNNING);
+    mock_addIF("igb0", /*idx=*/1);
+    mock_addIP("igb0", "192.0.2.2", "255.255.255.128");
+    mock_addIF("igb1", /*idx=*/2);
+    mock_addIP("igb1", "192.0.2.3", "255.255.255.128");
 
     createInterfaces();
-    EXPECT_EQ(2, manager.getInterfaces().size());
-    EXPECT_NE(manager.getInterfaces().end(),
-              manager.getInterfaces().find("igb0"));
-    EXPECT_NE(manager.getInterfaces().end(),
-              manager.getInterfaces().find("igb1"));
+    EXPECT_THAT(manager.getInterfaces(),
+                UnorderedElementsAre(Key("igb0"), Key("igb1")));
 }
 } // namespace network
 } // namespace phosphor
