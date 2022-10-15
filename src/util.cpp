@@ -6,19 +6,14 @@
 #include "types.hpp"
 
 #include <arpa/inet.h>
-#include <dirent.h>
 #include <fmt/compile.h>
 #include <fmt/format.h>
-#include <net/if.h>
 #include <sys/wait.h>
 
 #include <algorithm>
 #include <cctype>
 #include <charconv>
-#include <cstdlib>
-#include <cstring>
 #include <fstream>
-#include <list>
 #ifdef SYNC_MAC_FROM_INVENTORY
 #include <nlohmann/json.hpp>
 #endif
@@ -198,38 +193,6 @@ bool isValidPrefix(int family, uint8_t prefix)
 {
     return familyVisit(
         [=]<int f>() noexcept { return isValidPrefix<f>(prefix); }, family);
-}
-
-string_uset getSystemInterfaces()
-{
-    string_uset interfaces;
-    struct ifaddrs* ifaddr = nullptr;
-
-    // attempt to fill struct with ifaddrs
-    if (getifaddrs(&ifaddr) == -1)
-    {
-        auto error = errno;
-        log<level::ERR>("Error occurred during the getifaddrs call",
-                        entry("ERRNO=%d", error));
-        elog<InternalFailure>();
-    }
-
-    AddrPtr ifaddrPtr(ifaddr);
-    ifaddr = nullptr;
-    const auto& ignoredInterfaces = internal::getIgnoredInterfaces();
-
-    for (ifaddrs* ifa = ifaddrPtr.get(); ifa != nullptr; ifa = ifa->ifa_next)
-    {
-        // walk interfaces
-        // if loopback ignore
-        if (ifa->ifa_flags & IFF_LOOPBACK ||
-            ignoredInterfaces.find(ifa->ifa_name) != ignoredInterfaces.end())
-        {
-            continue;
-        }
-        interfaces.emplace(ifa->ifa_name);
-    }
-    return interfaces;
 }
 
 void deleteInterface(stdplus::const_zstring intf)
