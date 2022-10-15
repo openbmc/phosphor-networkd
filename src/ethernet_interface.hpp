@@ -124,10 +124,6 @@ class EthernetInterface : public Ifaces
      */
     void createStaticNeighborObjects();
 
-    /* @brief Gets the index of the interface on the system
-     */
-    unsigned ifIndex() const;
-
     /* @brief Gets all the ip addresses.
      * @returns the list of ipAddress.
      */
@@ -231,13 +227,6 @@ class EthernetInterface : public Ifaces
      */
     void deleteVLANFromSystem(stdplus::zstring_view interface);
 
-    /** @brief get the mac address of the interface.
-     *  @param[in] interfaceName - Network interface name.
-     *  @return macaddress on success
-     */
-
-    std::string getMACAddress(stdplus::const_zstring interfaceName) const;
-
     /** @brief construct the ip address dbus object path.
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipAddress - IP address.
@@ -282,6 +271,9 @@ class EthernetInterface : public Ifaces
 
     /** @brief Dbus object path */
     std::string objPath;
+
+    /** @brief Interface index */
+    unsigned ifIdx;
 
     friend class TestEthernetInterface;
 

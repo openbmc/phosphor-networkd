@@ -2,7 +2,7 @@
 #include "config_parser.hpp"
 #include "mock_ethernet_interface.hpp"
 #include "network_manager.hpp"
-#include "util.hpp"
+#include "system_queries.hpp"
 
 #include <gmock/gmock.h>
 
@@ -27,7 +27,7 @@ class MockManager : public Manager
     {
         // clear all the interfaces first
         interfaces.clear();
-        auto interfaceStrList = getSystemInterfaces();
+        auto interfaceStrList = system::getInterfaces();
         for (auto& interface : interfaceStrList)
         {
             fs::path objPath = objectPath;

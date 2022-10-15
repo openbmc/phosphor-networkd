@@ -6,11 +6,8 @@
 #include <netinet/in.h>
 #include <stdlib.h>
 
-#include <exception>
-#include <filesystem>
 #include <sdbusplus/bus.hpp>
 #include <stdplus/gtest/tmp.hpp>
-#include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gtest/gtest.h>
 
@@ -21,7 +18,6 @@ namespace network
 
 using ::testing::Key;
 using ::testing::UnorderedElementsAre;
-namespace fs = std::filesystem;
 
 class TestNetworkManager : public stdplus::gtest::TestWithTmp
 {
@@ -43,8 +39,9 @@ class TestNetworkManager : public stdplus::gtest::TestWithTmp
 // getifaddrs will not return any interface
 TEST_F(TestNetworkManager, NoInterface)
 {
-    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
-    EXPECT_THROW(createInterfaces(), InternalFailure);
+    mock_clear();
+    createInterfaces();
+    EXPECT_TRUE(manager.getInterfaces().empty());
 }
 // getifaddrs returns single interface.
 TEST_F(TestNetworkManager, WithSingleInterface)

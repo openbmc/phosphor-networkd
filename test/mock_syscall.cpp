@@ -181,9 +181,7 @@ extern "C" {
 int getifaddrs(ifaddrs** ifap)
 {
     *ifap = mock_ifaddrs;
-    if (mock_ifaddrs == nullptr)
-        return -1;
-    return (0);
+    return 0;
 }
 
 unsigned if_nametoindex(const char* ifname)
