@@ -2,6 +2,7 @@
 
 #include "config_parser.hpp"
 #include "network_manager.hpp"
+#include "system_queries.hpp"
 #include "util.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>
@@ -26,7 +27,7 @@ Configuration::Configuration(sdbusplus::bus_t& bus,
 {
     config::Parser conf;
     {
-        auto interfaceStrList = getSystemInterfaces();
+        auto interfaceStrList = system::getInterfaces();
         if (!interfaceStrList.empty())
         {
             conf.setFile(config::pathForIntfConf(manager.getConfDir(),
