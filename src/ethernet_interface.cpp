@@ -4,22 +4,20 @@
 
 #include "config_parser.hpp"
 #include "network_manager.hpp"
+#include "system_queries.hpp"
 #include "util.hpp"
 
-#include <arpa/inet.h>
 #include <fmt/compile.h>
 #include <fmt/format.h>
-#include <linux/ethtool.h>
+#include <linux/if_addr.h>
+#include <linux/neighbour.h>
 #include <linux/rtnetlink.h>
-#include <linux/sockios.h>
-#include <net/if.h>
 
 #include <algorithm>
 #include <filesystem>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus/match.hpp>
-#include <stdplus/fd/create.hpp>
 #include <stdplus/raw.hpp>
 #include <stdplus/zstring.hpp>
 #include <string>
@@ -49,56 +47,22 @@ constexpr auto TIMESYNCD_SERVICE_PATH = "/org/freedesktop/timesync1";
 
 constexpr auto METHOD_GET = "Get";
 
-static stdplus::Fd& getIFSock()
+template <typename Func>
+inline decltype(std::declval<Func>()())
+    ignoreError(std::string_view msg, stdplus::zstring_view intf,
+                decltype(std::declval<Func>()()) fallback, Func&& func) noexcept
 {
-    using namespace stdplus::fd;
-    static auto fd =
-        socket(SocketDomain::INet, SocketType::Datagram, SocketProto::IP);
-    return fd;
-}
-
-struct LinkInfo
-{
-    bool autoneg;
-    uint16_t speed;
-};
-
-static LinkInfo getLinkInfo(stdplus::zstring_view ifname)
-{
-    LinkInfo ret;
     try
     {
-        ethtool_cmd edata = {};
-        edata.cmd = ETHTOOL_GSET;
-
-        ifreq ifr = {};
-        const auto copied = std::min<std::size_t>(ifname.size(), IFNAMSIZ - 1);
-        std::copy_n(ifname.begin(), copied, ifr.ifr_name);
-        ifr.ifr_data = reinterpret_cast<char*>(&edata);
-
-        getIFSock().ioctl(SIOCETHTOOL, &ifr);
-
-        ret.speed = edata.speed;
-        ret.autoneg = edata.autoneg;
+        return func();
     }
-    catch (const std::system_error& e)
+    catch (const std::exception& e)
     {
-        if (e.code() == std::errc::operation_not_supported)
-        {
-            auto msg = fmt::format("ETHTOOL not supported on {}", ifname);
-            log<level::NOTICE>(msg.c_str(),
-                               entry("INTERFACE=%s", ifname.c_str()));
-        }
-        else
-        {
-            auto msg =
-                fmt::format("ETHTOOL failed on {}: {}", ifname, e.what());
-            log<level::ERR>(msg.c_str(), entry("INTERFACE=%s", ifname.c_str()));
-        }
+        auto err = fmt::format("{} failed on {}: {}", msg, intf, e.what());
+        log<level::ERR>(err.c_str(), entry("INTERFACE=%s", intf.c_str()));
     }
-    return ret;
+    return fallback;
 }
-
 EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
                                      stdplus::zstring_view objPath,
                                      const config::Parser& config,
@@ -107,11 +71,12 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
     Ifaces(bus, objPath.c_str(),
            emitSignal ? Ifaces::action::defer_emit
                       : Ifaces::action::emit_no_signals),
-    bus(bus), manager(parent), objPath(objPath.c_str())
+    bus(bus), manager(parent), objPath(objPath)
 {
     auto intfName = std::string(objPath.substr(objPath.rfind('/') + 1));
     std::replace(intfName.begin(), intfName.end(), '_', '.');
     interfaceName(intfName);
+    ifIdx = system::intfIndex(intfName);
     auto dhcpVal = getDHCPValue(config);
     EthernetInterfaceIntf::dhcp4(dhcpVal.v4);
     EthernetInterfaceIntf::dhcp6(dhcpVal.v6);
@@ -146,16 +111,11 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
     // would be same as parent interface.
     if (intfName.find(".") == std::string::npos)
     {
-        try
+        auto mac = ignoreError("getMAC", intfName, std::nullopt,
+                               [&] { return system::getMAC(intfName); });
+        if (mac)
         {
-            MacAddressIntf::macAddress(getMACAddress(intfName));
-        }
-        catch (const std::exception& e)
-        {
-            auto msg =
-                fmt::format("Failed to get MAC for {}: {}", intfName, e.what());
-            log<level::ERR>(msg.c_str(),
-                            entry("INTERFACE=%s", intfName.c_str()));
+            MacAddressIntf::macAddress(mac_address::toString(*mac));
         }
     }
     EthernetInterfaceIntf::ntpServers(
@@ -164,9 +124,10 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
     EthernetInterfaceIntf::linkUp(linkUp());
     EthernetInterfaceIntf::mtu(mtu());
 
-    auto info = getLinkInfo(intfName);
-    EthernetInterfaceIntf::autoNeg(info.autoneg);
-    EthernetInterfaceIntf::speed(info.speed);
+    auto ethInfo = ignoreError("GetEthInfo", intfName, {},
+                               [&] { return system::getEthInfo(intfName); });
+    EthernetInterfaceIntf::autoNeg(ethInfo.autoneg);
+    EthernetInterfaceIntf::speed(ethInfo.speed);
 
     // Emit deferred signal.
     if (emitSignal)
@@ -219,7 +180,7 @@ void EthernetInterface::createIPAddressObjects()
     addrs.clear();
 
     AddressFilter filter;
-    filter.interface = ifIndex();
+    filter.interface = ifIdx;
     auto currentAddrs = getCurrentAddresses(filter);
     for (const auto& addr : currentAddrs)
     {
@@ -256,7 +217,7 @@ void EthernetInterface::createStaticNeighborObjects()
     staticNeighbors.clear();
 
     NeighborFilter filter;
-    filter.interface = ifIndex();
+    filter.interface = ifIdx;
     filter.state = NUD_PERMANENT;
     auto neighbors = getCurrentNeighbors(filter);
     for (const auto& neighbor : neighbors)
@@ -272,17 +233,6 @@ void EthernetInterface::createStaticNeighborObjects()
             ip, std::make_unique<Neighbor>(bus, objectPath, *this, ip, mac,
                                            Neighbor::State::Permanent));
     }
-}
-
-unsigned EthernetInterface::ifIndex() const
-{
-    unsigned idx = if_nametoindex(interfaceName().c_str());
-    if (idx == 0)
-    {
-        throw std::system_error(errno, std::generic_category(),
-                                "if_nametoindex");
-    }
-    return idx;
 }
 
 ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
@@ -368,31 +318,6 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
     manager.reloadConfigs();
 
     return objectPath;
-}
-
-/** @brief get the mac address of the interface.
- *  @return macaddress on success
- */
-
-std::string
-    EthernetInterface::getMACAddress(stdplus::const_zstring interfaceName) const
-{
-    std::string activeMACAddr = MacAddressIntf::macAddress();
-
-    ifreq ifr = {};
-    std::strncpy(ifr.ifr_name, interfaceName.c_str(), IFNAMSIZ - 1);
-    try
-    {
-        getIFSock().ioctl(SIOCGIFHWADDR, &ifr);
-    }
-    catch (const std::exception& e)
-    {
-        log<level::ERR>("ioctl failed for SIOCGIFHWADDR:",
-                        entry("ERROR=%s", e.what()));
-        elog<InternalFailure>();
-    }
-    return mac_address::toString(
-        stdplus::raw::refFrom<ether_addr>(ifr.ifr_hwaddr.sa_data));
 }
 
 void EthernetInterface::deleteObject(std::string_view ipaddress)
@@ -562,70 +487,29 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled() const
 
 bool EthernetInterface::linkUp() const
 {
-    bool value = EthernetInterfaceIntf::linkUp();
-
-    ifreq ifr = {};
-    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
-    try
-    {
-        getIFSock().ioctl(SIOCGIFFLAGS, &ifr);
-        value = static_cast<bool>(ifr.ifr_flags & IFF_RUNNING);
-    }
-    catch (const std::exception& e)
-    {
-        log<level::ERR>("ioctl failed for SIOCGIFFLAGS:",
-                        entry("ERROR=%s", e.what()));
-    }
-    return value;
+    return system::intfIsRunning(interfaceName());
 }
 
 size_t EthernetInterface::mtu() const
 {
-    size_t value = EthernetInterfaceIntf::mtu();
-
-    ifreq ifr = {};
-    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
-    try
-    {
-        getIFSock().ioctl(SIOCGIFMTU, &ifr);
-        value = ifr.ifr_mtu;
-    }
-    catch (const std::exception& e)
-    {
-        log<level::ERR>("ioctl failed for SIOCGIFMTU:",
-                        entry("ERROR=%s", e.what()));
-    }
-    return value;
+    const auto ifname = interfaceName();
+    return ignoreError("getMTU", ifname, std::nullopt,
+                       [&] { return system::getMTU(ifname); })
+        .value_or(EthernetInterfaceIntf::mtu());
 }
 
 size_t EthernetInterface::mtu(size_t value)
 {
-    if (value == EthernetInterfaceIntf::mtu())
+    const size_t old = EthernetInterfaceIntf::mtu();
+    if (value == old)
     {
         return value;
     }
-    else if (value == 0)
-    {
-        return EthernetInterfaceIntf::mtu();
-    }
-
-    ifreq ifr = {};
-    std::strncpy(ifr.ifr_name, interfaceName().c_str(), IF_NAMESIZE - 1);
-    ifr.ifr_mtu = value;
-
-    try
-    {
-        getIFSock().ioctl(SIOCSIFMTU, &ifr);
-    }
-    catch (const std::exception& e)
-    {
-        log<level::ERR>("ioctl failed for SIOCSIFMTU:",
-                        entry("ERROR=%s", strerror(errno)));
-        return EthernetInterfaceIntf::mtu();
-    }
-
-    EthernetInterfaceIntf::mtu(value);
-    return value;
+    const auto ifname = interfaceName();
+    return EthernetInterfaceIntf::mtu(ignoreError("setMTU", ifname, old, [&] {
+        system::setMTU(ifname, value);
+        return value;
+    }));
 }
 
 bool EthernetInterface::queryNicEnabled() const
@@ -635,7 +519,7 @@ bool EthernetInterface::queryNicEnabled() const
     constexpr auto prop = "AdministrativeState";
     char* rpath;
     sd_bus_path_encode("/org/freedesktop/network1/link",
-                       std::to_string(ifIndex()).c_str(), &rpath);
+                       std::to_string(ifIdx).c_str(), &rpath);
     std::string path(rpath);
     free(rpath);
 
@@ -713,17 +597,6 @@ bool EthernetInterface::queryNicEnabled() const
     return *ret;
 }
 
-static void setNICAdminState(stdplus::const_zstring intf, bool up)
-{
-    ifreq ifr = {};
-    std::strncpy(ifr.ifr_name, intf.data(), IF_NAMESIZE - 1);
-    getIFSock().ioctl(SIOCGIFFLAGS, &ifr);
-
-    ifr.ifr_flags &= ~IFF_UP;
-    ifr.ifr_flags |= up ? IFF_UP : 0;
-    getIFSock().ioctl(SIOCSIFFLAGS, &ifr);
-}
-
 bool EthernetInterface::nicEnabled(bool value)
 {
     if (value == EthernetInterfaceIntf::nicEnabled())
@@ -738,7 +611,7 @@ bool EthernetInterface::nicEnabled(bool value)
         // We only need to bring down the interface, networkd will always bring
         // up managed interfaces
         manager.addReloadPreHook(
-            [ifname = interfaceName()]() { setNICAdminState(ifname, false); });
+            [ifname = interfaceName()]() { system::setNICUp(ifname, false); });
     }
     manager.reloadConfigs();
 
@@ -813,7 +686,7 @@ ServerList EthernetInterface::getNTPServerFromTimeSyncd()
 ServerList EthernetInterface::getNameServerFromResolvd()
 {
     ServerList servers;
-    std::string OBJ_PATH = RESOLVED_SERVICE_PATH + std::to_string(ifIndex());
+    auto OBJ_PATH = fmt::format("{}{}", RESOLVED_SERVICE_PATH, ifIdx);
 
     /*
       The DNS property under org.freedesktop.resolve1.Link interface contains
@@ -1141,7 +1014,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         writeConfigurationFile();
         manager.addReloadPreHook([interface]() {
             // The MAC and LLADDRs will only update if the NIC is already down
-            setNICAdminState(interface, false);
+            system::setNICUp(interface, false);
         });
         manager.reloadConfigs();
     }

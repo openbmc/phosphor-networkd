@@ -4,20 +4,14 @@
 
 #include "ipaddress.hpp"
 #include "network_config.hpp"
+#include "system_queries.hpp"
 #include "types.hpp"
-#include "util.hpp"
 
-#include <arpa/inet.h>
-#include <dirent.h>
-#include <net/if.h>
-
-#include <algorithm>
 #include <charconv>
 #include <filesystem>
 #include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
-#include <string>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 constexpr char SYSTEMD_BUSNAME[] = "org.freedesktop.systemd1";
@@ -54,7 +48,7 @@ bool Manager::createDefaultNetworkFiles()
     auto isCreated = false;
     try
     {
-        auto interfaceStrList = getSystemInterfaces();
+        auto interfaceStrList = system::getInterfaces();
         for (const auto& interface : interfaceStrList)
         {
             // if the interface has '.' in the name, it means that this is a
@@ -104,9 +98,7 @@ void Manager::createInterfaces()
 {
     // clear all the interfaces first
     interfaces.clear();
-
-    auto interfaceStrList = getSystemInterfaces();
-
+    auto interfaceStrList = system::getInterfaces();
     for (auto& interface : interfaceStrList)
     {
         fs::path objPath = objectPath;
