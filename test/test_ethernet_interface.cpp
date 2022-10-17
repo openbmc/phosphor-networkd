@@ -44,8 +44,8 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     {
         mock_clear();
         mock_addIF("test0", /*idx=*/1);
-        return {bus, "/xyz/openbmc_test/network/test0", config::Parser(),
-                manager};
+        return {bus, manager, getInterfaceInfo("test0"),
+                "/xyz/openbmc_test/network"sv, config::Parser()};
     }
 
     int countIPObjects()
@@ -101,8 +101,8 @@ TEST_F(TestEthernetInterface, Fields)
     constexpr unsigned mtu = 150;
 
     mock_addIF("test1", idx, IFF_RUNNING, mac, mtu);
-    MockEthernetInterface intf(bus, "/xyz/openbmc_test/network/test1",
-                               config::Parser(), manager);
+    MockEthernetInterface intf(bus, manager, getInterfaceInfo("test1"),
+                               "/xyz/openbmc_test/network"sv, config::Parser());
 
     EXPECT_EQ(mtu, intf.mtu());
     EXPECT_EQ(mac_address::toString(mac), intf.macAddress());

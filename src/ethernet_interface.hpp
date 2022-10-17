@@ -5,9 +5,11 @@
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
 #include "xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp"
 
+#include <netinet/ether.h>
+
+#include <optional>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
-#include <stdplus/zstring.hpp>
 #include <stdplus/zstring_view.hpp>
 #include <string>
 #include <vector>
@@ -37,8 +39,6 @@ using MacAddressIntf =
 using ServerList = std::vector<std::string>;
 using ObjectPath = sdbusplus::message::object_path;
 
-using VlanId = uint32_t;
-
 class Manager;
 
 class TestEthernetInterface;
@@ -49,6 +49,22 @@ namespace config
 {
 class Parser;
 }
+
+/** @class InterfaceInfo
+ *  @brief Information about interfaces from the kernel
+ */
+struct InterfaceInfo
+{
+    bool running;
+    unsigned index;
+    std::string name;
+    std::optional<ether_addr> mac;
+    std::optional<unsigned> mtu;
+};
+
+/** @brief Returns an InterfaceInfo for the given string name
+ */
+InterfaceInfo getInterfaceInfo(stdplus::zstring_view ifname);
 
 /** @class EthernetInterface
  *  @brief OpenBMC Ethernet Interface implementation.
@@ -67,17 +83,21 @@ class EthernetInterface : public Ifaces
 
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
-     *  @param[in] objPath - Path to attach at.
+     *  @param[in] manager - parent object.
+     *  @param[in] info - Interface information.
+     *  @param[in] objRoot - Path to attach at.
      *  @param[in] config - The parsed configuation file.
-     *  @param[in] parent - parent object.
      *  @param[in] emitSignal - true if the object added signal needs to be
      *                          send.
      *  @param[in] enabled - Override the lookup of nicEnabled
      */
-    EthernetInterface(sdbusplus::bus_t& bus, stdplus::zstring_view objPath,
-                      const config::Parser& config, Manager& parent,
-                      bool emitSignal = true,
+    EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
+                      const InterfaceInfo& info, std::string_view objRoot,
+                      const config::Parser& config, bool emitSignal = true,
                       std::optional<bool> enabled = std::nullopt);
+
+    /** @brief Updates the interface information based on new InterfaceInfo */
+    void updateInfo(const InterfaceInfo& info);
 
     /** @brief Function used to load the nameservers.
      */
@@ -186,13 +206,13 @@ class EthernetInterface : public Ifaces
     /** @brief create Vlan interface.
      *  @param[in] id- VLAN identifier.
      */
-    ObjectPath createVLAN(VlanId id);
+    ObjectPath createVLAN(uint16_t id);
 
     /** @brief load the vlan info from the system
      *         and creates the ip address dbus objects.
      *  @param[in] vlanID- VLAN identifier.
      */
-    void loadVLAN(VlanId vlanID);
+    void loadVLAN(std::string_view objRoot, uint16_t vlanID);
 
     /** @brief write the network conf file with the in-memory objects.
      */
@@ -278,6 +298,11 @@ class EthernetInterface : public Ifaces
     friend class TestEthernetInterface;
 
   private:
+    EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
+                      const InterfaceInfo& info, std::string&& objPath,
+                      const config::Parser& config, bool emitSignal,
+                      std::optional<bool> enabled);
+
     /** @brief Determines if DHCP is active for the IP::Protocol supplied.
      *  @param[in] protocol - Either IPv4 or IPv6
      *  @returns true/false value if DHCP is active for the input protocol
@@ -295,8 +320,7 @@ class EthernetInterface : public Ifaces
      */
     bool queryNicEnabled() const;
 
-    std::string vlanIntfName(VlanId id) const;
-    std::string vlanObjPath(VlanId id) const;
+    std::string vlanIntfName(uint16_t id) const;
 };
 
 } // namespace network

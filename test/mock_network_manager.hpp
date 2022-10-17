@@ -30,12 +30,10 @@ class MockManager : public Manager
         auto interfaceStrList = system::getInterfaces();
         for (auto& interface : interfaceStrList)
         {
-            fs::path objPath = objectPath;
             // normal ethernet interface
-            objPath /= interface;
             config::Parser config(config::pathForIntfConf(confDir, interface));
             auto intf = std::make_unique<MockEthernetInterface>(
-                bus, objPath.string(), config, *this);
+                bus, *this, getInterfaceInfo(interface), objectPath, config);
             intf->createIPAddressObjects();
             intf->createStaticNeighborObjects();
             intf->loadNameServers(config);
