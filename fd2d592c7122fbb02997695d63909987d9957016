@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae07fd59_00e2d2bd",
+        "filename": "src/meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-10-17T02:14:02Z",
+      "side": 0,
+      "message": "why did we introduce the fmt dependency before?",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 44
+      },
+      "revId": "fd2d592c7122fbb02997695d63909987d9957016",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
