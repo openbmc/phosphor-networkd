@@ -7,7 +7,6 @@
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
-#include <stdplus/zstring.hpp>
 #include <xyz/openbmc_project/Object/Delete/server.hpp>
 
 namespace phosphor
@@ -25,9 +24,9 @@ using VlanIface = sdbusplus::xyz::openbmc_project::Network::server::VLAN;
  *  @brief OpenBMC vlan Interface implementation.
  *  @details A concrete implementation for the vlan interface
  */
-class VlanInterface : public VlanIface,
+class VlanInterface : public EthernetInterface,
                       public DeleteIface,
-                      public EthernetInterface
+                      public VlanIface
 {
   public:
     VlanInterface() = delete;
@@ -39,17 +38,23 @@ class VlanInterface : public VlanIface,
 
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
-     *  @param[in] objPath - Path to attach at.
+     *  @param[in] manager - network manager object.
+     *  @param[in] info - Interface information.
+     *  @param[in] objRoot - Path to attach at.
      *  @param[in] config - The parsed configuation file.
      *  @param[in] vlanID - vlan identifier.
-     *  @param[in] intf - ethernet interface object.
-     *  @param[in] manager - network manager object.
+     *  @param[in] parent - ethernet interface object.
+     *  @param[in] emitSignal - true if the object added signal needs to be
+     *                          send.
+     *  @param[in] enabled - Override the lookup of nicEnabled
      *
      *  This constructor is called during loading the VLAN Interface
      */
-    VlanInterface(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-                  const config::Parser& config, bool nicEnabled,
-                  uint32_t vlanID, EthernetInterface& intf, Manager& parent);
+    VlanInterface(sdbusplus::bus_t& bus, Manager& manager,
+                  const InterfaceInfo& info, std::string_view objRoot,
+                  const config::Parser& config, uint16_t vlanID,
+                  EthernetInterface& parent, bool emitSignal = true,
+                  std::optional<bool> enabled = std::nullopt);
 
     /** @brief Delete this d-bus object.
      */

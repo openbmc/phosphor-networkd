@@ -17,19 +17,17 @@ namespace network
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-VlanInterface::VlanInterface(sdbusplus::bus_t& bus,
-                             stdplus::const_zstring objPath,
-                             const config::Parser& config, bool nicEnabled,
-                             uint32_t vlanID, EthernetInterface& intf,
-                             Manager& parent) :
-    VlanIface(bus, objPath.c_str()),
-    DeleteIface(bus, objPath.c_str()),
-    EthernetInterface(bus, objPath, config, parent, true, nicEnabled),
-    parentInterface(intf)
+VlanInterface::VlanInterface(sdbusplus::bus_t& bus, Manager& manager,
+                             const InterfaceInfo& info,
+                             std::string_view objRoot,
+                             const config::Parser& config, uint16_t vlanID,
+                             EthernetInterface& parent, bool emitSignal,
+                             std::optional<bool> enabled) :
+    EthernetInterface(bus, manager, info, objRoot, config, emitSignal, enabled),
+    DeleteIface(bus, objPath.c_str()), VlanIface(bus, objPath.c_str()),
+    parentInterface(parent)
 {
     id(vlanID);
-    MacAddressIntf::macAddress(parentInterface.macAddress());
-
     emit_object_added();
 }
 
