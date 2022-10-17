@@ -22,6 +22,30 @@
       },
       "revId": "fd2d592c7122fbb02997695d63909987d9957016",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd01baa2_16ad8fbd",
+        "filename": "src/meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-10-17T05:24:00Z",
+      "side": 0,
+      "message": "Seems like it worked as clang formatter which we use in bmcweb repo ?",
+      "parentUuid": "ae07fd59_00e2d2bd",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 44
+      },
+      "revId": "fd2d592c7122fbb02997695d63909987d9957016",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
