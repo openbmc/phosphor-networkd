@@ -20,6 +20,7 @@ namespace network
 {
 
 namespace fs = std::filesystem;
+using std::literals::string_view_literals::operator""sv;
 
 class TestVlanInterface : public stdplus::gtest::TestWithTmp
 {
@@ -42,14 +43,15 @@ class TestVlanInterface : public stdplus::gtest::TestWithTmp
         mock_clear();
         mock_addIF("test0", /*idx=*/1);
         return {bus,
-                "/xyz/openbmc_test/network/test0",
-                config::Parser(),
                 manager,
-                /*emitSignals=*/false,
+                getInterfaceInfo("test0"),
+                "/xyz/openbmc_test/network"sv,
+                config::Parser(),
+                /*emitSignal=*/false,
                 /*nicEnabled=*/true};
     }
 
-    void createVlan(VlanId id)
+    void createVlan(uint16_t id)
     {
         std::string ifname = "test0.";
         ifname += std::to_string(id);

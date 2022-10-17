@@ -101,7 +101,6 @@ void Manager::createInterfaces()
     auto interfaceStrList = system::getInterfaces();
     for (auto& interface : interfaceStrList)
     {
-        fs::path objPath = objectPath;
         auto index = interface.find(".");
 
         // interface can be of vlan type or normal ethernet interface.
@@ -130,15 +129,14 @@ void Manager::createInterfaces()
                 log<level::ERR>(msg.c_str());
                 continue;
             }
-            it->second->loadVLAN(vlanId);
+            it->second->loadVLAN(objectPath, vlanId);
             continue;
         }
         // normal ethernet interface
-        objPath /= interface;
         config::Parser config(config::pathForIntfConf(confDir, interface));
 
         auto intf = std::make_unique<phosphor::network::EthernetInterface>(
-            bus, objPath.string(), config, *this);
+            bus, *this, getInterfaceInfo(interface), objectPath, config);
 
         intf->createIPAddressObjects();
         intf->createStaticNeighborObjects();

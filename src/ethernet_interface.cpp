@@ -63,20 +63,46 @@ inline decltype(std::declval<Func>()())
     }
     return fallback;
 }
-EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
-                                     stdplus::zstring_view objPath,
+
+InterfaceInfo getInterfaceInfo(stdplus::zstring_view ifname)
+{
+    return InterfaceInfo{.running = system::intfIsRunning(ifname),
+                         .index = system::intfIndex(ifname),
+                         .name = std::string(ifname),
+                         .mac = system::getMAC(ifname),
+                         .mtu = system::getMTU(ifname)};
+}
+
+static std::string makeObjPath(std::string_view root, std::string_view intf)
+{
+    auto ret = fmt::format(FMT_COMPILE("{}/{}"), root, intf);
+    std::replace(ret.begin() + ret.size() - intf.size(), ret.end(), '.', '_');
+    return ret;
+}
+
+EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
+                                     const InterfaceInfo& info,
+                                     std::string_view objRoot,
                                      const config::Parser& config,
-                                     Manager& parent, bool emitSignal,
+                                     bool emitSignal,
+                                     std::optional<bool> enabled) :
+    EthernetInterface(bus, manager, info, makeObjPath(objRoot, info.name),
+                      config, emitSignal, enabled)
+{
+}
+
+EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
+                                     const InterfaceInfo& info,
+                                     std::string&& objPath,
+                                     const config::Parser& config,
+                                     bool emitSignal,
                                      std::optional<bool> enabled) :
     Ifaces(bus, objPath.c_str(),
            emitSignal ? Ifaces::action::defer_emit
                       : Ifaces::action::emit_no_signals),
-    bus(bus), manager(parent), objPath(objPath)
+    bus(bus), manager(manager), objPath(std::move(objPath)), ifIdx(info.index)
 {
-    auto intfName = std::string(objPath.substr(objPath.rfind('/') + 1));
-    std::replace(intfName.begin(), intfName.end(), '_', '.');
-    interfaceName(intfName);
-    ifIdx = system::intfIndex(intfName);
+    interfaceName(info.name);
     auto dhcpVal = getDHCPValue(config);
     EthernetInterfaceIntf::dhcp4(dhcpVal.v4);
     EthernetInterfaceIntf::dhcp6(dhcpVal.v6);
@@ -89,7 +115,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
 
     for (const auto& gateway : gatewayList)
     {
-        if (gateway.first == intfName)
+        if (gateway.first == info.name)
         {
             defaultGateway = gateway.second;
             break;
@@ -98,7 +124,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
 
     for (const auto& gateway6 : gateway6List)
     {
-        if (gateway6.first == intfName)
+        if (gateway6.first == info.name)
         {
             defaultGateway6 = gateway6.second;
             break;
@@ -107,32 +133,33 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
 
     EthernetInterfaceIntf::defaultGateway(defaultGateway);
     EthernetInterfaceIntf::defaultGateway6(defaultGateway6);
-    // Don't get the mac address from the system as the mac address
-    // would be same as parent interface.
-    if (intfName.find(".") == std::string::npos)
-    {
-        auto mac = ignoreError("getMAC", intfName, std::nullopt,
-                               [&] { return system::getMAC(intfName); });
-        if (mac)
-        {
-            MacAddressIntf::macAddress(mac_address::toString(*mac));
-        }
-    }
     EthernetInterfaceIntf::ntpServers(
         config.map.getValueStrings("Network", "NTP"));
 
-    EthernetInterfaceIntf::linkUp(linkUp());
-    EthernetInterfaceIntf::mtu(mtu());
-
-    auto ethInfo = ignoreError("GetEthInfo", intfName, {},
-                               [&] { return system::getEthInfo(intfName); });
+    auto ethInfo = ignoreError("GetEthInfo", info.name, {},
+                               [&] { return system::getEthInfo(info.name); });
     EthernetInterfaceIntf::autoNeg(ethInfo.autoneg);
     EthernetInterfaceIntf::speed(ethInfo.speed);
+
+    updateInfo(info);
 
     // Emit deferred signal.
     if (emitSignal)
     {
         this->emit_object_added();
+    }
+}
+
+void EthernetInterface::updateInfo(const InterfaceInfo& info)
+{
+    EthernetInterfaceIntf::linkUp(info.running);
+    if (info.mac)
+    {
+        MacAddressIntf::macAddress(mac_address::toString(*info.mac));
+    }
+    if (info.mtu)
+    {
+        EthernetInterfaceIntf::mtu(*info.mtu);
     }
 }
 
@@ -763,27 +790,19 @@ ServerList EthernetInterface::getNameServerFromResolvd()
     return servers;
 }
 
-std::string EthernetInterface::vlanIntfName(VlanId id) const
+std::string EthernetInterface::vlanIntfName(uint16_t id) const
 {
     return fmt::format(FMT_COMPILE("{}.{}"), interfaceName(), id);
 }
 
-std::string EthernetInterface::vlanObjPath(VlanId id) const
-{
-    return fmt::format(FMT_COMPILE("{}_{}"), objPath, id);
-}
-
-void EthernetInterface::loadVLAN(VlanId id)
+void EthernetInterface::loadVLAN(std::string_view objRoot, uint16_t id)
 {
     auto vlanInterfaceName = vlanIntfName(id);
-    auto path = vlanObjPath(id);
-
     config::Parser config(
         config::pathForIntfConf(manager.getConfDir(), vlanInterfaceName));
-
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, path.c_str(), config, EthernetInterfaceIntf::nicEnabled(), id,
-        *this, manager);
+        bus, manager, getInterfaceInfo(vlanInterfaceName), objRoot, config, id,
+        *this);
 
     // Fetch the ip address from the system
     // and create the dbus object.
@@ -796,7 +815,7 @@ void EthernetInterface::loadVLAN(VlanId id)
                                  std::move(vlanIntf));
 }
 
-ObjectPath EthernetInterface::createVLAN(VlanId id)
+ObjectPath EthernetInterface::createVLAN(uint16_t id)
 {
     auto vlanInterfaceName = vlanIntfName(id);
     if (this->vlanInterfaces.find(vlanInterfaceName) !=
@@ -808,13 +827,16 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
             Argument::ARGUMENT_VALUE(std::to_string(id).c_str()));
     }
 
-    auto path = vlanObjPath(id);
+    auto objRoot = std::string_view(objPath).substr(0, objPath.rfind('/'));
+    auto info = getInterfaceInfo(interfaceName());
+    info.name = vlanInterfaceName;
 
     // Pass the parents nicEnabled property, so that the child
     // VLAN interface can inherit.
     auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, path.c_str(), config::Parser(),
-        EthernetInterfaceIntf::nicEnabled(), id, *this, manager);
+        bus, manager, info, objRoot, config::Parser(), id, *this, /*emit=*/true,
+        nicEnabled());
+    ObjectPath ret = vlanIntf->objPath;
 
     // write the device file for the vlan interface.
     vlanIntf->writeDeviceFile();
@@ -824,7 +846,7 @@ ObjectPath EthernetInterface::createVLAN(VlanId id)
     writeConfigurationFile();
     manager.reloadConfigs();
 
-    return path;
+    return objPath;
 }
 
 ServerList EthernetInterface::staticNTPServers(ServerList value)
