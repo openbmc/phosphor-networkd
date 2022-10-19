@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49e3e996_f85aeab7",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-10-19T04:39:23Z",
+      "side": 1,
+      "message": "if this function is not doing any abstraction then why do we need this function? I will not hold my +1 for the same.",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 230,
+        "endChar": 1
+      },
+      "revId": "9f992c32edbbea50030fb60781012c0e08ccdbd3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47588ed5_c040f97b",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 44
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2022-10-19T04:39:23Z",
+      "side": 1,
+      "message": "William is having the patches in the network manager, where we don\u0027t need to have this shared pointer.",
+      "range": {
+        "startLine": 248,
+        "startChar": 28,
+        "endLine": 248,
+        "endChar": 38
+      },
+      "revId": "9f992c32edbbea50030fb60781012c0e08ccdbd3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
