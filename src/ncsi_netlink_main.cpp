@@ -143,6 +143,10 @@ int main(int argc, char** argv)
     {
         return ncsi::clearInterface(indexInt);
     }
+    else if ((options)["get-version-id"] == "true")
+    {
+        return ncsi::sendGetVersionIDCommand(indexInt, packageInt, channelInt);
+    }
     else
     {
         exitWithError("No Command specified", argv);

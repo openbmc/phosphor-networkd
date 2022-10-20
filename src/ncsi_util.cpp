@@ -400,6 +400,19 @@ int sendOemCommand(int ifindex, int package, int channel,
         package, channel, NONE, internal::sendCallBack);
 }
 
+int sendGetVersionIDCommand(int ifindex, int package, int channel)
+{
+    constexpr auto cmd = 0x15; // Version ID Command
+
+    std::cout << "Send Version ID Command, CHANNEL : " << std::hex << channel
+              << ", PACKAGE : " << std::hex << package
+              << ", IFINDEX: " << std::hex << ifindex << std::endl;
+
+    return internal::applyCmd(
+        ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, cmd),
+        package, channel, NONE, internal::sendCallBack);
+}
+
 int setChannel(int ifindex, int package, int channel)
 {
     std::cout << "Set Channel : " << std::hex << channel

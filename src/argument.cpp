@@ -77,6 +77,8 @@ void ArgumentParser::usage(char** argv)
     std::cerr << "    --package=<package>  Specify a package.\n";
     std::cerr << "    --channel=<channel> Specify a channel.\n";
     std::cerr << "    --index=<device index> Specify device ifindex.\n";
+    std::cerr << "    --get-version-id=<get-version-id> Send a Get Version ID "
+                 "Command\n";
     std::cerr << std::flush;
 }
 
@@ -88,6 +90,7 @@ const option ArgumentParser::options[] = {
     {"package", required_argument, NULL, 'p'},
     {"channel", required_argument, NULL, 'c'},
     {"index", required_argument, NULL, 'x'},
+    {"get-version-id", no_argument, NULL, 'g'},
     {"help", no_argument, NULL, 'h'},
     {0, 0, 0, 0},
 };
