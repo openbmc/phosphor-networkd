@@ -227,6 +227,12 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
         return ret;
     }
 
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        std::cerr << "Response: No data" << std::endl;
+        return -1;
+    }
+
     auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
     unsigned char* data =
         (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
