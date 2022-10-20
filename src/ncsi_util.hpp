@@ -27,6 +27,15 @@ int sendOemCommand(int ifindex, int package, int channel,
                    std::span<const unsigned char> payload);
 
 /* @brief  This function will ask underlying NCSI driver
+ *         A specific command Get Version ID
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] channel - Channel number with in the package.
+ * @returns 0 on success and negative value for failure.
+ */
+int sendGetVersionIDCommand(int ifindex, int package, int channel);
+
+/* @brief  This function will ask underlying NCSI driver
  *         to set a specific  package or package/channel
  *         combination as the preferred choice.
  *         This function talks with the NCSI driver over
