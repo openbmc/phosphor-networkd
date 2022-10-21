@@ -55,6 +55,7 @@ networkd_lib = static_library(
   'network_manager.cpp',
   'system_configuration.cpp',
   'system_queries.cpp',
+  'types.cpp',
   'util.cpp',
   'routing_table.cpp',
   'config_parser.cpp',

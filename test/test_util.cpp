@@ -1,12 +1,13 @@
 #include "util.hpp"
 
 #include <arpa/inet.h>
+#include <fmt/chrono.h>
 #include <netinet/in.h>
 
+#include <charconv>
 #include <cstddef>
 #include <cstring>
 #include <stdexcept>
-#include <stdplus/raw.hpp>
 #include <string>
 #include <string_view>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -53,19 +54,6 @@ TEST_F(TestUtil, AddrFromBuf)
     EXPECT_THROW(addrFromBuf(AF_INET6, tooSmall), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_INET6, tooLarge), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_UNSPEC, buf2), std::invalid_argument);
-}
-
-TEST_F(TestUtil, IpToString)
-{
-    struct in_addr ip1;
-    EXPECT_EQ(1, inet_pton(AF_INET, "192.168.10.1", &ip1));
-    EXPECT_EQ("192.168.10.1", toString(ip1));
-    EXPECT_EQ("192.168.10.1", toString(InAddrAny(ip1)));
-
-    struct in6_addr ip2;
-    EXPECT_EQ(1, inet_pton(AF_INET6, "fdd8:b5ad:9d93:94ee::2:1", &ip2));
-    EXPECT_EQ("fdd8:b5ad:9d93:94ee::2:1", toString(ip2));
-    EXPECT_EQ("fdd8:b5ad:9d93:94ee::2:1", toString(InAddrAny(ip2)));
 }
 
 TEST_F(TestUtil, IpValidation)
@@ -152,30 +140,15 @@ TEST(MacFromString, Bad)
 
 TEST(MacFromString, Valid)
 {
-    EXPECT_TRUE(
-        stdplus::raw::equal(ether_addr{}, fromString("00:00:00:00:00:00")));
-    EXPECT_TRUE(
-        stdplus::raw::equal(ether_addr{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa},
-                            fromString("FF:EE:DD:cc:bb:aa")));
-    EXPECT_TRUE(
-        stdplus::raw::equal(ether_addr{0x00, 0x01, 0x02, 0x03, 0x04, 0x05},
-                            fromString("0:1:2:3:4:5")));
-    EXPECT_TRUE(
-        stdplus::raw::equal(ether_addr{0x01, 0x23, 0x45, 0x67, 0x89, 0xab},
-                            fromString("0123456789AB")));
-    EXPECT_TRUE(
-        stdplus::raw::equal(ether_addr{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa},
-                            fromString("FFEEDDccbbaa")));
-}
-
-TEST(MacToString, Valid)
-{
-    EXPECT_EQ("11:22:33:44:55:66",
-              toString({0x11, 0x22, 0x33, 0x44, 0x55, 0x66}));
-    EXPECT_EQ("01:02:03:04:05:67",
-              toString({0x01, 0x02, 0x03, 0x04, 0x05, 0x67}));
-    EXPECT_EQ("00:00:00:00:00:00",
-              toString({0x00, 0x00, 0x00, 0x00, 0x00, 0x00}));
+    EXPECT_EQ((ether_addr{}), fromString("00:00:00:00:00:00"));
+    EXPECT_EQ((ether_addr{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa}),
+              fromString("FF:EE:DD:cc:bb:aa"));
+    EXPECT_EQ((ether_addr{0x00, 0x01, 0x02, 0x03, 0x04, 0x05}),
+              fromString("0:1:2:3:4:5"));
+    EXPECT_EQ((ether_addr{0x01, 0x23, 0x45, 0x67, 0x89, 0xab}),
+              fromString("0123456789AB"));
+    EXPECT_EQ((ether_addr{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa}),
+              fromString("FFEEDDccbbaa"));
 }
 
 TEST(MacIsEmpty, True)
