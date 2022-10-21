@@ -1,6 +1,7 @@
 #include "routing_table.hpp"
 
 #include "netlink.hpp"
+#include "types.hpp"
 #include "util.hpp"
 
 #include <net/if.h>
@@ -77,26 +78,16 @@ void Table::parseRoutes(const nlmsghdr& hdr, std::string_view msg)
         }
     }
 
-    std::string dstStr;
-    if (dstAddr)
-    {
-        dstStr = toString(*dstAddr);
-    }
-    std::string gatewayStr;
-    if (gateWayAddr)
-    {
-        gatewayStr = toString(*gateWayAddr);
-    }
     if (rtm.rtm_dst_len == 0 && gateWayAddr)
     {
         std::string ifNameStr(ifName);
         if (rtm.rtm_family == AF_INET)
         {
-            defaultGateway[ifNameStr] = gatewayStr;
+            defaultGateway.emplace(ifNameStr, std::to_string(*gateWayAddr));
         }
         else if (rtm.rtm_family == AF_INET6)
         {
-            defaultGateway6[ifNameStr] = gatewayStr;
+            defaultGateway6.emplace(ifNameStr, std::to_string(*gateWayAddr));
         }
     }
 }

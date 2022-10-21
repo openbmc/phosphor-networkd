@@ -51,6 +51,7 @@ tests = [
   'netlink',
   'network_manager',
   #'rtnetlink',
+  'types',
   'util',
   'vlan_interface',
 ]

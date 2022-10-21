@@ -43,12 +43,6 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName);
  */
 ether_addr fromString(std::string_view str);
 
-/** @brief Converts the given mac address bytes into a string
- *  @param[in] mac - The mac address
- *  @returns A valid mac address string
- */
-std::string toString(const ether_addr& mac);
-
 /** @brief Determines if the mac address is empty
  *  @param[in] mac - The mac address
  *  @return True if 00:00:00:00:00:00
@@ -81,31 +75,12 @@ template <>
 struct FamilyTraits<AF_INET>
 {
     using addr = in_addr;
-    static constexpr std::size_t strlen = INET_ADDRSTRLEN;
 };
 
 template <>
 struct FamilyTraits<AF_INET6>
 {
     using addr = in6_addr;
-    static constexpr std::size_t strlen = INET6_ADDRSTRLEN;
-};
-
-template <typename Addr>
-struct AddrToFamily
-{
-};
-
-template <>
-struct AddrToFamily<in_addr>
-{
-    static constexpr int value = AF_INET;
-};
-
-template <>
-struct AddrToFamily<in6_addr>
-{
-    static constexpr int value = AF_INET6;
 };
 
 /* @brief converts a sockaddr for the specified address family into
@@ -116,14 +91,6 @@ struct AddrToFamily<in6_addr>
 template <int family>
 typename FamilyTraits<family>::addr addrFromBuf(std::string_view buf);
 InAddrAny addrFromBuf(int family, std::string_view buf);
-
-/* @brief converts the ip bytes into a string representation
- * @param[in] addr - input ip address to convert.
- * @returns String representation of the ip.
- */
-template <typename Addr>
-std::string toString(const Addr& addr);
-std::string toString(const InAddrAny& addr);
 
 /* @brief checks that the given ip address valid or not.
  * @param[in] family - IP address family(AF_INET/AF_INET6).
