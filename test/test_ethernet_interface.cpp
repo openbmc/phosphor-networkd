@@ -117,7 +117,7 @@ TEST_F(TestEthernetInterface, Fields)
                                "/xyz/openbmc_test/network"sv, config::Parser());
 
     EXPECT_EQ(mtu, intf.mtu());
-    EXPECT_EQ(mac_address::toString(mac), intf.macAddress());
+    EXPECT_EQ(std::to_string(mac), intf.macAddress());
     EXPECT_TRUE(intf.linkUp());
 }
 

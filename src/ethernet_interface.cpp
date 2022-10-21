@@ -155,7 +155,7 @@ void EthernetInterface::updateInfo(const InterfaceInfo& info)
     EthernetInterfaceIntf::linkUp(info.running);
     if (info.mac)
     {
-        MacAddressIntf::macAddress(mac_address::toString(*info.mac));
+        MacAddressIntf::macAddress(std::to_string(*info.mac));
     }
     if (info.mtu)
     {
@@ -215,7 +215,7 @@ void EthernetInterface::createIPAddressObjects()
         {
             continue;
         }
-        auto address = toString(addr.address);
+        auto address = std::to_string(addr.address);
         IP::Protocol addressType = getProtocol(addr.address);
         IP::AddressOrigin origin = IP::AddressOrigin::Static;
         if (dhcpIsEnabled(addressType))
@@ -253,8 +253,8 @@ void EthernetInterface::createStaticNeighborObjects()
         {
             continue;
         }
-        auto ip = toString(neighbor.address);
-        auto mac = mac_address::toString(*neighbor.mac);
+        auto ip = std::to_string(neighbor.address);
+        auto mac = std::to_string(*neighbor.mac);
         auto objectPath = generateStaticNeighborObjectPath(ip, mac);
         staticNeighbors.emplace(
             ip, std::make_unique<Neighbor>(bus, objectPath, *this, ip, mac,
@@ -752,40 +752,8 @@ ServerList EthernetInterface::getNameServerFromResolvd()
     {
         int addressFamily = std::get<0>(*i);
         std::vector<uint8_t>& ipaddress = std::get<1>(*i);
-
-        switch (addressFamily)
-        {
-            case AF_INET:
-                if (ipaddress.size() == sizeof(struct in_addr))
-                {
-                    servers.push_back(toString(
-                        *reinterpret_cast<struct in_addr*>(ipaddress.data())));
-                }
-                else
-                {
-                    log<level::ERR>(
-                        "Invalid data recived from Systemd-Resolved");
-                }
-                break;
-
-            case AF_INET6:
-                if (ipaddress.size() == sizeof(struct in6_addr))
-                {
-                    servers.push_back(toString(
-                        *reinterpret_cast<struct in6_addr*>(ipaddress.data())));
-                }
-                else
-                {
-                    log<level::ERR>(
-                        "Invalid data recived from Systemd-Resolved");
-                }
-                break;
-
-            default:
-                log<level::ERR>(
-                    "Unsupported address family in DNS from Systemd-Resolved");
-                break;
-        }
+        servers.push_back(std::to_string(
+            addrFromBuf(addressFamily, stdplus::raw::asView<char>(ipaddress))));
     }
     return servers;
 }
@@ -1020,11 +988,11 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
     }
 
     auto interface = interfaceName();
-    std::string validMAC = mac_address::toString(newMAC);
+    auto validMAC = std::to_string(newMAC);
 
     // We don't need to update the system if the address is unchanged
     ether_addr oldMAC = mac_address::fromString(MacAddressIntf::macAddress());
-    if (!stdplus::raw::equal(newMAC, oldMAC))
+    if (newMAC != oldMAC)
     {
         // Update everything that depends on the MAC value
         for (const auto& [name, intf] : vlanInterfaces)
