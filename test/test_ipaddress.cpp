@@ -7,7 +7,6 @@
 
 #include <cstring>
 #include <stdexcept>
-#include <stdplus/raw.hpp>
 #include <string>
 #include <vector>
 
@@ -126,8 +125,7 @@ TEST(ParseAddress, FilterInterface)
     EXPECT_EQ(msg.ifa_index, addresses[0].interface);
     EXPECT_EQ(msg.ifa_scope, addresses[0].scope);
     EXPECT_EQ(msg.ifa_prefixlen, addresses[0].prefix);
-    EXPECT_TRUE(
-        stdplus::raw::equal(addr, std::get<in_addr>(addresses[0].address)));
+    EXPECT_EQ(addr, addresses[0].address);
 }
 
 TEST(ParseNeighbor, FilterScope)
@@ -164,8 +162,7 @@ TEST(ParseNeighbor, FilterScope)
     EXPECT_EQ(msg.ifa_index, addresses[0].interface);
     EXPECT_EQ(msg.ifa_scope, addresses[0].scope);
     EXPECT_EQ(msg.ifa_prefixlen, addresses[0].prefix);
-    EXPECT_TRUE(
-        stdplus::raw::equal(addr, std::get<in_addr>(addresses[0].address)));
+    EXPECT_EQ(addr, addresses[0].address);
 }
 
 TEST(ParseNeighbor, NoFilter)
@@ -198,8 +195,7 @@ TEST(ParseNeighbor, NoFilter)
     EXPECT_EQ(msg.ifa_index, addresses[0].interface);
     EXPECT_EQ(msg.ifa_scope, addresses[0].scope);
     EXPECT_EQ(msg.ifa_prefixlen, addresses[0].prefix);
-    EXPECT_TRUE(
-        stdplus::raw::equal(addr, std::get<in6_addr>(addresses[0].address)));
+    EXPECT_EQ(addr, addresses[0].address);
 }
 
 } // namespace detail

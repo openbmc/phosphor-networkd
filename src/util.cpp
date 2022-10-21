@@ -159,25 +159,6 @@ InAddrAny addrFromBuf(int family, std::string_view buf)
         [=]<int f>() -> InAddrAny { return addrFromBuf<f>(buf); }, family);
 }
 
-template <typename Addr>
-std::string toString(const Addr& addr)
-{
-    static constexpr int family = AddrToFamily<Addr>::value;
-    std::string ret(FamilyTraits<family>::strlen, '\0');
-    if (inet_ntop(family, &addr, ret.data(), ret.size()) == nullptr)
-    {
-        throw std::runtime_error("Failed to convert IP to string");
-    }
-
-    ret.resize(strlen(ret.c_str()));
-    return ret;
-}
-
-std::string toString(const InAddrAny& addr)
-{
-    return std::visit([](auto&& a) { return toString(a); }, addr);
-}
-
 bool isValidIP(int family, stdplus::const_zstring address) noexcept
 {
     unsigned char buf[sizeof(struct in6_addr)];
@@ -476,15 +457,9 @@ ether_addr fromString(std::string_view str)
     return ret;
 }
 
-std::string toString(const ether_addr& mac)
-{
-    return fmt::format(FMT_COMPILE("{:02x}"),
-                       fmt::join(mac.ether_addr_octet, ":"));
-}
-
 bool isEmpty(const ether_addr& mac)
 {
-    return stdplus::raw::equal(mac, ether_addr{});
+    return mac == ether_addr{};
 }
 
 bool isMulticast(const ether_addr& mac)

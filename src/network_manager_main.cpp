@@ -64,14 +64,14 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus,
     try
     {
         auto inventoryMAC = mac_address::getfromInventory(bus, intfname);
-        if (!mac_address::toString(inventoryMAC).empty())
+        if (inventoryMAC != ether_addr{})
         {
-            log<level::INFO>("Mac Address in Inventory on "),
-                entry("Interface : ", intfname.c_str()),
-                entry("MAC Address :",
-                      (mac_address::toString(inventoryMAC)).c_str());
-            manager->setFistBootMACOnInterface(std::make_pair(
-                intfname.c_str(), mac_address::toString(inventoryMAC)));
+            auto macStr = std::to_string(inventoryMAC);
+            log<level::INFO>("Mac Address in Inventory on ",
+                             entry("Interface : ", intfname.c_str()),
+                             entry("MAC Address :", macStr.c_str()));
+            manager->setFistBootMACOnInterface(
+                std::make_pair(intfname.c_str(), std::move(macStr)));
             first_boot_status.push_back(intfname.c_str());
             bool status = true;
             for (const auto& keys : configJson.items())
