@@ -1,5 +1,6 @@
 #include "netlink.hpp"
 
+#include <fmt/format.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
@@ -25,11 +26,15 @@ void processMsg(std::string_view& msgs, bool& done, ReceiveCallback cb)
     auto hdr = stdplus::raw::copyFrom<nlmsghdr>(msgs);
     if (hdr.nlmsg_len < sizeof(hdr))
     {
-        throw std::runtime_error("Invalid nlmsg length");
+        throw std::runtime_error(
+            fmt::format("nlmsg length shorter than header: {} < {}",
+                        hdr.nlmsg_len, sizeof(hdr)));
     }
     if (msgs.size() < hdr.nlmsg_len)
     {
-        throw std::runtime_error("Bad nlmsg payload");
+        throw std::runtime_error(
+            fmt::format("not enough message for nlmsg: {} < {}", msgs.size(),
+                        hdr.nlmsg_len));
     }
     auto msg = msgs.substr(NLMSG_HDRLEN, hdr.nlmsg_len - NLMSG_HDRLEN);
     msgs.remove_prefix(NLMSG_ALIGN(hdr.nlmsg_len));
@@ -170,11 +175,14 @@ std::tuple<rtattr, std::string_view> extractRtAttr(std::string_view& data)
     auto hdr = stdplus::raw::copyFrom<rtattr>(data);
     if (hdr.rta_len < RTA_LENGTH(0))
     {
-        throw std::runtime_error("Invalid rtattr length");
+        throw std::runtime_error(fmt::format(
+            "rtattr shorter than header: {} < {}", hdr.rta_len, RTA_LENGTH(0)));
     }
     if (data.size() < hdr.rta_len)
     {
-        throw std::runtime_error("Not enough data for rtattr");
+        throw std::runtime_error(
+            fmt::format("not enough message for rtattr: {} < {}", data.size(),
+                        hdr.rta_len));
     }
     auto attr = data.substr(RTA_LENGTH(0), hdr.rta_len - RTA_LENGTH(0));
     data.remove_prefix(RTA_ALIGN(hdr.rta_len));
