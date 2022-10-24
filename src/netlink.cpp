@@ -11,6 +11,8 @@
 #include <stdplus/raw.hpp>
 #include <system_error>
 
+using stdplus::raw::Aligned;
+
 namespace phosphor
 {
 namespace network
@@ -23,7 +25,7 @@ namespace detail
 void processMsg(std::string_view& msgs, bool& done, ReceiveCallback cb)
 {
     // Parse and update the message buffer
-    auto hdr = stdplus::raw::copyFrom<nlmsghdr>(msgs);
+    const auto& hdr = stdplus::raw::refFrom<nlmsghdr, Aligned>(msgs);
     if (hdr.nlmsg_len < sizeof(hdr))
     {
         throw std::runtime_error(
@@ -60,7 +62,7 @@ void processMsg(std::string_view& msgs, bool& done, ReceiveCallback cb)
     }
     else if (hdr.nlmsg_type == NLMSG_ERROR)
     {
-        auto err = stdplus::raw::copyFrom<nlmsgerr>(msg);
+        const auto& err = stdplus::raw::refFrom<nlmsgerr, Aligned>(msg);
         // This is just an ACK so don't do the callback
         if (err.error <= 0)
         {
@@ -176,7 +178,7 @@ void performRequest(int protocol, void* data, size_t size, ReceiveCallback cb)
 
 std::tuple<rtattr, std::string_view> extractRtAttr(std::string_view& data)
 {
-    auto hdr = stdplus::raw::copyFrom<rtattr>(data);
+    const auto& hdr = stdplus::raw::refFrom<rtattr, Aligned>(data);
     if (hdr.rta_len < RTA_LENGTH(0))
     {
         throw std::runtime_error(fmt::format(
