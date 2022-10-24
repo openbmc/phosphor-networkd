@@ -31,23 +31,19 @@ static bool shouldRefresh(const struct nlmsghdr& hdr,
         case RTM_DELADDR:
         case RTM_NEWROUTE:
         case RTM_DELROUTE:
-        {
             return true;
-        }
         case RTM_NEWNEIGH:
         case RTM_DELNEIGH:
         {
-            struct ndmsg ndm;
-            if (data.size() < sizeof(ndm))
+            if (data.size() < sizeof(ndmsg))
             {
                 return false;
             }
-            memcpy(&ndm, data.data(), sizeof(ndm));
+            const auto& ndm = *reinterpret_cast<const ndmsg*>(data.data());
             // We only want to refresh for static neighbors
             return ndm.ndm_state & NUD_PERMANENT;
         }
     }
-
     return false;
 }
 
