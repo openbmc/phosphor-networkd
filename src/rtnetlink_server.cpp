@@ -1,5 +1,6 @@
 #include "rtnetlink_server.hpp"
 
+#include "netlink.hpp"
 #include "types.hpp"
 
 #include <linux/netlink.h>
@@ -18,10 +19,11 @@ namespace network
 
 extern std::unique_ptr<Timer> refreshObjectTimer;
 
-namespace rtnetlink
+namespace netlink
 {
 
-static bool shouldRefresh(const struct nlmsghdr& hdr, std::string_view data)
+static bool shouldRefresh(const struct nlmsghdr& hdr,
+                          std::string_view data) noexcept
 {
     switch (hdr.nlmsg_type)
     {
@@ -49,41 +51,17 @@ static bool shouldRefresh(const struct nlmsghdr& hdr, std::string_view data)
     return false;
 }
 
-/* Call Back for the sd event loop */
+static void handler(const nlmsghdr& hdr, std::string_view data)
+{
+    if (shouldRefresh(hdr, data) && !refreshObjectTimer->isEnabled())
+    {
+        refreshObjectTimer->restartOnce(refreshTimeout);
+    }
+}
+
 static void eventHandler(sdeventplus::source::IO&, int fd, uint32_t)
 {
-    std::array<char, BUFSIZE> buffer = {};
-    int len{};
-
-    auto netLinkHeader = reinterpret_cast<struct nlmsghdr*>(buffer.data());
-
-    while ((len = recv(fd, netLinkHeader, buffer.size(), 0)) > 0)
-    {
-        for (; (NLMSG_OK(netLinkHeader, len)) &&
-               (netLinkHeader->nlmsg_type != NLMSG_DONE);
-             netLinkHeader = NLMSG_NEXT(netLinkHeader, len))
-        {
-            std::string_view data(
-                reinterpret_cast<const char*>(NLMSG_DATA(netLinkHeader)),
-                netLinkHeader->nlmsg_len - NLMSG_HDRLEN);
-            if (shouldRefresh(*netLinkHeader, data))
-            {
-                // starting the timer here to make sure that we don't want
-                // create the child objects multiple times.
-                if (!refreshObjectTimer->isEnabled())
-                {
-                    // if start timer throws exception then let the application
-                    // crash
-                    refreshObjectTimer->restartOnce(refreshTimeout);
-                } // end if
-            }     // end if
-
-        } // end for
-
-        buffer.fill('\0');
-
-        netLinkHeader = reinterpret_cast<struct nlmsghdr*>(buffer.data());
-    } // end while
+    receive(fd, handler);
 }
 
 static stdplus::ManagedFd makeSock()
@@ -109,6 +87,6 @@ Server::Server(sdeventplus::Event& event) :
 {
 }
 
-} // namespace rtnetlink
+} // namespace netlink
 } // namespace network
 } // namespace phosphor
