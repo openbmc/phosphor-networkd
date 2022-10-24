@@ -28,6 +28,13 @@ void performRequest(int protocol, void* data, size_t size, ReceiveCallback cb);
 
 } // namespace detail
 
+/** @brief Receives all outstanding messages on a netlink socket
+ *
+ *  @param[in] sock - The socket to receive the messages on
+ *  @param[in] cb   - Called for each response message payload
+ */
+void receive(int sock, ReceiveCallback cb);
+
 /* @brief Call on a block of rtattrs to parse a single one out
  *        Updates the input to remove the attr parsed out.
  *
