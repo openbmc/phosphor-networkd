@@ -78,53 +78,6 @@ void processMsg(std::string_view& msgs, bool& done, ReceiveCallback cb)
     }
 }
 
-static void receive(int sock, ReceiveCallback cb)
-{
-    // We need to make sure we have enough room for an entire packet otherwise
-    // it gets truncated. The netlink docs guarantee packets will not exceed 8K
-    std::array<char, 8192> buf;
-
-    iovec iov{};
-    iov.iov_base = buf.data();
-    iov.iov_len = buf.size();
-
-    sockaddr_nl from{};
-    from.nl_family = AF_NETLINK;
-
-    msghdr hdr{};
-    hdr.msg_name = &from;
-    hdr.msg_namelen = sizeof(from);
-    hdr.msg_iov = &iov;
-    hdr.msg_iovlen = 1;
-
-    // We only do multiple recvs if we have a MULTI type message
-    bool done = true;
-    do
-    {
-        ssize_t recvd = recvmsg(sock, &hdr, 0);
-        if (recvd < 0)
-        {
-            throw std::system_error(errno, std::generic_category(),
-                                    "netlink recvmsg");
-        }
-        if (recvd == 0)
-        {
-            throw std::runtime_error("netlink recvmsg: Got empty payload");
-        }
-
-        std::string_view msgs(buf.data(), recvd);
-        do
-        {
-            processMsg(msgs, done, cb);
-        } while (!done && !msgs.empty());
-
-        if (done && !msgs.empty())
-        {
-            throw std::runtime_error("Extra unprocessed netlink messages");
-        }
-    } while (!done);
-}
-
 static void requestSend(int sock, void* data, size_t size)
 {
     sockaddr_nl dst{};
@@ -169,6 +122,57 @@ void performRequest(int protocol, void* data, size_t size, ReceiveCallback cb)
 }
 
 } // namespace detail
+
+void receive(int sock, ReceiveCallback cb)
+{
+    // We need to make sure we have enough room for an entire packet otherwise
+    // it gets truncated. The netlink docs guarantee packets will not exceed 8K
+    std::array<char, 8192> buf;
+
+    iovec iov{};
+    iov.iov_base = buf.data();
+    iov.iov_len = buf.size();
+
+    sockaddr_nl from{};
+    from.nl_family = AF_NETLINK;
+
+    msghdr hdr{};
+    hdr.msg_name = &from;
+    hdr.msg_namelen = sizeof(from);
+    hdr.msg_iov = &iov;
+    hdr.msg_iovlen = 1;
+
+    // We only do multiple recvs if we have a MULTI type message
+    bool done = true;
+    do
+    {
+        ssize_t recvd = recvmsg(sock, &hdr, 0);
+        if (recvd < 0)
+        {
+            throw std::system_error(errno, std::generic_category(),
+                                    "netlink recvmsg");
+        }
+        if (recvd == 0)
+        {
+            if (!done)
+            {
+                throw std::runtime_error("netlink recvmsg: Got empty payload");
+            }
+            return;
+        }
+
+        std::string_view msgs(buf.data(), recvd);
+        do
+        {
+            detail::processMsg(msgs, done, cb);
+        } while (!done && !msgs.empty());
+
+        if (done && !msgs.empty())
+        {
+            throw std::runtime_error("Extra unprocessed netlink messages");
+        }
+    } while (!done);
+}
 
 std::tuple<rtattr, std::string_view> extractRtAttr(std::string_view& data)
 {

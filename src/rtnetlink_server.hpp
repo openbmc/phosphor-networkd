@@ -3,16 +3,11 @@
 #include <sdeventplus/source/io.hpp>
 #include <stdplus/fd/managed.hpp>
 
-namespace sdeventplus
-{
-class Event;
-}
-
 namespace phosphor
 {
 namespace network
 {
-namespace rtnetlink
+namespace netlink
 {
 
 constexpr auto BUFSIZE = 4096;
@@ -22,7 +17,6 @@ constexpr auto BUFSIZE = 4096;
     Usage would be create the server with the  call back
     and call the run method.
  */
-
 class Server
 {
 
@@ -47,6 +41,6 @@ class Server
     sdeventplus::source::IO io;
 };
 
-} // namespace rtnetlink
+} // namespace netlink
 } // namespace network
 } // namespace phosphor

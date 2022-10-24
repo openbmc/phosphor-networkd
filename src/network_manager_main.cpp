@@ -289,7 +289,7 @@ int main()
     manager = std::make_unique<Manager>(bus, DEFAULT_OBJPATH, NETWORK_CONF_DIR);
 
     // RTNETLINK event handler
-    rtnetlink::Server svr(event);
+    netlink::Server svr(event);
 
 #ifdef SYNC_MAC_FROM_INVENTORY
     std::ifstream in(configFile);
