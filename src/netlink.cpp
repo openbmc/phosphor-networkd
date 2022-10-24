@@ -78,7 +78,7 @@ void processMsg(std::string_view& msgs, bool& done, ReceiveCallback cb)
     }
 }
 
-static void receive(int sock, ReceiveCallback cb)
+void receive(int sock, ReceiveCallback cb)
 {
     // We need to make sure we have enough room for an entire packet otherwise
     // it gets truncated. The netlink docs guarantee packets will not exceed 8K
@@ -109,7 +109,11 @@ static void receive(int sock, ReceiveCallback cb)
         }
         if (recvd == 0)
         {
-            throw std::runtime_error("netlink recvmsg: Got empty payload");
+            if (!done)
+            {
+                throw std::runtime_error("netlink recvmsg: Got empty payload");
+            }
+            return;
         }
 
         std::string_view msgs(buf.data(), recvd);
