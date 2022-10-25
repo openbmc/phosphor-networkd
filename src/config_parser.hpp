@@ -35,28 +35,27 @@ class Checked
     };
 
     template <typename... Args>
-    inline constexpr Checked(Args&&... args) :
-        t(conCheck(std::forward<Args>(args)...))
+    constexpr Checked(Args&&... args) : t(conCheck(std::forward<Args>(args)...))
     {
     }
 
     template <typename... Args>
-    inline constexpr Checked(unchecked, Args&&... args) :
+    constexpr Checked(unchecked, Args&&... args) :
         t(std::forward<Args>(args)...)
     {
     }
 
-    inline const T& get() const noexcept
+    constexpr const T& get() const noexcept
     {
         return t;
     }
 
-    inline constexpr operator const T&() const noexcept
+    constexpr operator const T&() const noexcept
     {
         return t;
     }
 
-    inline constexpr bool operator==(const auto& rhs) const
+    constexpr bool operator==(const auto& rhs) const noexcept
     {
         return t == rhs;
     }
@@ -65,7 +64,7 @@ class Checked
     T t;
 
     template <typename... Args>
-    inline static constexpr T conCheck(Args&&... args)
+    static constexpr T conCheck(Args&&... args)
     {
         T t(std::forward<Args>(args)...);
         Check{}(t);
@@ -74,14 +73,14 @@ class Checked
 };
 
 template <typename T, typename Check>
-inline constexpr bool operator==(const auto& lhs, const Checked<T, Check>& rhs)
+constexpr bool operator==(const auto& lhs,
+                          const Checked<T, Check>& rhs) noexcept
 {
     return lhs == rhs.get();
 }
 
 template <typename T, typename Check>
-inline constexpr std::ostream& operator<<(std::ostream& s,
-                                          const Checked<T, Check>& rhs)
+inline std::ostream& operator<<(std::ostream& s, const Checked<T, Check>& rhs)
 {
     return s << rhs.get();
 }
