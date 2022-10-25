@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24bcba69_24821223",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000044
+      },
+      "writtenOn": "2022-10-25T05:58:19Z",
+      "side": 1,
+      "message": "Duplicated, remove it.",
+      "revId": "e6f6343c91f2cab35013ecfa9fd5fbace33fb6be",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
