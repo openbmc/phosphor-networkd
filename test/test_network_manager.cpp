@@ -41,7 +41,7 @@ class TestNetworkManager : public stdplus::gtest::TestWithTmp
 TEST_F(TestNetworkManager, NoInterface)
 {
     createInterfaces();
-    EXPECT_TRUE(manager.getInterfaces().empty());
+    EXPECT_TRUE(manager.interfaces.empty());
 }
 // getifaddrs returns single interface.
 TEST_F(TestNetworkManager, WithSingleInterface)
@@ -52,7 +52,7 @@ TEST_F(TestNetworkManager, WithSingleInterface)
     // Now create the interfaces which will call the mocked getifaddrs
     // which returns the above interface detail.
     createInterfaces();
-    EXPECT_THAT(manager.getInterfaces(), UnorderedElementsAre(Key("igb1")));
+    EXPECT_THAT(manager.interfaces, UnorderedElementsAre(Key("igb1")));
 }
 
 // getifaddrs returns two interfaces.
@@ -62,7 +62,7 @@ TEST_F(TestNetworkManager, WithMultipleInterfaces)
     system::mock_addIF({.idx = 2, .flags = 0, .name = "igb1"});
 
     createInterfaces();
-    EXPECT_THAT(manager.getInterfaces(),
+    EXPECT_THAT(manager.interfaces,
                 UnorderedElementsAre(Key("igb0"), Key("igb1")));
 }
 } // namespace network
