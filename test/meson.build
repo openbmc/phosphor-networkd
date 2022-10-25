@@ -54,7 +54,6 @@ tests = [
   'system_queries',
   'types',
   'util',
-  'vlan_interface',
 ]
 
 run_with_tmp = find_program('run_with_tmp', native: true)

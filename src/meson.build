@@ -59,7 +59,6 @@ networkd_lib = static_library(
   'routing_table.cpp',
   'config_parser.cpp',
   'dhcp_configuration.cpp',
-  'vlan_interface.cpp',
   'rtnetlink_server.cpp',
   'dns_updater.cpp',
   implicit_include_directories: false,
