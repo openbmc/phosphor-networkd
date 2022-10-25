@@ -46,6 +46,30 @@
       },
       "revId": "fd2d592c7122fbb02997695d63909987d9957016",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5791141_18b2ec88",
+        "filename": "src/meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-10-25T10:18:26Z",
+      "side": 0,
+      "message": "It\u0027s now guaranteed to be provided by stdplus and it wasn\u0027t before so we had to import it manually.",
+      "parentUuid": "cd01baa2_16ad8fbd",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 44
+      },
+      "revId": "fd2d592c7122fbb02997695d63909987d9957016",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
