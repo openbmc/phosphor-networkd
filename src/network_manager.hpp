@@ -4,7 +4,6 @@
 #include "routing_table.hpp"
 #include "system_configuration.hpp"
 #include "types.hpp"
-#include "vlan_interface.hpp"
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
 
 #include <filesystem>
@@ -125,14 +124,9 @@ class Manager : public details::VLANCreateIface
      */
     void doReloadConfigs();
 
-    /** @brief Get the interfaces owned by the manager
-     *
-     * @return Interfaces reference.
+    /** @brief Persistent map of EthernetInterface dbus objects and their names
      */
-    inline const auto& getInterfaces() const
-    {
-        return interfaces;
-    }
+    string_umap<std::unique_ptr<EthernetInterface>> interfaces;
 
     /** @brief Get the routing table owned by the manager
      *
@@ -155,10 +149,6 @@ class Manager : public details::VLANCreateIface
   protected:
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus_t& bus;
-
-    /** @brief Persistent map of EthernetInterface dbus objects and their names
-     */
-    string_umap<std::unique_ptr<EthernetInterface>> interfaces;
 
     /** @brief BMC network reset - resets network configuration for BMC. */
     void reset() override;

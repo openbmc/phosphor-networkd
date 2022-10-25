@@ -139,6 +139,15 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
 
     updateInfo(info);
 
+    if (info.vlan_id)
+    {
+        if (!info.parent_idx)
+        {
+            std::runtime_error("Missing parent link");
+        }
+        vlan.emplace(bus, this->objPath.c_str(), info, *this, emitSignal);
+    }
+
     // Emit deferred signal.
     if (emitSignal)
     {
@@ -367,48 +376,6 @@ void EthernetInterface::deleteStaticNeighborObject(std::string_view ipAddress)
         return;
     }
     staticNeighbors.erase(it);
-
-    writeConfigurationFile();
-    manager.reloadConfigs();
-}
-
-void EthernetInterface::deleteVLANFromSystem(stdplus::zstring_view interface)
-{
-    const auto& confDir = manager.getConfDir();
-    auto networkFile = config::pathForIntfConf(confDir, interface);
-    auto deviceFile = config::pathForIntfDev(confDir, interface);
-
-    // delete the vlan network file
-    std::error_code ec;
-    std::filesystem::remove(networkFile, ec);
-    std::filesystem::remove(deviceFile, ec);
-
-    // TODO  systemd doesn't delete the virtual network interface
-    // even after deleting all the related configuartion.
-    // https://github.com/systemd/systemd/issues/6600
-    try
-    {
-        deleteInterface(interface);
-    }
-    catch (const InternalFailure& e)
-    {
-        commit<InternalFailure>();
-    }
-}
-
-void EthernetInterface::deleteVLANObject(stdplus::zstring_view interface)
-{
-    auto it = vlanInterfaces.find(interface);
-    if (it == vlanInterfaces.end())
-    {
-        log<level::ERR>("DeleteVLANObject:Unable to find the object",
-                        entry("INTERFACE=%s", interface.c_str()));
-        return;
-    }
-
-    deleteVLANFromSystem(interface);
-    // delete the interface
-    vlanInterfaces.erase(it);
 
     writeConfigurationFile();
     manager.reloadConfigs();
@@ -762,39 +729,15 @@ ServerList EthernetInterface::getNameServerFromResolvd()
     return servers;
 }
 
-std::string EthernetInterface::vlanIntfName(uint16_t id) const
-{
-    return fmt::format(FMT_COMPILE("{}.{}"), interfaceName(), id);
-}
-
-void EthernetInterface::loadVLAN(std::string_view objRoot, uint16_t id,
-                                 system::InterfaceInfo&& info)
-{
-    config::Parser config(
-        config::pathForIntfConf(manager.getConfDir(), *info.name));
-    auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, manager, info, objRoot, config, id, *this);
-
-    // Fetch the ip address from the system
-    // and create the dbus object.
-    vlanIntf->createIPAddressObjects();
-    vlanIntf->createStaticNeighborObjects();
-    vlanIntf->loadNameServers(config);
-    vlanIntf->loadNTPServers(config);
-
-    this->vlanInterfaces.emplace(std::move(*info.name), std::move(vlanIntf));
-}
-
 ObjectPath EthernetInterface::createVLAN(uint16_t id)
 {
-    auto vlanInterfaceName = vlanIntfName(id);
-    if (this->vlanInterfaces.find(vlanInterfaceName) !=
-        this->vlanInterfaces.end())
+    auto intfName = fmt::format(FMT_COMPILE("{}.{}"), interfaceName(), id);
+    auto idStr = std::to_string(id);
+    if (manager.interfaces.find(intfName) != manager.interfaces.end())
     {
         log<level::ERR>("VLAN already exists", entry("VLANID=%u", id));
-        elog<InvalidArgument>(
-            Argument::ARGUMENT_NAME("VLANId"),
-            Argument::ARGUMENT_VALUE(std::to_string(id).c_str()));
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("VLANId"),
+                              Argument::ARGUMENT_VALUE(idStr.c_str()));
     }
 
     auto objRoot = std::string_view(objPath).substr(0, objPath.rfind('/'));
@@ -807,23 +750,29 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     auto info = system::InterfaceInfo{
         .idx = 0, // TODO: Query the correct value after creation
         .flags = 0,
-        .name = vlanInterfaceName,
+        .name = intfName,
         .mac = std::move(mac),
         .mtu = mtu(),
+        .parent_idx = ifIdx,
+        .vlan_id = id,
     };
 
     // Pass the parents nicEnabled property, so that the child
     // VLAN interface can inherit.
-    auto vlanIntf = std::make_unique<phosphor::network::VlanInterface>(
-        bus, manager, info, objRoot, config::Parser(), id, *this, /*emit=*/true,
+    auto vlanIntf = std::make_unique<EthernetInterface>(
+        bus, manager, info, objRoot, config::Parser(), /*emit=*/true,
         nicEnabled());
     ObjectPath ret = vlanIntf->objPath;
 
-    // write the device file for the vlan interface.
-    vlanIntf->writeDeviceFile();
+    manager.interfaces.emplace(intfName, std::move(vlanIntf));
 
-    this->vlanInterfaces.emplace(std::move(vlanInterfaceName),
-                                 std::move(vlanIntf));
+    // write the device file for the vlan interface.
+    config::Parser config;
+    auto& netdev = config.map["NetDev"].emplace_back();
+    netdev["Name"].emplace_back(intfName);
+    netdev["Kind"].emplace_back("vlan");
+    config.map["VLAN"].emplace_back()["Id"].emplace_back(std::move(idStr));
+    config.writeFile(config::pathForIntfDev(manager.getConfDir(), intfName));
 
     writeConfigurationFile();
     manager.reloadConfigs();
@@ -857,11 +806,6 @@ ServerList EthernetInterface::ntpServers(ServerList /*servers*/)
 
 void EthernetInterface::writeConfigurationFile()
 {
-    for (const auto& intf : vlanInterfaces)
-    {
-        intf.second->writeConfigurationFile();
-    }
-
     config::Parser config;
     config.map["Match"].emplace_back()["Name"].emplace_back(interfaceName());
     {
@@ -891,10 +835,12 @@ void EthernetInterface::writeConfigurationFile()
                                              : (dhcp6() ? "ipv6" : "false"));
         {
             auto& vlans = network["VLAN"];
-            for (const auto& intf : vlanInterfaces)
+            for (const auto& [_, intf] : manager.interfaces)
             {
-                vlans.emplace_back(
-                    intf.second->EthernetInterface::interfaceName());
+                if (intf->vlan && intf->vlan->parentIdx == ifIdx)
+                {
+                    vlans.emplace_back(intf->interfaceName());
+                }
             }
         }
         {
@@ -980,6 +926,11 @@ void EthernetInterface::writeConfigurationFile()
 
 std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
 {
+    if (vlan)
+    {
+        log<level::ERR>("Tried to set MAC address on VLAN");
+        elog<InternalFailure>();
+    }
 #ifdef PERSIST_MAC
     ether_addr newMAC;
     try
@@ -1009,9 +960,12 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
     if (newMAC != oldMAC)
     {
         // Update everything that depends on the MAC value
-        for (const auto& [name, intf] : vlanInterfaces)
+        for (const auto& [_, intf] : manager.interfaces)
         {
-            intf->MacAddressIntf::macAddress(validMAC);
+            if (intf->vlan && intf->vlan->parentIdx == ifIdx)
+            {
+                intf->MacAddressIntf::macAddress(validMAC);
+            }
         }
         MacAddressIntf::macAddress(validMAC);
 
@@ -1096,5 +1050,47 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
 
     return gw;
 }
+
+EthernetInterface::VlanProperties::VlanProperties(
+    sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
+    const system::InterfaceInfo& info, EthernetInterface& eth,
+    bool emitSignal) :
+    VlanIfaces(bus, objPath.c_str(),
+               emitSignal ? VlanIfaces::action::defer_emit
+                          : VlanIfaces::action::emit_no_signals),
+    parentIdx(*info.parent_idx), eth(eth)
+{
+    VlanIntf::id(*info.vlan_id);
+    if (emitSignal)
+    {
+        this->emit_object_added();
+    }
+}
+
+void EthernetInterface::VlanProperties::delete_()
+{
+    auto intf = eth.interfaceName();
+
+    // Remove all configs for the current interface
+    const auto& confDir = eth.manager.getConfDir();
+    std::error_code ec;
+    std::filesystem::remove(config::pathForIntfConf(confDir, intf), ec);
+    std::filesystem::remove(config::pathForIntfDev(confDir, intf), ec);
+
+    // Write an updated parent interface since it has a VLAN entry
+    for (const auto& [_, intf] : eth.manager.interfaces)
+    {
+        if (intf->ifIdx == parentIdx)
+        {
+            intf->writeConfigurationFile();
+        }
+    }
+
+    // We need to forcibly delete the interface as systemd does not
+    deleteInterface(intf);
+
+    eth.manager.interfaces.erase(intf);
+}
+
 } // namespace network
 } // namespace phosphor
