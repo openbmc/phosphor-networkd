@@ -2,11 +2,11 @@
 
 #include "network_manager.hpp"
 
+#include "config_parser.hpp"
 #include "ipaddress.hpp"
 #include "system_queries.hpp"
 #include "types.hpp"
 
-#include <charconv>
 #include <filesystem>
 #include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
@@ -63,41 +63,10 @@ void Manager::createInterfaces()
     interfaces.clear();
     for (auto& interface : system::getInterfaces())
     {
-        // interface can be of vlan type or normal ethernet interface.
-        // vlan interface looks like "interface.vlanid",so here by looking
-        // at the interface name we decide that we need
-        // to create the vlaninterface or normal physical interface.
-        if (const auto index = interface.name->find(".");
-            index != std::string::npos)
-        {
-            // it is vlan interface
-            auto sv = std::string_view(*interface.name);
-            auto interfaceName = sv.substr(0, index);
-            auto vlanStr = sv.substr(index + 1);
-            uint16_t vlanId;
-            auto res = std::from_chars(vlanStr.begin(), vlanStr.end(), vlanId);
-            if (res.ec != std::errc() || res.ptr != vlanStr.end())
-            {
-                auto msg = fmt::format("Invalid VLAN: {}", vlanStr);
-                log<level::ERR>(msg.c_str());
-                continue;
-            }
-            auto it = interfaces.find(interfaceName);
-            if (it == interfaces.end())
-            {
-                auto msg = fmt::format("Missing interface({}) for VLAN({}): {}",
-                                       interfaceName, vlanId, *interface.name);
-                log<level::ERR>(msg.c_str());
-                continue;
-            }
-            it->second->loadVLAN(objectPath, vlanId, std::move(interface));
-            continue;
-        }
-
         config::Parser config(
             config::pathForIntfConf(confDir, *interface.name));
-        auto intf = std::make_unique<phosphor::network::EthernetInterface>(
-            bus, *this, interface, objectPath, config);
+        auto intf = std::make_unique<EthernetInterface>(bus, *this, interface,
+                                                        objectPath, config);
         intf->createIPAddressObjects();
         intf->createStaticNeighborObjects();
         intf->loadNameServers(config);

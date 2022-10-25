@@ -14,6 +14,8 @@
 #include <xyz/openbmc_project/Collection/DeleteAll/server.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 #include <xyz/openbmc_project/Network/MACAddress/server.hpp>
+#include <xyz/openbmc_project/Network/VLAN/server.hpp>
+#include <xyz/openbmc_project/Object/Delete/server.hpp>
 
 namespace phosphor
 {
@@ -26,6 +28,12 @@ using Ifaces = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::IP::server::Create,
     sdbusplus::xyz::openbmc_project::Network::Neighbor::server::CreateStatic,
     sdbusplus::xyz::openbmc_project::Collection::server::DeleteAll>;
+
+using VlanIfaces = sdbusplus::server::object_t<
+    sdbusplus::xyz::openbmc_project::Object::server::Delete,
+    sdbusplus::xyz::openbmc_project::Network::server::VLAN>;
+
+using VlanIntf = sdbusplus::xyz::openbmc_project::Network::server::VLAN;
 
 using IP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 
@@ -40,8 +48,6 @@ using ObjectPath = sdbusplus::message::object_path;
 class Manager;
 
 class TestEthernetInterface;
-
-class VlanInterface;
 
 namespace config
 {
@@ -73,6 +79,7 @@ class EthernetInterface : public Ifaces
      *  @param[in] info - Interface information.
      *  @param[in] objRoot - Path to attach at.
      *  @param[in] config - The parsed configuation file.
+     *  @param[in] vlan - The id of the vlan if configured
      *  @param[in] emitSignal - true if the object added signal needs to be
      *                          send.
      *  @param[in] enabled - Override the lookup of nicEnabled
@@ -118,12 +125,6 @@ class EthernetInterface : public Ifaces
      * @param[in] ipAddress - IP address.
      */
     void deleteStaticNeighborObject(std::string_view ipAddress);
-
-    /* @brief delete the vlan dbus object of the given interface.
-     *        Also deletes the device file and the network file.
-     * @param[in] interface - VLAN Interface.
-     */
-    void deleteVLANObject(stdplus::zstring_view interface);
 
     /* @brief creates the dbus object(IPaddres) given in the address list.
      * @param[in] addrs - address list for which dbus objects needs
@@ -204,13 +205,6 @@ class EthernetInterface : public Ifaces
      */
     ObjectPath createVLAN(uint16_t id);
 
-    /** @brief load the vlan info from the system
-     *         and creates the ip address dbus objects.
-     *  @param[in] vlanID- VLAN identifier.
-     */
-    void loadVLAN(std::string_view objRoot, uint16_t vlanID,
-                  system::InterfaceInfo&& info);
-
     /** @brief write the network conf file with the in-memory objects.
      */
     void writeConfigurationFile();
@@ -239,11 +233,6 @@ class EthernetInterface : public Ifaces
     using EthernetInterfaceIntf::defaultGateway6;
 
   protected:
-    /* @brief delete the vlan interface from system.
-     * @param[in] interface - vlan Interface.
-     */
-    void deleteVLANFromSystem(stdplus::zstring_view interface);
-
     /** @brief construct the ip address dbus object path.
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipAddress - IP address.
@@ -283,9 +272,6 @@ class EthernetInterface : public Ifaces
     /** @brief Persistent map of Neighbor dbus objects and their names */
     string_umap<std::unique_ptr<Neighbor>> staticNeighbors;
 
-    /** @brief Persistent map of VLAN interface dbus objects and their names */
-    string_umap<std::unique_ptr<VlanInterface>> vlanInterfaces;
-
     /** @brief Dbus object path */
     std::string objPath;
 
@@ -317,7 +303,16 @@ class EthernetInterface : public Ifaces
      */
     bool queryNicEnabled() const;
 
-    std::string vlanIntfName(uint16_t id) const;
+    struct VlanProperties : VlanIfaces
+    {
+        VlanProperties(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
+                       const system::InterfaceInfo& info,
+                       EthernetInterface& eth, bool emitSignal = true);
+        void delete_() override;
+        unsigned parentIdx;
+        EthernetInterface& eth;
+    };
+    std::optional<VlanProperties> vlan;
 };
 
 } // namespace network
