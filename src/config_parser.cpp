@@ -123,12 +123,12 @@ Parser::Parser(const fs::path& filename)
     setFile(filename);
 }
 
-inline bool isspace(char c) noexcept
+constexpr bool isspace(char c) noexcept
 {
     return c == ' ' || c == '\t';
 }
 
-inline bool iscomment(char c) noexcept
+constexpr bool iscomment(char c) noexcept
 {
     return c == '#' || c == ';';
 }
