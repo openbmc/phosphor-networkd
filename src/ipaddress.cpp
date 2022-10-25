@@ -98,7 +98,7 @@ void parseAddress(const AddressFilter& filter, const nlmsghdr& hdr,
     {
         throw std::runtime_error("Not an address msg");
     }
-    auto ifaddr = stdplus::raw::extract<ifaddrmsg>(msg);
+    const auto& ifaddr = netlink::extractRtData<ifaddrmsg>(msg);
 
     // Filter out addresses we don't care about
     unsigned ifindex = ifaddr.ifa_index;

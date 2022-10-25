@@ -3,6 +3,7 @@
 #include <linux/rtnetlink.h>
 
 #include <function2/function2.hpp>
+#include <stdplus/raw.hpp>
 #include <string_view>
 #include <tuple>
 #include <type_traits>
@@ -34,6 +35,20 @@ void performRequest(int protocol, void* data, size_t size, ReceiveCallback cb);
  *  @param[in] cb   - Called for each response message payload
  */
 void receive(int sock, ReceiveCallback cb);
+
+/* @brief Call on an rtnetlink payload
+ *        Updates the input to remove the attr parsed out.
+ *
+ * @param[in,out] data - The buffer holding rtpayload to parse
+ * @return The payload for the rt msg
+ */
+template <typename T>
+constexpr const T& extractRtData(std::string_view& data)
+{
+    const T& ret = stdplus::raw::refFrom<T, stdplus::raw::Aligned>(data);
+    data.remove_prefix(NLMSG_ALIGN(sizeof(T)));
+    return ret;
+}
 
 /* @brief Call on a block of rtattrs to parse a single one out
  *        Updates the input to remove the attr parsed out.
