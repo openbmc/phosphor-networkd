@@ -35,7 +35,7 @@ void parseNeighbor(const NeighborFilter& filter, const nlmsghdr& hdr,
     {
         throw std::runtime_error("Not a neighbor msg");
     }
-    auto ndm = stdplus::raw::extract<ndmsg>(msg);
+    const auto& ndm = netlink::extractRtData<ndmsg>(msg);
 
     // Filter out neighbors we don't care about
     unsigned ifindex = ndm.ndm_ifindex;

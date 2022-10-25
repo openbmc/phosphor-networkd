@@ -53,7 +53,7 @@ void Table::parseRoutes(const nlmsghdr& hdr, std::string_view msg)
     {
         throw std::runtime_error("Not a route msg");
     }
-    auto rtm = stdplus::raw::extract<rtmsg>(msg);
+    const auto& rtm = netlink::extractRtData<rtmsg>(msg);
 
     if ((rtm.rtm_family != AF_INET && rtm.rtm_family != AF_INET6) ||
         rtm.rtm_table != RT_TABLE_MAIN)

@@ -122,7 +122,7 @@ InterfaceInfo detail::parseInterface(const nlmsghdr& hdr, std::string_view msg)
     {
         throw std::runtime_error("Not an interface msg");
     }
-    auto ifinfo = stdplus::raw::extract<ifinfomsg>(msg);
+    const auto& ifinfo = netlink::extractRtData<ifinfomsg>(msg);
     InterfaceInfo ret;
     ret.flags = ifinfo.ifi_flags;
     ret.idx = ifinfo.ifi_index;
