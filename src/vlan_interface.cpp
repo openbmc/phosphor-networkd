@@ -28,7 +28,6 @@ VlanInterface::VlanInterface(sdbusplus::bus_t& bus,
     parentInterface(intf)
 {
     id(vlanID);
-    VlanIface::interfaceName(EthernetInterface::interfaceName());
     MacAddressIntf::macAddress(parentInterface.macAddress());
 
     emit_object_added();
