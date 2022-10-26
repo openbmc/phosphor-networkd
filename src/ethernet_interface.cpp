@@ -229,10 +229,12 @@ void EthernetInterface::createIPAddressObjects()
         {
             origin = IP::AddressOrigin::DHCP;
         }
+#ifdef LINK_LOCAL_AUTOCONFIGURATION
         if (addr.scope == RT_SCOPE_LINK)
         {
             origin = IP::AddressOrigin::LinkLocal;
         }
+#endif
 
         auto ipAddressObjectPath =
             generateObjectPath(addressType, address, addr.prefix, origin);
