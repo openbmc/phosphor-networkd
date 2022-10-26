@@ -16,6 +16,24 @@
       "message": "What is your required behavior here? I\u0027m trying to get rid of all these compile options so I\u0027d like to understand how to support your device. You just need to be able to statically assign link local addresses?",
       "revId": "300ed5cd36106e7e4a607fc8aad85e460a1b2a89",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c08fbea1_e98e2570",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001288
+      },
+      "writtenOn": "2022-10-26T23:16:17Z",
+      "side": 1,
+      "message": "Our use-case requires being able to statically assign link-local addresses and query them back via ipmitool.",
+      "parentUuid": "072cb006_6614ded0",
+      "revId": "300ed5cd36106e7e4a607fc8aad85e460a1b2a89",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
