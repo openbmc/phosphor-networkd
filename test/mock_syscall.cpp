@@ -1,4 +1,5 @@
-#include "system_queries.hpp"
+#include "mock_syscall.hpp"
+
 #include "util.hpp"
 
 #include <arpa/inet.h>
@@ -31,26 +32,28 @@ using phosphor::network::system::InterfaceInfo;
 std::map<std::string, InterfaceInfo> mock_if;
 std::map<int, std::string> mock_if_indextoname;
 
-void mock_clear()
+void phosphor::network::system::mock_clear()
 {
     mock_rtnetlinks.clear();
     mock_if.clear();
     mock_if_indextoname.clear();
 }
 
-void mock_addIF(const std::string& name, unsigned idx, unsigned flags,
-                std::optional<ether_addr> mac, std::optional<unsigned> mtu)
+void phosphor::network::system::mock_addIF(const InterfaceInfo& info)
 {
-    if (idx == 0)
+    if (info.idx == 0)
     {
         throw std::invalid_argument("Bad interface index");
     }
-
-    mock_if.emplace(
-        name,
-        InterfaceInfo{
-            .idx = idx, .flags = flags, .name = name, .mac = mac, .mtu = mtu});
-    mock_if_indextoname.emplace(idx, name);
+    for (const auto& [_, iinfo] : mock_if)
+    {
+        if (iinfo.idx == info.idx || iinfo.name == info.name)
+        {
+            throw std::invalid_argument("Interface already exists");
+        }
+    }
+    mock_if.emplace(info.name.value(), info);
+    mock_if_indextoname.emplace(info.idx, info.name.value());
 }
 
 void validateMsgHdr(const struct msghdr* msg)
