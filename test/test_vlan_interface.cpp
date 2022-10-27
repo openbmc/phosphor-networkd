@@ -41,11 +41,12 @@ class TestVlanInterface : public stdplus::gtest::TestWithTmp
     static EthernetInterface makeInterface(sdbusplus::bus_t& bus,
                                            MockManager& manager)
     {
-        mock_clear();
-        mock_addIF("test0", /*idx=*/1);
+        system::mock_clear();
+        system::InterfaceInfo info{.idx = 1, .flags = 0, .name = "test0"};
+        system::mock_addIF(info);
         return {bus,
                 manager,
-                system::InterfaceInfo{.idx = 1, .flags = 0, .name = "test0"},
+                info,
                 "/xyz/openbmc_test/network"sv,
                 config::Parser(),
                 /*emitSignal=*/false,
@@ -54,9 +55,8 @@ class TestVlanInterface : public stdplus::gtest::TestWithTmp
 
     void createVlan(uint16_t id)
     {
-        std::string ifname = "test0.";
-        ifname += std::to_string(id);
-        mock_addIF(ifname.c_str(), 1000 + id);
+        system::mock_addIF(system::InterfaceInfo{
+            .idx = id + 10u, .flags = 0, .name = fmt::format("test0.{}", id)});
         interface.createVLAN(id);
     }
 

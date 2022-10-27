@@ -43,11 +43,11 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     static MockEthernetInterface makeInterface(sdbusplus::bus_t& bus,
                                                MockManager& manager)
     {
-        mock_clear();
-        mock_addIF("test0", /*idx=*/1);
-        return {bus, manager,
-                system::InterfaceInfo{.idx = 1, .flags = 0, .name = "test0"},
-                "/xyz/openbmc_test/network"sv, config::Parser()};
+        system::mock_clear();
+        system::InterfaceInfo info{.idx = 1, .flags = 0, .name = "test0"};
+        system::mock_addIF(info);
+        return {bus, manager, info, "/xyz/openbmc_test/network"sv,
+                config::Parser()};
     }
 
     int countIPObjects()
@@ -98,17 +98,16 @@ TEST_F(TestEthernetInterface, Fields)
     EXPECT_EQ("", interface.macAddress());
     EXPECT_FALSE(interface.linkUp());
 
-    constexpr unsigned idx = 2;
     constexpr ether_addr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};
     constexpr unsigned mtu = 150;
 
-    mock_addIF("test1", idx, IFF_RUNNING, mac, mtu);
-    MockEthernetInterface intf(bus, manager,
-                               system::InterfaceInfo{.idx = idx,
-                                                     .flags = IFF_RUNNING,
-                                                     .name = "test1",
-                                                     .mac = mac,
-                                                     .mtu = mtu},
+    system::InterfaceInfo info{.idx = 2,
+                               .flags = IFF_RUNNING,
+                               .name = "test1",
+                               .mac = mac,
+                               .mtu = mtu};
+    system::mock_addIF(info);
+    MockEthernetInterface intf(bus, manager, info,
                                "/xyz/openbmc_test/network"sv, config::Parser());
 
     EXPECT_EQ(mtu, intf.mtu());

@@ -293,12 +293,13 @@ TEST(ExtractRtAttr, SomeData)
 class PerformRequest : public testing::Test
 {
   public:
-    void doLinkDump(size_t ifs)
+    void doLinkDump(unsigned ifs)
     {
-        mock_clear();
-        for (size_t i = 0; i < ifs; ++i)
+        system::mock_clear();
+        for (unsigned i = 0; i < ifs; ++i)
         {
-            mock_addIF(fmt::format("eth{}", i), /*idx=*/1 + i);
+            system::mock_addIF(system::InterfaceInfo{
+                .idx = i + 1u, .flags = 0, .name = fmt::format("eth{}", i)});
         }
 
         size_t cbCalls = 0;
