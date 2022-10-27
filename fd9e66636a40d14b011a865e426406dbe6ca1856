@@ -16,6 +16,24 @@
       "message": "Why is this method here? It\u0027s not used anywhere",
       "revId": "fd9e66636a40d14b011a865e426406dbe6ca1856",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e400f110_5ba7b9d2",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-10-27T09:12:03Z",
+      "side": 1,
+      "message": "Done.\n\nOnly in the test file, it\u0027s being used. So removed this method here.",
+      "parentUuid": "fa61cd72_927e7121",
+      "revId": "fd9e66636a40d14b011a865e426406dbe6ca1856",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
