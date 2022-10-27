@@ -28,6 +28,7 @@ class TestNetworkManager : public stdplus::gtest::TestWithTmp
         bus(sdbusplus::bus::new_default()),
         manager(bus, "/xyz/openbmc_test/abc", CaseTmpDir())
     {
+        system::mock_clear();
     }
 
     void createInterfaces()
@@ -39,17 +40,14 @@ class TestNetworkManager : public stdplus::gtest::TestWithTmp
 // getifaddrs will not return any interface
 TEST_F(TestNetworkManager, NoInterface)
 {
-    mock_clear();
     createInterfaces();
     EXPECT_TRUE(manager.getInterfaces().empty());
 }
 // getifaddrs returns single interface.
 TEST_F(TestNetworkManager, WithSingleInterface)
 {
-    mock_clear();
-
     // Adds the following ip in the getifaddrs list.
-    mock_addIF("igb1", /*idx=*/2);
+    system::mock_addIF({.idx = 2, .flags = 0, .name = "igb1"});
 
     // Now create the interfaces which will call the mocked getifaddrs
     // which returns the above interface detail.
@@ -60,10 +58,8 @@ TEST_F(TestNetworkManager, WithSingleInterface)
 // getifaddrs returns two interfaces.
 TEST_F(TestNetworkManager, WithMultipleInterfaces)
 {
-    mock_clear();
-
-    mock_addIF("igb0", /*idx=*/1);
-    mock_addIF("igb1", /*idx=*/2);
+    system::mock_addIF({.idx = 1, .flags = 0, .name = "igb0"});
+    system::mock_addIF({.idx = 2, .flags = 0, .name = "igb1"});
 
     createInterfaces();
     EXPECT_THAT(manager.getInterfaces(),
