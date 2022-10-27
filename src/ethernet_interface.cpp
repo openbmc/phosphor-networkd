@@ -100,31 +100,23 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
     EthernetInterfaceIntf::dhcp6(dhcpVal.v6);
     EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRA(config));
     EthernetInterfaceIntf::nicEnabled(enabled ? *enabled : queryNicEnabled());
-    const auto& gatewayList = manager.getRouteTable().getDefaultGateway();
-    const auto& gateway6List = manager.getRouteTable().getDefaultGateway6();
-    std::string defaultGateway;
-    std::string defaultGateway6;
-
-    for (const auto& gateway : gatewayList)
     {
-        if (gateway.first == *info.name)
+        const auto& gws = manager.getRouteTable().getDefaultGateway();
+        auto it = gws.find(ifIdx);
+        if (it != gws.end())
         {
-            defaultGateway = gateway.second;
-            break;
+            EthernetInterfaceIntf::defaultGateway(std::to_string(it->second));
+        }
+    }
+    {
+        const auto& gws = manager.getRouteTable().getDefaultGateway6();
+        auto it = gws.find(ifIdx);
+        if (it != gws.end())
+        {
+            EthernetInterfaceIntf::defaultGateway6(std::to_string(it->second));
         }
     }
 
-    for (const auto& gateway6 : gateway6List)
-    {
-        if (gateway6.first == *info.name)
-        {
-            defaultGateway6 = gateway6.second;
-            break;
-        }
-    }
-
-    EthernetInterfaceIntf::defaultGateway(defaultGateway);
-    EthernetInterfaceIntf::defaultGateway6(defaultGateway6);
     EthernetInterfaceIntf::ntpServers(
         config.map.getValueStrings("Network", "NTP"));
 
