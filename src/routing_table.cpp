@@ -1,10 +1,6 @@
 #include "routing_table.hpp"
 
 #include "netlink.hpp"
-#include "types.hpp"
-#include "util.hpp"
-
-#include <net/if.h>
 
 #include <optional>
 #include <phosphor-logging/elog-errors.hpp>
@@ -24,16 +20,63 @@ namespace route
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
+template <typename Addr>
+static void parse(auto& gws, std::string_view msg)
+{
+    std::optional<unsigned> ifIdx;
+    std::optional<Addr> gw;
+    while (!msg.empty())
+    {
+        auto [hdr, data] = netlink::extractRtAttr(msg);
+        switch (hdr.rta_type)
+        {
+            case RTA_OIF:
+                ifIdx.emplace(stdplus::raw::copyFrom<int>(data));
+                break;
+            case RTA_GATEWAY:
+                gw.emplace(stdplus::raw::copyFrom<Addr>(data));
+                break;
+        }
+    }
+    if (ifIdx && gw)
+    {
+        gws.emplace(*ifIdx, *gw);
+    }
+}
+
+static void parseRoute(auto& gws4, auto& gws6, const nlmsghdr& hdr,
+                       std::string_view msg)
+{
+    if (hdr.nlmsg_type != RTM_NEWROUTE)
+    {
+        throw std::runtime_error("Not a route msg");
+    }
+    const auto& rtm = netlink::extractRtData<rtmsg>(msg);
+
+    if (rtm.rtm_table != RT_TABLE_MAIN || rtm.rtm_dst_len != 0)
+    {
+        return;
+    }
+
+    switch (rtm.rtm_family)
+    {
+        case AF_INET:
+            return parse<in_addr>(gws4, msg);
+        case AF_INET6:
+            return parse<in6_addr>(gws6, msg);
+    }
+}
+
 void Table::refresh()
 {
-    defaultGateway.clear();
-    defaultGateway6.clear();
+    gws4.clear();
+    gws6.clear();
     try
     {
         rtmsg msg{};
         netlink::performRequest(NETLINK_ROUTE, RTM_GETROUTE, NLM_F_DUMP, msg,
                                 [&](const nlmsghdr& hdr, std::string_view msg) {
-                                    this->parseRoutes(hdr, msg);
+                                    parseRoute(gws4, gws6, hdr, msg);
                                 });
     }
     catch (const std::exception& e)
@@ -42,56 +85,6 @@ void Table::refresh()
         commit<InternalFailure>();
     }
 }
-
-void Table::parseRoutes(const nlmsghdr& hdr, std::string_view msg)
-{
-    std::optional<InAddrAny> dstAddr;
-    std::optional<InAddrAny> gateWayAddr;
-    char ifName[IF_NAMESIZE] = {};
-
-    if (hdr.nlmsg_type != RTM_NEWROUTE)
-    {
-        throw std::runtime_error("Not a route msg");
-    }
-    const auto& rtm = netlink::extractRtData<rtmsg>(msg);
-
-    if ((rtm.rtm_family != AF_INET && rtm.rtm_family != AF_INET6) ||
-        rtm.rtm_table != RT_TABLE_MAIN)
-    {
-        return;
-    }
-
-    while (!msg.empty())
-    {
-        auto [hdr, data] = netlink::extractRtAttr(msg);
-        switch (hdr.rta_type)
-        {
-            case RTA_OIF:
-                if_indextoname(stdplus::raw::copyFrom<int>(data), ifName);
-                break;
-            case RTA_GATEWAY:
-                gateWayAddr = addrFromBuf(rtm.rtm_family, data);
-                break;
-            case RTA_DST:
-                dstAddr = addrFromBuf(rtm.rtm_family, data);
-                break;
-        }
-    }
-
-    if (rtm.rtm_dst_len == 0 && gateWayAddr)
-    {
-        std::string ifNameStr(ifName);
-        if (rtm.rtm_family == AF_INET)
-        {
-            defaultGateway.emplace(ifNameStr, std::to_string(*gateWayAddr));
-        }
-        else if (rtm.rtm_family == AF_INET6)
-        {
-            defaultGateway6.emplace(ifNameStr, std::to_string(*gateWayAddr));
-        }
-    }
-}
-
 } // namespace route
 } // namespace network
 } // namespace phosphor

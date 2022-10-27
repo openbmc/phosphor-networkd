@@ -30,13 +30,11 @@ std::map<int, std::queue<std::string>> mock_rtnetlinks;
 using phosphor::network::system::InterfaceInfo;
 
 std::map<std::string, InterfaceInfo> mock_if;
-std::map<int, std::string> mock_if_indextoname;
 
 void phosphor::network::system::mock_clear()
 {
     mock_rtnetlinks.clear();
     mock_if.clear();
-    mock_if_indextoname.clear();
 }
 
 void phosphor::network::system::mock_addIF(const InterfaceInfo& info)
@@ -53,7 +51,6 @@ void phosphor::network::system::mock_addIF(const InterfaceInfo& info)
         }
     }
     mock_if.emplace(info.name.value(), info);
-    mock_if_indextoname.emplace(info.idx, info.name.value());
 }
 
 void validateMsgHdr(const struct msghdr* msg)
@@ -155,17 +152,6 @@ ssize_t sendmsg_ack(std::queue<std::string>& msgs, std::string_view in)
 }
 
 extern "C" {
-
-char* if_indextoname(unsigned ifindex, char* ifname)
-{
-    auto it = mock_if_indextoname.find(ifindex);
-    if (it == mock_if_indextoname.end())
-    {
-        errno = ENXIO;
-        return NULL;
-    }
-    return std::strcpy(ifname, it->second.c_str());
-}
 
 int ioctl(int fd, unsigned long int request, ...)
 {
