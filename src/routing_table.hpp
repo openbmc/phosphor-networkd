@@ -1,9 +1,7 @@
 #pragma once
-#include <linux/netlink.h>
+#include "types.hpp"
 
-#include <map>
-#include <string>
-#include <string_view>
+#include <unordered_map>
 
 namespace phosphor
 {
@@ -24,7 +22,7 @@ class Table
      */
     inline const auto& getDefaultGateway() const
     {
-        return defaultGateway;
+        return gws4;
     }
 
     /**
@@ -34,19 +32,12 @@ class Table
      */
     inline const auto& getDefaultGateway6() const
     {
-        return defaultGateway6;
+        return gws6;
     };
 
   private:
-    /**
-     * @brief Parse the route and add it to the route list.
-     *
-     * @param[in] nlHdr - net link message header.
-     */
-    void parseRoutes(const struct nlmsghdr& nlHdr, std::string_view msg);
-
-    std::map<std::string, std::string> defaultGateway;  // default gateway list
-    std::map<std::string, std::string> defaultGateway6; // default gateway list
+    std::unordered_map<unsigned, in_addr> gws4;
+    std::unordered_map<unsigned, in6_addr> gws6;
 };
 
 } // namespace route
