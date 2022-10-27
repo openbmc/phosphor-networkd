@@ -1,0 +1,7 @@
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Code-Review+2: William A. Kennington III <wak@google.com>
+Submitted-by: Asmitha Karunanithi <asmitk01@in.ibm.com>
+Submitted-at: Thu, 27 Oct 2022 10:51:21 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/50156
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
