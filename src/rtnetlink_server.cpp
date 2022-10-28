@@ -27,6 +27,8 @@ static bool shouldRefresh(const struct nlmsghdr& hdr,
 {
     switch (hdr.nlmsg_type)
     {
+        case RTM_NEWLINK:
+        case RTM_DELLINK:
         case RTM_NEWADDR:
         case RTM_DELADDR:
         case RTM_NEWROUTE:
@@ -71,7 +73,7 @@ static stdplus::ManagedFd makeSock()
 
     sockaddr_nl local{};
     local.nl_family = AF_NETLINK;
-    local.nl_groups = RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR |
+    local.nl_groups = RTMGRP_LINK | RTMGRP_IPV4_IFADDR | RTMGRP_IPV6_IFADDR |
                       RTMGRP_IPV4_ROUTE | RTMGRP_IPV6_ROUTE | RTMGRP_NEIGH;
     bind(sock, local);
 
