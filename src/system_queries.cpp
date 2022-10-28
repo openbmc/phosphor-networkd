@@ -57,6 +57,9 @@ inline auto optionalIFReq(stdplus::zstring_view ifname, unsigned long long cmd,
 {
     ifreq ifr;
     std::optional<decltype(complete(ifr))> ret;
+    auto ukey = std::make_tuple(std::string(ifname), cmd);
+    static std::unordered_set<std::tuple<std::string, unsigned long long>>
+        unsupported;
     try
     {
         ifr = executeIFReq(ifname, cmd, data);
@@ -65,13 +68,19 @@ inline auto optionalIFReq(stdplus::zstring_view ifname, unsigned long long cmd,
     {
         if (e.code() == std::errc::operation_not_supported)
         {
-            auto msg = fmt::format("{} not supported on {}", cmdname, ifname);
-            log<level::INFO>(msg.c_str(),
-                             entry("INTERFACE=%s", ifname.c_str()));
+            if (unsupported.find(ukey) == unsupported.end())
+            {
+                unsupported.emplace(std::move(ukey));
+                auto msg =
+                    fmt::format("{} not supported on {}", cmdname, ifname);
+                log<level::INFO>(msg.c_str(),
+                                 entry("INTERFACE=%s", ifname.c_str()));
+            }
             return ret;
         }
         throw;
     }
+    unsupported.erase(ukey);
     ret.emplace(complete(ifr));
     return ret;
 }

@@ -50,13 +50,13 @@ using string_umap =
 using string_uset =
     std::unordered_set<std::string, string_hash, std::equal_to<>>;
 
-constexpr std::size_t hash_multi()
+constexpr std::size_t hash_multi() noexcept
 {
     return 0;
 }
 
 template <typename T, typename... Args>
-constexpr std::size_t hash_multi(const T& v, Args... args)
+constexpr std::size_t hash_multi(const T& v, Args... args) noexcept
 {
     const std::size_t seed = hash_multi(args...);
     return seed ^ (std::hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2));
@@ -64,3 +64,12 @@ constexpr std::size_t hash_multi(const T& v, Args... args)
 
 } // namespace network
 } // namespace phosphor
+
+template <typename... Ts>
+struct std::hash<std::tuple<Ts...>>
+{
+    constexpr auto operator()(const std::tuple<Ts...>& t) const noexcept
+    {
+        return std::apply(phosphor::network::hash_multi<Ts...>, t);
+    }
+};

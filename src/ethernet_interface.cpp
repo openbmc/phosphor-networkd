@@ -109,9 +109,9 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
     EthernetInterfaceIntf::defaultGateway6(defaultGateway6);
     // Don't get the mac address from the system as the mac address
     // would be same as parent interface.
-    if (intfName.find(".") == std::string::npos)
+    if (intfName.find(".") == std::string::npos && ifIdx > 0)
     {
-        auto mac = ignoreError("getMAC", intfName, std::nullopt,
+        auto mac = ignoreError("GetMAC", intfName, std::nullopt,
                                [&] { return system::getMAC(intfName); });
         if (mac)
         {
@@ -124,10 +124,14 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus,
     EthernetInterfaceIntf::linkUp(linkUp());
     EthernetInterfaceIntf::mtu(mtu());
 
-    auto ethInfo = ignoreError("GetEthInfo", intfName, {},
-                               [&] { return system::getEthInfo(intfName); });
-    EthernetInterfaceIntf::autoNeg(ethInfo.autoneg);
-    EthernetInterfaceIntf::speed(ethInfo.speed);
+    if (ifIdx > 0)
+    {
+        auto ethInfo = ignoreError("GetEthInfo", intfName, {}, [&] {
+            return system::getEthInfo(intfName);
+        });
+        EthernetInterfaceIntf::autoNeg(ethInfo.autoneg);
+        EthernetInterfaceIntf::speed(ethInfo.speed);
+    }
 
     // Emit deferred signal.
     if (emitSignal)
@@ -487,13 +491,21 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled() const
 
 bool EthernetInterface::linkUp() const
 {
+    if (ifIdx == 0)
+    {
+        return EthernetInterfaceIntf::linkUp();
+    }
     return system::intfIsRunning(interfaceName());
 }
 
 size_t EthernetInterface::mtu() const
 {
+    if (ifIdx == 0)
+    {
+        return EthernetInterfaceIntf::mtu();
+    }
     const auto ifname = interfaceName();
-    return ignoreError("getMTU", ifname, std::nullopt,
+    return ignoreError("GetMTU", ifname, std::nullopt,
                        [&] { return system::getMTU(ifname); })
         .value_or(EthernetInterfaceIntf::mtu());
 }
@@ -506,7 +518,7 @@ size_t EthernetInterface::mtu(size_t value)
         return value;
     }
     const auto ifname = interfaceName();
-    return EthernetInterfaceIntf::mtu(ignoreError("setMTU", ifname, old, [&] {
+    return EthernetInterfaceIntf::mtu(ignoreError("SetMTU", ifname, old, [&] {
         system::setMTU(ifname, value);
         return value;
     }));
