@@ -69,9 +69,6 @@ bool isUnicast(const ether_addr& mac);
 
 } // namespace mac_address
 
-constexpr auto networkdService = "systemd-networkd.service";
-constexpr auto timeSynchdService = "systemd-timesyncd.service";
-
 template <int family>
 struct FamilyTraits
 {
