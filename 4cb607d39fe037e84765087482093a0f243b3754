@@ -16,6 +16,24 @@
       "message": "You probably want to adopt the impl from `ethernet_interface.cpp` as you need to support the `dhcp4` `dhcp6` `ra` properties too.",
       "revId": "4cb607d39fe037e84765087482093a0f243b3754",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfe33724_f67856af",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-10-28T13:53:12Z",
+      "side": 1,
+      "message": "Done I have moved the dhcp methods to the next commit",
+      "parentUuid": "77837827_6ef009a7",
+      "revId": "4cb607d39fe037e84765087482093a0f243b3754",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
