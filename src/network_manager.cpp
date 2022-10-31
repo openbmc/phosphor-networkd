@@ -61,6 +61,7 @@ void Manager::createInterfaces()
 {
     // clear all the interfaces first
     interfaces.clear();
+    interfacesByIdx.clear();
     for (auto& interface : system::getInterfaces())
     {
         config::Parser config(
@@ -71,7 +72,9 @@ void Manager::createInterfaces()
         intf->createStaticNeighborObjects();
         intf->loadNameServers(config);
         intf->loadNTPServers(config);
-        this->interfaces.emplace(std::move(*interface.name), std::move(intf));
+        auto ptr = intf.get();
+        interfaces.emplace(std::move(*interface.name), std::move(intf));
+        interfacesByIdx.emplace(interface.idx, ptr);
     }
 }
 
