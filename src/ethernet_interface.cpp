@@ -944,7 +944,7 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
     EthernetInterfaceIntf::defaultGateway(gateway);
 
     writeConfigurationFile();
-    manager.reloadConfigs();
+    manager.reloadConfigsNoRefresh();
 
     return gateway;
 }
@@ -973,7 +973,7 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
     EthernetInterfaceIntf::defaultGateway6(gateway);
 
     writeConfigurationFile();
-    manager.reloadConfigs();
+    manager.reloadConfigsNoRefresh();
 
     return gateway;
 }
