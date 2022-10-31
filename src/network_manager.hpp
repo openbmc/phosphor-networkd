@@ -127,6 +127,7 @@ class Manager : public details::VLANCreateIface
     /** @brief Persistent map of EthernetInterface dbus objects and their names
      */
     string_umap<std::unique_ptr<EthernetInterface>> interfaces;
+    std::unordered_map<unsigned, EthernetInterface*> interfacesByIdx;
 
     /** @brief Get the routing table owned by the manager
      *
