@@ -52,6 +52,7 @@ networkd_lib = static_library(
   'ipaddress.cpp',
   'netlink.cpp',
   'network_manager.cpp',
+  'rtnetlink.cpp',
   'system_configuration.cpp',
   'system_queries.cpp',
   'types.cpp',
