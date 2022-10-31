@@ -7,6 +7,7 @@ namespace phosphor
 {
 namespace network
 {
+class Manager;
 namespace netlink
 {
 
@@ -26,9 +27,9 @@ class Server
      *  @details Sets up the server to handle incoming RTNETLINK events
      *
      *  @param[in] eventPtr - Unique ptr reference to sd_event.
-     *  @param[in] socket - netlink socket.
+     *  @param[in] manager  - The network manager that receives updates
      */
-    Server(sdeventplus::Event& event);
+    Server(sdeventplus::Event& event, Manager& manager);
 
     /** @brief Gets the socket associated with this netlink server */
     inline stdplus::Fd& getSock()
