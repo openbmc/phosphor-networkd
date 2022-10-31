@@ -1,6 +1,8 @@
 #include "rtnetlink_server.hpp"
 
 #include "netlink.hpp"
+#include "network_manager.hpp"
+#include "rtnetlink.hpp"
 #include "types.hpp"
 
 #include <linux/netlink.h>
@@ -8,6 +10,7 @@
 #include <netinet/in.h>
 
 #include <memory>
+#include <phosphor-logging/log.hpp>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/ops.hpp>
 #include <string_view>
@@ -22,6 +25,10 @@ extern std::unique_ptr<Timer> refreshObjectTimer;
 namespace netlink
 {
 
+using phosphor::logging::entry;
+using phosphor::logging::level;
+using phosphor::logging::log;
+
 static bool shouldRefresh(const struct nlmsghdr& hdr,
                           std::string_view data) noexcept
 {
@@ -31,8 +38,6 @@ static bool shouldRefresh(const struct nlmsghdr& hdr,
         case RTM_DELLINK:
         case RTM_NEWADDR:
         case RTM_DELADDR:
-        case RTM_NEWROUTE:
-        case RTM_DELROUTE:
             return true;
         case RTM_NEWNEIGH:
         case RTM_DELNEIGH:
@@ -49,17 +54,77 @@ static bool shouldRefresh(const struct nlmsghdr& hdr,
     return false;
 }
 
-static void handler(const nlmsghdr& hdr, std::string_view data)
+static void rthandler(Manager& m, bool n, std::string_view data)
+{
+    auto ret = netlink::gatewayFromRtm(data);
+    if (!ret)
+    {
+        return;
+    }
+    auto ifIdx = std::get<unsigned>(*ret);
+    auto it = m.interfacesByIdx.find(ifIdx);
+    if (it == m.interfacesByIdx.end())
+    {
+        auto msg = fmt::format("Interface `{}` not found for route", ifIdx);
+        log<level::ERR>(msg.c_str(), entry("IFIDX=%u", ifIdx));
+        return;
+    }
+    std::visit(
+        [&](auto addr) {
+            if constexpr (std::is_same_v<in_addr, decltype(addr)>)
+            {
+                if (n)
+                {
+                    it->second->EthernetInterfaceIntf::defaultGateway(
+                        std::to_string(addr));
+                }
+                else if (it->second->defaultGateway() == std::to_string(addr))
+                {
+                    it->second->EthernetInterfaceIntf::defaultGateway("");
+                }
+            }
+            else if constexpr (std::is_same_v<in6_addr, decltype(addr)>)
+            {
+                if (n)
+                {
+                    it->second->EthernetInterfaceIntf::defaultGateway6(
+                        std::to_string(addr));
+                }
+                else if (it->second->defaultGateway6() == std::to_string(addr))
+                {
+                    it->second->EthernetInterfaceIntf::defaultGateway6("");
+                }
+            }
+            else
+            {
+                static_assert(!std::is_same_v<void, decltype(addr)>);
+            }
+        },
+        std::get<InAddrAny>(*ret));
+}
+
+static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
 {
     if (shouldRefresh(hdr, data) && !refreshObjectTimer->isEnabled())
     {
         refreshObjectTimer->restartOnce(refreshTimeout);
     }
+    switch (hdr.nlmsg_type)
+    {
+        case RTM_NEWROUTE:
+            rthandler(m, true, data);
+            break;
+        case RTM_DELROUTE:
+            rthandler(m, false, data);
+            break;
+    }
 }
 
-static void eventHandler(sdeventplus::source::IO&, int fd, uint32_t)
+static void eventHandler(Manager& m, sdeventplus::source::IO&, int fd, uint32_t)
 {
-    receive(fd, handler);
+    receive(fd, [&](auto&&... args) {
+        return handler(m, std::forward<decltype(args)>(args)...);
+    });
 }
 
 static stdplus::ManagedFd makeSock()
@@ -80,8 +145,11 @@ static stdplus::ManagedFd makeSock()
     return sock;
 }
 
-Server::Server(sdeventplus::Event& event) :
-    sock(makeSock()), io(event, sock.get(), EPOLLIN | EPOLLET, eventHandler)
+Server::Server(sdeventplus::Event& event, Manager& manager) :
+    sock(makeSock()),
+    io(event, sock.get(), EPOLLIN | EPOLLET, [&](auto&&... args) {
+        return eventHandler(manager, std::forward<decltype(args)>(args)...);
+    })
 {
 }
 
