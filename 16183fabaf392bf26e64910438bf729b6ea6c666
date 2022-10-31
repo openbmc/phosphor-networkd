@@ -83,6 +83,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a481fbb8_35e277f5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-10-31T07:59:26Z",
+      "side": 1,
+      "message": "Ack\nLooking at the code - it seems like this will work straight away. But please get this through a factory reset loop to confirm the same.",
+      "parentUuid": "833bd5ed_24f332b5",
+      "revId": "16183fabaf392bf26e64910438bf729b6ea6c666",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd66acee_02a2f866",
@@ -114,6 +132,24 @@
       "side": 1,
       "message": "I should probably call it `phosphor-networkd-default` but the priority is 60 because of the other files that already exist to ensure that we override the systemd-networkd default but not any user provided or phosphor-networkd written files.",
       "parentUuid": "bd66acee_02a2f866",
+      "revId": "16183fabaf392bf26e64910438bf729b6ea6c666",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "431e7974_4459441b",
+        "filename": "60-networkd-default.network.in",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-10-31T07:59:26Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "47b2aabe_ec313c5b",
       "revId": "16183fabaf392bf26e64910438bf729b6ea6c666",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
