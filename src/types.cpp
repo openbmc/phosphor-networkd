@@ -96,6 +96,17 @@ std::string_view AddrBufMaker<in6_addr>::operator()(in6_addr val) noexcept
 
 } // namespace phosphor::network::detail
 
+std::size_t std::hash<in_addr>::operator()(in_addr addr) const noexcept
+{
+    return std::hash<decltype(addr.s_addr)>{}(addr.s_addr);
+}
+
+std::size_t std::hash<in6_addr>::operator()(in6_addr addr) const noexcept
+{
+    return phosphor::network::hash_multi(addr.s6_addr32[0], addr.s6_addr32[1],
+                                         addr.s6_addr32[2], addr.s6_addr32[3]);
+}
+
 std::string std::to_string(ether_addr value)
 {
     return string(phosphor::network::detail::AddrBufMaker<ether_addr>{}(value));
