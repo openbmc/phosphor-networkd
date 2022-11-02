@@ -156,6 +156,18 @@ struct std::hash<std::tuple<Ts...>>
     }
 };
 
+template <>
+struct std::hash<in_addr>
+{
+    std::size_t operator()(in_addr addr) const noexcept;
+};
+
+template <>
+struct std::hash<in6_addr>
+{
+    std::size_t operator()(in6_addr addr) const noexcept;
+};
+
 namespace fmt
 {
 template <>
