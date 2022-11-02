@@ -33,6 +33,91 @@ class MockHypEthernetInterface : public HypEthInterface
                 HypIP::AddressOrigin::Static, 0, "8.8.8.1", "if1"));
     }
 
+    bool createIP(MockHypEthernetInterface& interface, std::string intfLabel,
+                  HypIP::Protocol protType, const std::string& ipaddress,
+                  uint8_t prefixLength, const std::string& gateway)
+    {
+        if (interface.dhcpIsEnabled(protType))
+        {
+            switch (protType)
+            {
+                case HypIP::Protocol::IPv4:
+                    interface.dhcp4(false);
+                    break;
+                case HypIP::Protocol::IPv6:
+                    interface.dhcp6(false);
+                    break;
+            }
+        }
+
+        HypIP::AddressOrigin origin = HypIP::AddressOrigin::Static;
+
+        InAddrAny addr;
+        try
+        {
+            switch (protType)
+            {
+                case HypIP::Protocol::IPv4:
+                    addr = ToAddr<in_addr>{}(ipaddress);
+                    break;
+                case HypIP::Protocol::IPv6:
+                    addr = ToAddr<in6_addr>{}(ipaddress);
+                    break;
+                default:
+                    return false;
+            }
+        }
+        catch (const std::exception& e)
+        {
+            // Invalid ip address
+        }
+
+        IfAddr ifaddr;
+        try
+        {
+            ifaddr = {addr, prefixLength};
+        }
+        catch (const std::exception& e)
+        {
+            // Invalid prefix length
+            return false;
+        }
+
+        std::string gw;
+        try
+        {
+            if (!gateway.empty())
+            {
+                gw = std::to_string(ToAddr<in_addr>{}(gateway));
+            }
+        }
+        catch (const std::exception& e)
+        {
+            // Invalid gateway
+            return false;
+        }
+
+        const std::string ipObjId = "addr0";
+        std::string protocol;
+        if (protType == HypIP::Protocol::IPv4)
+        {
+            protocol = "ipv4";
+        }
+        else if (protType == HypIP::Protocol::IPv6)
+        {
+            protocol = "ipv6";
+        }
+
+        std::string objPath = objectPath + "/" + protocol + "/" + ipObjId;
+
+        addrs.erase(intfLabel);
+
+        addrs[intfLabel] = std::make_unique<HypIPAddress>(
+            bus, (objPath).c_str(), *this, protType, ipaddress, origin,
+            prefixLength, gw, "if0");
+        return true;
+    }
+
     friend class TestHypEthernetInterface;
 };
 } // namespace network

@@ -68,7 +68,49 @@ class HypIPAddress : public HypIPIfaces
 
     /** @brief Delete this d-bus object.
      */
-    void delete_() override {}
+    void delete_() override;
+
+    /** @brief Get bios table property's prefix based
+     *         on the protocol.
+     *  @result prefix of bios table properties
+     */
+    std::string getHypPrefix();
+
+    /** @brief Method that maps the dbus object's properties
+     *        with properties of the bios table.
+     *  @param[in] dbusProp - dbus property name
+     * @result bios table property equivalent to the dbus property.
+     */
+    std::string mapDbusToBiosAttr(std::string dbusProp);
+
+    /** @brief Method to update the bios table property
+     *  @param[in] attribute - bios attribute
+     *  @param[in] attributeValue - bios attribute value
+     */
+    void updateBaseBiosTable(std::string attribute,
+                             std::variant<std::string, int64_t> attributeValue);
+
+    /** @brief Method to update the pending attributes property
+     *         bios config manager
+     *  @param[in] pendingAttributes - list of all attr, attr value and attr
+     * types
+     */
+    void updateBiosPendingAttrs(PendingAttributesType pendingAttributes);
+
+    /** @brief Method to reset all the properties
+     *         of the ip addr object
+     */
+    void resetIPObjProps();
+
+    /** @brief Method to reset the base bios table attributes
+     */
+    void resetBaseBiosTableAttrs();
+
+    /** @brief Method to convert ip address to InAddrAny type
+     *  @param[in] ip - ip address of type string
+     *  @returns ip address of type InAddrAny
+     */
+    InAddrAny getIpAddress(std::string ip);
 
     using HypIP::address;
     using HypIP::gateway;
