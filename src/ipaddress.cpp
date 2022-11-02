@@ -2,6 +2,7 @@
 
 #include "ethernet_interface.hpp"
 #include "netlink.hpp"
+#include "network_manager.hpp"
 #include "util.hpp"
 
 #include <linux/netlink.h>
@@ -38,17 +39,48 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using NotAllowed = sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
 using Reason = xyz::openbmc_project::Common::NotAllowed::REASON;
 
-IPAddress::IPAddress(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-                     EthernetInterface& parent, IP::Protocol type,
-                     std::string_view ipaddress, IP::AddressOrigin origin,
-                     uint8_t prefixLength) :
-    IPIfaces(bus, objPath.c_str(), IPIfaces::action::defer_emit),
-    parent(parent)
+static auto makeObjPath(std::string_view root, IfAddr addr)
 {
+    auto ret = sdbusplus::message::object_path(std::string(root));
+    ret /= std::to_string(addr);
+    return ret;
+}
 
-    IP::address(std::string(ipaddress));
-    IP::prefixLength(prefixLength);
-    IP::type(type);
+template <typename T>
+struct Proto
+{
+};
+
+template <>
+struct Proto<in_addr>
+{
+    static inline constexpr auto value = IP::Protocol::IPv4;
+};
+
+template <>
+struct Proto<in6_addr>
+{
+    static inline constexpr auto value = IP::Protocol::IPv6;
+};
+
+IPAddress::IPAddress(sdbusplus::bus_t& bus, std::string_view objRoot,
+                     EthernetInterface& parent, IfAddr addr,
+                     AddressOrigin origin) :
+    IPAddress(bus, makeObjPath(objRoot, addr), parent, addr, origin)
+{
+}
+
+IPAddress::IPAddress(sdbusplus::bus_t& bus,
+                     sdbusplus::message::object_path objPath,
+                     EthernetInterface& parent, IfAddr addr,
+                     AddressOrigin origin) :
+    IPIfaces(bus, objPath.str.c_str(), IPIfaces::action::defer_emit),
+    parent(parent), objPath(std::move(objPath))
+{
+    IP::address(std::to_string(addr.getAddr()));
+    IP::prefixLength(addr.getPfx());
+    IP::type(std::visit([](auto v) { return Proto<decltype(v)>::value; },
+                        addr.getAddr()));
     IP::origin(origin);
 
     // Emit deferred signal.
@@ -85,7 +117,19 @@ void IPAddress::delete_()
         elog<InternalFailure>();
     }
 
-    parent.deleteObject(address());
+    std::unique_ptr<IPAddress> ptr;
+    for (auto it = parent.addrs.begin(); it != parent.addrs.end(); ++it)
+    {
+        if (it->second.get() == this)
+        {
+            ptr = std::move(it->second);
+            parent.addrs.erase(it);
+            break;
+        }
+    }
+
+    parent.writeConfigurationFile();
+    parent.manager.reloadConfigs();
 }
 
 namespace detail
