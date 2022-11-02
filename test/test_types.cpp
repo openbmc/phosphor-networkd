@@ -4,6 +4,7 @@
 #include <fmt/chrono.h>
 #include <fmt/format.h>
 
+#include <array>
 #include <sstream>
 #include <string_view>
 
@@ -36,6 +37,19 @@ TEST(EqualOperator, In6Addr)
 
 namespace phosphor::network
 {
+
+TEST(Byteswap, Swap)
+{
+    EXPECT_EQ(38, bswap(uint8_t{38}));
+    EXPECT_EQ(38 << 8, bswap(uint16_t{38}));
+    EXPECT_EQ(0x240082fe, bswap(uint32_t{0xfe820024}));
+    EXPECT_EQ(0x240082fe00000000, bswap(uint64_t{0xfe820024}));
+    struct
+    {
+        std::array<char, 4> a = {1, 2, 3, 4};
+    } s;
+    EXPECT_EQ((std::array<char, 4>{4, 3, 2, 1}), bswap(s).a);
+}
 
 TEST(EqualOperator, InAddrAny)
 {
@@ -97,12 +111,14 @@ TEST(BasicOps, AllAddrs)
     EXPECT_EQ("a 0.0.0.1", fmt::format("a {}", InAddrAny{in_addr{htonl(1)}}));
     EXPECT_EQ("a 100::", fmt::format("a {}", in6_addr{1}));
     EXPECT_EQ("a 100::", fmt::format("a {}", InAddrAny{in6_addr{1}}));
+    EXPECT_EQ("a 100::/90", fmt::format("a {}", IfAddr{in6_addr{1}, 90}));
 
     EXPECT_EQ("01:00:00:00:00:00", std::to_string(ether_addr{1}));
     EXPECT_EQ("0.0.0.1", std::to_string(in_addr{htonl(1)}));
     EXPECT_EQ("0.0.0.1", std::to_string(InAddrAny{in_addr{htonl(1)}}));
     EXPECT_EQ("100::", std::to_string(in6_addr{1}));
     EXPECT_EQ("100::", std::to_string(InAddrAny{in6_addr{1}}));
+    EXPECT_EQ("100::/22", std::to_string(IfAddr{in6_addr{1}, 22}));
 
     EXPECT_EQ("a01:00:00:00:00:00",
               (std::stringstream{} << "a" << ether_addr{1}).str());
@@ -114,6 +130,15 @@ TEST(BasicOps, AllAddrs)
     EXPECT_EQ("a100::", (std::stringstream{} << "a" << in6_addr{1}).str());
     EXPECT_EQ("a100::",
               (std::stringstream{} << "a" << InAddrAny{in6_addr{1}}).str());
+    auto ss = std::stringstream{};
+    constexpr auto addr = IfAddr{in6_addr{1}, 30};
+    ss << "a" << addr;
+    EXPECT_EQ("a100::/30", ss.str());
+
+    EXPECT_NO_THROW(IfAddr(in6_addr{}, 128));
+    EXPECT_NO_THROW(IfAddr(in_addr{}, 32));
+    EXPECT_THROW(IfAddr(in6_addr{}, 129), std::invalid_argument);
+    EXPECT_THROW(IfAddr(in_addr{}, 33), std::invalid_argument);
 }
 
 TEST(Perf, In6Addr)
