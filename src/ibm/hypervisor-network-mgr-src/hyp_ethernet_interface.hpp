@@ -6,9 +6,11 @@
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/elog.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
 #include <stdplus/pinned.hpp>
 #include <stdplus/str/maps.hpp>
+#include <xyz/openbmc_project/BIOSConfig/Manager/server.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 #include <xyz/openbmc_project/Network/IP/Create/server.hpp>
@@ -41,6 +43,9 @@ using ObjectPath = sdbusplus::message::object_path;
 using ipAddrMapType = stdplus::string_umap<std::unique_ptr<HypIPAddress>>;
 
 static std::shared_ptr<sdbusplus::bus::match_t> matchBIOSAttrUpdate;
+
+using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
 /** @class HypEthernetInterface
  *  @brief Hypervisor Ethernet Interface implementation.
@@ -83,11 +88,8 @@ class HypEthInterface : public CreateIface
      *  @param[in] gateway - Gateway ip address.
      */
 
-    ObjectPath ip(HypIP::Protocol /*addressType*/, std::string /*ipAddress*/,
-                  uint8_t /*prefixLength*/, std::string /*gateway*/) override
-    {
-        return std::string();
-    };
+    ObjectPath ip(HypIP::Protocol addressType, std::string ipAddress,
+                  uint8_t prefixLength, std::string gateway) override;
 
     /* @brief Function to delete the IP dbus object
      *  @param[in] ipaddress - ipaddress to delete.
@@ -124,11 +126,36 @@ class HypEthInterface : public CreateIface
                          std::variant<std::string, int64_t> attrValue,
                          std::string attrType);
 
-    /* @brief Returns the dhcp enabled property
-     * @param[in] protocol - ipv4/ipv6
-     * @return bool - true if dhcpEnabled
-     */
-    bool isDHCPEnabled(HypIP::Protocol protocol);
+    template <typename Addr>
+    static bool validIntfIP(Addr a) noexcept
+    {
+        return a.isUnicast() && !a.isLoopback();
+    }
+
+    template <typename Addr>
+    static void validateGateway(std::string& gw)
+    {
+        try
+        {
+            auto ip = stdplus::fromStr<Addr>(gw);
+            if (ip == Addr{})
+            {
+                throw std::invalid_argument("Empty gateway");
+            }
+            if (!validIntfIP(ip))
+            {
+                throw std::invalid_argument("Invalid unicast");
+            }
+            gw = stdplus::toStr(ip);
+        }
+        catch (const std::exception& e)
+        {
+            lg2::error("Invalid Gateway `{GATEWAY}`: {ERROR}", "GATEWAY", gw,
+                       "ERROR", e);
+            elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
+                                  Argument::ARGUMENT_VALUE(gw.c_str()));
+        }
+    }
 
     /** Set value of DHCPEnabled */
     HypEthernetIntf::DHCPConf dhcpEnabled() const override;
@@ -148,7 +175,6 @@ class HypEthInterface : public CreateIface
     /** @brief Parent of this object */
     stdplus::PinnedRef<HypNetworkMgr> manager;
 
-  protected:
     /** @brief List of the ipaddress and the ip dbus objects */
     ipAddrMapType addrs;
 };
