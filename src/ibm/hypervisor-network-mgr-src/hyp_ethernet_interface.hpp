@@ -7,6 +7,7 @@
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/elog.hpp>
 #include <sdbusplus/bus.hpp>
+#include <xyz/openbmc_project/BIOSConfig/Manager/server.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 #include <xyz/openbmc_project/Network/IP/Create/server.hpp>
@@ -78,11 +79,8 @@ class HypEthInterface : public CreateIface
      *  @param[in] gateway - Gateway ip address.
      */
 
-    ObjectPath ip(HypIP::Protocol /*addressType*/, std::string /*ipAddress*/,
-                  uint8_t /*prefixLength*/, std::string /*gateway*/) override
-    {
-        return std::string();
-    };
+    ObjectPath ip(HypIP::Protocol addressType, std::string ipAddress,
+                  uint8_t prefixLength, std::string gateway) override;
 
     /* @brief Function to delete the IP dbus object
      *  @param[in] ipaddress - ipaddress to delete.
