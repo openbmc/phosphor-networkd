@@ -83,11 +83,8 @@ class HypEthInterface : public CreateIface
      *  @param[in] gateway - Gateway ip address.
      */
 
-    ObjectPath ip(HypIP::Protocol /*addressType*/, std::string /*ipAddress*/,
-                  uint8_t /*prefixLength*/, std::string /*gateway*/) override
-    {
-        return std::string();
-    };
+    ObjectPath ip(HypIP::Protocol addressType, std::string ipAddress,
+                  uint8_t prefixLength, std::string gateway) override;
 
     /* @brief Function to delete the IP dbus object
      *  @param[in] ipaddress - ipaddress to delete.
