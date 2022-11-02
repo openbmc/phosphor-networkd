@@ -34,6 +34,65 @@ class MockHypEthernetInterface : public HypEthInterface
                 HypIP::AddressOrigin::Static, 0, "8.8.8.1", "if1"));
     }
 
+    bool createIP(MockHypEthernetInterface& interface, std::string intfLabel,
+                  HypIP::Protocol protType, const std::string& ipaddress,
+                  uint8_t prefixLength, const std::string& gateway)
+    {
+        if (interface.dhcpIsEnabled(protType))
+        {
+            switch (protType)
+            {
+                case HypIP::Protocol::IPv4:
+                    interface.dhcp4(false);
+                    break;
+                case HypIP::Protocol::IPv6:
+                    interface.dhcp6(false);
+                    break;
+            }
+        }
+
+        HypIP::AddressOrigin origin = HypIP::AddressOrigin::Static;
+
+        if (!isValidIP(AF_INET, ipaddress) && !isValidIP(AF_INET6, ipaddress))
+        {
+            // Not a valid IP address
+            return false;
+        }
+
+        if (!isValidIP(AF_INET, gateway) && !isValidIP(AF_INET6, gateway))
+        {
+            // Not a valid gateway
+            return false;
+        }
+
+        if (!isValidPrefix(AF_INET, prefixLength) &&
+            !isValidPrefix(AF_INET6, prefixLength))
+        {
+            // PrefixLength is not correct
+            return false;
+        }
+
+        const std::string ipObjId = "addr0";
+        std::string protocol;
+        if (protType == HypIP::Protocol::IPv4)
+        {
+            protocol = "ipv4";
+        }
+        else if (protType == HypIP::Protocol::IPv6)
+        {
+            protocol = "ipv6";
+        }
+
+        std::string objPath = objectPath + "/" + protocol + "/" + ipObjId;
+
+        addrs.erase(intfLabel);
+
+        addrs[intfLabel] = std::make_unique<HypIPAddress>(
+            bus, (objPath).c_str(), *this, protType, ipaddress, origin,
+            prefixLength, gateway, "if0");
+        return true;
+    }
+
     friend class TestHypEthernetInterface;
 };
 } // namespace network
