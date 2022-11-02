@@ -90,6 +90,12 @@ class EthernetInterface : public Ifaces
                       bool emitSignal = true,
                       std::optional<bool> enabled = std::nullopt);
 
+    /** @brief Network Manager object. */
+    Manager& manager;
+
+    /** @brief Persistent map of IPAddress dbus objects and their names */
+    std::unordered_map<IfAddr, std::unique_ptr<IPAddress>> addrs;
+
     /** @brief Updates the interface information based on new InterfaceInfo */
     void updateInfo(const system::InterfaceInfo& info);
 
@@ -119,11 +125,6 @@ class EthernetInterface : public Ifaces
     /* @brief delete the dbus object of the given ipAddress.
      * @param[in] ipAddress - IP address.
      */
-    void deleteObject(std::string_view ipAddress);
-
-    /* @brief delete the dbus object of the given ipAddress.
-     * @param[in] ipAddress - IP address.
-     */
     void deleteStaticNeighborObject(std::string_view ipAddress);
 
     /* @brief creates the dbus object(IPaddres) given in the address list.
@@ -135,14 +136,6 @@ class EthernetInterface : public Ifaces
     /* @brief creates the dbus object(Neighbor) given in the neighbor list.
      */
     void createStaticNeighborObjects();
-
-    /* @brief Gets all the ip addresses.
-     * @returns the list of ipAddress.
-     */
-    inline const auto& getAddresses() const
-    {
-        return addrs;
-    }
 
     /* @brief Gets all the static neighbor entries.
      * @returns Static neighbor map.
@@ -159,6 +152,19 @@ class EthernetInterface : public Ifaces
     bool dhcp4(bool value) override;
     using EthernetInterfaceIntf::dhcp6;
     bool dhcp6(bool value) override;
+
+    inline bool dhcpIsEnabled(in_addr) const
+    {
+        return dhcp4();
+    }
+    inline bool dhcpIsEnabled(in6_addr) const
+    {
+        return dhcp6();
+    }
+    inline bool dhcpIsEnabled(InAddrAny addr) const
+    {
+        return std::visit([&](auto v) { return dhcpIsEnabled(v); }, addr);
+    }
 
     /** Retrieve Link State */
     bool linkUp() const override;
@@ -263,12 +269,6 @@ class EthernetInterface : public Ifaces
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus_t& bus;
 
-    /** @brief Network Manager object. */
-    Manager& manager;
-
-    /** @brief Persistent map of IPAddress dbus objects and their names */
-    string_umap<std::unique_ptr<IPAddress>> addrs;
-
     /** @brief Persistent map of Neighbor dbus objects and their names */
     string_umap<std::unique_ptr<Neighbor>> staticNeighbors;
 
@@ -285,12 +285,6 @@ class EthernetInterface : public Ifaces
                       const system::InterfaceInfo& info, std::string&& objPath,
                       const config::Parser& config, bool emitSignal,
                       std::optional<bool> enabled);
-
-    /** @brief Determines if DHCP is active for the IP::Protocol supplied.
-     *  @param[in] protocol - Either IPv4 or IPv6
-     *  @returns true/false value if DHCP is active for the input protocol
-     */
-    bool dhcpIsEnabled(IP::Protocol protocol);
 
     /** @brief Determines if the address is manually assigned
      *  @param[in] origin - The origin entry of the IP::Address
