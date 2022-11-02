@@ -48,6 +48,106 @@ class MockHypEthernetInterface : public HypEthInterface
                 "if1"));
     }
 
+    bool createIP(MockHypEthernetInterface& interface, std::string intfLabel,
+                  HypIP::Protocol protType, const std::string& ipaddress,
+                  uint8_t prefixLength, const std::string& gateway)
+    {
+        HypIP::AddressOrigin origin = HypIP::AddressOrigin::Static;
+
+        std::optional<stdplus::InAnyAddr> addr;
+        try
+        {
+            switch (protType)
+            {
+                case HypIP::Protocol::IPv4:
+                    if (interface.dhcp4())
+                    {
+                        interface.dhcp4(false);
+                    }
+                    addr.emplace(stdplus::fromStr<stdplus::In4Addr>(ipaddress));
+                    break;
+                case HypIP::Protocol::IPv6:
+                    if (interface.dhcp6())
+                    {
+                        interface.dhcp6(false);
+                    }
+                    addr.emplace(stdplus::fromStr<stdplus::In6Addr>(ipaddress));
+                    break;
+                default:
+                    throw std::logic_error("Exhausted protocols");
+            }
+            if (!std::visit([](auto ip) { return validIntfIP(ip); }, *addr))
+            {
+                throw std::invalid_argument("not unicast");
+            }
+        }
+        catch (const std::exception& e)
+        {
+            // Invalid IP
+            return false;
+        }
+
+        std::optional<stdplus::SubnetAny> ifaddr;
+        try
+        {
+            if (prefixLength == 0)
+            {
+                throw std::invalid_argument("default route");
+            }
+            ifaddr.emplace(*addr, prefixLength);
+        }
+        catch (const std::exception& e)
+        {
+            // Invalid Prefix
+            return false;
+        }
+
+        try
+        {
+            if (!gateway.empty())
+            {
+                if (protType == HypIP::Protocol::IPv4)
+                {
+                    validateGateway<stdplus::In4Addr>(gateway);
+                }
+                else if (protType == HypIP::Protocol::IPv6)
+                {
+                    validateGateway<stdplus::In4Addr>(gateway);
+                }
+            }
+            else
+            {
+                throw std::invalid_argument("Empty gateway");
+            }
+        }
+        catch (const std::exception& e)
+        {
+            // Invalid Gateway
+            return false;
+        }
+
+        const std::string ipObjId = "addr0";
+        std::string protocol;
+        if (protType == HypIP::Protocol::IPv4)
+        {
+            protocol = "ipv4";
+        }
+        else if (protType == HypIP::Protocol::IPv6)
+        {
+            protocol = "ipv6";
+        }
+
+        const std::string intfLabel = "if0";
+        std::string objPath = objectPath.str + "/" + protocol + "/" + ipObjId;
+
+        addrs.erase(intfLabel);
+
+        addrs[intfLabel] = std::make_unique<HypIPAddress>(
+            bus, sdbusplus::message::object_path(objPath), *this, *ifaddr,
+            gateway, origin, intfLabel);
+        return true;
+    }
+
     friend class TestHypEthernetInterface;
 };
 } // namespace network

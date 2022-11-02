@@ -10,8 +10,8 @@ namespace network
 {
 
 using namespace phosphor::logging;
-using namespace sdbusplus::xyz::openbmc_project::Common::Error;
-using Argument = xyz::openbmc_project::Common::InvalidArgument;
+using BIOSConfigManager =
+    sdbusplus::xyz::openbmc_project::BIOSConfig::server::Manager;
 
 constexpr auto BIOS_SERVICE = "xyz.openbmc_project.BIOSConfigManager";
 constexpr auto BIOS_OBJPATH = "/xyz/openbmc_project/bios_config/manager";
@@ -23,12 +23,6 @@ constexpr auto BIOS_MGR_INTF = "xyz.openbmc_project.BIOSConfig.Manager";
 // 4 attributes of interface 1
 // and 1 vmi_hostname attribute
 constexpr auto BIOS_ATTRS_SIZE = 9;
-
-template <typename Addr>
-static bool validIntfIP(Addr a) noexcept
-{
-    return a.isUnicast() && !a.isLoopback();
-}
 
 void HypEthInterface::setIpPropsInMap(
     std::string attrName, std::variant<std::string, int64_t> attrValue,
@@ -277,6 +271,166 @@ bool HypEthInterface::dhcp6(bool value)
     return value;
 }
 
+ObjectPath HypEthInterface::ip(HypIP::Protocol protType, std::string ipaddress,
+                               uint8_t prefixLength, std::string gateway)
+{
+    HypIP::AddressOrigin origin = HypIP::AddressOrigin::Static;
+
+    std::optional<stdplus::InAnyAddr> addr;
+    try
+    {
+        switch (protType)
+        {
+            case HypIP::Protocol::IPv4:
+                if (dhcp4())
+                {
+                    log<level::INFO>("Disabling DHCP on the interface"),
+                        entry("INTERFACE=%s", interfaceName().c_str());
+                    dhcp4(false);
+                }
+                addr.emplace(stdplus::fromStr<stdplus::In4Addr>(ipaddress));
+                break;
+            case HypIP::Protocol::IPv6:
+                if (dhcp6())
+                {
+                    log<level::INFO>("Disabling DHCP on the interface"),
+                        entry("INTERFACE=%s", interfaceName().c_str());
+                    dhcp6(false);
+                }
+                addr.emplace(stdplus::fromStr<stdplus::In6Addr>(ipaddress));
+                break;
+            default:
+                throw std::logic_error("Exhausted protocols");
+        }
+        if (!std::visit([](auto ip) { return validIntfIP(ip); }, *addr))
+        {
+            throw std::invalid_argument("not unicast");
+        }
+    }
+    catch (const std::exception& e)
+    {
+        lg2::error("Invalid IP {NET_IP}: {ERROR}", "NET_IP", ipaddress, "ERROR",
+                   e);
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("ipaddress"),
+                              Argument::ARGUMENT_VALUE(ipaddress.c_str()));
+    }
+
+    std::optional<stdplus::SubnetAny> ifaddr;
+    try
+    {
+        if (prefixLength == 0)
+        {
+            throw std::invalid_argument("default route");
+        }
+        ifaddr.emplace(*addr, prefixLength);
+    }
+    catch (const std::exception& e)
+    {
+        lg2::error("Invalid prefix length {NET_PFX}: {ERROR}", "NET_PFX",
+                   prefixLength, "ERROR", e);
+        elog<InvalidArgument>(
+            Argument::ARGUMENT_NAME("prefixLength"),
+            Argument::ARGUMENT_VALUE(stdplus::toStr(prefixLength).c_str()));
+    }
+
+    try
+    {
+        if (!gateway.empty())
+        {
+            if (protType == HypIP::Protocol::IPv4)
+            {
+                validateGateway<stdplus::In4Addr>(gateway);
+            }
+            else if (protType == HypIP::Protocol::IPv6)
+            {
+                validateGateway<stdplus::In4Addr>(gateway);
+            }
+        }
+        else
+        {
+            throw std::invalid_argument("Empty gateway");
+        }
+    }
+    catch (const std::exception& e)
+    {
+        auto msg = fmt::format("Invalid GW `{}`: {}", gateway, e.what());
+        log<level::ERR>(msg.c_str(), entry("GATEWAY=%s", gateway.c_str()));
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
+                              Argument::ARGUMENT_VALUE(gateway.c_str()));
+    }
+
+    const std::string intfLabel = getIntfLabel();
+    if (intfLabel == "")
+    {
+        log<level::ERR>("Wrong interface name");
+        return sdbusplus::message::details::string_path_wrapper();
+    }
+
+    const std::string ipObjId = "addr0";
+    std::string protocol;
+    if (protType == HypIP::Protocol::IPv4)
+    {
+        protocol = "ipv4";
+    }
+    else if (protType == HypIP::Protocol::IPv6)
+    {
+        protocol = "ipv6";
+    }
+
+    std::string objPath = objectPath.str + "/" + protocol + "/" + ipObjId;
+
+    for (auto& addr : addrs)
+    {
+        auto& ipObj = addr.second;
+        std::string ipObjAddr = ipObj->address();
+        uint8_t ipObjPrefixLen = ipObj->prefixLength();
+        std::string ipObjGateway = ipObj->gateway();
+
+        if ((ipaddress == ipObjAddr) && (prefixLength == ipObjPrefixLen) &&
+            (gateway == ipObjGateway))
+        {
+            log<level::INFO>("Trying to set same IP properties");
+        }
+        auto addrKey = addrs.extract(addr.first);
+        addrKey.key() = ipaddress;
+        break;
+    }
+
+    log<level::INFO>("Updating IP properties",
+                     entry("OBJPATH=%s", objPath.c_str()),
+                     entry("INTERFACE=%s", intfLabel.c_str()),
+                     entry("ADDRESS=%s", ipaddress.c_str()),
+                     entry("GATEWAY=%s", gateway.c_str()),
+                     entry("PREFIXLENGTH=%d", prefixLength));
+
+    addrs[ipaddress] = std::make_unique<HypIPAddress>(
+        bus, sdbusplus::message::object_path(objPath), *this, *ifaddr, gateway,
+        origin, intfLabel);
+
+    PendingAttributesType pendingAttributes;
+
+    auto& ipObj = addrs[ipaddress];
+    pendingAttributes.insert_or_assign(
+        ipObj->mapDbusToBiosAttr("address"),
+        std::make_tuple(BIOSConfigManager::convertAttributeTypeToString(
+                            BIOSConfigManager::AttributeType::String),
+                        ipaddress));
+    pendingAttributes.insert_or_assign(
+        ipObj->mapDbusToBiosAttr("gateway"),
+        std::make_tuple(BIOSConfigManager::convertAttributeTypeToString(
+                            BIOSConfigManager::AttributeType::String),
+                        gateway));
+    pendingAttributes.insert_or_assign(
+        ipObj->mapDbusToBiosAttr("prefixLength"),
+        std::make_tuple(BIOSConfigManager::convertAttributeTypeToString(
+                            BIOSConfigManager::AttributeType::Integer),
+                        prefixLength));
+
+    ipObj->updateBiosPendingAttrs(pendingAttributes);
+
+    return objPath;
+}
+
 HypEthInterface::DHCPConf HypEthInterface::dhcpEnabled(DHCPConf value)
 {
     auto old4 = HypEthernetIntf::dhcp4();
@@ -291,10 +445,62 @@ HypEthInterface::DHCPConf HypEthInterface::dhcpEnabled(DHCPConf value)
         value == DHCPConf::v6stateless || value == DHCPConf::v4v6stateless ||
         value == DHCPConf::v6 || value == DHCPConf::both);
 
-    if (old4 != new4 || old6 != new6 || oldra != newra)
+    if (old4 == new4 || old6 == new6 || oldra == newra)
     {
-        HypEthernetIntf::dhcpEnabled(value);
+        // if new value is the same as old value
+        return value;
     }
+
+    HypEthernetIntf::dhcpEnabled(value);
+
+    std::unique_ptr<HypIPAddress> ipObj;
+    std::string method;
+
+    if (value != HypEthernetIntf::DHCPConf::none)
+    {
+        for (auto& itr : addrs)
+        {
+            ipObj = std::move(itr.second);
+
+            std::string method;
+            if (ipObj->type() == HypIP::Protocol::IPv4)
+            {
+                method = "IPv4DHCP";
+            }
+            else if (ipObj->type() == HypIP::Protocol::IPv6)
+            {
+                method = "IPv6DHCP";
+            }
+            break;
+        }
+    }
+    else
+    {
+        for (auto& itr : addrs)
+        {
+            ipObj = std::move(itr.second);
+
+            std::string method;
+            if (ipObj->type() == HypIP::Protocol::IPv4)
+            {
+                method = "IPv4Static";
+            }
+            else if (ipObj->type() == HypIP::Protocol::IPv6)
+            {
+                method = "IPv6Static";
+            }
+            break;
+        }
+    }
+
+    PendingAttributesType pendingAttributes;
+    pendingAttributes.insert_or_assign(
+        ipObj->mapDbusToBiosAttr("origin"),
+        std::make_tuple(BIOSConfigManager::convertAttributeTypeToString(
+                            BIOSConfigManager::AttributeType::Enumeration),
+                        method));
+    ipObj->updateBiosPendingAttrs(pendingAttributes);
+    log<level::INFO>("Updating the ip address properties");
 
     return value;
 }
