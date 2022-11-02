@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <array>
 #include <chrono>
+#include <numeric>
 #include <sdeventplus/clock.hpp>
 #include <sdeventplus/utility/timer.hpp>
 #include <string>
@@ -31,6 +32,46 @@ constexpr auto refreshTimeout = 4s;
 
 // Byte representations for common address types in network byte order
 using InAddrAny = std::variant<in_addr, in6_addr>;
+class IfAddr
+{
+  private:
+    InAddrAny addr;
+    uint8_t pfx;
+
+    static void invalidPfx(uint8_t pfx);
+
+  public:
+    constexpr IfAddr() : addr({}), pfx(0)
+    {
+    }
+
+    constexpr IfAddr(InAddrAny addr, uint8_t pfx) : addr(addr), pfx(pfx)
+    {
+        std::visit(
+            [pfx](auto v) {
+                if (sizeof(v) * 8 < pfx)
+                {
+                    invalidPfx(pfx);
+                }
+            },
+            addr);
+    }
+
+    constexpr auto getAddr() const
+    {
+        return addr;
+    }
+
+    constexpr auto getPfx() const
+    {
+        return pfx;
+    }
+
+    constexpr bool operator==(phosphor::network::IfAddr rhs) const noexcept
+    {
+        return addr == rhs.addr && pfx == rhs.pfx;
+    }
+};
 
 using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
 
@@ -54,6 +95,91 @@ constexpr std::size_t hash_multi(const T& v, const Args&... args) noexcept
 {
     const std::size_t seed = hash_multi(args...);
     return seed ^ (std::hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2));
+}
+
+namespace detail
+{
+
+template <typename T, uint8_t size = sizeof(T)>
+struct BswapAlign
+{
+    using type = T;
+};
+
+template <typename T>
+struct BswapAlign<T, 2>
+{
+    using type alignas(uint16_t) = T;
+};
+
+template <typename T>
+struct BswapAlign<T, 4>
+{
+    using type alignas(uint32_t) = T;
+};
+
+template <typename T>
+struct BswapAlign<T, 8>
+{
+    using type alignas(uint64_t) = T;
+};
+
+template <typename T>
+constexpr T bswapInt(typename BswapAlign<T>::type n) noexcept
+{
+    static_assert(std::is_trivially_copyable_v<T>);
+    if constexpr (sizeof(T) == 2)
+    {
+        reinterpret_cast<uint16_t&>(n) =
+            __builtin_bswap16(reinterpret_cast<uint16_t&>(n));
+    }
+    else if constexpr (sizeof(T) == 4)
+    {
+        reinterpret_cast<uint32_t&>(n) =
+            __builtin_bswap32(reinterpret_cast<uint32_t&>(n));
+    }
+    else if constexpr (sizeof(T) == 8)
+    {
+        reinterpret_cast<uint64_t&>(n) =
+            __builtin_bswap64(reinterpret_cast<uint64_t&>(n));
+    }
+    else
+    {
+        auto b = reinterpret_cast<std::byte*>(&n);
+        std::reverse(b, b + sizeof(n));
+    }
+    return n;
+}
+
+} // namespace detail
+
+template <typename T>
+constexpr T bswap(T n) noexcept
+{
+    return detail::bswapInt<T>(n);
+}
+
+template <typename T>
+constexpr T hton(T n) noexcept
+{
+    if constexpr (std::endian::native == std::endian::big)
+    {
+        return n;
+    }
+    else if constexpr (std::endian::native == std::endian::little)
+    {
+        return bswap(n);
+    }
+    else
+    {
+        static_assert(std::is_same_v<T, void>);
+    }
+}
+
+template <typename T>
+constexpr T ntoh(T n) noexcept
+{
+    return hton(n);
 }
 
 namespace detail
@@ -168,6 +294,12 @@ struct std::hash<in6_addr>
     std::size_t operator()(in6_addr addr) const noexcept;
 };
 
+template <>
+struct std::hash<phosphor::network::IfAddr>
+{
+    std::size_t operator()(phosphor::network::IfAddr addr) const noexcept;
+};
+
 namespace fmt
 {
 template <>
@@ -213,6 +345,29 @@ struct formatter<phosphor::network::InAddrAny>
             v);
     }
 };
+template <>
+struct formatter<phosphor::network::IfAddr>
+{
+  private:
+    fmt::formatter<phosphor::network::InAddrAny> addrF;
+    fmt::formatter<char> strF;
+    fmt::formatter<uint8_t> numF;
+
+  public:
+    template <typename ParseContext>
+    constexpr auto parse(ParseContext& ctx)
+    {
+        return ctx.begin();
+    }
+
+    template <typename FormatContext>
+    auto format(auto v, FormatContext& ctx) const
+    {
+        addrF.format(v.getAddr(), ctx);
+        strF.format('/', ctx);
+        return numF.format(v.getPfx(), ctx);
+    }
+};
 } // namespace fmt
 
 namespace std
@@ -221,6 +376,7 @@ string to_string(ether_addr value);
 string to_string(in_addr value);
 string to_string(in6_addr value);
 string to_string(phosphor::network::InAddrAny value);
+string to_string(phosphor::network::IfAddr value);
 } // namespace std
 
 constexpr bool operator==(ether_addr lhs, ether_addr rhs) noexcept
@@ -270,4 +426,9 @@ auto& operator<<(auto& os, phosphor::network::InAddrAny v)
                        decltype(v)>{}(v);
                },
                v);
+}
+
+auto& operator<<(auto& os, phosphor::network::IfAddr v)
+{
+    return os << v.getAddr() << "/" << std::dec << int{v.getPfx()};
 }
