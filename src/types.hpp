@@ -247,31 +247,22 @@ constexpr std::enable_if_t<!std::is_same_v<phosphor::network::InAddrAny, T>,
     return phosphor::network::detail::veq(rhs, lhs);
 }
 
-template <typename CharT, typename Traits>
-std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& os, ether_addr v)
+auto& operator<<(auto& os, ether_addr v)
 {
     return os << phosphor::network::detail::AddrBufMaker<ether_addr>{}(v);
 }
 
-template <typename CharT, typename Traits>
-std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& os, in_addr v)
+auto& operator<<(auto& os, in_addr v)
 {
     return os << phosphor::network::detail::AddrBufMaker<in_addr>{}(v);
 }
 
-template <typename CharT, typename Traits>
-std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& os, in6_addr v)
+auto& operator<<(auto& os, in6_addr v)
 {
     return os << phosphor::network::detail::AddrBufMaker<in6_addr>{}(v);
 }
 
-template <typename CharT, typename Traits>
-std::basic_ostream<CharT, Traits>&
-    operator<<(std::basic_ostream<CharT, Traits>& os,
-               phosphor::network::InAddrAny v)
+auto& operator<<(auto& os, phosphor::network::InAddrAny v)
 {
     return os << std::visit(
                [](auto v) {
