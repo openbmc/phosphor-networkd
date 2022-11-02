@@ -6,8 +6,9 @@
 #include <cstdint>
 #include <optional>
 #include <sdbusplus/bus.hpp>
+#include <sdbusplus/message/native_types.hpp>
 #include <sdbusplus/server/object.hpp>
-#include <stdplus/zstring.hpp>
+#include <string>
 #include <string_view>
 #include <vector>
 #include <xyz/openbmc_project/Network/IP/server.hpp>
@@ -68,17 +69,13 @@ class IPAddress : public IPIfaces
 
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
-     *  @param[in] objPath - Path to attach at.
+     *  @param[in] objRoot - Path to attach at.
      *  @param[in] parent - Parent object.
-     *  @param[in] type - ipaddress type(v4/v6).
-     *  @param[in] ipAddress - ipadress.
+     *  @param[in] addr - The ip address and prefix.
      *  @param[in] origin - origin of ipaddress(dhcp/static/SLAAC/LinkLocal).
-     *  @param[in] prefixLength - Length of prefix.
      */
-    IPAddress(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-              EthernetInterface& parent, IP::Protocol type,
-              std::string_view ipAddress, IP::AddressOrigin origin,
-              uint8_t prefixLength);
+    IPAddress(sdbusplus::bus_t& bus, std::string_view objRoot,
+              EthernetInterface& parent, IfAddr addr, IP::AddressOrigin origin);
 
     std::string address(std::string ipAddress) override;
     uint8_t prefixLength(uint8_t) override;
@@ -96,9 +93,20 @@ class IPAddress : public IPIfaces
     using IP::prefixLength;
     using IP::type;
 
+    inline const auto& getObjPath() const
+    {
+        return objPath;
+    }
+
   private:
     /** @brief Parent Object. */
     EthernetInterface& parent;
+
+    /** @brief Dbus object path */
+    sdbusplus::message::object_path objPath;
+
+    IPAddress(sdbusplus::bus_t& bus, sdbusplus::message::object_path objPath,
+              EthernetInterface& parent, IfAddr addr, IP::AddressOrigin origin);
 };
 
 namespace detail
