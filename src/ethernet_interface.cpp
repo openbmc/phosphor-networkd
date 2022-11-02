@@ -92,7 +92,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
     Ifaces(bus, objPath.c_str(),
            emitSignal ? Ifaces::action::defer_emit
                       : Ifaces::action::emit_no_signals),
-    bus(bus), manager(manager), objPath(std::move(objPath)), ifIdx(info.idx)
+    manager(manager), bus(bus), objPath(std::move(objPath)), ifIdx(info.idx)
 {
     interfaceName(*info.name);
     auto dhcpVal = getDHCPValue(config);
@@ -160,32 +160,6 @@ void EthernetInterface::updateInfo(const system::InterfaceInfo& info)
     }
 }
 
-static IP::Protocol getProtocol(const InAddrAny& addr)
-{
-    if (std::holds_alternative<in_addr>(addr))
-    {
-        return IP::Protocol::IPv4;
-    }
-    else if (std::holds_alternative<in6_addr>(addr))
-    {
-        return IP::Protocol::IPv6;
-    }
-
-    throw std::runtime_error("Invalid addr type");
-}
-
-bool EthernetInterface::dhcpIsEnabled(IP::Protocol family)
-{
-    switch (family)
-    {
-        case IP::Protocol::IPv6:
-            return dhcp6();
-        case IP::Protocol::IPv4:
-            return dhcp4();
-    }
-    throw std::logic_error("Unreachable");
-}
-
 bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
 {
     return (
@@ -212,10 +186,9 @@ void EthernetInterface::createIPAddressObjects()
         {
             continue;
         }
-        auto address = std::to_string(addr.address);
-        IP::Protocol addressType = getProtocol(addr.address);
+        auto ifaddr = IfAddr(addr.address, addr.prefix);
         IP::AddressOrigin origin = IP::AddressOrigin::Static;
-        if (dhcpIsEnabled(addressType))
+        if (dhcpIsEnabled(addr.address))
         {
             origin = IP::AddressOrigin::DHCP;
         }
@@ -226,13 +199,9 @@ void EthernetInterface::createIPAddressObjects()
         }
 #endif
 
-        auto ipAddressObjectPath =
-            generateObjectPath(addressType, address, addr.prefix, origin);
-
         this->addrs.insert_or_assign(
-            address, std::make_unique<IPAddress>(bus, ipAddressObjectPath,
-                                                 *this, addressType, address,
-                                                 origin, addr.prefix));
+            ifaddr, std::make_unique<IPAddress>(bus, std::string_view(objPath),
+                                                *this, ifaddr, origin));
     }
 }
 
@@ -262,56 +231,54 @@ void EthernetInterface::createStaticNeighborObjects()
 ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
                                  uint8_t prefixLength, std::string)
 {
-    if (dhcpIsEnabled(protType))
+    InAddrAny addr;
+    try
     {
-        log<level::INFO>("DHCP enabled on the interface, disabling"),
-            entry("INTERFACE=%s", interfaceName().c_str());
         switch (protType)
         {
             case IP::Protocol::IPv4:
-                dhcp4(false);
+                addr = ToAddr<in_addr>{}(ipaddress);
                 break;
             case IP::Protocol::IPv6:
-                dhcp6(false);
+                addr = ToAddr<in6_addr>{}(ipaddress);
                 break;
+            default:
+                throw std::logic_error("Exhausted protocols");
         }
-        // Delete the IP address object and that reloads the networkd
-        // to allow the same IP address to be set as Static IP
-        deleteObject(ipaddress);
     }
-
-    IP::AddressOrigin origin = IP::AddressOrigin::Static;
-
-    int addressFamily = (protType == IP::Protocol::IPv4) ? AF_INET : AF_INET6;
-
-    if (!isValidIP(addressFamily, ipaddress))
+    catch (const std::exception& e)
     {
-        log<level::ERR>("Not a valid IP address"),
-            entry("ADDRESS=%s", ipaddress.c_str());
+        auto msg = fmt::format("Invalid IP `{}`: {}\n", ipaddress, e.what());
+        log<level::ERR>(msg.c_str(), entry("ADDRESS=%s", ipaddress.c_str()));
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("ipaddress"),
                               Argument::ARGUMENT_VALUE(ipaddress.c_str()));
     }
-
-    if (!isValidPrefix(addressFamily, prefixLength))
+    IfAddr ifaddr;
+    try
     {
-        log<level::ERR>("PrefixLength is not correct "),
-            entry("PREFIXLENGTH=%" PRIu8, prefixLength);
+        ifaddr = {addr, prefixLength};
+    }
+    catch (const std::exception& e)
+    {
+        auto msg = fmt::format("Invalid prefix length `{}`: {}\n", prefixLength,
+                               e.what());
+        log<level::ERR>(msg.c_str(),
+                        entry("PREFIXLENGTH=%" PRIu8, prefixLength));
         elog<InvalidArgument>(
             Argument::ARGUMENT_NAME("prefixLength"),
             Argument::ARGUMENT_VALUE(std::to_string(prefixLength).c_str()));
     }
 
-    auto objectPath =
-        generateObjectPath(protType, ipaddress, prefixLength, origin);
-    this->addrs.insert_or_assign(
-        ipaddress,
-        std::make_unique<IPAddress>(bus, objectPath, *this, protType, ipaddress,
-                                    origin, prefixLength));
+    auto obj =
+        std::make_unique<IPAddress>(bus, std::string_view(objPath), *this,
+                                    ifaddr, IP::AddressOrigin::Static);
+    auto path = obj->getObjPath();
+    this->addrs.insert_or_assign(ifaddr, std::move(obj));
 
     writeConfigurationFile();
     manager.reloadConfigs();
 
-    return objectPath;
+    return path;
 }
 
 ObjectPath EthernetInterface::neighbor(std::string ipAddress,
@@ -342,20 +309,6 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
     manager.reloadConfigs();
 
     return objectPath;
-}
-
-void EthernetInterface::deleteObject(std::string_view ipaddress)
-{
-    auto it = addrs.find(ipaddress);
-    if (it == addrs.end())
-    {
-        log<level::ERR>("DeleteObject:Unable to find the object.");
-        return;
-    }
-    this->addrs.erase(it);
-
-    writeConfigurationFile();
-    manager.reloadConfigs();
 }
 
 void EthernetInterface::deleteStaticNeighborObject(std::string_view ipAddress)
@@ -851,10 +804,9 @@ void EthernetInterface::writeConfigurationFile()
         }
         {
             auto& address = network["Address"];
-            for (const auto& addr : getAddresses())
+            for (const auto& addr : addrs)
             {
-                if (originIsManuallyAssigned(addr.second->origin()) &&
-                    !dhcpIsEnabled(addr.second->type()))
+                if (originIsManuallyAssigned(addr.second->origin()))
                 {
                     address.emplace_back(
                         fmt::format("{}/{}", addr.second->address(),
