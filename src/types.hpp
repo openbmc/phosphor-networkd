@@ -286,6 +286,29 @@ struct ToAddr<ether_addr>
     }
 };
 
+template <>
+struct ToAddr<in_addr>
+{
+    constexpr in_addr operator()(std::string_view str) const
+    {
+        constexpr DecodeInt<uint8_t, 10> di;
+        uint32_t addr = {};
+        for (size_t i = 0; i < 3; ++i)
+        {
+            auto loc = str.find(".");
+            addr |= di(str.substr(0, loc));
+            addr <<= 8;
+            str.remove_prefix(loc == str.npos ? str.size() : loc + 1);
+            if (str.empty())
+            {
+                throw std::invalid_argument("Missing addr data");
+            }
+        }
+        addr |= di(str);
+        return {hton(addr)};
+    }
+};
+
 namespace detail
 {
 

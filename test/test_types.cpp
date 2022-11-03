@@ -120,6 +120,22 @@ TEST(ToAddr, EtherAddr)
               ToAddr<ether_addr>{}("FFEEDDccbbaa"));
 }
 
+TEST(ToAddr, InAddr)
+{
+    EXPECT_THROW(ToAddr<in_addr>{}(""), std::invalid_argument);
+    EXPECT_THROW(ToAddr<in_addr>{}("0"), std::invalid_argument);
+    EXPECT_THROW(ToAddr<in_addr>{}("0.0.0"), std::invalid_argument);
+    EXPECT_THROW(ToAddr<in_addr>{}("0.0.0."), std::invalid_argument);
+    EXPECT_THROW(ToAddr<in_addr>{}(".0.0.0"), std::invalid_argument);
+    EXPECT_THROW(ToAddr<in_addr>{}("0.0.0.0.0"), std::invalid_argument);
+    EXPECT_THROW(ToAddr<in_addr>{}("x.0.0.0"), std::invalid_argument);
+    EXPECT_THROW(ToAddr<in_addr>{}("ff.0.0.0"), std::invalid_argument);
+    EXPECT_THROW(ToAddr<in_addr>{}("256.0.0.0"), std::overflow_error);
+
+    EXPECT_EQ((in_addr{}), ToAddr<in_addr>{}("0.0.0.0"));
+    EXPECT_EQ((in_addr{htonl(0xc0a80101)}), ToAddr<in_addr>{}("192.168.001.1"));
+}
+
 namespace detail
 {
 
