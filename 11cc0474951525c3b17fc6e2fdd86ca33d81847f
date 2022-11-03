@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a2ca4e3_fd55b8dd",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-03T08:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f22e8003_aaa2343e",
+      "revId": "11cc0474951525c3b17fc6e2fdd86ca33d81847f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "16ecccdf_93a86b01",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-11-03T07:03:05Z",
       "side": 1,
       "message": "nit: Split \"PrefixLength\" as \"Prefix length\"",
+      "revId": "11cc0474951525c3b17fc6e2fdd86ca33d81847f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90ce18a4_dc1699a0",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-03T08:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16ecccdf_93a86b01",
       "revId": "11cc0474951525c3b17fc6e2fdd86ca33d81847f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -52,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb1fab68_4938b6a8",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-03T08:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b9dbdc7_1a1630a0",
+      "revId": "11cc0474951525c3b17fc6e2fdd86ca33d81847f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ad3f0893_5846a71d",
@@ -69,6 +123,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e371e13d_177f7386",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ip_interface.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-03T08:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad3f0893_5846a71d",
+      "revId": "11cc0474951525c3b17fc6e2fdd86ca33d81847f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "03bd0d5f_05efe2ea",
@@ -82,6 +154,24 @@
       "writtenOn": "2022-11-03T07:03:05Z",
       "side": 1,
       "message": "nit: Replace \"prop\" with \"property\"",
+      "revId": "11cc0474951525c3b17fc6e2fdd86ca33d81847f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75aa75e8_2bea86b5",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ip_interface.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-03T08:36:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03bd0d5f_05efe2ea",
       "revId": "11cc0474951525c3b17fc6e2fdd86ca33d81847f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
