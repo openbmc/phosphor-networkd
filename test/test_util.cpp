@@ -121,36 +121,6 @@ TEST_F(TestUtil, InterfaceToUbootEthAddr)
 namespace mac_address
 {
 
-TEST(MacFromString, Bad)
-{
-    EXPECT_THROW(fromString("0x:00:00:00:00:00"), std::invalid_argument);
-    EXPECT_THROW(fromString("00:00:00:00:00"), std::invalid_argument);
-    EXPECT_THROW(fromString("00:00:00:00:00:"), std::invalid_argument);
-    EXPECT_THROW(fromString("00:00:00:00::00"), std::invalid_argument);
-    EXPECT_THROW(fromString(":00:00:00:00:00"), std::invalid_argument);
-    EXPECT_THROW(fromString("00::00:00:00:00"), std::invalid_argument);
-    EXPECT_THROW(fromString(":::::"), std::invalid_argument);
-    EXPECT_THROW(fromString("00:0:0:0:0"), std::invalid_argument);
-    EXPECT_THROW(fromString("00:00:00:00:00:00:00"), std::invalid_argument);
-    EXPECT_THROW(fromString(""), std::invalid_argument);
-    EXPECT_THROW(fromString("123456789XYZ"), std::invalid_argument);
-    EXPECT_THROW(fromString("123456789AB"), std::invalid_argument);
-    EXPECT_THROW(fromString("123456789ABCD"), std::invalid_argument);
-}
-
-TEST(MacFromString, Valid)
-{
-    EXPECT_EQ((ether_addr{}), fromString("00:00:00:00:00:00"));
-    EXPECT_EQ((ether_addr{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa}),
-              fromString("FF:EE:DD:cc:bb:aa"));
-    EXPECT_EQ((ether_addr{0x00, 0x01, 0x02, 0x03, 0x04, 0x05}),
-              fromString("0:1:2:3:4:5"));
-    EXPECT_EQ((ether_addr{0x01, 0x23, 0x45, 0x67, 0x89, 0xab}),
-              fromString("0123456789AB"));
-    EXPECT_EQ((ether_addr{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa}),
-              fromString("FFEEDDccbbaa"));
-}
-
 TEST(MacIsEmpty, True)
 {
     EXPECT_TRUE(isEmpty({}));
@@ -158,34 +128,34 @@ TEST(MacIsEmpty, True)
 
 TEST(MacIsEmpty, False)
 {
-    EXPECT_FALSE(isEmpty(fromString("01:00:00:00:00:00")));
-    EXPECT_FALSE(isEmpty(fromString("00:00:00:10:00:00")));
-    EXPECT_FALSE(isEmpty(fromString("00:00:00:00:00:01")));
+    EXPECT_FALSE(isEmpty({1}));
+    EXPECT_FALSE(isEmpty({0, 0, 0, 1}));
+    EXPECT_FALSE(isEmpty({0, 0, 0, 0, 0, 1}));
 }
 
 TEST(MacIsMulticast, True)
 {
-    EXPECT_TRUE(isMulticast(fromString("ff:ff:ff:ff:ff:ff")));
-    EXPECT_TRUE(isMulticast(fromString("01:00:00:00:00:00")));
+    EXPECT_TRUE(isMulticast({255, 255, 255, 255, 255, 255}));
+    EXPECT_TRUE(isMulticast({1}));
 }
 
 TEST(MacIsMulticast, False)
 {
-    EXPECT_FALSE(isMulticast(fromString("00:11:22:33:44:55")));
-    EXPECT_FALSE(isMulticast(fromString("FE:11:22:33:44:55")));
+    EXPECT_FALSE(isMulticast({0, 1, 2, 3, 4, 5}));
+    EXPECT_FALSE(isMulticast({0xfe, 255, 255, 255, 255, 255}));
 }
 
 TEST(MacIsUnicast, True)
 {
-    EXPECT_TRUE(isUnicast(fromString("00:11:22:33:44:55")));
-    EXPECT_TRUE(isUnicast(fromString("FE:11:22:33:44:55")));
+    EXPECT_TRUE(isUnicast({0, 1, 2, 3, 4, 5}));
+    EXPECT_TRUE(isUnicast({0xfe, 255, 255, 255, 255, 255}));
 }
 
 TEST(MacIsUnicast, False)
 {
-    EXPECT_FALSE(isUnicast(fromString("00:00:00:00:00:00")));
-    EXPECT_FALSE(isUnicast(fromString("01:00:00:00:00:00")));
-    EXPECT_FALSE(isUnicast(fromString("ff:ff:ff:ff:ff:ff")));
+    EXPECT_FALSE(isUnicast({}));
+    EXPECT_FALSE(isUnicast({1}));
+    EXPECT_FALSE(isUnicast({255, 255, 255, 255, 255, 255}));
 }
 
 TEST(IgnoredInterfaces, Empty)
