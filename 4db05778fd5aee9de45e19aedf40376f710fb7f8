@@ -16,6 +16,24 @@
       "message": "This is kinda defunct functionality given how the interface is set up now. We prefer to directly manipulate `dhcp4` / `dhcp6` / `ra` so you don\u0027t need to check `dhcpEnabled` as you shouldn\u0027t be storing it directly (it should be implemented as a wrapper around the other values).",
       "revId": "4db05778fd5aee9de45e19aedf40376f710fb7f8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8735a164_fc444d71",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-03T08:02:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4bebd3a9_9bd1505c",
+      "revId": "4db05778fd5aee9de45e19aedf40376f710fb7f8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
