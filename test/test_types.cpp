@@ -51,6 +51,29 @@ TEST(Byteswap, Swap)
     EXPECT_EQ((std::array<char, 4>{4, 3, 2, 1}), bswap(s).a);
 }
 
+TEST(DecodeInt, uint8_10)
+{
+    DecodeInt<uint8_t, 10> d;
+    EXPECT_EQ(42, d("42"));
+    EXPECT_EQ(255, d("255"));
+    EXPECT_THROW(d(""), std::invalid_argument);
+    EXPECT_THROW(d("a0"), std::invalid_argument);
+    EXPECT_THROW(d(".0"), std::invalid_argument);
+    EXPECT_THROW(d("257"), std::overflow_error);
+    EXPECT_THROW(d("300"), std::overflow_error);
+}
+
+TEST(DecodeInt, uint8_16)
+{
+    DecodeInt<uint8_t, 16> d;
+    EXPECT_EQ(0x42, d("42"));
+    EXPECT_EQ(0xff, d("ff"));
+    EXPECT_THROW(d(""), std::invalid_argument);
+    EXPECT_THROW(d("g0"), std::invalid_argument);
+    EXPECT_THROW(d(".0"), std::invalid_argument);
+    EXPECT_THROW(d("100"), std::overflow_error);
+}
+
 TEST(EqualOperator, InAddrAny)
 {
     EXPECT_EQ(InAddrAny(in6_addr{0xff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
