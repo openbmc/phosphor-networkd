@@ -324,7 +324,7 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("ipAddress"),
                               Argument::ARGUMENT_VALUE(ipAddress.c_str()));
     }
-    if (!mac_address::isUnicast(mac_address::fromString(macAddress)))
+    if (!mac_address::isUnicast(ToAddr<ether_addr>{}(macAddress)))
     {
         log<level::ERR>("Not a valid MAC address",
                         entry("MACADDRESS=%s", ipAddress.c_str()));
@@ -737,7 +737,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     std::optional<ether_addr> mac;
     if (!macStr.empty())
     {
-        mac.emplace(mac_address::fromString(macStr));
+        mac.emplace(ToAddr<ether_addr>{}(macStr));
     }
     auto info = system::InterfaceInfo{
         .idx = 0, // TODO: Query the correct value after creation
@@ -927,7 +927,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
     ether_addr newMAC;
     try
     {
-        newMAC = mac_address::fromString(value);
+        newMAC = ToAddr<ether_addr>{}(value);
     }
     catch (const std::invalid_argument&)
     {
@@ -948,7 +948,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
     auto validMAC = std::to_string(newMAC);
 
     // We don't need to update the system if the address is unchanged
-    ether_addr oldMAC = mac_address::fromString(MacAddressIntf::macAddress());
+    ether_addr oldMAC = ToAddr<ether_addr>{}(MacAddressIntf::macAddress());
     if (newMAC != oldMAC)
     {
         // Update everything that depends on the MAC value
