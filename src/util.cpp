@@ -415,45 +415,7 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
 
     std::variant<std::string> value;
     reply.read(value);
-    return fromString(std::get<std::string>(value));
-}
-
-static uint8_t decodeHex(std::string_view str)
-{
-    uint8_t ret;
-    auto res = std::from_chars(str.begin(), str.end(), ret, 16);
-    if (res.ptr != str.end() || res.ec != std::errc())
-    {
-        throw std::invalid_argument("Not hex");
-    }
-    return ret;
-}
-
-ether_addr fromString(std::string_view str)
-{
-    ether_addr ret;
-    if (str.size() == 12 && str.find(":") == str.npos)
-    {
-        for (size_t i = 0; i < 6; ++i)
-        {
-            ret.ether_addr_octet[i] = decodeHex(str.substr(i * 2, 2));
-        }
-    }
-    else
-    {
-        for (size_t i = 0; i < 5; ++i)
-        {
-            auto loc = str.find(":");
-            ret.ether_addr_octet[i] = decodeHex(str.substr(0, loc));
-            str.remove_prefix(loc == str.npos ? str.size() : loc + 1);
-            if (str.empty())
-            {
-                throw std::invalid_argument("Missing mac data");
-            }
-        }
-        ret.ether_addr_octet[5] = decodeHex(str);
-    }
-    return ret;
+    return ToAddr<ether_addr>{}(std::get<std::string>(value));
 }
 
 bool isEmpty(const ether_addr& mac)
