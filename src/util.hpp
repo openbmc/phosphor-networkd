@@ -36,13 +36,6 @@ namespace mac_address
  */
 ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName);
 
-/** @brief Converts the given mac address into byte form
- *  @param[in] str - The mac address in human readable form
- *  @returns A mac address in network byte order
- *  @throws std::runtime_error for bad mac
- */
-ether_addr fromString(std::string_view str);
-
 /** @brief Determines if the mac address is empty
  *  @param[in] mac - The mac address
  *  @return True if 00:00:00:00:00:00

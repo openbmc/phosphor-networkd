@@ -249,6 +249,43 @@ struct DecodeInt
     }
 };
 
+template <typename T>
+struct ToAddr
+{
+};
+
+template <>
+struct ToAddr<ether_addr>
+{
+    constexpr ether_addr operator()(std::string_view str) const
+    {
+        constexpr DecodeInt<uint8_t, 16> di;
+        ether_addr ret;
+        if (str.size() == 12 && str.find(":") == str.npos)
+        {
+            for (size_t i = 0; i < 6; ++i)
+            {
+                ret.ether_addr_octet[i] = di(str.substr(i * 2, 2));
+            }
+        }
+        else
+        {
+            for (size_t i = 0; i < 5; ++i)
+            {
+                auto loc = str.find(":");
+                ret.ether_addr_octet[i] = di(str.substr(0, loc));
+                str.remove_prefix(loc == str.npos ? str.size() : loc + 1);
+                if (str.empty())
+                {
+                    throw std::invalid_argument("Missing mac data");
+                }
+            }
+            ret.ether_addr_octet[5] = di(str);
+        }
+        return ret;
+    }
+};
+
 namespace detail
 {
 
