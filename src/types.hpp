@@ -184,6 +184,73 @@ constexpr T ntoh(T n) noexcept
 
 namespace detail
 {
+inline constexpr auto charLookup = []() {
+    std::array<int8_t, 256> ret;
+    std::fill(ret.begin(), ret.end(), -1);
+    for (int8_t i = 0; i < 10; ++i)
+    {
+        ret[i + '0'] = i;
+    }
+    for (int8_t i = 0; i < 26; ++i)
+    {
+        ret[i + 'A'] = i + 10;
+        ret[i + 'a'] = i + 10;
+    }
+    return ret;
+}();
+}
+
+template <typename T, uint8_t base>
+struct DecodeInt
+{
+    static_assert(base > 1 && base <= 36);
+    static_assert(std::is_unsigned_v<T>);
+
+    constexpr T operator()(std::string_view str) const
+    {
+        if (str.empty())
+        {
+            throw std::invalid_argument("Empty Str");
+        }
+        constexpr auto max = std::numeric_limits<T>::max();
+        auto ret =
+            std::accumulate(str.begin(), str.end(), T{}, [&](T r, char c) {
+                auto v = detail::charLookup[c];
+                if (v < 0 || v >= base)
+                {
+                    throw std::invalid_argument("Invalid numeral");
+                }
+                if constexpr (std::popcount(base) == 1)
+                {
+                    constexpr auto shift = std::countr_zero(base);
+                    constexpr auto maxshift = max >> shift;
+                    if (r > maxshift)
+                    {
+                        throw std::overflow_error("Integer Decode");
+                    }
+                    return (r << shift) | v;
+                }
+                else
+                {
+                    constexpr auto maxbase = max / base;
+                    if (r > maxbase)
+                    {
+                        throw std::overflow_error("Integer Decode");
+                    }
+                    r *= base;
+                    if (max - v < r)
+                    {
+                        throw std::overflow_error("Integer Decode");
+                    }
+                    return r + v;
+                }
+            });
+        return ret;
+    }
+};
+
+namespace detail
+{
 
 template <typename T>
 constexpr bool vcontains() noexcept
