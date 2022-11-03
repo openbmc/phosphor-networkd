@@ -50,7 +50,7 @@ constexpr std::size_t hash_multi() noexcept
 }
 
 template <typename T, typename... Args>
-constexpr std::size_t hash_multi(const T& v, Args... args) noexcept
+constexpr std::size_t hash_multi(const T& v, const Args&... args) noexcept
 {
     const std::size_t seed = hash_multi(args...);
     return seed ^ (std::hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2));
