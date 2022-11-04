@@ -563,15 +563,19 @@ bool EthernetInterface::nicEnabled(bool value)
 
 ServerList EthernetInterface::staticNameServers(ServerList value)
 {
-    for (const auto& nameserverip : value)
+    for (auto& ip : value)
     {
-        if (!isValidIP(nameserverip))
+        try
         {
-            log<level::ERR>("Not a valid IP address"),
-                entry("ADDRESS=%s", nameserverip.c_str());
-            elog<InvalidArgument>(
-                Argument::ARGUMENT_NAME("StaticNameserver"),
-                Argument::ARGUMENT_VALUE(nameserverip.c_str()));
+            ip = std::to_string(ToAddr<InAddrAny>{}(ip));
+        }
+        catch (const std::exception& e)
+        {
+            auto msg =
+                fmt::format("Not a valid IP address `{}`: {}", ip, e.what());
+            log<level::ERR>(msg.c_str()), entry("ADDRESS=%s", ip.c_str());
+            elog<InvalidArgument>(Argument::ARGUMENT_NAME("StaticNameserver"),
+                                  Argument::ARGUMENT_VALUE(ip.c_str()));
         }
     }
     try
