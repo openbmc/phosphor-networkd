@@ -951,48 +951,60 @@ void EthernetInterface::deleteAll()
 
 std::string EthernetInterface::defaultGateway(std::string gateway)
 {
-    auto gw = EthernetInterfaceIntf::defaultGateway();
-    if (gw == gateway)
+    try
     {
-        return gw;
+        if (!gateway.empty())
+        {
+            gateway = std::to_string(ToAddr<in_addr>{}(gateway));
+        }
     }
-
-    if (!isValidIP(AF_INET, gateway) && !gateway.empty())
+    catch (const std::exception& e)
     {
-        log<level::ERR>("Not a valid v4 Gateway",
-                        entry("GATEWAY=%s", gateway.c_str()));
+        auto msg = fmt::format("Invalid v4 GW `{}`: {}", gateway, e.what());
+        log<level::ERR>(msg.c_str(), entry("GATEWAY=%s", gateway.c_str()));
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
                               Argument::ARGUMENT_VALUE(gateway.c_str()));
     }
-    gw = EthernetInterfaceIntf::defaultGateway(gateway);
+
+    if (EthernetInterfaceIntf::defaultGateway() == gateway)
+    {
+        return gateway;
+    }
+    EthernetInterfaceIntf::defaultGateway(gateway);
 
     writeConfigurationFile();
     manager.reloadConfigs();
 
-    return gw;
+    return gateway;
 }
 
 std::string EthernetInterface::defaultGateway6(std::string gateway)
 {
-    auto gw = EthernetInterfaceIntf::defaultGateway6();
-    if (gw == gateway)
+    try
     {
-        return gw;
+        if (!gateway.empty())
+        {
+            gateway = std::to_string(ToAddr<in6_addr>{}(gateway));
+        }
     }
-
-    if (!isValidIP(AF_INET6, gateway) && !gateway.empty())
+    catch (const std::exception& e)
     {
-        log<level::ERR>("Not a valid v6 Gateway",
-                        entry("GATEWAY=%s", gateway.c_str()));
+        auto msg = fmt::format("Invalid v6 GW `{}`: {}", gateway, e.what());
+        log<level::ERR>(msg.c_str(), entry("GATEWAY=%s", gateway.c_str()));
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
                               Argument::ARGUMENT_VALUE(gateway.c_str()));
     }
-    gw = EthernetInterfaceIntf::defaultGateway6(gateway);
+
+    if (EthernetInterfaceIntf::defaultGateway6() == gateway)
+    {
+        return gateway;
+    }
+    EthernetInterfaceIntf::defaultGateway6(gateway);
 
     writeConfigurationFile();
     manager.reloadConfigs();
 
-    return gw;
+    return gateway;
 }
 
 EthernetInterface::VlanProperties::VlanProperties(
