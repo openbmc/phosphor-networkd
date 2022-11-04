@@ -309,6 +309,66 @@ struct ToAddr<in_addr>
     }
 };
 
+template <>
+struct ToAddr<in6_addr>
+{
+    constexpr in6_addr operator()(std::string_view str) const
+    {
+        constexpr DecodeInt<uint16_t, 16> di;
+        in6_addr ret = {};
+        size_t i = 0;
+        while (i < 8)
+        {
+            auto loc = str.find(':');
+            if (i == 6 && loc == str.npos)
+            {
+                ret.s6_addr32[3] = ToAddr<in_addr>{}(str).s_addr;
+                return ret;
+            }
+            if (loc != 0 && !str.empty())
+            {
+                ret.s6_addr16[i++] = hton(di(str.substr(0, loc)));
+            }
+            if (i < 8 && str.size() > loc + 1 && str[loc + 1] == ':')
+            {
+                str.remove_prefix(loc + 2);
+                break;
+            }
+            else if (str.empty())
+            {
+                throw std::invalid_argument("IPv6 Data");
+            }
+            str.remove_prefix(loc == str.npos ? str.size() : loc + 1);
+        }
+        if (str.starts_with(':'))
+        {
+            throw std::invalid_argument("Extra separator");
+        }
+        size_t j = 7;
+        if (!str.empty() && i < 6 && str.find('.') != str.npos)
+        {
+            auto loc = str.rfind(':');
+            ret.s6_addr32[3] =
+                ToAddr<in_addr>{}(str.substr(loc == str.npos ? 0 : loc + 1))
+                    .s_addr;
+            str.remove_suffix(loc == str.npos ? str.size() : str.size() - loc);
+            j -= 2;
+        }
+        while (!str.empty() && j > i)
+        {
+            auto loc = str.rfind(':');
+            ret.s6_addr16[j--] =
+                hton(di(str.substr(loc == str.npos ? 0 : loc + 1)));
+            str.remove_suffix(loc == str.npos ? str.size() : str.size() - loc);
+        }
+        if (!str.empty())
+        {
+            throw std::invalid_argument("Too much data");
+        }
+        return ret;
+    }
+};
+
 namespace detail
 {
 
