@@ -22,6 +22,30 @@
       },
       "revId": "4514049c497f321518d20c31cfc45438e7106571",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c4d9f80_6bcd5379",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-04T10:06:40Z",
+      "side": 1,
+      "message": "Not needed since we are checking dhcpv6() on line 454.",
+      "parentUuid": "e9b6b960_41c443f6",
+      "range": {
+        "startLine": 100,
+        "startChar": 15,
+        "endLine": 100,
+        "endChar": 27
+      },
+      "revId": "4514049c497f321518d20c31cfc45438e7106571",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
