@@ -136,6 +136,51 @@ TEST(ToAddr, InAddr)
     EXPECT_EQ((in_addr{htonl(0xc0a80101)}), ToAddr<in_addr>{}("192.168.001.1"));
 }
 
+TEST(ToAddr, In6Addr)
+{
+    constexpr ToAddr<in6_addr> ta;
+    EXPECT_THROW(ta(""), std::invalid_argument);
+    EXPECT_THROW(ta("0"), std::invalid_argument);
+    EXPECT_THROW(ta("0:0"), std::invalid_argument);
+    EXPECT_THROW(ta("0::0:"), std::invalid_argument);
+    EXPECT_THROW(ta("0:::"), std::invalid_argument);
+    EXPECT_THROW(ta(":::0"), std::invalid_argument);
+    EXPECT_THROW(ta("0:::0"), std::invalid_argument);
+    EXPECT_THROW(ta("0::0::0"), std::invalid_argument);
+    EXPECT_THROW(ta("1::0.0.0."), std::invalid_argument);
+    EXPECT_THROW(ta("1::.0.0.0"), std::invalid_argument);
+    EXPECT_THROW(ta("x::0"), std::invalid_argument);
+    EXPECT_THROW(ta("g::0"), std::invalid_argument);
+    EXPECT_THROW(ta("0:1:2:3:4::5:6:7"), std::invalid_argument);
+    EXPECT_THROW(ta("::0:1:2:3:4:5:6:7"), std::invalid_argument);
+    EXPECT_THROW(ta("0:1:2:3:4:5:6:7::"), std::invalid_argument);
+    EXPECT_THROW(ta("0:1:2:3:4:5:6:7:8"), std::invalid_argument);
+    EXPECT_THROW(ta("0:1:2:3:4:5:6:0.0.0.0"), std::invalid_argument);
+    EXPECT_THROW(ta("0:1:2:3:4:5::0.0.0.0"), std::invalid_argument);
+    EXPECT_THROW(ta("ffff0::0"), std::overflow_error);
+
+    EXPECT_EQ((in6_addr{}), ta("::"));
+    EXPECT_EQ((in6_addr{}), ta("0:0:0:0:0:0:0:0"));
+    EXPECT_EQ((in6_addr{0, 0xff}), ta("ff::"));
+    EXPECT_EQ((in6_addr{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff}),
+              ta("::ff"));
+    EXPECT_EQ((in6_addr{0, 0, 0, 0, 0, 0xff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff}),
+              ta("0:0:ff::ff"));
+    EXPECT_EQ((in6_addr{0, 1, 0, 2, 0, 3, 0, 4, 0, 0, 0, 6, 0, 7, 0, 8}),
+              ta("1:2:3:4::6:7:8"));
+    EXPECT_EQ((in6_addr{0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 0}),
+              ta("1:2:3:4:5:6:7::"));
+    EXPECT_EQ((in6_addr{0, 0, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8}),
+              ta("::2:3:4:5:6:7:8"));
+    EXPECT_EQ(
+        (in6_addr{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff, 192, 168, 0, 1}),
+        ta("::ffff:192.168.0.1"));
+    EXPECT_EQ((in6_addr{0, 0xff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 168, 0, 1}),
+              ta("ff::255.168.0.1"));
+    EXPECT_EQ((in6_addr{0, 0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 255, 168, 0, 1}),
+              ta("0:1:2:3:4:5:255.168.0.1"));
+}
+
 namespace detail
 {
 
