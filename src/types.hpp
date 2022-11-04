@@ -369,6 +369,34 @@ struct ToAddr<in6_addr>
     }
 };
 
+template <>
+struct ToAddr<InAddrAny>
+{
+    constexpr InAddrAny operator()(std::string_view str) const
+    {
+        if (str.find(':') == str.npos)
+        {
+            return ToAddr<in_addr>{}(str);
+        }
+        return ToAddr<in6_addr>{}(str);
+    }
+};
+
+template <>
+struct ToAddr<IfAddr>
+{
+    constexpr IfAddr operator()(std::string_view str) const
+    {
+        auto pos = str.rfind('/');
+        if (pos == str.npos)
+        {
+            throw std::invalid_argument("Invalid IfAddr");
+        }
+        return {ToAddr<InAddrAny>{}(str.substr(0, pos)),
+                DecodeInt<uint8_t, 10>{}(str.substr(pos + 1))};
+    }
+};
+
 namespace detail
 {
 

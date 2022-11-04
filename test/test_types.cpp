@@ -181,6 +181,28 @@ TEST(ToAddr, In6Addr)
               ta("0:1:2:3:4:5:255.168.0.1"));
 }
 
+TEST(ToAddr, InAddrAny)
+{
+    constexpr ToAddr<InAddrAny> ta;
+    EXPECT_EQ((InAddrAny{in_addr{}}), ta("0.0.0.0"));
+    EXPECT_EQ((InAddrAny{in6_addr{}}), ta("::"));
+    EXPECT_EQ((InAddrAny{in6_addr{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff, 192,
+                                  168, 0, 1}}),
+              ta("::ffff:192.168.0.1"));
+}
+
+TEST(ToAddr, IfAddr)
+{
+    constexpr ToAddr<IfAddr> ta;
+    EXPECT_THROW(ta("10"), std::invalid_argument);
+    EXPECT_THROW(ta("/10"), std::invalid_argument);
+    EXPECT_THROW(ta("0.0.0.0"), std::invalid_argument);
+    EXPECT_THROW(ta("0.0.0.0/"), std::invalid_argument);
+    EXPECT_EQ((IfAddr{in_addr{}, 0}), ta("0.0.0.0/0"));
+    EXPECT_EQ((IfAddr{in_addr{}, 30}), ta("0.0.0.0/30"));
+    EXPECT_EQ((IfAddr{in6_addr{}, 80}), ta("::/80"));
+}
+
 namespace detail
 {
 
