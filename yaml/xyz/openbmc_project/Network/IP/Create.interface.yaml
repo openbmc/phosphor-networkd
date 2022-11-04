@@ -22,7 +22,7 @@ methods:
               Gateway Address.
       returns:
         - name: Path
-          type: path
+          type: object_path
           description: >
             The path for the created ipaddress object.
       errors:
