@@ -34,23 +34,36 @@ std::string_view AddrBufMaker<ether_addr>::operator()(ether_addr val) noexcept
     return {buf.begin(), buf.size()};
 }
 
-std::string_view AddrBufMaker<in_addr>::operator()(in_addr val) noexcept
+static char* makeInAddr(char* ptr, char* end, in_addr val) noexcept
 {
     auto v = bswap(ntoh(val.s_addr));
-    char* ptr = buf.begin();
     for (size_t i = 0; i < 3; ++i)
     {
-        const auto res = std::to_chars(ptr, buf.end(), v & 0xff, 10);
+        const auto res = std::to_chars(ptr, end, v & 0xff, 10);
         *res.ptr = '.';
         ptr = res.ptr + 1;
         v >>= 8;
     }
-    const auto res = std::to_chars(ptr, buf.end(), v & 0xff, 10);
-    return {buf.data(), res.ptr};
+    return std::to_chars(ptr, end, v & 0xff, 10).ptr;
+}
+
+std::string_view AddrBufMaker<in_addr>::operator()(in_addr val) noexcept
+{
+    return {buf.data(), makeInAddr(buf.data(), buf.end(), val)};
 }
 
 std::string_view AddrBufMaker<in6_addr>::operator()(in6_addr val) noexcept
 {
+    // IPv4 in IPv6 Addr
+    if (val.s6_addr32[0] == 0 && val.s6_addr32[1] == 0 &&
+        val.s6_addr32[2] == hton(uint32_t(0xffff)))
+    {
+        constexpr auto prefix = std::string_view("::ffff:");
+        return {buf.data(),
+                makeInAddr(std::copy(prefix.begin(), prefix.end(), buf.begin()),
+                           buf.end(), {val.s6_addr32[3]})};
+    }
+
     size_t skip_start = 0;
     size_t skip_size = 0;
     {
@@ -80,7 +93,7 @@ std::string_view AddrBufMaker<in6_addr>::operator()(in6_addr val) noexcept
     char* ptr = buf.begin();
     for (size_t i = 0; i < 8; ++i)
     {
-        if (i == skip_start && skip_size > 0)
+        if (i == skip_start && skip_size > 1)
         {
             if (i == 0)
             {
