@@ -172,6 +172,16 @@ TEST(BufMaker, In6Addr)
     EXPECT_EQ("ff00::"sv, abm(in6_addr{0xff}));
     EXPECT_EQ("1:2:3:4:5:6:7:8"sv,
               abm(in6_addr{0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8}));
+    // rfc5952 4.2.2
+    EXPECT_EQ("1:2:3:4:0:6:7:8"sv,
+              abm(in6_addr{0, 1, 0, 2, 0, 3, 0, 4, 0, 0, 0, 6, 0, 7, 0, 8}));
+    // rfc5952 4.2.3
+    EXPECT_EQ("1::4:0:0:7:8"sv,
+              abm(in6_addr{0, 1, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 7, 0, 8}));
+    // rfc5952 5
+    EXPECT_EQ("::ffff:192.168.0.1"sv,
+              abm(in6_addr{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0xff, 192, 168,
+                           0, 1}));
 }
 
 TEST(BasicOps, AllAddrs)
