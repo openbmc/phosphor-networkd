@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "648e32ac_ccbed2ee",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-04T10:01:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d425eba2_4877c976",
+      "revId": "707a6fb22e64cb137d24ae6a83ab6f73199f2090",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6cea314f_01f59781",
@@ -41,6 +59,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c32b704d_fd91294e",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-04T10:01:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6cea314f_01f59781",
+      "range": {
+        "startLine": 442,
+        "startChar": 0,
+        "endLine": 447,
+        "endChar": 45
+      },
+      "revId": "707a6fb22e64cb137d24ae6a83ab6f73199f2090",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4c3f2739_4220fcf1",
@@ -54,6 +96,30 @@
       "writtenOn": "2022-11-03T10:07:57Z",
       "side": 1,
       "message": "this trace should be printed after updating the ip parameter - at the end of the method",
+      "range": {
+        "startLine": 180,
+        "startChar": 4,
+        "endLine": 180,
+        "endChar": 75
+      },
+      "revId": "707a6fb22e64cb137d24ae6a83ab6f73199f2090",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "153ec4ad_3e3d353a",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ip_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-04T10:01:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c3f2739_4220fcf1",
       "range": {
         "startLine": 180,
         "startChar": 4,
