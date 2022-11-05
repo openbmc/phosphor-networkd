@@ -86,25 +86,6 @@ TEST_F(TestUtil, IpValidation)
     EXPECT_TRUE(isValidIP(AF_INET6, "1::8"));
 }
 
-TEST_F(TestUtil, PrefixValidation)
-{
-    EXPECT_TRUE(isValidPrefix(AF_INET, 0));
-    EXPECT_TRUE(isValidPrefix(AF_INET, 1));
-    EXPECT_TRUE(isValidPrefix(AF_INET, 32));
-    EXPECT_FALSE(isValidPrefix(AF_INET, 33));
-    EXPECT_FALSE(isValidPrefix(AF_INET, 64));
-
-    EXPECT_TRUE(isValidPrefix(AF_INET6, 0));
-    EXPECT_TRUE(isValidPrefix(AF_INET6, 1));
-    EXPECT_TRUE(isValidPrefix(AF_INET6, 53));
-    EXPECT_TRUE(isValidPrefix(AF_INET6, 64));
-    EXPECT_TRUE(isValidPrefix(AF_INET6, 128));
-    EXPECT_FALSE(isValidPrefix(AF_INET6, 129));
-    EXPECT_FALSE(isValidPrefix(AF_INET6, 177));
-
-    EXPECT_THROW(isValidPrefix(AF_UNSPEC, 1), std::invalid_argument);
-}
-
 TEST_F(TestUtil, InterfaceToUbootEthAddr)
 {
     EXPECT_EQ(std::nullopt, interfaceToUbootEthAddr("et"));
