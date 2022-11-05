@@ -90,18 +90,6 @@ InAddrAny addrFromBuf(int family, std::string_view buf);
 bool isValidIP(int family, stdplus::const_zstring address) noexcept;
 bool isValidIP(stdplus::const_zstring address) noexcept;
 
-/* @brief checks that the given prefix is valid or not.
- * @param[in] family - IP address family(AF_INET/AF_INET6).
- * @param[in] prefix - prefix length.
- * @returns true if it is valid otherwise false.
- */
-template <int family>
-constexpr bool isValidPrefix(uint8_t prefix) noexcept
-{
-    return prefix <= sizeof(typename FamilyTraits<family>::addr) * 8;
-}
-bool isValidPrefix(int family, uint8_t prefixLength);
-
 /** @brief Delete the given interface.
  *  @param[in] intf - interface name.
  */

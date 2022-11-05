@@ -169,12 +169,6 @@ bool isValidIP(stdplus::const_zstring address) noexcept
     return isValidIP(AF_INET, address) || isValidIP(AF_INET6, address);
 }
 
-bool isValidPrefix(int family, uint8_t prefix)
-{
-    return familyVisit(
-        [=]<int f>() noexcept { return isValidPrefix<f>(prefix); }, family);
-}
-
 void deleteInterface(stdplus::const_zstring intf)
 {
     pid_t pid = fork();
