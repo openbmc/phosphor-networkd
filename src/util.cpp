@@ -5,7 +5,6 @@
 #include "config_parser.hpp"
 #include "types.hpp"
 
-#include <arpa/inet.h>
 #include <fmt/compile.h>
 #include <fmt/format.h>
 #include <sys/wait.h>
@@ -156,17 +155,6 @@ InAddrAny addrFromBuf(int family, std::string_view buf)
 {
     return familyVisit(
         [=]<int f>() -> InAddrAny { return addrFromBuf<f>(buf); }, family);
-}
-
-bool isValidIP(int family, stdplus::const_zstring address) noexcept
-{
-    unsigned char buf[sizeof(struct in6_addr)];
-    return inet_pton(family, address.c_str(), buf) > 0;
-}
-
-bool isValidIP(stdplus::const_zstring address) noexcept
-{
-    return isValidIP(AF_INET, address) || isValidIP(AF_INET6, address);
 }
 
 void deleteInterface(stdplus::const_zstring intf)
