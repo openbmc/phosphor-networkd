@@ -2,6 +2,7 @@
 
 #include "ethernet_interface.hpp"
 #include "netlink.hpp"
+#include "network_manager.hpp"
 #include "util.hpp"
 
 #include <linux/neighbour.h>
@@ -87,14 +88,29 @@ std::vector<NeighborInfo> getCurrentNeighbors(const NeighborFilter& filter)
     return neighbors;
 }
 
-Neighbor::Neighbor(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-                   EthernetInterface& parent, std::string_view ipAddress,
-                   std::string_view macAddress, State state) :
-    NeighborObj(bus, objPath.c_str(), NeighborObj::action::defer_emit),
-    parent(parent)
+static auto makeObjPath(std::string_view root, InAddrAny addr)
 {
-    NeighborObj::ipAddress(std::string(ipAddress));
-    NeighborObj::macAddress(std::string(macAddress));
+    auto ret = sdbusplus::message::object_path(std::string(root));
+    ret /= std::to_string(addr);
+    return ret;
+}
+
+Neighbor::Neighbor(sdbusplus::bus_t& bus, std::string_view objRoot,
+                   EthernetInterface& parent, InAddrAny addr, ether_addr lladdr,
+                   State state) :
+    Neighbor(bus, makeObjPath(objRoot, addr), parent, addr, lladdr, state)
+{
+}
+
+Neighbor::Neighbor(sdbusplus::bus_t& bus,
+                   sdbusplus::message::object_path objPath,
+                   EthernetInterface& parent, InAddrAny addr, ether_addr lladdr,
+                   State state) :
+    NeighborObj(bus, objPath.str.c_str(), NeighborObj::action::defer_emit),
+    parent(parent), objPath(std::move(objPath))
+{
+    NeighborObj::ipAddress(std::to_string(addr));
+    NeighborObj::macAddress(std::to_string(lladdr));
     NeighborObj::state(state);
 
     // Emit deferred signal.
@@ -103,7 +119,18 @@ Neighbor::Neighbor(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
 
 void Neighbor::delete_()
 {
-    parent.deleteStaticNeighborObject(ipAddress());
+    auto& neighbors = parent.staticNeighbors;
+    for (auto it = neighbors.begin(); it != neighbors.end(); ++it)
+    {
+        if (it->second.get() == this)
+        {
+            neighbors.erase(it);
+            break;
+        }
+    }
+
+    parent.writeConfigurationFile();
+    parent.manager.reloadConfigs();
 }
 
 using sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
