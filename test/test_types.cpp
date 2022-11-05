@@ -185,6 +185,9 @@ TEST(ToAddr, In6Addr)
     EXPECT_THROW(ta("ffff0::0"), std::overflow_error);
 
     EXPECT_EQ((in6_addr{}), ta("::"));
+    EXPECT_EQ((in6_addr{255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+                        255, 255, 255, 255, 255}),
+              ta("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"sv));
     EXPECT_EQ((in6_addr{}), ta("0:0:0:0:0:0:0:0"));
     EXPECT_EQ((in6_addr{0, 0xff}), ta("ff::"));
     EXPECT_EQ((in6_addr{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff}),
@@ -233,7 +236,7 @@ namespace detail
 
 TEST(BufMaker, EthAddr)
 {
-    AddrBufMaker<ether_addr> abm;
+    ToStrBuf<ether_addr> abm;
     EXPECT_EQ("11:22:33:44:55:66"sv,
               abm(ether_addr{0x11, 0x22, 0x33, 0x44, 0x55, 0x66}));
     EXPECT_EQ("01:02:03:04:05:67"sv,
@@ -244,7 +247,7 @@ TEST(BufMaker, EthAddr)
 
 TEST(BufMaker, InAddr)
 {
-    AddrBufMaker<in_addr> abm;
+    ToStrBuf<in_addr> abm;
     EXPECT_EQ("255.255.255.255"sv, abm(in_addr{0xffffffff}));
     EXPECT_EQ("1.15.3.4"sv, abm(in_addr{htonl(0x010f0304)}));
     EXPECT_EQ("0.0.0.0"sv, abm(in_addr{}));
@@ -252,7 +255,7 @@ TEST(BufMaker, InAddr)
 
 TEST(BufMaker, In6Addr)
 {
-    AddrBufMaker<in6_addr> abm;
+    ToStrBuf<in6_addr> abm;
     EXPECT_EQ("::"sv, abm(in6_addr{}));
     EXPECT_EQ("ff::"sv, abm(in6_addr{0, 0xff}));
     EXPECT_EQ("::ff"sv,
@@ -264,6 +267,9 @@ TEST(BufMaker, In6Addr)
     EXPECT_EQ("ff00::"sv, abm(in6_addr{0xff}));
     EXPECT_EQ("1:2:3:4:5:6:7:8"sv,
               abm(in6_addr{0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8}));
+    EXPECT_EQ("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff"sv,
+              abm(in6_addr{255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+                           255, 255, 255, 255, 255, 255}));
     // rfc5952 4.2.2
     EXPECT_EQ("1:2:3:4:0:6:7:8"sv,
               abm(in6_addr{0, 1, 0, 2, 0, 3, 0, 4, 0, 0, 0, 6, 0, 7, 0, 8}));
@@ -321,7 +327,7 @@ TEST(Perf, In6Addr)
     auto start = std::chrono::steady_clock::now();
     for (size_t i = 0; i < 10000000; ++i)
     {
-        AddrBufMaker<in6_addr>{}(in6_addr{1});
+        ToStrBuf<in6_addr>{}(in6_addr{1});
     }
     fmt::print("Duration: {}\n", std::chrono::steady_clock::now() - start);
     // Make sure this test isn't enabled
