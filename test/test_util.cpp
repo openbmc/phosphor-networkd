@@ -56,36 +56,6 @@ TEST_F(TestUtil, AddrFromBuf)
     EXPECT_THROW(addrFromBuf(AF_UNSPEC, buf2), std::invalid_argument);
 }
 
-TEST_F(TestUtil, IpValidation)
-{
-    EXPECT_TRUE(isValidIP(AF_INET, "0.0.0.0"));
-    EXPECT_TRUE(isValidIP("0.0.0.0"));
-
-    EXPECT_TRUE(isValidIP(AF_INET, "9.3.185.83"));
-
-    EXPECT_FALSE(isValidIP(AF_INET, "9.3.185.a"));
-    EXPECT_FALSE(isValidIP("9.3.185.a"));
-
-    EXPECT_FALSE(isValidIP(AF_INET, "9.3.a.83"));
-
-    EXPECT_FALSE(isValidIP(AF_INET, "x.x.x.x"));
-
-    EXPECT_TRUE(isValidIP(AF_INET6, "0:0:0:0:0:0:0:0"));
-    EXPECT_TRUE(isValidIP("0:0:0:0:0:0:0:0"));
-
-    EXPECT_TRUE(isValidIP(AF_INET6, "1:0:0:0:0:0:0:8"));
-
-    EXPECT_TRUE(isValidIP(AF_INET6, "1::8"));
-
-    EXPECT_TRUE(isValidIP(AF_INET6, "0:0:0:0:0:FFFF:204.152.189.116"));
-
-    EXPECT_TRUE(isValidIP(AF_INET6, "::ffff:204.152.189.116"));
-
-    EXPECT_TRUE(isValidIP(AF_INET6, "a:0:0:0:0:FFFF:204.152.189.116"));
-
-    EXPECT_TRUE(isValidIP(AF_INET6, "1::8"));
-}
-
 TEST_F(TestUtil, InterfaceToUbootEthAddr)
 {
     EXPECT_EQ(std::nullopt, interfaceToUbootEthAddr("et"));
