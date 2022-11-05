@@ -7,8 +7,8 @@
 #include <cstdint>
 #include <optional>
 #include <sdbusplus/bus.hpp>
+#include <sdbusplus/message/native_types.hpp>
 #include <sdbusplus/server/object.hpp>
-#include <stdplus/zstring.hpp>
 #include <string_view>
 #include <vector>
 #include <xyz/openbmc_project/Network/Neighbor/server.hpp>
@@ -73,15 +73,15 @@ class Neighbor : public NeighborObj
 
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
-     *  @param[in] objPath - Path to attach at.
+     *  @param[in] objRoot - Path to attach at.
      *  @param[in] parent - Parent object.
-     *  @param[in] ipAddress - IP address.
-     *  @param[in] macAddress - Low level MAC address.
+     *  @param[in] addr - IP address.
+     *  @param[in] lladdr - Low level MAC address.
      *  @param[in] state - The state of the neighbor entry.
      */
-    Neighbor(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-             EthernetInterface& parent, std::string_view ipAddress,
-             std::string_view macAddress, State state);
+    Neighbor(sdbusplus::bus_t& bus, std::string_view objRoot,
+             EthernetInterface& parent, InAddrAny addr, ether_addr lladdr,
+             State state);
 
     /** @brief Delete this d-bus object.
      */
@@ -94,9 +94,21 @@ class Neighbor : public NeighborObj
     using NeighborObj::state;
     State state(State) override;
 
+    inline const auto& getObjPath() const
+    {
+        return objPath;
+    }
+
   private:
     /** @brief Parent Object. */
     EthernetInterface& parent;
+
+    /** @brief Dbus object path */
+    sdbusplus::message::object_path objPath;
+
+    Neighbor(sdbusplus::bus_t& bus, sdbusplus::message::object_path objPath,
+             EthernetInterface& parent, InAddrAny addr, ether_addr lladdr,
+             State state);
 };
 
 namespace detail

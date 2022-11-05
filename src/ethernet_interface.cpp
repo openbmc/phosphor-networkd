@@ -219,12 +219,11 @@ void EthernetInterface::createStaticNeighborObjects()
         {
             continue;
         }
-        auto ip = std::to_string(neighbor.address);
-        auto mac = std::to_string(*neighbor.mac);
-        auto objectPath = generateStaticNeighborObjectPath(ip, mac);
         staticNeighbors.emplace(
-            ip, std::make_unique<Neighbor>(bus, objectPath, *this, ip, mac,
-                                           Neighbor::State::Permanent));
+            neighbor.address,
+            std::make_unique<Neighbor>(bus, std::string_view(objPath), *this,
+                                       neighbor.address, *neighbor.mac,
+                                       Neighbor::State::Permanent));
     }
 }
 
@@ -269,90 +268,58 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
             Argument::ARGUMENT_VALUE(std::to_string(prefixLength).c_str()));
     }
 
-    auto obj =
+    auto [it, _] = this->addrs.insert_or_assign(
+        ifaddr,
         std::make_unique<IPAddress>(bus, std::string_view(objPath), *this,
-                                    ifaddr, IP::AddressOrigin::Static);
-    auto path = obj->getObjPath();
-    this->addrs.insert_or_assign(ifaddr, std::move(obj));
+                                    ifaddr, IP::AddressOrigin::Static));
 
     writeConfigurationFile();
     manager.reloadConfigs();
 
-    return path;
+    return it->second->getObjPath();
 }
 
 ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                                        std::string macAddress)
 {
-    if (!isValidIP(ipAddress))
+    InAddrAny addr;
+    try
     {
-        log<level::ERR>("Not a valid IP address",
-                        entry("ADDRESS=%s", ipAddress.c_str()));
+        addr = ToAddr<InAddrAny>{}(ipAddress);
+    }
+    catch (const std::exception& e)
+    {
+        auto msg =
+            fmt::format("Not a valid IP address `{}`: {}", ipAddress, e.what());
+        log<level::ERR>(msg.c_str(), entry("ADDRESS=%s", ipAddress.c_str()));
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("ipAddress"),
                               Argument::ARGUMENT_VALUE(ipAddress.c_str()));
     }
-    if (!mac_address::isUnicast(ToAddr<ether_addr>{}(macAddress)))
+
+    ether_addr lladdr;
+    try
     {
-        log<level::ERR>("Not a valid MAC address",
-                        entry("MACADDRESS=%s", ipAddress.c_str()));
+        lladdr = ToAddr<ether_addr>{}(macAddress);
+    }
+    catch (const std::exception& e)
+    {
+        auto msg = fmt::format("Not a valid MAC address `{}`: {}", macAddress,
+                               e.what());
+        log<level::ERR>(msg.c_str(),
+                        entry("MACADDRESS=%s", macAddress.c_str()));
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("macAddress"),
                               Argument::ARGUMENT_VALUE(macAddress.c_str()));
     }
 
-    auto objectPath = generateStaticNeighborObjectPath(ipAddress, macAddress);
-    staticNeighbors.emplace(
-        ipAddress,
-        std::make_unique<Neighbor>(bus, objectPath, *this, ipAddress,
-                                   macAddress, Neighbor::State::Permanent));
+    auto [it, _] = staticNeighbors.emplace(
+        addr,
+        std::make_unique<Neighbor>(bus, std::string_view(objPath), *this, addr,
+                                   lladdr, Neighbor::State::Permanent));
 
     writeConfigurationFile();
     manager.reloadConfigs();
 
-    return objectPath;
-}
-
-void EthernetInterface::deleteStaticNeighborObject(std::string_view ipAddress)
-{
-    auto it = staticNeighbors.find(ipAddress);
-    if (it == staticNeighbors.end())
-    {
-        log<level::ERR>(
-            "DeleteStaticNeighborObject:Unable to find the object.");
-        return;
-    }
-    staticNeighbors.erase(it);
-
-    writeConfigurationFile();
-    manager.reloadConfigs();
-}
-
-std::string EthernetInterface::generateObjectPath(
-    IP::Protocol addressType, std::string_view ipAddress, uint8_t prefixLength,
-    IP::AddressOrigin origin) const
-{
-    std::string_view type;
-    switch (addressType)
-    {
-        case IP::Protocol::IPv4:
-            type = "ipv4"sv;
-            break;
-        case IP::Protocol::IPv6:
-            type = "ipv6"sv;
-            break;
-    }
-    return fmt::format(
-        FMT_COMPILE("{}/{}/{:08x}"), objPath, type,
-        static_cast<uint32_t>(hash_multi(
-            ipAddress, prefixLength,
-            static_cast<std::underlying_type_t<IP::AddressOrigin>>(origin))));
-}
-
-std::string EthernetInterface::generateStaticNeighborObjectPath(
-    std::string_view ipAddress, std::string_view macAddress) const
-{
-    return fmt::format(
-        FMT_COMPILE("{}/static_neighbor/{:08x}"), objPath,
-        static_cast<uint32_t>(hash_multi(ipAddress, macAddress)));
+    return it->second->getObjPath();
 }
 
 bool EthernetInterface::ipv6AcceptRA(bool value)

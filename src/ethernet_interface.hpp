@@ -97,6 +97,9 @@ class EthernetInterface : public Ifaces
     /** @brief Persistent map of IPAddress dbus objects and their names */
     std::unordered_map<IfAddr, std::unique_ptr<IPAddress>> addrs;
 
+    /** @brief Persistent map of Neighbor dbus objects and their names */
+    std::unordered_map<InAddrAny, std::unique_ptr<Neighbor>> staticNeighbors;
+
     /** @brief Updates the interface information based on new InterfaceInfo */
     void updateInfo(const system::InterfaceInfo& info);
 
@@ -123,11 +126,6 @@ class EthernetInterface : public Ifaces
      */
     ObjectPath neighbor(std::string ipAddress, std::string macAddress) override;
 
-    /* @brief delete the dbus object of the given ipAddress.
-     * @param[in] ipAddress - IP address.
-     */
-    void deleteStaticNeighborObject(std::string_view ipAddress);
-
     /* @brief creates the dbus object(IPaddres) given in the address list.
      * @param[in] addrs - address list for which dbus objects needs
      *                    to create.
@@ -137,14 +135,6 @@ class EthernetInterface : public Ifaces
     /* @brief creates the dbus object(Neighbor) given in the neighbor list.
      */
     void createStaticNeighborObjects();
-
-    /* @brief Gets all the static neighbor entries.
-     * @returns Static neighbor map.
-     */
-    inline const auto& getStaticNeighbors() const
-    {
-        return staticNeighbors;
-    }
 
     /** Set value of DHCPEnabled */
     DHCPConf dhcpEnabled() const override;
@@ -240,23 +230,6 @@ class EthernetInterface : public Ifaces
     using EthernetInterfaceIntf::defaultGateway6;
 
   protected:
-    /** @brief construct the ip address dbus object path.
-     *  @param[in] addressType - Type of ip address.
-     *  @param[in] ipAddress - IP address.
-     *  @param[in] prefixLength - Length of prefix.
-     *  @param[in] origin - The origin entry of the IP::Address
-
-     *  @return path of the address object.
-     */
-    std::string generateObjectPath(IP::Protocol addressType,
-                                   std::string_view ipAddress,
-                                   uint8_t prefixLength,
-                                   IP::AddressOrigin origin) const;
-
-    std::string
-        generateStaticNeighborObjectPath(std::string_view ipAddress,
-                                         std::string_view macAddress) const;
-
     /** @brief get the NTP server list from the timsyncd dbus obj
      *
      */
@@ -269,9 +242,6 @@ class EthernetInterface : public Ifaces
 
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus_t& bus;
-
-    /** @brief Persistent map of Neighbor dbus objects and their names */
-    string_umap<std::unique_ptr<Neighbor>> staticNeighbors;
 
     /** @brief Dbus object path */
     std::string objPath;
