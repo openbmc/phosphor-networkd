@@ -462,6 +462,161 @@ struct ToAddr<IfAddr>
     }
 };
 
+template <typename T>
+struct ToStr
+{
+};
+
+template <>
+struct ToStr<char>
+{
+    static constexpr uint8_t buf_size = 1;
+    using buf_type = std::array<char, buf_size>;
+
+    constexpr char* operator()(char* buf, char v) const noexcept
+    {
+        buf[0] = v;
+        return buf + 1;
+    }
+};
+
+template <>
+struct ToStr<ether_addr>
+{
+    // 6 octets * 2 hex chars + 5 separators
+    static constexpr uint8_t buf_size = 17;
+    using buf_type = std::array<char, buf_size>;
+
+    constexpr char* operator()(char* buf, ether_addr v) const noexcept
+    {
+        for (char* ptr = buf + 2; ptr < buf + buf_size; ptr += 3)
+        {
+            *ptr = ':';
+        }
+        for (size_t i = 0; i < 6; ++i)
+        {
+            char* tmp = buf + i * 3;
+            uint8_t byte = v.ether_addr_octet[i];
+            EncodeInt<uint8_t, 16>{}(tmp, byte, 2);
+        }
+        return buf + buf_size;
+    }
+};
+
+template <>
+struct ToStr<in_addr>
+{
+    // 4 octets * 3 dec chars + 3 separators
+    static constexpr uint8_t buf_size = 15;
+    using buf_type = std::array<char, buf_size>;
+
+    constexpr char* operator()(char* buf, in_addr v) const noexcept
+    {
+        auto n = bswap(ntoh(v.s_addr));
+        for (size_t i = 0; i < 3; ++i)
+        {
+            buf = ToStr<char>{}(EncodeInt<uint8_t, 10>{}(buf, n & 0xff), '.');
+            n >>= 8;
+        }
+        return EncodeInt<uint8_t, 10>{}(buf, n & 0xff);
+    }
+};
+
+template <>
+struct ToStr<in6_addr>
+{
+    // 8 hextets * 4 hex chars + 7 separators
+    static constexpr uint8_t buf_size = 39;
+    using buf_type = std::array<char, buf_size>;
+
+    constexpr char* operator()(char* buf, in6_addr v) const noexcept
+    {
+        // IPv4 in IPv6 Addr
+        if (v.s6_addr32[0] == 0 && v.s6_addr32[1] == 0 &&
+            v.s6_addr32[2] == hton(uint32_t(0xffff)))
+        {
+            constexpr auto prefix = std::string_view("::ffff:");
+            return ToStr<in_addr>{}(
+                std::copy(prefix.begin(), prefix.end(), buf), {v.s6_addr32[3]});
+        }
+
+        size_t skip_start = 0;
+        size_t skip_size = 0;
+        {
+            size_t new_start = 0;
+            size_t new_size = 0;
+            for (size_t i = 0; i < 9; ++i)
+            {
+                if (i < 8 && v.s6_addr16[i] == 0)
+                {
+                    if (new_start + new_size == i)
+                    {
+                        new_size++;
+                    }
+                    else
+                    {
+                        new_start = i;
+                        new_size = 1;
+                    }
+                }
+                else if (new_start + new_size == i && new_size > skip_size)
+                {
+                    skip_start = new_start;
+                    skip_size = new_size;
+                }
+            }
+        }
+        for (size_t i = 0; i < 8; ++i)
+        {
+            if (i == skip_start && skip_size > 1)
+            {
+                if (i == 0)
+                {
+                    *(buf++) = ':';
+                }
+                *(buf++) = ':';
+                i += skip_size - 1;
+                continue;
+            }
+            buf = EncodeInt<uint16_t, 16>{}(buf, ntoh(v.s6_addr16[i]));
+            if (i < 7)
+            {
+                *(buf++) = ':';
+            }
+        }
+        return buf;
+    }
+};
+
+template <>
+struct ToStr<InAddrAny>
+{
+    // IPv6 is the bigger of the addrs
+    static constexpr uint8_t buf_size = ToStr<in6_addr>::buf_size;
+    using buf_type = std::array<char, buf_size>;
+
+    constexpr char* operator()(char* buf, InAddrAny v) const noexcept
+    {
+        return std::visit([=](auto v) { return ToStr<decltype(v)>{}(buf, v); },
+                          v);
+    }
+};
+
+template <>
+struct ToStr<IfAddr>
+{
+    // InAddrAny + sep + 3 prefix chars
+    static constexpr uint8_t buf_size = ToStr<InAddrAny>::buf_size + 4;
+    using buf_type = std::array<char, buf_size>;
+
+    constexpr char* operator()(char* buf, IfAddr v) const noexcept
+    {
+        buf = ToStr<InAddrAny>{}(buf, v.getAddr());
+        buf = ToStr<char>{}(buf, '/');
+        return EncodeInt<uint8_t, 10>{}(buf, v.getPfx());
+    }
+};
+
 namespace detail
 {
 
@@ -496,42 +651,20 @@ constexpr std::enable_if_t<vcontains<T, Types...>(), bool>
 }
 
 template <typename T>
-struct AddrBufMaker
-{
-};
-
-template <>
-struct AddrBufMaker<ether_addr>
+struct ToStrBuf
 {
   public:
-    std::string_view operator()(ether_addr val) noexcept;
+    constexpr std::string_view operator()(T v) noexcept
+    {
+        return {buf.data(), ToStr<T>{}(buf.data(), v)};
+    }
 
   private:
-    std::array<char, /*octet*/ 2 * /*octets*/ 6 + /*seps*/ 5> buf;
+    typename ToStr<T>::buf_type buf;
 };
 
-template <>
-struct AddrBufMaker<in_addr>
-{
-  public:
-    std::string_view operator()(in_addr val) noexcept;
-
-  private:
-    std::array<char, /*octet*/ 3 * /*octets*/ 4 + /*seps*/ 3> buf;
-};
-
-template <>
-struct AddrBufMaker<in6_addr>
-{
-  public:
-    std::string_view operator()(in6_addr val) noexcept;
-
-  private:
-    std::array<char, /*hextet*/ 4 * /*hextets*/ 8 + /*seps*/ 7> buf;
-};
-
-template <typename BufMaker>
-struct FormatFromBuf
+template <typename T>
+struct Format
 {
   private:
     fmt::formatter<std::string_view> formatter;
@@ -546,7 +679,7 @@ struct FormatFromBuf
     template <typename FormatContext>
     auto format(auto v, FormatContext& ctx) const
     {
-        return formatter.format(BufMaker{}(v), ctx);
+        return formatter.format(ToStrBuf<T>{}(v), ctx);
     }
 };
 } // namespace detail
@@ -583,70 +716,26 @@ struct std::hash<phosphor::network::IfAddr>
 namespace fmt
 {
 template <>
-struct formatter<ether_addr>
-    : phosphor::network::detail::FormatFromBuf<
-          phosphor::network::detail::AddrBufMaker<ether_addr>>
+struct formatter<ether_addr> : phosphor::network::detail::Format<ether_addr>
 {
 };
 template <>
-struct formatter<in_addr>
-    : phosphor::network::detail::FormatFromBuf<
-          phosphor::network::detail::AddrBufMaker<in_addr>>
+struct formatter<in_addr> : phosphor::network::detail::Format<in_addr>
 {
 };
 template <>
-struct formatter<in6_addr>
-    : phosphor::network::detail::FormatFromBuf<
-          phosphor::network::detail::AddrBufMaker<in6_addr>>
+struct formatter<in6_addr> : phosphor::network::detail::Format<in6_addr>
 {
 };
 template <>
 struct formatter<phosphor::network::InAddrAny>
+    : phosphor::network::detail::Format<phosphor::network::InAddrAny>
 {
-  private:
-    fmt::formatter<std::string_view> formatter;
-
-  public:
-    template <typename ParseContext>
-    constexpr auto parse(ParseContext& ctx)
-    {
-        return ctx.begin();
-    }
-
-    template <typename FormatContext>
-    auto format(auto v, FormatContext& ctx) const
-    {
-        return std::visit(
-            [&](auto v) {
-                auto abm =
-                    phosphor::network::detail::AddrBufMaker<decltype(v)>{};
-                return formatter.format(abm(v), ctx);
-            },
-            v);
-    }
 };
 template <>
 struct formatter<phosphor::network::IfAddr>
+    : phosphor::network::detail::Format<phosphor::network::IfAddr>
 {
-  private:
-    fmt::formatter<phosphor::network::InAddrAny> addrF;
-    fmt::formatter<char> strF;
-    fmt::formatter<uint8_t> numF;
-
-  public:
-    template <typename ParseContext>
-    constexpr auto parse(ParseContext& ctx)
-    {
-        return ctx.begin();
-    }
-
-    template <typename FormatContext>
-    auto format(auto v, FormatContext& ctx) const
-    {
-        addrF.format(v.getAddr(), ctx);
-        strF.format('/', ctx);
-        return numF.format(v.getPfx(), ctx);
-    }
 };
 } // namespace fmt
 
@@ -685,30 +774,27 @@ constexpr std::enable_if_t<!std::is_same_v<phosphor::network::InAddrAny, T>,
 
 auto& operator<<(auto& os, ether_addr v)
 {
-    return os << phosphor::network::detail::AddrBufMaker<ether_addr>{}(v);
+    return os << phosphor::network::detail::ToStrBuf<ether_addr>{}(v);
 }
 
 auto& operator<<(auto& os, in_addr v)
 {
-    return os << phosphor::network::detail::AddrBufMaker<in_addr>{}(v);
+    return os << phosphor::network::detail::ToStrBuf<in_addr>{}(v);
 }
 
 auto& operator<<(auto& os, in6_addr v)
 {
-    return os << phosphor::network::detail::AddrBufMaker<in6_addr>{}(v);
+    return os << phosphor::network::detail::ToStrBuf<in6_addr>{}(v);
 }
 
 auto& operator<<(auto& os, phosphor::network::InAddrAny v)
 {
-    return os << std::visit(
-               [](auto v) {
-                   return phosphor::network::detail::AddrBufMaker<
-                       decltype(v)>{}(v);
-               },
-               v);
+    phosphor::network::detail::ToStrBuf<phosphor::network::InAddrAny> tsb;
+    return os << tsb(v);
 }
 
 auto& operator<<(auto& os, phosphor::network::IfAddr v)
 {
-    return os << v.getAddr() << "/" << std::dec << int{v.getPfx()};
+    phosphor::network::detail::ToStrBuf<phosphor::network::IfAddr> tsb;
+    return os << tsb(v);
 }
