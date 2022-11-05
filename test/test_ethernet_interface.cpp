@@ -54,15 +54,6 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
                 config::Parser()};
     }
 
-    std::string getObjectPath(const std::string& ipaddress, uint8_t subnetMask,
-                              IP::AddressOrigin origin)
-    {
-        IP::Protocol addressType = IP::Protocol::IPv4;
-
-        return interface.generateObjectPath(addressType, ipaddress, subnetMask,
-                                            origin);
-    }
-
     auto createIPObject(IP::Protocol addressType, const std::string& ipaddress,
                         uint8_t subnetMask)
     {
