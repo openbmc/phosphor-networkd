@@ -82,14 +82,6 @@ template <int family>
 typename FamilyTraits<family>::addr addrFromBuf(std::string_view buf);
 InAddrAny addrFromBuf(int family, std::string_view buf);
 
-/* @brief checks that the given ip address valid or not.
- * @param[in] family - IP address family(AF_INET/AF_INET6).
- * @param[in] address - IP address.
- * @returns true if it is valid otherwise false.
- */
-bool isValidIP(int family, stdplus::const_zstring address) noexcept;
-bool isValidIP(stdplus::const_zstring address) noexcept;
-
 /** @brief Delete the given interface.
  *  @param[in] intf - interface name.
  */
