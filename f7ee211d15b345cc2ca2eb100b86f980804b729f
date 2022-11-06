@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec497c40_0746d966",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-11-06T06:06:29Z",
+      "side": 1,
+      "message": "Yeah, we have a couple places that turn every lower layer error into a log entry and then return a default value back to the user.",
+      "parentUuid": "64bcd342_ed3412ce",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 1
+      },
+      "revId": "f7ee211d15b345cc2ca2eb100b86f980804b729f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ab2b641b_5012f822",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-11-01T14:13:54Z",
       "side": 1,
       "message": "We have the util file, Are you trying to break this into multiple utils?",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 9
+      },
+      "revId": "f7ee211d15b345cc2ca2eb100b86f980804b729f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90ee2092_96cd86b8",
+        "filename": "src/system_queries.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-11-06T06:06:29Z",
+      "side": 1,
+      "message": "Yeah, I want to split out these things by purpose. The inventory mac stuff is going to be separate too because it\u0027s a large chunk of related code that is spread across multiple files that aren\u0027t really related to it.",
+      "parentUuid": "ab2b641b_5012f822",
       "range": {
         "startLine": 3,
         "startChar": 0,
