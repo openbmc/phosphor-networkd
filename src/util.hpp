@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <optional>
 #include <sdbusplus/bus.hpp>
+#include <stdplus/raw.hpp>
 #include <stdplus/zstring.hpp>
 #include <string>
 #include <string_view>
@@ -56,31 +57,22 @@ bool isUnicast(const ether_addr& mac);
 
 } // namespace mac_address
 
-template <int family>
-struct FamilyTraits
-{
-};
-
-template <>
-struct FamilyTraits<AF_INET>
-{
-    using addr = in_addr;
-};
-
-template <>
-struct FamilyTraits<AF_INET6>
-{
-    using addr = in6_addr;
-};
-
 /* @brief converts a sockaddr for the specified address family into
  *        a type_safe InAddrAny.
  * @param[in] family - The address family of the buf
  * @param[in] buf - The network byte order address
  */
-template <int family>
-typename FamilyTraits<family>::addr addrFromBuf(std::string_view buf);
-InAddrAny addrFromBuf(int family, std::string_view buf);
+constexpr InAddrAny addrFromBuf(int family, std::string_view buf)
+{
+    switch (family)
+    {
+        case AF_INET:
+            return stdplus::raw::copyFromStrict<in_addr>(buf);
+        case AF_INET6:
+            return stdplus::raw::copyFromStrict<in6_addr>(buf);
+    }
+    throw std::invalid_argument("Unrecognized family");
+}
 
 /** @brief Delete the given interface.
  *  @param[in] intf - interface name.
