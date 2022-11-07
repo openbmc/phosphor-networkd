@@ -36,8 +36,6 @@ static bool shouldRefresh(const struct nlmsghdr& hdr,
     {
         case RTM_NEWLINK:
         case RTM_DELLINK:
-        case RTM_NEWADDR:
-        case RTM_DELADDR:
             return true;
         case RTM_NEWNEIGH:
         case RTM_DELNEIGH:
@@ -103,6 +101,26 @@ static void rthandler(Manager& m, bool n, std::string_view data)
         std::get<InAddrAny>(*ret));
 }
 
+static void addrhandler(Manager& m, bool n, std::string_view data)
+{
+    auto info = netlink::addrFromRtm(data);
+    auto it = m.interfacesByIdx.find(info.ifidx);
+    if (it == m.interfacesByIdx.end())
+    {
+        auto msg = fmt::format("Interface `{}` not found for addr", info.ifidx);
+        log<level::ERR>(msg.c_str(), entry("IFIDX=%u", info.ifidx));
+        return;
+    }
+    if (n)
+    {
+        it->second->addAddr(info);
+    }
+    else
+    {
+        it->second->addrs.erase(info.ifaddr);
+    }
+}
+
 static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
 {
     if (shouldRefresh(hdr, data) && !refreshObjectTimer->isEnabled())
@@ -116,6 +134,12 @@ static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
             break;
         case RTM_DELROUTE:
             rthandler(m, false, data);
+            break;
+        case RTM_NEWADDR:
+            addrhandler(m, true, data);
+            break;
+        case RTM_DELADDR:
+            addrhandler(m, false, data);
             break;
     }
 }
