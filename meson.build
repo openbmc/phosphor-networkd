@@ -12,7 +12,6 @@ default_busname = 'xyz.openbmc_project.Network'
 
 conf_data = configuration_data()
 conf_data.set_quoted('DEFAULT_BUSNAME', default_busname)
-conf_data.set('HAVE_UBOOT_ENV', get_option('uboot-env'))
 conf_data.set(
   'LINK_LOCAL_AUTOCONFIGURATION',
   get_option('default-link-local-autoconf'))
