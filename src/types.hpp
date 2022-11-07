@@ -86,6 +86,17 @@ struct AddressInfo
     uint32_t flags;
 };
 
+/** @class NeighborInfo
+ *  @brief Information about a neighbor from the kernel
+ */
+struct NeighborInfo
+{
+    unsigned ifidx;
+    InAddrAny addr;
+    std::optional<ether_addr> mac;
+    uint16_t state;
+};
+
 struct string_hash : public std::hash<std::string_view>
 {
     using is_transparent = void;

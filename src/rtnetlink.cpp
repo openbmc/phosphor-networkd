@@ -81,4 +81,32 @@ AddressInfo addrFromRtm(std::string_view msg)
     return ret;
 }
 
+NeighborInfo neighFromRtm(std::string_view msg)
+{
+    const auto& ndm = netlink::extractRtData<ndmsg>(msg);
+
+    NeighborInfo ret;
+    ret.ifidx = ndm.ndm_ifindex;
+    ret.state = ndm.ndm_state;
+    bool set_addr = false;
+    while (!msg.empty())
+    {
+        auto [hdr, data] = netlink::extractRtAttr(msg);
+        if (hdr.rta_type == NDA_LLADDR)
+        {
+            ret.mac = stdplus::raw::copyFrom<ether_addr>(data);
+        }
+        else if (hdr.rta_type == NDA_DST)
+        {
+            ret.addr = addrFromBuf(ndm.ndm_family, data);
+            set_addr = true;
+        }
+    }
+    if (!set_addr)
+    {
+        throw std::runtime_error("Missing address");
+    }
+    return ret;
+}
+
 } // namespace phosphor::network::netlink
