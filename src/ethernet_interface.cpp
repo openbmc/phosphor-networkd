@@ -208,21 +208,16 @@ void EthernetInterface::createIPAddressObjects()
 void EthernetInterface::createStaticNeighborObjects()
 {
     staticNeighbors.clear();
-
-    NeighborFilter filter;
-    filter.interface = ifIdx;
-    filter.state = NUD_PERMANENT;
-    auto neighbors = getCurrentNeighbors(filter);
-    for (const auto& neighbor : neighbors)
+    for (const auto& neighbor : system::getNeighbors({.ifidx = ifIdx}))
     {
-        if (!neighbor.mac)
+        if (!neighbor.mac || (neighbor.state & NUD_PERMANENT) == 0)
         {
             continue;
         }
         staticNeighbors.emplace(
-            neighbor.address,
+            neighbor.addr,
             std::make_unique<Neighbor>(bus, std::string_view(objPath), *this,
-                                       neighbor.address, *neighbor.mac,
+                                       neighbor.addr, *neighbor.mac,
                                        Neighbor::State::Permanent));
     }
 }
