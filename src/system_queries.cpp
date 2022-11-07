@@ -1,6 +1,7 @@
 #include "system_queries.hpp"
 
 #include "netlink.hpp"
+#include "rtnetlink.hpp"
 #include "util.hpp"
 
 #include <fmt/format.h>
@@ -224,6 +225,16 @@ bool detail::validateNewInterface(const InterfaceInfo& info)
     return true;
 }
 
+bool detail::validateNewAddr(const AddressInfo& info,
+                             const AddressFilter& filter) noexcept
+{
+    if (filter.ifidx != 0 && filter.ifidx != info.ifidx)
+    {
+        return false;
+    }
+    return true;
+}
+
 std::vector<InterfaceInfo> getInterfaces()
 {
     std::vector<InterfaceInfo> ret;
@@ -236,6 +247,22 @@ std::vector<InterfaceInfo> getInterfaces()
     };
     ifinfomsg msg{};
     netlink::performRequest(NETLINK_ROUTE, RTM_GETLINK, NLM_F_DUMP, msg, cb);
+    return ret;
+}
+
+std::vector<AddressInfo> getAddresses(const AddressFilter& filter)
+{
+    std::vector<AddressInfo> ret;
+    auto cb = [&](const nlmsghdr&, std::string_view msg) {
+        auto info = netlink::addrFromRtm(msg);
+        if (detail::validateNewAddr(info, filter))
+        {
+            ret.emplace_back(std::move(info));
+        }
+    };
+    ifaddrmsg msg{};
+    msg.ifa_index = filter.ifidx;
+    netlink::performRequest(NETLINK_ROUTE, RTM_GETADDR, NLM_F_DUMP, msg, cb);
     return ret;
 }
 
