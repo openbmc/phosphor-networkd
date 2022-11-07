@@ -53,15 +53,27 @@ struct InterfaceInfo
     }
 };
 
+struct AddressFilter
+{
+    unsigned ifidx = 0;
+};
+
 namespace detail
 {
 InterfaceInfo parseInterface(const nlmsghdr& hdr, std::string_view msg);
 bool validateNewInterface(const InterfaceInfo& info);
+bool validateNewAddr(const AddressInfo& info,
+                     const AddressFilter& filter) noexcept;
 } // namespace detail
 
 /** @brief Get all the interfaces from the system.
  *  @returns list of interface names.
  */
 std::vector<InterfaceInfo> getInterfaces();
+
+/** @brief Get all the addreses from the system.
+ *  @returns list of addresses
+ */
+std::vector<AddressInfo> getAddresses(const AddressFilter& filter);
 
 } // namespace phosphor::network::system
