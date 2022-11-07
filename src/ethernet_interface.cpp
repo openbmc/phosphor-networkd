@@ -791,17 +791,18 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         manager.reloadConfigs();
     }
 
-#ifdef HAVE_UBOOT_ENV
-    // Ensure that the valid address is stored in the u-boot-env
-    auto envVar = interfaceToUbootEthAddr(interface);
-    if (envVar)
+    std::error_code ec;
+    const auto fw_setenv = std::filesystem::path("/sbin/fw_setenv");
+    if (std::filesystem::exists(fw_setenv, ec))
     {
-        // Trimming MAC addresses that are out of range. eg: AA:FF:FF:FF:FF:100;
-        // and those having more than 6 bytes. eg: AA:AA:AA:AA:AA:AA:BB
-        execute("/sbin/fw_setenv", "fw_setenv", envVar->c_str(),
-                validMAC.c_str());
+        // Ensure that the valid address is stored in the u-boot-env
+        auto envVar = interfaceToUbootEthAddr(interface);
+        if (envVar)
+        {
+            execute(fw_setenv.native(), "fw_setenv", envVar->c_str(),
+                    validMAC.c_str());
+        }
     }
-#endif // HAVE_UBOOT_ENV
 
     return value;
 #else
