@@ -100,6 +100,8 @@ class EthernetInterface : public Ifaces
     /** @brief Persistent map of Neighbor dbus objects and their names */
     std::unordered_map<InAddrAny, std::unique_ptr<Neighbor>> staticNeighbors;
 
+    void addAddr(const AddressInfo& info);
+
     /** @brief Updates the interface information based on new InterfaceInfo */
     void updateInfo(const system::InterfaceInfo& info);
 

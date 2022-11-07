@@ -173,31 +173,35 @@ bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
     );
 }
 
+void EthernetInterface::addAddr(const AddressInfo& info)
+{
+    if (info.flags & IFA_F_DEPRECATED)
+    {
+        return;
+    }
+    IP::AddressOrigin origin = IP::AddressOrigin::Static;
+    if (dhcpIsEnabled(info.ifaddr.getAddr()))
+    {
+        origin = IP::AddressOrigin::DHCP;
+    }
+#ifdef LINK_LOCAL_AUTOCONFIGURATION
+    if (info.scope == RT_SCOPE_LINK)
+    {
+        origin = IP::AddressOrigin::LinkLocal;
+    }
+#endif
+
+    this->addrs.insert_or_assign(
+        info.ifaddr, std::make_unique<IPAddress>(bus, std::string_view(objPath),
+                                                 *this, info.ifaddr, origin));
+}
+
 void EthernetInterface::createIPAddressObjects()
 {
     addrs.clear();
     for (const auto& addr : system::getAddresses({.ifidx = ifIdx}))
     {
-        if (addr.flags & IFA_F_DEPRECATED)
-        {
-            continue;
-        }
-        IP::AddressOrigin origin = IP::AddressOrigin::Static;
-        if (dhcpIsEnabled(addr.ifaddr.getAddr()))
-        {
-            origin = IP::AddressOrigin::DHCP;
-        }
-#ifdef LINK_LOCAL_AUTOCONFIGURATION
-        if (addr.scope == RT_SCOPE_LINK)
-        {
-            origin = IP::AddressOrigin::LinkLocal;
-        }
-#endif
-
-        this->addrs.insert_or_assign(
-            addr.ifaddr,
-            std::make_unique<IPAddress>(bus, std::string_view(objPath), *this,
-                                        addr.ifaddr, origin));
+        addAddr(addr);
     }
 }
 
@@ -270,7 +274,7 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
                                     ifaddr, IP::AddressOrigin::Static));
 
     writeConfigurationFile();
-    manager.reloadConfigs();
+    manager.reloadConfigsNoRefresh();
 
     return it->second->getObjPath();
 }
