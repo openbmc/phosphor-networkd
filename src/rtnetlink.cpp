@@ -1,6 +1,7 @@
 #include "rtnetlink.hpp"
 
 #include "netlink.hpp"
+#include "util.hpp"
 
 #include <linux/rtnetlink.h>
 
@@ -19,10 +20,10 @@ static std::optional<std::tuple<unsigned, InAddrAny>>
         switch (hdr.rta_type)
         {
             case RTA_OIF:
-                ifIdx.emplace(stdplus::raw::copyFrom<int>(data));
+                ifIdx.emplace(stdplus::raw::copyFromStrict<int>(data));
                 break;
             case RTA_GATEWAY:
-                gw.emplace(stdplus::raw::copyFrom<Addr>(data));
+                gw.emplace(stdplus::raw::copyFromStrict<Addr>(data));
                 break;
         }
     }
@@ -49,6 +50,35 @@ std::optional<std::tuple<unsigned, InAddrAny>>
             return parse<in6_addr>(msg);
     }
     return std::nullopt;
+}
+
+AddressInfo addrFromRtm(std::string_view msg)
+{
+    const auto& ifa = extractRtData<ifaddrmsg>(msg);
+
+    AddressInfo ret;
+    ret.ifidx = ifa.ifa_index;
+    ret.flags = ifa.ifa_flags;
+    ret.scope = ifa.ifa_scope;
+    std::optional<InAddrAny> addr;
+    while (!msg.empty())
+    {
+        auto [hdr, data] = extractRtAttr(msg);
+        if (hdr.rta_type == IFA_ADDRESS)
+        {
+            addr.emplace(addrFromBuf(ifa.ifa_family, data));
+        }
+        else if (hdr.rta_type == IFA_FLAGS)
+        {
+            ret.flags = stdplus::raw::copyFromStrict<uint32_t>(data);
+        }
+    }
+    if (!addr)
+    {
+        throw std::runtime_error("Missing address");
+    }
+    ret.ifaddr = {*addr, ifa.ifa_prefixlen};
+    return ret;
 }
 
 } // namespace phosphor::network::netlink

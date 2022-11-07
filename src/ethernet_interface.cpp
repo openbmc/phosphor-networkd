@@ -176,19 +176,14 @@ bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
 void EthernetInterface::createIPAddressObjects()
 {
     addrs.clear();
-
-    AddressFilter filter;
-    filter.interface = ifIdx;
-    auto currentAddrs = getCurrentAddresses(filter);
-    for (const auto& addr : currentAddrs)
+    for (const auto& addr : system::getAddresses({.ifidx = ifIdx}))
     {
         if (addr.flags & IFA_F_DEPRECATED)
         {
             continue;
         }
-        auto ifaddr = IfAddr(addr.address, addr.prefix);
         IP::AddressOrigin origin = IP::AddressOrigin::Static;
-        if (dhcpIsEnabled(addr.address))
+        if (dhcpIsEnabled(addr.ifaddr.getAddr()))
         {
             origin = IP::AddressOrigin::DHCP;
         }
@@ -200,8 +195,9 @@ void EthernetInterface::createIPAddressObjects()
 #endif
 
         this->addrs.insert_or_assign(
-            ifaddr, std::make_unique<IPAddress>(bus, std::string_view(objPath),
-                                                *this, ifaddr, origin));
+            addr.ifaddr,
+            std::make_unique<IPAddress>(bus, std::string_view(objPath), *this,
+                                        addr.ifaddr, origin));
     }
 }
 

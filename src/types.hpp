@@ -75,6 +75,17 @@ class IfAddr
 
 using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
 
+/** @class AddressInfo
+ *  @brief Information about a addresses from the kernel
+ */
+struct AddressInfo
+{
+    unsigned ifidx;
+    IfAddr ifaddr;
+    uint8_t scope;
+    uint32_t flags;
+};
+
 struct string_hash : public std::hash<std::string_view>
 {
     using is_transparent = void;

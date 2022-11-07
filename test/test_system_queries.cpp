@@ -111,5 +111,16 @@ TEST(ValidateNewInterface, Valid)
     EXPECT_TRUE(validateNewInterface(info));
 }
 
+TEST(ValidateNewAddr, Filtering)
+{
+    AddressInfo info = {};
+    EXPECT_TRUE(validateNewAddr(info, {}));
+
+    info.ifidx = 2;
+    EXPECT_TRUE(validateNewAddr(info, {}));
+    EXPECT_TRUE(validateNewAddr(info, {.ifidx = 2}));
+    EXPECT_FALSE(validateNewAddr(info, {.ifidx = 3}));
+}
+
 } // namespace detail
 } // namespace phosphor::network::system

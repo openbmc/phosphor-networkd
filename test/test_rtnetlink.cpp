@@ -1,90 +1,66 @@
-#include "mock_network_manager.hpp"
-#include "mock_syscall.hpp"
-#include "rtnetlink_server.hpp"
-#include "types.hpp"
+#include "rtnetlink.hpp"
 
+#include <linux/netlink.h>
 #include <linux/rtnetlink.h>
-#include <net/if.h>
 
-#include <chrono>
-#include <functional>
-#include <sdbusplus/bus.hpp>
-#include <sdeventplus/event.hpp>
-#include <testutil.hpp>
+#include <stdplus/raw.hpp>
 
 #include <gtest/gtest.h>
 
-namespace phosphor
+namespace phosphor::network::netlink
 {
 
-namespace network
+TEST(AddrFromRtm, MissingAddr)
 {
-sdbusplus::bus_t bus(sdbusplus::bus::new_default());
-extern std::unique_ptr<MockManager> manager;
-extern std::unique_ptr<Timer> refreshObjectTimer;
-EventPtr eventPtr = nullptr;
-
-class TestRtNetlink : public TestWithTmp
-{
-
-  public:
-    std::optional<rtnetlink::Server> svr;
-
-    TestRtNetlink()
+    struct
     {
-        manager = std::make_unique<MockManager>(bus, "/xyz/openbmc_test/bcd",
-                                                CaseTmpDir());
-        sd_event* events;
-        sd_event_default(&events);
-        eventPtr.reset(events);
-        events = nullptr;
-        initializeTimers();
-        createNetLinkSocket();
-        bus.attach_event(eventPtr.get(), SD_EVENT_PRIORITY_NORMAL);
-        svr.emplace(eventPtr);
-    }
-
-    void createNetLinkSocket()
-    {
-        // RtnetLink socket
-        auto fd = socket(PF_NETLINK, SOCK_RAW | SOCK_NONBLOCK, NETLINK_ROUTE);
-        smartSock.set(fd);
-    }
-};
-
-TEST_F(TestRtNetlink, WithSingleInterface)
-{
-    using namespace std::chrono;
-    mock_clear();
-    // Adds the following ip in the getifaddrs list.
-    mock_addIF("igb5", /*idx=*/6);
-    mock_addIP("igb5", "127.0.0.1", "255.255.255.128");
-    constexpr auto BUFSIZE = 4096;
-    std::array<char, BUFSIZE> msgBuf = {0};
-
-    // point the header and the msg structure pointers into the buffer.
-    auto nlMsg = reinterpret_cast<nlmsghdr*>(msgBuf.data());
-    // Length of message
-    nlMsg->nlmsg_len = NLMSG_LENGTH(sizeof(rtmsg));
-    nlMsg->nlmsg_type = RTM_GETADDR;
-    nlMsg->nlmsg_flags = NLM_F_DUMP | NLM_F_REQUEST;
-    nlMsg->nlmsg_seq = 0;
-    nlMsg->nlmsg_pid = getpid();
-
-    EXPECT_EQ(false, manager->hasInterface("igb5"));
-    // Send the request
-    send(svr->getSock(), nlMsg, nlMsg->nlmsg_len, 0);
-
-    int i = 3;
-    while (i--)
-    {
-        // wait for timer to expire
-        std::this_thread::sleep_for(std::chrono::milliseconds(refreshTimeout));
-        sd_event_run(eventPtr.get(), 10);
-    };
-
-    EXPECT_EQ(true, manager->hasInterface("igb5"));
+        alignas(NLMSG_ALIGNTO) ifaddrmsg ifa = {};
+    } msg;
+    EXPECT_THROW(addrFromRtm(stdplus::raw::asView<char>(msg)),
+                 std::runtime_error);
 }
 
-} // namespace network
-} // namespace phosphor
+TEST(AddrFromRtm, Regular)
+{
+    struct
+    {
+        alignas(NLMSG_ALIGNTO) ifaddrmsg ifa;
+        alignas(NLMSG_ALIGNTO) rtattr addr_hdr;
+        alignas(NLMSG_ALIGNTO) uint8_t addr[4] = {192, 168, 1, 20};
+    } msg;
+    msg.ifa.ifa_family = AF_INET;
+    msg.ifa.ifa_prefixlen = 28;
+    msg.ifa.ifa_flags = 4;
+    msg.ifa.ifa_scope = 3;
+    msg.ifa.ifa_index = 10;
+    msg.addr_hdr.rta_type = IFA_ADDRESS;
+    msg.addr_hdr.rta_len = RTA_LENGTH(sizeof(msg.addr));
+
+    auto ret = addrFromRtm(stdplus::raw::asView<char>(msg));
+    EXPECT_EQ(msg.ifa.ifa_flags, ret.flags);
+    EXPECT_EQ(msg.ifa.ifa_scope, ret.scope);
+    EXPECT_EQ(msg.ifa.ifa_index, ret.ifidx);
+    EXPECT_EQ((IfAddr{in_addr{hton(0xc0a80114)}, 28}), ret.ifaddr);
+}
+
+TEST(AddrFromRtm, ExtraFlags)
+{
+    struct
+    {
+        alignas(NLMSG_ALIGNTO) ifaddrmsg ifa = {};
+        alignas(NLMSG_ALIGNTO) rtattr flags_hdr;
+        alignas(NLMSG_ALIGNTO) uint32_t flags = 0xff00ff00;
+        alignas(NLMSG_ALIGNTO) rtattr addr_hdr;
+        alignas(NLMSG_ALIGNTO) uint8_t addr[16] = {};
+    } msg;
+    msg.ifa.ifa_family = AF_INET6;
+    msg.flags_hdr.rta_type = IFA_FLAGS;
+    msg.flags_hdr.rta_len = RTA_LENGTH(sizeof(msg.flags));
+    msg.addr_hdr.rta_type = IFA_ADDRESS;
+    msg.addr_hdr.rta_len = RTA_LENGTH(sizeof(msg.addr));
+
+    auto ret = addrFromRtm(stdplus::raw::asView<char>(msg));
+    EXPECT_EQ(0xff00ff00, ret.flags);
+}
+
+} // namespace phosphor::network::netlink

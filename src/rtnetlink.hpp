@@ -7,6 +7,10 @@
 
 namespace phosphor::network::netlink
 {
+
 std::optional<std::tuple<unsigned, InAddrAny>>
     gatewayFromRtm(std::string_view msg);
-}
+
+AddressInfo addrFromRtm(std::string_view msg);
+
+} // namespace phosphor::network::netlink
