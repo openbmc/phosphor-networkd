@@ -13,4 +13,6 @@ std::optional<std::tuple<unsigned, InAddrAny>>
 
 AddressInfo addrFromRtm(std::string_view msg);
 
+NeighborInfo neighFromRtm(std::string_view msg);
+
 } // namespace phosphor::network::netlink

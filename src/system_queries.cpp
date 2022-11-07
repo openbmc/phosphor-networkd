@@ -235,6 +235,16 @@ bool detail::validateNewAddr(const AddressInfo& info,
     return true;
 }
 
+bool detail::validateNewNeigh(const NeighborInfo& info,
+                              const NeighborFilter& filter) noexcept
+{
+    if (filter.ifidx != 0 && filter.ifidx != info.ifidx)
+    {
+        return false;
+    }
+    return true;
+}
+
 std::vector<InterfaceInfo> getInterfaces()
 {
     std::vector<InterfaceInfo> ret;
@@ -263,6 +273,22 @@ std::vector<AddressInfo> getAddresses(const AddressFilter& filter)
     ifaddrmsg msg{};
     msg.ifa_index = filter.ifidx;
     netlink::performRequest(NETLINK_ROUTE, RTM_GETADDR, NLM_F_DUMP, msg, cb);
+    return ret;
+}
+
+std::vector<NeighborInfo> getNeighbors(const NeighborFilter& filter)
+{
+    std::vector<NeighborInfo> ret;
+    auto cb = [&](const nlmsghdr&, std::string_view msg) {
+        auto info = netlink::neighFromRtm(msg);
+        if (detail::validateNewNeigh(info, filter))
+        {
+            ret.push_back(std::move(info));
+        }
+    };
+    ndmsg msg{};
+    msg.ndm_ifindex = filter.ifidx;
+    netlink::performRequest(NETLINK_ROUTE, RTM_GETNEIGH, NLM_F_DUMP, msg, cb);
     return ret;
 }
 
