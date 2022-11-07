@@ -1,16 +1,10 @@
 #pragma once
 #include "types.hpp"
 
-#include <linux/netlink.h>
-#include <net/ethernet.h>
-
-#include <cstdint>
-#include <optional>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/message/native_types.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <string_view>
-#include <vector>
 #include <xyz/openbmc_project/Network/Neighbor/server.hpp>
 #include <xyz/openbmc_project/Object/Delete/server.hpp>
 
@@ -25,34 +19,6 @@ using NeighborObj = sdbusplus::server::object_t<
     NeighborIntf, sdbusplus::xyz::openbmc_project::Object::server::Delete>;
 
 class EthernetInterface;
-
-/* @class NeighborFilter
- */
-struct NeighborFilter
-{
-    unsigned interface;
-    uint16_t state;
-
-    /* @brief Creates an empty filter */
-    NeighborFilter() : interface(0), state(~UINT16_C(0))
-    {
-    }
-};
-
-/** @class NeighborInfo
- *  @brief Information about a neighbor from the kernel
- */
-struct NeighborInfo
-{
-    unsigned interface;
-    InAddrAny address;
-    std::optional<ether_addr> mac;
-    uint16_t state;
-};
-
-/** @brief Returns a list of the current system neighbor table
- */
-std::vector<NeighborInfo> getCurrentNeighbors(const NeighborFilter& filter);
 
 /** @class Neighbor
  *  @brief OpenBMC network neighbor implementation.
@@ -110,14 +76,6 @@ class Neighbor : public NeighborObj
              EthernetInterface& parent, InAddrAny addr, ether_addr lladdr,
              State state);
 };
-
-namespace detail
-{
-
-void parseNeighbor(const NeighborFilter& filter, const nlmsghdr& hdr,
-                   std::string_view msg, std::vector<NeighborInfo>& neighbors);
-
-} // namespace detail
 
 } // namespace network
 } // namespace phosphor
