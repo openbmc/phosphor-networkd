@@ -17,8 +17,6 @@
 #endif
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
-#include <stdexcept>
-#include <stdplus/raw.hpp>
 #include <string>
 #include <string_view>
 #include <variant>
@@ -130,32 +128,6 @@ const std::unordered_set<std::string_view>& getIgnoredInterfaces()
 }
 
 } // namespace internal
-
-constexpr auto familyVisit(auto&& visitor, int family)
-{
-    if (family == AF_INET)
-    {
-        return visitor.template operator()<AF_INET>();
-    }
-    else if (family == AF_INET6)
-    {
-        return visitor.template operator()<AF_INET6>();
-    }
-    throw std::invalid_argument("Invalid addr family");
-}
-
-template <int family>
-typename FamilyTraits<family>::addr addrFromBuf(std::string_view buf)
-{
-    return stdplus::raw::copyFromStrict<typename FamilyTraits<family>::addr>(
-        buf);
-}
-
-InAddrAny addrFromBuf(int family, std::string_view buf)
-{
-    return familyVisit(
-        [=]<int f>() -> InAddrAny { return addrFromBuf<f>(buf); }, family);
-}
 
 void deleteInterface(stdplus::const_zstring intf)
 {
