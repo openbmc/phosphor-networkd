@@ -1,7 +1,5 @@
 option('tests', type: 'feature', description: 'Build tests')
 
-option('uboot-env', type: 'boolean',
-       description: 'Update u-boot env for MAC changes')
 option('default-link-local-autoconf', type: 'boolean',
        description: 'Enable link local autoconfiguration by default')
 option('default-ipv6-accept-ra', type: 'boolean',
