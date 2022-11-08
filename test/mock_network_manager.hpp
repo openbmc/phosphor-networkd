@@ -41,6 +41,7 @@ class MockManager : public Manager
     }
 
     MOCK_METHOD(void, reloadConfigs, (), (override));
+    MOCK_METHOD(void, reloadConfigsNoRefresh, (), (override));
 };
 
 } // namespace network
