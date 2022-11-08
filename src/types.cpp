@@ -1,8 +1,18 @@
 #include "types.hpp"
 
+#include <fmt/format.h>
+
 #include <charconv>
 
-namespace phosphor::network::detail
+namespace phosphor::network
+{
+
+void IfAddr::invalidPfx(uint8_t pfx)
+{
+    throw std::invalid_argument(fmt::format("Invalid prefix {}", pfx));
+}
+
+namespace detail
 {
 
 std::string_view AddrBufMaker<ether_addr>::operator()(ether_addr val) noexcept
@@ -91,7 +101,8 @@ std::string_view AddrBufMaker<in6_addr>::operator()(in6_addr val) noexcept
     return {buf.data(), ptr};
 }
 
-} // namespace phosphor::network::detail
+} // namespace detail
+} // namespace phosphor::network
 
 std::size_t std::hash<in_addr>::operator()(in_addr addr) const noexcept
 {
@@ -102,6 +113,12 @@ std::size_t std::hash<in6_addr>::operator()(in6_addr addr) const noexcept
 {
     return phosphor::network::hash_multi(addr.s6_addr32[0], addr.s6_addr32[1],
                                          addr.s6_addr32[2], addr.s6_addr32[3]);
+}
+
+std::size_t std::hash<phosphor::network::IfAddr>::operator()(
+    phosphor::network::IfAddr addr) const noexcept
+{
+    return phosphor::network::hash_multi(addr.getAddr(), addr.getPfx());
 }
 
 std::string std::to_string(ether_addr value)
@@ -119,4 +136,9 @@ std::string std::to_string(in6_addr value)
 std::string std::to_string(phosphor::network::InAddrAny value)
 {
     return std::visit([](auto v) { return std::to_string(v); }, value);
+}
+
+std::string std::to_string(phosphor::network::IfAddr value)
+{
+    return fmt::to_string(value);
 }

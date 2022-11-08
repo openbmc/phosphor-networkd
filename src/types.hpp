@@ -32,6 +32,46 @@ constexpr auto refreshTimeout = 4s;
 
 // Byte representations for common address types in network byte order
 using InAddrAny = std::variant<in_addr, in6_addr>;
+class IfAddr
+{
+  private:
+    InAddrAny addr;
+    uint8_t pfx;
+
+    static void invalidPfx(uint8_t pfx);
+
+  public:
+    constexpr IfAddr() : addr({}), pfx(0)
+    {
+    }
+
+    constexpr IfAddr(InAddrAny addr, uint8_t pfx) : addr(addr), pfx(pfx)
+    {
+        std::visit(
+            [pfx](auto v) {
+                if (sizeof(v) * 8 < pfx)
+                {
+                    invalidPfx(pfx);
+                }
+            },
+            addr);
+    }
+
+    constexpr auto getAddr() const
+    {
+        return addr;
+    }
+
+    constexpr auto getPfx() const
+    {
+        return pfx;
+    }
+
+    constexpr bool operator==(phosphor::network::IfAddr rhs) const noexcept
+    {
+        return addr == rhs.addr && pfx == rhs.pfx;
+    }
+};
 
 using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
 
@@ -254,6 +294,12 @@ struct std::hash<in6_addr>
     std::size_t operator()(in6_addr addr) const noexcept;
 };
 
+template <>
+struct std::hash<phosphor::network::IfAddr>
+{
+    std::size_t operator()(phosphor::network::IfAddr addr) const noexcept;
+};
+
 namespace fmt
 {
 template <>
@@ -299,6 +345,29 @@ struct formatter<phosphor::network::InAddrAny>
             v);
     }
 };
+template <>
+struct formatter<phosphor::network::IfAddr>
+{
+  private:
+    fmt::formatter<phosphor::network::InAddrAny> addrF;
+    fmt::formatter<char> strF;
+    fmt::formatter<uint8_t> numF;
+
+  public:
+    template <typename ParseContext>
+    constexpr auto parse(ParseContext& ctx)
+    {
+        return ctx.begin();
+    }
+
+    template <typename FormatContext>
+    auto format(auto v, FormatContext& ctx) const
+    {
+        addrF.format(v.getAddr(), ctx);
+        strF.format('/', ctx);
+        return numF.format(v.getPfx(), ctx);
+    }
+};
 } // namespace fmt
 
 namespace std
@@ -307,6 +376,7 @@ string to_string(ether_addr value);
 string to_string(in_addr value);
 string to_string(in6_addr value);
 string to_string(phosphor::network::InAddrAny value);
+string to_string(phosphor::network::IfAddr value);
 } // namespace std
 
 constexpr bool operator==(ether_addr lhs, ether_addr rhs) noexcept
@@ -356,4 +426,9 @@ auto& operator<<(auto& os, phosphor::network::InAddrAny v)
                        decltype(v)>{}(v);
                },
                v);
+}
+
+auto& operator<<(auto& os, phosphor::network::IfAddr v)
+{
+    return os << v.getAddr() << "/" << std::dec << int{v.getPfx()};
 }
