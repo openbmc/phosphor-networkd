@@ -191,9 +191,17 @@ void EthernetInterface::addAddr(const AddressInfo& info)
     }
 #endif
 
-    this->addrs.insert_or_assign(
-        info.ifaddr, std::make_unique<IPAddress>(bus, std::string_view(objPath),
-                                                 *this, info.ifaddr, origin));
+    auto it = addrs.find(info.ifaddr);
+    if (it == addrs.end())
+    {
+        addrs.emplace(info.ifaddr, std::make_unique<IPAddress>(
+                                       bus, std::string_view(objPath), *this,
+                                       info.ifaddr, origin));
+    }
+    else
+    {
+        it->second->IPIfaces::origin(origin);
+    }
 }
 
 void EthernetInterface::createIPAddressObjects()
