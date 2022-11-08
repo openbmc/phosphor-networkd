@@ -101,6 +101,7 @@ class EthernetInterface : public Ifaces
     std::unordered_map<InAddrAny, std::unique_ptr<Neighbor>> staticNeighbors;
 
     void addAddr(const AddressInfo& info);
+    void addStaticNeigh(const NeighborInfo& info);
 
     /** @brief Updates the interface information based on new InterfaceInfo */
     void updateInfo(const system::InterfaceInfo& info);
