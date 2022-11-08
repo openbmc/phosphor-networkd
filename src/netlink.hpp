@@ -34,7 +34,7 @@ void performRequest(int protocol, void* data, size_t size, ReceiveCallback cb);
  *  @param[in] sock - The socket to receive the messages on
  *  @param[in] cb   - Called for each response message payload
  */
-void receive(int sock, ReceiveCallback cb);
+size_t receive(int sock, ReceiveCallback cb);
 
 /* @brief Call on an rtnetlink payload
  *        Updates the input to remove the attr parsed out.

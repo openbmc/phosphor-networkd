@@ -61,7 +61,8 @@ static void handler(const nlmsghdr& hdr, std::string_view data)
 
 static void eventHandler(sdeventplus::source::IO&, int fd, uint32_t)
 {
-    receive(fd, handler);
+    while (receive(fd, handler) > 0)
+        ;
 }
 
 static stdplus::ManagedFd makeSock()

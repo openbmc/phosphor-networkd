@@ -125,7 +125,7 @@ void performRequest(int protocol, void* data, size_t size, ReceiveCallback cb)
 
 } // namespace detail
 
-void receive(int sock, ReceiveCallback cb)
+size_t receive(int sock, ReceiveCallback cb)
 {
     // We need to make sure we have enough room for an entire packet otherwise
     // it gets truncated. The netlink docs guarantee packets will not exceed 8K
@@ -146,27 +146,29 @@ void receive(int sock, ReceiveCallback cb)
 
     // We only do multiple recvs if we have a MULTI type message
     bool done = true;
+    size_t num_msgs = 0;
     do
     {
         ssize_t recvd = recvmsg(sock, &hdr, 0);
-        if (recvd < 0)
+        if (recvd < 0 && errno != EAGAIN)
         {
             throw std::system_error(errno, std::generic_category(),
                                     "netlink recvmsg");
         }
-        if (recvd == 0)
+        if (recvd <= 0)
         {
             if (!done)
             {
                 throw std::runtime_error("netlink recvmsg: Got empty payload");
             }
-            return;
+            return num_msgs;
         }
 
         std::string_view msgs(buf.data(), recvd);
         do
         {
             detail::processMsg(msgs, done, cb);
+            num_msgs++;
         } while (!done && !msgs.empty());
 
         if (done && !msgs.empty())
@@ -174,6 +176,7 @@ void receive(int sock, ReceiveCallback cb)
             throw std::runtime_error("Extra unprocessed netlink messages");
         }
     } while (!done);
+    return num_msgs;
 }
 
 std::tuple<rtattr, std::string_view> extractRtAttr(std::string_view& data)
