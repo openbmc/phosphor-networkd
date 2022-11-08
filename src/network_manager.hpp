@@ -118,6 +118,7 @@ class Manager : public details::VLANCreateIface
     /** @brief Arms a timer to tell systemd-network to reload all of the network
      * configurations
      */
+    virtual void reloadConfigsNoRefresh();
     virtual void reloadConfigs();
 
     /** @brief Tell systemd-network to reload all of the network configurations

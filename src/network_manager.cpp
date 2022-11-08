@@ -177,9 +177,14 @@ void Manager::setFistBootMACOnInterface(
 
 #endif
 
-void Manager::reloadConfigs()
+void Manager::reloadConfigsNoRefresh()
 {
     reloadTimer->restartOnce(reloadTimeout);
+}
+
+void Manager::reloadConfigs()
+{
+    reloadConfigsNoRefresh();
     // Ensure that the next refresh happens after reconfiguration
     refreshObjectTimer->setRemaining(reloadTimeout + refreshTimeout);
 }
@@ -212,7 +217,10 @@ void Manager::doReloadConfigs()
         elog<InternalFailure>();
     }
     // Ensure reconfiguration has enough time
-    refreshObjectTimer->setRemaining(refreshTimeout);
+    if (refreshObjectTimer->isEnabled())
+    {
+        refreshObjectTimer->setRemaining(refreshTimeout);
+    }
 }
 
 } // namespace network
