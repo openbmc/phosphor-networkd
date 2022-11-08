@@ -1,8 +1,5 @@
 #include "types.hpp"
 
-#include <arpa/inet.h>
-#include <byteswap.h>
-
 #include <charconv>
 
 namespace phosphor::network::detail
@@ -29,7 +26,7 @@ std::string_view AddrBufMaker<ether_addr>::operator()(ether_addr val) noexcept
 
 std::string_view AddrBufMaker<in_addr>::operator()(in_addr val) noexcept
 {
-    auto v = bswap_32(ntohl(val.s_addr));
+    auto v = bswap(ntoh(val.s_addr));
     char* ptr = buf.begin();
     for (size_t i = 0; i < 3; ++i)
     {
@@ -84,7 +81,7 @@ std::string_view AddrBufMaker<in6_addr>::operator()(in6_addr val) noexcept
             continue;
         }
         const auto res =
-            std::to_chars(ptr, buf.end(), ntohs(val.s6_addr16[i]), 16);
+            std::to_chars(ptr, buf.end(), ntoh(val.s6_addr16[i]), 16);
         ptr = res.ptr;
         if (i < 7)
         {
