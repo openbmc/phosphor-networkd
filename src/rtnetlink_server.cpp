@@ -29,25 +29,13 @@ using phosphor::logging::entry;
 using phosphor::logging::level;
 using phosphor::logging::log;
 
-static bool shouldRefresh(const struct nlmsghdr& hdr,
-                          std::string_view data) noexcept
+static bool shouldRefresh(const struct nlmsghdr& hdr, std::string_view) noexcept
 {
     switch (hdr.nlmsg_type)
     {
         case RTM_NEWLINK:
         case RTM_DELLINK:
             return true;
-        case RTM_NEWNEIGH:
-        case RTM_DELNEIGH:
-        {
-            if (data.size() < sizeof(ndmsg))
-            {
-                return false;
-            }
-            const auto& ndm = *reinterpret_cast<const ndmsg*>(data.data());
-            // We only want to refresh for static neighbors
-            return ndm.ndm_state & NUD_PERMANENT;
-        }
     }
     return false;
 }
@@ -121,6 +109,26 @@ static void addrhandler(Manager& m, bool n, std::string_view data)
     }
 }
 
+static void neighhandler(Manager& m, bool n, std::string_view data)
+{
+    auto info = netlink::neighFromRtm(data);
+    auto it = m.interfacesByIdx.find(info.ifidx);
+    if (it == m.interfacesByIdx.end())
+    {
+        auto msg = fmt::format("Interface `{}` not found for addr", info.ifidx);
+        log<level::ERR>(msg.c_str(), entry("IFIDX=%u", info.ifidx));
+        return;
+    }
+    if (n)
+    {
+        it->second->addStaticNeigh(info);
+    }
+    else
+    {
+        it->second->staticNeighbors.erase(info.addr);
+    }
+}
+
 static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
 {
     if (shouldRefresh(hdr, data) && !refreshObjectTimer->isEnabled())
@@ -140,6 +148,12 @@ static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
             break;
         case RTM_DELADDR:
             addrhandler(m, false, data);
+            break;
+        case RTM_NEWNEIGH:
+            neighhandler(m, true, data);
+            break;
+        case RTM_DELNEIGH:
+            neighhandler(m, false, data);
             break;
     }
 }
