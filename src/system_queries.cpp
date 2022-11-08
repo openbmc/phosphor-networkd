@@ -249,10 +249,18 @@ std::vector<InterfaceInfo> getInterfaces()
 {
     std::vector<InterfaceInfo> ret;
     auto cb = [&](const nlmsghdr& hdr, std::string_view msg) {
-        auto info = detail::parseInterface(hdr, msg);
-        if (detail::validateNewInterface(info))
+        try
         {
-            ret.emplace_back(std::move(info));
+            auto info = detail::parseInterface(hdr, msg);
+            if (detail::validateNewInterface(info))
+            {
+                ret.emplace_back(std::move(info));
+            }
+        }
+        catch (const std::exception& e)
+        {
+            auto msg = fmt::format("Failed parsing interface: {}", e.what());
+            log<level::ERR>(msg.c_str());
         }
     };
     ifinfomsg msg{};
@@ -264,10 +272,19 @@ std::vector<AddressInfo> getAddresses(const AddressFilter& filter)
 {
     std::vector<AddressInfo> ret;
     auto cb = [&](const nlmsghdr&, std::string_view msg) {
-        auto info = netlink::addrFromRtm(msg);
-        if (detail::validateNewAddr(info, filter))
+        try
         {
-            ret.emplace_back(std::move(info));
+            auto info = netlink::addrFromRtm(msg);
+            if (detail::validateNewAddr(info, filter))
+            {
+                ret.emplace_back(std::move(info));
+            }
+        }
+        catch (const std::exception& e)
+        {
+            auto msg = fmt::format("Failed parsing address for ifidx {}: {}",
+                                   filter.ifidx, e.what());
+            log<level::ERR>(msg.c_str());
         }
     };
     ifaddrmsg msg{};
@@ -280,10 +297,19 @@ std::vector<NeighborInfo> getNeighbors(const NeighborFilter& filter)
 {
     std::vector<NeighborInfo> ret;
     auto cb = [&](const nlmsghdr&, std::string_view msg) {
-        auto info = netlink::neighFromRtm(msg);
-        if (detail::validateNewNeigh(info, filter))
+        try
         {
-            ret.push_back(std::move(info));
+            auto info = netlink::neighFromRtm(msg);
+            if (detail::validateNewNeigh(info, filter))
+            {
+                ret.push_back(std::move(info));
+            }
+        }
+        catch (const std::exception& e)
+        {
+            auto msg = fmt::format("Failed parsing neighbor for ifidx {}: {}",
+                                   filter.ifidx, e.what());
+            log<level::ERR>(msg.c_str());
         }
     };
     ndmsg msg{};
