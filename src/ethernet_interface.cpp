@@ -341,7 +341,7 @@ bool EthernetInterface::ipv6AcceptRA(bool value)
     if (ipv6AcceptRA() != EthernetInterfaceIntf::ipv6AcceptRA(value))
     {
         writeConfigurationFile();
-        manager.reloadConfigs();
+        manager.reloadConfigsNoRefresh();
     }
     return value;
 }
@@ -351,7 +351,7 @@ bool EthernetInterface::dhcp4(bool value)
     if (dhcp4() != EthernetInterfaceIntf::dhcp4(value))
     {
         writeConfigurationFile();
-        manager.reloadConfigs();
+        manager.reloadConfigsNoRefresh();
     }
     return value;
 }
@@ -361,7 +361,7 @@ bool EthernetInterface::dhcp6(bool value)
     if (dhcp6() != EthernetInterfaceIntf::dhcp6(value))
     {
         writeConfigurationFile();
-        manager.reloadConfigs();
+        manager.reloadConfigsNoRefresh();
     }
     return value;
 }
@@ -383,7 +383,7 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
     if (old4 != new4 || old6 != new6 || oldra != newra)
     {
         writeConfigurationFile();
-        manager.reloadConfigs();
+        manager.reloadConfigsNoRefresh();
     }
     return value;
 }
@@ -564,7 +564,7 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
         EthernetInterfaceIntf::staticNameServers(value);
 
         writeConfigurationFile();
-        manager.reloadConfigs();
+        manager.reloadConfigsNoRefresh();
     }
     catch (const InternalFailure& e)
     {
@@ -717,7 +717,7 @@ ServerList EthernetInterface::staticNTPServers(ServerList value)
         EthernetInterfaceIntf::staticNTPServers(value);
 
         writeConfigurationFile();
-        manager.reloadConfigs();
+        manager.reloadConfigsNoRefresh();
     }
     catch (InternalFailure& e)
     {
