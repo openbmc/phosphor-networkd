@@ -135,26 +135,34 @@ static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
     {
         refreshObjectTimer->restartOnce(refreshTimeout);
     }
-    switch (hdr.nlmsg_type)
+    try
     {
-        case RTM_NEWROUTE:
-            rthandler(m, true, data);
-            break;
-        case RTM_DELROUTE:
-            rthandler(m, false, data);
-            break;
-        case RTM_NEWADDR:
-            addrhandler(m, true, data);
-            break;
-        case RTM_DELADDR:
-            addrhandler(m, false, data);
-            break;
-        case RTM_NEWNEIGH:
-            neighhandler(m, true, data);
-            break;
-        case RTM_DELNEIGH:
-            neighhandler(m, false, data);
-            break;
+        switch (hdr.nlmsg_type)
+        {
+            case RTM_NEWROUTE:
+                rthandler(m, true, data);
+                break;
+            case RTM_DELROUTE:
+                rthandler(m, false, data);
+                break;
+            case RTM_NEWADDR:
+                addrhandler(m, true, data);
+                break;
+            case RTM_DELADDR:
+                addrhandler(m, false, data);
+                break;
+            case RTM_NEWNEIGH:
+                neighhandler(m, true, data);
+                break;
+            case RTM_DELNEIGH:
+                neighhandler(m, false, data);
+                break;
+        }
+    }
+    catch (const std::exception& e)
+    {
+        auto msg = fmt::format("Failed parsing netlink event: {}", e.what());
+        log<level::ERR>(msg.c_str());
     }
 }
 
