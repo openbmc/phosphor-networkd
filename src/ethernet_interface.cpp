@@ -205,20 +205,31 @@ void EthernetInterface::createIPAddressObjects()
     }
 }
 
+void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
+{
+    if ((info.state & NUD_PERMANENT) == 0)
+    {
+        return;
+    }
+    if (!info.mac)
+    {
+        auto msg = fmt::format("Missing neighbor mac for `{}` on {}\n",
+                               info.addr, interfaceName());
+        log<level::ERR>(msg.c_str());
+        return;
+    }
+    staticNeighbors.emplace(
+        info.addr, std::make_unique<Neighbor>(bus, std::string_view(objPath),
+                                              *this, info.addr, *info.mac,
+                                              Neighbor::State::Permanent));
+}
+
 void EthernetInterface::createStaticNeighborObjects()
 {
     staticNeighbors.clear();
     for (const auto& neighbor : system::getNeighbors({.ifidx = ifIdx}))
     {
-        if (!neighbor.mac || (neighbor.state & NUD_PERMANENT) == 0)
-        {
-            continue;
-        }
-        staticNeighbors.emplace(
-            neighbor.addr,
-            std::make_unique<Neighbor>(bus, std::string_view(objPath), *this,
-                                       neighbor.addr, *neighbor.mac,
-                                       Neighbor::State::Permanent));
+        addStaticNeigh(neighbor);
     }
 }
 
@@ -312,7 +323,7 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                                    lladdr, Neighbor::State::Permanent));
 
     writeConfigurationFile();
-    manager.reloadConfigs();
+    manager.reloadConfigsNoRefresh();
 
     return it->second->getObjPath();
 }
