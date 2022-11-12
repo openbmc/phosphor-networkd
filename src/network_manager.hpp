@@ -10,6 +10,7 @@
 #include <function2/function2.hpp>
 #include <memory>
 #include <sdbusplus/bus.hpp>
+#include <sdbusplus/bus/match.hpp>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -42,7 +43,6 @@ using VLANCreateIface = details::ServerObject<
 class Manager : public details::VLANCreateIface
 {
   public:
-    Manager() = delete;
     Manager(const Manager&) = delete;
     Manager& operator=(const Manager&) = delete;
     Manager(Manager&&) = delete;
@@ -62,6 +62,9 @@ class Manager : public details::VLANCreateIface
     /** @brief write the network conf file with the in-memory objects.
      */
     void writeToConfigurationFile();
+
+    /** @brief Adds a single interface to the interface map */
+    void addInterface(InterfaceInfo& info, bool enabled);
 
     /** @brief Fetch the interface and the ipaddress details
      *         from the system and create the ethernet interraces
@@ -170,8 +173,18 @@ class Manager : public details::VLANCreateIface
     /** @brief The routing table */
     route::Table routeTable;
 
+    /** @brief Map of interface info for undiscovered interfaces */
+    std::unordered_map<unsigned, InterfaceInfo> undiscoveredIntfInfo;
+
+    /** @brief Map of enabled interfaces */
+    std::unordered_map<unsigned, bool> systemdNetworkdEnabled;
+    sdbusplus::bus::match_t systemdNetworkdEnabledMatch;
+
     /** @brief List of hooks to execute during the next reload */
     std::vector<fu2::unique_function<void()>> reloadPreHooks;
+
+    /** @brief Handles the recipt of an adminstrative state string */
+    void handleAdminState(std::string_view state, unsigned ifidx);
 };
 
 } // namespace network
