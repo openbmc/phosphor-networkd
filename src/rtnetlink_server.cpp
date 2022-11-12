@@ -123,9 +123,9 @@ static void neighhandler(Manager& m, bool n, std::string_view data)
     {
         it->second->addStaticNeigh(info);
     }
-    else
+    else if (info.addr)
     {
-        it->second->staticNeighbors.erase(info.addr);
+        it->second->staticNeighbors.erase(*info.addr);
     }
 }
 

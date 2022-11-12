@@ -138,7 +138,7 @@ struct NeighborInfo
 {
     unsigned ifidx;
     uint16_t state;
-    InAddrAny addr;
+    std::optional<InAddrAny> addr;
     std::optional<ether_addr> mac;
 
     constexpr bool operator==(const NeighborInfo& rhs) const noexcept

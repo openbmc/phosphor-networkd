@@ -88,7 +88,6 @@ NeighborInfo neighFromRtm(std::string_view msg)
     NeighborInfo ret;
     ret.ifidx = ndm.ndm_ifindex;
     ret.state = ndm.ndm_state;
-    bool set_addr = false;
     while (!msg.empty())
     {
         auto [hdr, data] = netlink::extractRtAttr(msg);
@@ -99,12 +98,7 @@ NeighborInfo neighFromRtm(std::string_view msg)
         else if (hdr.rta_type == NDA_DST)
         {
             ret.addr = addrFromBuf(ndm.ndm_family, data);
-            set_addr = true;
         }
-    }
-    if (!set_addr)
-    {
-        throw std::runtime_error("Missing address");
     }
     return ret;
 }
