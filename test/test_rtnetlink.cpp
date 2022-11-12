@@ -69,8 +69,8 @@ TEST(NeighFromRtm, MissingAddr)
     {
         alignas(NLMSG_ALIGNTO) ndmsg ndm = {};
     } msg;
-    EXPECT_THROW(neighFromRtm(stdplus::raw::asView<char>(msg)),
-                 std::runtime_error);
+
+    EXPECT_EQ((NeighborInfo{}), neighFromRtm(stdplus::raw::asView<char>(msg)));
 }
 
 TEST(NeighFromRtm, NoMac)
