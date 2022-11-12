@@ -18,7 +18,6 @@
 #include <filesystem>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
-#include <sdbusplus/bus/match.hpp>
 #include <stdplus/raw.hpp>
 #include <stdplus/zstring.hpp>
 #include <string>
@@ -76,8 +75,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
                                      const InterfaceInfo& info,
                                      std::string_view objRoot,
                                      const config::Parser& config,
-                                     bool emitSignal,
-                                     std::optional<bool> enabled) :
+                                     bool emitSignal, bool enabled) :
     EthernetInterface(bus, manager, info, makeObjPath(objRoot, *info.name),
                       config, emitSignal, enabled)
 {
@@ -87,8 +85,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
                                      const InterfaceInfo& info,
                                      std::string&& objPath,
                                      const config::Parser& config,
-                                     bool emitSignal,
-                                     std::optional<bool> enabled) :
+                                     bool emitSignal, bool enabled) :
     Ifaces(bus, objPath.c_str(),
            emitSignal ? Ifaces::action::defer_emit
                       : Ifaces::action::emit_no_signals),
@@ -99,7 +96,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
     EthernetInterfaceIntf::dhcp4(dhcpVal.v4);
     EthernetInterfaceIntf::dhcp6(dhcpVal.v6);
     EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRA(config));
-    EthernetInterfaceIntf::nicEnabled(enabled ? *enabled : queryNicEnabled());
+    EthernetInterfaceIntf::nicEnabled(enabled);
     {
         const auto& gws = manager.getRouteTable().getDefaultGateway();
         auto it = gws.find(ifIdx);
@@ -433,91 +430,6 @@ size_t EthernetInterface::mtu(size_t value)
         system::setMTU(ifname, value);
         return value;
     }));
-}
-
-bool EthernetInterface::queryNicEnabled() const
-{
-    constexpr auto svc = "org.freedesktop.network1";
-    constexpr auto intf = "org.freedesktop.network1.Link";
-    constexpr auto prop = "AdministrativeState";
-    char* rpath;
-    sd_bus_path_encode("/org/freedesktop/network1/link",
-                       std::to_string(ifIdx).c_str(), &rpath);
-    std::string path(rpath);
-    free(rpath);
-
-    // Store / Parser for the AdministrativeState return value
-    std::optional<bool> ret;
-    auto cb = [&](std::string_view state) {
-        if (state != "initialized")
-        {
-            ret = state != "unmanaged";
-        }
-    };
-
-    // Build a matcher before making the property call to ensure we
-    // can eventually get the value.
-    sdbusplus::bus::match_t match(
-        bus,
-        fmt::format("type='signal',sender='{}',path='{}',interface='{}',member="
-                    "'PropertiesChanged',arg0='{}',",
-                    svc, path, PROPERTY_INTERFACE, intf)
-            .c_str(),
-        [&](sdbusplus::message_t& m) {
-            std::string intf;
-            std::unordered_map<std::string, std::variant<std::string>> values;
-            try
-            {
-                m.read(intf, values);
-                auto it = values.find(prop);
-                // Ignore properties that aren't AdministrativeState
-                if (it != values.end())
-                {
-                    cb(std::get<std::string>(it->second));
-                }
-            }
-            catch (const std::exception& e)
-            {
-                log<level::ERR>(
-                    fmt::format(
-                        "AdministrativeState match parsing failed on {}: {}",
-                        interfaceName(), e.what())
-                        .c_str(),
-                    entry("INTERFACE=%s", interfaceName().c_str()),
-                    entry("ERROR=%s", e.what()));
-            }
-        });
-
-    // Actively call for the value in case the interface is already configured
-    auto method =
-        bus.new_method_call(svc, path.c_str(), PROPERTY_INTERFACE, METHOD_GET);
-    method.append(intf, prop);
-    try
-    {
-        auto reply = bus.call(method);
-        std::variant<std::string> state;
-        reply.read(state);
-        cb(std::get<std::string>(state));
-    }
-    catch (const std::exception& e)
-    {
-        log<level::ERR>(
-            fmt::format("Failed to get AdministrativeState on {}: {}",
-                        interfaceName(), e.what())
-                .c_str(),
-            entry("INTERFACE=%s", interfaceName().c_str()),
-            entry("ERROR=%s", e.what()));
-    }
-
-    // The interface is not yet configured by systemd-networkd, wait until it
-    // signals us a valid state.
-    while (!ret)
-    {
-        bus.wait();
-        bus.process_discard();
-    }
-
-    return *ret;
 }
 
 bool EthernetInterface::nicEnabled(bool value)

@@ -79,12 +79,12 @@ class EthernetInterface : public Ifaces
      *  @param[in] vlan - The id of the vlan if configured
      *  @param[in] emitSignal - true if the object added signal needs to be
      *                          send.
-     *  @param[in] enabled - Override the lookup of nicEnabled
+     *  @param[in] enabled - Determine if systemd-networkd is managing this link
      */
     EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
                       const InterfaceInfo& info, std::string_view objRoot,
-                      const config::Parser& config, bool emitSignal = true,
-                      std::optional<bool> enabled = std::nullopt);
+                      const config::Parser& config, bool emitSignal,
+                      bool enabled);
 
     /** @brief Network Manager object. */
     Manager& manager;
@@ -265,18 +265,13 @@ class EthernetInterface : public Ifaces
     EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
                       const InterfaceInfo& info, std::string&& objPath,
                       const config::Parser& config, bool emitSignal,
-                      std::optional<bool> enabled);
+                      bool enabled);
 
     /** @brief Determines if the address is manually assigned
      *  @param[in] origin - The origin entry of the IP::Address
      *  @returns true/false value if the address is static
      */
     bool originIsManuallyAssigned(IP::AddressOrigin origin);
-
-    /** @brief Determines if the NIC is enabled in systemd
-     *  @returns true/false value if the NIC is enabled
-     */
-    bool queryNicEnabled() const;
 };
 
 } // namespace network
