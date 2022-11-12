@@ -11,6 +11,7 @@
 #include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
+#include <sdbusplus/message.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 constexpr char SYSTEMD_BUSNAME[] = "org.freedesktop.systemd1";
@@ -33,13 +34,79 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
+static constexpr const char enabledMatch[] =
+    "type='signal',sender='org.freedesktop.network1',path_namespace='/org/"
+    "freedesktop/network1/"
+    "link',interface='org.freedesktop.DBus.Properties',member='"
+    "PropertiesChanged',arg0='org.freedesktop.network1.Link',";
+
 Manager::Manager(sdbusplus::bus_t& bus, const char* objPath,
                  const fs::path& confDir) :
     details::VLANCreateIface(bus, objPath,
                              details::VLANCreateIface::action::defer_emit),
-    bus(bus), objectPath(objPath)
+    bus(bus), objectPath(objPath),
+    systemdNetworkdEnabledMatch(
+        bus, enabledMatch, [&](sdbusplus::message_t& m) {
+            std::string intf;
+            std::unordered_map<std::string, std::variant<std::string>> values;
+            try
+            {
+                m.read(intf, values);
+                auto it = values.find("AdministrativeState");
+                if (it == values.end())
+                {
+                    return;
+                }
+                const std::string_view obj = m.get_path();
+                auto sep = obj.rfind('/');
+                if (sep == obj.npos || sep + 3 > obj.size())
+                {
+                    throw std::invalid_argument("Invalid obj path");
+                }
+                auto ifidx = DecodeInt<unsigned, 10>{}(obj.substr(sep + 3));
+                const auto& state = std::get<std::string>(it->second);
+                handleAdminState(state, ifidx);
+            }
+            catch (const std::exception& e)
+            {
+                log<level::ERR>(
+                    fmt::format("AdministrativeState match parsing failed: {}",
+                                e.what())
+                        .c_str(),
+                    entry("ERROR=%s", e.what()));
+            }
+        })
 {
     setConfDir(confDir);
+    std::vector<
+        std::tuple<int32_t, std::string, sdbusplus::message::object_path>>
+        links;
+    try
+    {
+        auto rsp =
+            bus.new_method_call("org.freedesktop.network1",
+                                "/org/freedesktop/network1",
+                                "org.freedesktop.network1.Manager", "ListLinks")
+                .call();
+        rsp.read(links);
+    }
+    catch (const sdbusplus::exception::SdBusError& e)
+    {
+        // Any failures are systemd-network not being ready
+    }
+    for (const auto& link : links)
+    {
+        unsigned ifidx = std::get<0>(link);
+        auto obj = fmt::format("/org/freedesktop/network1/link/_3{}", ifidx);
+        auto req =
+            bus.new_method_call("org.freedesktop.network1", obj.c_str(),
+                                "org.freedesktop.DBus.Properties", "Get");
+        req.append("org.freedesktop.network1.Link", "AdministrativeState");
+        auto rsp = req.call();
+        std::variant<std::string> val;
+        rsp.read(val);
+        handleAdminState(std::get<std::string>(val), ifidx);
+    }
 }
 
 void Manager::setConfDir(const fs::path& dir)
@@ -57,24 +124,36 @@ void Manager::setConfDir(const fs::path& dir)
     }
 }
 
+void Manager::addInterface(InterfaceInfo& info, bool enabled)
+{
+    config::Parser config(config::pathForIntfConf(confDir, *info.name));
+    auto intf = std::make_unique<EthernetInterface>(
+        bus, *this, info, objectPath, config, true, enabled);
+    intf->createIPAddressObjects();
+    intf->createStaticNeighborObjects();
+    intf->loadNameServers(config);
+    intf->loadNTPServers(config);
+    auto ptr = intf.get();
+    interfaces.emplace(std::move(*info.name), std::move(intf));
+    interfacesByIdx.emplace(info.idx, ptr);
+}
+
 void Manager::createInterfaces()
 {
     // clear all the interfaces first
     interfaces.clear();
     interfacesByIdx.clear();
-    for (auto& interface : system::getInterfaces())
+    for (auto& info : system::getInterfaces())
     {
-        config::Parser config(
-            config::pathForIntfConf(confDir, *interface.name));
-        auto intf = std::make_unique<EthernetInterface>(bus, *this, interface,
-                                                        objectPath, config);
-        intf->createIPAddressObjects();
-        intf->createStaticNeighborObjects();
-        intf->loadNameServers(config);
-        intf->loadNTPServers(config);
-        auto ptr = intf.get();
-        interfaces.emplace(std::move(*interface.name), std::move(intf));
-        interfacesByIdx.emplace(interface.idx, ptr);
+        auto it = systemdNetworkdEnabled.find(info.idx);
+        if (it != systemdNetworkdEnabled.end())
+        {
+            addInterface(info, it->second);
+        }
+        else
+        {
+            undiscoveredIntfInfo.insert_or_assign(info.idx, std::move(info));
+        }
     }
 }
 
@@ -220,6 +299,31 @@ void Manager::doReloadConfigs()
     if (refreshObjectTimer->isEnabled())
     {
         refreshObjectTimer->setRemaining(refreshTimeout);
+    }
+}
+
+void Manager::handleAdminState(std::string_view state, unsigned ifidx)
+{
+    if (state == "initialized" || state == "linger")
+    {
+        systemdNetworkdEnabled.erase(ifidx);
+    }
+    else
+    {
+        bool managed = state != "unmanaged";
+        systemdNetworkdEnabled.insert_or_assign(ifidx, managed);
+        if (auto it = undiscoveredIntfInfo.find(ifidx);
+            it != undiscoveredIntfInfo.end())
+        {
+            auto info = std::move(it->second);
+            undiscoveredIntfInfo.erase(it);
+            addInterface(info, managed);
+        }
+        else if (auto it = interfacesByIdx.find(ifidx);
+                 it != interfacesByIdx.end())
+        {
+            it->second->EthernetInterfaceIntf::nicEnabled(managed);
+        }
     }
 }
 
