@@ -54,10 +54,6 @@ namespace config
 {
 class Parser;
 }
-namespace system
-{
-struct InterfaceInfo;
-};
 
 /** @class EthernetInterface
  *  @brief OpenBMC Ethernet Interface implementation.
@@ -86,9 +82,8 @@ class EthernetInterface : public Ifaces
      *  @param[in] enabled - Override the lookup of nicEnabled
      */
     EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
-                      const system::InterfaceInfo& info,
-                      std::string_view objRoot, const config::Parser& config,
-                      bool emitSignal = true,
+                      const InterfaceInfo& info, std::string_view objRoot,
+                      const config::Parser& config, bool emitSignal = true,
                       std::optional<bool> enabled = std::nullopt);
 
     /** @brief Network Manager object. */
@@ -104,7 +99,7 @@ class EthernetInterface : public Ifaces
     void addStaticNeigh(const NeighborInfo& info);
 
     /** @brief Updates the interface information based on new InterfaceInfo */
-    void updateInfo(const system::InterfaceInfo& info);
+    void updateInfo(const InterfaceInfo& info);
 
     /** @brief Function used to load the ntpservers
      */
@@ -255,8 +250,8 @@ class EthernetInterface : public Ifaces
     struct VlanProperties : VlanIfaces
     {
         VlanProperties(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-                       const system::InterfaceInfo& info,
-                       EthernetInterface& eth, bool emitSignal = true);
+                       const InterfaceInfo& info, EthernetInterface& eth,
+                       bool emitSignal = true);
         void delete_() override;
         unsigned parentIdx;
         EthernetInterface& eth;
@@ -268,7 +263,7 @@ class EthernetInterface : public Ifaces
 
   private:
     EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
-                      const system::InterfaceInfo& info, std::string&& objPath,
+                      const InterfaceInfo& info, std::string&& objPath,
                       const config::Parser& config, bool emitSignal,
                       std::optional<bool> enabled);
 

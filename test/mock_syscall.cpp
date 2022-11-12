@@ -27,7 +27,7 @@
 
 std::map<int, std::queue<std::string>> mock_rtnetlinks;
 
-using phosphor::network::system::InterfaceInfo;
+using phosphor::network::InterfaceInfo;
 
 std::map<std::string, InterfaceInfo> mock_if;
 
