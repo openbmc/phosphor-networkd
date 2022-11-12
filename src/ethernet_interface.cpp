@@ -73,7 +73,7 @@ static std::string makeObjPath(std::string_view root, std::string_view intf)
 }
 
 EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
-                                     const system::InterfaceInfo& info,
+                                     const InterfaceInfo& info,
                                      std::string_view objRoot,
                                      const config::Parser& config,
                                      bool emitSignal,
@@ -84,7 +84,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
 }
 
 EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
-                                     const system::InterfaceInfo& info,
+                                     const InterfaceInfo& info,
                                      std::string&& objPath,
                                      const config::Parser& config,
                                      bool emitSignal,
@@ -147,7 +147,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
     }
 }
 
-void EthernetInterface::updateInfo(const system::InterfaceInfo& info)
+void EthernetInterface::updateInfo(const InterfaceInfo& info)
 {
     EthernetInterfaceIntf::linkUp(info.flags & IFF_RUNNING);
     if (info.mac)
@@ -677,7 +677,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     {
         mac.emplace(ToAddr<ether_addr>{}(macStr));
     }
-    auto info = system::InterfaceInfo{
+    auto info = InterfaceInfo{
         .idx = 0, // TODO: Query the correct value after creation
         .flags = 0,
         .name = intfName,
@@ -994,8 +994,7 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
 
 EthernetInterface::VlanProperties::VlanProperties(
     sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-    const system::InterfaceInfo& info, EthernetInterface& eth,
-    bool emitSignal) :
+    const InterfaceInfo& info, EthernetInterface& eth, bool emitSignal) :
     VlanIfaces(bus, objPath.c_str(),
                emitSignal ? VlanIfaces::action::defer_emit
                           : VlanIfaces::action::emit_no_signals),

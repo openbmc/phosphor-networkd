@@ -16,6 +16,22 @@
 #include <unordered_set>
 #include <variant>
 
+constexpr bool operator==(ether_addr lhs, ether_addr rhs) noexcept
+{
+    return std::equal(lhs.ether_addr_octet, lhs.ether_addr_octet + 6,
+                      rhs.ether_addr_octet);
+}
+
+constexpr bool operator==(in_addr lhs, in_addr rhs) noexcept
+{
+    return lhs.s_addr == rhs.s_addr;
+}
+
+constexpr bool operator==(in6_addr lhs, in6_addr rhs) noexcept
+{
+    return std::equal(lhs.s6_addr32, lhs.s6_addr32 + 4, rhs.s6_addr32);
+}
+
 namespace phosphor
 {
 namespace network
@@ -75,6 +91,29 @@ class IfAddr
 
 using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
 
+/** @class InterfaceInfo
+ *  @brief Information about interfaces from the kernel
+ */
+struct InterfaceInfo
+{
+    unsigned idx;
+    unsigned flags;
+    std::optional<std::string> name = std::nullopt;
+    std::optional<ether_addr> mac = std::nullopt;
+    std::optional<unsigned> mtu = std::nullopt;
+    std::optional<unsigned> parent_idx = std::nullopt;
+    std::optional<std::string> kind = std::nullopt;
+    std::optional<uint16_t> vlan_id = std::nullopt;
+
+    constexpr bool operator==(const InterfaceInfo& rhs) const noexcept
+    {
+        return idx == rhs.idx && flags == rhs.flags && name == rhs.name &&
+               mac == rhs.mac && mtu == rhs.mtu &&
+               parent_idx == rhs.parent_idx && kind == rhs.kind &&
+               vlan_id == rhs.vlan_id;
+    }
+};
+
 /** @class AddressInfo
  *  @brief Information about a addresses from the kernel
  */
@@ -84,6 +123,12 @@ struct AddressInfo
     IfAddr ifaddr;
     uint8_t scope;
     uint32_t flags;
+
+    constexpr bool operator==(const AddressInfo& rhs) const noexcept
+    {
+        return ifidx == rhs.ifidx && ifaddr == rhs.ifaddr &&
+               scope == rhs.scope && flags == rhs.flags;
+    }
 };
 
 /** @class NeighborInfo
@@ -92,9 +137,15 @@ struct AddressInfo
 struct NeighborInfo
 {
     unsigned ifidx;
+    uint16_t state;
     InAddrAny addr;
     std::optional<ether_addr> mac;
-    uint16_t state;
+
+    constexpr bool operator==(const NeighborInfo& rhs) const noexcept
+    {
+        return ifidx == rhs.ifidx && state == rhs.state && addr == rhs.addr &&
+               mac == rhs.mac;
+    }
 };
 
 struct string_hash : public std::hash<std::string_view>
@@ -769,22 +820,6 @@ string to_string(in6_addr value);
 string to_string(phosphor::network::InAddrAny value);
 string to_string(phosphor::network::IfAddr value);
 } // namespace std
-
-constexpr bool operator==(ether_addr lhs, ether_addr rhs) noexcept
-{
-    return std::equal(lhs.ether_addr_octet, lhs.ether_addr_octet + 6,
-                      rhs.ether_addr_octet);
-}
-
-constexpr bool operator==(in_addr lhs, in_addr rhs) noexcept
-{
-    return lhs.s_addr == rhs.s_addr;
-}
-
-constexpr bool operator==(in6_addr lhs, in6_addr rhs) noexcept
-{
-    return std::equal(lhs.s6_addr32, lhs.s6_addr32 + 4, rhs.s6_addr32);
-}
 
 template <typename T>
 constexpr std::enable_if_t<!std::is_same_v<phosphor::network::InAddrAny, T>,
