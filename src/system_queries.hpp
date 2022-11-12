@@ -30,29 +30,6 @@ void setMTU(std::string_view ifname, unsigned mtu);
 
 void setNICUp(std::string_view ifname, bool up);
 
-/** @class InterfaceInfo
- *  @brief Information about interfaces from the kernel
- */
-struct InterfaceInfo
-{
-    unsigned idx;
-    unsigned flags;
-    std::optional<std::string> name = std::nullopt;
-    std::optional<ether_addr> mac = std::nullopt;
-    std::optional<unsigned> mtu = std::nullopt;
-    std::optional<unsigned> parent_idx = std::nullopt;
-    std::optional<std::string> kind = std::nullopt;
-    std::optional<uint16_t> vlan_id = std::nullopt;
-
-    constexpr bool operator==(const InterfaceInfo& rhs) const noexcept
-    {
-        return idx == rhs.idx && flags == rhs.flags && name == rhs.name &&
-               mac == rhs.mac && mtu == rhs.mtu &&
-               parent_idx == rhs.parent_idx && kind == rhs.kind &&
-               vlan_id == rhs.vlan_id;
-    }
-};
-
 struct AddressFilter
 {
     unsigned ifidx = 0;
