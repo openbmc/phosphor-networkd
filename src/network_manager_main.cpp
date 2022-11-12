@@ -317,8 +317,8 @@ int main(int /*argc*/, char** /*argv*/)
     }
     catch (const std::exception& e)
     {
-        auto msg = fmt::format("FAILED: {}", e.what());
-        log<level::ERR>(msg.c_str(), entry("ERROR", e.what()));
+        fmt::print(stderr, "FAILED: {}", e.what());
+        fflush(stderr);
         return 1;
     }
 }
