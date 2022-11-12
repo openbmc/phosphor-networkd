@@ -298,7 +298,7 @@ class PerformRequest : public testing::Test
         system::mock_clear();
         for (unsigned i = 0; i < ifs; ++i)
         {
-            system::mock_addIF(system::InterfaceInfo{
+            system::mock_addIF(InterfaceInfo{
                 .idx = i + 1u, .flags = 0, .name = fmt::format("eth{}", i)});
         }
 
