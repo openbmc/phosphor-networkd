@@ -219,17 +219,16 @@ void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
     {
         return;
     }
-    if (!info.mac)
+    if (!info.mac || !info.addr)
     {
-        auto msg = fmt::format("Missing neighbor mac for `{}` on {}\n",
-                               info.addr, interfaceName());
+        auto msg = fmt::format("Missing neighbor mac on {}\n", interfaceName());
         log<level::ERR>(msg.c_str());
         return;
     }
     staticNeighbors.emplace(
-        info.addr, std::make_unique<Neighbor>(bus, std::string_view(objPath),
-                                              *this, info.addr, *info.mac,
-                                              Neighbor::State::Permanent));
+        *info.addr, std::make_unique<Neighbor>(bus, std::string_view(objPath),
+                                               *this, *info.addr, *info.mac,
+                                               Neighbor::State::Permanent));
 }
 
 void EthernetInterface::createStaticNeighborObjects()
