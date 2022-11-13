@@ -66,6 +66,18 @@ class Manager : public details::VLANCreateIface
     /** @brief Adds a single interface to the interface map */
     void addInterface(InterfaceInfo& info, bool enabled);
 
+    /** @brief Add / remove an address to the interface or queue */
+    void addAddress(const AddressInfo& info);
+    void removeAddress(const AddressInfo& info);
+
+    /** @brief Add / remove a neighbor to the interface or queue */
+    void addNeighbor(const NeighborInfo& info);
+    void removeNeighbor(const NeighborInfo& info);
+
+    /** @brief Add / remove default gateway for interface */
+    void addDefGw(unsigned ifidx, InAddrAny addr);
+    void removeDefGw(unsigned ifidx, InAddrAny addr);
+
     /** @brief Fetch the interface and the ipaddress details
      *         from the system and create the ethernet interraces
      *         dbus object.
