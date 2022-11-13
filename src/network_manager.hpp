@@ -64,7 +64,8 @@ class Manager : public details::VLANCreateIface
     void writeToConfigurationFile();
 
     /** @brief Adds a single interface to the interface map */
-    void addInterface(InterfaceInfo& info, bool enabled);
+    void addInterface(const InterfaceInfo& info);
+    void removeInterface(const InterfaceInfo& info);
 
     /** @brief Add / remove an address to the interface or queue */
     void addAddress(const AddressInfo& info);
@@ -197,6 +198,9 @@ class Manager : public details::VLANCreateIface
 
     /** @brief Handles the recipt of an adminstrative state string */
     void handleAdminState(std::string_view state, unsigned ifidx);
+
+    /** @brief Creates the interface in the maps */
+    void createInterface(const InterfaceInfo& info, bool enabled);
 };
 
 } // namespace network
