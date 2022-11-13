@@ -124,8 +124,9 @@ void Manager::setConfDir(const fs::path& dir)
     }
 }
 
-void Manager::addInterface(InterfaceInfo& info, bool enabled)
+void Manager::createInterface(const InterfaceInfo& info, bool enabled)
 {
+    removeInterface(info);
     config::Parser config(config::pathForIntfConf(confDir, *info.name));
     auto intf = std::make_unique<EthernetInterface>(
         bus, *this, info, objectPath, config, true, enabled);
@@ -134,8 +135,61 @@ void Manager::addInterface(InterfaceInfo& info, bool enabled)
     intf->loadNameServers(config);
     intf->loadNTPServers(config);
     auto ptr = intf.get();
-    interfaces.emplace(std::move(*info.name), std::move(intf));
+    interfaces.emplace(*info.name, std::move(intf));
     interfacesByIdx.emplace(info.idx, ptr);
+}
+
+void Manager::addInterface(const InterfaceInfo& info)
+{
+    auto it = systemdNetworkdEnabled.find(info.idx);
+    if (it != systemdNetworkdEnabled.end())
+    {
+        createInterface(info, it->second);
+    }
+    else
+    {
+        undiscoveredIntfInfo.insert_or_assign(info.idx, std::move(info));
+    }
+}
+
+void Manager::removeInterface(const InterfaceInfo& info)
+{
+    auto iit = interfacesByIdx.find(info.idx);
+    auto nit = interfaces.end();
+    if (info.name)
+    {
+        nit = interfaces.find(*info.name);
+        if (nit != interfaces.end() && iit != interfacesByIdx.end() &&
+            nit->second.get() != iit->second)
+        {
+            fmt::print(stderr, "Removed interface desync detected\n");
+            fflush(stderr);
+            std::abort();
+        }
+    }
+    else if (iit != interfacesByIdx.end())
+    {
+        for (nit = interfaces.begin(); nit != interfaces.end(); ++nit)
+        {
+            if (nit->second.get() == iit->second)
+            {
+                break;
+            }
+        }
+    }
+
+    if (iit != interfacesByIdx.end())
+    {
+        interfacesByIdx.erase(iit);
+    }
+    else
+    {
+        undiscoveredIntfInfo.erase(info.idx);
+    }
+    if (nit != interfaces.end())
+    {
+        interfaces.erase(nit);
+    }
 }
 
 inline void getIntfOrLog(const decltype(Manager::interfacesByIdx)& intfs,
@@ -238,15 +292,7 @@ void Manager::createInterfaces()
     interfacesByIdx.clear();
     for (auto& info : system::getInterfaces())
     {
-        auto it = systemdNetworkdEnabled.find(info.idx);
-        if (it != systemdNetworkdEnabled.end())
-        {
-            addInterface(info, it->second);
-        }
-        else
-        {
-            undiscoveredIntfInfo.insert_or_assign(info.idx, std::move(info));
-        }
+        addInterface(info);
     }
 }
 
@@ -410,7 +456,7 @@ void Manager::handleAdminState(std::string_view state, unsigned ifidx)
         {
             auto info = std::move(it->second);
             undiscoveredIntfInfo.erase(it);
-            addInterface(info, managed);
+            createInterface(info, managed);
         }
         else if (auto it = interfacesByIdx.find(ifidx);
                  it != interfacesByIdx.end())
