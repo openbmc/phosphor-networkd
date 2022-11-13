@@ -141,6 +141,99 @@ void Manager::addInterface(InterfaceInfo& info, bool enabled)
     interfacesByIdx.emplace(info.idx, ptr);
 }
 
+inline void getIntfOrLog(const decltype(Manager::interfacesByIdx)& intfs,
+                         unsigned idx, auto&& cb)
+{
+    auto it = intfs.find(idx);
+    if (it == intfs.end())
+    {
+        auto msg = fmt::format("Interface `{}` not found", idx);
+        log<level::ERR>(msg.c_str(), entry("IFIDX=%u", idx));
+        return;
+    }
+    cb(*it->second);
+}
+
+void Manager::addAddress(const AddressInfo& info)
+{
+    getIntfOrLog(interfacesByIdx, info.ifidx,
+                 [&](auto& intf) { intf.addAddr(info); });
+}
+
+void Manager::removeAddress(const AddressInfo& info)
+{
+    getIntfOrLog(interfacesByIdx, info.ifidx,
+                 [&](auto& intf) { intf.addrs.erase(info.ifaddr); });
+}
+
+void Manager::addNeighbor(const NeighborInfo& info)
+{
+    getIntfOrLog(interfacesByIdx, info.ifidx,
+                 [&](auto& intf) { intf.addStaticNeigh(info); });
+}
+
+void Manager::removeNeighbor(const NeighborInfo& info)
+{
+    if (info.addr)
+    {
+        getIntfOrLog(interfacesByIdx, info.ifidx, [&](auto& intf) {
+            intf.staticNeighbors.erase(*info.addr);
+        });
+    }
+}
+
+void Manager::addDefGw(unsigned ifidx, InAddrAny addr)
+{
+    getIntfOrLog(interfacesByIdx, ifidx, [&](auto& intf) {
+        std::visit(
+            [&](auto addr) {
+                if constexpr (std::is_same_v<in_addr, decltype(addr)>)
+                {
+                    intf.EthernetInterfaceIntf::defaultGateway(
+                        std::to_string(addr));
+                }
+                else if constexpr (std::is_same_v<in6_addr, decltype(addr)>)
+                {
+                    intf.EthernetInterfaceIntf::defaultGateway6(
+                        std::to_string(addr));
+                }
+                else
+                {
+                    static_assert(!std::is_same_v<void, decltype(addr)>);
+                }
+            },
+            addr);
+    });
+}
+
+void Manager::removeDefGw(unsigned ifidx, InAddrAny addr)
+{
+    getIntfOrLog(interfacesByIdx, ifidx, [&](auto& intf) {
+        std::visit(
+            [&](auto addr) {
+                if constexpr (std::is_same_v<in_addr, decltype(addr)>)
+                {
+                    if (intf.defaultGateway() == std::to_string(addr))
+                    {
+                        intf.EthernetInterfaceIntf::defaultGateway("");
+                    }
+                }
+                else if constexpr (std::is_same_v<in6_addr, decltype(addr)>)
+                {
+                    if (intf.defaultGateway6() == std::to_string(addr))
+                    {
+                        intf.EthernetInterfaceIntf::defaultGateway6("");
+                    }
+                }
+                else
+                {
+                    static_assert(!std::is_same_v<void, decltype(addr)>);
+                }
+            },
+            addr);
+    });
+}
+
 void Manager::createInterfaces()
 {
     // clear all the interfaces first
