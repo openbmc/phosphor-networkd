@@ -40,93 +40,14 @@ static bool shouldRefresh(const struct nlmsghdr& hdr, std::string_view) noexcept
     return false;
 }
 
-static void rthandler(Manager& m, bool n, std::string_view data)
+inline void rthandler(std::string_view data, auto&& cb)
 {
-    auto ret = netlink::gatewayFromRtm(data);
+    auto ret = gatewayFromRtm(data);
     if (!ret)
     {
         return;
     }
-    auto ifIdx = std::get<unsigned>(*ret);
-    auto it = m.interfacesByIdx.find(ifIdx);
-    if (it == m.interfacesByIdx.end())
-    {
-        auto msg = fmt::format("Interface `{}` not found for route", ifIdx);
-        log<level::ERR>(msg.c_str(), entry("IFIDX=%u", ifIdx));
-        return;
-    }
-    std::visit(
-        [&](auto addr) {
-            if constexpr (std::is_same_v<in_addr, decltype(addr)>)
-            {
-                if (n)
-                {
-                    it->second->EthernetInterfaceIntf::defaultGateway(
-                        std::to_string(addr));
-                }
-                else if (it->second->defaultGateway() == std::to_string(addr))
-                {
-                    it->second->EthernetInterfaceIntf::defaultGateway("");
-                }
-            }
-            else if constexpr (std::is_same_v<in6_addr, decltype(addr)>)
-            {
-                if (n)
-                {
-                    it->second->EthernetInterfaceIntf::defaultGateway6(
-                        std::to_string(addr));
-                }
-                else if (it->second->defaultGateway6() == std::to_string(addr))
-                {
-                    it->second->EthernetInterfaceIntf::defaultGateway6("");
-                }
-            }
-            else
-            {
-                static_assert(!std::is_same_v<void, decltype(addr)>);
-            }
-        },
-        std::get<InAddrAny>(*ret));
-}
-
-static void addrhandler(Manager& m, bool n, std::string_view data)
-{
-    auto info = netlink::addrFromRtm(data);
-    auto it = m.interfacesByIdx.find(info.ifidx);
-    if (it == m.interfacesByIdx.end())
-    {
-        auto msg = fmt::format("Interface `{}` not found for addr", info.ifidx);
-        log<level::ERR>(msg.c_str(), entry("IFIDX=%u", info.ifidx));
-        return;
-    }
-    if (n)
-    {
-        it->second->addAddr(info);
-    }
-    else
-    {
-        it->second->addrs.erase(info.ifaddr);
-    }
-}
-
-static void neighhandler(Manager& m, bool n, std::string_view data)
-{
-    auto info = netlink::neighFromRtm(data);
-    auto it = m.interfacesByIdx.find(info.ifidx);
-    if (it == m.interfacesByIdx.end())
-    {
-        auto msg = fmt::format("Interface `{}` not found for addr", info.ifidx);
-        log<level::ERR>(msg.c_str(), entry("IFIDX=%u", info.ifidx));
-        return;
-    }
-    if (n)
-    {
-        it->second->addStaticNeigh(info);
-    }
-    else if (info.addr)
-    {
-        it->second->staticNeighbors.erase(*info.addr);
-    }
+    cb(std::get<unsigned>(*ret), std::get<InAddrAny>(*ret));
 }
 
 static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
@@ -140,29 +61,33 @@ static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
         switch (hdr.nlmsg_type)
         {
             case RTM_NEWROUTE:
-                rthandler(m, true, data);
+                rthandler(data, [&](auto ifidx, auto addr) {
+                    m.addDefGw(ifidx, addr);
+                });
                 break;
             case RTM_DELROUTE:
-                rthandler(m, false, data);
+                rthandler(data, [&](auto ifidx, auto addr) {
+                    m.removeDefGw(ifidx, addr);
+                });
                 break;
             case RTM_NEWADDR:
-                addrhandler(m, true, data);
+                m.addAddress(addrFromRtm(data));
                 break;
             case RTM_DELADDR:
-                addrhandler(m, false, data);
+                m.removeAddress(addrFromRtm(data));
                 break;
             case RTM_NEWNEIGH:
-                neighhandler(m, true, data);
+                m.addNeighbor(neighFromRtm(data));
                 break;
             case RTM_DELNEIGH:
-                neighhandler(m, false, data);
+                m.removeNeighbor(neighFromRtm(data));
                 break;
         }
     }
     catch (const std::exception& e)
     {
-        auto msg = fmt::format("Failed parsing netlink event: {}", e.what());
-        log<level::ERR>(msg.c_str());
+        auto msg = fmt::format("Failed handling netlink event: {}", e.what());
+        log<level::ERR>(msg.c_str(), entry("ERROR=%s", e.what()));
     }
 }
 
