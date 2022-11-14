@@ -9,7 +9,6 @@
 
 #include <fmt/compile.h>
 #include <fmt/format.h>
-#include <linux/if_addr.h>
 #include <linux/neighbour.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
@@ -172,10 +171,6 @@ bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
 
 void EthernetInterface::addAddr(const AddressInfo& info)
 {
-    if (info.flags & IFA_F_DEPRECATED)
-    {
-        return;
-    }
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
     if (dhcpIsEnabled(info.ifaddr.getAddr()))
     {
@@ -206,7 +201,7 @@ void EthernetInterface::createIPAddressObjects()
     addrs.clear();
     for (const auto& addr : system::getAddresses({.ifidx = ifIdx}))
     {
-        addAddr(addr);
+        manager.addAddress(addr);
     }
 }
 
