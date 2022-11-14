@@ -9,6 +9,7 @@
 #include "util.hpp"
 
 #include <linux/if_addr.h>
+#include <linux/neighbour.h>
 #include <net/if.h>
 
 #include <filesystem>
@@ -266,17 +267,40 @@ void Manager::removeAddress(const AddressInfo& info)
 
 void Manager::addNeighbor(const NeighborInfo& info)
 {
-    getIntfOrLog(interfacesByIdx, info.ifidx,
-                 [&](auto& intf) { intf.addStaticNeigh(info); });
+    if (!(info.state & NUD_PERMANENT) || !info.addr)
+    {
+        return;
+    }
+    if (auto it = interfacesByIdx.find(info.ifidx); it != interfacesByIdx.end())
+    {
+        it->second->addStaticNeigh(info);
+    }
+    else if (auto it = undiscoveredIntfInfo.find(info.ifidx);
+             it != undiscoveredIntfInfo.end())
+    {
+        it->second.staticNeighs.insert_or_assign(*info.addr, info);
+    }
+    else
+    {
+        throw std::runtime_error(
+            fmt::format("Interface `{}` not found for neigh", info.ifidx));
+    }
 }
 
 void Manager::removeNeighbor(const NeighborInfo& info)
 {
-    if (info.addr)
+    if (!info.addr)
     {
-        getIntfOrLog(interfacesByIdx, info.ifidx, [&](auto& intf) {
-            intf.staticNeighbors.erase(*info.addr);
-        });
+        return;
+    }
+    if (auto it = interfacesByIdx.find(info.ifidx); it != interfacesByIdx.end())
+    {
+        it->second->staticNeighbors.erase(*info.addr);
+    }
+    else if (auto it = undiscoveredIntfInfo.find(info.ifidx);
+             it != undiscoveredIntfInfo.end())
+    {
+        it->second.staticNeighs.erase(*info.addr);
     }
 }
 
