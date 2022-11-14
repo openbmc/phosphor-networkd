@@ -187,7 +187,15 @@ class Manager : public details::VLANCreateIface
     route::Table routeTable;
 
     /** @brief Map of interface info for undiscovered interfaces */
-    std::unordered_map<unsigned, InterfaceInfo> undiscoveredIntfInfo;
+    struct UndiscoveredInfo
+    {
+        InterfaceInfo intf;
+        std::optional<in_addr> defgw4 = std::nullopt;
+        std::optional<in6_addr> defgw6 = std::nullopt;
+        std::unordered_map<IfAddr, AddressInfo> addrs = {};
+        std::unordered_map<InAddrAny, NeighborInfo> staticNeighs = {};
+    };
+    std::unordered_map<unsigned, UndiscoveredInfo> undiscoveredIntfInfo;
 
     /** @brief Map of enabled interfaces */
     std::unordered_map<unsigned, bool> systemdNetworkdEnabled;
@@ -200,7 +208,7 @@ class Manager : public details::VLANCreateIface
     void handleAdminState(std::string_view state, unsigned ifidx);
 
     /** @brief Creates the interface in the maps */
-    void createInterface(const InterfaceInfo& info, bool enabled);
+    void createInterface(const UndiscoveredInfo& info, bool enabled);
 };
 
 } // namespace network
