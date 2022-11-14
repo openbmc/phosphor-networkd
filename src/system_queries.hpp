@@ -43,7 +43,6 @@ struct NeighborFilter
 namespace detail
 {
 InterfaceInfo parseInterface(const nlmsghdr& hdr, std::string_view msg);
-bool validateNewInterface(const InterfaceInfo& info);
 bool validateNewAddr(const AddressInfo& info,
                      const AddressFilter& filter) noexcept;
 bool validateNewNeigh(const NeighborInfo& info,
