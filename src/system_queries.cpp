@@ -2,7 +2,6 @@
 
 #include "netlink.hpp"
 #include "rtnetlink.hpp"
-#include "util.hpp"
 
 #include <fmt/format.h>
 #include <linux/ethtool.h>
@@ -207,24 +206,6 @@ InterfaceInfo detail::parseInterface(const nlmsghdr& hdr, std::string_view msg)
     return ret;
 }
 
-bool detail::validateNewInterface(const InterfaceInfo& info)
-{
-    if (info.flags & IFF_LOOPBACK)
-    {
-        return false;
-    }
-    if (!info.name)
-    {
-        throw std::invalid_argument("Interface Dump missing name");
-    }
-    const auto& ignored = internal::getIgnoredInterfaces();
-    if (ignored.find(*info.name) != ignored.end())
-    {
-        return false;
-    }
-    return true;
-}
-
 bool detail::validateNewAddr(const AddressInfo& info,
                              const AddressFilter& filter) noexcept
 {
@@ -251,11 +232,7 @@ std::vector<InterfaceInfo> getInterfaces()
     auto cb = [&](const nlmsghdr& hdr, std::string_view msg) {
         try
         {
-            auto info = detail::parseInterface(hdr, msg);
-            if (detail::validateNewInterface(info))
-            {
-                ret.emplace_back(std::move(info));
-            }
+            ret.emplace_back(detail::parseInterface(hdr, msg));
         }
         catch (const std::exception& e)
         {
