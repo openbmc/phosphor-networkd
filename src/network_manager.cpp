@@ -127,19 +127,19 @@ void Manager::setConfDir(const fs::path& dir)
     }
 }
 
-void Manager::createInterface(const InterfaceInfo& info, bool enabled)
+void Manager::createInterface(const UndiscoveredInfo& info, bool enabled)
 {
-    removeInterface(info);
-    config::Parser config(config::pathForIntfConf(confDir, *info.name));
+    removeInterface(info.intf);
+    config::Parser config(config::pathForIntfConf(confDir, *info.intf.name));
     auto intf = std::make_unique<EthernetInterface>(
-        bus, *this, info, objectPath, config, true, enabled);
+        bus, *this, info.intf, objectPath, config, true, enabled);
     intf->createIPAddressObjects();
     intf->createStaticNeighborObjects();
     intf->loadNameServers(config);
     intf->loadNTPServers(config);
     auto ptr = intf.get();
-    interfaces.emplace(*info.name, std::move(intf));
-    interfacesByIdx.emplace(info.idx, ptr);
+    interfaces.insert_or_assign(*info.intf.name, std::move(intf));
+    interfacesByIdx.insert_or_assign(info.intf.idx, ptr);
 }
 
 void Manager::addInterface(const InterfaceInfo& info)
@@ -147,11 +147,12 @@ void Manager::addInterface(const InterfaceInfo& info)
     auto it = systemdNetworkdEnabled.find(info.idx);
     if (it != systemdNetworkdEnabled.end())
     {
-        createInterface(info, it->second);
+        createInterface({info}, it->second);
     }
     else
     {
-        undiscoveredIntfInfo.insert_or_assign(info.idx, std::move(info));
+        undiscoveredIntfInfo.insert_or_assign(
+            info.idx, UndiscoveredInfo{std::move(info)});
     }
 }
 
