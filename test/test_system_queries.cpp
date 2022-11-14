@@ -82,35 +82,6 @@ TEST(ParseInterface, AllAttrs)
     EXPECT_EQ(info, expected);
 }
 
-TEST(ValidateNewInterface, Loopback)
-{
-    InterfaceInfo info;
-    info.flags = IFF_LOOPBACK | IFF_RUNNING;
-    EXPECT_FALSE(validateNewInterface(info));
-}
-
-TEST(ValidateNewInterface, NoName)
-{
-    EXPECT_THROW(validateNewInterface(InterfaceInfo{}), std::invalid_argument);
-}
-
-TEST(ValidateNewInterface, IgnoredInterface)
-{
-    InterfaceInfo info;
-    setenv("IGNORED_INTERFACES", "ign", true);
-    info.name = "ign";
-    info.flags = IFF_RUNNING;
-    EXPECT_FALSE(validateNewInterface(info));
-}
-
-TEST(ValidateNewInterface, Valid)
-{
-    InterfaceInfo info;
-    info.name = "eth0";
-    info.flags = 0;
-    EXPECT_TRUE(validateNewInterface(info));
-}
-
 TEST(ValidateNewAddr, Filtering)
 {
     AddressInfo info = {};
