@@ -3,11 +3,9 @@
 #include "netlink.hpp"
 #include "network_manager.hpp"
 #include "rtnetlink.hpp"
-#include "types.hpp"
 
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
-#include <netinet/in.h>
 
 #include <memory>
 #include <phosphor-logging/log.hpp>
@@ -29,17 +27,6 @@ using phosphor::logging::entry;
 using phosphor::logging::level;
 using phosphor::logging::log;
 
-static bool shouldRefresh(const struct nlmsghdr& hdr, std::string_view) noexcept
-{
-    switch (hdr.nlmsg_type)
-    {
-        case RTM_NEWLINK:
-        case RTM_DELLINK:
-            return true;
-    }
-    return false;
-}
-
 inline void rthandler(std::string_view data, auto&& cb)
 {
     auto ret = gatewayFromRtm(data);
@@ -52,14 +39,16 @@ inline void rthandler(std::string_view data, auto&& cb)
 
 static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
 {
-    if (shouldRefresh(hdr, data) && !refreshObjectTimer->isEnabled())
-    {
-        refreshObjectTimer->restartOnce(refreshTimeout);
-    }
     try
     {
         switch (hdr.nlmsg_type)
         {
+            case RTM_NEWLINK:
+                m.addInterface(intfFromRtm(data));
+                break;
+            case RTM_DELLINK:
+                m.removeInterface(intfFromRtm(data));
+                break;
             case RTM_NEWROUTE:
                 rthandler(data, [&](auto ifidx, auto addr) {
                     m.addDefGw(ifidx, addr);
