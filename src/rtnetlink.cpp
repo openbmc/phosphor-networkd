@@ -8,6 +8,83 @@
 namespace phosphor::network::netlink
 {
 
+using std::literals::string_view_literals::operator""sv;
+
+static void parseVlanInfo(InterfaceInfo& info, std::string_view msg)
+{
+    if (msg.data() == nullptr)
+    {
+        throw std::runtime_error("Missing VLAN data");
+    }
+    while (!msg.empty())
+    {
+        auto [hdr, data] = netlink::extractRtAttr(msg);
+        switch (hdr.rta_type)
+        {
+            case IFLA_VLAN_ID:
+                info.vlan_id.emplace(stdplus::raw::copyFrom<uint16_t>(data));
+                break;
+        }
+    }
+}
+
+static void parseLinkInfo(InterfaceInfo& info, std::string_view msg)
+{
+    std::string_view submsg;
+    while (!msg.empty())
+    {
+        auto [hdr, data] = netlink::extractRtAttr(msg);
+        switch (hdr.rta_type)
+        {
+            case IFLA_INFO_KIND:
+                data.remove_suffix(1);
+                info.kind.emplace(data);
+                break;
+            case IFLA_INFO_DATA:
+                submsg = data;
+                break;
+        }
+    }
+    if (info.kind == "vlan"sv)
+    {
+        parseVlanInfo(info, submsg);
+    }
+}
+
+InterfaceInfo intfFromRtm(std::string_view msg)
+{
+    const auto& ifinfo = netlink::extractRtData<ifinfomsg>(msg);
+    InterfaceInfo ret;
+    ret.flags = ifinfo.ifi_flags;
+    ret.idx = ifinfo.ifi_index;
+    while (!msg.empty())
+    {
+        auto [hdr, data] = netlink::extractRtAttr(msg);
+        switch (hdr.rta_type)
+        {
+            case IFLA_IFNAME:
+                ret.name.emplace(data.begin(), data.end() - 1);
+                break;
+            case IFLA_ADDRESS:
+                if (data.size() == sizeof(ether_addr))
+                {
+                    ret.mac.emplace(stdplus::raw::copyFrom<ether_addr>(data));
+                }
+                break;
+            case IFLA_MTU:
+                ret.mtu.emplace(stdplus::raw::copyFrom<unsigned>(data));
+                break;
+            case IFLA_LINK:
+                ret.parent_idx.emplace(stdplus::raw::copyFrom<unsigned>(data));
+                break;
+            case IFLA_LINKINFO:
+                parseLinkInfo(ret, data);
+                break;
+        }
+    }
+    return ret;
+}
+
 template <typename Addr>
 static std::optional<std::tuple<unsigned, InAddrAny>>
     parse(std::string_view msg)
