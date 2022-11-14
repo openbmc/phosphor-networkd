@@ -8,6 +8,7 @@
 #include "types.hpp"
 #include "util.hpp"
 
+#include <linux/if_addr.h>
 #include <net/if.h>
 
 #include <filesystem>
@@ -227,14 +228,37 @@ inline void getIntfOrLog(const decltype(Manager::interfacesByIdx)& intfs,
 
 void Manager::addAddress(const AddressInfo& info)
 {
-    getIntfOrLog(interfacesByIdx, info.ifidx,
-                 [&](auto& intf) { intf.addAddr(info); });
+    if (info.flags & IFA_F_DEPRECATED)
+    {
+        return;
+    }
+    if (auto it = interfacesByIdx.find(info.ifidx); it != interfacesByIdx.end())
+    {
+        it->second->addAddr(info);
+    }
+    else if (auto it = undiscoveredIntfInfo.find(info.ifidx);
+             it != undiscoveredIntfInfo.end())
+    {
+        it->second.addrs.insert_or_assign(info.ifaddr, info);
+    }
+    else
+    {
+        throw std::runtime_error(
+            fmt::format("Interface `{}` not found for addr", info.ifidx));
+    }
 }
 
 void Manager::removeAddress(const AddressInfo& info)
 {
-    getIntfOrLog(interfacesByIdx, info.ifidx,
-                 [&](auto& intf) { intf.addrs.erase(info.ifaddr); });
+    if (auto it = interfacesByIdx.find(info.ifidx); it != interfacesByIdx.end())
+    {
+        it->second->addrs.erase(info.ifaddr);
+    }
+    else if (auto it = undiscoveredIntfInfo.find(info.ifidx);
+             it != undiscoveredIntfInfo.end())
+    {
+        it->second.addrs.erase(info.ifaddr);
+    }
 }
 
 void Manager::addNeighbor(const NeighborInfo& info)
