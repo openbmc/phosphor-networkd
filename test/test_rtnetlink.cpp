@@ -10,6 +10,54 @@
 namespace phosphor::network::netlink
 {
 
+TEST(IntfFromRtm, SmallMsg)
+{
+    EXPECT_THROW(intfFromRtm("1"), std::runtime_error);
+}
+
+TEST(IntfFromRtm, NoAttrs)
+{
+    struct
+    {
+        ifinfomsg hdr __attribute__((aligned(NLMSG_ALIGNTO)));
+    } msg;
+    msg.hdr.ifi_index = 1;
+    msg.hdr.ifi_flags = 2;
+    EXPECT_EQ(intfFromRtm(stdplus::raw::asView<char>(msg)),
+              (InterfaceInfo{.idx = 1, .flags = 2}));
+}
+
+TEST(IntfFromRtm, AllAttrs)
+{
+    struct
+    {
+        ifinfomsg hdr __attribute__((aligned(NLMSG_ALIGNTO)));
+        rtattr addr_hdr __attribute__((aligned((RTA_ALIGNTO))));
+        char addr[6]
+            __attribute__((aligned((RTA_ALIGNTO)))) = {0, 1, 2, 3, 4, 5};
+        rtattr name_hdr __attribute__((aligned((RTA_ALIGNTO))));
+        char name[5] __attribute__((aligned((RTA_ALIGNTO)))) = "eth0";
+        rtattr mtu_hdr __attribute__((aligned((RTA_ALIGNTO))));
+        unsigned mtu __attribute__((aligned((RTA_ALIGNTO)))) = 50;
+    } msg;
+    msg.hdr.ifi_index = 1;
+    msg.hdr.ifi_flags = 2;
+    msg.addr_hdr.rta_type = IFLA_ADDRESS;
+    msg.addr_hdr.rta_len = RTA_LENGTH(sizeof(msg.addr));
+    msg.name_hdr.rta_type = IFLA_IFNAME;
+    msg.name_hdr.rta_len = RTA_LENGTH(sizeof(msg.name));
+    msg.mtu_hdr.rta_type = IFLA_MTU;
+    msg.mtu_hdr.rta_len = RTA_LENGTH(sizeof(msg.mtu));
+
+    auto info = intfFromRtm(stdplus::raw::asView<char>(msg));
+    auto expected = InterfaceInfo{.idx = 1,
+                                  .flags = 2,
+                                  .name = "eth0",
+                                  .mac = ether_addr{0, 1, 2, 3, 4, 5},
+                                  .mtu = 50};
+    EXPECT_EQ(info, expected);
+}
+
 TEST(AddrFromRtm, MissingAddr)
 {
     struct
