@@ -9,7 +9,6 @@
 
 #include <fmt/compile.h>
 #include <fmt/format.h>
-#include <linux/neighbour.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
 
@@ -207,10 +206,6 @@ void EthernetInterface::createIPAddressObjects()
 
 void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
 {
-    if ((info.state & NUD_PERMANENT) == 0)
-    {
-        return;
-    }
     if (!info.mac || !info.addr)
     {
         auto msg = fmt::format("Missing neighbor mac on {}\n", interfaceName());
@@ -228,7 +223,7 @@ void EthernetInterface::createStaticNeighborObjects()
     staticNeighbors.clear();
     for (const auto& neighbor : system::getNeighbors({.ifidx = ifIdx}))
     {
-        addStaticNeigh(neighbor);
+        manager.addNeighbor(neighbor);
     }
 }
 
