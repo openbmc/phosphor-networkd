@@ -6,6 +6,9 @@
 #include "ipaddress.hpp"
 #include "system_queries.hpp"
 #include "types.hpp"
+#include "util.hpp"
+
+#include <net/if.h>
 
 #include <filesystem>
 #include <fstream>
@@ -141,6 +144,22 @@ void Manager::createInterface(const UndiscoveredInfo& info, bool enabled)
 
 void Manager::addInterface(const InterfaceInfo& info)
 {
+    if (info.flags & IFF_LOOPBACK)
+    {
+        return;
+    }
+    if (!info.name)
+    {
+        throw std::invalid_argument("Interface missing name");
+    }
+    const auto& ignored = internal::getIgnoredInterfaces();
+    if (ignored.find(*info.name) != ignored.end())
+    {
+        auto msg = fmt::format("Ignoring interface {}\n", *info.name);
+        log<level::INFO>(msg.c_str());
+        return;
+    }
+
     auto it = systemdNetworkdEnabled.find(info.idx);
     if (it != systemdNetworkdEnabled.end())
     {
