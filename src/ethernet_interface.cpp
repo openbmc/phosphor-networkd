@@ -259,6 +259,35 @@ void EthernetInterface::createStaticNeighborObjects()
     }
 }
 
+void EthernetInterface::createValidNeighborObjects()
+{
+
+    validNeighbors.clear();
+
+    constexpr auto uudValid = (NUD_PERMANENT | NUD_NOARP | NUD_REACHABLE |
+                               NUD_PROBE | NUD_STALE | NUD_DELAY);
+    NeighborFilter filter;
+    filter.interface = ifIdx;
+    filter.state = uudValid;
+    auto neighbors = getCurrentNeighbors(filter);
+    for (const auto& neighbor : neighbors)
+    {
+        if (!neighbor.mac)
+        {
+            continue;
+        }
+        auto ip = std::to_string(neighbor.address);
+        auto mac = std::to_string(*neighbor.mac);
+        auto objectPath = generateValidNeighborObjectPath(ip, mac);
+        validNeighbors.emplace(ip,
+                               std::make_unique<Neighbor>(
+                                   bus, objectPath, *this, ip, mac,
+                                   Neighbor::State::Reachable)); // TODO: state,
+                                                                 // not
+                                                                 // Reachable
+    }
+}
+
 ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
                                  uint8_t prefixLength, std::string)
 {
@@ -399,6 +428,14 @@ std::string EthernetInterface::generateStaticNeighborObjectPath(
 {
     return fmt::format(
         FMT_COMPILE("{}/static_neighbor/{:08x}"), objPath,
+        static_cast<uint32_t>(hash_multi(ipAddress, macAddress)));
+}
+
+std::string EthernetInterface::generateValidNeighborObjectPath(
+    std::string_view ipAddress, std::string_view macAddress) const
+{
+    return fmt::format(
+        FMT_COMPILE("{}/valid_neighbor/{:08x}"), objPath,
         static_cast<uint32_t>(hash_multi(ipAddress, macAddress)));
 }
 
