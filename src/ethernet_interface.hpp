@@ -137,6 +137,10 @@ class EthernetInterface : public Ifaces
      */
     void createStaticNeighborObjects();
 
+    /* @brief creates the dbus object(Valid Neighbor) in the neighbor list.
+     */
+    void createValidNeighborObjects();
+
     /* @brief Gets all the ip addresses.
      * @returns the list of ipAddress.
      */
@@ -251,6 +255,10 @@ class EthernetInterface : public Ifaces
         generateStaticNeighborObjectPath(std::string_view ipAddress,
                                          std::string_view macAddress) const;
 
+    std::string
+        generateValidNeighborObjectPath(std::string_view ipAddress,
+                                        std::string_view macAddress) const;
+
     /** @brief get the NTP server list from the timsyncd dbus obj
      *
      */
@@ -272,6 +280,11 @@ class EthernetInterface : public Ifaces
 
     /** @brief Persistent map of Neighbor dbus objects and their names */
     string_umap<std::unique_ptr<Neighbor>> staticNeighbors;
+
+    /** @brief Persistent map of valid Neighbor dbus objects
+     * and their names
+     */
+    string_umap<std::unique_ptr<Neighbor>> validNeighbors;
 
     /** @brief Dbus object path */
     std::string objPath;
