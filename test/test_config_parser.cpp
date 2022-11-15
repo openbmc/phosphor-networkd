@@ -112,6 +112,7 @@ class TestConfigParser : public stdplus::gtest::TestWithTmp
 
 TEST_F(TestConfigParser, EmptyObject)
 {
+    EXPECT_FALSE(parser.getFileExists());
     EXPECT_TRUE(parser.getFilename().empty());
     EXPECT_EQ(0, parser.getWarnings().size());
     EXPECT_EQ(SectionMap(), parser.map);
@@ -120,6 +121,7 @@ TEST_F(TestConfigParser, EmptyObject)
 TEST_F(TestConfigParser, ReadDirectory)
 {
     parser.setFile("/");
+    EXPECT_FALSE(parser.getFileExists());
     EXPECT_EQ("/", parser.getFilename());
     EXPECT_EQ(1, parser.getWarnings().size());
     EXPECT_EQ(SectionMap(), parser.map);
@@ -128,6 +130,7 @@ TEST_F(TestConfigParser, ReadDirectory)
 TEST_F(TestConfigParser, ReadConfigDataMissingFile)
 {
     parser.setFile("/no-such-path");
+    EXPECT_FALSE(parser.getFileExists());
     EXPECT_EQ("/no-such-path", parser.getFilename());
     EXPECT_EQ(1, parser.getWarnings().size());
     EXPECT_EQ(SectionMap(), parser.map);
@@ -137,6 +140,7 @@ TEST_F(TestConfigParser, ReadConfigDataFromFile)
 {
     WriteSampleFile();
     parser.setFile(filename);
+    EXPECT_TRUE(parser.getFileExists());
     EXPECT_EQ(filename, parser.getFilename());
     EXPECT_EQ(4, parser.getWarnings().size());
     ValidateSectionMap();
