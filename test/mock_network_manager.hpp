@@ -34,6 +34,7 @@ class MockManager : public Manager
                 bus, *this, interface, objectPath, config);
             intf->createIPAddressObjects();
             intf->createStaticNeighborObjects();
+            intf->createReachableNeighborObjects();
             intf->loadNameServers(config);
             this->interfaces.emplace(
                 std::make_pair(std::move(*interface.name), std::move(intf)));
