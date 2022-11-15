@@ -213,7 +213,11 @@ inline auto systemdParseLast(const config::Parser& config,
                              std::string_view section, std::string_view key,
                              auto&& fun)
 {
-    if (auto str = config.map.getLastValueString(section, key); str == nullptr)
+    if (!config.getFileExists())
+    {
+    }
+    else if (auto str = config.map.getLastValueString(section, key);
+             str == nullptr)
     {
         auto err = fmt::format("Unable to get the value of {}[{}] from {}",
                                section, key, config.getFilename().native());
