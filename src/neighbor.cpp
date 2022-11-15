@@ -57,7 +57,7 @@ void Neighbor::delete_()
     }
 
     parent.writeConfigurationFile();
-    parent.manager.reloadConfigsNoRefresh();
+    parent.manager.reloadConfigs();
 }
 
 using sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;

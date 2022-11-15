@@ -66,7 +66,7 @@ bool Configuration::sendHostNameEnabled(bool value)
     auto name = ConfigIntf::sendHostNameEnabled(value);
 
     manager.writeToConfigurationFile();
-    manager.reloadConfigsNoRefresh();
+    manager.reloadConfigs();
 
     return name;
 }
@@ -80,7 +80,7 @@ bool Configuration::hostNameEnabled(bool value)
 
     auto name = ConfigIntf::hostNameEnabled(value);
     manager.writeToConfigurationFile();
-    manager.reloadConfigsNoRefresh();
+    manager.reloadConfigs();
 
     return name;
 }
@@ -94,7 +94,7 @@ bool Configuration::ntpEnabled(bool value)
 
     auto ntp = ConfigIntf::ntpEnabled(value);
     manager.writeToConfigurationFile();
-    manager.reloadConfigsNoRefresh();
+    manager.reloadConfigs();
 
     return ntp;
 }
@@ -108,7 +108,7 @@ bool Configuration::dnsEnabled(bool value)
 
     auto dns = ConfigIntf::dnsEnabled(value);
     manager.writeToConfigurationFile();
-    manager.reloadConfigsNoRefresh();
+    manager.reloadConfigs();
 
     return dns;
 }

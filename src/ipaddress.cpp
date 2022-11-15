@@ -111,7 +111,7 @@ void IPAddress::delete_()
     }
 
     parent.writeConfigurationFile();
-    parent.manager.reloadConfigsNoRefresh();
+    parent.manager.reloadConfigs();
 }
 
 } // namespace network

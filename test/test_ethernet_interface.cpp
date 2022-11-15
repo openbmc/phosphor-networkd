@@ -1,23 +1,15 @@
 #include "config_parser.hpp"
 #include "ipaddress.hpp"
+#include "mock_ethernet_interface.hpp"
 #include "mock_network_manager.hpp"
-#include "mock_syscall.hpp"
-#include "system_queries.hpp"
-#include "util.hpp"
 
-#include <arpa/inet.h>
 #include <net/if.h>
-#include <netinet/in.h>
-#include <stdlib.h>
 
-#include <charconv>
-#include <exception>
 #include <sdbusplus/bus.hpp>
 #include <stdplus/gtest/tmp.hpp>
 #include <string_view>
 #include <xyz/openbmc_project/Common/error.hpp>
 
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 namespace phosphor
@@ -33,7 +25,7 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
 {
   public:
     sdbusplus::bus_t bus;
-    std::string confDir;
+    std::filesystem::path confDir;
     MockManager manager;
     MockEthernetInterface interface;
     TestEthernetInterface() :
@@ -47,9 +39,7 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     static MockEthernetInterface makeInterface(sdbusplus::bus_t& bus,
                                                MockManager& manager)
     {
-        system::mock_clear();
         InterfaceInfo info{.idx = 1, .flags = 0, .name = "test0"};
-        system::mock_addIF(info);
         return {bus, manager, info, "/xyz/openbmc_test/network"sv,
                 config::Parser()};
     }
@@ -86,7 +76,6 @@ TEST_F(TestEthernetInterface, Fields)
                        .name = "test1",
                        .mac = mac,
                        .mtu = mtu};
-    system::mock_addIF(info);
     MockEthernetInterface intf(bus, manager, info,
                                "/xyz/openbmc_test/network"sv, config::Parser());
 
@@ -136,11 +125,9 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
 TEST_F(TestEthernetInterface, addStaticNameServers)
 {
     ServerList servers = {"9.1.1.1", "9.2.2.2", "9.3.3.3"};
-    EXPECT_CALL(manager, reloadConfigsNoRefresh());
+    EXPECT_CALL(manager, reloadConfigs());
     interface.staticNameServers(servers);
-    fs::path filePath = confDir;
-    filePath /= "00-bmc-test0.network";
-    config::Parser parser(filePath.string());
+    config::Parser parser((confDir / "00-bmc-test0.network").native());
     EXPECT_EQ(servers, parser.map.getValueStrings("Network", "DNS"));
 }
 
@@ -155,11 +142,9 @@ TEST_F(TestEthernetInterface, getDynamicNameServers)
 TEST_F(TestEthernetInterface, addStaticNTPServers)
 {
     ServerList servers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};
-    EXPECT_CALL(manager, reloadConfigsNoRefresh());
+    EXPECT_CALL(manager, reloadConfigs());
     interface.staticNTPServers(servers);
-    fs::path filePath = confDir;
-    filePath /= "00-bmc-test0.network";
-    config::Parser parser(filePath.string());
+    config::Parser parser((confDir / "00-bmc-test0.network").native());
     EXPECT_EQ(servers, parser.map.getValueStrings("Network", "NTP"));
 }
 
