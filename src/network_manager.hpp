@@ -196,6 +196,7 @@ class Manager : public details::VLANCreateIface
         std::unordered_map<InAddrAny, NeighborInfo> staticNeighs = {};
     };
     std::unordered_map<unsigned, UndiscoveredInfo> undiscoveredIntfInfo;
+    std::unordered_set<unsigned> ignoredIntf;
 
     /** @brief Map of enabled interfaces */
     std::unordered_map<unsigned, bool> systemdNetworkdEnabled;
