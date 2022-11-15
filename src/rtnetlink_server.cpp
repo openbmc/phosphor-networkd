@@ -7,20 +7,11 @@
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
-#include <memory>
 #include <phosphor-logging/log.hpp>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/ops.hpp>
-#include <string_view>
 
-namespace phosphor
-{
-namespace network
-{
-
-extern std::unique_ptr<Timer> refreshObjectTimer;
-
-namespace netlink
+namespace phosphor::network::netlink
 {
 
 using phosphor::logging::entry;
@@ -122,6 +113,4 @@ Server::Server(sdeventplus::Event& event, Manager& manager) :
     performRequest(NETLINK_ROUTE, RTM_GETNEIGH, NLM_F_DUMP, ndmsg{}, cb);
 }
 
-} // namespace netlink
-} // namespace network
-} // namespace phosphor
+} // namespace phosphor::network::netlink

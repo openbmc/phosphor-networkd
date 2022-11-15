@@ -1,11 +1,5 @@
 #include "config_parser.hpp"
 #include "mock_network_manager.hpp"
-#include "mock_syscall.hpp"
-
-#include <arpa/inet.h>
-#include <net/if.h>
-#include <netinet/in.h>
-#include <stdlib.h>
 
 #include <filesystem>
 #include <sdbusplus/bus.hpp>
@@ -30,12 +24,6 @@ class TestNetworkManager : public stdplus::gtest::TestWithTmp
         bus(sdbusplus::bus::new_default()),
         manager(bus, "/xyz/openbmc_test/abc", CaseTmpDir())
     {
-        system::mock_clear();
-    }
-
-    void createInterfaces()
-    {
-        manager.createInterfaces();
     }
 
     void deleteVLAN(std::string_view ifname)
@@ -44,31 +32,29 @@ class TestNetworkManager : public stdplus::gtest::TestWithTmp
     }
 };
 
-// getifaddrs will not return any interface
 TEST_F(TestNetworkManager, NoInterface)
 {
-    createInterfaces();
     EXPECT_TRUE(manager.interfaces.empty());
 }
-// getifaddrs returns single interface.
+
 TEST_F(TestNetworkManager, WithSingleInterface)
 {
-    // Adds the following ip in the getifaddrs list.
-    system::mock_addIF({.idx = 2, .flags = 0, .name = "igb1"});
+    manager.addInterface({.idx = 2, .flags = 0, .name = "igb1"});
+    manager.handleAdminState("managed", 2);
 
     // Now create the interfaces which will call the mocked getifaddrs
     // which returns the above interface detail.
-    createInterfaces();
     EXPECT_THAT(manager.interfaces, UnorderedElementsAre(Key("igb1")));
 }
 
 // getifaddrs returns two interfaces.
 TEST_F(TestNetworkManager, WithMultipleInterfaces)
 {
-    system::mock_addIF({.idx = 1, .flags = 0, .name = "igb0"});
-    system::mock_addIF({.idx = 2, .flags = 0, .name = "igb1"});
+    manager.addInterface({.idx = 1, .flags = 0, .name = "igb0"});
+    manager.handleAdminState("managed", 1);
+    manager.handleAdminState("unmanaged", 2);
+    manager.addInterface({.idx = 2, .flags = 0, .name = "igb1"});
 
-    createInterfaces();
     EXPECT_THAT(manager.interfaces,
                 UnorderedElementsAre(Key("igb0"), Key("igb1")));
 }
@@ -79,8 +65,8 @@ TEST_F(TestNetworkManager, WithVLAN)
     EXPECT_THROW(manager.vlan("", 0), std::exception);
     EXPECT_THROW(manager.vlan("eth0", 2), std::exception);
 
-    system::mock_addIF({.idx = 1, .flags = 0, .name = "eth0"});
-    manager.createInterfaces();
+    manager.addInterface({.idx = 1, .flags = 0, .name = "eth0"});
+    manager.handleAdminState("managed", 1);
     EXPECT_NO_THROW(manager.vlan("eth0", 2));
     EXPECT_NO_THROW(manager.vlan("eth0", 4094));
     EXPECT_THAT(
