@@ -49,7 +49,6 @@ tests = [
   'netlink',
   'network_manager',
   'rtnetlink',
-  'system_queries',
   'types',
   'util',
 ]

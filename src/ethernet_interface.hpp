@@ -124,16 +124,6 @@ class EthernetInterface : public Ifaces
      */
     ObjectPath neighbor(std::string ipAddress, std::string macAddress) override;
 
-    /* @brief creates the dbus object(IPaddres) given in the address list.
-     * @param[in] addrs - address list for which dbus objects needs
-     *                    to create.
-     */
-    void createIPAddressObjects();
-
-    /* @brief creates the dbus object(Neighbor) given in the neighbor list.
-     */
-    void createStaticNeighborObjects();
-
     /** Set value of DHCPEnabled */
     DHCPConf dhcpEnabled() const override;
     DHCPConf dhcpEnabled(DHCPConf value) override;
@@ -154,12 +144,6 @@ class EthernetInterface : public Ifaces
     {
         return std::visit([&](auto v) { return dhcpIsEnabled(v); }, addr);
     }
-
-    /** Retrieve Link State */
-    bool linkUp() const override;
-
-    /** Retrieve MTU Size */
-    size_t mtu() const override;
 
     /** Set size of MTU */
     size_t mtu(size_t value) override;

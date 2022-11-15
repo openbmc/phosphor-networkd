@@ -1,8 +1,5 @@
 #include "system_queries.hpp"
 
-#include "netlink.hpp"
-#include "rtnetlink.hpp"
-
 #include <fmt/format.h>
 #include <linux/ethtool.h>
 #include <linux/sockios.h>
@@ -13,10 +10,8 @@
 #include <phosphor-logging/log.hpp>
 #include <stdexcept>
 #include <stdplus/fd/create.hpp>
-#include <stdplus/raw.hpp>
 #include <stdplus/util/cexec.hpp>
 #include <string_view>
-#include <system_error>
 
 namespace phosphor::network::system
 {
@@ -99,17 +94,6 @@ EthInfo getEthInfo(stdplus::zstring_view ifname)
         .value_or(EthInfo{});
 }
 
-bool intfIsRunning(std::string_view ifname)
-{
-    return executeIFReq(ifname, SIOCGIFFLAGS).ifr_flags & IFF_RUNNING;
-}
-
-std::optional<unsigned> getMTU(stdplus::zstring_view ifname)
-{
-    return optionalIFReq(ifname, SIOCGIFMTU, "GMTU",
-                         [](const ifreq& ifr) { return ifr.ifr_mtu; });
-}
-
 void setMTU(std::string_view ifname, unsigned mtu)
 {
     auto ifr = makeIFReq(ifname);
@@ -123,95 +107,6 @@ void setNICUp(std::string_view ifname, bool up)
     ifr.ifr_flags &= ~IFF_UP;
     ifr.ifr_flags |= up ? IFF_UP : 0;
     getIFSock().ioctl(SIOCSIFFLAGS, &ifr);
-}
-
-bool detail::validateNewAddr(const AddressInfo& info,
-                             const AddressFilter& filter) noexcept
-{
-    if (filter.ifidx != 0 && filter.ifidx != info.ifidx)
-    {
-        return false;
-    }
-    return true;
-}
-
-bool detail::validateNewNeigh(const NeighborInfo& info,
-                              const NeighborFilter& filter) noexcept
-{
-    if (filter.ifidx != 0 && filter.ifidx != info.ifidx)
-    {
-        return false;
-    }
-    return true;
-}
-
-std::vector<InterfaceInfo> getInterfaces()
-{
-    std::vector<InterfaceInfo> ret;
-    auto cb = [&](const nlmsghdr&, std::string_view msg) {
-        try
-        {
-            ret.emplace_back(netlink::intfFromRtm(msg));
-        }
-        catch (const std::exception& e)
-        {
-            auto msg = fmt::format("Failed parsing interface: {}", e.what());
-            log<level::ERR>(msg.c_str());
-        }
-    };
-    ifinfomsg msg{};
-    netlink::performRequest(NETLINK_ROUTE, RTM_GETLINK, NLM_F_DUMP, msg, cb);
-    return ret;
-}
-
-std::vector<AddressInfo> getAddresses(const AddressFilter& filter)
-{
-    std::vector<AddressInfo> ret;
-    auto cb = [&](const nlmsghdr&, std::string_view msg) {
-        try
-        {
-            auto info = netlink::addrFromRtm(msg);
-            if (detail::validateNewAddr(info, filter))
-            {
-                ret.emplace_back(std::move(info));
-            }
-        }
-        catch (const std::exception& e)
-        {
-            auto msg = fmt::format("Failed parsing address for ifidx {}: {}",
-                                   filter.ifidx, e.what());
-            log<level::ERR>(msg.c_str());
-        }
-    };
-    ifaddrmsg msg{};
-    msg.ifa_index = filter.ifidx;
-    netlink::performRequest(NETLINK_ROUTE, RTM_GETADDR, NLM_F_DUMP, msg, cb);
-    return ret;
-}
-
-std::vector<NeighborInfo> getNeighbors(const NeighborFilter& filter)
-{
-    std::vector<NeighborInfo> ret;
-    auto cb = [&](const nlmsghdr&, std::string_view msg) {
-        try
-        {
-            auto info = netlink::neighFromRtm(msg);
-            if (detail::validateNewNeigh(info, filter))
-            {
-                ret.push_back(std::move(info));
-            }
-        }
-        catch (const std::exception& e)
-        {
-            auto msg = fmt::format("Failed parsing neighbor for ifidx {}: {}",
-                                   filter.ifidx, e.what());
-            log<level::ERR>(msg.c_str());
-        }
-    };
-    ndmsg msg{};
-    msg.ndm_ifindex = filter.ifidx;
-    netlink::performRequest(NETLINK_ROUTE, RTM_GETNEIGH, NLM_F_DUMP, msg, cb);
-    return ret;
 }
 
 } // namespace phosphor::network::system

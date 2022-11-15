@@ -11,6 +11,7 @@
 #include <memory>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/bus/match.hpp>
+#include <sdbusplus/message/native_types.hpp>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -21,26 +22,14 @@ namespace phosphor
 namespace network
 {
 
-using SystemConfPtr = std::unique_ptr<SystemConfiguration>;
-using DHCPConfPtr = std::unique_ptr<dhcp::Configuration>;
-
-namespace fs = std::filesystem;
-namespace details
-{
-
-template <typename T, typename U>
-using ServerObject = typename sdbusplus::server::object_t<T, U>;
-
-using VLANCreateIface = details::ServerObject<
+using ManagerIface = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::VLAN::server::Create,
     sdbusplus::xyz::openbmc_project::Common::server::FactoryReset>;
-
-} // namespace details
 
 /** @class Manager
  *  @brief OpenBMC network manager implementation.
  */
-class Manager : public details::VLANCreateIface
+class Manager : public ManagerIface
 {
   public:
     Manager(const Manager&) = delete;
@@ -55,7 +44,7 @@ class Manager : public details::VLANCreateIface
      *  @param[in] confDir - Network Configuration directory path.
      */
     Manager(sdbusplus::bus_t& bus, const char* objPath,
-            const fs::path& confDir);
+            const std::filesystem::path& confDir);
 
     ObjectPath vlan(std::string interfaceName, uint32_t id) override;
 
@@ -79,24 +68,9 @@ class Manager : public details::VLANCreateIface
     void addDefGw(unsigned ifidx, InAddrAny addr);
     void removeDefGw(unsigned ifidx, InAddrAny addr);
 
-    /** @brief Fetch the interface and the ipaddress details
-     *         from the system and create the ethernet interraces
-     *         dbus object.
-     */
-    virtual void createInterfaces();
-
-    /** @brief create child interface object and the system conf object.
-     */
-    void createChildObjects();
-
-    /** @brief sets the network conf directory.
-     *  @param[in] dirName - Absolute path of the directory.
-     */
-    void setConfDir(const fs::path& dir);
-
     /** @brief gets the network conf directory.
      */
-    inline const fs::path& getConfDir() const
+    inline const auto& getConfDir() const
     {
         return confDir;
     }
@@ -104,17 +78,17 @@ class Manager : public details::VLANCreateIface
     /** @brief gets the system conf object.
      *
      */
-    inline const SystemConfPtr& getSystemConf()
+    inline auto& getSystemConf()
     {
-        return systemConf;
+        return *systemConf;
     }
 
     /** @brief gets the dhcp conf object.
      *
      */
-    inline const DHCPConfPtr& getDHCPConf()
+    inline auto& getDHCPConf()
     {
-        return dhcpConf;
+        return *dhcpConf;
     }
 
     /** @brief This function gets the MAC address from the VPD and
@@ -134,7 +108,6 @@ class Manager : public details::VLANCreateIface
     /** @brief Arms a timer to tell systemd-network to reload all of the network
      * configurations
      */
-    virtual void reloadConfigsNoRefresh();
     virtual void reloadConfigs();
 
     /** @brief Tell systemd-network to reload all of the network configurations
@@ -145,15 +118,6 @@ class Manager : public details::VLANCreateIface
      */
     string_umap<std::unique_ptr<EthernetInterface>> interfaces;
     std::unordered_map<unsigned, EthernetInterface*> interfacesByIdx;
-
-    /** @brief Get the routing table owned by the manager
-     *
-     * @return Routing table reference.
-     */
-    inline const auto& getRouteTable() const
-    {
-        return routeTable;
-    }
 
     /** @brief Adds a hook that runs immediately prior to reloading
      *
@@ -172,19 +136,16 @@ class Manager : public details::VLANCreateIface
     void reset() override;
 
     /** @brief Path of Object. */
-    std::string objectPath;
+    sdbusplus::message::object_path objPath;
 
     /** @brief pointer to system conf object. */
-    SystemConfPtr systemConf = nullptr;
+    std::unique_ptr<SystemConfiguration> systemConf = nullptr;
 
     /** @brief pointer to dhcp conf object. */
-    DHCPConfPtr dhcpConf = nullptr;
+    std::unique_ptr<dhcp::Configuration> dhcpConf = nullptr;
 
     /** @brief Network Configuration directory. */
-    fs::path confDir;
-
-    /** @brief The routing table */
-    route::Table routeTable;
+    std::filesystem::path confDir;
 
     /** @brief Map of interface info for undiscovered interfaces */
     struct UndiscoveredInfo
