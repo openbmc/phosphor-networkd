@@ -70,6 +70,7 @@ void Manager::createInterfaces()
                                                         objectPath, config);
         intf->createIPAddressObjects();
         intf->createStaticNeighborObjects();
+        intf->createReachableNeighborObjects();
         intf->loadNameServers(config);
         intf->loadNTPServers(config);
         auto ptr = intf.get();
