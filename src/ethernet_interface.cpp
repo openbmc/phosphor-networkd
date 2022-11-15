@@ -115,15 +115,6 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
     EthernetInterfaceIntf::ntpServers(
         config.map.getValueStrings("Network", "NTP"));
 
-    if (ifIdx > 0)
-    {
-        auto ethInfo = ignoreError("GetEthInfo", *info.name, {}, [&] {
-            return system::getEthInfo(*info.name);
-        });
-        EthernetInterfaceIntf::autoNeg(ethInfo.autoneg);
-        EthernetInterfaceIntf::speed(ethInfo.speed);
-    }
-
     updateInfo(info);
 
     if (info.vlan_id)
@@ -152,6 +143,14 @@ void EthernetInterface::updateInfo(const InterfaceInfo& info)
     if (info.mtu)
     {
         EthernetInterfaceIntf::mtu(*info.mtu);
+    }
+    if (ifIdx > 0)
+    {
+        auto ethInfo = ignoreError("GetEthInfo", *info.name, {}, [&] {
+            return system::getEthInfo(*info.name);
+        });
+        EthernetInterfaceIntf::autoNeg(ethInfo.autoneg);
+        EthernetInterfaceIntf::speed(ethInfo.speed);
     }
 }
 
