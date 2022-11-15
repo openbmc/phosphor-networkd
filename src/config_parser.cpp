@@ -252,6 +252,7 @@ void Parser::setFile(const fs::path& filename)
 {
     Parse parse(filename);
 
+    bool fileExists = true;
     try
     {
         auto fd = stdplus::fd::open(filename.c_str(),
@@ -265,14 +266,16 @@ void Parser::setFile(const fs::path& filename)
     catch (const stdplus::exception::Eof&)
     {
     }
-    catch (const std::exception& e)
+    catch (const std::system_error& e)
     {
+        fileExists = false;
         // TODO: Pass exceptions once callers can handle them
         parse.warnings.emplace_back(
-            fmt::format("{}: Read error: {}", filename.native(), e.what()));
+            fmt::format("{}: Open error: {}", filename.native(), e.what()));
     }
 
     this->map = std::move(parse.map);
+    this->fileExists = fileExists;
     this->filename = filename;
     this->warnings = std::move(parse.warnings);
 }
