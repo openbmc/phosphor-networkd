@@ -438,7 +438,7 @@ bool EthernetInterface::nicEnabled(bool value)
         manager.addReloadPreHook(
             [ifname = interfaceName()]() { system::setNICUp(ifname, false); });
     }
-    manager.reloadConfigs();
+    manager.reloadConfigsNoRefresh();
 
     return value;
 }
@@ -606,7 +606,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     config.writeFile(config::pathForIntfDev(manager.getConfDir(), intfName));
 
     writeConfigurationFile();
-    manager.reloadConfigs();
+    manager.reloadConfigsNoRefresh();
 
     return ret;
 }
@@ -804,7 +804,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
             // The MAC and LLADDRs will only update if the NIC is already down
             system::setNICUp(interface, false);
         });
-        manager.reloadConfigs();
+        manager.reloadConfigsNoRefresh();
     }
 
     std::error_code ec;
@@ -833,7 +833,7 @@ void EthernetInterface::deleteAll()
     addrs.clear();
 
     writeConfigurationFile();
-    manager.reloadConfigs();
+    manager.reloadConfigsNoRefresh();
 }
 
 std::string EthernetInterface::defaultGateway(std::string gateway)
