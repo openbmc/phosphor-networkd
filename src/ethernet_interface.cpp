@@ -212,10 +212,18 @@ void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
         log<level::ERR>(msg.c_str());
         return;
     }
-    staticNeighbors.emplace(
-        *info.addr, std::make_unique<Neighbor>(bus, std::string_view(objPath),
-                                               *this, *info.addr, *info.mac,
-                                               Neighbor::State::Permanent));
+
+    if (auto it = staticNeighbors.find(*info.addr); it != staticNeighbors.end())
+    {
+        it->second->NeighborObj::macAddress(std::to_string(*info.mac));
+    }
+    else
+    {
+        staticNeighbors.emplace(*info.addr, std::make_unique<Neighbor>(
+                                                bus, std::string_view(objPath),
+                                                *this, *info.addr, *info.mac,
+                                                Neighbor::State::Permanent));
+    }
 }
 
 void EthernetInterface::createStaticNeighborObjects()
