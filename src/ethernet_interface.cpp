@@ -95,22 +95,6 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
     EthernetInterfaceIntf::dhcp6(dhcpVal.v6);
     EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRA(config));
     EthernetInterfaceIntf::nicEnabled(enabled);
-    {
-        const auto& gws = manager.getRouteTable().getDefaultGateway();
-        auto it = gws.find(ifIdx);
-        if (it != gws.end())
-        {
-            EthernetInterfaceIntf::defaultGateway(std::to_string(it->second));
-        }
-    }
-    {
-        const auto& gws = manager.getRouteTable().getDefaultGateway6();
-        auto it = gws.find(ifIdx);
-        if (it != gws.end())
-        {
-            EthernetInterfaceIntf::defaultGateway6(std::to_string(it->second));
-        }
-    }
 
     EthernetInterfaceIntf::ntpServers(
         config.map.getValueStrings("Network", "NTP"));
@@ -194,15 +178,6 @@ void EthernetInterface::addAddr(const AddressInfo& info)
     }
 }
 
-void EthernetInterface::createIPAddressObjects()
-{
-    addrs.clear();
-    for (const auto& addr : system::getAddresses({.ifidx = ifIdx}))
-    {
-        manager.addAddress(addr);
-    }
-}
-
 void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
 {
     if (!info.mac || !info.addr)
@@ -222,15 +197,6 @@ void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
                                                 bus, std::string_view(objPath),
                                                 *this, *info.addr, *info.mac,
                                                 Neighbor::State::Permanent));
-    }
-}
-
-void EthernetInterface::createStaticNeighborObjects()
-{
-    staticNeighbors.clear();
-    for (const auto& neighbor : system::getNeighbors({.ifidx = ifIdx}))
-    {
-        manager.addNeighbor(neighbor);
     }
 }
 
@@ -281,7 +247,7 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
                                     ifaddr, IP::AddressOrigin::Static));
 
     writeConfigurationFile();
-    manager.reloadConfigsNoRefresh();
+    manager.reloadConfigs();
 
     return it->second->getObjPath();
 }
@@ -324,7 +290,7 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                                    lladdr, Neighbor::State::Permanent));
 
     writeConfigurationFile();
-    manager.reloadConfigsNoRefresh();
+    manager.reloadConfigs();
 
     return it->second->getObjPath();
 }
@@ -334,7 +300,7 @@ bool EthernetInterface::ipv6AcceptRA(bool value)
     if (ipv6AcceptRA() != EthernetInterfaceIntf::ipv6AcceptRA(value))
     {
         writeConfigurationFile();
-        manager.reloadConfigsNoRefresh();
+        manager.reloadConfigs();
     }
     return value;
 }
@@ -344,7 +310,7 @@ bool EthernetInterface::dhcp4(bool value)
     if (dhcp4() != EthernetInterfaceIntf::dhcp4(value))
     {
         writeConfigurationFile();
-        manager.reloadConfigsNoRefresh();
+        manager.reloadConfigs();
     }
     return value;
 }
@@ -354,7 +320,7 @@ bool EthernetInterface::dhcp6(bool value)
     if (dhcp6() != EthernetInterfaceIntf::dhcp6(value))
     {
         writeConfigurationFile();
-        manager.reloadConfigsNoRefresh();
+        manager.reloadConfigs();
     }
     return value;
 }
@@ -376,7 +342,7 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
     if (old4 != new4 || old6 != new6 || oldra != newra)
     {
         writeConfigurationFile();
-        manager.reloadConfigsNoRefresh();
+        manager.reloadConfigs();
     }
     return value;
 }
@@ -392,27 +358,6 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled() const
         return ipv6AcceptRA() ? DHCPConf::v4v6stateless : DHCPConf::v4;
     }
     return ipv6AcceptRA() ? DHCPConf::v6stateless : DHCPConf::none;
-}
-
-bool EthernetInterface::linkUp() const
-{
-    if (ifIdx == 0)
-    {
-        return EthernetInterfaceIntf::linkUp();
-    }
-    return system::intfIsRunning(interfaceName());
-}
-
-size_t EthernetInterface::mtu() const
-{
-    if (ifIdx == 0)
-    {
-        return EthernetInterfaceIntf::mtu();
-    }
-    const auto ifname = interfaceName();
-    return ignoreError("GetMTU", ifname, std::nullopt,
-                       [&] { return system::getMTU(ifname); })
-        .value_or(EthernetInterfaceIntf::mtu());
 }
 
 size_t EthernetInterface::mtu(size_t value)
@@ -445,7 +390,7 @@ bool EthernetInterface::nicEnabled(bool value)
         manager.addReloadPreHook(
             [ifname = interfaceName()]() { system::setNICUp(ifname, false); });
     }
-    manager.reloadConfigsNoRefresh();
+    manager.reloadConfigs();
 
     return value;
 }
@@ -472,7 +417,7 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
         EthernetInterfaceIntf::staticNameServers(value);
 
         writeConfigurationFile();
-        manager.reloadConfigsNoRefresh();
+        manager.reloadConfigs();
     }
     catch (const InternalFailure& e)
     {
@@ -613,7 +558,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     config.writeFile(config::pathForIntfDev(manager.getConfDir(), intfName));
 
     writeConfigurationFile();
-    manager.reloadConfigsNoRefresh();
+    manager.reloadConfigs();
 
     return ret;
 }
@@ -625,7 +570,7 @@ ServerList EthernetInterface::staticNTPServers(ServerList value)
         EthernetInterfaceIntf::staticNTPServers(value);
 
         writeConfigurationFile();
-        manager.reloadConfigsNoRefresh();
+        manager.reloadConfigs();
     }
     catch (InternalFailure& e)
     {
@@ -742,18 +687,15 @@ void EthernetInterface::writeConfigurationFile()
     {
         auto& dhcp = config.map["DHCP"].emplace_back();
         dhcp["ClientIdentifier"].emplace_back("mac");
-        if (manager.getDHCPConf())
-        {
-            const auto& conf = *manager.getDHCPConf();
-            auto dns_enabled = conf.dnsEnabled() ? "true" : "false";
-            dhcp["UseDNS"].emplace_back(dns_enabled);
-            dhcp["UseDomains"].emplace_back(dns_enabled);
-            dhcp["UseNTP"].emplace_back(conf.ntpEnabled() ? "true" : "false");
-            dhcp["UseHostname"].emplace_back(conf.hostNameEnabled() ? "true"
-                                                                    : "false");
-            dhcp["SendHostname"].emplace_back(
-                conf.sendHostNameEnabled() ? "true" : "false");
-        }
+        const auto& conf = manager.getDHCPConf();
+        auto dns_enabled = conf.dnsEnabled() ? "true" : "false";
+        dhcp["UseDNS"].emplace_back(dns_enabled);
+        dhcp["UseDomains"].emplace_back(dns_enabled);
+        dhcp["UseNTP"].emplace_back(conf.ntpEnabled() ? "true" : "false");
+        dhcp["UseHostname"].emplace_back(conf.hostNameEnabled() ? "true"
+                                                                : "false");
+        dhcp["SendHostname"].emplace_back(conf.sendHostNameEnabled() ? "true"
+                                                                     : "false");
     }
     auto path = config::pathForIntfConf(manager.getConfDir(), interfaceName());
     config.writeFile(path);
@@ -811,7 +753,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
             // The MAC and LLADDRs will only update if the NIC is already down
             system::setNICUp(interface, false);
         });
-        manager.reloadConfigsNoRefresh();
+        manager.reloadConfigs();
     }
 
 #ifdef HAVE_UBOOT_ENV
@@ -839,7 +781,7 @@ void EthernetInterface::deleteAll()
     addrs.clear();
 
     writeConfigurationFile();
-    manager.reloadConfigsNoRefresh();
+    manager.reloadConfigs();
 }
 
 std::string EthernetInterface::defaultGateway(std::string gateway)
@@ -866,7 +808,7 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
     EthernetInterfaceIntf::defaultGateway(gateway);
 
     writeConfigurationFile();
-    manager.reloadConfigsNoRefresh();
+    manager.reloadConfigs();
 
     return gateway;
 }
@@ -895,7 +837,7 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
     EthernetInterfaceIntf::defaultGateway6(gateway);
 
     writeConfigurationFile();
-    manager.reloadConfigsNoRefresh();
+    manager.reloadConfigs();
 
     return gateway;
 }

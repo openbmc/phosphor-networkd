@@ -42,10 +42,6 @@ using namespace std::chrono_literals;
 // wait for three seconds before reloading systemd-networkd
 constexpr auto reloadTimeout = 3s;
 
-// refresh the objets after four seconds as network
-// configuration takes 3-4 sec to reconfigure at most.
-constexpr auto refreshTimeout = 4s;
-
 // Byte representations for common address types in network byte order
 using InAddrAny = std::variant<in_addr, in6_addr>;
 class IfAddr

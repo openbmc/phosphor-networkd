@@ -1,8 +1,5 @@
 #pragma once
-#include "config_parser.hpp"
-#include "mock_ethernet_interface.hpp"
 #include "network_manager.hpp"
-#include "system_queries.hpp"
 
 #include <gmock/gmock.h>
 
@@ -10,9 +7,6 @@ namespace phosphor
 {
 namespace network
 {
-
-void initializeTimers();
-void refreshObjects();
 
 class MockManager : public Manager
 {
@@ -23,25 +17,9 @@ class MockManager : public Manager
     {
     }
 
-    void createInterfaces() override
-    {
-        interfaces.clear();
-        for (auto& interface : system::getInterfaces())
-        {
-            config::Parser config(
-                config::pathForIntfConf(confDir, *interface.name));
-            auto intf = std::make_unique<MockEthernetInterface>(
-                bus, *this, interface, objectPath, config);
-            intf->createIPAddressObjects();
-            intf->createStaticNeighborObjects();
-            intf->loadNameServers(config);
-            this->interfaces.emplace(
-                std::make_pair(std::move(*interface.name), std::move(intf)));
-        }
-    }
-
     MOCK_METHOD(void, reloadConfigs, (), (override));
-    MOCK_METHOD(void, reloadConfigsNoRefresh, (), (override));
+
+    using Manager::handleAdminState;
 };
 
 } // namespace network

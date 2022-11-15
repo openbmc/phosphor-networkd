@@ -52,7 +52,6 @@ namespace network
 {
 
 std::unique_ptr<Manager> manager = nullptr;
-std::unique_ptr<Timer> refreshObjectTimer = nullptr;
 std::unique_ptr<Timer> reloadTimer = nullptr;
 
 #ifdef SYNC_MAC_FROM_INVENTORY
@@ -239,17 +238,6 @@ void watchEthernetInterface(sdbusplus::bus_t& bus,
 
 #endif
 
-/** @brief refresh the network objects. */
-void refreshObjects()
-{
-    if (manager)
-    {
-        log<level::INFO>("Refreshing the objects.");
-        manager->createChildObjects();
-        log<level::INFO>("Refreshing complete.");
-    }
-}
-
 void reloadNetworkd()
 {
     if (manager)
@@ -262,8 +250,6 @@ void reloadNetworkd()
 
 void initializeTimers(sdeventplus::Event& event)
 {
-    refreshObjectTimer =
-        std::make_unique<Timer>(event, std::bind(refreshObjects));
     reloadTimer = std::make_unique<Timer>(event, std::bind(reloadNetworkd));
 }
 
@@ -300,11 +286,6 @@ int main()
     in >> configJson;
     watchEthernetInterface(bus, configJson);
 #endif
-
-    // Trigger the initial object scan
-    // This is intentionally deferred, to ensure that systemd-networkd is
-    // fully configured.
-    refreshObjectTimer->restartOnce(refreshTimeout);
 
     return event.loop();
 }
