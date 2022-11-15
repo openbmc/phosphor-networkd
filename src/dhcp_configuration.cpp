@@ -2,9 +2,11 @@
 
 #include "config_parser.hpp"
 #include "network_manager.hpp"
-#include "system_queries.hpp"
 #include "util.hpp"
 
+#include <sys/stat.h>
+
+#include <filesystem>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -26,13 +28,25 @@ Configuration::Configuration(sdbusplus::bus_t& bus,
     bus(bus), manager(parent)
 {
     config::Parser conf;
+    std::filesystem::directory_entry newest_file;
+    time_t newest_time = 0;
+    for (const auto& dirent :
+         std::filesystem::directory_iterator(manager.getConfDir()))
     {
-        auto interfaces = system::getInterfaces();
-        if (!interfaces.empty())
+        struct stat st = {};
+        stat(dirent.path().native().c_str(), &st);
+        if (st.st_mtime > newest_time)
         {
-            conf.setFile(config::pathForIntfConf(manager.getConfDir(),
-                                                 *interfaces[0].name));
+            newest_file = dirent;
+            newest_time = st.st_mtime;
         }
+    }
+    if (newest_file != std::filesystem::directory_entry{})
+    {
+        log<level::INFO>(fmt::format("Using DHCP options from {}",
+                                     newest_file.path().native())
+                             .c_str());
+        conf.setFile(newest_file.path());
     }
 
     ConfigIntf::dnsEnabled(getDHCPProp(conf, "UseDNS"));
