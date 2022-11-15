@@ -134,6 +134,13 @@ void Manager::setConfDir(const fs::path& dir)
 
 void Manager::createInterface(const UndiscoveredInfo& info, bool enabled)
 {
+    if (!info.intf.name)
+    {
+        auto msg = fmt::format("Can't create interface without name: {}",
+                               info.intf.idx);
+        log<level::ERR>(msg.c_str(), entry("IFIDX=%u", info.intf.idx));
+        return;
+    }
     removeInterface(info.intf);
     config::Parser config(config::pathForIntfConf(confDir, *info.intf.name));
     auto intf = std::make_unique<EthernetInterface>(
@@ -151,18 +158,24 @@ void Manager::addInterface(const InterfaceInfo& info)
 {
     if (info.flags & IFF_LOOPBACK)
     {
+        ignoredIntf.emplace(info.idx);
         return;
     }
-    if (!info.name)
+    if (info.name)
     {
-        throw std::invalid_argument("Interface missing name");
-    }
-    const auto& ignored = internal::getIgnoredInterfaces();
-    if (ignored.find(*info.name) != ignored.end())
-    {
-        auto msg = fmt::format("Ignoring interface {}\n", *info.name);
-        log<level::INFO>(msg.c_str());
-        return;
+        const auto& ignored = internal::getIgnoredInterfaces();
+        if (ignored.find(*info.name) != ignored.end())
+        {
+            static std::unordered_set<std::string> ignored;
+            if (!ignored.contains(*info.name))
+            {
+                ignored.emplace(*info.name);
+                auto msg = fmt::format("Ignoring interface {}\n", *info.name);
+                log<level::INFO>(msg.c_str());
+            }
+            ignoredIntf.emplace(info.idx);
+            return;
+        }
     }
 
     auto it = systemdNetworkdEnabled.find(info.idx);
@@ -210,6 +223,7 @@ void Manager::removeInterface(const InterfaceInfo& info)
     else
     {
         undiscoveredIntfInfo.erase(info.idx);
+        ignoredIntf.erase(info.idx);
     }
     if (nit != interfaces.end())
     {
@@ -232,7 +246,7 @@ void Manager::addAddress(const AddressInfo& info)
     {
         it->second.addrs.insert_or_assign(info.ifaddr, info);
     }
-    else
+    else if (!ignoredIntf.contains(info.ifidx))
     {
         throw std::runtime_error(
             fmt::format("Interface `{}` not found for addr", info.ifidx));
@@ -267,7 +281,7 @@ void Manager::addNeighbor(const NeighborInfo& info)
     {
         it->second.staticNeighs.insert_or_assign(*info.addr, info);
     }
-    else
+    else if (!ignoredIntf.contains(info.ifidx))
     {
         throw std::runtime_error(
             fmt::format("Interface `{}` not found for neigh", info.ifidx));
@@ -334,7 +348,7 @@ void Manager::addDefGw(unsigned ifidx, InAddrAny addr)
             },
             addr);
     }
-    else
+    else if (!ignoredIntf.contains(ifidx))
     {
         auto msg = fmt::format("Interface `{}` not found for gw", ifidx);
         log<level::ERR>(msg.c_str(), entry("IFIDX=%u", ifidx));
