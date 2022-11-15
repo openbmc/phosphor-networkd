@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6dbcd7ed_b77cff07",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-11-15T22:12:47Z",
+      "side": 1,
+      "message": "We may be able to add something like this once all of the code goes in to remove refreshing the interface list for every neighbor change.",
+      "revId": "fba46c2414016ab4e9caa4741009dc4c2e47f22e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
