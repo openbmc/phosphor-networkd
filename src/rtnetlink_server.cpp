@@ -113,6 +113,13 @@ Server::Server(sdeventplus::Event& event, Manager& manager) :
         return eventHandler(manager, std::forward<decltype(args)>(args)...);
     })
 {
+    auto cb = [&](const nlmsghdr& hdr, std::string_view data) {
+        handler(manager, hdr, data);
+    };
+    performRequest(NETLINK_ROUTE, RTM_GETLINK, NLM_F_DUMP, ifinfomsg{}, cb);
+    performRequest(NETLINK_ROUTE, RTM_GETADDR, NLM_F_DUMP, ifaddrmsg{}, cb);
+    performRequest(NETLINK_ROUTE, RTM_GETROUTE, NLM_F_DUMP, rtmsg{}, cb);
+    performRequest(NETLINK_ROUTE, RTM_GETNEIGH, NLM_F_DUMP, ndmsg{}, cb);
 }
 
 } // namespace netlink
