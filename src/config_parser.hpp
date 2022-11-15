@@ -168,6 +168,12 @@ class Parser
      */
     Parser(const fs::path& filename);
 
+    /** @brief Determine if the loaded file exists */
+    inline bool getFileExists() const noexcept
+    {
+        return fileExists;
+    }
+
     /** @brief Determine if there were warnings parsing the file
      *  @return The number of parsing issues in the file
      */
@@ -194,6 +200,7 @@ class Parser
     void writeFile(const fs::path& filename);
 
   private:
+    bool fileExists = false;
     fs::path filename;
     std::vector<std::string> warnings;
 };
