@@ -33,7 +33,6 @@ namespace phosphor
 namespace network
 {
 
-extern std::unique_ptr<Timer> refreshObjectTimer;
 extern std::unique_ptr<Timer> reloadTimer;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
@@ -46,10 +45,9 @@ static constexpr const char enabledMatch[] =
     "PropertiesChanged',arg0='org.freedesktop.network1.Link',";
 
 Manager::Manager(sdbusplus::bus_t& bus, const char* objPath,
-                 const fs::path& confDir) :
-    details::VLANCreateIface(bus, objPath,
-                             details::VLANCreateIface::action::defer_emit),
-    bus(bus), objectPath(objPath),
+                 const std::filesystem::path& confDir) :
+    ManagerIface(bus, objPath, ManagerIface::action::defer_emit),
+    bus(bus), objPath(std::string(objPath)), confDir(confDir),
     systemdNetworkdEnabledMatch(
         bus, enabledMatch, [&](sdbusplus::message_t& m) {
             std::string intf;
@@ -82,7 +80,6 @@ Manager::Manager(sdbusplus::bus_t& bus, const char* objPath,
             }
         })
 {
-    setConfDir(confDir);
     std::vector<
         std::tuple<int32_t, std::string, sdbusplus::message::object_path>>
         links;
@@ -112,25 +109,29 @@ Manager::Manager(sdbusplus::bus_t& bus, const char* objPath,
         rsp.read(val);
         handleAdminState(std::get<std::string>(val), ifidx);
     }
-}
 
-void Manager::setConfDir(const fs::path& dir)
-{
-    confDir = dir;
-
-    if (!fs::exists(confDir))
-    {
-        if (!fs::create_directories(confDir))
-        {
-            log<level::ERR>("Unable to create the network conf dir",
-                            entry("DIR=%s", confDir.c_str()));
-            elog<InternalFailure>();
-        }
-    }
+    std::filesystem::create_directories(confDir);
+    systemConf = std::make_unique<phosphor::network::SystemConfiguration>(
+        bus, (this->objPath / "config").str);
+    dhcpConf = std::make_unique<phosphor::network::dhcp::Configuration>(
+        bus, (this->objPath / "dhcp").str, *this);
 }
 
 void Manager::createInterface(const UndiscoveredInfo& info, bool enabled)
 {
+    if (auto it = interfacesByIdx.find(info.intf.idx);
+        it != interfacesByIdx.end())
+    {
+        it->second->updateInfo(info.intf);
+        if (info.intf.name && *info.intf.name != it->second->interfaceName())
+        {
+            fmt::print(stderr, "Interface name change detected {} -> {}\n",
+                       it->second->interfaceName(), *info.intf.name);
+            fflush(stderr);
+            std::abort();
+        }
+        return;
+    }
     if (!info.intf.name)
     {
         auto msg = fmt::format("Can't create interface without name: {}",
@@ -138,12 +139,25 @@ void Manager::createInterface(const UndiscoveredInfo& info, bool enabled)
         log<level::ERR>(msg.c_str(), entry("IFIDX=%u", info.intf.idx));
         return;
     }
-    removeInterface(info.intf);
     config::Parser config(config::pathForIntfConf(confDir, *info.intf.name));
     auto intf = std::make_unique<EthernetInterface>(
-        bus, *this, info.intf, objectPath, config, true, enabled);
-    intf->createIPAddressObjects();
-    intf->createStaticNeighborObjects();
+        bus, *this, info.intf, objPath.str, config, true, enabled);
+    if (info.defgw4)
+    {
+        intf->EthernetInterface::defaultGateway(std::to_string(*info.defgw4));
+    }
+    if (info.defgw6)
+    {
+        intf->EthernetInterface::defaultGateway6(std::to_string(*info.defgw6));
+    }
+    for (const auto& [_, addr] : info.addrs)
+    {
+        intf->addAddr(addr);
+    }
+    for (const auto& [_, neigh] : info.staticNeighs)
+    {
+        intf->addStaticNeigh(neigh);
+    }
     intf->loadNameServers(config);
     intf->loadNTPServers(config);
     auto ptr = intf.get();
@@ -407,39 +421,6 @@ void Manager::removeDefGw(unsigned ifidx, InAddrAny addr)
     }
 }
 
-void Manager::createInterfaces()
-{
-    // clear all the interfaces first
-    interfaces.clear();
-    interfacesByIdx.clear();
-    for (auto& info : system::getInterfaces())
-    {
-        addInterface(info);
-    }
-}
-
-void Manager::createChildObjects()
-{
-    routeTable.refresh();
-
-    // creates the ethernet interface dbus object.
-    createInterfaces();
-
-    systemConf.reset(nullptr);
-    dhcpConf.reset(nullptr);
-
-    fs::path objPath = objectPath;
-    objPath /= "config";
-
-    // create the system conf object.
-    systemConf = std::make_unique<phosphor::network::SystemConfiguration>(
-        bus, objPath.string());
-    // create the dhcp conf object.
-    objPath /= "dhcp";
-    dhcpConf = std::make_unique<phosphor::network::dhcp::Configuration>(
-        bus, objPath.string(), *this);
-}
-
 ObjectPath Manager::vlan(std::string interfaceName, uint32_t id)
 {
     if (id == 0 || id >= 4095)
@@ -462,14 +443,12 @@ ObjectPath Manager::vlan(std::string interfaceName, uint32_t id)
 
 void Manager::reset()
 {
-    if (fs::is_directory(confDir))
+    for (const auto& dirent : std::filesystem::directory_iterator(confDir))
     {
-        for (const auto& file : fs::directory_iterator(confDir))
-        {
-            fs::remove(file.path());
-        }
+        std::error_code ec;
+        std::filesystem::remove(dirent.path(), ec);
     }
-    log<level::INFO>("Network Factory Reset queued.");
+    log<level::INFO>("Network data purged.");
 }
 
 // Need to merge the below function with the code which writes the
@@ -517,16 +496,9 @@ void Manager::setFistBootMACOnInterface(
 
 #endif
 
-void Manager::reloadConfigsNoRefresh()
-{
-    reloadTimer->restartOnce(reloadTimeout);
-}
-
 void Manager::reloadConfigs()
 {
-    reloadConfigsNoRefresh();
-    // Ensure that the next refresh happens after reconfiguration
-    refreshObjectTimer->setRemaining(reloadTimeout + refreshTimeout);
+    reloadTimer->restartOnce(reloadTimeout);
 }
 
 void Manager::doReloadConfigs()
@@ -555,11 +527,6 @@ void Manager::doReloadConfigs()
         log<level::ERR>("Failed to reload configuration",
                         entry("ERR=%s", ex.what()));
         elog<InternalFailure>();
-    }
-    // Ensure reconfiguration has enough time
-    if (refreshObjectTimer->isEnabled())
-    {
-        refreshObjectTimer->setRemaining(refreshTimeout);
     }
 }
 
