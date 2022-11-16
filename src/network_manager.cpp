@@ -120,7 +120,7 @@ Manager::Manager(sdbusplus::bus_t& bus, const char* objPath,
         bus, (this->objPath / "dhcp").str, *this);
 }
 
-void Manager::createInterface(const UndiscoveredInfo& info, bool enabled)
+void Manager::createInterface(const AllIntfInfo& info, bool enabled)
 {
     if (auto it = interfacesByIdx.find(info.intf.idx);
         it != interfacesByIdx.end())
@@ -192,15 +192,19 @@ void Manager::addInterface(const InterfaceInfo& info)
         }
     }
 
-    auto it = systemdNetworkdEnabled.find(info.idx);
-    if (it != systemdNetworkdEnabled.end())
+    if (auto it = intfInfo.find(info.idx); it != intfInfo.end())
     {
-        createInterface({info}, it->second);
+        it->second.intf = info;
     }
     else
     {
-        undiscoveredIntfInfo.insert_or_assign(
-            info.idx, UndiscoveredInfo{std::move(info)});
+        intfInfo.emplace(info.idx, AllIntfInfo{info});
+    }
+
+    if (auto it = systemdNetworkdEnabled.find(info.idx);
+        it != systemdNetworkdEnabled.end())
+    {
+        createInterface({info}, it->second);
     }
 }
 
@@ -236,13 +240,13 @@ void Manager::removeInterface(const InterfaceInfo& info)
     }
     else
     {
-        undiscoveredIntfInfo.erase(info.idx);
         ignoredIntf.erase(info.idx);
     }
     if (nit != interfaces.end())
     {
         interfaces.erase(nit);
     }
+    intfInfo.erase(info.idx);
 }
 
 void Manager::addAddress(const AddressInfo& info)
@@ -251,14 +255,14 @@ void Manager::addAddress(const AddressInfo& info)
     {
         return;
     }
-    if (auto it = interfacesByIdx.find(info.ifidx); it != interfacesByIdx.end())
-    {
-        it->second->addAddr(info);
-    }
-    else if (auto it = undiscoveredIntfInfo.find(info.ifidx);
-             it != undiscoveredIntfInfo.end())
+    if (auto it = intfInfo.find(info.ifidx); it != intfInfo.end())
     {
         it->second.addrs.insert_or_assign(info.ifaddr, info);
+        if (auto it = interfacesByIdx.find(info.ifidx);
+            it != interfacesByIdx.end())
+        {
+            it->second->addAddr(info);
+        }
     }
     else if (!ignoredIntf.contains(info.ifidx))
     {
@@ -272,11 +276,10 @@ void Manager::removeAddress(const AddressInfo& info)
     if (auto it = interfacesByIdx.find(info.ifidx); it != interfacesByIdx.end())
     {
         it->second->addrs.erase(info.ifaddr);
-    }
-    else if (auto it = undiscoveredIntfInfo.find(info.ifidx);
-             it != undiscoveredIntfInfo.end())
-    {
-        it->second.addrs.erase(info.ifaddr);
+        if (auto it = intfInfo.find(info.ifidx); it != intfInfo.end())
+        {
+            it->second.addrs.erase(info.ifaddr);
+        }
     }
 }
 
@@ -286,14 +289,14 @@ void Manager::addNeighbor(const NeighborInfo& info)
     {
         return;
     }
-    if (auto it = interfacesByIdx.find(info.ifidx); it != interfacesByIdx.end())
-    {
-        it->second->addStaticNeigh(info);
-    }
-    else if (auto it = undiscoveredIntfInfo.find(info.ifidx);
-             it != undiscoveredIntfInfo.end())
+    if (auto it = intfInfo.find(info.ifidx); it != intfInfo.end())
     {
         it->second.staticNeighs.insert_or_assign(*info.addr, info);
+        if (auto it = interfacesByIdx.find(info.ifidx);
+            it != interfacesByIdx.end())
+        {
+            it->second->addStaticNeigh(info);
+        }
     }
     else if (!ignoredIntf.contains(info.ifidx))
     {
@@ -308,42 +311,20 @@ void Manager::removeNeighbor(const NeighborInfo& info)
     {
         return;
     }
-    if (auto it = interfacesByIdx.find(info.ifidx); it != interfacesByIdx.end())
-    {
-        it->second->staticNeighbors.erase(*info.addr);
-    }
-    else if (auto it = undiscoveredIntfInfo.find(info.ifidx);
-             it != undiscoveredIntfInfo.end())
+    if (auto it = intfInfo.find(info.ifidx); it != intfInfo.end())
     {
         it->second.staticNeighs.erase(*info.addr);
+        if (auto it = interfacesByIdx.find(info.ifidx);
+            it != interfacesByIdx.end())
+        {
+            it->second->staticNeighbors.erase(*info.addr);
+        }
     }
 }
 
 void Manager::addDefGw(unsigned ifidx, InAddrAny addr)
 {
-    if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
-    {
-        std::visit(
-            [&](auto addr) {
-                if constexpr (std::is_same_v<in_addr, decltype(addr)>)
-                {
-                    it->second->EthernetInterfaceIntf::defaultGateway(
-                        std::to_string(addr));
-                }
-                else if constexpr (std::is_same_v<in6_addr, decltype(addr)>)
-                {
-                    it->second->EthernetInterfaceIntf::defaultGateway6(
-                        std::to_string(addr));
-                }
-                else
-                {
-                    static_assert(!std::is_same_v<void, decltype(addr)>);
-                }
-            },
-            addr);
-    }
-    else if (auto it = undiscoveredIntfInfo.find(ifidx);
-             it != undiscoveredIntfInfo.end())
+    if (auto it = intfInfo.find(ifidx); it != intfInfo.end())
     {
         std::visit(
             [&](auto addr) {
@@ -361,6 +342,27 @@ void Manager::addDefGw(unsigned ifidx, InAddrAny addr)
                 }
             },
             addr);
+        if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
+        {
+            std::visit(
+                [&](auto addr) {
+                    if constexpr (std::is_same_v<in_addr, decltype(addr)>)
+                    {
+                        it->second->EthernetInterfaceIntf::defaultGateway(
+                            std::to_string(addr));
+                    }
+                    else if constexpr (std::is_same_v<in6_addr, decltype(addr)>)
+                    {
+                        it->second->EthernetInterfaceIntf::defaultGateway6(
+                            std::to_string(addr));
+                    }
+                    else
+                    {
+                        static_assert(!std::is_same_v<void, decltype(addr)>);
+                    }
+                },
+                addr);
+        }
     }
     else if (!ignoredIntf.contains(ifidx))
     {
@@ -371,33 +373,7 @@ void Manager::addDefGw(unsigned ifidx, InAddrAny addr)
 
 void Manager::removeDefGw(unsigned ifidx, InAddrAny addr)
 {
-    if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
-    {
-        std::visit(
-            [&](auto addr) {
-                if constexpr (std::is_same_v<in_addr, decltype(addr)>)
-                {
-                    if (it->second->defaultGateway() == std::to_string(addr))
-                    {
-                        it->second->EthernetInterfaceIntf::defaultGateway("");
-                    }
-                }
-                else if constexpr (std::is_same_v<in6_addr, decltype(addr)>)
-                {
-                    if (it->second->defaultGateway6() == std::to_string(addr))
-                    {
-                        it->second->EthernetInterfaceIntf::defaultGateway6("");
-                    }
-                }
-                else
-                {
-                    static_assert(!std::is_same_v<void, decltype(addr)>);
-                }
-            },
-            addr);
-    }
-    else if (auto it = undiscoveredIntfInfo.find(ifidx);
-             it != undiscoveredIntfInfo.end())
+    if (auto it = intfInfo.find(ifidx); it != intfInfo.end())
     {
         std::visit(
             [&](auto addr) {
@@ -421,6 +397,35 @@ void Manager::removeDefGw(unsigned ifidx, InAddrAny addr)
                 }
             },
             addr);
+        if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
+        {
+            std::visit(
+                [&](auto addr) {
+                    if constexpr (std::is_same_v<in_addr, decltype(addr)>)
+                    {
+                        if (it->second->defaultGateway() ==
+                            std::to_string(addr))
+                        {
+                            it->second->EthernetInterfaceIntf::defaultGateway(
+                                "");
+                        }
+                    }
+                    else if constexpr (std::is_same_v<in6_addr, decltype(addr)>)
+                    {
+                        if (it->second->defaultGateway6() ==
+                            std::to_string(addr))
+                        {
+                            it->second->EthernetInterfaceIntf::defaultGateway6(
+                                "");
+                        }
+                    }
+                    else
+                    {
+                        static_assert(!std::is_same_v<void, decltype(addr)>);
+                    }
+                },
+                addr);
+        }
     }
 }
 
@@ -543,17 +548,13 @@ void Manager::handleAdminState(std::string_view state, unsigned ifidx)
     {
         bool managed = state != "unmanaged";
         systemdNetworkdEnabled.insert_or_assign(ifidx, managed);
-        if (auto it = undiscoveredIntfInfo.find(ifidx);
-            it != undiscoveredIntfInfo.end())
-        {
-            auto info = std::move(it->second);
-            undiscoveredIntfInfo.erase(it);
-            createInterface(info, managed);
-        }
-        else if (auto it = interfacesByIdx.find(ifidx);
-                 it != interfacesByIdx.end())
+        if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
         {
             it->second->EthernetInterfaceIntf::nicEnabled(managed);
+        }
+        else if (auto it = intfInfo.find(ifidx); it != intfInfo.end())
+        {
+            createInterface(it->second, managed);
         }
     }
 }
