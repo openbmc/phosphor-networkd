@@ -142,23 +142,7 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
     }
     config::Parser config(config::pathForIntfConf(confDir, *info.intf.name));
     auto intf = std::make_unique<EthernetInterface>(
-        bus, *this, info.intf, objPath.str, config, enabled);
-    if (info.defgw4)
-    {
-        intf->EthernetInterface::defaultGateway(std::to_string(*info.defgw4));
-    }
-    if (info.defgw6)
-    {
-        intf->EthernetInterface::defaultGateway6(std::to_string(*info.defgw6));
-    }
-    for (const auto& [_, addr] : info.addrs)
-    {
-        intf->addAddr(addr);
-    }
-    for (const auto& [_, neigh] : info.staticNeighs)
-    {
-        intf->addStaticNeigh(neigh);
-    }
+        bus, *this, info, objPath.str, config, enabled);
     intf->loadNameServers(config);
     intf->loadNTPServers(config);
     auto ptr = intf.get();
