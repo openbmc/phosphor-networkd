@@ -88,17 +88,27 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
     manager(manager), bus(bus), objPath(std::move(objPath)),
     ifIdx(info.intf.idx)
 {
-    interfaceName(*info.intf.name);
+    interfaceName(*info.intf.name, true);
     auto dhcpVal = getDHCPValue(config);
-    EthernetInterfaceIntf::dhcp4(dhcpVal.v4);
-    EthernetInterfaceIntf::dhcp6(dhcpVal.v6);
-    EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRA(config));
-    EthernetInterfaceIntf::nicEnabled(enabled);
+    EthernetInterfaceIntf::dhcp4(dhcpVal.v4, true);
+    EthernetInterfaceIntf::dhcp6(dhcpVal.v6, true);
+    EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRA(config), true);
+    EthernetInterfaceIntf::nicEnabled(enabled, true);
 
     EthernetInterfaceIntf::ntpServers(
-        config.map.getValueStrings("Network", "NTP"));
+        config.map.getValueStrings("Network", "NTP"), true);
 
-    updateInfo(info.intf);
+    updateInfo(info.intf, true);
+
+    if (info.defgw4)
+    {
+        EthernetInterface::defaultGateway(std::to_string(*info.defgw4), true);
+    }
+    if (info.defgw6)
+    {
+        EthernetInterface::defaultGateway6(std::to_string(*info.defgw6), true);
+    }
+    emit_object_added();
 
     if (info.intf.vlan_id)
     {
@@ -108,14 +118,6 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
         }
         vlan.emplace(bus, this->objPath.c_str(), info.intf, *this);
     }
-    if (info.defgw4)
-    {
-        EthernetInterface::defaultGateway(std::to_string(*info.defgw4));
-    }
-    if (info.defgw6)
-    {
-        EthernetInterface::defaultGateway6(std::to_string(*info.defgw6));
-    }
     for (const auto& [_, addr] : info.addrs)
     {
         addAddr(addr);
@@ -124,28 +126,26 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
     {
         addStaticNeigh(neigh);
     }
-
-    this->emit_object_added();
 }
 
-void EthernetInterface::updateInfo(const InterfaceInfo& info)
+void EthernetInterface::updateInfo(const InterfaceInfo& info, bool skipSignal)
 {
-    EthernetInterfaceIntf::linkUp(info.flags & IFF_RUNNING);
+    EthernetInterfaceIntf::linkUp(info.flags & IFF_RUNNING, skipSignal);
     if (info.mac)
     {
-        MacAddressIntf::macAddress(std::to_string(*info.mac));
+        MacAddressIntf::macAddress(std::to_string(*info.mac), skipSignal);
     }
     if (info.mtu)
     {
-        EthernetInterfaceIntf::mtu(*info.mtu);
+        EthernetInterfaceIntf::mtu(*info.mtu, skipSignal);
     }
     if (ifIdx > 0)
     {
         auto ethInfo = ignoreError("GetEthInfo", *info.name, {}, [&] {
             return system::getEthInfo(*info.name);
         });
-        EthernetInterfaceIntf::autoNeg(ethInfo.autoneg);
-        EthernetInterfaceIntf::speed(ethInfo.speed);
+        EthernetInterfaceIntf::autoNeg(ethInfo.autoneg, skipSignal);
+        EthernetInterfaceIntf::speed(ethInfo.speed, skipSignal);
     }
 }
 
@@ -874,8 +874,8 @@ EthernetInterface::VlanProperties::VlanProperties(
     VlanIfaces(bus, objPath.c_str(), VlanIfaces::action::defer_emit),
     parentIdx(*info.parent_idx), eth(eth)
 {
-    VlanIntf::id(*info.vlan_id);
-    this->emit_object_added();
+    VlanIntf::id(*info.vlan_id, true);
+    emit_object_added();
 }
 
 void EthernetInterface::VlanProperties::delete_()

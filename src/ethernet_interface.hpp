@@ -96,7 +96,7 @@ class EthernetInterface : public Ifaces
     void addStaticNeigh(const NeighborInfo& info);
 
     /** @brief Updates the interface information based on new InterfaceInfo */
-    void updateInfo(const InterfaceInfo& info);
+    void updateInfo(const InterfaceInfo& info, bool skipSignal = false);
 
     /** @brief Function used to load the ntpservers
      */
