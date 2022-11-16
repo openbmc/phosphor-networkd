@@ -49,10 +49,10 @@ Configuration::Configuration(sdbusplus::bus_t& bus,
         conf.setFile(newest_file.path());
     }
 
-    ConfigIntf::dnsEnabled(getDHCPProp(conf, "UseDNS"));
-    ConfigIntf::ntpEnabled(getDHCPProp(conf, "UseNTP"));
-    ConfigIntf::hostNameEnabled(getDHCPProp(conf, "UseHostname"));
-    ConfigIntf::sendHostNameEnabled(getDHCPProp(conf, "SendHostname"));
+    ConfigIntf::dnsEnabled(getDHCPProp(conf, "UseDNS"), true);
+    ConfigIntf::ntpEnabled(getDHCPProp(conf, "UseNTP"), true);
+    ConfigIntf::hostNameEnabled(getDHCPProp(conf, "UseHostname"), true);
+    ConfigIntf::sendHostNameEnabled(getDHCPProp(conf, "SendHostname"), true);
     emit_object_added();
 }
 
