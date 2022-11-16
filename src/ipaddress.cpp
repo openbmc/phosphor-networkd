@@ -59,13 +59,12 @@ IPAddress::IPAddress(sdbusplus::bus_t& bus,
     IPIfaces(bus, objPath.str.c_str(), IPIfaces::action::defer_emit),
     parent(parent), objPath(std::move(objPath))
 {
-    IP::address(std::to_string(addr.getAddr()));
-    IP::prefixLength(addr.getPfx());
+    IP::address(std::to_string(addr.getAddr()), true);
+    IP::prefixLength(addr.getPfx(), true);
     IP::type(std::visit([](auto v) { return Proto<decltype(v)>::value; },
-                        addr.getAddr()));
-    IP::origin(origin);
-
-    // Emit deferred signal.
+                        addr.getAddr()),
+             true);
+    IP::origin(origin, true);
     emit_object_added();
 }
 std::string IPAddress::address(std::string /*ipAddress*/)

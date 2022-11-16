@@ -28,9 +28,9 @@ SystemConfiguration::SystemConfiguration(sdbusplus::bus_t& bus,
     Iface(bus, objPath.c_str(), Iface::action::defer_emit),
     bus(bus)
 {
-    SystemConfigIntf::hostName(getHostNameFromSystem());
+    SystemConfigIntf::hostName(getHostNameFromSystem(), true);
 
-    this->emit_object_added();
+    emit_object_added();
 }
 
 std::string SystemConfiguration::hostName(std::string name)
