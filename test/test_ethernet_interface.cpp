@@ -39,7 +39,7 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     static MockEthernetInterface makeInterface(sdbusplus::bus_t& bus,
                                                MockManager& manager)
     {
-        InterfaceInfo info{.idx = 1, .flags = 0, .name = "test0"};
+        AllIntfInfo info{InterfaceInfo{.idx = 1, .flags = 0, .name = "test0"}};
         return {bus, manager, info, "/xyz/openbmc_test/network"sv,
                 config::Parser()};
     }
@@ -71,11 +71,11 @@ TEST_F(TestEthernetInterface, Fields)
     constexpr ether_addr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};
     constexpr unsigned mtu = 150;
 
-    InterfaceInfo info{.idx = 2,
-                       .flags = IFF_RUNNING,
-                       .name = "test1",
-                       .mac = mac,
-                       .mtu = mtu};
+    AllIntfInfo info{InterfaceInfo{.idx = 2,
+                                   .flags = IFF_RUNNING,
+                                   .name = "test1",
+                                   .mac = mac,
+                                   .mtu = mtu}};
     MockEthernetInterface intf(bus, manager, info,
                                "/xyz/openbmc_test/network"sv, config::Parser());
 

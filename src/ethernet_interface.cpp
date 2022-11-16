@@ -70,24 +70,25 @@ static std::string makeObjPath(std::string_view root, std::string_view intf)
 }
 
 EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
-                                     const InterfaceInfo& info,
+                                     const AllIntfInfo& info,
                                      std::string_view objRoot,
                                      const config::Parser& config,
                                      bool enabled) :
-    EthernetInterface(bus, manager, info, makeObjPath(objRoot, *info.name),
+    EthernetInterface(bus, manager, info, makeObjPath(objRoot, *info.intf.name),
                       config, enabled)
 {
 }
 
 EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
-                                     const InterfaceInfo& info,
+                                     const AllIntfInfo& info,
                                      std::string&& objPath,
                                      const config::Parser& config,
                                      bool enabled) :
     Ifaces(bus, objPath.c_str(), Ifaces::action::defer_emit),
-    manager(manager), bus(bus), objPath(std::move(objPath)), ifIdx(info.idx)
+    manager(manager), bus(bus), objPath(std::move(objPath)),
+    ifIdx(info.intf.idx)
 {
-    interfaceName(*info.name);
+    interfaceName(*info.intf.name);
     auto dhcpVal = getDHCPValue(config);
     EthernetInterfaceIntf::dhcp4(dhcpVal.v4);
     EthernetInterfaceIntf::dhcp6(dhcpVal.v6);
@@ -97,15 +98,31 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
     EthernetInterfaceIntf::ntpServers(
         config.map.getValueStrings("Network", "NTP"));
 
-    updateInfo(info);
+    updateInfo(info.intf);
 
-    if (info.vlan_id)
+    if (info.intf.vlan_id)
     {
-        if (!info.parent_idx)
+        if (!info.intf.parent_idx)
         {
             std::runtime_error("Missing parent link");
         }
-        vlan.emplace(bus, this->objPath.c_str(), info, *this);
+        vlan.emplace(bus, this->objPath.c_str(), info.intf, *this);
+    }
+    if (info.defgw4)
+    {
+        EthernetInterface::defaultGateway(std::to_string(*info.defgw4));
+    }
+    if (info.defgw6)
+    {
+        EthernetInterface::defaultGateway6(std::to_string(*info.defgw6));
+    }
+    for (const auto& [_, addr] : info.addrs)
+    {
+        addAddr(addr);
+    }
+    for (const auto& [_, neigh] : info.staticNeighs)
+    {
+        addStaticNeigh(neigh);
     }
 
     this->emit_object_added();
@@ -540,7 +557,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     {
         mac.emplace(ToAddr<ether_addr>{}(macStr));
     }
-    auto info = InterfaceInfo{
+    auto info = AllIntfInfo{InterfaceInfo{
         .idx = 0, // TODO: Query the correct value after creation
         .flags = 0,
         .name = intfName,
@@ -548,7 +565,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
         .mtu = mtu(),
         .parent_idx = ifIdx,
         .vlan_id = id,
-    };
+    }};
 
     // Pass the parents nicEnabled property, so that the child
     // VLAN interface can inherit.

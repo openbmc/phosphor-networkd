@@ -80,7 +80,7 @@ class EthernetInterface : public Ifaces
      *  @param[in] enabled - Determine if systemd-networkd is managing this link
      */
     EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
-                      const InterfaceInfo& info, std::string_view objRoot,
+                      const AllIntfInfo& info, std::string_view objRoot,
                       const config::Parser& config, bool enabled);
 
     /** @brief Network Manager object. */
@@ -243,7 +243,7 @@ class EthernetInterface : public Ifaces
 
   private:
     EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
-                      const InterfaceInfo& info, std::string&& objPath,
+                      const AllIntfInfo& info, std::string&& objPath,
                       const config::Parser& config, bool enabled);
 
     /** @brief Determines if the address is manually assigned
