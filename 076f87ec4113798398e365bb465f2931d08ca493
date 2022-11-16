@@ -169,6 +169,23 @@
       "message": "I changed this bit recently, can you copy the stderr printf that is in\nhttps://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/58704.\n\nOtherwise, you don\u0027t get proper error output hitting the journal.",
       "revId": "076f87ec4113798398e365bb465f2931d08ca493",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0e279db_63551896",
+        "filename": "test/ibm/hypervisor-network-mgr-test/meson.build",
+        "patchSetId": 49
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-11-16T11:48:55Z",
+      "side": 1,
+      "message": "Please make all of these a static_library with a dependency that your test code can include. phosphor-network-manager is already set up this way.",
+      "revId": "076f87ec4113798398e365bb465f2931d08ca493",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
