@@ -851,3 +851,18 @@ auto& operator<<(auto& os, phosphor::network::IfAddr v)
     phosphor::network::detail::ToStrBuf<phosphor::network::IfAddr> tsb;
     return os << tsb(v);
 }
+
+namespace phosphor::network
+{
+
+/** @brief Contains all of the object information about the interface */
+struct AllIntfInfo
+{
+    InterfaceInfo intf;
+    std::optional<in_addr> defgw4 = std::nullopt;
+    std::optional<in6_addr> defgw6 = std::nullopt;
+    std::unordered_map<IfAddr, AddressInfo> addrs = {};
+    std::unordered_map<InAddrAny, NeighborInfo> staticNeighs = {};
+};
+
+} // namespace phosphor::network
