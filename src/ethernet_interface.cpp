@@ -241,10 +241,18 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
             Argument::ARGUMENT_VALUE(std::to_string(prefixLength).c_str()));
     }
 
-    auto [it, _] = this->addrs.insert_or_assign(
-        ifaddr,
-        std::make_unique<IPAddress>(bus, std::string_view(objPath), *this,
-                                    ifaddr, IP::AddressOrigin::Static));
+    auto it = addrs.find(ifaddr);
+    if (it == addrs.end())
+    {
+        it = std::get<0>(addrs.emplace(
+            ifaddr,
+            std::make_unique<IPAddress>(bus, std::string_view(objPath), *this,
+                                        ifaddr, IP::AddressOrigin::Static)));
+    }
+    else
+    {
+        it->second->IPIfaces::origin(IP::AddressOrigin::Static);
+    }
 
     writeConfigurationFile();
     manager.reloadConfigs();
@@ -284,10 +292,18 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                               Argument::ARGUMENT_VALUE(macAddress.c_str()));
     }
 
-    auto [it, _] = staticNeighbors.emplace(
-        addr,
-        std::make_unique<Neighbor>(bus, std::string_view(objPath), *this, addr,
-                                   lladdr, Neighbor::State::Permanent));
+    auto it = staticNeighbors.find(addr);
+    if (it == staticNeighbors.end())
+    {
+        it = std::get<0>(staticNeighbors.emplace(
+            addr, std::make_unique<Neighbor>(bus, std::string_view(objPath),
+                                             *this, addr, lladdr,
+                                             Neighbor::State::Permanent)));
+    }
+    else
+    {
+        it->second->NeighborObj::macAddress(std::to_string(lladdr));
+    }
 
     writeConfigurationFile();
     manager.reloadConfigs();
