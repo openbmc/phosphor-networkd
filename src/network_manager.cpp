@@ -122,15 +122,16 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
     if (auto it = interfacesByIdx.find(info.intf.idx);
         it != interfacesByIdx.end())
     {
-        it->second->updateInfo(info.intf);
         if (info.intf.name && *info.intf.name != it->second->interfaceName())
         {
-            fmt::print(stderr, "Interface name change detected {} -> {}\n",
-                       it->second->interfaceName(), *info.intf.name);
-            fflush(stderr);
-            std::abort();
+            interfaces.erase(it->second->interfaceName());
+            interfacesByIdx.erase(it);
         }
-        return;
+        else
+        {
+            it->second->updateInfo(info.intf);
+            return;
+        }
     }
     if (!info.intf.name)
     {
