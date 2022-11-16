@@ -141,7 +141,7 @@ void Manager::createInterface(const UndiscoveredInfo& info, bool enabled)
     }
     config::Parser config(config::pathForIntfConf(confDir, *info.intf.name));
     auto intf = std::make_unique<EthernetInterface>(
-        bus, *this, info.intf, objPath.str, config, true, enabled);
+        bus, *this, info.intf, objPath.str, config, enabled);
     if (info.defgw4)
     {
         intf->EthernetInterface::defaultGateway(std::to_string(*info.defgw4));
