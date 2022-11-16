@@ -77,14 +77,11 @@ class EthernetInterface : public Ifaces
      *  @param[in] objRoot - Path to attach at.
      *  @param[in] config - The parsed configuation file.
      *  @param[in] vlan - The id of the vlan if configured
-     *  @param[in] emitSignal - true if the object added signal needs to be
-     *                          send.
      *  @param[in] enabled - Determine if systemd-networkd is managing this link
      */
     EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
                       const InterfaceInfo& info, std::string_view objRoot,
-                      const config::Parser& config, bool emitSignal,
-                      bool enabled);
+                      const config::Parser& config, bool enabled);
 
     /** @brief Network Manager object. */
     Manager& manager;
@@ -234,8 +231,7 @@ class EthernetInterface : public Ifaces
     struct VlanProperties : VlanIfaces
     {
         VlanProperties(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-                       const InterfaceInfo& info, EthernetInterface& eth,
-                       bool emitSignal = true);
+                       const InterfaceInfo& info, EthernetInterface& eth);
         void delete_() override;
         unsigned parentIdx;
         EthernetInterface& eth;
@@ -248,8 +244,7 @@ class EthernetInterface : public Ifaces
   private:
     EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
                       const InterfaceInfo& info, std::string&& objPath,
-                      const config::Parser& config, bool emitSignal,
-                      bool enabled);
+                      const config::Parser& config, bool enabled);
 
     /** @brief Determines if the address is manually assigned
      *  @param[in] origin - The origin entry of the IP::Address
