@@ -147,7 +147,7 @@ class Manager : public ManagerIface
     std::filesystem::path confDir;
 
     /** @brief Map of interface info for undiscovered interfaces */
-    struct UndiscoveredInfo
+    struct AllIntfInfo
     {
         InterfaceInfo intf;
         std::optional<in_addr> defgw4 = std::nullopt;
@@ -155,7 +155,7 @@ class Manager : public ManagerIface
         std::unordered_map<IfAddr, AddressInfo> addrs = {};
         std::unordered_map<InAddrAny, NeighborInfo> staticNeighs = {};
     };
-    std::unordered_map<unsigned, UndiscoveredInfo> undiscoveredIntfInfo;
+    std::unordered_map<unsigned, AllIntfInfo> intfInfo;
     std::unordered_set<unsigned> ignoredIntf;
 
     /** @brief Map of enabled interfaces */
@@ -169,7 +169,7 @@ class Manager : public ManagerIface
     void handleAdminState(std::string_view state, unsigned ifidx);
 
     /** @brief Creates the interface in the maps */
-    void createInterface(const UndiscoveredInfo& info, bool enabled);
+    void createInterface(const AllIntfInfo& info, bool enabled);
 };
 
 } // namespace network
