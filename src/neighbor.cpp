@@ -34,11 +34,9 @@ Neighbor::Neighbor(sdbusplus::bus_t& bus,
     NeighborObj(bus, objPath.str.c_str(), NeighborObj::action::defer_emit),
     parent(parent), objPath(std::move(objPath))
 {
-    NeighborObj::ipAddress(std::to_string(addr));
-    NeighborObj::macAddress(std::to_string(lladdr));
-    NeighborObj::state(state);
-
-    // Emit deferred signal.
+    NeighborObj::ipAddress(std::to_string(addr), true);
+    NeighborObj::macAddress(std::to_string(lladdr), true);
+    NeighborObj::state(state, true);
     emit_object_added();
 }
 
