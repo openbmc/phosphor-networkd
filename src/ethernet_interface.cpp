@@ -73,9 +73,9 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
                                      const InterfaceInfo& info,
                                      std::string_view objRoot,
                                      const config::Parser& config,
-                                     bool emitSignal, bool enabled) :
+                                     bool enabled) :
     EthernetInterface(bus, manager, info, makeObjPath(objRoot, *info.name),
-                      config, emitSignal, enabled)
+                      config, enabled)
 {
 }
 
@@ -83,10 +83,8 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
                                      const InterfaceInfo& info,
                                      std::string&& objPath,
                                      const config::Parser& config,
-                                     bool emitSignal, bool enabled) :
-    Ifaces(bus, objPath.c_str(),
-           emitSignal ? Ifaces::action::defer_emit
-                      : Ifaces::action::emit_no_signals),
+                                     bool enabled) :
+    Ifaces(bus, objPath.c_str(), Ifaces::action::defer_emit),
     manager(manager), bus(bus), objPath(std::move(objPath)), ifIdx(info.idx)
 {
     interfaceName(*info.name);
@@ -107,14 +105,10 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
         {
             std::runtime_error("Missing parent link");
         }
-        vlan.emplace(bus, this->objPath.c_str(), info, *this, emitSignal);
+        vlan.emplace(bus, this->objPath.c_str(), info, *this);
     }
 
-    // Emit deferred signal.
-    if (emitSignal)
-    {
-        this->emit_object_added();
-    }
+    this->emit_object_added();
 }
 
 void EthernetInterface::updateInfo(const InterfaceInfo& info)
@@ -559,8 +553,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     // Pass the parents nicEnabled property, so that the child
     // VLAN interface can inherit.
     auto vlanIntf = std::make_unique<EthernetInterface>(
-        bus, manager, info, objRoot, config::Parser(), /*emit=*/true,
-        nicEnabled());
+        bus, manager, info, objRoot, config::Parser(), nicEnabled());
     ObjectPath ret = vlanIntf->objPath;
 
     manager.interfaces.emplace(intfName, std::move(vlanIntf));
@@ -861,17 +854,12 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
 
 EthernetInterface::VlanProperties::VlanProperties(
     sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-    const InterfaceInfo& info, EthernetInterface& eth, bool emitSignal) :
-    VlanIfaces(bus, objPath.c_str(),
-               emitSignal ? VlanIfaces::action::defer_emit
-                          : VlanIfaces::action::emit_no_signals),
+    const InterfaceInfo& info, EthernetInterface& eth) :
+    VlanIfaces(bus, objPath.c_str(), VlanIfaces::action::defer_emit),
     parentIdx(*info.parent_idx), eth(eth)
 {
     VlanIntf::id(*info.vlan_id);
-    if (emitSignal)
-    {
-        this->emit_object_added();
-    }
+    this->emit_object_added();
 }
 
 void EthernetInterface::VlanProperties::delete_()
