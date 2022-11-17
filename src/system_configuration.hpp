@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sdbusplus/bus.hpp>
+#include <sdbusplus/bus/match.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <stdplus/zstring.hpp>
 #include <string>
@@ -46,13 +47,11 @@ class SystemConfiguration : public Iface
     std::string hostName(std::string name) override;
 
   private:
-    /** @brief get the hostname from the system by doing
-     *         dbus call to hostnamed service.
-     */
-    std::string getHostNameFromSystem() const;
-
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus_t& bus;
+
+    /** @brief Monitor for hostname changes */
+    sdbusplus::bus::match_t hostnamePropMatch;
 };
 
 } // namespace network
