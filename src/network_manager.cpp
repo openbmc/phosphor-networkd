@@ -517,7 +517,6 @@ void Manager::doReloadConfigs()
     {
         log<level::ERR>("Failed to reload configuration",
                         entry("ERR=%s", ex.what()));
-        elog<InternalFailure>();
     }
 }
 
