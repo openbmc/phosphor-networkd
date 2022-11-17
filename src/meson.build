@@ -57,7 +57,6 @@ networkd_lib = static_library(
   'system_queries.cpp',
   'types.cpp',
   'util.cpp',
-  'routing_table.cpp',
   'config_parser.cpp',
   'dhcp_configuration.cpp',
   'rtnetlink_server.cpp',

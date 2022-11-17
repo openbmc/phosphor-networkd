@@ -1,7 +1,6 @@
 #pragma once
 #include "dhcp_configuration.hpp"
 #include "ethernet_interface.hpp"
-#include "routing_table.hpp"
 #include "system_configuration.hpp"
 #include "types.hpp"
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
