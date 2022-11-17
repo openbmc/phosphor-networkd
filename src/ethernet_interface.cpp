@@ -693,7 +693,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     writeConfigurationFile();
     manager.reloadConfigs();
 
-    return objPath;
+    return ret;
 }
 
 ServerList EthernetInterface::staticNTPServers(ServerList value)
