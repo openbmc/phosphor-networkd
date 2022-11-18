@@ -218,12 +218,15 @@ void watchEthernetInterface(sdbusplus::bus_t& bus,
     bool registeredSignals = false;
     for (const auto& interfaceString : configJson.items())
     {
-        if (!std::filesystem::exists(firstBootPath + interfaceString.key()) &&
-            !registeredSignals)
+        if ((FORCE_SYNC_MAC_FROM_INVENTORY ||
+             !std::filesystem::exists(firstBootPath + interfaceString.key())) &&
+             !registeredSignals)
         {
-
-            log<level::INFO>(
-                "First boot file is not present, check VPD for MAC");
+            auto msg = fmt::format("{}, check VPD for MAC",
+                                   (FORCE_SYNC_MAC_FROM_INVENTORY) ?
+                                   "Force sync enabled" :
+                                   "First boot file is not present");
+            log<level::INFO>(msg.c_str());
             EthInterfaceMatch = std::make_unique<sdbusplus::bus::match_t>(
                 bus,
                 "interface='org.freedesktop.DBus.ObjectManager',type='signal',"
