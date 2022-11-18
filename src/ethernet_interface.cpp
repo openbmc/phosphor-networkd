@@ -262,6 +262,10 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
     }
     else
     {
+        if (it->second->origin() == IP::AddressOrigin::Static)
+        {
+            return it->second->getObjPath();
+        }
         it->second->IPIfaces::origin(IP::AddressOrigin::Static);
     }
 
@@ -313,7 +317,12 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
     }
     else
     {
-        it->second->NeighborObj::macAddress(std::to_string(lladdr));
+        auto str = std::to_string(lladdr);
+        if (it->second->macAddress() == str)
+        {
+            return it->second->getObjPath();
+        }
+        it->second->NeighborObj::macAddress(str);
     }
 
     writeConfigurationFile();
