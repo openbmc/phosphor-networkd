@@ -126,6 +126,10 @@ class Manager : public ManagerIface
     {
         reloadPreHooks.push_back(std::move(hook));
     }
+    inline void addReloadPostHook(fu2::unique_function<void()>&& hook)
+    {
+        reloadPostHooks.push_back(std::move(hook));
+    }
 
   protected:
     /** @brief Persistent sdbusplus DBus bus connection. */
@@ -156,6 +160,7 @@ class Manager : public ManagerIface
 
     /** @brief List of hooks to execute during the next reload */
     std::vector<fu2::unique_function<void()>> reloadPreHooks;
+    std::vector<fu2::unique_function<void()>> reloadPostHooks;
 
     /** @brief Handles the recipt of an adminstrative state string */
     void handleAdminState(std::string_view state, unsigned ifidx);

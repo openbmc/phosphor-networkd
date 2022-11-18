@@ -517,7 +517,21 @@ void Manager::doReloadConfigs()
     {
         log<level::ERR>("Failed to reload configuration",
                         entry("ERR=%s", ex.what()));
+        reloadPostHooks.clear();
     }
+    for (auto& hook : reloadPostHooks)
+    {
+        try
+        {
+            hook();
+        }
+        catch (const std::exception& ex)
+        {
+            log<level::ERR>("Failed executing reload hook, ignoring",
+                            entry("ERR=%s", ex.what()));
+        }
+    }
+    reloadPostHooks.clear();
 }
 
 void Manager::handleAdminState(std::string_view state, unsigned ifidx)
