@@ -888,6 +888,14 @@ void EthernetInterface::VlanProperties::delete_()
     std::filesystem::remove(config::pathForIntfConf(confDir, intf), ec);
     std::filesystem::remove(config::pathForIntfDev(confDir, intf), ec);
 
+    if (eth.ifIdx > 0)
+    {
+        eth.manager.interfacesByIdx.erase(eth.ifIdx);
+    }
+    auto it = eth.manager.interfaces.find(intf);
+    auto obj = std::move(it->second);
+    eth.manager.interfaces.erase(it);
+
     // Write an updated parent interface since it has a VLAN entry
     for (const auto& [_, intf] : eth.manager.interfaces)
     {
@@ -898,13 +906,13 @@ void EthernetInterface::VlanProperties::delete_()
     }
 
     // We need to forcibly delete the interface as systemd does not
-    system::deleteIntf(intf);
+    eth.manager.addReloadPostHook(
+        [idx = eth.ifIdx]() { system::deleteIntf(idx); });
 
-    if (eth.ifIdx > 0)
-    {
-        eth.manager.interfacesByIdx.erase(eth.ifIdx);
-    }
-    eth.manager.interfaces.erase(intf);
+    // Ignore the interface so the reload doesn't re-query it
+    eth.manager.ignoredIntf.emplace(eth.ifIdx);
+
+    eth.manager.reloadConfigs();
 }
 
 } // namespace network

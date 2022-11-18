@@ -119,6 +119,10 @@ Manager::Manager(sdbusplus::bus_t& bus, const char* objPath,
 
 void Manager::createInterface(const AllIntfInfo& info, bool enabled)
 {
+    if (ignoredIntf.find(info.intf.idx) != ignoredIntf.end())
+    {
+        return;
+    }
     if (auto it = interfacesByIdx.find(info.intf.idx);
         it != interfacesByIdx.end())
     {
