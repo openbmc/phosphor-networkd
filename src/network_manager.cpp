@@ -133,6 +133,15 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
             return;
         }
     }
+    else if (info.intf.name)
+    {
+        auto it = interfaces.find(*info.intf.name);
+        if (it != interfaces.end())
+        {
+            it->second->updateInfo(info.intf);
+            return;
+        }
+    }
     if (!info.intf.name)
     {
         auto msg = fmt::format("Can't create interface without name: {}",
