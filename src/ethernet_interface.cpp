@@ -85,8 +85,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
                                      const config::Parser& config,
                                      bool enabled) :
     Ifaces(bus, objPath.c_str(), Ifaces::action::defer_emit),
-    manager(manager), bus(bus), objPath(std::move(objPath)),
-    ifIdx(info.intf.idx)
+    manager(manager), bus(bus), objPath(std::move(objPath))
 {
     interfaceName(*info.intf.name, true);
     auto dhcpVal = getDHCPValue(config);
@@ -130,6 +129,7 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
 
 void EthernetInterface::updateInfo(const InterfaceInfo& info, bool skipSignal)
 {
+    ifIdx = info.idx;
     EthernetInterfaceIntf::linkUp(info.flags & IFF_RUNNING, skipSignal);
     if (info.mac)
     {
