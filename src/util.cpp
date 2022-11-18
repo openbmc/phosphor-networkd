@@ -10,7 +10,6 @@
 #include <sys/wait.h>
 
 #include <cctype>
-#include <charconv>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <string>
@@ -133,10 +132,12 @@ std::optional<std::string> interfaceToUbootEthAddr(std::string_view intf)
         return std::nullopt;
     }
     intf.remove_prefix(pfx.size());
-    auto last = intf.data() + intf.size();
-    unsigned long idx;
-    auto res = std::from_chars(intf.data(), last, idx);
-    if (res.ec != std::errc() || res.ptr != last)
+    unsigned idx;
+    try
+    {
+        idx = DecodeInt<unsigned, 10>{}(intf);
+    }
+    catch (...)
     {
         return std::nullopt;
     }
