@@ -1,15 +1,9 @@
 #include "util.hpp"
 
-#include <arpa/inet.h>
-#include <fmt/chrono.h>
-#include <netinet/in.h>
-
-#include <cstddef>
-#include <cstring>
 #include <stdexcept>
+#include <stdplus/raw.hpp>
 #include <string>
 #include <string_view>
-#include <xyz/openbmc_project/Common/error.hpp>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -19,43 +13,29 @@ namespace phosphor
 namespace network
 {
 
-using namespace std::literals;
-using InternalFailure =
-    sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
-class TestUtil : public testing::Test
-{
-  public:
-    TestUtil()
-    {
-        // Empty
-    }
-};
-
-TEST_F(TestUtil, AddrFromBuf)
+TEST(TestUtil, AddrFromBuf)
 {
     std::string tooSmall(1, 'a');
     std::string tooLarge(24, 'a');
 
-    struct in_addr ip1;
-    EXPECT_EQ(1, inet_pton(AF_INET, "192.168.10.1", &ip1));
-    std::string_view buf1(reinterpret_cast<char*>(&ip1), sizeof(ip1));
+    struct in_addr ip1 = {0x01020304};
+    auto buf1 = stdplus::raw::asView<char>(ip1);
     InAddrAny res1 = addrFromBuf(AF_INET, buf1);
-    EXPECT_EQ(0, memcmp(&ip1, &std::get<struct in_addr>(res1), sizeof(ip1)));
+    EXPECT_EQ(ip1, res1);
     EXPECT_THROW(addrFromBuf(AF_INET, tooSmall), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_INET, tooLarge), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_UNSPEC, buf1), std::invalid_argument);
 
-    struct in6_addr ip2;
-    EXPECT_EQ(1, inet_pton(AF_INET6, "fdd8:b5ad:9d93:94ee::2:1", &ip2));
-    std::string_view buf2(reinterpret_cast<char*>(&ip2), sizeof(ip2));
+    struct in6_addr ip2 = {0xfd, 0, 0, 0, 1};
+    auto buf2 = stdplus::raw::asView<char>(ip2);
     InAddrAny res2 = addrFromBuf(AF_INET6, buf2);
-    EXPECT_EQ(0, memcmp(&ip2, &std::get<struct in6_addr>(res2), sizeof(ip2)));
+    EXPECT_EQ(ip2, res2);
     EXPECT_THROW(addrFromBuf(AF_INET6, tooSmall), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_INET6, tooLarge), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_UNSPEC, buf2), std::invalid_argument);
 }
 
-TEST_F(TestUtil, InterfaceToUbootEthAddr)
+TEST(TestUtil, InterfaceToUbootEthAddr)
 {
     EXPECT_EQ(std::nullopt, interfaceToUbootEthAddr("et"));
     EXPECT_EQ(std::nullopt, interfaceToUbootEthAddr("eth"));
