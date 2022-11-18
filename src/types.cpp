@@ -2,8 +2,6 @@
 
 #include <fmt/format.h>
 
-#include <charconv>
-
 void phosphor::network::IfAddr::invalidPfx(uint8_t pfx)
 {
     throw std::invalid_argument(fmt::format("Invalid prefix {}", pfx));
