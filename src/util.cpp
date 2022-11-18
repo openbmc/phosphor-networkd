@@ -129,47 +129,6 @@ const std::unordered_set<std::string_view>& getIgnoredInterfaces()
 
 } // namespace internal
 
-void deleteInterface(stdplus::const_zstring intf)
-{
-    pid_t pid = fork();
-    int status{};
-
-    if (pid == 0)
-    {
-
-        execl("/sbin/ip", "ip", "link", "delete", "dev", intf.c_str(), nullptr);
-        auto error = errno;
-        log<level::ERR>("Couldn't delete the device", entry("ERRNO=%d", error),
-                        entry("INTF=%s", intf.c_str()));
-        elog<InternalFailure>();
-    }
-    else if (pid < 0)
-    {
-        auto error = errno;
-        log<level::ERR>("Error occurred during fork", entry("ERRNO=%d", error));
-        elog<InternalFailure>();
-    }
-    else if (pid > 0)
-    {
-        while (waitpid(pid, &status, 0) == -1)
-        {
-            if (errno != EINTR)
-            { /* Error other than EINTR */
-                status = -1;
-                break;
-            }
-        }
-
-        if (status < 0)
-        {
-            log<level::ERR>("Unable to delete the interface",
-                            entry("INTF=%s", intf.c_str()),
-                            entry("STATUS=%d", status));
-            elog<InternalFailure>();
-        }
-    }
-}
-
 std::optional<std::string> interfaceToUbootEthAddr(std::string_view intf)
 {
     constexpr auto pfx = "eth"sv;

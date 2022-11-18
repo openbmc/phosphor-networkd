@@ -18,4 +18,6 @@ void setMTU(std::string_view ifname, unsigned mtu);
 
 void setNICUp(std::string_view ifname, bool up);
 
+void deleteIntf(unsigned idx);
+
 } // namespace phosphor::network::system

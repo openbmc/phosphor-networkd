@@ -897,11 +897,11 @@ void EthernetInterface::VlanProperties::delete_()
         }
     }
 
-    // We need to forcibly delete the interface as systemd does not
-    deleteInterface(intf);
-
     if (eth.ifIdx > 0)
     {
+        // We need to forcibly delete the interface as systemd does not
+        system::deleteIntf(eth.ifIdx);
+
         eth.manager.interfacesByIdx.erase(eth.ifIdx);
     }
     eth.manager.interfaces.erase(intf);

@@ -1,7 +1,10 @@
 #include "system_queries.hpp"
 
+#include "netlink.hpp"
+
 #include <fmt/format.h>
 #include <linux/ethtool.h>
+#include <linux/rtnetlink.h>
 #include <linux/sockios.h>
 #include <net/if.h>
 
@@ -107,6 +110,28 @@ void setNICUp(std::string_view ifname, bool up)
     ifr.ifr_flags &= ~IFF_UP;
     ifr.ifr_flags |= up ? IFF_UP : 0;
     getIFSock().ioctl(SIOCSIFFLAGS, &ifr);
+}
+
+void deleteIntf(unsigned idx)
+{
+    if (idx == 0)
+    {
+        return;
+    }
+    ifinfomsg msg = {};
+    msg.ifi_family = AF_UNSPEC;
+    msg.ifi_index = idx;
+    netlink::performRequest(
+        NETLINK_ROUTE, RTM_DELLINK, NLM_F_REPLACE, msg,
+        [&](const nlmsghdr& hdr, std::string_view data) {
+            int err = 0;
+            if (hdr.nlmsg_type == NLMSG_ERROR)
+            {
+                err = netlink::extractRtData<nlmsgerr>(data).error;
+            }
+            throw std::runtime_error(
+                fmt::format("Failed to delete `{}`: {}", idx, strerror(err)));
+        });
 }
 
 } // namespace phosphor::network::system
