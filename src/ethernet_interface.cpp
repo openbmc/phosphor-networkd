@@ -899,7 +899,7 @@ void EthernetInterface::VlanProperties::delete_()
     }
 
     // We need to forcibly delete the interface as systemd does not
-    deleteInterface(intf);
+    system::deleteIntf(intf);
 
     if (eth.ifIdx > 0)
     {

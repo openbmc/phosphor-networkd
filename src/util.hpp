@@ -74,11 +74,6 @@ constexpr InAddrAny addrFromBuf(int family, std::string_view buf)
     throw std::invalid_argument("Unrecognized family");
 }
 
-/** @brief Delete the given interface.
- *  @param[in] intf - interface name.
- */
-void deleteInterface(stdplus::const_zstring intf);
-
 /** @brief Converts the interface name into a u-boot environment
  *         variable that would hold its ethernet address.
  *
