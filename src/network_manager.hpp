@@ -117,6 +117,7 @@ class Manager : public ManagerIface
      */
     string_umap<std::unique_ptr<EthernetInterface>> interfaces;
     std::unordered_map<unsigned, EthernetInterface*> interfacesByIdx;
+    std::unordered_set<unsigned> ignoredIntf;
 
     /** @brief Adds a hook that runs immediately prior to reloading
      *
@@ -152,7 +153,6 @@ class Manager : public ManagerIface
 
     /** @brief Map of interface info for undiscovered interfaces */
     std::unordered_map<unsigned, AllIntfInfo> intfInfo;
-    std::unordered_set<unsigned> ignoredIntf;
 
     /** @brief Map of enabled interfaces */
     std::unordered_map<unsigned, bool> systemdNetworkdEnabled;
