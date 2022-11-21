@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <stdplus/pinned.hpp>
 
 namespace sdbusplus::bus
 {
@@ -18,7 +19,8 @@ struct Runtime
 {
     virtual ~Runtime() = default;
 };
-std::unique_ptr<Runtime> watch(sdbusplus::bus::bus& bus, Manager& m);
+std::unique_ptr<Runtime> watch(stdplus::PinnedRef<sdbusplus::bus::bus> bus,
+                               stdplus::PinnedRef<Manager> m);
 
 } // namespace inventory
 } // namespace phosphor::network

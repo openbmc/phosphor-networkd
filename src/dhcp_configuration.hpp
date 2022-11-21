@@ -1,6 +1,7 @@
 #pragma once
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
+#include <stdplus/pinned.hpp>
 #include <stdplus/zstring.hpp>
 #include <xyz/openbmc_project/Network/DHCPConfiguration/server.hpp>
 
@@ -27,20 +28,13 @@ using Iface = sdbusplus::server::object_t<ConfigIntf>;
 class Configuration : public Iface
 {
   public:
-    Configuration() = default;
-    Configuration(const Configuration&) = delete;
-    Configuration& operator=(const Configuration&) = delete;
-    Configuration(Configuration&&) = delete;
-    Configuration& operator=(Configuration&&) = delete;
-    virtual ~Configuration() = default;
-
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
      *  @param[in] objPath - Path to attach at.
      *  @param[in] parent - Parent object.
      */
     Configuration(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-                  Manager& parent);
+                  stdplus::PinnedRef<Manager> parent);
 
     /** @brief If true then DNS servers received from the DHCP server
      *         will be used and take precedence over any statically
@@ -83,11 +77,8 @@ class Configuration : public Iface
     using ConfigIntf::sendHostNameEnabled;
 
   private:
-    /** @brief sdbusplus DBus bus connection. */
-    sdbusplus::bus_t& bus;
-
     /** @brief Network Manager object. */
-    phosphor::network::Manager& manager;
+    stdplus::PinnedRef<Manager> manager;
 };
 
 } // namespace dhcp

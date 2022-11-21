@@ -4,6 +4,7 @@
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/message/native_types.hpp>
 #include <sdbusplus/server/object.hpp>
+#include <stdplus/pinned.hpp>
 #include <string_view>
 #include <xyz/openbmc_project/Network/IP/server.hpp>
 #include <xyz/openbmc_project/Object/Delete/server.hpp>
@@ -30,13 +31,6 @@ class EthernetInterface;
 class IPAddress : public IPIfaces
 {
   public:
-    IPAddress() = delete;
-    IPAddress(const IPAddress&) = delete;
-    IPAddress& operator=(const IPAddress&) = delete;
-    IPAddress(IPAddress&&) = delete;
-    IPAddress& operator=(IPAddress&&) = delete;
-    virtual ~IPAddress() = default;
-
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
      *  @param[in] objRoot - Path to attach at.
@@ -45,7 +39,8 @@ class IPAddress : public IPIfaces
      *  @param[in] origin - origin of ipaddress(dhcp/static/SLAAC/LinkLocal).
      */
     IPAddress(sdbusplus::bus_t& bus, std::string_view objRoot,
-              EthernetInterface& parent, IfAddr addr, IP::AddressOrigin origin);
+              stdplus::PinnedRef<EthernetInterface> parent, IfAddr addr,
+              IP::AddressOrigin origin);
 
     std::string address(std::string ipAddress) override;
     uint8_t prefixLength(uint8_t) override;
@@ -70,13 +65,14 @@ class IPAddress : public IPIfaces
 
   private:
     /** @brief Parent Object. */
-    EthernetInterface& parent;
+    stdplus::PinnedRef<EthernetInterface> parent;
 
     /** @brief Dbus object path */
     sdbusplus::message::object_path objPath;
 
     IPAddress(sdbusplus::bus_t& bus, sdbusplus::message::object_path objPath,
-              EthernetInterface& parent, IfAddr addr, IP::AddressOrigin origin);
+              stdplus::PinnedRef<EthernetInterface> parent, IfAddr addr,
+              IP::AddressOrigin origin);
 };
 
 } // namespace network

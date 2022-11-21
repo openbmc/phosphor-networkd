@@ -32,7 +32,8 @@ struct TestManagerData
 
 struct TestManager : TestManagerData, Manager
 {
-    inline TestManager(sdbusplus::bus_t& bus, stdplus::zstring_view path,
+    inline TestManager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                       stdplus::zstring_view path,
                        const std::filesystem::path& dir) :
         Manager(bus, reloadForManager(), path, dir)
     {

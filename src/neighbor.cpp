@@ -21,16 +21,16 @@ static auto makeObjPath(std::string_view root, InAddrAny addr)
 }
 
 Neighbor::Neighbor(sdbusplus::bus_t& bus, std::string_view objRoot,
-                   EthernetInterface& parent, InAddrAny addr, ether_addr lladdr,
-                   State state) :
+                   stdplus::PinnedRef<EthernetInterface> parent, InAddrAny addr,
+                   ether_addr lladdr, State state) :
     Neighbor(bus, makeObjPath(objRoot, addr), parent, addr, lladdr, state)
 {
 }
 
 Neighbor::Neighbor(sdbusplus::bus_t& bus,
                    sdbusplus::message::object_path objPath,
-                   EthernetInterface& parent, InAddrAny addr, ether_addr lladdr,
-                   State state) :
+                   stdplus::PinnedRef<EthernetInterface> parent, InAddrAny addr,
+                   ether_addr lladdr, State state) :
     NeighborObj(bus, objPath.str.c_str(), NeighborObj::action::defer_emit),
     parent(parent), objPath(std::move(objPath))
 {
@@ -42,7 +42,7 @@ Neighbor::Neighbor(sdbusplus::bus_t& bus,
 
 void Neighbor::delete_()
 {
-    auto& neighbors = parent.staticNeighbors;
+    auto& neighbors = parent.get().staticNeighbors;
     std::unique_ptr<Neighbor> ptr;
     for (auto it = neighbors.begin(); it != neighbors.end(); ++it)
     {
@@ -54,8 +54,8 @@ void Neighbor::delete_()
         }
     }
 
-    parent.writeConfigurationFile();
-    parent.manager.reloadConfigs();
+    parent.get().writeConfigurationFile();
+    parent.get().manager.get().reloadConfigs();
 }
 
 using sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
