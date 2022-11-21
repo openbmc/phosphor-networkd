@@ -11,6 +11,7 @@
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/bus/match.hpp>
 #include <sdbusplus/message/native_types.hpp>
+#include <stdplus/pinned.hpp>
 #include <stdplus/zstring_view.hpp>
 #include <string>
 #include <string_view>
@@ -41,8 +42,6 @@ class DelayedExecutor
 class Manager : public ManagerIface
 {
   public:
-    Manager(const Manager&) = delete;
-    Manager& operator=(const Manager&) = delete;
     Manager(Manager&&) = delete;
     Manager& operator=(Manager&&) = delete;
 
@@ -52,7 +51,7 @@ class Manager : public ManagerIface
      *  @param[in] objPath - Path to attach at.
      *  @param[in] confDir - Network Configuration directory path.
      */
-    Manager(sdbusplus::bus_t& bus, DelayedExecutor& reload,
+    Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus, DelayedExecutor& reload,
             stdplus::zstring_view objPath,
             const std::filesystem::path& confDir);
 
@@ -133,7 +132,7 @@ class Manager : public ManagerIface
     DelayedExecutor& reload;
 
     /** @brief Persistent sdbusplus DBus bus connection. */
-    sdbusplus::bus_t& bus;
+    stdplus::PinnedRef<sdbusplus::bus_t> bus;
 
     /** @brief BMC network reset - resets network configuration for BMC. */
     void reset() override;
