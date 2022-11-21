@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd644f42_40e0b98a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2022-11-21T10:33:41Z",
+      "side": 1,
+      "message": "I\u0027m actively trying to get rid of meson options that tweak build parameters that could be runtime configurable, but I don\u0027t have a schema yet for handling this (likely via the config.json already used for the inventory). So I\u0027ll probably follow this up in the next month with another change.",
+      "revId": "997fb2bc3acdfe1040d8b99ae8f41891b939c25c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
