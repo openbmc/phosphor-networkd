@@ -1,7 +1,7 @@
 #include "config_parser.hpp"
 #include "ipaddress.hpp"
 #include "mock_ethernet_interface.hpp"
-#include "mock_network_manager.hpp"
+#include "test_network_manager.hpp"
 
 #include <net/if.h>
 
@@ -26,7 +26,7 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
   public:
     sdbusplus::bus_t bus;
     std::filesystem::path confDir;
-    MockManager manager;
+    TestManager manager;
     MockEthernetInterface interface;
     TestEthernetInterface() :
         bus(sdbusplus::bus::new_default()), confDir(CaseTmpDir()),
@@ -37,7 +37,7 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     }
 
     static MockEthernetInterface makeInterface(sdbusplus::bus_t& bus,
-                                               MockManager& manager)
+                                               TestManager& manager)
     {
         AllIntfInfo info{InterfaceInfo{.idx = 1, .flags = 0, .name = "test0"}};
         return {bus, manager, info, "/xyz/openbmc_test/network"sv,
@@ -125,7 +125,7 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
 TEST_F(TestEthernetInterface, addStaticNameServers)
 {
     ServerList servers = {"9.1.1.1", "9.2.2.2", "9.3.3.3"};
-    EXPECT_CALL(manager, reloadConfigs());
+    EXPECT_CALL(manager.mockReload, schedule());
     interface.staticNameServers(servers);
     config::Parser parser((confDir / "00-bmc-test0.network").native());
     EXPECT_EQ(servers, parser.map.getValueStrings("Network", "DNS"));
@@ -142,7 +142,7 @@ TEST_F(TestEthernetInterface, getDynamicNameServers)
 TEST_F(TestEthernetInterface, addStaticNTPServers)
 {
     ServerList servers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};
-    EXPECT_CALL(manager, reloadConfigs());
+    EXPECT_CALL(manager.mockReload, schedule());
     interface.staticNTPServers(servers);
     config::Parser parser((confDir / "00-bmc-test0.network").native());
     EXPECT_EQ(servers, parser.map.getValueStrings("Network", "NTP"));
@@ -182,7 +182,8 @@ TEST_F(TestEthernetInterface, addGateway6)
 
 TEST_F(TestEthernetInterface, DHCPEnabled)
 {
-    EXPECT_CALL(manager, reloadConfigs()).WillRepeatedly(testing::Return());
+    EXPECT_CALL(manager.mockReload, schedule())
+        .WillRepeatedly(testing::Return());
 
     using DHCPConf = EthernetInterfaceIntf::DHCPConf;
     auto test = [&](DHCPConf conf, bool dhcp4, bool dhcp6, bool ra) {

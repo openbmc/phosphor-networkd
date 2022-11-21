@@ -33,7 +33,6 @@ test_deps = [
 test_lib = static_library(
   'networkd-test',
   'mock_syscall.cpp',
-  'global_network_objects.cpp',
   implicit_include_directories: false,
   include_directories: test_headers,
   dependencies: test_deps)

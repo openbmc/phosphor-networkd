@@ -21,8 +21,7 @@ int main(int /*argc*/, char** /*argv*/)
     bus.attach_event(event.get(), SD_EVENT_PRIORITY_NORMAL);
 
     // Create hypervisor network manager dbus object
-    phosphor::network::HypNetworkMgr manager(bus, event,
-                                             DEFAULT_HYP_NW_OBJPATH);
+    phosphor::network::HypNetworkMgr manager(bus, DEFAULT_HYP_NW_OBJPATH);
 
     // Create the hypervisor eth interface objects
     manager.createIfObjects();

@@ -17,10 +17,9 @@ class TestHypNetworkManager : public testing::Test
   public:
     sdbusplus::bus_t bus;
     HypNetworkMgr manager;
-    sdeventplus::Event event = sdeventplus::Event::get_default();
     TestHypNetworkManager() :
         bus(sdbusplus::bus::new_default()),
-        manager(bus, event, "/xyz/openbmc_test/network/hypervisor")
+        manager(bus, "/xyz/openbmc_test/network/hypervisor")
     {
         // TODO: Once the support for ipv6 has been added, the below
         // method call to set default values in the local copy

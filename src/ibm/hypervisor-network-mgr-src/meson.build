@@ -17,7 +17,10 @@ executable(
   'hyp_network_manager.cpp',
   'hyp_sys_config.cpp',
   implicit_include_directories: false,
-  dependencies: networkd_dep,
+  dependencies: [
+    networkd_dep,
+    dependency('sdeventplus'),
+  ],
   install: true,
   install_dir: get_option('bindir'))
 

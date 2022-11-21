@@ -14,7 +14,6 @@
 #include <phosphor-logging/log.hpp>
 #include <string>
 #include <string_view>
-#include <variant>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor

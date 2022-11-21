@@ -1,8 +1,5 @@
 #include "hyp_network_manager.hpp"
 
-#include "types.hpp"
-#include "util.hpp"
-
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/elog.hpp>
 #include <phosphor-logging/log.hpp>

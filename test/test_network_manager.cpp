@@ -1,5 +1,6 @@
+#include "test_network_manager.hpp"
+
 #include "config_parser.hpp"
-#include "mock_network_manager.hpp"
 
 #include <filesystem>
 #include <sdbusplus/bus.hpp>
@@ -19,7 +20,7 @@ class TestNetworkManager : public stdplus::gtest::TestWithTmp
 {
   protected:
     sdbusplus::bus_t bus;
-    MockManager manager;
+    TestManager manager;
     TestNetworkManager() :
         bus(sdbusplus::bus::new_default()),
         manager(bus, "/xyz/openbmc_test/abc", CaseTmpDir())

@@ -18,10 +18,9 @@ class TestHypSysConfig : public testing::Test
     sdbusplus::bus_t bus;
     HypNetworkMgr manager;
     MockHypSysConfig sysConfigObj;
-    sdeventplus::Event event = sdeventplus::Event::get_default();
     TestHypSysConfig() :
         bus(sdbusplus::bus::new_default()),
-        manager(bus, event, "/xyz/openbmc_test/network/hypervisor"),
+        manager(bus, "/xyz/openbmc_test/network/hypervisor"),
         sysConfigObj(bus, "/xyz/openbmc_test/network/hypervisor/config",
                      manager)
     {

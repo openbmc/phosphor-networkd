@@ -35,7 +35,6 @@ networkd_deps = [
   dependency('phosphor-logging'),
   networkd_dbus_dep,
   sdbusplus_dep,
-  dependency('sdeventplus'),
   stdplus_dep,
 ]
 
@@ -58,7 +57,6 @@ networkd_lib = static_library(
   'util.cpp',
   'config_parser.cpp',
   'dhcp_configuration.cpp',
-  'rtnetlink_server.cpp',
   'dns_updater.cpp',
   implicit_include_directories: false,
   include_directories: src_includes,
@@ -73,9 +71,13 @@ networkd_dep = declare_dependency(
 executable(
   'phosphor-network-manager',
   'network_manager_main.cpp',
+  'rtnetlink_server.cpp',
   main_srcs,
   implicit_include_directories: false,
-  dependencies: [networkd_dep] + main_deps,
+  dependencies: main_deps + [
+    networkd_dep,
+    dependency('sdeventplus'),
+  ],
   install: true,
   install_dir: get_option('bindir'))
 
