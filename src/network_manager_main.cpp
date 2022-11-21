@@ -17,6 +17,7 @@
 #include <sdeventplus/event.hpp>
 #include <sdeventplus/source/signal.hpp>
 #include <sdeventplus/utility/timer.hpp>
+#include <stdplus/pinned.hpp>
 #include <stdplus/signal.hpp>
 
 using phosphor::logging::level;
@@ -65,11 +66,11 @@ int main()
     stdplus::signal::block(SIGTERM);
     sdeventplus::source::Signal(event, SIGTERM, termCb).set_floating(true);
 
-    auto bus = sdbusplus::bus::new_default();
+    stdplus::Pinned bus = sdbusplus::bus::new_default();
     bus.attach_event(event.get(), SD_EVENT_PRIORITY_NORMAL);
     sdbusplus::server::manager_t objManager(bus, DEFAULT_OBJPATH);
 
-    TimerExecutor reload(event, std::chrono::seconds(3));
+    stdplus::Pinned<TimerExecutor> reload(event, std::chrono::seconds(3));
     Manager manager(bus, reload, DEFAULT_OBJPATH, "/etc/systemd/network");
     netlink::Server svr(event, manager);
 

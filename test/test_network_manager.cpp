@@ -19,7 +19,7 @@ using ::testing::UnorderedElementsAre;
 class TestNetworkManager : public stdplus::gtest::TestWithTmp
 {
   protected:
-    sdbusplus::bus_t bus;
+    stdplus::Pinned<sdbusplus::bus_t> bus;
     TestManager manager;
     TestNetworkManager() :
         bus(sdbusplus::bus::new_default()),

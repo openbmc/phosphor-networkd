@@ -4,6 +4,7 @@
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/message/native_types.hpp>
 #include <sdbusplus/server/object.hpp>
+#include <stdplus/pinned.hpp>
 #include <string_view>
 #include <xyz/openbmc_project/Network/Neighbor/server.hpp>
 #include <xyz/openbmc_project/Object/Delete/server.hpp>
@@ -28,15 +29,6 @@ class EthernetInterface;
 class Neighbor : public NeighborObj
 {
   public:
-    using State = NeighborIntf::State;
-
-    Neighbor() = delete;
-    Neighbor(const Neighbor&) = delete;
-    Neighbor& operator=(const Neighbor&) = delete;
-    Neighbor(Neighbor&&) = delete;
-    Neighbor& operator=(Neighbor&&) = delete;
-    virtual ~Neighbor() = default;
-
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
      *  @param[in] objRoot - Path to attach at.
@@ -46,8 +38,8 @@ class Neighbor : public NeighborObj
      *  @param[in] state - The state of the neighbor entry.
      */
     Neighbor(sdbusplus::bus_t& bus, std::string_view objRoot,
-             EthernetInterface& parent, InAddrAny addr, ether_addr lladdr,
-             State state);
+             stdplus::PinnedRef<EthernetInterface> parent, InAddrAny addr,
+             ether_addr lladdr, State state);
 
     /** @brief Delete this d-bus object.
      */
@@ -67,14 +59,14 @@ class Neighbor : public NeighborObj
 
   private:
     /** @brief Parent Object. */
-    EthernetInterface& parent;
+    stdplus::PinnedRef<EthernetInterface> parent;
 
     /** @brief Dbus object path */
     sdbusplus::message::object_path objPath;
 
     Neighbor(sdbusplus::bus_t& bus, sdbusplus::message::object_path objPath,
-             EthernetInterface& parent, InAddrAny addr, ether_addr lladdr,
-             State state);
+             stdplus::PinnedRef<EthernetInterface> parent, InAddrAny addr,
+             ether_addr lladdr, State state);
 };
 
 } // namespace network
