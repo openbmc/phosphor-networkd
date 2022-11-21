@@ -46,7 +46,7 @@ struct Proto<in6_addr>
 };
 
 IPAddress::IPAddress(sdbusplus::bus_t& bus, std::string_view objRoot,
-                     EthernetInterface& parent, IfAddr addr,
+                     stdplus::PinnedRef<EthernetInterface> parent, IfAddr addr,
                      AddressOrigin origin) :
     IPAddress(bus, makeObjPath(objRoot, addr), parent, addr, origin)
 {
@@ -54,7 +54,7 @@ IPAddress::IPAddress(sdbusplus::bus_t& bus, std::string_view objRoot,
 
 IPAddress::IPAddress(sdbusplus::bus_t& bus,
                      sdbusplus::message::object_path objPath,
-                     EthernetInterface& parent, IfAddr addr,
+                     stdplus::PinnedRef<EthernetInterface> parent, IfAddr addr,
                      AddressOrigin origin) :
     IPIfaces(bus, objPath.str.c_str(), IPIfaces::action::defer_emit),
     parent(parent), objPath(std::move(objPath))
@@ -94,23 +94,24 @@ void IPAddress::delete_()
         log<level::ERR>("Tried to delete a non-static address"),
             entry("ADDRESS=%s", address().c_str()),
             entry("PREFIX=%" PRIu8, prefixLength()),
-            entry("INTERFACE=%s", parent.interfaceName().c_str());
+            entry("INTERFACE=%s", parent.get().interfaceName().c_str());
         elog<InternalFailure>();
     }
 
     std::unique_ptr<IPAddress> ptr;
-    for (auto it = parent.addrs.begin(); it != parent.addrs.end(); ++it)
+    auto& addrs = parent.get().addrs;
+    for (auto it = addrs.begin(); it != addrs.end(); ++it)
     {
         if (it->second.get() == this)
         {
             ptr = std::move(it->second);
-            parent.addrs.erase(it);
+            addrs.erase(it);
             break;
         }
     }
 
-    parent.writeConfigurationFile();
-    parent.manager.reloadConfigs();
+    parent.get().writeConfigurationFile();
+    parent.get().manager.get().reloadConfigs();
 }
 
 } // namespace network

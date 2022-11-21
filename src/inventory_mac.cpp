@@ -337,9 +337,10 @@ void watchEthernetInterface(sdbusplus::bus_t& bus,
     }
 }
 
-std::unique_ptr<Runtime> watch(sdbusplus::bus::bus& bus, Manager& m)
+std::unique_ptr<Runtime> watch(stdplus::PinnedRef<sdbusplus::bus::bus> bus,
+                               stdplus::PinnedRef<Manager> m)
 {
-    manager = &m;
+    manager = &m.get();
     std::ifstream in(configFile);
     nlohmann::json configJson;
     in >> configJson;

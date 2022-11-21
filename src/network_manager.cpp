@@ -14,6 +14,7 @@
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/message.hpp>
+#include <stdplus/pinned.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 constexpr char SYSTEMD_BUSNAME[] = "org.freedesktop.systemd1";
@@ -39,13 +40,14 @@ static constexpr const char enabledMatch[] =
     "link',interface='org.freedesktop.DBus.Properties',member='"
     "PropertiesChanged',arg0='org.freedesktop.network1.Link',";
 
-Manager::Manager(sdbusplus::bus_t& bus, DelayedExecutor& reload,
-                 stdplus::zstring_view objPath,
+Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                 DelayedExecutor& reload, stdplus::zstring_view objPath,
                  const std::filesystem::path& confDir) :
     ManagerIface(bus, objPath.c_str(), ManagerIface::action::defer_emit),
     reload(reload), bus(bus), objPath(std::string(objPath)), confDir(confDir),
     systemdNetworkdEnabledMatch(
-        bus, enabledMatch, [&](sdbusplus::message_t& m) {
+        bus, enabledMatch,
+        [man = stdplus::PinnedRef<Manager>(*this)](sdbusplus::message_t& m) {
             std::string intf;
             std::unordered_map<std::string, std::variant<std::string>> values;
             try
@@ -64,7 +66,7 @@ Manager::Manager(sdbusplus::bus_t& bus, DelayedExecutor& reload,
                 }
                 auto ifidx = DecodeInt<unsigned, 10>{}(obj.substr(sep + 3));
                 const auto& state = std::get<std::string>(it->second);
-                handleAdminState(state, ifidx);
+                man.get().handleAdminState(state, ifidx);
             }
             catch (const std::exception& e)
             {
@@ -92,9 +94,10 @@ Manager::Manager(sdbusplus::bus_t& bus, DelayedExecutor& reload,
         reloadPreHooks.clear();
         try
         {
-            auto method = bus.new_method_call(NETWORKD_BUSNAME, NETWORKD_PATH,
-                                              NETWORKD_INTERFACE, "Reload");
-            bus.call_noreply(method);
+            bus.get()
+                .new_method_call(NETWORKD_BUSNAME, NETWORKD_PATH,
+                                 NETWORKD_INTERFACE, "Reload")
+                .call();
             log<level::INFO>("Reloaded systemd-networkd");
         }
         catch (const sdbusplus::exception_t& ex)
@@ -122,11 +125,12 @@ Manager::Manager(sdbusplus::bus_t& bus, DelayedExecutor& reload,
         links;
     try
     {
-        auto rsp =
-            bus.new_method_call("org.freedesktop.network1",
-                                "/org/freedesktop/network1",
-                                "org.freedesktop.network1.Manager", "ListLinks")
-                .call();
+        auto rsp = bus.get()
+                       .new_method_call("org.freedesktop.network1",
+                                        "/org/freedesktop/network1",
+                                        "org.freedesktop.network1.Manager",
+                                        "ListLinks")
+                       .call();
         rsp.read(links);
     }
     catch (const sdbusplus::exception::SdBusError& e)
@@ -138,8 +142,8 @@ Manager::Manager(sdbusplus::bus_t& bus, DelayedExecutor& reload,
         unsigned ifidx = std::get<0>(link);
         auto obj = fmt::format("/org/freedesktop/network1/link/_3{}", ifidx);
         auto req =
-            bus.new_method_call("org.freedesktop.network1", obj.c_str(),
-                                "org.freedesktop.DBus.Properties", "Get");
+            bus.get().new_method_call("org.freedesktop.network1", obj.c_str(),
+                                      "org.freedesktop.DBus.Properties", "Get");
         req.append("org.freedesktop.network1.Link", "AdministrativeState");
         auto rsp = req.call();
         std::variant<std::string> val;
