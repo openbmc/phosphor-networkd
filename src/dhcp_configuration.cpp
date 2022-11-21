@@ -23,15 +23,16 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 Configuration::Configuration(sdbusplus::bus_t& bus,
-                             stdplus::const_zstring objPath, Manager& parent) :
+                             stdplus::const_zstring objPath,
+                             stdplus::PinnedRef<Manager> parent) :
     Iface(bus, objPath.c_str(), Iface::action::defer_emit),
-    bus(bus), manager(parent)
+    manager(parent)
 {
     config::Parser conf;
     std::filesystem::directory_entry newest_file;
     time_t newest_time = 0;
     for (const auto& dirent :
-         std::filesystem::directory_iterator(manager.getConfDir()))
+         std::filesystem::directory_iterator(manager.get().getConfDir()))
     {
         struct stat st = {};
         stat(dirent.path().native().c_str(), &st);
@@ -65,8 +66,8 @@ bool Configuration::sendHostNameEnabled(bool value)
 
     auto name = ConfigIntf::sendHostNameEnabled(value);
 
-    manager.writeToConfigurationFile();
-    manager.reloadConfigs();
+    manager.get().writeToConfigurationFile();
+    manager.get().reloadConfigs();
 
     return name;
 }
@@ -79,8 +80,8 @@ bool Configuration::hostNameEnabled(bool value)
     }
 
     auto name = ConfigIntf::hostNameEnabled(value);
-    manager.writeToConfigurationFile();
-    manager.reloadConfigs();
+    manager.get().writeToConfigurationFile();
+    manager.get().reloadConfigs();
 
     return name;
 }
@@ -93,8 +94,8 @@ bool Configuration::ntpEnabled(bool value)
     }
 
     auto ntp = ConfigIntf::ntpEnabled(value);
-    manager.writeToConfigurationFile();
-    manager.reloadConfigs();
+    manager.get().writeToConfigurationFile();
+    manager.get().reloadConfigs();
 
     return ntp;
 }
@@ -107,8 +108,8 @@ bool Configuration::dnsEnabled(bool value)
     }
 
     auto dns = ConfigIntf::dnsEnabled(value);
-    manager.writeToConfigurationFile();
-    manager.reloadConfigs();
+    manager.get().writeToConfigurationFile();
+    manager.get().reloadConfigs();
 
     return dns;
 }
