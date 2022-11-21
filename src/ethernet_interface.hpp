@@ -8,6 +8,7 @@
 #include <optional>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
+#include <stdplus/pinned.hpp>
 #include <stdplus/zstring_view.hpp>
 #include <string>
 #include <vector>
@@ -63,12 +64,8 @@ class Parser;
 class EthernetInterface : public Ifaces
 {
   public:
-    EthernetInterface() = delete;
-    EthernetInterface(const EthernetInterface&) = delete;
-    EthernetInterface& operator=(const EthernetInterface&) = delete;
     EthernetInterface(EthernetInterface&&) = delete;
     EthernetInterface& operator=(EthernetInterface&&) = delete;
-    virtual ~EthernetInterface() = default;
 
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
@@ -79,12 +76,13 @@ class EthernetInterface : public Ifaces
      *  @param[in] vlan - The id of the vlan if configured
      *  @param[in] enabled - Determine if systemd-networkd is managing this link
      */
-    EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
+    EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                      stdplus::PinnedRef<Manager> manager,
                       const AllIntfInfo& info, std::string_view objRoot,
                       const config::Parser& config, bool enabled);
 
     /** @brief Network Manager object. */
-    Manager& manager;
+    stdplus::PinnedRef<Manager> manager;
 
     /** @brief Persistent map of IPAddress dbus objects and their names */
     std::unordered_map<IfAddr, std::unique_ptr<IPAddress>> addrs;
@@ -220,7 +218,7 @@ class EthernetInterface : public Ifaces
     virtual ServerList getNameServerFromResolvd();
 
     /** @brief Persistent sdbusplus DBus bus connection. */
-    sdbusplus::bus_t& bus;
+    stdplus::PinnedRef<sdbusplus::bus_t> bus;
 
     /** @brief Dbus object path */
     std::string objPath;
@@ -231,10 +229,11 @@ class EthernetInterface : public Ifaces
     struct VlanProperties : VlanIfaces
     {
         VlanProperties(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-                       const InterfaceInfo& info, EthernetInterface& eth);
+                       const InterfaceInfo& info,
+                       stdplus::PinnedRef<EthernetInterface> eth);
         void delete_() override;
         unsigned parentIdx;
-        EthernetInterface& eth;
+        stdplus::PinnedRef<EthernetInterface> eth;
     };
     std::optional<VlanProperties> vlan;
 
@@ -242,7 +241,8 @@ class EthernetInterface : public Ifaces
     friend class TestNetworkManager;
 
   private:
-    EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
+    EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                      stdplus::PinnedRef<Manager> manager,
                       const AllIntfInfo& info, std::string&& objPath,
                       const config::Parser& config, bool enabled);
 

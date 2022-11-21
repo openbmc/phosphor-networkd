@@ -3,6 +3,7 @@
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/bus/match.hpp>
 #include <sdbusplus/server/object.hpp>
+#include <stdplus/pinned.hpp>
 #include <stdplus/zstring.hpp>
 #include <string>
 #include <xyz/openbmc_project/Network/SystemConfiguration/server.hpp>
@@ -27,19 +28,16 @@ class Manager; // forward declaration of network manager.
 class SystemConfiguration : public Iface
 {
   public:
-    SystemConfiguration() = default;
-    SystemConfiguration(const SystemConfiguration&) = delete;
-    SystemConfiguration& operator=(const SystemConfiguration&) = delete;
     SystemConfiguration(SystemConfiguration&&) = delete;
     SystemConfiguration& operator=(SystemConfiguration&&) = delete;
-    virtual ~SystemConfiguration() = default;
 
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
      *  @param[in] objPath - Path to attach at.
      *  @param[in] parent - Parent object.
      */
-    SystemConfiguration(sdbusplus::bus_t& bus, stdplus::const_zstring objPath);
+    SystemConfiguration(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                        stdplus::const_zstring objPath);
 
     /** @brief set the hostname of the system.
      *  @param[in] name - host name of the system.
@@ -48,7 +46,7 @@ class SystemConfiguration : public Iface
 
   private:
     /** @brief Persistent sdbusplus DBus bus connection. */
-    sdbusplus::bus_t& bus;
+    stdplus::PinnedRef<sdbusplus::bus_t> bus;
 
     /** @brief Monitor for hostname changes */
     sdbusplus::bus::match_t hostnamePropMatch;
