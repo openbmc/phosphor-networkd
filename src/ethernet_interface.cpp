@@ -69,7 +69,8 @@ static std::string makeObjPath(std::string_view root, std::string_view intf)
     return ret;
 }
 
-EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
+EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                                     stdplus::PinnedRef<Manager> manager,
                                      const AllIntfInfo& info,
                                      std::string_view objRoot,
                                      const config::Parser& config,
@@ -79,7 +80,8 @@ EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
 {
 }
 
-EthernetInterface::EthernetInterface(sdbusplus::bus_t& bus, Manager& manager,
+EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                                     stdplus::PinnedRef<Manager> manager,
                                      const AllIntfInfo& info,
                                      std::string&& objPath,
                                      const config::Parser& config,
@@ -270,7 +272,7 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
     }
 
     writeConfigurationFile();
-    manager.reloadConfigs();
+    manager.get().reloadConfigs();
 
     return it->second->getObjPath();
 }
@@ -326,7 +328,7 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
     }
 
     writeConfigurationFile();
-    manager.reloadConfigs();
+    manager.get().reloadConfigs();
 
     return it->second->getObjPath();
 }
@@ -336,7 +338,7 @@ bool EthernetInterface::ipv6AcceptRA(bool value)
     if (ipv6AcceptRA() != EthernetInterfaceIntf::ipv6AcceptRA(value))
     {
         writeConfigurationFile();
-        manager.reloadConfigs();
+        manager.get().reloadConfigs();
     }
     return value;
 }
@@ -346,7 +348,7 @@ bool EthernetInterface::dhcp4(bool value)
     if (dhcp4() != EthernetInterfaceIntf::dhcp4(value))
     {
         writeConfigurationFile();
-        manager.reloadConfigs();
+        manager.get().reloadConfigs();
     }
     return value;
 }
@@ -356,7 +358,7 @@ bool EthernetInterface::dhcp6(bool value)
     if (dhcp6() != EthernetInterfaceIntf::dhcp6(value))
     {
         writeConfigurationFile();
-        manager.reloadConfigs();
+        manager.get().reloadConfigs();
     }
     return value;
 }
@@ -378,7 +380,7 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
     if (old4 != new4 || old6 != new6 || oldra != newra)
     {
         writeConfigurationFile();
-        manager.reloadConfigs();
+        manager.get().reloadConfigs();
     }
     return value;
 }
@@ -423,10 +425,10 @@ bool EthernetInterface::nicEnabled(bool value)
     {
         // We only need to bring down the interface, networkd will always bring
         // up managed interfaces
-        manager.addReloadPreHook(
+        manager.get().addReloadPreHook(
             [ifname = interfaceName()]() { system::setNICUp(ifname, false); });
     }
-    manager.reloadConfigs();
+    manager.get().reloadConfigs();
 
     return value;
 }
@@ -453,7 +455,7 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
         EthernetInterfaceIntf::staticNameServers(value);
 
         writeConfigurationFile();
-        manager.reloadConfigs();
+        manager.get().reloadConfigs();
     }
     catch (const InternalFailure& e)
     {
@@ -479,14 +481,15 @@ void EthernetInterface::loadNameServers(const config::Parser& config)
 ServerList EthernetInterface::getNTPServerFromTimeSyncd()
 {
     ServerList servers; // Variable to capture the NTP Server IPs
-    auto method = bus.new_method_call(TIMESYNCD_SERVICE, TIMESYNCD_SERVICE_PATH,
-                                      PROPERTY_INTERFACE, METHOD_GET);
+    auto method =
+        bus.get().new_method_call(TIMESYNCD_SERVICE, TIMESYNCD_SERVICE_PATH,
+                                  PROPERTY_INTERFACE, METHOD_GET);
 
     method.append(TIMESYNCD_INTERFACE, "LinkNTPServers");
 
     try
     {
-        auto reply = bus.call(method);
+        auto reply = bus.get().call(method);
         std::variant<ServerList> response;
         reply.read(response);
         servers = std::get<ServerList>(response);
@@ -523,14 +526,14 @@ ServerList EthernetInterface::getNameServerFromResolvd()
 
     using type = std::vector<std::tuple<int32_t, std::vector<uint8_t>>>;
     std::variant<type> name; // Variable to capture the DNS property
-    auto method = bus.new_method_call(RESOLVED_SERVICE, OBJ_PATH.c_str(),
-                                      PROPERTY_INTERFACE, METHOD_GET);
+    auto method = bus.get().new_method_call(RESOLVED_SERVICE, OBJ_PATH.c_str(),
+                                            PROPERTY_INTERFACE, METHOD_GET);
 
     method.append(RESOLVED_INTERFACE, "DNS");
 
     try
     {
-        auto reply = bus.call(method);
+        auto reply = bus.get().call(method);
         reply.read(name);
     }
     catch (const sdbusplus::exception_t& e)
@@ -552,7 +555,8 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
 {
     auto intfName = fmt::format(FMT_COMPILE("{}.{}"), interfaceName(), id);
     auto idStr = std::to_string(id);
-    if (manager.interfaces.find(intfName) != manager.interfaces.end())
+    if (manager.get().interfaces.find(intfName) !=
+        manager.get().interfaces.end())
     {
         log<level::ERR>("VLAN already exists", entry("VLANID=%u", id));
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("VLANId"),
@@ -582,7 +586,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
         bus, manager, info, objRoot, config::Parser(), nicEnabled());
     ObjectPath ret = vlanIntf->objPath;
 
-    manager.interfaces.emplace(intfName, std::move(vlanIntf));
+    manager.get().interfaces.emplace(intfName, std::move(vlanIntf));
 
     // write the device file for the vlan interface.
     config::Parser config;
@@ -590,10 +594,11 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     netdev["Name"].emplace_back(intfName);
     netdev["Kind"].emplace_back("vlan");
     config.map["VLAN"].emplace_back()["Id"].emplace_back(std::move(idStr));
-    config.writeFile(config::pathForIntfDev(manager.getConfDir(), intfName));
+    config.writeFile(
+        config::pathForIntfDev(manager.get().getConfDir(), intfName));
 
     writeConfigurationFile();
-    manager.reloadConfigs();
+    manager.get().reloadConfigs();
 
     return ret;
 }
@@ -605,7 +610,7 @@ ServerList EthernetInterface::staticNTPServers(ServerList value)
         EthernetInterfaceIntf::staticNTPServers(value);
 
         writeConfigurationFile();
-        manager.reloadConfigs();
+        manager.get().reloadConfigs();
     }
     catch (InternalFailure& e)
     {
@@ -653,7 +658,7 @@ void EthernetInterface::writeConfigurationFile()
                                              : (dhcp6() ? "ipv6" : "false"));
         {
             auto& vlans = network["VLAN"];
-            for (const auto& [_, intf] : manager.interfaces)
+            for (const auto& [_, intf] : manager.get().interfaces)
             {
                 if (intf->vlan && intf->vlan->parentIdx == ifIdx)
                 {
@@ -722,7 +727,7 @@ void EthernetInterface::writeConfigurationFile()
     {
         auto& dhcp = config.map["DHCP"].emplace_back();
         dhcp["ClientIdentifier"].emplace_back("mac");
-        const auto& conf = manager.getDHCPConf();
+        const auto& conf = manager.get().getDHCPConf();
         auto dns_enabled = conf.dnsEnabled() ? "true" : "false";
         dhcp["UseDNS"].emplace_back(dns_enabled);
         dhcp["UseDomains"].emplace_back(dns_enabled);
@@ -732,7 +737,8 @@ void EthernetInterface::writeConfigurationFile()
         dhcp["SendHostname"].emplace_back(conf.sendHostNameEnabled() ? "true"
                                                                      : "false");
     }
-    auto path = config::pathForIntfConf(manager.getConfDir(), interfaceName());
+    auto path =
+        config::pathForIntfConf(manager.get().getConfDir(), interfaceName());
     config.writeFile(path);
     auto msg = fmt::format("Wrote networkd file: {}", path.native());
     log<level::INFO>(msg.c_str(), entry("FILE=%s", path.c_str()));
@@ -774,7 +780,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
     if (newMAC != oldMAC)
     {
         // Update everything that depends on the MAC value
-        for (const auto& [_, intf] : manager.interfaces)
+        for (const auto& [_, intf] : manager.get().interfaces)
         {
             if (intf->vlan && intf->vlan->parentIdx == ifIdx)
             {
@@ -784,11 +790,11 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         MacAddressIntf::macAddress(validMAC);
 
         writeConfigurationFile();
-        manager.addReloadPreHook([interface]() {
+        manager.get().addReloadPreHook([interface]() {
             // The MAC and LLADDRs will only update if the NIC is already down
             system::setNICUp(interface, false);
         });
-        manager.reloadConfigs();
+        manager.get().reloadConfigs();
     }
 
 #ifdef HAVE_UBOOT_ENV
@@ -816,7 +822,7 @@ void EthernetInterface::deleteAll()
     addrs.clear();
 
     writeConfigurationFile();
-    manager.reloadConfigs();
+    manager.get().reloadConfigs();
 }
 
 std::string EthernetInterface::defaultGateway(std::string gateway)
@@ -843,7 +849,7 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
     EthernetInterfaceIntf::defaultGateway(gateway);
 
     writeConfigurationFile();
-    manager.reloadConfigs();
+    manager.get().reloadConfigs();
 
     return gateway;
 }
@@ -872,14 +878,14 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
     EthernetInterfaceIntf::defaultGateway6(gateway);
 
     writeConfigurationFile();
-    manager.reloadConfigs();
+    manager.get().reloadConfigs();
 
     return gateway;
 }
 
 EthernetInterface::VlanProperties::VlanProperties(
     sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-    const InterfaceInfo& info, EthernetInterface& eth) :
+    const InterfaceInfo& info, stdplus::PinnedRef<EthernetInterface> eth) :
     VlanIfaces(bus, objPath.c_str(), VlanIfaces::action::defer_emit),
     parentIdx(*info.parent_idx), eth(eth)
 {
@@ -889,24 +895,24 @@ EthernetInterface::VlanProperties::VlanProperties(
 
 void EthernetInterface::VlanProperties::delete_()
 {
-    auto intf = eth.interfaceName();
+    auto intf = eth.get().interfaceName();
 
     // Remove all configs for the current interface
-    const auto& confDir = eth.manager.getConfDir();
+    const auto& confDir = eth.get().manager.get().getConfDir();
     std::error_code ec;
     std::filesystem::remove(config::pathForIntfConf(confDir, intf), ec);
     std::filesystem::remove(config::pathForIntfDev(confDir, intf), ec);
 
-    if (eth.ifIdx > 0)
+    if (eth.get().ifIdx > 0)
     {
-        eth.manager.interfacesByIdx.erase(eth.ifIdx);
+        eth.get().manager.get().interfacesByIdx.erase(eth.get().ifIdx);
     }
-    auto it = eth.manager.interfaces.find(intf);
+    auto it = eth.get().manager.get().interfaces.find(intf);
     auto obj = std::move(it->second);
-    eth.manager.interfaces.erase(it);
+    eth.get().manager.get().interfaces.erase(it);
 
     // Write an updated parent interface since it has a VLAN entry
-    for (const auto& [_, intf] : eth.manager.interfaces)
+    for (const auto& [_, intf] : eth.get().manager.get().interfaces)
     {
         if (intf->ifIdx == parentIdx)
         {
@@ -915,13 +921,13 @@ void EthernetInterface::VlanProperties::delete_()
     }
 
     // We need to forcibly delete the interface as systemd does not
-    eth.manager.addReloadPostHook(
-        [idx = eth.ifIdx]() { system::deleteIntf(idx); });
+    eth.get().manager.get().addReloadPostHook(
+        [idx = eth.get().ifIdx]() { system::deleteIntf(idx); });
 
     // Ignore the interface so the reload doesn't re-query it
-    eth.manager.ignoredIntf.emplace(eth.ifIdx);
+    eth.get().manager.get().ignoredIntf.emplace(eth.get().ifIdx);
 
-    eth.manager.reloadConfigs();
+    eth.get().manager.get().reloadConfigs();
 }
 
 } // namespace network

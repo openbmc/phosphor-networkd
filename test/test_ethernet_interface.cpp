@@ -24,7 +24,7 @@ using testing::UnorderedElementsAre;
 class TestEthernetInterface : public stdplus::gtest::TestWithTmp
 {
   public:
-    sdbusplus::bus_t bus;
+    stdplus::Pinned<sdbusplus::bus_t> bus;
     std::filesystem::path confDir;
     TestManager manager;
     MockEthernetInterface interface;
@@ -36,8 +36,9 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     {
     }
 
-    static MockEthernetInterface makeInterface(sdbusplus::bus_t& bus,
-                                               TestManager& manager)
+    static MockEthernetInterface
+        makeInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                      TestManager& manager)
     {
         AllIntfInfo info{InterfaceInfo{.idx = 1, .flags = 0, .name = "test0"}};
         return {bus, manager, info, "/xyz/openbmc_test/network"sv,
