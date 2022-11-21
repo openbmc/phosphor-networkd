@@ -1,12 +1,8 @@
 #pragma once
-
 #include "hyp_sys_config.hpp"
-#include "types.hpp"
-#include "util.hpp"
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
-#include <sdeventplus/source/event.hpp>
 
 namespace phosphor
 {
@@ -65,13 +61,10 @@ class HypNetworkMgr
 
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
-     *  @param[in] event - event.
      *  @param[in] path - Path to attach at.
      */
-    HypNetworkMgr(sdbusplus::bus_t& bus, sdeventplus::Event& event,
-                  const char* path) :
-        bus(bus),
-        event(event), objectPath(path){};
+    HypNetworkMgr(sdbusplus::bus_t& bus, const char* path) :
+        bus(bus), objectPath(path){};
 
     /** @brief Get the BaseBiosTable attributes
      *
@@ -142,9 +135,6 @@ class HypNetworkMgr
 
     /** @brief sdbusplus DBus bus connection. */
     sdbusplus::bus_t& bus;
-
-    /**  sdevent Event handle. */
-    sdeventplus::Event& event;
 
     /** @brief object path */
     std::string objectPath;

@@ -11,6 +11,7 @@
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/bus/match.hpp>
 #include <sdbusplus/message/native_types.hpp>
+#include <stdplus/zstring_view.hpp>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -25,6 +26,15 @@ using ManagerIface = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::VLAN::server::Create,
     sdbusplus::xyz::openbmc_project::Common::server::FactoryReset>;
 
+class DelayedExecutor
+{
+  public:
+    virtual ~DelayedExecutor() = default;
+
+    virtual void schedule() = 0;
+    virtual void setCallback(fu2::unique_function<void()>&& cb) = 0;
+};
+
 /** @class Manager
  *  @brief OpenBMC network manager implementation.
  */
@@ -35,14 +45,15 @@ class Manager : public ManagerIface
     Manager& operator=(const Manager&) = delete;
     Manager(Manager&&) = delete;
     Manager& operator=(Manager&&) = delete;
-    virtual ~Manager() = default;
 
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
+     *  @param[in] reload - The executor for reloading configs
      *  @param[in] objPath - Path to attach at.
      *  @param[in] confDir - Network Configuration directory path.
      */
-    Manager(sdbusplus::bus_t& bus, const char* objPath,
+    Manager(sdbusplus::bus_t& bus, DelayedExecutor& reload,
+            stdplus::zstring_view objPath,
             const std::filesystem::path& confDir);
 
     ObjectPath vlan(std::string interfaceName, uint32_t id) override;
@@ -93,11 +104,10 @@ class Manager : public ManagerIface
     /** @brief Arms a timer to tell systemd-network to reload all of the network
      * configurations
      */
-    virtual void reloadConfigs();
-
-    /** @brief Tell systemd-network to reload all of the network configurations
-     */
-    void doReloadConfigs();
+    inline void reloadConfigs()
+    {
+        reload.schedule();
+    }
 
     /** @brief Persistent map of EthernetInterface dbus objects and their names
      */
@@ -119,6 +129,9 @@ class Manager : public ManagerIface
     }
 
   protected:
+    /** @brief Handle to the object used to trigger reloads of networkd. */
+    DelayedExecutor& reload;
+
     /** @brief Persistent sdbusplus DBus bus connection. */
     sdbusplus::bus_t& bus;
 

@@ -29,7 +29,6 @@ namespace phosphor
 namespace network
 {
 
-extern std::unique_ptr<Timer> reloadTimer;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
@@ -40,10 +39,11 @@ static constexpr const char enabledMatch[] =
     "link',interface='org.freedesktop.DBus.Properties',member='"
     "PropertiesChanged',arg0='org.freedesktop.network1.Link',";
 
-Manager::Manager(sdbusplus::bus_t& bus, const char* objPath,
+Manager::Manager(sdbusplus::bus_t& bus, DelayedExecutor& reload,
+                 stdplus::zstring_view objPath,
                  const std::filesystem::path& confDir) :
-    ManagerIface(bus, objPath, ManagerIface::action::defer_emit),
-    bus(bus), objPath(std::string(objPath)), confDir(confDir),
+    ManagerIface(bus, objPath.c_str(), ManagerIface::action::defer_emit),
+    reload(reload), bus(bus), objPath(std::string(objPath)), confDir(confDir),
     systemdNetworkdEnabledMatch(
         bus, enabledMatch, [&](sdbusplus::message_t& m) {
             std::string intf;
@@ -76,6 +76,47 @@ Manager::Manager(sdbusplus::bus_t& bus, const char* objPath,
             }
         })
 {
+    reload.setCallback([&]() {
+        for (auto& hook : reloadPreHooks)
+        {
+            try
+            {
+                hook();
+            }
+            catch (const std::exception& ex)
+            {
+                log<level::ERR>("Failed executing reload hook, ignoring",
+                                entry("ERR=%s", ex.what()));
+            }
+        }
+        reloadPreHooks.clear();
+        try
+        {
+            auto method = bus.new_method_call(NETWORKD_BUSNAME, NETWORKD_PATH,
+                                              NETWORKD_INTERFACE, "Reload");
+            bus.call_noreply(method);
+            log<level::INFO>("Reloaded systemd-networkd");
+        }
+        catch (const sdbusplus::exception_t& ex)
+        {
+            log<level::ERR>("Failed to reload configuration",
+                            entry("ERR=%s", ex.what()));
+            reloadPostHooks.clear();
+        }
+        for (auto& hook : reloadPostHooks)
+        {
+            try
+            {
+                hook();
+            }
+            catch (const std::exception& ex)
+            {
+                log<level::ERR>("Failed executing reload hook, ignoring",
+                                entry("ERR=%s", ex.what()));
+            }
+        }
+        reloadPostHooks.clear();
+    });
     std::vector<
         std::tuple<int32_t, std::string, sdbusplus::message::object_path>>
         links;
@@ -461,53 +502,6 @@ void Manager::writeToConfigurationFile()
     {
         intf.second->writeConfigurationFile();
     }
-}
-
-void Manager::reloadConfigs()
-{
-    reloadTimer->restartOnce(reloadTimeout);
-}
-
-void Manager::doReloadConfigs()
-{
-    for (auto& hook : reloadPreHooks)
-    {
-        try
-        {
-            hook();
-        }
-        catch (const std::exception& ex)
-        {
-            log<level::ERR>("Failed executing reload hook, ignoring",
-                            entry("ERR=%s", ex.what()));
-        }
-    }
-    reloadPreHooks.clear();
-    try
-    {
-        auto method = bus.new_method_call(NETWORKD_BUSNAME, NETWORKD_PATH,
-                                          NETWORKD_INTERFACE, "Reload");
-        bus.call_noreply(method);
-    }
-    catch (const sdbusplus::exception_t& ex)
-    {
-        log<level::ERR>("Failed to reload configuration",
-                        entry("ERR=%s", ex.what()));
-        reloadPostHooks.clear();
-    }
-    for (auto& hook : reloadPostHooks)
-    {
-        try
-        {
-            hook();
-        }
-        catch (const std::exception& ex)
-        {
-            log<level::ERR>("Failed executing reload hook, ignoring",
-                            entry("ERR=%s", ex.what()));
-        }
-    }
-    reloadPostHooks.clear();
 }
 
 void Manager::handleAdminState(std::string_view state, unsigned ifidx)

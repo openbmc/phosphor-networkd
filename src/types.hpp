@@ -5,10 +5,8 @@
 
 #include <algorithm>
 #include <array>
-#include <chrono>
 #include <numeric>
-#include <sdeventplus/clock.hpp>
-#include <sdeventplus/utility/timer.hpp>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <type_traits>
@@ -36,11 +34,6 @@ namespace phosphor
 {
 namespace network
 {
-
-using namespace std::chrono_literals;
-
-// wait for three seconds before reloading systemd-networkd
-constexpr auto reloadTimeout = 3s;
 
 // Byte representations for common address types in network byte order
 using InAddrAny = std::variant<in_addr, in6_addr>;
@@ -84,8 +77,6 @@ class IfAddr
         return addr == rhs.addr && pfx == rhs.pfx;
     }
 };
-
-using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
 
 /** @class InterfaceInfo
  *  @brief Information about interfaces from the kernel

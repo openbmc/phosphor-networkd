@@ -9,43 +9,49 @@
 
 #include <fmt/format.h>
 
-#include <functional>
-#include <memory>
+#include <chrono>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/manager.hpp>
+#include <sdeventplus/clock.hpp>
 #include <sdeventplus/event.hpp>
 #include <sdeventplus/source/signal.hpp>
+#include <sdeventplus/utility/timer.hpp>
 #include <stdplus/signal.hpp>
 
 using phosphor::logging::level;
 using phosphor::logging::log;
 
-constexpr char NETWORK_CONF_DIR[] = "/etc/systemd/network";
 constexpr char DEFAULT_OBJPATH[] = "/xyz/openbmc_project/network";
 
-namespace phosphor
-{
-namespace network
+namespace phosphor::network
 {
 
-std::unique_ptr<Manager> manager = nullptr;
-std::unique_ptr<Timer> reloadTimer = nullptr;
-
-void reloadNetworkd()
+class TimerExecutor : public DelayedExecutor
 {
-    if (manager)
+  private:
+    using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
+
+  public:
+    TimerExecutor(sdeventplus::Event& event, std::chrono::seconds delay) :
+        delay(delay), timer(event, nullptr)
     {
-        log<level::INFO>("Sending networkd reload");
-        manager->doReloadConfigs();
-        log<level::INFO>("Done networkd reload");
     }
-}
 
-void initializeTimers(sdeventplus::Event& event)
-{
-    reloadTimer = std::make_unique<Timer>(event, std::bind(reloadNetworkd));
-}
+    void schedule() override
+    {
+        timer.restartOnce(delay);
+    }
+
+    void setCallback(fu2::unique_function<void()>&& cb) override
+    {
+        timer.set_callback([cb = std::move(cb)](Timer&) mutable { cb(); });
+    }
+
+  private:
+    std::chrono::seconds delay;
+    Timer timer;
+};
 
 void termCb(sdeventplus::source::Signal& signal, const struct signalfd_siginfo*)
 {
@@ -59,30 +65,23 @@ int main()
     stdplus::signal::block(SIGTERM);
     sdeventplus::source::Signal(event, SIGTERM, termCb).set_floating(true);
 
-    initializeTimers(event);
-
     auto bus = sdbusplus::bus::new_default();
-    // Attach the bus to sd_event to service user requests
     bus.attach_event(event.get(), SD_EVENT_PRIORITY_NORMAL);
-
-    // Add sdbusplus Object Manager for the 'root' path of the network manager.
     sdbusplus::server::manager_t objManager(bus, DEFAULT_OBJPATH);
-    bus.request_name(DEFAULT_BUSNAME);
 
-    manager = std::make_unique<Manager>(bus, DEFAULT_OBJPATH, NETWORK_CONF_DIR);
-
-    // RTNETLINK event handler
-    netlink::Server svr(event, *manager);
+    TimerExecutor reload(event, std::chrono::seconds(3));
+    Manager manager(bus, reload, DEFAULT_OBJPATH, "/etc/systemd/network");
+    netlink::Server svr(event, manager);
 
 #ifdef SYNC_MAC_FROM_INVENTORY
-    auto runtime = inventory::watch(bus, *manager);
+    auto runtime = inventory::watch(bus, manager);
 #endif
 
+    bus.request_name(DEFAULT_BUSNAME);
     return event.loop();
 }
 
-} // namespace network
-} // namespace phosphor
+} // namespace phosphor::network
 
 int main(int /*argc*/, char** /*argv*/)
 {
