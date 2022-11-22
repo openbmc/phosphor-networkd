@@ -16,6 +16,7 @@
 #include <sdeventplus/clock.hpp>
 #include <sdeventplus/event.hpp>
 #include <sdeventplus/source/signal.hpp>
+#include <sdeventplus/utility/sdbus.hpp>
 #include <sdeventplus/utility/timer.hpp>
 #include <stdplus/signal.hpp>
 
@@ -66,7 +67,6 @@ int main()
     sdeventplus::source::Signal(event, SIGTERM, termCb).set_floating(true);
 
     auto bus = sdbusplus::bus::new_default();
-    bus.attach_event(event.get(), SD_EVENT_PRIORITY_NORMAL);
     sdbusplus::server::manager_t objManager(bus, DEFAULT_OBJPATH);
 
     TimerExecutor reload(event, std::chrono::seconds(3));
@@ -78,7 +78,7 @@ int main()
 #endif
 
     bus.request_name(DEFAULT_BUSNAME);
-    return event.loop();
+    return sdeventplus::utility::loopWithBus(event, bus);
 }
 
 } // namespace phosphor::network
