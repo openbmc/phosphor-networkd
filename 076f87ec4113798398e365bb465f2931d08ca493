@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5449be61_5bc4198b",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 49
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-23T19:47:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "066abc3f_fc73dd36",
+      "revId": "076f87ec4113798398e365bb465f2931d08ca493",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "19b0216b_d65c03ad",
@@ -52,6 +70,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "20e294ee_6016dec3",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.hpp",
+        "patchSetId": 49
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-23T19:47:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "228e32b6_84df580d",
+      "revId": "076f87ec4113798398e365bb465f2931d08ca493",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1f3550f2_bc29e8ea",
@@ -65,6 +101,24 @@
       "writtenOn": "2022-11-16T11:47:49Z",
       "side": 1,
       "message": "nit: string_umap",
+      "revId": "076f87ec4113798398e365bb465f2931d08ca493",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a0b564f_0e5a96e9",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.hpp",
+        "patchSetId": 49
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-23T19:47:57Z",
+      "side": 1,
+      "message": "Used in the 4 commit in the commit chain, so removing from this commit.",
+      "parentUuid": "1f3550f2_bc29e8ea",
       "revId": "076f87ec4113798398e365bb465f2931d08ca493",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -86,6 +140,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "93f69cef_d38bfdaa",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.hpp",
+        "patchSetId": 49
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-23T19:47:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "abbb932b_0f18e693",
+      "revId": "076f87ec4113798398e365bb465f2931d08ca493",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0d41f4e6_cd9b386f",
@@ -99,6 +171,24 @@
       "writtenOn": "2022-11-16T11:47:49Z",
       "side": 1,
       "message": "If you defer emit, you need to call `emit_object_added()` at the end of the constructor",
+      "revId": "076f87ec4113798398e365bb465f2931d08ca493",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2bcdd105_b4d58efc",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.hpp",
+        "patchSetId": 49
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-23T19:47:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d41f4e6_cd9b386f",
       "revId": "076f87ec4113798398e365bb465f2931d08ca493",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -120,6 +210,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "75b4178f_d15cd7e9",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.hpp",
+        "patchSetId": 49
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-23T19:47:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f184b22_9adbe198",
+      "revId": "076f87ec4113798398e365bb465f2931d08ca493",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e721224c_f051b39d",
@@ -133,6 +241,24 @@
       "writtenOn": "2022-11-16T11:47:49Z",
       "side": 1,
       "message": "You have to make functions inline in the header, otherwise external callers won\u0027t be able to access it.",
+      "revId": "076f87ec4113798398e365bb465f2931d08ca493",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a7cda58_b93d7ac7",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 49
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-23T19:47:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e721224c_f051b39d",
       "revId": "076f87ec4113798398e365bb465f2931d08ca493",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -154,6 +280,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43796e86_ac7f8b76",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager_main.cpp",
+        "patchSetId": 49
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-23T19:47:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58b271fa_f97caa7a",
+      "revId": "076f87ec4113798398e365bb465f2931d08ca493",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "28dc2072_eb89631c",
@@ -171,6 +315,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe58a84e_d2b8995b",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager_main.cpp",
+        "patchSetId": 49
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-23T19:47:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28dc2072_eb89631c",
+      "revId": "076f87ec4113798398e365bb465f2931d08ca493",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c0e279db_63551896",
@@ -184,6 +346,24 @@
       "writtenOn": "2022-11-16T11:48:55Z",
       "side": 1,
       "message": "Please make all of these a static_library with a dependency that your test code can include. phosphor-network-manager is already set up this way.",
+      "revId": "076f87ec4113798398e365bb465f2931d08ca493",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d33d2a5_a50a4872",
+        "filename": "test/ibm/hypervisor-network-mgr-test/meson.build",
+        "patchSetId": 49
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2022-11-23T19:47:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0e279db_63551896",
       "revId": "076f87ec4113798398e365bb465f2931d08ca493",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
