@@ -18,7 +18,7 @@ struct Runtime
 {
     virtual ~Runtime() = default;
 };
-std::unique_ptr<Runtime> watch(sdbusplus::bus::bus& bus, Manager& m);
+std::unique_ptr<Runtime> watch(sdbusplus::bus_t& bus, Manager& m);
 
 } // namespace inventory
 } // namespace phosphor::network
