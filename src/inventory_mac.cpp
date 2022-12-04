@@ -337,7 +337,7 @@ void watchEthernetInterface(sdbusplus::bus_t& bus,
     }
 }
 
-std::unique_ptr<Runtime> watch(sdbusplus::bus::bus& bus, Manager& m)
+std::unique_ptr<Runtime> watch(sdbusplus::bus_t& bus, Manager& m)
 {
     manager = &m;
     std::ifstream in(configFile);
