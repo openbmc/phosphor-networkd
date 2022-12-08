@@ -4,19 +4,19 @@ methods:
       description: >
           Create VLANInterface Object.
       parameters:
-        - name: InterfaceName
-          type: string
-          description: >
-              Name of the interface.
-        - name: Id
-          type: uint32
-          description: >
-              VLAN Identifier.
+          - name: InterfaceName
+            type: string
+            description: >
+                Name of the interface.
+          - name: Id
+            type: uint32
+            description: >
+                VLAN Identifier.
       returns:
-        - name: Path
-          type: object_path
-          description: >
-            The path for the created VLAN object.
+          - name: Path
+            type: object_path
+            description: >
+                The path for the created VLAN object.
       errors:
-        - xyz.openbmc_project.Common.Error.InvalidArgument
-        - xyz.openbmc_project.Common.Error.ResourceNotFound
+          - xyz.openbmc_project.Common.Error.InvalidArgument
+          - xyz.openbmc_project.Common.Error.ResourceNotFound
