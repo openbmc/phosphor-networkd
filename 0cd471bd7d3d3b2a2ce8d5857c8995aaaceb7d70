@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8b4d5c9_d6dadf51",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-12-09T08:03:00Z",
+      "side": 1,
+      "message": "Please print an info log to capture the value getting set",
+      "revId": "0cd471bd7d3d3b2a2ce8d5857c8995aaaceb7d70",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1d22068_ffdc7566",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2022-12-09T08:03:00Z",
+      "side": 1,
+      "message": "Please print an error message here if this setting fails",
+      "revId": "0cd471bd7d3d3b2a2ce8d5857c8995aaaceb7d70",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
