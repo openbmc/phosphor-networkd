@@ -176,6 +176,8 @@ TEST_F(TestEthernetInterface, addGateway)
     EXPECT_EQ(interface.defaultGateway(), gateway);
     interface.defaultGateway("");
     EXPECT_EQ(interface.defaultGateway(), "");
+    interface.defaultGateway("0.0.0.0");
+    EXPECT_EQ(interface.defaultGateway(), "");
 }
 
 TEST_F(TestEthernetInterface, addGateway6)
@@ -184,6 +186,8 @@ TEST_F(TestEthernetInterface, addGateway6)
     interface.defaultGateway6(gateway6);
     EXPECT_EQ(interface.defaultGateway6(), gateway6);
     interface.defaultGateway6("");
+    EXPECT_EQ(interface.defaultGateway6(), "");
+    interface.defaultGateway6("::");
     EXPECT_EQ(interface.defaultGateway6(), "");
 }
 

@@ -820,7 +820,13 @@ static void normalizeGateway(std::string& gw)
     }
     try
     {
-        gw = stdplus::toStr(stdplus::fromStr<Addr>(gw));
+        auto ip = stdplus::fromStr<Addr>(gw);
+        if (ip == Addr{})
+        {
+            gw.clear();
+            return;
+        }
+        gw = stdplus::toStr(ip);
     }
     catch (const std::exception& e)
     {
