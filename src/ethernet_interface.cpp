@@ -841,7 +841,13 @@ static void normalizeGateway(std::string& gw)
     }
     try
     {
-        gw = std::to_string(ToAddr<Addr>{}(gw));
+        auto ip = ToAddr<Addr>{}(gw);
+        if (ip == Addr{})
+        {
+            gw.clear();
+            return;
+        }
+        gw = std::to_string(ip);
     }
     catch (const std::exception& e)
     {
