@@ -33,6 +33,98 @@
       "message": "Hi Reviewers \u0026 Maintainers,\n\nCan you please vote for this commit to take it to merge?",
       "revId": "a15de0a1548d9d0c424c174ea3a5702f8adf6882",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8430d284_25fbfbee",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-01-10T09:57:39Z",
+      "side": 1,
+      "message": "Do we need this?",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 18
+      },
+      "revId": "a15de0a1548d9d0c424c174ea3a5702f8adf6882",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02177178_f88e83db",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-01-10T09:57:39Z",
+      "side": 1,
+      "message": "Is it always fixed and not going to be changed in future?\n- Number of interfaces\n- Interface name.",
+      "range": {
+        "startLine": 236,
+        "startChar": 48,
+        "endLine": 236,
+        "endChar": 52
+      },
+      "revId": "a15de0a1548d9d0c424c174ea3a5702f8adf6882",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3bc2051_28b3b782",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-01-10T09:57:39Z",
+      "side": 1,
+      "message": "why to have this function which is not doing anything except returning the property?\nYou can make the biosTableAttrs public.",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 5
+      },
+      "revId": "a15de0a1548d9d0c424c174ea3a5702f8adf6882",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b52b798_b4bac63f",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-01-10T09:57:39Z",
+      "side": 1,
+      "message": "Same here, why this function is needed?",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 5
+      },
+      "revId": "a15de0a1548d9d0c424c174ea3a5702f8adf6882",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
