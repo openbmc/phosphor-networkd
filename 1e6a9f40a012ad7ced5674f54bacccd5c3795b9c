@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bbdae6f3_d0429371",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 60
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-01-11T07:35:01Z",
+      "side": 1,
+      "message": "The CI failure is unrelated to my change I hope.\n\n```\ndiff --git a/gen/meson.build b/gen/meson.build\nindex 2756633..a7da0a7 100644\n--- a/gen/meson.build\n+++ b/gen/meson.build\n@@ -2,12 +2,13 @@\n sdbuspp_gen_meson_ver \u003d run_command(\n     sdbuspp_gen_meson_prog,\n     \u0027--version\u0027,\n+    check: true,\n ).stdout().strip().split(\u0027\\n\u0027)[0]\n \n-if sdbuspp_gen_meson_ver !\u003d \u0027sdbus++-gen-meson version 4\u0027\n+if sdbuspp_gen_meson_ver !\u003d \u0027sdbus++-gen-meson version 5\u0027\n     warning(\u0027Generated meson files from wrong version of sdbus++-gen-meson.\u0027)\n     warning(\n-        \u0027Expected \"sdbus++-gen-meson version 4\", got:\u0027,\n+        \u0027Expected \"sdbus++-gen-meson version 5\", got:\u0027,\n```",
+      "revId": "1e6a9f40a012ad7ced5674f54bacccd5c3795b9c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
