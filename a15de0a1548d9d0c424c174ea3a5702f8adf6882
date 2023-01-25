@@ -226,6 +226,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cdad3e9b_e4ae1334",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-01-25T08:08:26Z",
+      "side": 1,
+      "message": "Since this is a private data member, I have a getter method for the same.\nThis property is the local copy of the bios table, and this method will be called from ethernet interface file.",
+      "parentUuid": "86e09ab0_ee759b83",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 5
+      },
+      "revId": "a15de0a1548d9d0c424c174ea3a5702f8adf6882",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5b52b798_b4bac63f",
         "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
         "patchSetId": 57
