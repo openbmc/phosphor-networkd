@@ -13,6 +13,47 @@ namespace phosphor
 namespace network
 {
 
+TEST(TestUtil, ValidateUnicast4)
+{
+    EXPECT_TRUE(validUnicast(ToAddr<in_addr>{}("1.1.1.1")));
+    EXPECT_TRUE(validUnicast(ToAddr<in_addr>{}("192.168.1.0")));
+    EXPECT_TRUE(validUnicast(ToAddr<in_addr>{}("10.30.0.1")));
+    EXPECT_TRUE(validUnicast(ToAddr<in_addr>{}("8.8.4.4")));
+    EXPECT_TRUE(validUnicast(ToAddr<in_addr>{}("169.253.255.255")));
+    EXPECT_TRUE(validUnicast(ToAddr<in_addr>{}("169.254.0.1")));
+    EXPECT_TRUE(validUnicast(ToAddr<in_addr>{}("169.254.255.255")));
+    EXPECT_TRUE(validUnicast(ToAddr<in_addr>{}("169.255.0.0")));
+    EXPECT_TRUE(validUnicast(ToAddr<in_addr>{}("240.0.0.0")));
+    EXPECT_TRUE(validUnicast(ToAddr<in_addr>{}("255.255.255.1")));
+
+    EXPECT_FALSE(validUnicast(ToAddr<in_addr>{}("0.0.0.0")));
+    EXPECT_FALSE(validUnicast(ToAddr<in_addr>{}("0.255.255.255")));
+    EXPECT_FALSE(validUnicast(ToAddr<in_addr>{}("127.0.0.0")));
+    EXPECT_FALSE(validUnicast(ToAddr<in_addr>{}("127.0.0.1")));
+    EXPECT_FALSE(validUnicast(ToAddr<in_addr>{}("127.0.0.83")));
+    EXPECT_FALSE(validUnicast(ToAddr<in_addr>{}("127.253.0.0")));
+    EXPECT_FALSE(validUnicast(ToAddr<in_addr>{}("127.255.255.255")));
+    EXPECT_FALSE(validUnicast(ToAddr<in_addr>{}("224.0.0.0")));
+    EXPECT_FALSE(validUnicast(ToAddr<in_addr>{}("227.30.10.50")));
+    EXPECT_FALSE(validUnicast(ToAddr<in_addr>{}("239.255.255.255")));
+    EXPECT_FALSE(validUnicast(ToAddr<in_addr>{}("255.255.255.255")));
+}
+
+TEST(TestUtil, ValidateUnicast6)
+{
+    EXPECT_TRUE(validUnicast(ToAddr<in6_addr>{}("::2")));
+    EXPECT_TRUE(validUnicast(ToAddr<in6_addr>{}("1::")));
+    EXPECT_TRUE(validUnicast(ToAddr<in6_addr>{}("2001:5938::fd98")));
+    EXPECT_TRUE(validUnicast(ToAddr<in6_addr>{}("fe80::1")));
+    EXPECT_TRUE(validUnicast(ToAddr<in6_addr>{}("feff:ffff:ffff:ffff::")));
+
+    EXPECT_FALSE(validUnicast(ToAddr<in6_addr>{}("::")));
+    EXPECT_FALSE(validUnicast(ToAddr<in6_addr>{}("::1")));
+    EXPECT_FALSE(validUnicast(ToAddr<in6_addr>{}("ff00::")));
+    EXPECT_FALSE(
+        validUnicast(ToAddr<in6_addr>{}("ffff:ffff:ffff:ffff:ffff::")));
+}
+
 TEST(TestUtil, AddrFromBuf)
 {
     std::string tooSmall(1, 'a');
