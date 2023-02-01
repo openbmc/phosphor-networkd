@@ -71,6 +71,12 @@ static std::string makeObjPath(std::string_view root, std::string_view intf)
     return ret;
 }
 
+template <typename Addr>
+static bool validIntfIP(Addr a) noexcept
+{
+    return a.isUnicast() && !a.isLoopback();
+}
+
 EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                                      stdplus::PinnedRef<Manager> manager,
                                      const AllIntfInfo& info,
@@ -825,6 +831,10 @@ static void normalizeGateway(std::string& gw)
         {
             gw.clear();
             return;
+        }
+        if (!validIntfIP(ip))
+        {
+            throw std::invalid_argument("Invalid unicast");
         }
         gw = stdplus::toStr(ip);
     }
