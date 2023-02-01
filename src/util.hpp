@@ -17,6 +17,29 @@ namespace config
 class Parser;
 }
 
+constexpr bool validUnicast(in_addr addr) noexcept
+{
+    const auto s8net = addr.s_addr & hton(0xff000000u);
+    const auto s4net = addr.s_addr & hton(0xf0000000u);
+    return s8net != 0u &&                // 0.0.0.0/8
+           s8net != hton(0x7f000000u) && // 127.0.0.0/8
+           s4net != hton(0xe0000000u) && // 224.0.0.0/4
+           addr.s_addr != 0xffffffffu;   // 255.255.255.255/32
+}
+
+constexpr bool validUnicast(in6_addr addr) noexcept
+{
+    return addr != in6_addr{} && // ::/128
+           addr != in6_addr{0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 0, 0, 0, 0, 0, 1} && // ::1/128
+           addr.s6_addr[0] != 0xff;                    // ff00::/8
+}
+
+constexpr bool validUnicast(InAddrAny addr) noexcept
+{
+    return std::visit([](auto a) { return validUnicast(a); }, addr);
+}
+
 namespace mac_address
 {
 

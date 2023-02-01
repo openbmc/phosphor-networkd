@@ -847,6 +847,10 @@ static void normalizeGateway(std::string& gw)
             gw.clear();
             return;
         }
+        if (!validUnicast(ip))
+        {
+            throw std::invalid_argument("Invalid unicast");
+        }
         gw = std::to_string(ip);
     }
     catch (const std::exception& e)
