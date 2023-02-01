@@ -18,6 +18,7 @@ namespace phosphor
 namespace network
 {
 
+using sdbusplus::xyz::openbmc_project::Common::Error::InvalidArgument;
 using std::literals::string_view_literals::operator""sv;
 using testing::Key;
 using testing::UnorderedElementsAre;
@@ -168,14 +169,18 @@ TEST_F(TestEthernetInterface, addGateway)
     std::string gateway = "10.3.3.3";
     interface.defaultGateway(gateway);
     EXPECT_EQ(interface.defaultGateway(), gateway);
+    EXPECT_THROW(interface.defaultGateway6("127.0.0.10"), InvalidArgument);
+    EXPECT_EQ(interface.defaultGateway(), gateway);
     interface.defaultGateway("");
     EXPECT_EQ(interface.defaultGateway(), "");
 }
 
 TEST_F(TestEthernetInterface, addGateway6)
 {
-    std::string gateway6 = "ffff:ffff:ffff:fe80::1";
+    std::string gateway6 = "fe80::1";
     interface.defaultGateway6(gateway6);
+    EXPECT_EQ(interface.defaultGateway6(), gateway6);
+    EXPECT_THROW(interface.defaultGateway6("::1"), InvalidArgument);
     EXPECT_EQ(interface.defaultGateway6(), gateway6);
     interface.defaultGateway6("");
     EXPECT_EQ(interface.defaultGateway6(), "");
