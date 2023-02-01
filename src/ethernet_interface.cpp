@@ -821,23 +821,39 @@ void EthernetInterface::deleteAll()
     manager.get().reloadConfigs();
 }
 
-std::string EthernetInterface::defaultGateway(std::string gateway)
+template <typename Addr>
+static void normalizeGateway(std::string& gw)
 {
+    if (gw.empty())
+    {
+        return;
+    }
     try
     {
-        if (!gateway.empty())
+        auto ip = ToAddr<Addr>{}(gw);
+        if (ip == Addr{})
         {
-            gateway = std::to_string(ToAddr<in_addr>{}(gateway));
+            gw.clear();
+            return;
         }
+        if (!validUnicast(ip))
+        {
+            throw std::invalid_argument("Invalid unicast");
+        }
+        gw = std::to_string(ip);
     }
     catch (const std::exception& e)
     {
-        lg2::error("Invalid v4 GW {GATEWAY}: {ERROR}", "GATEWAY", gateway,
-                   "ERROR", e);
+        auto msg = fmt::format("Invalid GW `{}`: {}", gw, e.what());
+        log<level::ERR>(msg.c_str(), entry("GATEWAY=%s", gw.c_str()));
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
-                              Argument::ARGUMENT_VALUE(gateway.c_str()));
+                              Argument::ARGUMENT_VALUE(gw.c_str()));
     }
+}
 
+std::string EthernetInterface::defaultGateway(std::string gateway)
+{
+    normalizeGateway<in_addr>(gateway);
     if (EthernetInterfaceIntf::defaultGateway() == gateway)
     {
         return gateway;
@@ -852,6 +868,7 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
 
 std::string EthernetInterface::defaultGateway6(std::string gateway)
 {
+    normalizeGateway<in6_addr>(gateway);
     try
     {
         if (!gateway.empty())
