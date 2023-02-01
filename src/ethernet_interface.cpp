@@ -812,6 +812,12 @@ void EthernetInterface::deleteAll()
 }
 
 template <typename Addr>
+static bool validIntfIP(Addr a) noexcept
+{
+    return a.isUnicast() && !a.isLoopback();
+}
+
+template <typename Addr>
 static void normalizeGateway(std::string& gw)
 {
     if (gw.empty())
@@ -825,6 +831,10 @@ static void normalizeGateway(std::string& gw)
         {
             gw.clear();
             return;
+        }
+        if (!validIntfIP(a))
+        {
+            throw std::invalid_argument("Invalid unicast");
         }
         gw = stdplus::toStr(ip);
     }
