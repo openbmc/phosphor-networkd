@@ -811,63 +811,44 @@ void EthernetInterface::deleteAll()
     manager.get().reloadConfigs();
 }
 
-std::string EthernetInterface::defaultGateway(std::string gateway)
+template <typename Addr>
+static void normalizeGateway(std::string& gw)
 {
+    if (gw.empty())
+    {
+        return;
+    }
     try
     {
-        if (!gateway.empty())
-        {
-            gateway =
-                stdplus::toStr(stdplus::fromStr<stdplus::In4Addr>(gateway));
-        }
+        gw = stdplus::toStr(stdplus::fromStr<Addr>(gw));
     }
     catch (const std::exception& e)
     {
-        lg2::error("Invalid v4 GW {NET_GW}: {ERROR}", "NET_GW", gateway,
-                   "ERROR", e);
+        lg2::error("Invalid GW `{NET_GW}`: {ERROR}", "NET_GW", gw, "ERROR", e);
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
-                              Argument::ARGUMENT_VALUE(gateway.c_str()));
+                              Argument::ARGUMENT_VALUE(gw.c_str()));
     }
+}
 
-    if (EthernetInterfaceIntf::defaultGateway() == gateway)
+std::string EthernetInterface::defaultGateway(std::string gateway)
+{
+    normalizeGateway<stdplus::In4Addr>(gateway);
+    if (gateway != defaultGateway())
     {
-        return gateway;
+        gateway = EthernetInterfaceIntf::defaultGateway(std::move(gateway));
+        manager.get().reloadConfigs();
     }
-    EthernetInterfaceIntf::defaultGateway(gateway);
-
-    writeConfigurationFile();
-    manager.get().reloadConfigs();
-
     return gateway;
 }
 
 std::string EthernetInterface::defaultGateway6(std::string gateway)
 {
-    try
+    normalizeGateway<stdplus::In6Addr>(gateway);
+    if (gateway != defaultGateway6())
     {
-        if (!gateway.empty())
-        {
-            gateway =
-                stdplus::toStr(stdplus::fromStr<stdplus::In6Addr>(gateway));
-        }
+        gateway = EthernetInterfaceIntf::defaultGateway6(std::move(gateway));
+        manager.get().reloadConfigs();
     }
-    catch (const std::exception& e)
-    {
-        lg2::error("Invalid v6 GW {NET_GW}: {ERROR}", "NET_GW", gateway,
-                   "ERROR", e);
-        elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
-                              Argument::ARGUMENT_VALUE(gateway.c_str()));
-    }
-
-    if (EthernetInterfaceIntf::defaultGateway6() == gateway)
-    {
-        return gateway;
-    }
-    EthernetInterfaceIntf::defaultGateway6(gateway);
-
-    writeConfigurationFile();
-    manager.get().reloadConfigs();
-
     return gateway;
 }
 
