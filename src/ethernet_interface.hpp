@@ -251,6 +251,10 @@ class EthernetInterface : public Ifaces
      *  @returns true/false value if the address is static
      */
     bool originIsManuallyAssigned(IP::AddressOrigin origin);
+
+    template <typename T>
+    T configIfChanged(T&& newv, T (EthernetInterfaceIntf::*get)() const,
+                      T (EthernetInterfaceIntf::*set)(T, bool));
 };
 
 } // namespace network

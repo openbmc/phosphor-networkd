@@ -825,62 +825,57 @@ void EthernetInterface::deleteAll()
     manager.get().reloadConfigs();
 }
 
-std::string EthernetInterface::defaultGateway(std::string gateway)
+template <typename Addr>
+static void normalizeGateway(std::string& gw)
 {
+    if (gw.empty())
+    {
+        return;
+    }
     try
     {
-        if (!gateway.empty())
-        {
-            gateway = std::to_string(ToAddr<in_addr>{}(gateway));
-        }
+        gw = std::to_string(ToAddr<Addr>{}(gw));
     }
     catch (const std::exception& e)
     {
-        auto msg = fmt::format("Invalid v4 GW `{}`: {}", gateway, e.what());
-        log<level::ERR>(msg.c_str(), entry("GATEWAY=%s", gateway.c_str()));
+        auto msg = fmt::format("Invalid GW `{}`: {}", gw, e.what());
+        log<level::ERR>(msg.c_str(), entry("GATEWAY=%s", gw.c_str()));
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
-                              Argument::ARGUMENT_VALUE(gateway.c_str()));
+                              Argument::ARGUMENT_VALUE(gw.c_str()));
     }
+}
 
-    if (EthernetInterfaceIntf::defaultGateway() == gateway)
+template <typename T>
+T EthernetInterface::configIfChanged(T&& newv,
+                                     T (EthernetInterfaceIntf::*get)() const,
+                                     T (EthernetInterfaceIntf::*set)(T, bool))
+{
+    if ((this->*get)() == newv)
     {
-        return gateway;
+        return std::move(newv);
     }
-    EthernetInterfaceIntf::defaultGateway(gateway);
+    auto ret = (this->*set)(std::move(newv), true);
 
     writeConfigurationFile();
     manager.get().reloadConfigs();
 
-    return gateway;
+    return ret;
+}
+
+std::string EthernetInterface::defaultGateway(std::string gateway)
+{
+    normalizeGateway<in_addr>(gateway);
+    return configIfChanged(std::move(gateway),
+                           &EthernetInterfaceIntf::defaultGateway,
+                           &EthernetInterfaceIntf::defaultGateway);
 }
 
 std::string EthernetInterface::defaultGateway6(std::string gateway)
 {
-    try
-    {
-        if (!gateway.empty())
-        {
-            gateway = std::to_string(ToAddr<in6_addr>{}(gateway));
-        }
-    }
-    catch (const std::exception& e)
-    {
-        auto msg = fmt::format("Invalid v6 GW `{}`: {}", gateway, e.what());
-        log<level::ERR>(msg.c_str(), entry("GATEWAY=%s", gateway.c_str()));
-        elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
-                              Argument::ARGUMENT_VALUE(gateway.c_str()));
-    }
-
-    if (EthernetInterfaceIntf::defaultGateway6() == gateway)
-    {
-        return gateway;
-    }
-    EthernetInterfaceIntf::defaultGateway6(gateway);
-
-    writeConfigurationFile();
-    manager.get().reloadConfigs();
-
-    return gateway;
+    normalizeGateway<in6_addr>(gateway);
+    return configIfChanged(std::move(gateway),
+                           &EthernetInterfaceIntf::defaultGateway6,
+                           &EthernetInterfaceIntf::defaultGateway6);
 }
 
 EthernetInterface::VlanProperties::VlanProperties(
