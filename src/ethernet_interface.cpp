@@ -832,61 +832,47 @@ void EthernetInterface::deleteAll()
     manager.get().reloadConfigs();
 }
 
-std::string EthernetInterface::defaultGateway(std::string gateway)
+template <typename Addr>
+static void normalizeGateway(std::string& gw)
 {
+    if (gw.empty())
+    {
+        return;
+    }
     try
     {
-        if (!gateway.empty())
-        {
-            gateway = std::to_string(ToAddr<in_addr>{}(gateway));
-        }
+        gw = std::to_string(ToAddr<Addr>{}(gw));
     }
     catch (const std::exception& e)
     {
-        auto msg = fmt::format("Invalid v4 GW `{}`: {}", gateway, e.what());
-        log<level::ERR>(msg.c_str(), entry("GATEWAY=%s", gateway.c_str()));
+        auto msg = fmt::format("Invalid GW `{}`: {}", gw, e.what());
+        log<level::ERR>(msg.c_str(), entry("GATEWAY=%s", gw.c_str()));
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
-                              Argument::ARGUMENT_VALUE(gateway.c_str()));
+                              Argument::ARGUMENT_VALUE(gw.c_str()));
     }
+}
 
-    if (EthernetInterfaceIntf::defaultGateway() == gateway)
+std::string EthernetInterface::defaultGateway(std::string gateway)
+{
+    normalizeGateway<in_addr>(gateway);
+    if (gateway != defaultGateway())
     {
-        return gateway;
+        EthernetInterfaceIntf::defaultGateway(gateway);
+        queueWriteConfig();
+        manager.get().reloadConfigs();
     }
-    EthernetInterfaceIntf::defaultGateway(gateway);
-
-    queueWriteConfig();
-    manager.get().reloadConfigs();
-
     return gateway;
 }
 
 std::string EthernetInterface::defaultGateway6(std::string gateway)
 {
-    try
+    normalizeGateway<in6_addr>(gateway);
+    if (gateway != defaultGateway6())
     {
-        if (!gateway.empty())
-        {
-            gateway = std::to_string(ToAddr<in6_addr>{}(gateway));
-        }
+        EthernetInterfaceIntf::defaultGateway6(gateway);
+        queueWriteConfig();
+        manager.get().reloadConfigs();
     }
-    catch (const std::exception& e)
-    {
-        auto msg = fmt::format("Invalid v6 GW `{}`: {}", gateway, e.what());
-        log<level::ERR>(msg.c_str(), entry("GATEWAY=%s", gateway.c_str()));
-        elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
-                              Argument::ARGUMENT_VALUE(gateway.c_str()));
-    }
-
-    if (EthernetInterfaceIntf::defaultGateway6() == gateway)
-    {
-        return gateway;
-    }
-    EthernetInterfaceIntf::defaultGateway6(gateway);
-
-    queueWriteConfig();
-    manager.get().reloadConfigs();
-
     return gateway;
 }
 
