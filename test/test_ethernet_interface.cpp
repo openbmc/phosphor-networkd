@@ -93,6 +93,13 @@ TEST_F(TestEthernetInterface, NoIPaddress)
 
 TEST_F(TestEthernetInterface, AddIPAddress)
 {
+    EXPECT_THROW(createIPObject(IP::Protocol::IPv4, "127.0.0.1", 16), InvalidArgument);
+    EXPECT_THROW(createIPObject(IP::Protocol::IPv4, "127.0.0.1", 32), InvalidArgument);
+    EXPECT_THROW(createIPObject(IP::Protocol::IPv4, "192.168.1.1", 0), InvalidArgument);
+    EXPECT_THROW(createIPObject(IP::Protocol::IPv6, "::1", 64), InvalidArgument);
+    EXPECT_THROW(createIPObject(IP::Protocol::IPv6, "::", 128), InvalidArgument);
+    EXPECT_THROW(createIPObject(IP::Protocol::IPv6, "fe80::1", 0), InvalidArgument);
+
     createIPObject(IP::Protocol::IPv4, "10.10.10.10", 16);
     EXPECT_THAT(interface.addrs, UnorderedElementsAre(Key(
                                      IfAddr(in_addr{htonl(0x0a0a0a0a)}, 16))));
