@@ -264,11 +264,13 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
     }
     else
     {
-        if (it->second->origin() == IP::AddressOrigin::Static)
+        // Note: If there is an address already in the map(static too), but we
+        // cannot guarantee that it is the same as the configuration file due to
+        // the rtlink callback, so, we always need to reload.
+        if (it->second->origin() != IP::AddressOrigin::Static)
         {
-            return it->second->getObjPath();
+            it->second->IPIfaces::origin(IP::AddressOrigin::Static);
         }
-        it->second->IPIfaces::origin(IP::AddressOrigin::Static);
     }
 
     writeConfigurationFile();
