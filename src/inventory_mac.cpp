@@ -46,7 +46,9 @@ constexpr auto methodGet = "Get";
 
 Manager* manager = nullptr;
 std::unique_ptr<sdbusplus::bus::match_t> EthInterfaceMatch = nullptr;
+std::unique_ptr<sdbusplus::bus::match_t> MacAddressMatch = nullptr;
 std::vector<std::string> first_boot_status;
+nlohmann::json configJson;
 
 void setFirstBootMACOnInterface(const std::string& intf, const std::string& mac)
 {
@@ -77,13 +79,7 @@ void setFirstBootMACOnInterface(const std::string& intf, const std::string& mac)
 
 ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
 {
-    std::string interfaceName = intfName;
-
-    // load the config JSON from the Read Only Path
-    std::ifstream in(configFile);
-    nlohmann::json configJson;
-    in >> configJson;
-    interfaceName = configJson[intfName];
+    std::string interfaceName = configJson[intfName];
 
     std::vector<DbusInterface> interfaces;
     interfaces.emplace_back(invNetworkIntf);
@@ -165,9 +161,7 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
     return ToAddr<ether_addr>{}(std::get<std::string>(value));
 }
 
-bool setInventoryMACOnSystem(sdbusplus::bus_t& bus,
-                             const nlohmann::json& configJson,
-                             const std::string& intfname)
+bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
 {
     try
     {
@@ -214,11 +208,9 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus,
 }
 
 // register the macthes to be monitored from inventory manager
-void registerSignals(sdbusplus::bus_t& bus, const nlohmann::json& configJson)
+void registerSignals(sdbusplus::bus_t& bus)
 {
     log<level::INFO>("Registering the Inventory Signals Matcher");
-
-    static std::unique_ptr<sdbusplus::bus::match_t> MacAddressMatch;
 
     auto callback = [&](sdbusplus::message_t& m) {
         std::map<DbusObjectPath,
@@ -261,10 +253,32 @@ void registerSignals(sdbusplus::bus_t& bus, const nlohmann::json& configJson)
         callback);
 }
 
-void watchEthernetInterface(sdbusplus::bus_t& bus,
-                            const nlohmann::json& configJson)
+void watchEthernetInterface(sdbusplus::bus_t& bus)
 {
-    auto mycallback = [&](sdbusplus::message_t& m) {
+    auto handle_interface = [&](auto infname) {
+        if (configJson.find(infname) == configJson.end())
+        {
+            // ethernet interface not found in configJSON
+            // check if it is not sit0 interface, as it is
+            // expected.
+            if (infname != "sit0")
+            {
+                log<level::ERR>("Wrong Interface Name in Config Json");
+            }
+        }
+        else
+        {
+            registerSignals(bus);
+            EthInterfaceMatch = nullptr;
+
+            if (setInventoryMACOnSystem(bus, infname))
+            {
+                MacAddressMatch = nullptr;
+            }
+        }
+    };
+
+    auto mycallback = [&, handle_interface](sdbusplus::message_t& m) {
         std::map<DbusObjectPath,
                  std::map<DbusInterface, std::variant<PropertyValue>>>
             interfacesProperties;
@@ -272,8 +286,10 @@ void watchEthernetInterface(sdbusplus::bus_t& bus,
         sdbusplus::message::object_path objPath;
         std::pair<std::string, std::string> ethPair;
         m.read(objPath, interfacesProperties);
+
         for (const auto& interfaces : interfacesProperties)
         {
+            log<level::INFO>(interfaces.first.c_str());
             if (interfaces.first ==
                 "xyz.openbmc_project.Network.EthernetInterface")
             {
@@ -281,29 +297,9 @@ void watchEthernetInterface(sdbusplus::bus_t& bus,
                 {
                     if (property.first == "InterfaceName")
                     {
-                        std::string infname =
-                            std::get<std::string>(property.second);
+                        handle_interface(
+                            std::get<std::string>(property.second));
 
-                        if (configJson.find(infname) == configJson.end())
-                        {
-                            // ethernet interface not found in configJSON
-                            // check if it is not sit0 interface, as it is
-                            // expected.
-                            if (infname != "sit0")
-                            {
-                                log<level::ERR>(
-                                    "Wrong Interface Name in Config Json");
-                            }
-                        }
-                        else
-                        {
-                            if (!setInventoryMACOnSystem(bus, configJson,
-                                                         infname))
-                            {
-                                registerSignals(bus, configJson);
-                                EthInterfaceMatch = nullptr;
-                            }
-                        }
                         break;
                     }
                 }
@@ -333,6 +329,14 @@ void watchEthernetInterface(sdbusplus::bus_t& bus,
                 "member='InterfacesAdded',path='/xyz/openbmc_project/network'",
                 mycallback);
             registeredSignals = true;
+
+            for (const auto& intf : manager->interfaces)
+            {
+                if (intf.first == interfaceString.key())
+                {
+                    handle_interface(intf.first);
+                }
+            }
         }
     }
 }
@@ -342,9 +346,8 @@ std::unique_ptr<Runtime> watch(stdplus::PinnedRef<sdbusplus::bus_t> bus,
 {
     manager = &m.get();
     std::ifstream in(configFile);
-    nlohmann::json configJson;
     in >> configJson;
-    watchEthernetInterface(bus, configJson);
+    watchEthernetInterface(bus);
     return nullptr;
 }
 
