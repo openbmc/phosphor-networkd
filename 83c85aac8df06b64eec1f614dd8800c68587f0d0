@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c5667bd_dddb781a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-02-10T09:30:30Z",
+      "side": 1,
+      "message": "Hi William, Can you please add test details and a bit more elaborated commit messages",
+      "revId": "83c85aac8df06b64eec1f614dd8800c68587f0d0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
