@@ -34,6 +34,24 @@
       "parentUuid": "182e5668_293be2e7",
       "revId": "194fdafb261ee62ba4295f3e7ec6b3932a268c9e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5afaf628_db88d904",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-02-13T23:47:24Z",
+      "side": 1,
+      "message": "What do you mean we don\u0027t check it? You mean we don\u0027t check if there exists an address with a different prefix when we configure the same address with a new prefix?",
+      "parentUuid": "e37c2fcd_3871b4be",
+      "revId": "194fdafb261ee62ba4295f3e7ec6b3932a268c9e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
