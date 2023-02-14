@@ -171,6 +171,10 @@ void EthernetInterface::addAddr(const AddressInfo& info)
     {
         origin = IP::AddressOrigin::DHCP;
     }
+    else if ((addressType==IP::Protocol::IPv6)&&ipv6AcceptRA())
+    {
+        origin = IP::AddressOrigin::SLAAC;
+    }
 #ifdef LINK_LOCAL_AUTOCONFIGURATION
     if (info.scope == RT_SCOPE_LINK)
     {
