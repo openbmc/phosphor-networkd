@@ -88,6 +88,24 @@
       "parentUuid": "d71bf302_4c63fd94",
       "revId": "194fdafb261ee62ba4295f3e7ec6b3932a268c9e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "089167a1_63172f65",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001371
+      },
+      "writtenOn": "2023-02-14T10:30:05Z",
+      "side": 1,
+      "message": "The current callback mechanism, it\u0027s easier to got an error config when the when the two reloads are very close to each other. eg:\n1. set nic enabled to false\n2. reloaded\n3. set nic enabled to true\n4. the AdministrativeState set state to false\n\nso I got a error config...",
+      "parentUuid": "0cc23f9b_b0f300c5",
+      "revId": "194fdafb261ee62ba4295f3e7ec6b3932a268c9e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
