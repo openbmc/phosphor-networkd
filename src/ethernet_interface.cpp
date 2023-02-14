@@ -164,12 +164,31 @@ bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
     );
 }
 
+static IP::Protocol getProtocol(const InAddrAny& addr)
+{
+    if (std::holds_alternative<in_addr>(addr))
+    {
+        return IP::Protocol::IPv4;
+    }
+    else if (std::holds_alternative<in6_addr>(addr))
+    {
+        return IP::Protocol::IPv6;
+    }
+
+    throw std::runtime_error("Invalid addr type");
+}
+
 void EthernetInterface::addAddr(const AddressInfo& info)
 {
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
+    IP::Protocol addressType = getProtocol(info.ifaddr.getAddr());
     if (dhcpIsEnabled(info.ifaddr.getAddr()))
     {
         origin = IP::AddressOrigin::DHCP;
+    }
+    else if ((addressType == IP::Protocol::IPv6) && ipv6AcceptRA())
+    {
+        origin = IP::AddressOrigin::SLAAC;
     }
 #ifdef LINK_LOCAL_AUTOCONFIGURATION
     if (info.scope == RT_SCOPE_LINK)
