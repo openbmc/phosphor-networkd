@@ -1,6 +1,5 @@
 [Unit]
 Description=Phosphor Network Manager
-After=obmc-mapper.target
 After=systemd-networkd.service
 
 [Service]
