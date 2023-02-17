@@ -22,6 +22,30 @@
       },
       "revId": "386f1ab1382cfe7def21f1577cdb8e35208e284d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3de41bee_7bc1dcd1",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-02-17T09:51:01Z",
+      "side": 1,
+      "message": "It still says invalid prefix length when the exception is caught, but the reason is the prefix of 0 or `default route` is provided which is illegal.",
+      "parentUuid": "dd44bff9_1c03a633",
+      "range": {
+        "startLine": 250,
+        "startChar": 41,
+        "endLine": 250,
+        "endChar": 54
+      },
+      "revId": "386f1ab1382cfe7def21f1577cdb8e35208e284d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
