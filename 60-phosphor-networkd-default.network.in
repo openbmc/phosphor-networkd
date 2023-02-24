@@ -1,6 +1,5 @@
 [Match]
-Name=*
-Name=!lo
+Type=ether
 [Network]
 DHCP=true
 LinkLocalAddressing=@LINK_LOCAL_AUTOCONFIGURATION@

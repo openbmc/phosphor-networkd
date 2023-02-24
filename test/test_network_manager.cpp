@@ -2,6 +2,8 @@
 
 #include "config_parser.hpp"
 
+#include <net/if_arp.h>
+
 #include <sdbusplus/bus.hpp>
 #include <stdplus/gtest/tmp.hpp>
 
@@ -40,7 +42,8 @@ TEST_F(TestNetworkManager, NoInterface)
 
 TEST_F(TestNetworkManager, WithSingleInterface)
 {
-    manager.addInterface({.idx = 2, .flags = 0, .name = "igb1"});
+    manager.addInterface(
+        {.type = ARPHRD_ETHER, .idx = 2, .flags = 0, .name = "igb1"});
     manager.handleAdminState("managed", 2);
 
     // Now create the interfaces which will call the mocked getifaddrs
@@ -51,10 +54,12 @@ TEST_F(TestNetworkManager, WithSingleInterface)
 // getifaddrs returns two interfaces.
 TEST_F(TestNetworkManager, WithMultipleInterfaces)
 {
-    manager.addInterface({.idx = 1, .flags = 0, .name = "igb0"});
+    manager.addInterface(
+        {.type = ARPHRD_ETHER, .idx = 1, .flags = 0, .name = "igb0"});
     manager.handleAdminState("managed", 1);
     manager.handleAdminState("unmanaged", 2);
-    manager.addInterface({.idx = 2, .flags = 0, .name = "igb1"});
+    manager.addInterface(
+        {.type = ARPHRD_ETHER, .idx = 2, .flags = 0, .name = "igb1"});
 
     EXPECT_THAT(manager.interfaces,
                 UnorderedElementsAre(Key("igb0"), Key("igb1")));
@@ -66,7 +71,8 @@ TEST_F(TestNetworkManager, WithVLAN)
     EXPECT_THROW(manager.vlan("", 0), std::exception);
     EXPECT_THROW(manager.vlan("eth0", 2), std::exception);
 
-    manager.addInterface({.idx = 1, .flags = 0, .name = "eth0"});
+    manager.addInterface(
+        {.type = ARPHRD_ETHER, .idx = 1, .flags = 0, .name = "eth0"});
     manager.handleAdminState("managed", 1);
     EXPECT_NO_THROW(manager.vlan("eth0", 2));
     EXPECT_NO_THROW(manager.vlan("eth0", 4094));

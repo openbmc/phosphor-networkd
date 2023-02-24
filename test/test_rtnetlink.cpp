@@ -21,10 +21,11 @@ TEST(IntfFromRtm, NoAttrs)
     {
         ifinfomsg hdr __attribute__((aligned(NLMSG_ALIGNTO)));
     } msg;
+    msg.hdr.ifi_type = 3;
     msg.hdr.ifi_index = 1;
     msg.hdr.ifi_flags = 2;
     EXPECT_EQ(intfFromRtm(stdplus::raw::asView<char>(msg)),
-              (InterfaceInfo{.idx = 1, .flags = 2}));
+              (InterfaceInfo{.type = 3, .idx = 1, .flags = 2}));
 }
 
 TEST(IntfFromRtm, AllAttrs)
@@ -40,6 +41,7 @@ TEST(IntfFromRtm, AllAttrs)
         rtattr mtu_hdr __attribute__((aligned((RTA_ALIGNTO))));
         unsigned mtu __attribute__((aligned((RTA_ALIGNTO)))) = 50;
     } msg;
+    msg.hdr.ifi_type = 4;
     msg.hdr.ifi_index = 1;
     msg.hdr.ifi_flags = 2;
     msg.addr_hdr.rta_type = IFLA_ADDRESS;
@@ -50,7 +52,8 @@ TEST(IntfFromRtm, AllAttrs)
     msg.mtu_hdr.rta_len = RTA_LENGTH(sizeof(msg.mtu));
 
     auto info = intfFromRtm(stdplus::raw::asView<char>(msg));
-    auto expected = InterfaceInfo{.idx = 1,
+    auto expected = InterfaceInfo{.type = 4,
+                                  .idx = 1,
                                   .flags = 2,
                                   .name = "eth0",
                                   .mac = ether_addr{0, 1, 2, 3, 4, 5},
