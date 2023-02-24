@@ -4,6 +4,7 @@
 #include "test_network_manager.hpp"
 
 #include <net/if.h>
+#include <net/if_arp.h>
 
 #include <sdbusplus/bus.hpp>
 #include <stdplus/gtest/tmp.hpp>
@@ -40,7 +41,8 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
         makeInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                       TestManager& manager)
     {
-        AllIntfInfo info{InterfaceInfo{.idx = 1, .flags = 0, .name = "test0"}};
+        AllIntfInfo info{InterfaceInfo{
+            .type = ARPHRD_ETHER, .idx = 1, .flags = 0, .name = "test0"}};
         return {bus, manager, info, "/xyz/openbmc_test/network"sv,
                 config::Parser()};
     }
@@ -72,7 +74,8 @@ TEST_F(TestEthernetInterface, Fields)
     constexpr ether_addr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};
     constexpr unsigned mtu = 150;
 
-    AllIntfInfo info{InterfaceInfo{.idx = 2,
+    AllIntfInfo info{InterfaceInfo{.type = ARPHRD_ETHER,
+                                   .idx = 2,
                                    .flags = IFF_RUNNING,
                                    .name = "test1",
                                    .mac = mac,

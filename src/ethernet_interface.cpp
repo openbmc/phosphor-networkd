@@ -11,6 +11,7 @@
 #include <fmt/format.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
+#include <net/if_arp.h>
 
 #include <algorithm>
 #include <filesystem>
@@ -571,6 +572,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
         mac.emplace(ToAddr<ether_addr>{}(macStr));
     }
     auto info = AllIntfInfo{InterfaceInfo{
+        .type = ARPHRD_ETHER,
         .idx = 0, // TODO: Query the correct value after creation
         .flags = 0,
         .name = intfName,

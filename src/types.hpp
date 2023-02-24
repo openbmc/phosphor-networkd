@@ -83,6 +83,7 @@ class IfAddr
  */
 struct InterfaceInfo
 {
+    unsigned short type;
     unsigned idx;
     unsigned flags;
     std::optional<std::string> name = std::nullopt;
