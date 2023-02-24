@@ -272,7 +272,7 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
         it->second->IPIfaces::origin(IP::AddressOrigin::Static);
     }
 
-    writeConfigurationFile();
+    queueWriteConfig();
     manager.get().reloadConfigs();
 
     return it->second->getObjPath();
@@ -328,7 +328,7 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
         it->second->NeighborObj::macAddress(str);
     }
 
-    writeConfigurationFile();
+    queueWriteConfig();
     manager.get().reloadConfigs();
 
     return it->second->getObjPath();
@@ -338,7 +338,7 @@ bool EthernetInterface::ipv6AcceptRA(bool value)
 {
     if (ipv6AcceptRA() != EthernetInterfaceIntf::ipv6AcceptRA(value))
     {
-        writeConfigurationFile();
+        queueWriteConfig();
         manager.get().reloadConfigs();
     }
     return value;
@@ -348,7 +348,7 @@ bool EthernetInterface::dhcp4(bool value)
 {
     if (dhcp4() != EthernetInterfaceIntf::dhcp4(value))
     {
-        writeConfigurationFile();
+        queueWriteConfig();
         manager.get().reloadConfigs();
     }
     return value;
@@ -358,7 +358,7 @@ bool EthernetInterface::dhcp6(bool value)
 {
     if (dhcp6() != EthernetInterfaceIntf::dhcp6(value))
     {
-        writeConfigurationFile();
+        queueWriteConfig();
         manager.get().reloadConfigs();
     }
     return value;
@@ -380,7 +380,7 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
 
     if (old4 != new4 || old6 != new6 || oldra != newra)
     {
-        writeConfigurationFile();
+        queueWriteConfig();
         manager.get().reloadConfigs();
     }
     return value;
@@ -421,7 +421,7 @@ bool EthernetInterface::nicEnabled(bool value)
     }
 
     EthernetInterfaceIntf::nicEnabled(value);
-    writeConfigurationFile();
+    queueWriteConfig();
     if (!value)
     {
         // We only need to bring down the interface, networkd will always bring
@@ -455,7 +455,7 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
     {
         EthernetInterfaceIntf::staticNameServers(value);
 
-        writeConfigurationFile();
+        queueWriteConfig();
         manager.get().reloadConfigs();
     }
     catch (const InternalFailure& e)
@@ -599,7 +599,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     config.writeFile(
         config::pathForIntfDev(manager.get().getConfDir(), intfName));
 
-    writeConfigurationFile();
+    queueWriteConfig();
     manager.get().reloadConfigs();
 
     return ret;
@@ -611,7 +611,7 @@ ServerList EthernetInterface::staticNTPServers(ServerList value)
     {
         EthernetInterfaceIntf::staticNTPServers(value);
 
-        writeConfigurationFile();
+        queueWriteConfig();
         manager.get().reloadConfigs();
     }
     catch (InternalFailure& e)
@@ -746,6 +746,11 @@ void EthernetInterface::writeConfigurationFile()
     log<level::INFO>(msg.c_str(), entry("FILE=%s", path.c_str()));
 }
 
+void EthernetInterface::queueWriteConfig()
+{
+    manager.get().queueWriteIntfConfig(ifIdx);
+}
+
 std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
 {
     if (vlan)
@@ -791,7 +796,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         }
         MacAddressIntf::macAddress(validMAC);
 
-        writeConfigurationFile();
+        queueWriteConfig();
         manager.get().addReloadPreHook([interface]() {
             // The MAC and LLADDRs will only update if the NIC is already down
             system::setNICUp(interface, false);
@@ -823,7 +828,7 @@ void EthernetInterface::deleteAll()
     // clear all the ip on the interface
     addrs.clear();
 
-    writeConfigurationFile();
+    queueWriteConfig();
     manager.get().reloadConfigs();
 }
 
@@ -850,7 +855,7 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
     }
     EthernetInterfaceIntf::defaultGateway(gateway);
 
-    writeConfigurationFile();
+    queueWriteConfig();
     manager.get().reloadConfigs();
 
     return gateway;
@@ -879,7 +884,7 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
     }
     EthernetInterfaceIntf::defaultGateway6(gateway);
 
-    writeConfigurationFile();
+    queueWriteConfig();
     manager.get().reloadConfigs();
 
     return gateway;
@@ -914,13 +919,7 @@ void EthernetInterface::VlanProperties::delete_()
     eth.get().manager.get().interfaces.erase(it);
 
     // Write an updated parent interface since it has a VLAN entry
-    for (const auto& [_, intf] : eth.get().manager.get().interfaces)
-    {
-        if (intf->ifIdx == parentIdx)
-        {
-            intf->writeConfigurationFile();
-        }
-    }
+    eth.get().manager.get().queueWriteIntfConfig(parentIdx);
 
     if (eth.get().ifIdx > 0)
     {

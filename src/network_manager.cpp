@@ -79,48 +79,7 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
             }
         })
 {
-    reload.setCallback([&]() {
-        for (auto& hook : reloadPreHooks)
-        {
-            try
-            {
-                hook();
-            }
-            catch (const std::exception& ex)
-            {
-                log<level::ERR>("Failed executing reload hook, ignoring",
-                                entry("ERR=%s", ex.what()));
-            }
-        }
-        reloadPreHooks.clear();
-        try
-        {
-            bus.get()
-                .new_method_call(NETWORKD_BUSNAME, NETWORKD_PATH,
-                                 NETWORKD_INTERFACE, "Reload")
-                .call();
-            log<level::INFO>("Reloaded systemd-networkd");
-        }
-        catch (const sdbusplus::exception_t& ex)
-        {
-            log<level::ERR>("Failed to reload configuration",
-                            entry("ERR=%s", ex.what()));
-            reloadPostHooks.clear();
-        }
-        for (auto& hook : reloadPostHooks)
-        {
-            try
-            {
-                hook();
-            }
-            catch (const std::exception& ex)
-            {
-                log<level::ERR>("Failed executing reload hook, ignoring",
-                                entry("ERR=%s", ex.what()));
-            }
-        }
-        reloadPostHooks.clear();
-    });
+    reload.setCallback([&]() { reloadCb(); });
     std::vector<
         std::tuple<int32_t, std::string, sdbusplus::message::object_path>>
         links;
@@ -238,6 +197,7 @@ void Manager::addInterface(const InterfaceInfo& info)
     {
         infoIt = std::get<0>(intfInfo.emplace(info.idx, AllIntfInfo{info}));
     }
+    infoIt->second.lastUpdate = std::chrono::steady_clock::now();
 
     if (auto it = systemdNetworkdEnabled.find(info.idx);
         it != systemdNetworkdEnabled.end())
@@ -284,6 +244,7 @@ void Manager::removeInterface(const InterfaceInfo& info)
     {
         interfaces.erase(nit);
     }
+    writtenIntfs.erase(info.idx);
     intfInfo.erase(info.idx);
 }
 
@@ -295,6 +256,7 @@ void Manager::addAddress(const AddressInfo& info)
     }
     if (auto it = intfInfo.find(info.ifidx); it != intfInfo.end())
     {
+        it->second.lastUpdate = std::chrono::steady_clock::now();
         it->second.addrs.insert_or_assign(info.ifaddr, info);
         if (auto it = interfacesByIdx.find(info.ifidx);
             it != interfacesByIdx.end())
@@ -311,12 +273,14 @@ void Manager::addAddress(const AddressInfo& info)
 
 void Manager::removeAddress(const AddressInfo& info)
 {
-    if (auto it = interfacesByIdx.find(info.ifidx); it != interfacesByIdx.end())
+    if (auto it = intfInfo.find(info.ifidx); it != intfInfo.end())
     {
-        it->second->addrs.erase(info.ifaddr);
-        if (auto it = intfInfo.find(info.ifidx); it != intfInfo.end())
+        it->second.lastUpdate = std::chrono::steady_clock::now();
+        it->second.addrs.erase(info.ifaddr);
+        if (auto it = interfacesByIdx.find(info.ifidx);
+            it != interfacesByIdx.end())
         {
-            it->second.addrs.erase(info.ifaddr);
+            it->second->addrs.erase(info.ifaddr);
         }
     }
 }
@@ -329,6 +293,7 @@ void Manager::addNeighbor(const NeighborInfo& info)
     }
     if (auto it = intfInfo.find(info.ifidx); it != intfInfo.end())
     {
+        it->second.lastUpdate = std::chrono::steady_clock::now();
         it->second.staticNeighs.insert_or_assign(*info.addr, info);
         if (auto it = interfacesByIdx.find(info.ifidx);
             it != interfacesByIdx.end())
@@ -351,6 +316,7 @@ void Manager::removeNeighbor(const NeighborInfo& info)
     }
     if (auto it = intfInfo.find(info.ifidx); it != intfInfo.end())
     {
+        it->second.lastUpdate = std::chrono::steady_clock::now();
         it->second.staticNeighs.erase(*info.addr);
         if (auto it = interfacesByIdx.find(info.ifidx);
             it != interfacesByIdx.end())
@@ -364,6 +330,7 @@ void Manager::addDefGw(unsigned ifidx, InAddrAny addr)
 {
     if (auto it = intfInfo.find(ifidx); it != intfInfo.end())
     {
+        it->second.lastUpdate = std::chrono::steady_clock::now();
         std::visit(
             [&](auto addr) {
                 if constexpr (std::is_same_v<in_addr, decltype(addr)>)
@@ -413,6 +380,7 @@ void Manager::removeDefGw(unsigned ifidx, InAddrAny addr)
 {
     if (auto it = intfInfo.find(ifidx); it != intfInfo.end())
     {
+        it->second.lastUpdate = std::chrono::steady_clock::now();
         std::visit(
             [&](auto addr) {
                 if constexpr (std::is_same_v<in_addr, decltype(addr)>)
@@ -500,13 +468,20 @@ void Manager::reset()
 // Need to merge the below function with the code which writes the
 // config file during factory reset.
 // TODO openbmc/openbmc#1751
-void Manager::writeToConfigurationFile()
+void Manager::queueWriteAllConfigs()
 {
     // write all the static ip address in the systemd-network conf file
-    for (const auto& intf : interfaces)
+    for (const auto& intf : intfInfo)
     {
-        intf.second->writeConfigurationFile();
+        writtenIntfs.emplace(intf.first);
     }
+    scheduleReload();
+}
+
+void Manager::queueWriteIntfConfig(unsigned idx)
+{
+    writtenIntfs.emplace(idx);
+    scheduleReload();
 }
 
 void Manager::handleAdminState(std::string_view state, unsigned ifidx)
@@ -528,6 +503,106 @@ void Manager::handleAdminState(std::string_view state, unsigned ifidx)
             createInterface(it->second, managed);
         }
     }
+}
+
+void Manager::reloadConfigs()
+{
+    reloadDeadline = std::chrono::steady_clock::now() + reloadDelay;
+    scheduleReload();
+}
+
+void Manager::scheduleReload()
+{
+    const auto max = std::chrono::milliseconds::max();
+    const auto now = std::chrono::steady_clock::now();
+    auto next = max;
+    if (reloadDeadline)
+    {
+        next = std::min(next,
+                        std::chrono::duration_cast<std::chrono::milliseconds>(
+                            *reloadDeadline - now));
+    }
+    const auto nextInterval = now - writeDelay;
+    for (const auto idx : writtenIntfs)
+    {
+        auto toWrite = std::chrono::duration_cast<std::chrono::milliseconds>(
+            intfInfo.find(idx)->second.lastUpdate - nextInterval);
+        next = std::min(next, toWrite);
+    }
+    if (next != max)
+    {
+        // Add a little padding in case it triggers early
+        next += std::chrono::milliseconds(10);
+        reload.schedule(std::max(next, std::chrono::milliseconds(0)));
+    }
+}
+
+void Manager::reloadCb()
+{
+    const auto now = std::chrono::steady_clock::now();
+    bool reloading = reloadDeadline && *reloadDeadline <= now;
+
+    for (auto it = writtenIntfs.begin(); it != writtenIntfs.end();)
+    {
+        auto curIt = it++;
+        if (reloading ||
+            now - intfInfo.find(*curIt)->second.lastUpdate >= writeDelay)
+        {
+            if (auto itIf = interfacesByIdx.find(*curIt);
+                itIf != interfacesByIdx.end())
+            {
+                itIf->second->writeConfigurationFile();
+            }
+            writtenIntfs.erase(curIt);
+        }
+    }
+
+    if (reloading)
+    {
+        reloadDeadline = std::nullopt;
+        for (auto& hook : reloadPreHooks)
+        {
+            try
+            {
+                hook();
+            }
+            catch (const std::exception& ex)
+            {
+                log<level::ERR>("Failed executing reload hook, ignoring",
+                                entry("ERR=%s", ex.what()));
+            }
+        }
+        reloadPreHooks.clear();
+        try
+        {
+            bus.get()
+                .new_method_call(NETWORKD_BUSNAME, NETWORKD_PATH,
+                                 NETWORKD_INTERFACE, "Reload")
+                .call();
+            log<level::INFO>("Reloaded systemd-networkd");
+        }
+        catch (const sdbusplus::exception_t& ex)
+        {
+            log<level::ERR>("Failed to reload configuration",
+                            entry("ERR=%s", ex.what()));
+            reloadPostHooks.clear();
+        }
+        for (auto& hook : reloadPostHooks)
+        {
+            try
+            {
+                hook();
+            }
+            catch (const std::exception& ex)
+            {
+                log<level::ERR>("Failed executing reload hook, ignoring",
+                                entry("ERR=%s", ex.what()));
+            }
+        }
+        reloadPostHooks.clear();
+    }
+
+    scheduleReload();
 }
 
 } // namespace network

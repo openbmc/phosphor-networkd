@@ -43,6 +43,7 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     {
         AllIntfInfo info{InterfaceInfo{
             .type = ARPHRD_ETHER, .idx = 1, .flags = 0, .name = "test0"}};
+        manager.intfInfo.emplace(info.intf.idx, info);
         return {bus, manager, info, "/xyz/openbmc_test/network"sv,
                 config::Parser()};
     }
@@ -129,8 +130,10 @@ TEST_F(TestEthernetInterface, CheckObjectPath)
 TEST_F(TestEthernetInterface, addStaticNameServers)
 {
     ServerList servers = {"9.1.1.1", "9.2.2.2", "9.3.3.3"};
-    EXPECT_CALL(manager.mockReload, schedule());
+    EXPECT_CALL(manager.mockReload, schedule(testing::Le(reloadDelay)))
+        .Times(testing::AtLeast(1));
     interface.staticNameServers(servers);
+    interface.writeConfigurationFile();
     config::Parser parser((confDir / "00-bmc-test0.network").native());
     EXPECT_EQ(servers, parser.map.getValueStrings("Network", "DNS"));
 }
@@ -146,8 +149,10 @@ TEST_F(TestEthernetInterface, getDynamicNameServers)
 TEST_F(TestEthernetInterface, addStaticNTPServers)
 {
     ServerList servers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};
-    EXPECT_CALL(manager.mockReload, schedule());
+    EXPECT_CALL(manager.mockReload, schedule(testing::Le(reloadDelay)))
+        .Times(testing::AtLeast(1));
     interface.staticNTPServers(servers);
+    interface.writeConfigurationFile();
     config::Parser parser((confDir / "00-bmc-test0.network").native());
     EXPECT_EQ(servers, parser.map.getValueStrings("Network", "NTP"));
 }
@@ -186,7 +191,7 @@ TEST_F(TestEthernetInterface, addGateway6)
 
 TEST_F(TestEthernetInterface, DHCPEnabled)
 {
-    EXPECT_CALL(manager.mockReload, schedule())
+    EXPECT_CALL(manager.mockReload, schedule(testing::Le(reloadDelay)))
         .WillRepeatedly(testing::Return());
 
     using DHCPConf = EthernetInterfaceIntf::DHCPConf;

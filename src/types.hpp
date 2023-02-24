@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <array>
+#include <chrono>
 #include <numeric>
 #include <optional>
 #include <string>
@@ -855,6 +856,8 @@ struct AllIntfInfo
     std::optional<in6_addr> defgw6 = std::nullopt;
     std::unordered_map<IfAddr, AddressInfo> addrs = {};
     std::unordered_map<InAddrAny, NeighborInfo> staticNeighs = {};
+
+    std::chrono::time_point<std::chrono::steady_clock> lastUpdate = {};
 };
 
 } // namespace phosphor::network

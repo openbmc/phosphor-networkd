@@ -110,7 +110,7 @@ void IPAddress::delete_()
         }
     }
 
-    parent.get().writeConfigurationFile();
+    parent.get().queueWriteConfig();
     parent.get().manager.get().reloadConfigs();
 }
 

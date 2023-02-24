@@ -10,7 +10,7 @@ namespace network
 
 struct MockExecutor : DelayedExecutor
 {
-    MOCK_METHOD((void), schedule, (), (override));
+    MOCK_METHOD((void), schedule, (std::chrono::milliseconds), (override));
     MOCK_METHOD((void), setCallback, (fu2::unique_function<void()> &&),
                 (override));
 };

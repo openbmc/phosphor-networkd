@@ -9,7 +9,6 @@
 
 #include <fmt/format.h>
 
-#include <chrono>
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/manager.hpp>
@@ -35,14 +34,13 @@ class TimerExecutor : public DelayedExecutor
     using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
 
   public:
-    TimerExecutor(sdeventplus::Event& event, std::chrono::seconds delay) :
-        delay(delay), timer(event, nullptr)
+    TimerExecutor(sdeventplus::Event& event) : timer(event, nullptr)
     {
     }
 
-    void schedule() override
+    void schedule(std::chrono::milliseconds d) override
     {
-        timer.restartOnce(delay);
+        timer.restartOnce(d);
     }
 
     void setCallback(fu2::unique_function<void()>&& cb) override
@@ -51,7 +49,6 @@ class TimerExecutor : public DelayedExecutor
     }
 
   private:
-    std::chrono::seconds delay;
     Timer timer;
 };
 
@@ -70,7 +67,7 @@ int main()
     stdplus::Pinned bus = sdbusplus::bus::new_default();
     sdbusplus::server::manager_t objManager(bus, DEFAULT_OBJPATH);
 
-    stdplus::Pinned<TimerExecutor> reload(event, std::chrono::seconds(3));
+    stdplus::Pinned<TimerExecutor> reload(event);
     Manager manager(bus, reload, DEFAULT_OBJPATH, "/etc/systemd/network");
     netlink::Server svr(event, manager);
 

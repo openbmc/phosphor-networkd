@@ -182,6 +182,7 @@ class EthernetInterface : public Ifaces
     /** @brief write the network conf file with the in-memory objects.
      */
     void writeConfigurationFile();
+    void queueWriteConfig();
 
     /** @brief delete all dbus objects.
      */

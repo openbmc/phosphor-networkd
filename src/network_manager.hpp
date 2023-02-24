@@ -5,6 +5,7 @@
 #include "types.hpp"
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
 
+#include <chrono>
 #include <filesystem>
 #include <function2/function2.hpp>
 #include <memory>
@@ -27,12 +28,15 @@ using ManagerIface = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::VLAN::server::Create,
     sdbusplus::xyz::openbmc_project::Common::server::FactoryReset>;
 
+inline constexpr auto reloadDelay = std::chrono::seconds(3);
+inline constexpr auto writeDelay = std::chrono::seconds(1);
+
 class DelayedExecutor
 {
   public:
     virtual ~DelayedExecutor() = default;
 
-    virtual void schedule() = 0;
+    virtual void schedule(std::chrono::milliseconds d) = 0;
     virtual void setCallback(fu2::unique_function<void()>&& cb) = 0;
 };
 
@@ -59,7 +63,8 @@ class Manager : public ManagerIface
 
     /** @brief write the network conf file with the in-memory objects.
      */
-    void writeToConfigurationFile();
+    void queueWriteAllConfigs();
+    void queueWriteIntfConfig(unsigned idx);
 
     /** @brief Adds a single interface to the interface map */
     void addInterface(const InterfaceInfo& info);
@@ -103,10 +108,7 @@ class Manager : public ManagerIface
     /** @brief Arms a timer to tell systemd-network to reload all of the network
      * configurations
      */
-    inline void reloadConfigs()
-    {
-        reload.schedule();
-    }
+    void reloadConfigs();
 
     /** @brief Persistent map of EthernetInterface dbus objects and their names
      */
@@ -130,6 +132,9 @@ class Manager : public ManagerIface
   protected:
     /** @brief Handle to the object used to trigger reloads of networkd. */
     DelayedExecutor& reload;
+    void reloadCb();
+    std::optional<std::chrono::steady_clock::time_point> reloadDeadline;
+    std::unordered_set<unsigned> writtenIntfs;
 
     /** @brief Persistent sdbusplus DBus bus connection. */
     stdplus::PinnedRef<sdbusplus::bus_t> bus;
@@ -165,6 +170,11 @@ class Manager : public ManagerIface
 
     /** @brief Creates the interface in the maps */
     void createInterface(const AllIntfInfo& info, bool enabled);
+
+    /** @brief Schedules the next reload of the delayed executor */
+    void scheduleReload();
+
+    friend class TestEthernetInterface;
 };
 
 } // namespace network
