@@ -9,6 +9,7 @@
 #include <linux/if_addr.h>
 #include <linux/neighbour.h>
 #include <net/if.h>
+#include <net/if_arp.h>
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
@@ -202,7 +203,7 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
 
 void Manager::addInterface(const InterfaceInfo& info)
 {
-    if (info.flags & IFF_LOOPBACK)
+    if (info.type != ARPHRD_ETHER)
     {
         ignoredIntf.emplace(info.idx);
         return;

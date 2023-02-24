@@ -55,8 +55,9 @@ InterfaceInfo intfFromRtm(std::string_view msg)
 {
     const auto& ifinfo = netlink::extractRtData<ifinfomsg>(msg);
     InterfaceInfo ret;
-    ret.flags = ifinfo.ifi_flags;
+    ret.type = ifinfo.ifi_type;
     ret.idx = ifinfo.ifi_index;
+    ret.flags = ifinfo.ifi_flags;
     while (!msg.empty())
     {
         auto [hdr, data] = netlink::extractRtAttr(msg);
