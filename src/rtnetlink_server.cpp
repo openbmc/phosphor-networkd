@@ -28,6 +28,23 @@ inline void rthandler(std::string_view data, auto&& cb)
     cb(std::get<unsigned>(*ret), std::get<InAddrAny>(*ret));
 }
 
+static unsigned getIfIdx(const nlmsghdr& hdr, std::string_view data)
+{
+    switch (hdr.nlmsg_type)
+    {
+        case RTM_NEWLINK:
+        case RTM_DELLINK:
+            return extractRtData<ifinfomsg>(data).ifi_index;
+        case RTM_NEWADDR:
+        case RTM_DELADDR:
+            return extractRtData<ifaddrmsg>(data).ifa_index;
+        case RTM_NEWNEIGH:
+        case RTM_DELNEIGH:
+            return extractRtData<ndmsg>(data).ndm_ifindex;
+    }
+    throw std::runtime_error("Unknown nlmsg_type");
+}
+
 static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
 {
     try
@@ -66,6 +83,17 @@ static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
     }
     catch (const std::exception& e)
     {
+        try
+        {
+            if (m.ignoredIntf.contains(getIfIdx(hdr, data)))
+            {
+                // We don't want to log errors for ignored interfaces
+                return;
+            }
+        }
+        catch (...)
+        {
+        }
         auto msg = fmt::format("Failed handling netlink event: {}", e.what());
         log<level::ERR>(msg.c_str(), entry("ERROR=%s", e.what()));
     }
