@@ -41,6 +41,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8fb0c53_b1e42903",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-02-28T09:57:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6822b465_01f48b05",
+      "range": {
+        "startLine": 185,
+        "startChar": 4,
+        "endLine": 185,
+        "endChar": 28
+      },
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "65f95435_8c5f5225",
@@ -54,6 +78,30 @@
       "writtenOn": "2023-02-28T07:02:17Z",
       "side": 1,
       "message": "can combine?",
+      "range": {
+        "startLine": 528,
+        "startChar": 8,
+        "endLine": 530,
+        "endChar": 39
+      },
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64036055_1dcdbcf9",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-02-28T09:57:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65f95435_8c5f5225",
       "range": {
         "startLine": 528,
         "startChar": 8,
@@ -87,6 +135,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3522ce0a_4042df6a",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-02-28T09:57:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31865e41_69d9bb8f",
+      "range": {
+        "startLine": 535,
+        "startChar": 16,
+        "endLine": 535,
+        "endChar": 45
+      },
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f418e238_408e94fb",
@@ -100,6 +172,30 @@
       "writtenOn": "2023-02-28T07:02:17Z",
       "side": 1,
       "message": "flip the logic to save horizontal space?\n\n```\nif(!reloading) {\n  scheduleReload();\n  return;\n}\n...\n```",
+      "range": {
+        "startLine": 560,
+        "startChar": 4,
+        "endLine": 561,
+        "endChar": 5
+      },
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91fbd164_756f2e0c",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-02-28T09:57:39Z",
+      "side": 1,
+      "message": "I suppose, but it\u0027s multiple if () ... blocks of variable action and then a required call. I\u0027d like to stick with one type of flow pattern in case new conditionals get added.",
+      "parentUuid": "f418e238_408e94fb",
       "range": {
         "startLine": 560,
         "startChar": 4,
@@ -133,6 +229,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d6ef18b_16c46b86",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-02-28T09:57:39Z",
+      "side": 1,
+      "message": "They are possibly mutable when they are called (lambda with mutable captures), so they can\u0027t be const.",
+      "parentUuid": "a2e28057_14bef157",
+      "range": {
+        "startLine": 563,
+        "startChar": 13,
+        "endLine": 563,
+        "endChar": 18
+      },
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ecb36b9e_8f5f0156",
@@ -146,6 +266,24 @@
       "writtenOn": "2023-02-28T07:02:17Z",
       "side": 1,
       "message": "nit: rm extra new line?",
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7093ec72_2cfa2e8b",
+        "filename": "src/types.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 859,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-02-28T09:57:39Z",
+      "side": 1,
+      "message": "I was trying to separate data the interface data from the timestamp logically.",
+      "parentUuid": "ecb36b9e_8f5f0156",
       "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
