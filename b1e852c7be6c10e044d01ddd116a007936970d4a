@@ -16,6 +16,138 @@
       "message": "I want to invert the change to coalesce rtnetlink updates instead of trying to coalesce around writes. This will make dbus signals more stable too and accurately reflect the intention of changes.",
       "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6822b465_01f48b05",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2023-02-28T07:02:17Z",
+      "side": 1,
+      "message": "docstring. same with all of the new methods.",
+      "range": {
+        "startLine": 185,
+        "startChar": 4,
+        "endLine": 185,
+        "endChar": 28
+      },
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65f95435_8c5f5225",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2023-02-28T07:02:17Z",
+      "side": 1,
+      "message": "can combine?",
+      "range": {
+        "startLine": 528,
+        "startChar": 8,
+        "endLine": 530,
+        "endChar": 39
+      },
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31865e41_69d9bb8f",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2023-02-28T07:02:17Z",
+      "side": 1,
+      "message": "add this as constexpr like `reloadDelay` and `writeDelay`?",
+      "range": {
+        "startLine": 535,
+        "startChar": 16,
+        "endLine": 535,
+        "endChar": 45
+      },
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f418e238_408e94fb",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2023-02-28T07:02:17Z",
+      "side": 1,
+      "message": "flip the logic to save horizontal space?\n\n```\nif(!reloading) {\n  scheduleReload();\n  return;\n}\n...\n```",
+      "range": {
+        "startLine": 560,
+        "startChar": 4,
+        "endLine": 561,
+        "endChar": 5
+      },
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2e28057_14bef157",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2023-02-28T07:02:17Z",
+      "side": 1,
+      "message": "const auto\u0026?\n\nsame with `reloadPreHooks`?",
+      "range": {
+        "startLine": 563,
+        "startChar": 13,
+        "endLine": 563,
+        "endChar": 18
+      },
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecb36b9e_8f5f0156",
+        "filename": "src/types.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 859,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2023-02-28T07:02:17Z",
+      "side": 1,
+      "message": "nit: rm extra new line?",
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
