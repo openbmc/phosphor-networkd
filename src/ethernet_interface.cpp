@@ -127,6 +127,10 @@ EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     {
         addStaticNeigh(neigh);
     }
+    for (const auto& [_, staticRoute] : info.staticRoutes)
+    {
+        addStaticRoute(staticRoute);
+    }
 }
 
 void EthernetInterface::updateInfo(const InterfaceInfo& info, bool skipSignal)
@@ -210,6 +214,31 @@ void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
                                                 bus, std::string_view(objPath),
                                                 *this, *info.addr, *info.mac,
                                                 Neighbor::State::Permanent));
+    }
+}
+
+void EthernetInterface::addStaticRoute(const StaticRouteInfo& info)
+{
+    if (!info.gateway || !info.destination)
+    {
+        auto msg = fmt::format("Missing static route details on {}\n",
+                               interfaceName());
+        log<level::ERR>(msg.c_str());
+        return;
+    }
+
+    if (auto it = staticRoutes.find(*info.destination);
+        it != staticRoutes.end())
+    {
+        it->second->StaticRouteObj::gateway(*info.gateway);
+    }
+    else
+    {
+        staticRoutes.emplace(
+            *info.destination,
+            std::make_unique<StaticRoute>(bus, std::string_view(objPath), *this,
+                                          *info.destination, *info.gateway,
+                                          info.prefixLength));
     }
 }
 
@@ -325,6 +354,47 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
             return it->second->getObjPath();
         }
         it->second->NeighborObj::macAddress(str);
+    }
+
+    writeConfigurationFile();
+    manager.get().reloadConfigs();
+
+    return it->second->getObjPath();
+}
+
+ObjectPath EthernetInterface::staticRoute(std::string destination,
+                                          std::string gateway,
+                                          uint32_t prefixLength)
+{
+    InAddrAny addr;
+    try
+    {
+        addr = ToAddr<InAddrAny>{}(destination);
+    }
+    catch (const std::exception& e)
+    {
+        auto msg = fmt::format("Not a valid IP address `{}`: {}", destination,
+                               e.what());
+        log<level::ERR>(msg.c_str(), entry("ADDRESS=%s", destination.c_str()));
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("destination"),
+                              Argument::ARGUMENT_VALUE(destination.c_str()));
+    }
+
+    auto it = staticRoutes.find(destination);
+    if (it == staticRoutes.end())
+    {
+        it = std::get<0>(staticRoutes.emplace(
+            destination,
+            std::make_unique<StaticRoute>(bus, std::string_view(objPath), *this,
+                                          destination, gateway, prefixLength)));
+    }
+    else
+    {
+        if (it->second->StaticRouteObj::destination() == destination)
+        {
+            return it->second->getObjPath();
+        }
+        it->second->StaticRouteObj::destination(destination);
     }
 
     writeConfigurationFile();
@@ -737,6 +807,20 @@ void EthernetInterface::writeConfigurationFile()
         dhcp["SendHostname"].emplace_back(conf.sendHostNameEnabled() ? "true"
                                                                      : "false");
     }
+
+    {
+        auto& sroutes = config.map["Route"];
+        for (const auto& temp : staticRoutes)
+        {
+            auto& staticRoute = sroutes.emplace_back();
+            staticRoute["Destination"].emplace_back(
+                fmt::format("{}/{}", temp.second->destination(),
+                            temp.second->prefixLength()));
+            staticRoute["Gateway"].emplace_back(temp.second->gateway());
+            staticRoute["GatewayOnLink"].emplace_back("true");
+        }
+    }
+
     auto path =
         config::pathForIntfConf(manager.get().getConfDir(), interfaceName());
     config.writeFile(path);
