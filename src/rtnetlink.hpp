@@ -17,4 +17,5 @@ AddressInfo addrFromRtm(std::string_view msg);
 
 NeighborInfo neighFromRtm(std::string_view msg);
 
+//StaticRouteInfo staticRouteFromRtm(std::string_view msg);
 } // namespace phosphor::network::netlink
