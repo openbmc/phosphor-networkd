@@ -179,5 +179,31 @@ NeighborInfo neighFromRtm(std::string_view msg)
     }
     return ret;
 }
+#if 0
+StaticRouteInfo staticRouteFromRtm(std::string_view msg)
+{
+    const auto& rtm = netlink::extractRtData<rtmsg>(msg);
+
+    StaticRouteInfo ret;
+    ret.ifidx = rtm.ndm_ifindex;
+    ret.state = rtm.ndm_state;
+    while (!msg.empty())
+    {
+        auto [hdr, data] = netlink::extractRtAttr(msg);
+        if (hdr.rta_type == RTM_GETROUTE)
+	{	
+         if (hdr.rta_type == RTA_GATEWAY)
+	{
+            ret.gateway = stdplus::raw::copyFrom<std::string>(data);
+	}
+        else if (hdr.rta_type == RTA_DST)
+        {
+            ret.destination = stdplus::raw::copyFrom<std::string>(data);
+        }
+	}
+    }
+    return ret;
+}
+#endif
 
 } // namespace phosphor::network::netlink
