@@ -56,6 +56,7 @@ int clearInterface(int ifindex);
  * @returns 0 on success and negative value for failure.
  */
 int getInfo(int ifindex, int package);
+int setChannelMask(int ifindex, int package, int mask);
 
 } // namespace ncsi
 } // namespace network

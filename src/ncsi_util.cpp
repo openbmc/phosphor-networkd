@@ -6,10 +6,11 @@
 #include <netlink/genl/genl.h>
 #include <netlink/netlink.h>
 
+#include <chrono>
+#include <condition_variable>
 #include <iomanip>
 #include <iostream>
 #include <vector>
-
 namespace phosphor
 {
 namespace network
@@ -58,6 +59,24 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+struct NCSIChannelInfo
+{
+    int id;
+    bool hasId;
+    bool active;
+};
+
+struct NCSIPackageInfo
+{
+    bool hasId;
+    int id;
+    std::vector<NCSIChannelInfo> channels;
+};
+
+std::vector<NCSIPackageInfo> packageList;
+std::condition_variable cv_ncsiGetInfo;
+std::mutex mutex_ncsiGetInfo;
+bool getInfoDone = false;
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -107,10 +126,11 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
             std::cerr << "Failed to parse package nested" << std::endl;
             return -1;
         }
-
+        NCSIPackageInfo currentPackage;
         if (packagetb[NCSI_PKG_ATTR_ID])
         {
             auto attrID = nla_get_u32(packagetb[NCSI_PKG_ATTR_ID]);
+            currentPackage.id = attrID;
             std::cout << "Package has id : " << std::hex << attrID << std::endl;
         }
         else
@@ -137,17 +157,20 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
                 std::cerr << "Failed to parse channel nested" << std::endl;
                 return -1;
             }
-
+            NCSIChannelInfo currentChannel;
             if (channeltb[NCSI_CHANNEL_ATTR_ID])
             {
                 auto channel = nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_ID]);
+                currentChannel.id = channel;
                 if (channeltb[NCSI_CHANNEL_ATTR_ACTIVE])
                 {
+                    currentChannel.active = true;
                     std::cout << "Channel Active : " << std::hex << channel
                               << std::endl;
                 }
                 else
                 {
+                    currentChannel.active = false;
                     std::cout << "Channel Not Active : " << std::hex << channel
                               << std::endl;
                 }
@@ -159,6 +182,7 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
             }
             else
             {
+                currentChannel.hasId = false;
                 std::cout << "Channel with no ID" << std::endl;
             }
 
@@ -203,8 +227,16 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
                     vid = nla_next(vid, &len);
                 }
             }
+            currentPackage.channels.emplace_back(currentChannel);
         }
+        packageList.emplace_back(currentPackage);
     }
+    // notify conditional variable ready
+    {
+        std::lock_guard<std::mutex> lock(mutex_ncsiGetInfo);
+        getInfoDone = true;
+    }
+    cv_ncsiGetInfo.notify_one();
     return (int)NL_SKIP;
 };
 
@@ -247,8 +279,8 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
 };
 
 int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
-             int channel = DEFAULT_VALUE, int flags = NONE,
-             CallBack function = nullptr)
+             int channel = DEFAULT_VALUE, int mask = DEFAULT_VALUE,
+             int flags = NONE, CallBack function = nullptr)
 {
     int cb_ret = 0;
     nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
@@ -307,6 +339,21 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
         {
             std::cerr << "Failed to set the attribute , RC : " << ret
                       << "CHANNEL : " << std::hex << channel << std::endl;
+            return ret;
+        }
+    }
+    if (mask != DEFAULT_VALUE)
+    {
+
+        ret = nla_put_u32(msg.get(),
+                          (package == DEFAULT_VALUE)
+                              ? ncsi_nl_attrs::NCSI_ATTR_PACKAGE_MASK
+                              : ncsi_nl_attrs::NCSI_ATTR_CHANNEL_MASK,
+                          mask);
+        if (ret < 0)
+        {
+            std::cerr << "Failed to set the mask attribute , RC : " << ret
+                      << "CHANNEL : " << std::hex << mask << std::endl;
             return ret;
         }
     }
@@ -397,7 +444,7 @@ int sendOemCommand(int ifindex, int package, int channel,
     return internal::applyCmd(
         ifindex,
         internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, cmd, payload),
-        package, channel, NONE, internal::sendCallBack);
+        package, channel, DEFAULT_VALUE, NONE, internal::sendCallBack);
 }
 
 int setChannel(int ifindex, int package, int channel)
@@ -418,6 +465,62 @@ int clearInterface(int ifindex)
         ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE));
 }
 
+int setChannelMask(int ifindex, int package, int mask)
+{
+
+    std::cout << "set mask , PACKAGE :  " << std::hex << package
+              << ", IFINDEX :  " << std::hex << ifindex << std::endl;
+
+    getInfo(ifindex, package);
+    std::unique_lock<std::mutex> lock(internal::mutex_ncsiGetInfo);
+    internal::cv_ncsiGetInfo.wait_for(lock, std::chrono::seconds(1),
+                                      [] { return internal::getInfoDone; });
+
+    for (auto& package : internal::packageList)
+    {
+        std::cout << " Package has Id:  " << package.hasId
+                  << ", package id :  " << package.id << std::endl;
+
+        for (auto& channel : package.channels)
+        {
+            std::cout << " channel has Id:  " << channel.hasId
+                      << ", channel id :  " << channel.id
+                      << ", channel active : " << channel.active << std::endl;
+        }
+    }
+
+    if (package != DEFAULT_VALUE)
+    {
+        auto channels = internal::packageList[package].channels.size();
+
+        if (channels < mask)
+        {
+            std::cout << " invalid channel mask : " << mask
+                      << ",valid channels : " << channels << std::endl;
+            return -1;
+        }
+        return internal::applyCmd(
+            ifindex,
+            internal::Command(ncsi_nl_commands::NCSI_CMD_SET_CHANNEL_MASK),
+            package, DEFAULT_VALUE, mask);
+    }
+    else
+    {
+
+        auto packages = internal::packageList.size();
+
+        if (packages < mask)
+        {
+            std::cout << " invalid package mask : " << mask
+                      << ", valid packages : " << packages << std::endl;
+            return -1;
+        }
+        return internal::applyCmd(
+            ifindex,
+            internal::Command(ncsi_nl_commands::NCSI_CMD_SET_PACKAGE_MASK),
+            DEFAULT_VALUE, DEFAULT_VALUE, mask);
+    }
+}
 int getInfo(int ifindex, int package)
 {
     std::cout << "Get Info , PACKAGE :  " << std::hex << package
@@ -426,12 +529,13 @@ int getInfo(int ifindex, int package)
     {
         return internal::applyCmd(
             ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_PKG_INFO),
-            package, DEFAULT_VALUE, NLM_F_DUMP, internal::infoCallBack);
+            package, DEFAULT_VALUE, DEFAULT_VALUE, NLM_F_DUMP,
+            internal::infoCallBack);
     }
     else
     {
         return internal::applyCmd(ifindex, ncsi_nl_commands::NCSI_CMD_PKG_INFO,
-                                  package, DEFAULT_VALUE, NONE,
+                                  package, DEFAULT_VALUE, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
 }

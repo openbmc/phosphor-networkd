@@ -36,6 +36,7 @@ int main(int argc, char** argv)
     int packageInt{};
     int channelInt{};
     int indexInt{};
+    int maskInt{};
 
     // Parse out interface argument.
     auto ifIndex = (options)["index"];
@@ -84,6 +85,20 @@ int main(int argc, char** argv)
     if (channelInt < 0)
     {
         channelInt = DEFAULT_VALUE;
+    }
+    auto mask = (options)["mask"];
+    try
+    {
+        maskInt = stoi(mask, nullptr);
+    }
+    catch (const std::exception& e)
+    {
+        maskInt = DEFAULT_VALUE;
+    }
+
+    if (maskInt < 0)
+    {
+        maskInt = DEFAULT_VALUE;
     }
 
     auto payloadStr = (options)["oem-payload"];
@@ -142,6 +157,10 @@ int main(int argc, char** argv)
     else if ((options)["clear"] == "true")
     {
         return ncsi::clearInterface(indexInt);
+    }
+    else if ((options)["set-mask"] == "true")
+    {
+        return ncsi::setChannelMask(indexInt, packageInt, maskInt);
     }
     else
     {
