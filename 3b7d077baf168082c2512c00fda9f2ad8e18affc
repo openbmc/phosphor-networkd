@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a670a3e3_f458a520",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-03-14T16:40:36Z",
+      "side": 1,
+      "message": "Here is StaticRoute D-bus interfaces commit\nhttps://gerrit.openbmc.org/c/openbmc/phosphor-dbus-interfaces/+/60517\n\nCI failure is expected as networkd looks of StaticRoute D-bus Interface\n../src/static_route.hpp:9:10: fatal error: xyz/openbmc_project/Network/StaticRoute/server.hpp: No such file or directory\n    9 | #include \u003cxyz/openbmc_project/Network/StaticRoute/server.hpp\u003e",
+      "revId": "3b7d077baf168082c2512c00fda9f2ad8e18affc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
