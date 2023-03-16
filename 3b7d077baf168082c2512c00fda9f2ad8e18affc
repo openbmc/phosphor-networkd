@@ -16,6 +16,92 @@
       "message": "Here is StaticRoute D-bus interfaces commit\nhttps://gerrit.openbmc.org/c/openbmc/phosphor-dbus-interfaces/+/60517\n\nCI failure is expected as networkd looks of StaticRoute D-bus Interface\n../src/static_route.hpp:9:10: fatal error: xyz/openbmc_project/Network/StaticRoute/server.hpp: No such file or directory\n    9 | #include \u003cxyz/openbmc_project/Network/StaticRoute/server.hpp\u003e",
       "revId": "3b7d077baf168082c2512c00fda9f2ad8e18affc",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aef4c5c6_b7c6e89b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-03-16T03:56:53Z",
+      "side": 1,
+      "message": "yaml file is added ?",
+      "revId": "3b7d077baf168082c2512c00fda9f2ad8e18affc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d687f5c4_28d7d755",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-03-16T03:56:53Z",
+      "side": 1,
+      "message": "remove?",
+      "range": {
+        "startLine": 393,
+        "startChar": 8,
+        "endLine": 393,
+        "endChar": 50
+      },
+      "revId": "3b7d077baf168082c2512c00fda9f2ad8e18affc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6ebe9ba_b7ff5ada",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-03-16T03:56:53Z",
+      "side": 1,
+      "message": "objects destination should be matched here right ?",
+      "range": {
+        "startLine": 394,
+        "startChar": 40,
+        "endLine": 394,
+        "endChar": 47
+      },
+      "revId": "3b7d077baf168082c2512c00fda9f2ad8e18affc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9bc0eb0_e8d05890",
+        "filename": "src/static_route.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-03-16T03:56:53Z",
+      "side": 1,
+      "message": "Is it allowed to update the static route? eg: for a destination, can a user update the gateway? -or- user should delete and recreate the route object? \nIs there any RFC which mentions this ?",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 23
+      },
+      "revId": "3b7d077baf168082c2512c00fda9f2ad8e18affc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
