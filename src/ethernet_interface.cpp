@@ -464,6 +464,7 @@ bool EthernetInterface::nicEnabled(bool value)
 
 ServerList EthernetInterface::staticNameServers(ServerList value)
 {
+    std::vector<std::string> dnsUniqueValues;  
     for (auto& ip : value)
     {
         try
@@ -477,7 +478,18 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
             elog<InvalidArgument>(Argument::ARGUMENT_NAME("StaticNameserver"),
                                   Argument::ARGUMENT_VALUE(ip.c_str()));
         }
+        if (std::find(dnsUniqueValues.begin(), dnsUniqueValues.end(),
+                      ip) == dnsUniqueValues.end())
+        {
+            dnsUniqueValues.push_back(ip);
+        }      
     }
+<<<<<<< PATCH SET (690ddc Avoid writing duplicate DNS entries to config file.)
+    try
+    {
+        EthernetInterfaceIntf::staticNameServers(dnsUniqueValues);
+=======
+>>>>>>> BASE      (1f0052 meson: adjust nlohmann-json dependency)
 
     value = EthernetInterfaceIntf::staticNameServers(std::move(value));
 
