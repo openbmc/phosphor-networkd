@@ -464,6 +464,7 @@ bool EthernetInterface::nicEnabled(bool value)
 
 ServerList EthernetInterface::staticNameServers(ServerList value)
 {
+    std::vector<std::string> dnsUniqueValues;  
     for (auto& ip : value)
     {
         try
@@ -477,9 +478,14 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
             elog<InvalidArgument>(Argument::ARGUMENT_NAME("StaticNameserver"),
                                   Argument::ARGUMENT_VALUE(ip.c_str()));
         }
+        if (std::find(dnsUniqueValues.begin(), dnsUniqueValues.end(),
+                      ip) == dnsUniqueValues.end())
+        {
+            dnsUniqueValues.push_back(ip);
+        }
     }
 
-    value = EthernetInterfaceIntf::staticNameServers(std::move(value));
+    value = EthernetInterfaceIntf::staticNameServers(std::move(dnsUniqueValues));
 
     writeConfigurationFile();
     manager.get().reloadConfigs();
