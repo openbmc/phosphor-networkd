@@ -675,7 +675,11 @@ void EthernetInterface::writeConfigurationFile()
         }
         {
             auto& dnss = network["DNS"];
-            for (const auto& dns : EthernetInterfaceIntf::staticNameServers())
+            const auto& dnsValues = EthernetInterfaceIntf::staticNameServers();
+            std::unordered_set<std::string> dnsServList(dnsValues.rbegin(),
+                                                        dnsValues.rend());
+
+            for (const auto& dns : dnsServList)
             {
                 dnss.emplace_back(dns);
             }
