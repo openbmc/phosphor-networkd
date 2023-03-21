@@ -675,9 +675,16 @@ void EthernetInterface::writeConfigurationFile()
         }
         {
             auto& dnss = network["DNS"];
-            for (const auto& dns : EthernetInterfaceIntf::staticNameServers())
+            std::vector<std::string> dnsUniqueValues;
+          
+            for (const auto& dns : EthernetInterfaceIntf::staticNameServers();)
             {
-                dnss.emplace_back(dns);
+                if (std::find(dnsUniqueValues.begin(), dnsUniqueValues.end(),
+                              dns) == dnsUniqueValues.end())
+                {
+                    dnsUniqueValues.push_back(dns);
+                    dnss.emplace_back(dns);
+                }
             }
         }
         {
