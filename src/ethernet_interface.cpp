@@ -675,7 +675,12 @@ void EthernetInterface::writeConfigurationFile()
         }
         {
             auto& dnss = network["DNS"];
-            for (const auto& dns : EthernetInterfaceIntf::staticNameServers())
+            // To remove the duplicate dns entries
+            const auto& dnsValues = EthernetInterfaceIntf::staticNameServers();
+            std::unordered_set<std::string> dnsServList(dnsValues.begin(),
+                                                        dnsValues.end());
+
+            for (const auto& dns : dnsServList)
             {
                 dnss.emplace_back(dns);
             }
