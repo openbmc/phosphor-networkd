@@ -203,10 +203,10 @@ TEST_F(TestEthernetInterface, DHCPEnabled)
     set_test(DHCPConf::v4, /*dhcp4=*/true, /*dhcp6=*/false, /*ra=*/false);
     set_test(DHCPConf::v6stateless, /*dhcp4=*/false, /*dhcp6=*/false,
              /*ra=*/true);
-    set_test(DHCPConf::v6, /*dhcp4=*/false, /*dhcp6=*/true, /*ra=*/true);
+    set_test(DHCPConf::v6, /*dhcp4=*/false, /*dhcp6=*/true, /*ra=*/false);
     set_test(DHCPConf::v4v6stateless, /*dhcp4=*/true, /*dhcp6=*/false,
              /*ra=*/true);
-    set_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/true);
+    set_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/false);
 
     auto ind_test = [&](DHCPConf conf, bool dhcp4, bool dhcp6, bool ra) {
         EXPECT_EQ(dhcp4, interface.dhcp4(dhcp4));
@@ -219,12 +219,11 @@ TEST_F(TestEthernetInterface, DHCPEnabled)
     ind_test(DHCPConf::v6stateless, /*dhcp4=*/false, /*dhcp6=*/false,
              /*ra=*/true);
     ind_test(DHCPConf::v6, /*dhcp4=*/false, /*dhcp6=*/true, /*ra=*/false);
-    set_test(DHCPConf::v6, /*dhcp4=*/false, /*dhcp6=*/true, /*ra=*/true);
+    set_test(DHCPConf::v6, /*dhcp4=*/false, /*dhcp6=*/true, /*ra=*/false);
     ind_test(DHCPConf::v4v6stateless, /*dhcp4=*/true, /*dhcp6=*/false,
              /*ra=*/true);
     ind_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/false);
-    set_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/true);
+    set_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/false);
 }
-
 } // namespace network
 } // namespace phosphor
