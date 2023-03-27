@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "50dd5747_95cf2e35",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-03-27T14:41:40Z",
+      "side": 1,
+      "message": "yes",
+      "parentUuid": "aef4c5c6_b7c6e89b",
+      "revId": "3b7d077baf168082c2512c00fda9f2ad8e18affc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d687f5c4_28d7d755",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 5
@@ -48,6 +66,30 @@
       "writtenOn": "2023-03-16T03:56:53Z",
       "side": 1,
       "message": "remove?",
+      "range": {
+        "startLine": 393,
+        "startChar": 8,
+        "endLine": 393,
+        "endChar": 50
+      },
+      "revId": "3b7d077baf168082c2512c00fda9f2ad8e18affc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e66e6603_fc5febed",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-03-27T14:41:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d687f5c4_28d7d755",
       "range": {
         "startLine": 393,
         "startChar": 8,
@@ -81,6 +123,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f466d34f_44c64d05",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-03-27T14:41:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6ebe9ba_b7ff5ada",
+      "range": {
+        "startLine": 394,
+        "startChar": 40,
+        "endLine": 394,
+        "endChar": 47
+      },
+      "revId": "3b7d077baf168082c2512c00fda9f2ad8e18affc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e9bc0eb0_e8d05890",
@@ -94,6 +160,30 @@
       "writtenOn": "2023-03-16T03:56:53Z",
       "side": 1,
       "message": "Is it allowed to update the static route? eg: for a destination, can a user update the gateway? -or- user should delete and recreate the route object? \nIs there any RFC which mentions this ?",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 23
+      },
+      "revId": "3b7d077baf168082c2512c00fda9f2ad8e18affc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40602e7f_29b5707c",
+        "filename": "src/static_route.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-03-27T14:41:40Z",
+      "side": 1,
+      "message": "No support of property value updates on static route object.\nyes it should delete and create new object\nsimilar to IP address objects",
+      "parentUuid": "e9bc0eb0_e8d05890",
       "range": {
         "startLine": 44,
         "startChar": 4,
