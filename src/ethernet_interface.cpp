@@ -174,16 +174,28 @@ bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
 void EthernetInterface::addAddr(const AddressInfo& info)
 {
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
-    if (dhcpIsEnabled(info.ifaddr.getAddr()))
-    {
-        origin = IP::AddressOrigin::DHCP;
-    }
 #ifdef LINK_LOCAL_AUTOCONFIGURATION
     if (info.scope == RT_SCOPE_LINK)
     {
         origin = IP::AddressOrigin::LinkLocal;
     }
 #endif
+
+    if ((info.scope == RT_SCOPE_UNIVERSE) && (info.flags & IFA_F_PERMANENT))
+    {
+        origin = IP::AddressOrigin::Static;
+    }
+    if ((info.scope == RT_SCOPE_UNIVERSE) &&
+        ((info.flags & IFA_F_NOPREFIXROUTE) &&
+         (info.flags & IFA_F_MANAGETEMPADDR)))
+    {
+        origin = IP::AddressOrigin::SLAAC;
+    }
+    else if ((info.scope == RT_SCOPE_UNIVERSE) &&
+             ((info.flags & IFA_F_NOPREFIXROUTE)))
+    {
+        origin = IP::AddressOrigin::DHCP;
+    }
 
     auto it = addrs.find(info.ifaddr);
     if (it == addrs.end())
