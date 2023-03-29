@@ -367,17 +367,12 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
 {
     auto old4 = EthernetInterfaceIntf::dhcp4();
     auto new4 = EthernetInterfaceIntf::dhcp4(value == DHCPConf::v4 ||
-                                             value == DHCPConf::v4v6stateless ||
                                              value == DHCPConf::both);
     auto old6 = EthernetInterfaceIntf::dhcp6();
     auto new6 = EthernetInterfaceIntf::dhcp6(value == DHCPConf::v6 ||
                                              value == DHCPConf::both);
-    auto oldra = EthernetInterfaceIntf::ipv6AcceptRA();
-    auto newra = EthernetInterfaceIntf::ipv6AcceptRA(
-        value == DHCPConf::v6stateless || value == DHCPConf::v4v6stateless ||
-        value == DHCPConf::v6 || value == DHCPConf::both);
 
-    if (old4 != new4 || old6 != new6 || oldra != newra)
+    if (old4 != new4 || old6 != new6)
     {
         writeConfigurationFile();
         manager.get().reloadConfigs();
@@ -393,9 +388,9 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled() const
     }
     else if (dhcp4())
     {
-        return ipv6AcceptRA() ? DHCPConf::v4v6stateless : DHCPConf::v4;
+        return DHCPConf::v4;
     }
-    return ipv6AcceptRA() ? DHCPConf::v6stateless : DHCPConf::none;
+    return DHCPConf::none;
 }
 
 size_t EthernetInterface::mtu(size_t value)
