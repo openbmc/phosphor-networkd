@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6983f244_27983af2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-03-29T04:57:29Z",
+      "side": 1,
+      "message": "Is this tested for both IPv4 and IPv6 ?",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 10
+      },
+      "revId": "0980a630d90ef77e520a2f6856a44cb8c1627a75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "941a9daf_677a39fa",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-03-29T04:57:29Z",
+      "side": 1,
+      "message": "Do you still need this section?",
+      "range": {
+        "startLine": 170,
+        "startChar": 0,
+        "endLine": 173,
+        "endChar": 5
+      },
+      "revId": "0980a630d90ef77e520a2f6856a44cb8c1627a75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e06a9d3_1ea7bf91",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-03-29T04:57:29Z",
+      "side": 1,
+      "message": "When there are multiple IP addresses, i think we also need to handle IFA_F_SECONDARY here.",
+      "range": {
+        "startLine": 181,
+        "startChar": 45,
+        "endLine": 181,
+        "endChar": 75
+      },
+      "revId": "0980a630d90ef77e520a2f6856a44cb8c1627a75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
