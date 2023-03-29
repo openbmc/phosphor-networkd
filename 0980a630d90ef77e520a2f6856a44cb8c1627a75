@@ -95,6 +95,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddf4dbce_7a42750c",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-03-29T05:18:50Z",
+      "side": 1,
+      "message": "Ack. Anyway this will not harm anything being here.",
+      "parentUuid": "d473d70d_062cac85",
+      "range": {
+        "startLine": 170,
+        "startChar": 0,
+        "endLine": 173,
+        "endChar": 5
+      },
+      "revId": "0980a630d90ef77e520a2f6856a44cb8c1627a75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4e06a9d3_1ea7bf91",
@@ -132,6 +156,30 @@
       "side": 1,
       "message": "you mean multiple DHCP addresses from same server?",
       "parentUuid": "4e06a9d3_1ea7bf91",
+      "range": {
+        "startLine": 181,
+        "startChar": 45,
+        "endLine": 181,
+        "endChar": 75
+      },
+      "revId": "0980a630d90ef77e520a2f6856a44cb8c1627a75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08350875_90b56ef6",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-03-29T05:18:50Z",
+      "side": 1,
+      "message": "Multiple static IP addresses.",
+      "parentUuid": "ac875d78_503471ff",
       "range": {
         "startLine": 181,
         "startChar": 45,
