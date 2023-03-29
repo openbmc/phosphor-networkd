@@ -94,7 +94,8 @@ void IPAddress::delete_()
                    "{PREFIX} interface {INTERFACE_NAME}",
                    "IP_ADDRESS", address(), "PREFIX", prefixLength(),
                    "INTERFACE_NAME", parent.get().interfaceName());
-        elog<InternalFailure>();
+
+        elog<NotAllowed>(Reason("Not allowed to delete a non-static address"));
     }
 
     std::unique_ptr<IPAddress> ptr;
