@@ -188,6 +188,30 @@
       },
       "revId": "0980a630d90ef77e520a2f6856a44cb8c1627a75",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57de8ca5_0b4d63f3",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-03-29T13:30:49Z",
+      "side": 1,
+      "message": "yes I have tested with multiple static addresses on the interface.\nirrespective of  IFA_F_SECONDARY flag, origin of static addresses marked as \"Static\"",
+      "parentUuid": "08350875_90b56ef6",
+      "range": {
+        "startLine": 181,
+        "startChar": 45,
+        "endLine": 181,
+        "endChar": 75
+      },
+      "revId": "0980a630d90ef77e520a2f6856a44cb8c1627a75",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
