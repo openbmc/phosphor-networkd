@@ -16,6 +16,24 @@
       "message": "Can you please describe more, what is the issue which you are trying to fix it here?",
       "revId": "5fd049784e43b3578eef259cc7a11a31f84a3e04",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b2127ad_036d8691",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-03-30T15:42:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "979baa69_41f35244",
+      "revId": "5fd049784e43b3578eef259cc7a11a31f84a3e04",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
