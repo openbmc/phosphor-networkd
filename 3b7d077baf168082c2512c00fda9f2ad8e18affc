@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d9f1b5f7_fd76ccb0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-03-30T06:48:03Z",
+      "side": 1,
+      "message": "Network Interfaces like IP interface already defined under networkd.\nfollowed the same for this static route interface as well.",
+      "parentUuid": "5b50f033_33a96340",
+      "revId": "3b7d077baf168082c2512c00fda9f2ad8e18affc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d687f5c4_28d7d755",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 5
