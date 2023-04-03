@@ -1,6 +1,8 @@
 [Match]
 Name=*
 Name=!lo
+[DHCPv6]
+WithoutRA=solicit
 [Network]
 DHCP=true
 LinkLocalAddressing=@LINK_LOCAL_AUTOCONFIGURATION@
