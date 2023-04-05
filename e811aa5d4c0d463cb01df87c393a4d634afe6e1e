@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82d45f60_3f76572e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-04-05T02:15:31Z",
+      "side": 1,
+      "message": "William/Ratan\nCan you please review this commit",
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
