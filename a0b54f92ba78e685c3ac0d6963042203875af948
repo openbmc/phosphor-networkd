@@ -52,6 +52,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d4ba56b_d305a86b",
+        "filename": "meson.build",
+        "patchSetId": 61
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-04-07T09:08:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42562b5b_8e2cc0b0",
+      "revId": "a0b54f92ba78e685c3ac0d6963042203875af948",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c532f486_ee205835",
@@ -65,6 +83,24 @@
       "writtenOn": "2023-04-06T20:42:25Z",
       "side": 1,
       "message": "nit: Use auto with `make_unique`",
+      "revId": "a0b54f92ba78e685c3ac0d6963042203875af948",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3ed3eba_2ce7becf",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager_main.cpp",
+        "patchSetId": 61
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-04-07T09:08:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c532f486_ee205835",
       "revId": "a0b54f92ba78e685c3ac0d6963042203875af948",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
