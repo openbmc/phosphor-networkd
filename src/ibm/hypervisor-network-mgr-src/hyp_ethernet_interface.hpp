@@ -20,7 +20,7 @@ class HypNetworkMgr; // forward declaration of hypervisor network manager.
 using namespace phosphor::logging;
 using HypIP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 
-using CreateIface = sdbusplus::server::object::object<
+using CreateIface = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface,
     sdbusplus::xyz::openbmc_project::Network::IP::server::Create>;
 
@@ -31,7 +31,7 @@ using HypEthernetIntf =
 
 using ObjectPath = sdbusplus::message::object_path;
 
-static std::shared_ptr<sdbusplus::bus::match::match> matchBIOSAttrUpdate;
+static std::shared_ptr<sdbusplus::bus::match_t> matchBIOSAttrUpdate;
 
 /** @class HypEthernetInterface
  *  @brief Hypervisor Ethernet Interface implementation.
@@ -51,7 +51,7 @@ class HypEthInterface : public CreateIface
      *  @param[in] path - Path to attach at.
      *  @param[in] parent - parent object.
      */
-    HypEthInterface(sdbusplus::bus::bus& bus, const char* path,
+    HypEthInterface(sdbusplus::bus_t& bus, const char* path,
                     std::string_view intfName, HypNetworkMgr& parent) :
         CreateIface(bus, path, CreateIface::action::defer_emit),
         bus(bus), objectPath(path), manager(parent)
@@ -101,7 +101,7 @@ class HypEthInterface : public CreateIface
 
   protected:
     /** @brief sdbusplus DBus bus connection. */
-    sdbusplus::bus::bus& bus;
+    sdbusplus::bus_t& bus;
 
     /** @brief object path */
     std::string objectPath;
