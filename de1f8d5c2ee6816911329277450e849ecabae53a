@@ -16,6 +16,40 @@
       "message": "William/Ratan\nCan you please review this commit",
       "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "523ac571_5cdc6d90",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-10T17:56:35Z",
+      "side": 1,
+      "message": "Ravi,\nI\u0027m reviewing three separate commits, this being one, intended to resolve Issue #60 from the phosphor-networkd repo. Do you mind clarifying the intent with this change?",
+      "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1be3521b_5005aafb",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-10T17:56:35Z",
+      "side": 1,
+      "message": "What is the purpose of this change?\nI applied this code and tried a few things on my SUT.\nThe first was to confirm my RA/DHCPv6 servers supplied a DHCP address and route that allowed me to send/receive packets.\nI then used the IPv6 Router Address Configuration Control, \u0027ipmitool raw 0xc 1 1 0x40 1\u0027, to disable RA. The expectation is that the DHCPv6 address will also disappear.\nI was surprised to find that my BMC still had a DHCPv6 address.\nI was also surprised to find that traffic via that address failed to operate.\n\nThis change appears to introduce two unwanted artifacts.\nHow is your SUT/environment configured such that this change is desirable in your environment?",
+      "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
