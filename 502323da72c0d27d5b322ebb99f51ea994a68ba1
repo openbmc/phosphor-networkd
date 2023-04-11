@@ -51,6 +51,23 @@
       "parentUuid": "d5f43ba2_c639fedf",
       "revId": "502323da72c0d27d5b322ebb99f51ea994a68ba1",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe479121_39c856cf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-04-11T10:19:32Z",
+      "side": 1,
+      "message": "I am good with the changes, @william Kennigton, Do you see any issues here?",
+      "revId": "502323da72c0d27d5b322ebb99f51ea994a68ba1",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
