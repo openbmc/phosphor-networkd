@@ -9,7 +9,7 @@ configure_file(
   },
   install: true,
   install_dir: dependency('systemd').get_variable(
-    pkgconfig: 'systemdsystemunitdir'))
+    'systemdsystemunitdir'))
 
 hyp_src_includes = include_directories('.')
 
