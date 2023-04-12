@@ -2,7 +2,7 @@ project(
   'phosphor-networkd',
   'cpp',
   version: '0.1',
-  meson_version: '>=0.57.0',
+  meson_version: '>=0.58.0',
   default_options: [
     'warning_level=3',
     'cpp_std=c++20',
@@ -76,7 +76,7 @@ configure_file(
   configuration: conf_data,
   install: true,
   install_dir: dependency('systemd').get_variable(
-    pkgconfig: 'systemdutildir') / 'network')
+    'systemdutildir') / 'network')
 
 configure_file(
   input: 'xyz.openbmc_project.Network.service.in',
@@ -87,7 +87,7 @@ configure_file(
   },
   install: true,
   install_dir: dependency('systemd').get_variable(
-    pkgconfig: 'systemdsystemunitdir'))
+    'systemdsystemunitdir'))
 
 configure_file(
   input: 'xyz.openbmc_project.Network.conf.in',
