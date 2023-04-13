@@ -16,6 +16,23 @@
       "message": "Hi William/Ratan\n\ncan you please review this commit?\nthis commit fixes IP address origin issues",
       "revId": "68c14cb2fe70b016604f91840e1b0ab7422a98b5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2884ef9a_3cf88ef4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-13T21:38:22Z",
+      "side": 1,
+      "message": "I have been doing some lengthy IPMI and RF tests on this commit. So far it improves aspects of the IPv6 address reporting.\n\nIt does seem to potentially break a contract to BMCWeb. I notice that BMCWeb now always reports DHCPv4: false, and OperatingMode: \"Disabled\".\n\nAnother possible side effect is that using RF to put the OperatingMode \u003d Stateful does not enable DHCPv6Client. It only appears to modify IPv6AcceptRA.",
+      "revId": "68c14cb2fe70b016604f91840e1b0ab7422a98b5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
