@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0548fcc7_34b8dc13",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-04-13T09:03:10Z",
+      "side": 1,
+      "message": "Hi Johnathan \n\nThis change is make sure bmc get stand-alone DHCPv6 IP address when there is no RA Router attached in the network.\non example is say DHPC server directly connected to BMC through Ethernet cross cable then BMC does not get DHCPv6 IP even though dhcp server is up and running.\nso this commit sets WithoutRA\u003dsolicit when DHCP enabled so that BMC gets IPv6 DHCP Address when there is no RA router attached in the network",
+      "parentUuid": "523ac571_5cdc6d90",
+      "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1be3521b_5005aafb",
@@ -48,6 +66,24 @@
       "writtenOn": "2023-04-10T17:56:35Z",
       "side": 1,
       "message": "What is the purpose of this change?\nI applied this code and tried a few things on my SUT.\nThe first was to confirm my RA/DHCPv6 servers supplied a DHCP address and route that allowed me to send/receive packets.\nI then used the IPv6 Router Address Configuration Control, \u0027ipmitool raw 0xc 1 1 0x40 1\u0027, to disable RA. The expectation is that the DHCPv6 address will also disappear.\nI was surprised to find that my BMC still had a DHCPv6 address.\nI was also surprised to find that traffic via that address failed to operate.\n\nThis change appears to introduce two unwanted artifacts.\nHow is your SUT/environment configured such that this change is desirable in your environment?",
+      "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "543822ba_56fb9bd7",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-04-13T09:03:10Z",
+      "side": 1,
+      "message": "Existing change works fine as long as RA packets are received by BMC.\nsay if there are no RA packets received from router then bmc does not get DHCPv6 IP even though DHCPv6 server up and running, are you noticing same behaviour ?\nIs it expected behaviour as per RFCs?",
+      "parentUuid": "1be3521b_5005aafb",
       "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
