@@ -53,6 +53,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ea6963c_639da69c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-13T14:19:54Z",
+      "side": 1,
+      "message": "I don\u0027t approve of adding this commit to the phosphor-network mainline.\n\nThis creates an undesirable side-effect for environments that have a DHCPv6 server, but don\u0027t want their BMC to have a DHCPv6 address. When the BMC is told to turn RA off the expectation is there will only be static IPv6 addresses and static routes present in the system.\n\nThis is especially important for IPMI, as the only knob to modify is Set Lan Config Routing Advertisement Configuration. When this register has disabled \"dynamic router advertisement\" (bit 2 clear) the expectation is there will be no addresses reported in Get LAN Config IPv6 Dynamic Address.\n\nThis change causes the IPv6 Dynamic Address to report a value. This commit assumes this is desirable for all OBMC users. I already have several defects filed against phosphor-network related to IPMI DHCPv6/v4 address handling. Allowing this commit to propagate only ensures I have another added to the list.\n\nIt is mandatory for IPMI to work, correctly, for all use cases. The only in-band method for controlling IPv4/IPv6 addressing from BIOS is via IPMI. It is also highly desirable that solutions operate without requiring retooling BIOS IPMI behavior. It appears that most commits only test Redfish functionality, without regard to IPMI functionality. IMO a commit has to function in both Redfish, and IPMI before it is submitted for review.\n\nThis was the point of adding the DHCP enumerations in phos-dbus-intf over a year ago. It allowed IPMI to perform correct state transforms while only having control of the single Routing Advertisement Configuration register.",
+      "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1be3521b_5005aafb",
