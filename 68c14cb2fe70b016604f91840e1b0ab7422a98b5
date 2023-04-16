@@ -33,6 +33,24 @@
       "message": "I have been doing some lengthy IPMI and RF tests on this commit. So far it improves aspects of the IPv6 address reporting.\n\nIt does seem to potentially break a contract to BMCWeb. I notice that BMCWeb now always reports DHCPv4: false, and OperatingMode: \"Disabled\".\n\nAnother possible side effect is that using RF to put the OperatingMode \u003d Stateful does not enable DHCPv6Client. It only appears to modify IPv6AcceptRA.",
       "revId": "68c14cb2fe70b016604f91840e1b0ab7422a98b5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c8c0b6e_c96d0751",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-04-16T12:40:11Z",
+      "side": 1,
+      "message": "Thank you, Johnathan for evaluating this commit. Probably https://gerrit.openbmc.org/c/openbmc/bmcweb/+/53959 is the bmcweb commit which you need along with this change",
+      "parentUuid": "2884ef9a_3cf88ef4",
+      "revId": "68c14cb2fe70b016604f91840e1b0ab7422a98b5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
