@@ -7,16 +7,14 @@
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/ops.hpp>
 
 namespace phosphor::network::netlink
 {
 
-using phosphor::logging::entry;
-using phosphor::logging::level;
-using phosphor::logging::log;
+PHOSPHOR_LOG2_USING_WITH_FLAGS;
 
 inline void rthandler(std::string_view data, auto&& cb)
 {
@@ -66,8 +64,7 @@ static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
     }
     catch (const std::exception& e)
     {
-        auto msg = fmt::format("Failed handling netlink event: {}", e.what());
-        log<level::ERR>(msg.c_str(), entry("ERROR=%s", e.what()));
+        error("Failed handling netlink event: {ERROR}", "ERROR", e);
     }
 }
 

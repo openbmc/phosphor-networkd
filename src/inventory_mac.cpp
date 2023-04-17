@@ -10,7 +10,7 @@
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/bus/match.hpp>
 #include <string>
@@ -21,9 +21,7 @@ namespace phosphor::network::inventory
 {
 
 using phosphor::logging::elog;
-using phosphor::logging::entry;
-using phosphor::logging::level;
-using phosphor::logging::log;
+PHOSPHOR_LOG2_USING_WITH_FLAGS;
 using sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
 
 using DbusObjectPath = std::string;
@@ -59,9 +57,8 @@ void setFirstBootMACOnInterface(const std::string& intf, const std::string& mac)
             auto returnMAC = interface.second->macAddress(mac);
             if (returnMAC == mac)
             {
-                log<level::INFO>(fmt::format("Setting MAC on {}", intf).c_str(),
-                                 entry("INTF=%s", intf.c_str()),
-                                 entry("MAC=%s", mac.c_str()));
+                info("Setting MAC {MAC} on interface {INTERFACE}", "MAC", mac,
+                     "INTERFACE", intf);
                 std::error_code ec;
                 if (std::filesystem::is_directory("/var/lib/network", ec))
                 {
@@ -71,7 +68,7 @@ void setFirstBootMACOnInterface(const std::string& intf, const std::string& mac)
             }
             else
             {
-                log<level::INFO>("MAC is Not Set on ethernet Interface");
+                info("MAC is Not Set on ethernet Interface");
             }
         }
     }
@@ -94,7 +91,7 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
     auto mapperReply = bus.call(mapperCall);
     if (mapperReply.is_method_error())
     {
-        log<level::ERR>("Error in mapper call");
+        error("Error in mapper call");
         elog<InternalFailure>();
     }
 
@@ -103,8 +100,8 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
 
     if (objectTree.empty())
     {
-        log<level::ERR>("No Object has implemented the interface",
-                        entry("INTERFACE=%s", invNetworkIntf));
+        error("No Object has implemented the interface {INTERFACE}",
+              "INTERFACE", invNetworkIntf);
         elog<InternalFailure>();
     }
 
@@ -122,9 +119,8 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
         // interface name
         for (auto const& object : objectTree)
         {
-            log<level::INFO>("interface",
-                             entry("INT=%s", interfaceName.c_str()));
-            log<level::INFO>("object", entry("OBJ=%s", object.first.c_str()));
+            info("interface {INTERFACE}", "INTERFACE", interfaceName);
+            info("object {OBJECT}", "OBJECT", object.first);
 
             if (std::string::npos != object.first.find(interfaceName.c_str()))
             {
@@ -136,8 +132,8 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
 
         if (objPath.empty())
         {
-            log<level::ERR>("Can't find the object for the interface",
-                            entry("intfName=%s", interfaceName.c_str()));
+            error("Can't find the object for the interface {INTERFACE}",
+                  "INTERFACE", interfaceName);
             elog<InternalFailure>();
         }
     }
@@ -150,9 +146,8 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
     auto reply = bus.call(method);
     if (reply.is_method_error())
     {
-        log<level::ERR>("Failed to get MACAddress",
-                        entry("PATH=%s", objPath.c_str()),
-                        entry("INTERFACE=%s", invNetworkIntf));
+        error("Failed to get MACAddress for path {PATH} interface {INTERFACE}",
+              "PATH", objPath, "INTERFACE", invNetworkIntf);
         elog<InternalFailure>();
     }
 
@@ -169,9 +164,8 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
         if (inventoryMAC != ether_addr{})
         {
             auto macStr = std::to_string(inventoryMAC);
-            log<level::INFO>("Mac Address in Inventory on ",
-                             entry("Interface : ", intfname.c_str()),
-                             entry("MAC Address :", macStr.c_str()));
+            info("Mac Address {MAC} in Inventory on Interface {INTERFACE}",
+                 "MAC", macStr, "INTERFACE", intfname);
             setFirstBootMACOnInterface(intfname, macStr);
             first_boot_status.push_back(intfname);
             bool status = true;
@@ -181,27 +175,27 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
                                 first_boot_status.end(),
                                 keys.key()) != first_boot_status.end()))
                 {
-                    log<level::INFO>("Interface MAC is NOT set from VPD"),
-                        entry("INTERFACE", keys.key().c_str());
+                    info("Interface {INTERFACE} MAC is NOT set from VPD",
+                         "INTERFACE", keys.key());
                     status = false;
                 }
             }
             if (status)
             {
-                log<level::INFO>("Removing the match for ethernet interfaces");
+                info("Removing the match for ethernet interfaces");
                 EthInterfaceMatch = nullptr;
             }
         }
         else
         {
-            log<level::INFO>("Nothing is present in Inventory");
+            info("Nothing is present in Inventory");
             return false;
         }
     }
     catch (const std::exception& e)
     {
-        log<level::ERR>("Exception occurred during getting of MAC "
-                        "address from Inventory");
+        error("Exception occurred during getting of MAC "
+              "address from Inventory");
         return false;
     }
     return true;
@@ -210,7 +204,7 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
 // register the macthes to be monitored from inventory manager
 void registerSignals(sdbusplus::bus_t& bus)
 {
-    log<level::INFO>("Registering the Inventory Signals Matcher");
+    info("Registering the Inventory Signals Matcher");
 
     auto callback = [&](sdbusplus::message_t& m) {
         std::map<DbusObjectPath,
@@ -263,7 +257,7 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
             // expected.
             if (infname != "sit0")
             {
-                log<level::ERR>("Wrong Interface Name in Config Json");
+                error("Wrong Interface Name in Config Json");
             }
         }
         else
@@ -289,7 +283,7 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
 
         for (const auto& interfaces : interfacesProperties)
         {
-            log<level::INFO>(interfaces.first.c_str());
+            info("{INTERFACE}", "INTERFACE", interfaces.first);
             if (interfaces.first ==
                 "xyz.openbmc_project.Network.EthernetInterface")
             {
@@ -318,11 +312,10 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
              !std::filesystem::exists(firstBootPath + interfaceString.key())) &&
             !registeredSignals)
         {
-            auto msg = fmt::format("{}, check VPD for MAC",
-                                   (FORCE_SYNC_MAC_FROM_INVENTORY)
-                                       ? "Force sync enabled"
-                                       : "First boot file is not present");
-            log<level::INFO>(msg.c_str());
+            info("{FORCE_SYNC_STATUS}, check VPD for MAC", "FORCE_SYNC_STATUS",
+                 (FORCE_SYNC_MAC_FROM_INVENTORY)
+                     ? "Force sync enabled"
+                     : "First boot file is not present");
             EthInterfaceMatch = std::make_unique<sdbusplus::bus::match_t>(
                 bus,
                 "interface='org.freedesktop.DBus.ObjectManager',type='signal',"
