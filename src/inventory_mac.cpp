@@ -10,7 +10,7 @@
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/bus/match.hpp>
 #include <string>
@@ -21,9 +21,6 @@ namespace phosphor::network::inventory
 {
 
 using phosphor::logging::elog;
-using phosphor::logging::entry;
-using phosphor::logging::level;
-using phosphor::logging::log;
 using sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
 
 using DbusObjectPath = std::string;
@@ -59,9 +56,9 @@ void setFirstBootMACOnInterface(const std::string& intf, const std::string& mac)
             auto returnMAC = interface.second->macAddress(mac);
             if (returnMAC == mac)
             {
-                log<level::INFO>(fmt::format("Setting MAC on {}", intf).c_str(),
-                                 entry("INTF=%s", intf.c_str()),
-                                 entry("MAC=%s", mac.c_str()));
+                lg2::info(
+                    "Setting MAC {MAC_ADDRESS} on interface {INTERFACE_NAME}",
+                    "MAC_ADDRESS", mac, "INTERFACE_NAME", intf);
                 std::error_code ec;
                 if (std::filesystem::is_directory("/var/lib/network", ec))
                 {
@@ -71,7 +68,7 @@ void setFirstBootMACOnInterface(const std::string& intf, const std::string& mac)
             }
             else
             {
-                log<level::INFO>("MAC is Not Set on ethernet Interface");
+                lg2::info("MAC is Not Set on ethernet Interface");
             }
         }
     }
@@ -94,7 +91,7 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
     auto mapperReply = bus.call(mapperCall);
     if (mapperReply.is_method_error())
     {
-        log<level::ERR>("Error in mapper call");
+        lg2::error("Error in mapper call");
         elog<InternalFailure>();
     }
 
@@ -103,8 +100,8 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
 
     if (objectTree.empty())
     {
-        log<level::ERR>("No Object has implemented the interface",
-                        entry("INTERFACE=%s", invNetworkIntf));
+        lg2::error("No Object has implemented the interface {INTERFACE_NAME}",
+                   "INTERFACE_NAME", invNetworkIntf);
         elog<InternalFailure>();
     }
 
@@ -122,9 +119,9 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
         // interface name
         for (auto const& object : objectTree)
         {
-            log<level::INFO>("interface",
-                             entry("INT=%s", interfaceName.c_str()));
-            log<level::INFO>("object", entry("OBJ=%s", object.first.c_str()));
+            lg2::info(
+                "Get info on interface {INTERFACE_NAME}, object {OBJECT}",
+                "INTERFACE_NAME", interfaceName, "OBJECT", object.first);
 
             if (std::string::npos != object.first.find(interfaceName.c_str()))
             {
@@ -136,8 +133,9 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
 
         if (objPath.empty())
         {
-            log<level::ERR>("Can't find the object for the interface",
-                            entry("intfName=%s", interfaceName.c_str()));
+            lg2::error(
+                "Can't find the object for the interface {INTERFACE_NAME}",
+                "INTERFACE_NAME", interfaceName);
             elog<InternalFailure>();
         }
     }
@@ -150,9 +148,9 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
     auto reply = bus.call(method);
     if (reply.is_method_error())
     {
-        log<level::ERR>("Failed to get MACAddress",
-                        entry("PATH=%s", objPath.c_str()),
-                        entry("INTERFACE=%s", invNetworkIntf));
+        lg2::error("Failed to get MACAddress for path {PATH} interface "
+                   "{INTERFACE_NAME}",
+                   "PATH", objPath, "INTERFACE_NAME", invNetworkIntf);
         elog<InternalFailure>();
     }
 
@@ -169,9 +167,9 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
         if (inventoryMAC != ether_addr{})
         {
             auto macStr = std::to_string(inventoryMAC);
-            log<level::INFO>("Mac Address in Inventory on ",
-                             entry("Interface : ", intfname.c_str()),
-                             entry("MAC Address :", macStr.c_str()));
+            lg2::info("Mac Address {MAC_ADDRESS} in Inventory on Interface "
+                      "{INTERFACE_NAME}",
+                      "MAC_ADDRESS", macStr, "INTERFACE_NAME", intfname);
             setFirstBootMACOnInterface(intfname, macStr);
             first_boot_status.push_back(intfname);
             bool status = true;
@@ -181,27 +179,28 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
                                 first_boot_status.end(),
                                 keys.key()) != first_boot_status.end()))
                 {
-                    log<level::INFO>("Interface MAC is NOT set from VPD"),
-                        entry("INTERFACE", keys.key().c_str());
+                    lg2::info(
+                        "Interface {INTERFACE_NAME} MAC is NOT set from VPD",
+                        "INTERFACE_NAME", keys.key());
                     status = false;
                 }
             }
             if (status)
             {
-                log<level::INFO>("Removing the match for ethernet interfaces");
+                lg2::info("Removing the match for ethernet interfaces");
                 EthInterfaceMatch = nullptr;
             }
         }
         else
         {
-            log<level::INFO>("Nothing is present in Inventory");
+            lg2::info("Nothing is present in Inventory");
             return false;
         }
     }
     catch (const std::exception& e)
     {
-        log<level::ERR>("Exception occurred during getting of MAC "
-                        "address from Inventory");
+        lg2::error("Exception occurred during getting of MAC "
+                   "address from Inventory");
         return false;
     }
     return true;
@@ -210,7 +209,7 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
 // register the macthes to be monitored from inventory manager
 void registerSignals(sdbusplus::bus_t& bus)
 {
-    log<level::INFO>("Registering the Inventory Signals Matcher");
+    lg2::info("Registering the Inventory Signals Matcher");
 
     auto callback = [&](sdbusplus::message_t& m) {
         std::map<DbusObjectPath,
@@ -263,7 +262,7 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
             // expected.
             if (infname != "sit0")
             {
-                log<level::ERR>("Wrong Interface Name in Config Json");
+                lg2::error("Wrong Interface Name in Config Json");
             }
         }
         else
@@ -289,7 +288,8 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
 
         for (const auto& interfaces : interfacesProperties)
         {
-            log<level::INFO>(interfaces.first.c_str());
+            lg2::info("Check {INTERFACE_NAME} for sdbus response",
+                      "INTERFACE_NAME", interfaces.first);
             if (interfaces.first ==
                 "xyz.openbmc_project.Network.EthernetInterface")
             {
@@ -318,11 +318,10 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
              !std::filesystem::exists(firstBootPath + interfaceString.key())) &&
             !registeredSignals)
         {
-            auto msg = fmt::format("{}, check VPD for MAC",
-                                   (FORCE_SYNC_MAC_FROM_INVENTORY)
-                                       ? "Force sync enabled"
-                                       : "First boot file is not present");
-            log<level::INFO>(msg.c_str());
+            lg2::info("Check VPD for MAC: {REASON}", "REASON",
+                      (FORCE_SYNC_MAC_FROM_INVENTORY)
+                          ? "Force sync enabled"
+                          : "First boot file is not present");
             EthInterfaceMatch = std::make_unique<sdbusplus::bus::match_t>(
                 bus,
                 "interface='org.freedesktop.DBus.ObjectManager',type='signal',"
