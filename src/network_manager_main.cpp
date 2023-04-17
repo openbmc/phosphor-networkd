@@ -10,7 +10,7 @@
 #include <fmt/format.h>
 
 #include <chrono>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/manager.hpp>
 #include <sdeventplus/clock.hpp>
@@ -20,9 +20,6 @@
 #include <sdeventplus/utility/timer.hpp>
 #include <stdplus/pinned.hpp>
 #include <stdplus/signal.hpp>
-
-using phosphor::logging::level;
-using phosphor::logging::log;
 
 constexpr char DEFAULT_OBJPATH[] = "/xyz/openbmc_project/network";
 
@@ -57,7 +54,7 @@ class TimerExecutor : public DelayedExecutor
 
 void termCb(sdeventplus::source::Signal& signal, const struct signalfd_siginfo*)
 {
-    log<level::NOTICE>("Got TERM, exiting");
+    lg2::notice("Received request to terminate, exiting");
     signal.get_event().exit(0);
 }
 
