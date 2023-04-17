@@ -3,7 +3,7 @@
 #include "hyp_network_manager.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
@@ -15,7 +15,7 @@ constexpr auto BIOS_SERVICE = "xyz.openbmc_project.BIOSConfigManager";
 constexpr auto BIOS_OBJPATH = "/xyz/openbmc_project/bios_config/manager";
 constexpr auto BIOS_MGR_INTF = "xyz.openbmc_project.BIOSConfig.Manager";
 
-using namespace phosphor::logging;
+PHOSPHOR_LOG2_USING_WITH_FLAGS;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using InvalidArgumentMetadata = xyz::openbmc_project::Common::InvalidArgument;
 
@@ -64,8 +64,8 @@ std::string HypSysConfig::getHostNameFromBios() const
     }
     catch (const sdbusplus::exception::SdBusError& ex)
     {
-        log<level::ERR>("Failed to get the hostname from bios table",
-                        entry("ERR=%s", ex.what()));
+        error("Failed to get the hostname from bios table: {ERROR}", "ERROR",
+              ex);
     }
     return std::string();
 }
