@@ -2,7 +2,7 @@
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/elog.hpp>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -13,7 +13,7 @@ namespace phosphor
 {
 namespace network
 {
-using namespace phosphor::logging;
+PHOSPHOR_LOG2_USING_WITH_FLAGS;
 using InternalFailure =
     sdbusplus::xyz::openbmc_project::Common::Error::InternalFailure;
 
@@ -71,9 +71,8 @@ void HypNetworkMgr::setBIOSTableAttr(
     }
     else
     {
-        log<level::INFO>(
-            "setBIOSTableAttr: Attribute is not found in biosTableAttrs"),
-            entry("attrName : ", attrName.c_str());
+        info("setBIOSTableAttr: Attribute {ATTRNAME} is not found in "
+             "biosTableAttrs", "ATTRNAME", attrName);
     }
 }
 
@@ -113,7 +112,7 @@ void HypNetworkMgr::setBIOSTableAttrs()
         auto mapperReply = bus.call(mapperCall);
         if (mapperReply.is_method_error())
         {
-            log<level::ERR>("Error in mapper call");
+            error("Error in mapper call");
             elog<InternalFailure>();
         }
 
@@ -122,8 +121,8 @@ void HypNetworkMgr::setBIOSTableAttrs()
 
         if (objectTree.empty())
         {
-            log<level::ERR>("No Object has implemented the interface",
-                            entry("INTERFACE=%s", biosMgrIntf));
+            error("No Object has implemented the interface {INTERFACE}",
+                  "INTERFACE", biosMgrIntf);
             elog<InternalFailure>();
         }
 
@@ -139,9 +138,8 @@ void HypNetworkMgr::setBIOSTableAttrs()
             // interface name
             for (auto const& object : objectTree)
             {
-                log<level::INFO>("interface", entry("INT=%s", biosMgrIntf));
-                log<level::INFO>("object",
-                                 entry("OBJ=%s", object.first.c_str()));
+                info("{INTERFACE}", "INTERFACE", biosMgrIntf);
+                info("{OBJECT}", "OBJECT", object.first);
 
                 if (std::string::npos != object.first.find(biosMgrIntf))
                 {
@@ -152,8 +150,8 @@ void HypNetworkMgr::setBIOSTableAttrs()
 
             if (objPath.empty())
             {
-                log<level::ERR>("Can't find the object for the interface",
-                                entry("intfName=%s", biosMgrIntf));
+                error("Can't find the object for the interface {INTERFACE}",
+                      "INTERFACE", biosMgrIntf);
                 elog<InternalFailure>();
             }
         }
@@ -166,7 +164,7 @@ void HypNetworkMgr::setBIOSTableAttrs()
 
         if (baseBiosTable == nullptr)
         {
-            log<level::ERR>("BaseBiosTable is empty. No attributes found!");
+            error("BaseBiosTable is empty. No attributes found!");
             return;
         }
 
@@ -201,15 +199,15 @@ void HypNetworkMgr::setBIOSTableAttrs()
                 }
                 else
                 {
-                    log<level::ERR>("Unsupported datatype: The attribute is of "
-                                    "unknown type");
+                    error("Unsupported datatype: The attribute is of "
+                          "unknown type");
                 }
             }
         }
     }
     catch (const SdBusError& e)
     {
-        log<level::ERR>("Error in making dbus call");
+        error("Error in making dbus call");
         throw std::runtime_error("DBus call failed");
     }
 }
@@ -228,7 +226,7 @@ void HypNetworkMgr::createIfObjects()
     // created during init time to support the static
     // network configurations on the both.
     // create eth0 and eth1 objects
-    log<level::INFO>("Creating eth0 and eth1 objects");
+    info("Creating eth0 and eth1 objects");
     interfaces.emplace("eth0",
                        std::make_unique<HypEthInterface>(
                            bus, (objectPath + "/eth0").c_str(), "eth0", *this));
