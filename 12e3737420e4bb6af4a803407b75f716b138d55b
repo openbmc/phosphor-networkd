@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa58bae4_5de4cc07",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-18T23:12:04Z",
+      "side": 1,
+      "message": "Do we want MAC_ADDRESS for consistency with IP_ADDRESS?\n\n(Change throughout if so).",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b593550_f559a20c",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-18T23:12:04Z",
+      "side": 1,
+      "message": "Add “e” here.",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb5b32d5_bd34aa18",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-18T23:12:04Z",
+      "side": 1,
+      "message": "Add “e” here too. please check all the ‘error’ in catch clauses for the rest of the commit also.",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e62aa8dc_cc7388d5",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-18T23:12:04Z",
+      "side": 1,
+      "message": "Suggest VLAN_ID.",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "528bf080_870093a5",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-18T23:12:04Z",
+      "side": 1,
+      "message": "Suggest VLAN_ID.",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b421d4d_6a826c32",
+        "filename": "src/util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-18T23:12:04Z",
+      "side": 1,
+      "message": "Do we need .data here or does it work without it?",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
