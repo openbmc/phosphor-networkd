@@ -5,7 +5,7 @@
 #include "util.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -91,10 +91,10 @@ void IPAddress::delete_()
 {
     if (origin() != IP::AddressOrigin::Static)
     {
-        log<level::ERR>("Tried to delete a non-static address"),
-            entry("ADDRESS=%s", address().c_str()),
-            entry("PREFIX=%" PRIu8, prefixLength()),
-            entry("INTERFACE=%s", parent.get().interfaceName().c_str());
+        lg2::error("Tried to delete a non-static address {IP_ADDRESS} prefix "
+                   "{PREFIX} interface {INTERFACE_NAME}",
+                   "IP_ADDRESS", address(), "PREFIX", prefixLength(),
+                   "INTERFACE_NAME", parent.get().interfaceName());
         elog<InternalFailure>();
     }
 
