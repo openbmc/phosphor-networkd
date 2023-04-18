@@ -11,7 +11,7 @@
 
 #include <cctype>
 #include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <string>
 #include <string_view>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -41,7 +41,7 @@ void executeCommandinChildProcess(stdplus::const_zstring path, char** args)
     else if (pid < 0)
     {
         auto error = errno;
-        log<level::ERR>("Error occurred during fork", entry("ERRNO=%d", error));
+        lg2::error("Error occurred during fork: {ERRNO}", "ERRNO", error);
         elog<InternalFailure>();
     }
     else if (pid > 0)
@@ -65,9 +65,8 @@ void executeCommandinChildProcess(stdplus::const_zstring path, char** args)
                 fmt::format_to(fmt::appender(buf), " `{}`", args[i]);
             }
             buf.push_back('\0');
-            log<level::ERR>("Unable to execute the command",
-                            entry("CMD=%s", buf.data()),
-                            entry("STATUS=%d", status));
+            lg2::error("Unable to execute the command {CMD}: {STATUS}", "CMD",
+                       buf.data(), "STATUS", status);
             elog<InternalFailure>();
         }
     }
@@ -174,17 +173,15 @@ inline auto systemdParseLast(const config::Parser& config,
     else if (auto str = config.map.getLastValueString(section, key);
              str == nullptr)
     {
-        auto err = fmt::format("Unable to get the value of {}[{}] from {}",
-                               section, key, config.getFilename().native());
-        log<level::NOTICE>(err.c_str(),
-                           entry("FILE=%s", config.getFilename().c_str()));
+        lg2::notice("Unable to get the value of {SECTION}[{KEY}] from {FILE}",
+                    "SECTION", section, "KEY", key, "FILE",
+                    config.getFilename());
     }
     else if (auto val = fun(*str); !val)
     {
-        auto err = fmt::format("Invalid value of {}[{}] from {}: {}", section,
-                               key, config.getFilename().native(), *str);
-        log<level::NOTICE>(err.c_str(), entry("VALUE=%s", str->c_str()),
-                           entry("FILE=%s", config.getFilename().c_str()));
+        lg2::notice("Invalid value of {SECTION}[{KEY}] from {FILE}: {VALUE}",
+                    "SECTION", section, "KEY", key, "FILE",
+                    config.getFilename(), "VALUE", *str);
     }
     else
     {
