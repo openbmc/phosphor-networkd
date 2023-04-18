@@ -10,7 +10,7 @@
 
 #include <algorithm>
 #include <optional>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <stdexcept>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/util/cexec.hpp>
@@ -20,9 +20,6 @@ namespace phosphor::network::system
 {
 
 using std::literals::string_view_literals::operator""sv;
-using phosphor::logging::entry;
-using phosphor::logging::level;
-using phosphor::logging::log;
 
 static stdplus::Fd& getIFSock()
 {
@@ -69,10 +66,8 @@ inline auto optionalIFReq(stdplus::zstring_view ifname, unsigned long long cmd,
             if (unsupported.find(ukey) == unsupported.end())
             {
                 unsupported.emplace(std::move(ukey));
-                auto msg =
-                    fmt::format("{} not supported on {}", cmdname, ifname);
-                log<level::INFO>(msg.c_str(),
-                                 entry("INTERFACE=%s", ifname.c_str()));
+                lg2::info("{CMD_NAME} not supported on {INTERFACE_NAME}",
+                          "CMD_NAME", cmdname, "INTERFACE_NAME", ifname);
             }
             return ret;
         }

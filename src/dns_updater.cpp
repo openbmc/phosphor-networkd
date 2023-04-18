@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
@@ -23,16 +23,14 @@ void updateDNSEntries(const fs::path& inFile, const fs::path& outFile)
     std::fstream outStream(outFile, std::fstream::out);
     if (!outStream.is_open())
     {
-        log<level::ERR>("Unable to open output file",
-                        entry("FILE=%s", outFile.c_str()));
+        lg2::error("Unable to open output file {FILE}", "FILE", outFile);
         elog<InternalFailure>();
     }
 
     std::fstream inStream(inFile, std::fstream::in);
     if (!inStream.is_open())
     {
-        log<level::ERR>("Unable to open the input file",
-                        entry("FILE=%s", inFile.c_str()));
+        lg2::error("Unable to open the input file {FILE}", "FILE", inFile);
         elog<InternalFailure>();
     }
 
