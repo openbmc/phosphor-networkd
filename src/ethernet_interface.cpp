@@ -15,7 +15,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <stdplus/raw.hpp>
 #include <stdplus/zstring.hpp>
 #include <string>
@@ -28,6 +28,7 @@ namespace phosphor
 namespace network
 {
 
+PHOSPHOR_LOG2_USING_WITH_FLAGS;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using NotAllowed = sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
@@ -56,8 +57,8 @@ inline decltype(std::declval<Func>()())
     }
     catch (const std::exception& e)
     {
-        auto err = fmt::format("{} failed on {}: {}", msg, intf, e.what());
-        log<level::ERR>(err.c_str(), entry("INTERFACE=%s", intf.c_str()));
+        error("{MSG} failed on {INTERFACE}: {ERROR}", "MSG", msg, "INTERFACE",
+              intf, "ERROR", e);
     }
     return fallback;
 }
@@ -195,8 +196,8 @@ void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
 {
     if (!info.mac || !info.addr)
     {
-        auto msg = fmt::format("Missing neighbor mac on {}\n", interfaceName());
-        log<level::ERR>(msg.c_str());
+        error("Missing neighbor mac on {INTERFACE}", "INTERFACE",
+              interfaceName());
         return;
     }
 
@@ -233,8 +234,8 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
     }
     catch (const std::exception& e)
     {
-        auto msg = fmt::format("Invalid IP `{}`: {}\n", ipaddress, e.what());
-        log<level::ERR>(msg.c_str(), entry("ADDRESS=%s", ipaddress.c_str()));
+        error("Invalid IP {IP_ADDRESS}: {ERROR}", "IP_ADDRESS", ipaddress,
+              "ERROR", e);
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("ipaddress"),
                               Argument::ARGUMENT_VALUE(ipaddress.c_str()));
     }
@@ -245,10 +246,8 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
     }
     catch (const std::exception& e)
     {
-        auto msg = fmt::format("Invalid prefix length `{}`: {}\n", prefixLength,
-                               e.what());
-        log<level::ERR>(msg.c_str(),
-                        entry("PREFIXLENGTH=%" PRIu8, prefixLength));
+        error("Invalid prefix length {PREFIXLENGTH}: {ERROR}", "PREFIXLENGTH",
+              prefixLength, "ERROR", e);
         elog<InvalidArgument>(
             Argument::ARGUMENT_NAME("prefixLength"),
             Argument::ARGUMENT_VALUE(std::to_string(prefixLength).c_str()));
@@ -287,9 +286,8 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
     }
     catch (const std::exception& e)
     {
-        auto msg =
-            fmt::format("Not a valid IP address `{}`: {}", ipAddress, e.what());
-        log<level::ERR>(msg.c_str(), entry("ADDRESS=%s", ipAddress.c_str()));
+        error("Not a valid IP address {IP_ADDRESS}: {ERROR}", "IP_ADDRESS",
+              ipAddress, "ERROR", e);
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("ipAddress"),
                               Argument::ARGUMENT_VALUE(ipAddress.c_str()));
     }
@@ -301,10 +299,8 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
     }
     catch (const std::exception& e)
     {
-        auto msg = fmt::format("Not a valid MAC address `{}`: {}", macAddress,
-                               e.what());
-        log<level::ERR>(msg.c_str(),
-                        entry("MACADDRESS=%s", macAddress.c_str()));
+        error("Not a valid MAC address {MACADDRESS}: {ERROR}", "MACADDRESS",
+              macAddress, "ERROR", e);
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("macAddress"),
                               Argument::ARGUMENT_VALUE(macAddress.c_str()));
     }
@@ -443,9 +439,8 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
         }
         catch (const std::exception& e)
         {
-            auto msg =
-                fmt::format("Not a valid IP address `{}`: {}", ip, e.what());
-            log<level::ERR>(msg.c_str()), entry("ADDRESS=%s", ip.c_str());
+            error("Not a valid IP address {IP_ADDRESS}: {ERROR}", "IP_ADDRESS",
+                  ip, "ERROR", e);
             elog<InvalidArgument>(Argument::ARGUMENT_NAME("StaticNameserver"),
                                   Argument::ARGUMENT_VALUE(ip.c_str()));
         }
@@ -459,7 +454,7 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
     }
     catch (const InternalFailure& e)
     {
-        log<level::ERR>("Exception processing DNS entries");
+        error("Exception processing DNS entries");
     }
     return EthernetInterfaceIntf::staticNameServers();
 }
@@ -496,8 +491,7 @@ ServerList EthernetInterface::getNTPServerFromTimeSyncd()
     }
     catch (const sdbusplus::exception::SdBusError& e)
     {
-        log<level::ERR>(
-            "Failed to get NTP server information from Systemd-Timesyncd");
+        error("Failed to get NTP server information from Systemd-Timesyncd");
     }
 
     return servers;
@@ -538,7 +532,7 @@ ServerList EthernetInterface::getNameServerFromResolvd()
     }
     catch (const sdbusplus::exception_t& e)
     {
-        log<level::ERR>("Failed to get DNS information from Systemd-Resolved");
+        error("Failed to get DNS information from Systemd-Resolved");
     }
     auto tupleVector = std::get_if<type>(&name);
     for (auto i = tupleVector->begin(); i != tupleVector->end(); ++i)
@@ -558,7 +552,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     if (manager.get().interfaces.find(intfName) !=
         manager.get().interfaces.end())
     {
-        log<level::ERR>("VLAN already exists", entry("VLANID=%u", id));
+        error("VLAN {VLANID} already exists", "VLANID", id);
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("VLANId"),
                               Argument::ARGUMENT_VALUE(idStr.c_str()));
     }
@@ -614,7 +608,7 @@ ServerList EthernetInterface::staticNTPServers(ServerList value)
     }
     catch (InternalFailure& e)
     {
-        log<level::ERR>("Exception processing NTP entries");
+        error("Exception processing NTP entries");
     }
     return EthernetInterfaceIntf::staticNTPServers();
 }
@@ -740,15 +734,14 @@ void EthernetInterface::writeConfigurationFile()
     auto path =
         config::pathForIntfConf(manager.get().getConfDir(), interfaceName());
     config.writeFile(path);
-    auto msg = fmt::format("Wrote networkd file: {}", path.native());
-    log<level::INFO>(msg.c_str(), entry("FILE=%s", path.c_str()));
+    info("Wrote networkd file: {FILE_PATH}", "FILE_PATH", path);
 }
 
 std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
 {
     if (vlan)
     {
-        log<level::ERR>("Tried to set MAC address on VLAN");
+        error("Tried to set MAC address on VLAN");
         elog<InternalFailure>();
     }
 #ifdef PERSIST_MAC
@@ -759,15 +752,13 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
     }
     catch (const std::invalid_argument&)
     {
-        log<level::ERR>("MACAddress is not valid.",
-                        entry("MAC=%s", value.c_str()));
+        error("MACAddress {MACADDRESS} is not valid", "MACADDRESS", value);
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("MACAddress"),
                               Argument::ARGUMENT_VALUE(value.c_str()));
     }
     if (!mac_address::isUnicast(newMAC))
     {
-        log<level::ERR>("MACAddress is not valid.",
-                        entry("MAC=%s", value.c_str()));
+        error("MACAddress {MACADDRESS} is not valid", "MACADDRESS", value);
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("MACAddress"),
                               Argument::ARGUMENT_VALUE(value.c_str()));
     }
@@ -836,8 +827,8 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
     }
     catch (const std::exception& e)
     {
-        auto msg = fmt::format("Invalid v4 GW `{}`: {}", gateway, e.what());
-        log<level::ERR>(msg.c_str(), entry("GATEWAY=%s", gateway.c_str()));
+        error("Invalid v4 GW {GATEWAY}: {ERROR}", "GATEWAY", gateway, "ERROR",
+              e);
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
                               Argument::ARGUMENT_VALUE(gateway.c_str()));
     }
@@ -865,8 +856,8 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
     }
     catch (const std::exception& e)
     {
-        auto msg = fmt::format("Invalid v6 GW `{}`: {}", gateway, e.what());
-        log<level::ERR>(msg.c_str(), entry("GATEWAY=%s", gateway.c_str()));
+        error("Invalid v6 GW {GATEWAY}: {ERROR}", "GATEWAY", gateway, "ERROR",
+              e);
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("GATEWAY"),
                               Argument::ARGUMENT_VALUE(gateway.c_str()));
     }

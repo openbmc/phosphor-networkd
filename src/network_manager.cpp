@@ -12,7 +12,7 @@
 
 #include <filesystem>
 #include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/message.hpp>
 #include <stdplus/pinned.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
@@ -30,6 +30,7 @@ namespace phosphor
 namespace network
 {
 
+PHOSPHOR_LOG2_USING_WITH_FLAGS;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
@@ -70,11 +71,8 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
             }
             catch (const std::exception& e)
             {
-                log<level::ERR>(
-                    fmt::format("AdministrativeState match parsing failed: {}",
-                                e.what())
-                        .c_str(),
-                    entry("ERROR=%s", e.what()));
+                error("AdministrativeState match parsing failed: {ERROR}",
+                      "ERROR", e);
             }
         })
 {
@@ -87,8 +85,8 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
             }
             catch (const std::exception& ex)
             {
-                log<level::ERR>("Failed executing reload hook, ignoring",
-                                entry("ERR=%s", ex.what()));
+                error("Failed executing reload hook, ignoring: {ERROR}",
+                      "ERROR", ex);
             }
         }
         reloadPreHooks.clear();
@@ -98,12 +96,11 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                 .new_method_call(NETWORKD_BUSNAME, NETWORKD_PATH,
                                  NETWORKD_INTERFACE, "Reload")
                 .call();
-            log<level::INFO>("Reloaded systemd-networkd");
+            info("Reloaded systemd-networkd");
         }
         catch (const sdbusplus::exception_t& ex)
         {
-            log<level::ERR>("Failed to reload configuration",
-                            entry("ERR=%s", ex.what()));
+            error("Failed to reload configuration: {ERROR}", "ERROR", ex);
             reloadPostHooks.clear();
         }
         for (auto& hook : reloadPostHooks)
@@ -114,8 +111,8 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
             }
             catch (const std::exception& ex)
             {
-                log<level::ERR>("Failed executing reload hook, ignoring",
-                                entry("ERR=%s", ex.what()));
+                error("Failed executing reload hook, ignoring: {ERROR}",
+                      "ERROR", ex);
             }
         }
         reloadPostHooks.clear();
@@ -189,9 +186,8 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
     }
     if (!info.intf.name)
     {
-        auto msg = fmt::format("Can't create interface without name: {}",
-                               info.intf.idx);
-        log<level::ERR>(msg.c_str(), entry("IFIDX=%u", info.intf.idx));
+        error("Can't create interface without name: {IFIDX}", "IFIDX",
+              info.intf.idx);
         return;
     }
     config::Parser config(config::pathForIntfConf(confDir, *info.intf.name));
@@ -220,8 +216,8 @@ void Manager::addInterface(const InterfaceInfo& info)
             if (!ignored.contains(*info.name))
             {
                 ignored.emplace(*info.name);
-                auto msg = fmt::format("Ignoring interface {}\n", *info.name);
-                log<level::INFO>(msg.c_str());
+                lg2::info("Ignoring interface {INTERFACE}", "INTERFACE",
+                          *info.name);
             }
             ignoredIntf.emplace(info.idx);
             return;
@@ -403,8 +399,7 @@ void Manager::addDefGw(unsigned ifidx, InAddrAny addr)
     }
     else if (!ignoredIntf.contains(ifidx))
     {
-        auto msg = fmt::format("Interface `{}` not found for gw", ifidx);
-        log<level::ERR>(msg.c_str(), entry("IFIDX=%u", ifidx));
+        error("Interface {IFIDX} not found for gw", "IFIDX", ifidx);
     }
 }
 
@@ -470,7 +465,7 @@ ObjectPath Manager::vlan(std::string interfaceName, uint32_t id)
 {
     if (id == 0 || id >= 4095)
     {
-        log<level::ERR>("VLAN ID is not valid", entry("VLANID=%u", id));
+        error("VLAN ID {VLANID} is not valid", "VLANID", id);
         elog<InvalidArgument>(
             Argument::ARGUMENT_NAME("VLANId"),
             Argument::ARGUMENT_VALUE(std::to_string(id).c_str()));
@@ -493,7 +488,7 @@ void Manager::reset()
         std::error_code ec;
         std::filesystem::remove(dirent.path(), ec);
     }
-    log<level::INFO>("Network data purged.");
+    info("Network data purged.");
 }
 
 // Need to merge the below function with the code which writes the
