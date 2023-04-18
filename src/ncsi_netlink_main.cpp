@@ -16,14 +16,15 @@
 #include "argument.hpp"
 #include "ncsi_util.hpp"
 
-#include <iostream>
+#include <phosphor-logging/lg2.hpp>
 #include <string>
 #include <vector>
 
 static void exitWithError(const char* err, char** argv)
 {
+    PHOSPHOR_LOG2_USING_WITH_FLAGS;
     phosphor::network::ncsi::ArgumentParser::usage(argv);
-    std::cerr << "ERROR: " << err << "\n";
+    error("ERROR: {ERROR}", "ERROR", err);
     exit(EXIT_FAILURE);
 }
 
