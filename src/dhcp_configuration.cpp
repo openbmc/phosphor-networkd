@@ -8,7 +8,7 @@
 
 #include <filesystem>
 #include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
@@ -19,7 +19,6 @@ namespace dhcp
 {
 
 using namespace phosphor::network;
-using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 Configuration::Configuration(sdbusplus::bus_t& bus,
@@ -44,9 +43,8 @@ Configuration::Configuration(sdbusplus::bus_t& bus,
     }
     if (newest_file != std::filesystem::directory_entry{})
     {
-        log<level::INFO>(fmt::format("Using DHCP options from {}",
-                                     newest_file.path().native())
-                             .c_str());
+        lg2::info("Using DHCP options from {FILE}", "FILE",
+                  newest_file.path().native());
         conf.setFile(newest_file.path());
     }
 
