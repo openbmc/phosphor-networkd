@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2769c670_5292bfec",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-18T23:08:47Z",
+      "side": 1,
+      "message": "I have dropped this inclusion in my latest change.\n\nThis is formatting lib https://fmt.dev/latest/api.html",
+      "parentUuid": "67795587_5314e528",
+      "revId": "5469e03e919670a529fcce3fd67c72a2164e9e10",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d8313d68_07997d4c",
