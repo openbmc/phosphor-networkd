@@ -12,6 +12,7 @@ executable(
   dependencies: [
     dependency('libnl-3.0'),
     dependency('libnl-genl-3.0'),
+    dependency('phosphor-logging'),
     stdplus_dep,
   ],
   install: true,
