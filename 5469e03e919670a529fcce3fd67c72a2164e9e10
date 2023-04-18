@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aef56dcc_f221166c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-18T22:01:19Z",
+      "side": 1,
+      "message": "Providing some feedback.",
+      "revId": "5469e03e919670a529fcce3fd67c72a2164e9e10",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67795587_5314e528",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-18T22:01:19Z",
+      "side": 1,
+      "message": "What is this?\nIs this a library that we want to pull into phosphor-network?",
+      "revId": "5469e03e919670a529fcce3fd67c72a2164e9e10",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8313d68_07997d4c",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-18T22:01:19Z",
+      "side": 1,
+      "message": "Make this explicit.\nI\u0027m not in favor of seeing this kind of obfuscation.",
+      "revId": "5469e03e919670a529fcce3fd67c72a2164e9e10",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "250ef9ff_16f4a53d",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-18T22:01:19Z",
+      "side": 1,
+      "message": "See previous comment.\nDo not obfuscate this.",
+      "revId": "5469e03e919670a529fcce3fd67c72a2164e9e10",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
