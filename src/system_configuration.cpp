@@ -1,7 +1,7 @@
 #include "system_configuration.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <stdplus/pinned.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
@@ -14,7 +14,7 @@ static constexpr char HOSTNAMED_SVC[] = "org.freedesktop.hostname1";
 static constexpr char HOSTNAMED_OBJ[] = "/org/freedesktop/hostname1";
 static constexpr char HOSTNAMED_INTF[] = "org.freedesktop.hostname1";
 
-using namespace phosphor::logging;
+PHOSPHOR_LOG2_USING_WITH_FLAGS;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 static constexpr char propMatch[] =
@@ -44,10 +44,7 @@ SystemConfiguration::SystemConfiguration(
             }
             catch (const std::exception& e)
             {
-                log<level::ERR>(
-                    fmt::format("Hostname match parsing failed: {}", e.what())
-                        .c_str(),
-                    entry("ERROR=%s", e.what()));
+                error("Hostname match parsing failed: {ERROR}", "ERROR", e);
             }
         })
 {
@@ -65,8 +62,7 @@ SystemConfiguration::SystemConfiguration(
     }
     catch (const std::exception& e)
     {
-        auto msg = fmt::format("Failed to get hostname: {}", e.what());
-        log<level::ERR>(msg.c_str(), entry("ERROR=%s", e.what()));
+        error("Failed to get hostname: {ERROR}", "ERROR", e);
     }
 
     emit_object_added();
@@ -88,8 +84,7 @@ std::string SystemConfiguration::hostName(std::string name)
     }
     catch (const std::exception& e)
     {
-        auto msg = fmt::format("Failed to set hostname: {}", e.what());
-        log<level::ERR>(msg.c_str(), entry("ERROR=%s", e.what()));
+        error("Failed to set hostname: {ERROR}", "ERROR", e);
     }
     return SystemConfigIntf::hostName();
 }

@@ -5,7 +5,7 @@
 #include "util.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>
-#include <phosphor-logging/log.hpp>
+#include <phosphor-logging/lg2.hpp>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -16,6 +16,7 @@ namespace phosphor
 namespace network
 {
 
+PHOSPHOR_LOG2_USING_WITH_FLAGS;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using NotAllowed = sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
@@ -91,10 +92,10 @@ void IPAddress::delete_()
 {
     if (origin() != IP::AddressOrigin::Static)
     {
-        log<level::ERR>("Tried to delete a non-static address"),
-            entry("ADDRESS=%s", address().c_str()),
-            entry("PREFIX=%" PRIu8, prefixLength()),
-            entry("INTERFACE=%s", parent.get().interfaceName().c_str());
+        error("Tried to delete a non-static address {ADDRESS} prefix "
+              "{PREFIX} interface {INTERFACE}",
+              "ADDRESS", address(), "PREFIX", prefixLength(), "INTERFACE",
+              parent.get().interfaceName());
         elog<InternalFailure>();
     }
 
