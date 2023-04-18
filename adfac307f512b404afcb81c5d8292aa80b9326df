@@ -16,6 +16,74 @@
       "message": "Thanks for reviewing the PR.",
       "revId": "adfac307f512b404afcb81c5d8292aa80b9326df",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1333ad5d_c6d90e0f",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-18T23:38:42Z",
+      "side": 1,
+      "message": "Suggest ATTR_ID.",
+      "revId": "adfac307f512b404afcb81c5d8292aa80b9326df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59fc052d_f3ffc096",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-18T23:38:42Z",
+      "side": 1,
+      "message": "Please add this directly to the previous log statement. No need for two.",
+      "revId": "adfac307f512b404afcb81c5d8292aa80b9326df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d15bf113_1465548c",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-18T23:38:42Z",
+      "side": 1,
+      "message": "Suggest just RC for these. I think that’s what we’ve used in other repos.",
+      "revId": "adfac307f512b404afcb81c5d8292aa80b9326df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df8de14d_e5a0d8e9",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-18T23:38:42Z",
+      "side": 1,
+      "message": "Can you use a consistent key for “interface index”?",
+      "revId": "adfac307f512b404afcb81c5d8292aa80b9326df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }

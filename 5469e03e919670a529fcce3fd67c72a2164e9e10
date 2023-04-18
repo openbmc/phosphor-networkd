@@ -72,6 +72,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d61d9041_bd09a6ef",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-18T23:38:42Z",
+      "side": 1,
+      "message": "Can you elaborate what you want?  This macro is provided by LG2 headers. I’m not really sure what you are asking for.",
+      "parentUuid": "d8313d68_07997d4c",
+      "revId": "5469e03e919670a529fcce3fd67c72a2164e9e10",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "250ef9ff_16f4a53d",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 2
