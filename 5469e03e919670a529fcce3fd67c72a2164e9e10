@@ -144,6 +144,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9fb5ade1_579d5ce9",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-19T16:16:52Z",
+      "side": 1,
+      "message": "Thank you for clarifying. \n\nI’m not a maintainer on this repository so I don’t really care which approach is taken. I gave the tools in the API to let developers decide which approach they prefer.",
+      "parentUuid": "06a7ea31_57a2fd96",
+      "revId": "5469e03e919670a529fcce3fd67c72a2164e9e10",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "250ef9ff_16f4a53d",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 2
