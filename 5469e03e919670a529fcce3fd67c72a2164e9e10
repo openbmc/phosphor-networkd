@@ -108,6 +108,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a2f774fe_6d7241c1",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-19T14:48:41Z",
+      "side": 1,
+      "message": "There is PHOSPHOR_LOG2_USING and PHOSPHOR_LOG2_USING_WITH_FLAGS.\n\nhttps://github.com/search?q\u003dorg%3Aopenbmc+phosphor_log2_using\u0026type\u003dcode\n\n\u003e Is the C preprocessor really the only way to implement the feature?\n\nNo, certainly not.  It use to be pretty common for people to have `using phosphor::logging` sprinkled in their code.  This macro is a replacement for a global `using lg2` which may add more to your namespace than you want.\n\nYou can either use the `using`, use the macro, or prepend `lg2` to all the statements.  Any of those are fine approaches... but I\u0027d generally stay away from the `using` on its own because the lg2 API makes no attempt to not conflict with `std` (in order to keep the API generally succinct).  There is for example `lg2::hex` which conflicts with `std::hex`.\n\n\u003e Does the inclusion inside a local scope prevent the behavior from bleeding into the global scope?\n\nYes.  Both macros are just smaller `using` sets than a full `using lg2`.\n\n\u003e So is there a way to make this more obvious what \"USING_WITH_FLAGS\" is/does/means?\n\nDo you have any suggestions here?  Maybe it could be better documented in the phosphor-logging/docs/structured-logging.md?\n\n@Jagpal - Do you actually want the `_WITH_FLAGS` here or is the plain `PHOSPHOR_LOG2_USING` sufficient.",
+      "parentUuid": "81d12b76_73487342",
+      "revId": "5469e03e919670a529fcce3fd67c72a2164e9e10",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "250ef9ff_16f4a53d",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 2
