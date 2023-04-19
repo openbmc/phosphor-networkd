@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "81d12b76_73487342",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-19T14:01:24Z",
+      "side": 1,
+      "message": "Patrick,\nI\u0027m not wholly familiar with lg2, so I don\u0027t know what this does. I went looking for this macro in other repos that use lg2, and did not find it in use. The C macro style is jarring in a C++ based project. \nIs this macro necessary?\nIs the C preprocessor really the only way to implement the feature?\nIt\u0027s unclear, as someone who doesn\u0027t use lg2, what this macro does.\nIs there a way to eliminate the opacity of the macro?\nDoes the inclusion inside a local scope prevent the behavior from bleeding into the global scope?\nIf I\u0027m asking these questions, who else is asking these questions upon reading the source?\nSo is there a way to make this more obvious what \"USING_WITH_FLAGS\" is/does/means?",
+      "parentUuid": "d61d9041_bd09a6ef",
+      "revId": "5469e03e919670a529fcce3fd67c72a2164e9e10",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "250ef9ff_16f4a53d",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 2
