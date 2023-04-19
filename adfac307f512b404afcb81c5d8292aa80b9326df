@@ -52,6 +52,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc753cab_2b14bd10",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-19T23:00:02Z",
+      "side": 1,
+      "message": "Thanks for reviewing. Addressed comments.",
+      "revId": "adfac307f512b404afcb81c5d8292aa80b9326df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1333ad5d_c6d90e0f",
@@ -65,6 +82,24 @@
       "writtenOn": "2023-04-18T23:38:42Z",
       "side": 1,
       "message": "Suggest ATTR_ID.",
+      "revId": "adfac307f512b404afcb81c5d8292aa80b9326df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "acdd022c_855b0c4a",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-19T23:00:02Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1333ad5d_c6d90e0f",
       "revId": "adfac307f512b404afcb81c5d8292aa80b9326df",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -86,6 +121,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "937b1915_460a49c8",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-19T23:00:02Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "59fc052d_f3ffc096",
+      "revId": "adfac307f512b404afcb81c5d8292aa80b9326df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d15bf113_1465548c",
@@ -103,6 +156,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6335322_78effe36",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-19T23:00:02Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d15bf113_1465548c",
+      "revId": "adfac307f512b404afcb81c5d8292aa80b9326df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "df8de14d_e5a0d8e9",
@@ -116,6 +187,24 @@
       "writtenOn": "2023-04-18T23:38:42Z",
       "side": 1,
       "message": "Can you use a consistent key for “interface index”?",
+      "revId": "adfac307f512b404afcb81c5d8292aa80b9326df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8860760d_3d91e031",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-19T23:00:02Z",
+      "side": 1,
+      "message": "Sure, changed to INTERFACE_INDEX",
+      "parentUuid": "df8de14d_e5a0d8e9",
       "revId": "adfac307f512b404afcb81c5d8292aa80b9326df",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
