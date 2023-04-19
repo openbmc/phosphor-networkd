@@ -126,6 +126,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "06a7ea31_57a2fd96",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-19T15:40:07Z",
+      "side": 1,
+      "message": "\u003e There is PHOSPHOR_LOG2_USING and PHOSPHOR_LOG2_USING_WITH_FLAGS.\n\u003e \n\u003e https://github.com/search?q\u003dorg%3Aopenbmc+phosphor_log2_using\u0026type\u003dcode\n\nThanks for the reference.\n\n\u003e \n\u003e \u003e Is the C preprocessor really the only way to implement the feature?\n\u003e \n\u003e No, certainly not.  It use to be pretty common for people to have `using phosphor::logging` sprinkled in their code.  This macro is a replacement for a global `using lg2` which may add more to your namespace than you want.\n\u003e \n\u003e You can either use the `using`, use the macro, or prepend `lg2` to all the statements.  Any of those are fine approaches... but I\u0027d generally stay away from the `using` on its own because the lg2 API makes no attempt to not conflict with `std` (in order to keep the API generally succinct).  There is for example `lg2::hex` which conflicts with `std::hex`.\n\nI guess this means my comment \"make explicit\" effectively means don\u0027t use the macro, and express what you really want. If you want to use lg2::bin, or lg2::dec, then don\u0027t leave the reader to try and figure out why lg2::info() isn\u0027t doing std::dec or std::bin.\n\n\u003e \n\u003e \u003e Does the inclusion inside a local scope prevent the behavior from bleeding into the global scope?\n\u003e \n\u003e Yes.  Both macros are just smaller `using` sets than a full `using lg2`.\n\u003e \n\u003e \u003e So is there a way to make this more obvious what \"USING_WITH_FLAGS\" is/does/means?\n\u003e \n\u003e Do you have any suggestions here?  Maybe it could be better documented in the phosphor-logging/docs/structured-logging.md?\n\nI\u0027m sure my (unpopular opinion) is don\u0027t use the macros, and express the intent directly in the code. I don\u0027t want to be surprised that std::bin isn\u0027t in use when something like \" \u003c\u003c bin \u003c\u003c binaryValue; \" is written.\n\n\u003e \n\u003e @Jagpal - Do you actually want the `_WITH_FLAGS` here or is the plain `PHOSPHOR_LOG2_USING` sufficient.",
+      "parentUuid": "a2f774fe_6d7241c1",
+      "revId": "5469e03e919670a529fcce3fd67c72a2164e9e10",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "250ef9ff_16f4a53d",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 2
