@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c2168e0_2e320bb1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2023-04-20T10:09:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd736628_9cd4c58e",
+      "range": {
+        "startLine": 9,
+        "startChar": 45,
+        "endLine": 9,
+        "endChar": 125
+      },
+      "revId": "e3a9105061de9959b8b518021c29f4d5ea6c9dc4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b8d64328_7725d033",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-04-07T05:12:55Z",
       "side": 1,
       "message": "pls remove this blank spaces",
+      "range": {
+        "startLine": 679,
+        "startChar": 0,
+        "endLine": 679,
+        "endChar": 10
+      },
+      "revId": "e3a9105061de9959b8b518021c29f4d5ea6c9dc4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd5ebc80_48515525",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2023-04-20T10:09:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8d64328_7725d033",
       "range": {
         "startLine": 679,
         "startChar": 0,
