@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "450e422e_57e62b69",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-20T00:09:58Z",
+      "side": 1,
+      "message": "Thanks for reviewing. Comments Addressed.",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fa58bae4_5de4cc07",
@@ -14,6 +31,24 @@
       "writtenOn": "2023-04-18T23:12:04Z",
       "side": 1,
       "message": "Do we want MAC_ADDRESS for consistency with IP_ADDRESS?\n\n(Change throughout if so).",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8bd2e5b_b7b9644f",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-20T00:09:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fa58bae4_5de4cc07",
       "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -35,6 +70,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe4af642_76a45ac5",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-20T00:09:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2b593550_f559a20c",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fb5b32d5_bd34aa18",
@@ -48,6 +101,24 @@
       "writtenOn": "2023-04-18T23:12:04Z",
       "side": 1,
       "message": "Add “e” here too. please check all the ‘error’ in catch clauses for the rest of the commit also.",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5590b278_23d1d120",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-20T00:09:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fb5b32d5_bd34aa18",
       "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -69,6 +140,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4fe0da8_e08fe467",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-20T00:09:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e62aa8dc_cc7388d5",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "528bf080_870093a5",
@@ -86,6 +175,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab80d19a_13248b7e",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-20T00:09:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "528bf080_870093a5",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3b421d4d_6a826c32",
@@ -99,6 +206,24 @@
       "writtenOn": "2023-04-18T23:12:04Z",
       "side": 1,
       "message": "Do we need .data here or does it work without it?",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6c27a0c5_b88d5175",
+        "filename": "src/util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-20T00:09:58Z",
+      "side": 1,
+      "message": "We need this as build fails with -\n\n/usr/local/include/phosphor-logging/lg2/conversion.hpp:377:44: error: use of deleted function \u0027fmt::v9::basic_memory_buffer\u003cchar\u003e::basic_memory_buffer(const fmt::v9::basic_memory_buffer\u003cchar\u003e\u0026)\u0027\n  377 |                                 log_convert(h.data(), log_flag\u003c\u003e{}, v)),\n      |                                 ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~\nIn file included from /usr/local/include/stdplus/raw.hpp:3,",
+      "parentUuid": "3b421d4d_6a826c32",
       "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
