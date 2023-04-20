@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8edfafc8_f6bf7116",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-20T15:19:24Z",
+      "side": 1,
+      "message": "Requesting one of the messages to be modified.\nOtherwise LGTM.",
+      "revId": "b9bf9d5d6b09486289a99175ad9a4c57e3689bc5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f1d1b69_d9e2dd55",
+        "filename": "src/network_manager_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-20T15:19:24Z",
+      "side": 1,
+      "message": "\"Received request to terminate, exiting\"",
+      "revId": "b9bf9d5d6b09486289a99175ad9a4c57e3689bc5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
