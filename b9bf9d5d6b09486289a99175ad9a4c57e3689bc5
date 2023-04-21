@@ -18,6 +18,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8138c33f_8acaa402",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-21T18:22:05Z",
+      "side": 1,
+      "message": "Addressed your comments. Thanks",
+      "revId": "b9bf9d5d6b09486289a99175ad9a4c57e3689bc5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "59f37ca4_0ff3336f",
@@ -31,6 +48,30 @@
       "writtenOn": "2023-04-21T13:15:02Z",
       "side": 1,
       "message": "info",
+      "range": {
+        "startLine": 122,
+        "startChar": 17,
+        "endLine": 122,
+        "endChar": 22
+      },
+      "revId": "b9bf9d5d6b09486289a99175ad9a4c57e3689bc5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "788578d1_7312ee5f",
+        "filename": "src/inventory_mac.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-21T18:22:05Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "59f37ca4_0ff3336f",
       "range": {
         "startLine": 122,
         "startChar": 17,
