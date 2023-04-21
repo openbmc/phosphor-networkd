@@ -33,6 +33,24 @@
       "message": "Do we need PHOSPHOR_LOG2_USING_WITH_FLAGS?",
       "revId": "a209845c38644c72a76afee349c37d4f8c497f16",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c90e116a_207163df",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-04-21T13:36:49Z",
+      "side": 1,
+      "message": "There is the lg2 namespace prefix on line 26 already. No need for the using.",
+      "parentUuid": "9de63a87_25a3532f",
+      "revId": "a209845c38644c72a76afee349c37d4f8c497f16",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
