@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd2f9f2e_d990810a",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-04-21T13:18:32Z",
+      "side": 1,
+      "message": "Why it is needed here? Let\u0027s keep it same as other PS\nhttps://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/62594/5/src/ncsi_netlink_main.cpp",
+      "revId": "68c639a5aea98fe327036dcfb36558bb8dd73767",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
