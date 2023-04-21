@@ -226,6 +226,24 @@
       "parentUuid": "3b421d4d_6a826c32",
       "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a27d6ab_b88fff0f",
+        "filename": "src/util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2023-04-21T17:50:15Z",
+      "side": 1,
+      "message": "Change causes build failure as mentioned above, so patch change is fine.",
+      "parentUuid": "6c27a0c5_b88d5175",
+      "revId": "12e3737420e4bb6af4a803407b75f716b138d55b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
