@@ -156,6 +156,24 @@
       "parentUuid": "543822ba_56fb9bd7",
       "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a6f3ec3_1430ba75",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-04-24T05:23:21Z",
+      "side": 1,
+      "message": "Johnathan\n\nI understand your point, When \"WithoutRA\u003dsolicit\" is active, DHCPv6 server only provides a Stateful DHCPv6 IP address and Stateless ipv6 address configured based on Ipv6AcceptRa enable/disable flag and IPv6AcceptRA property can controlled independently.\n\nplease have a look this commit \nhttps://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/62033\nThis commit removes dependancy between",
+      "parentUuid": "17acabf3_87a40d24",
+      "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
