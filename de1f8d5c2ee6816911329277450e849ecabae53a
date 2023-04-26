@@ -105,6 +105,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c83d139e_e0e73b3f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-26T15:32:18Z",
+      "side": 1,
+      "message": "Sorry for the essay.",
+      "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1be3521b_5005aafb",
@@ -172,6 +189,24 @@
       "side": 1,
       "message": "Johnathan\n\nI understand your point, When \"WithoutRA\u003dsolicit\" is active, DHCPv6 server only provides a Stateful DHCPv6 IP address and Stateless ipv6 address configured based on Ipv6AcceptRa enable/disable flag and IPv6AcceptRA property can controlled independently.\n\nplease have a look this commit \nhttps://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/62033\nThis commit removes dependancy between",
       "parentUuid": "17acabf3_87a40d24",
+      "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "244f0e60_85f14544",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-04-26T15:32:18Z",
+      "side": 1,
+      "message": "I still don\u0027t quite understand what \"problem\" this is trying to solve.\nIMO this is optimizing for a use case that won\u0027t be present in the BMCs environment.\nIs it really likely that a room full of servers with BMCs on board are going to be in a RA-less network? IMO this is extremely unlikely.\n\nTLDR; don\u0027t support WithoutRA in OpenBMC. Simplify the RA/DHCPv6 model.\n\nI agree that D-Bus permits control of a DHCPv4 boolean, a DHCPv6 boolean, and the IPv6AcceptRA boolean. However, there is no direct mapping in either Redfish or IPMI for all three of these booleans.\n\nIPMI can only control DHCPv4, and IPv6AcceptRA.\nRedfish has control of the DHCPv4 boolean.\nRedfish OperatingMode only controls DHCPv6 state at the current moment. I don\u0027t see an obvious location for Redfish to control IPv6AcceptRA. IMO StatelessAddressAutoConfiguration is not it.\n\nIMO, the 98+% use case for OperatingMode enabled is IPv6AcceptRA enabled, DHCPv6 enabled. Right now there is no way for Redfish to fully DISABLE IPv6. If you use Redfish to \"Disable\" DHCPv6 via OperatingMode you still have the possibility of SLAAC addresses being assigned. This is a surprising outcome. The Redfish command was to \"Disable\" dynamic address assignment. If you use the proposed StatelessAddressAutoConfiguration commit to disable IPv6AcceptRA you have just eliminated Stateful DHCPv6 assignment. This is a surprising outcome. I toggled a Stateless control and I have my Stateful addresses impacted? IMO OperatingMode disabled should change the phosphor-network D-Bus entries to IPv6AcceptRA\u003ddisabled, DHCPv6 disabled. Now all dynamic addressing is disabled, which mirrors the DHCPv4 model.\n\nFollowing that paradigm IPMI can be updated to do the same when Set LAN Config IPv6 Router Address Configuration is toggled. Asserting bit 1 in this command enables both IPv6AcceptRA and DHCPv6. Clearing bit 1 disables IPv6AcceptRA and DHCPv6.\n\nIf we use this paradigm:\nNetworks with an RA/DHCPv6 server will configure the BMC with Stateful addresses if the DHCPv6 server is configured that way. It will assign Stateless addresses if the network segment has an RA only asserting the \u0027O\u0027 bit, and the DHCPv6 server is providing secondary IP addresses (DNS/NTP/etc..). If there isn\u0027t an RA on the network segment, then we should press the Redfish working group for a control allowing the DHCPv6 system to request what to do when an RA is not present.\n\nUsing this paradigm allows IPMI to work orthogonally without having to create some OpenBMC centric OEM command for controlling the DHCPv6 boolean independently of the IPv6AcceptRA boolean. If in the future there is a control added for controlling WithoutRA then IPMI will need some mechanism added for controlling it.",
+      "parentUuid": "9a6f3ec3_1430ba75",
       "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
