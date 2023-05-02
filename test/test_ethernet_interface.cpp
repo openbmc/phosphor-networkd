@@ -51,6 +51,14 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
         return interface.ip(addressType, ipaddress, subnetMask, "");
     }
 
+    auto createStaticRouteObject(const std::string& destination,
+                                 const std::string& gateway,
+                                 size_t prefixLength, IP::Protocol protocol)
+    {
+        return interface.staticRoute(destination, gateway, prefixLength,
+                                     protocol);
+    }
+
     void setNtpServers()
     {
         ServerList ntpServers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};
@@ -224,6 +232,37 @@ TEST_F(TestEthernetInterface, DHCPEnabled)
              /*ra=*/true);
     ind_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/false);
     set_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/true);
+}
+
+TEST_F(TestEthernetInterface, AddStaticRoute)
+{
+    createStaticRouteObject("10.10.10.10", "10.10.10.1", 24,
+                            IP::Protocol::IPv4);
+    EXPECT_THAT(interface.staticRoutes,
+                UnorderedElementsAre(Key(std::string("10.10.10.10"))));
+}
+
+TEST_F(TestEthernetInterface, AddMultipleStaticRoutes)
+{
+    createStaticRouteObject("10.10.10.10", "10.10.10.1", 24,
+                            IP::Protocol::IPv4);
+    createStaticRouteObject("10.20.30.10", "10.20.30.1", 24,
+                            IP::Protocol::IPv4);
+    EXPECT_THAT(interface.staticRoutes,
+                UnorderedElementsAre(Key(std::string("10.10.10.10")),
+                                     Key(std::string("10.20.30.10"))));
+}
+
+TEST_F(TestEthernetInterface, DeleteIPAddress)
+{
+    createStaticRouteObject("10.10.10.10", "10.10.10.1", 24,
+                            IP::Protocol::IPv4);
+    createStaticRouteObject("10.20.30.10", "10.20.30.1", 24,
+                            IP::Protocol::IPv4);
+
+    interfaces.staticRoutes.at(std::string("10.10.10.10"))->delete_();
+    interfaces.staticRoutes.at(std::string("10.20.30.10"))->delete_();
+    EXPECT_EQ(interface.staticRoutes.empty(), true);
 }
 
 } // namespace network
