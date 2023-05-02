@@ -127,6 +127,10 @@ EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     {
         addStaticNeigh(neigh);
     }
+    for (const auto& [_, staticRoute] : info.staticRoutes)
+    {
+        addStaticRoute(staticRoute);
+    }
 }
 
 void EthernetInterface::updateInfo(const InterfaceInfo& info, bool skipSignal)
@@ -210,6 +214,41 @@ void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
                                                 bus, std::string_view(objPath),
                                                 *this, *info.addr, *info.mac,
                                                 Neighbor::State::Permanent));
+    }
+}
+
+void EthernetInterface::addStaticRoute(const StaticRouteInfo& info)
+{
+    if (!info.gateway || !info.destination)
+    {
+        auto msg = fmt::format("Missing static route details on {}\n",
+                               interfaceName());
+        log<level::ERR>(msg.c_str());
+        return;
+    }
+
+    IP::Protocol protocolType;
+    if (*info.protocol == "IPv4")
+    {
+        protocolType = IP::Protocol::IPv4;
+    }
+    else if (*info.protocol == "IPv6")
+    {
+        protocolType = IP::Protocol::IPv6;
+    }
+
+    if (auto it = staticRoutes.find(*info.gateway);
+        it != staticRoutes.end())
+    {
+        it->second->StaticRouteObj::gateway(*info.gateway);
+    }
+    else
+    {
+        staticRoutes.emplace(
+            *info.gateway,
+            std::make_unique<StaticRoute>(bus, std::string_view(objPath), *this,
+                                          *info.destination, *info.gateway,
+                                          info.prefixLength, protocolType));
     }
 }
 
@@ -320,6 +359,48 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
             return it->second->getObjPath();
         }
         it->second->NeighborObj::macAddress(str);
+    }
+
+    writeConfigurationFile();
+    manager.get().reloadConfigs();
+
+    return it->second->getObjPath();
+}
+
+ObjectPath EthernetInterface::staticRoute(std::string destination,
+                                          std::string gateway,
+                                          size_t prefixLength,
+                                          IP::Protocol protocolType)
+{
+    InAddrAny addr;
+    try
+    {
+        addr = ToAddr<InAddrAny>{}(gateway);
+    }
+    catch (const std::exception& e)
+    {
+        auto msg = fmt::format("Not a valid IP address `{}`: {}", gateway,
+                               e.what());
+        log<level::ERR>(msg.c_str(), entry("ADDRESS=%s", gateway.c_str()));
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("gateway"),
+                              Argument::ARGUMENT_VALUE(gateway.c_str()));
+    }
+
+    auto it = staticRoutes.find(gateway);
+    if (it == staticRoutes.end())
+    {
+        it = std::get<0>(staticRoutes.emplace(
+             gateway, std::make_unique<StaticRoute>(
+                             bus, std::string_view(objPath), *this, destination,
+                             gateway, prefixLength, protocolType)));
+    }
+    else
+    {
+        if (it->second->StaticRouteObj::gateway() == gateway)
+        {
+            return it->second->getObjPath();
+        }
+        it->second->StaticRouteObj::gateway(gateway);
     }
 
     writeConfigurationFile();
@@ -734,6 +815,20 @@ void EthernetInterface::writeConfigurationFile()
         dhcp["SendHostname"].emplace_back(conf.sendHostNameEnabled() ? "true"
                                                                      : "false");
     }
+
+    {
+        auto& sroutes = config.map["Route"];
+        for (const auto& temp : staticRoutes)
+        {
+            auto& staticRoute = sroutes.emplace_back();
+            staticRoute["Destination"].emplace_back(
+                fmt::format("{}/{}", temp.second->destination(),
+                            temp.second->prefixLength()));
+            staticRoute["Gateway"].emplace_back(temp.second->gateway());
+            staticRoute["GatewayOnLink"].emplace_back("true");
+        }
+    }
+
     auto path =
         config::pathForIntfConf(manager.get().getConfDir(), interfaceName());
     config.writeFile(path);
