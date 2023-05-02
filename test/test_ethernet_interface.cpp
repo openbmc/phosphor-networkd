@@ -55,6 +55,12 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
         return interface.ip(addressType, ipaddress, subnetMask, "");
     }
 
+    auto createStaticGatewayObject(const std::string& gateway,
+                                   size_t prefixLength, IP::Protocol protocol)
+    {
+        return interface.staticGateway(gateway, prefixLength, protocol);
+    }
+
     void setNtpServers()
     {
         ServerList ntpServers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};
@@ -251,6 +257,48 @@ TEST_F(TestEthernetInterface, DHCPEnabled)
              /*ra=*/true);
     ind_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/false);
     set_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/true);
+}
+
+TEST_F(TestEthernetInterface, AddStaticGateway)
+{
+    createStaticGatewayObject("10.10.10.1", 24, IP::Protocol::IPv4);
+    EXPECT_THAT(interface.staticGateways,
+                UnorderedElementsAre(Key(std::string("10.10.10.1"))));
+}
+
+TEST_F(TestEthernetInterface, AddMultipleStaticGateways)
+{
+    createStaticGatewayObject("10.10.10.1", 24, IP::Protocol::IPv4);
+    createStaticGatewayObject("10.20.30.1", 24, IP::Protocol::IPv4);
+    EXPECT_THAT(interface.staticGateways,
+                UnorderedElementsAre(Key(std::string("10.10.10.1")),
+                                     Key(std::string("10.20.30.1"))));
+}
+
+TEST_F(TestEthernetInterface, DeleteStaticGateway)
+{
+    createStaticGatewayObject("10.10.10.1", 24, IP::Protocol::IPv4);
+    createStaticGatewayObject("10.20.30.1", 24, IP::Protocol::IPv4);
+
+    interface.staticGateways.at(std::string("10.10.10.1"))->delete_();
+    interface.staticGateways.at(std::string("10.20.30.1"))->delete_();
+    EXPECT_EQ(interface.staticGateways.empty(), true);
+}
+
+TEST_F(TestEthernetInterface, AddIPv6StaticGateway)
+{
+    createStaticGatewayObject("2002:903:15f:325::1", 64, IP::Protocol::IPv6);
+    EXPECT_THAT(interface.staticGateways,
+                UnorderedElementsAre(Key(std::string("2002:903:15f:325::1"))));
+}
+
+TEST_F(TestEthernetInterface, AddMultipleIPv6StaticGateways)
+{
+    createStaticGatewayObject("2003:903:15f:325::1", 64, IP::Protocol::IPv6);
+    createStaticGatewayObject("2004:903:15f:325::1", 64, IP::Protocol::IPv6);
+    EXPECT_THAT(interface.staticGateways,
+                UnorderedElementsAre(Key(std::string("2003:903:15f:325::1")),
+                                     Key(std::string("2004:903:15f:325::1"))));
 }
 
 } // namespace network
