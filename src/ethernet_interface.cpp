@@ -134,6 +134,10 @@ EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     {
         addStaticNeigh(neigh);
     }
+    for (const auto& [_, staticRoute] : info.staticRoutes)
+    {
+        addStaticRoute(staticRoute);
+    }
 }
 
 void EthernetInterface::updateInfo(const InterfaceInfo& info, bool skipSignal)
@@ -217,6 +221,40 @@ void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
                                                 bus, std::string_view(objPath),
                                                 *this, *info.addr, *info.mac,
                                                 Neighbor::State::Permanent));
+    }
+}
+
+void EthernetInterface::addStaticRoute(const StaticRouteInfo& info)
+{
+    if (!info.gateway || !info.destination)
+    {
+        auto msg = fmt::format("Missing static route details on {}\n",
+                               interfaceName());
+        log<level::ERR>(msg.c_str());
+        return;
+    }
+
+    IP::Protocol protocolType;
+    if (*info.protocol == "IPv4")
+    {
+        protocolType = IP::Protocol::IPv4;
+    }
+    else if (*info.protocol == "IPv6")
+    {
+        protocolType = IP::Protocol::IPv6;
+    }
+
+    if (auto it = staticRoutes.find(*info.gateway); it != staticRoutes.end())
+    {
+        it->second->StaticRouteObj::gateway(*info.gateway);
+    }
+    else
+    {
+        staticRoutes.emplace(
+            *info.gateway,
+            std::make_unique<StaticRoute>(bus, std::string_view(objPath), *this,
+                                          *info.destination, *info.gateway,
+                                          info.prefixLength, protocolType));
     }
 }
 
@@ -335,6 +373,47 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
             return it->second->getObjPath();
         }
         it->second->NeighborObj::macAddress(str);
+    }
+
+    writeConfigurationFile();
+    manager.get().reloadConfigs();
+
+    return it->second->getObjPath();
+}
+
+ObjectPath EthernetInterface::staticRoute(std::string destination,
+                                          std::string gateway,
+                                          size_t prefixLength,
+                                          IP::Protocol protocolType)
+{
+    std::optional<stdplus::InAnyAddr> addr;
+    try
+    {
+        addr.emplace(stdplus::fromStr<stdplus::InAnyAddr>(gateway));
+    }
+    catch (const std::exception& e)
+    {
+        lg2::error("Not a valid IP address {GATEWAY}: {ERROR}", "GATEWAY",
+                   gateway, "ERROR", e);
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("gateway"),
+                              Argument::ARGUMENT_VALUE(gateway.c_str()));
+    }
+
+    auto it = staticRoutes.find(gateway);
+    if (it == staticRoutes.end())
+    {
+        it = std::get<0>(staticRoutes.emplace(
+            gateway, std::make_unique<StaticRoute>(
+                         bus, std::string_view(objPath), *this, destination,
+                         gateway, prefixLength, protocolType)));
+    }
+    else
+    {
+        if (it->second->StaticRouteObj::gateway() == gateway)
+        {
+            return it->second->getObjPath();
+        }
+        it->second->StaticRouteObj::gateway(gateway);
     }
 
     writeConfigurationFile();
@@ -480,6 +559,67 @@ void EthernetInterface::loadNameServers(const config::Parser& config)
     EthernetInterfaceIntf::nameservers(getNameServerFromResolvd());
     EthernetInterfaceIntf::staticNameServers(
         config.map.getValueStrings("Network", "DNS"));
+}
+
+void EthernetInterface::loadStaticRoutes(const config::Parser& config)
+{
+    std::vector<std::string> destinations =
+        config.map.getValueStrings("Route", "Destination");
+    std::vector<std::string> gateways = config.map.getValueStrings("Route",
+                                                                   "Gateway");
+    for (uint8_t i = 0; i < destinations.size() && i < gateways.size(); i++)
+    {
+        size_t pos = destinations[i].find("/");
+        std::string dest = destinations[i].substr(0, pos);
+        std::string prefixStr =
+            destinations[i].substr(pos + 1, destinations[i].length());
+        uint8_t prefix = stoi(prefixStr);
+        auto msg = fmt::format("loadStaticRoutes `{}`: {}", dest, prefix);
+        log<level::ERR>(msg.c_str());
+        std::optional<stdplus::SubnetAny> ifaddr;
+        std::optional<stdplus::InAnyAddr> addr;
+        IP::Protocol addressType;
+        unsigned char buf[sizeof(struct in6_addr)];
+        int status6 = inet_pton(AF_INET6, gateways[i].c_str(), buf);
+        if (status6 <= 0)
+        {
+            int status4 = inet_pton(AF_INET, gateways[i].c_str(), buf);
+            if (status4 <= 0)
+            {
+                auto msg1 = fmt::format("Invalid static route \n");
+                log<level::ERR>(msg1.c_str());
+                return;
+            }
+            addr.emplace(stdplus::fromStr<stdplus::In4Addr>(gateways[i]));
+            addressType = IP::Protocol::IPv4;
+        }
+        else if (status6)
+        {
+            addr.emplace(stdplus::fromStr<stdplus::In6Addr>(gateways[i]));
+            addressType = IP::Protocol::IPv6;
+        }
+        try
+        {
+            if (prefixLength == 0)
+            {
+                throw std::invalid_argument("default route");
+            }
+            ifaddr.emplace(*addr, prefixLength);
+        }
+
+        catch (const std::exception& e)
+        {
+            lg2::error("Invalid prefix length {NET_PFX}: {ERROR}", "NET_PFX",
+                   prefixLength, "ERROR", e);
+            elog<InvalidArgument>(
+                Argument::ARGUMENT_NAME("prefixLength"),
+                Argument::ARGUMENT_VALUE(stdplus::toStr(prefixLength).c_str()));
+        }
+        staticRoutes.emplace(gateways[i],
+                             std::make_unique<StaticRoute>(
+                                 bus, std::string_view(objPath), *this, dest,
+                                 gateways[i], prefix, addressType));
+    }
 }
 
 ServerList EthernetInterface::getNTPServerFromTimeSyncd()
@@ -739,6 +879,20 @@ void EthernetInterface::writeConfigurationFile()
         dhcp["SendHostname"].emplace_back(conf.sendHostNameEnabled() ? "true"
                                                                      : "false");
     }
+
+    {
+        auto& sroutes = config.map["Route"];
+        for (const auto& temp : staticRoutes)
+        {
+            auto& staticRoute = sroutes.emplace_back();
+            staticRoute["Destination"].emplace_back(
+                fmt::format("{}/{}", temp.second->destination(),
+                            temp.second->prefixLength()));
+            staticRoute["Gateway"].emplace_back(temp.second->gateway());
+            staticRoute["GatewayOnLink"].emplace_back("true");
+        }
+    }
+
     auto path = config::pathForIntfConf(manager.get().getConfDir(),
                                         interfaceName());
     config.writeFile(path);
