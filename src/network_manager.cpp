@@ -198,6 +198,7 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
         bus, *this, info, objPath.str, config, enabled);
     intf->loadNameServers(config);
     intf->loadNTPServers(config);
+    intf->loadStaticRoutes(config);
     auto ptr = intf.get();
     interfaces.insert_or_assign(*info.intf.name, std::move(intf));
     interfacesByIdx.insert_or_assign(info.intf.idx, ptr);
