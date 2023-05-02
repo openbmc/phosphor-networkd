@@ -47,6 +47,7 @@ networkd_lib = static_library(
   'ethernet_interface.cpp',
   'neighbor.cpp',
   'ipaddress.cpp',
+  'static_gateway.cpp',
   'netlink.cpp',
   'network_manager.cpp',
   'rtnetlink.cpp',
