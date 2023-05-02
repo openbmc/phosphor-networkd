@@ -79,6 +79,21 @@ struct NeighborInfo
     }
 };
 
+/** @class StaticGatewayInfo
+ *  @brief Information about a static gateway from the kernel
+ */
+struct StaticGatewayInfo
+{
+    unsigned ifidx;
+    std::optional<std::string> gateway;
+    std::optional<std::string> protocol;
+
+    constexpr bool operator==(const StaticGatewayInfo& rhs) const noexcept
+    {
+        return ifidx == rhs.ifidx && gateway == rhs.gateway;
+    }
+};
+
 /** @brief Contains all of the object information about the interface */
 struct AllIntfInfo
 {
@@ -87,6 +102,7 @@ struct AllIntfInfo
     std::optional<stdplus::In6Addr> defgw6 = std::nullopt;
     std::unordered_map<stdplus::SubnetAny, AddressInfo> addrs = {};
     std::unordered_map<stdplus::InAnyAddr, NeighborInfo> staticNeighs = {};
+    std::unordered_map<std::string, StaticGatewayInfo> staticGateways = {};
 };
 
 } // namespace phosphor::network
