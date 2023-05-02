@@ -133,6 +133,24 @@ struct NeighborInfo
     }
 };
 
+/** @class StaticRouteInfo
+ *  @brief Information about a static route from the kernel
+ */
+struct StaticRouteInfo
+{
+    unsigned ifidx;
+    size_t prefixLength;
+    std::optional<std::string> destination;
+    std::optional<std::string> gateway;
+    std::optional<std::string> protocol;
+
+    constexpr bool operator==(const StaticRouteInfo& rhs) const noexcept
+    {
+        return ifidx == rhs.ifidx && prefixLength == rhs.prefixLength &&
+               destination == rhs.destination && gateway == rhs.gateway;
+    }
+};
+
 struct string_hash : public std::hash<std::string_view>
 {
     using is_transparent = void;
@@ -845,6 +863,7 @@ struct AllIntfInfo
     std::optional<in6_addr> defgw6 = std::nullopt;
     std::unordered_map<IfAddr, AddressInfo> addrs = {};
     std::unordered_map<InAddrAny, NeighborInfo> staticNeighs = {};
+    std::unordered_map<std::string, StaticRouteInfo> staticRoutes = {};
 };
 
 } // namespace phosphor::network
