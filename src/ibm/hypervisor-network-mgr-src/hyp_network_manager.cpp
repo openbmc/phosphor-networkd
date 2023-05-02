@@ -1,14 +1,17 @@
 #include "hyp_network_manager.hpp"
 
+#include <optional>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/elog.hpp>
 #include <phosphor-logging/lg2.hpp>
+#include <ranges>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 using sdbusplus::exception::SdBusError;
-
+using namespace std;
+using namespace std::ranges;
 namespace phosphor
 {
 namespace network
@@ -20,9 +23,81 @@ const std::string intType = "Integer";
 const std::string strType = "String";
 const std::string enumType = "Enumeration";
 
+auto getDefaultTable(const std::string& protocol)
+{
+    static std::array<std::pair<const char*, biosAttrCurrValue>, 4>
+        ipv4_defaults = {std::pair<const char*, biosAttrCurrValue>{
+                             "_ipv4_ipaddr", biosAttrCurrValue("0.0.0.0"s)},
+                         {"_ipv4_gateway", biosAttrCurrValue("0.0.0.0"s)},
+                         {"_ipv4_prefix_length", biosAttrCurrValue(0)},
+                         {"_ipv4_method", biosAttrCurrValue("IPv4Static"s)}};
+
+    static std::array<std::pair<const char*, biosAttrCurrValue>, 4>
+        ipv6_defaults = {std::pair<const char*, biosAttrCurrValue>{
+                             "_ipv6_ipaddr", biosAttrCurrValue("::"s)},
+                         {"_ipv6_gateway", biosAttrCurrValue("::"s)},
+                         {"_ipv6_prefix_length", biosAttrCurrValue(128)},
+                         {"_ipv6_method", biosAttrCurrValue("IPv6Static"s)}};
+    return (protocol == std::string("ipv4"s)) ? ipv4_defaults : ipv6_defaults;
+}
+
+auto getDefaultBIOSTableAttrsOnIntf(const std::string& intf,
+                                    const std::string& protocol, auto ins)
+{
+    std::map<biosAttrName, biosAttrCurrValue> defaults;
+    auto d = getDefaultTable(protocol) | views::transform([&](auto& p) {
+                 return std::make_pair("vmi_" + intf + p.first, p.second);
+             });
+    ranges::copy(d, ins);
+}
+auto setBIOSTableAttrImpl(
+    std::map<biosAttrName, biosAttrCurrValue>& biosTableAttrs,
+    std::string attrName, const biosAttrCurrValue& attrValue,
+    std::string attrType)
+{
+    using MapType = std::decay_t<decltype(biosTableAttrs)>;
+    auto updated = biosTableAttrs |
+                   views::transform([&](const auto& p) -> MapType::value_type {
+                       if (p.first == attrName)
+                       {
+                           if (p.second != attrValue)
+                           {
+                               return std::make_pair(p.first, attrValue);
+                           }
+                       }
+                       return p;
+                   });
+    biosTableAttrs = MapType(updated.begin(), updated.end());
+}
+
 using ObjectTree =
     std::map<std::string, std::map<std::string, std::vector<std::string>>>;
-
+optional<biosTableType::value_type> convert(auto&& item)
+{
+    auto itemType = std::get<0>(item.second);
+    if (itemType == intType)
+    {
+        const int64_t* currValue =
+            std::get_if<int64_t>(&std::get<biosBaseCurrValue>(item.second));
+        if (currValue != nullptr)
+        {
+            return biosTableType::value_type{item.first,
+                                             biosAttrCurrValue(*currValue)};
+        }
+        return nullopt;
+    }
+    if (itemType == enumType || itemType == strType)
+    {
+        const std::string* currValue =
+            std::get_if<std::string>(&std::get<biosBaseCurrValue>(item.second));
+        if (currValue != nullptr)
+        {
+            return biosTableType::value_type{item.first,
+                                             biosAttrCurrValue(*currValue)};
+        }
+    }
+    return nullopt;
+}
 auto HypNetworkMgr::getDBusProp(const std::string& objectName,
                                 const std::string& interface,
                                 const std::string& kw)
@@ -46,42 +121,17 @@ void HypNetworkMgr::setBIOSTableAttr(
     std::string attrName, std::variant<std::string, int64_t> attrValue,
     std::string attrType)
 {
-    auto findAttr = biosTableAttrs.find(attrName);
-    if (findAttr != biosTableAttrs.end())
-    {
-        if (attrType == intType)
-        {
-            int64_t value = std::get<int64_t>(attrValue);
-            if (value != std::get<int64_t>(findAttr->second))
-            {
-                biosTableAttrs.erase(findAttr);
-                biosTableAttrs.emplace(attrName, value);
-            }
-        }
-        else if (attrType == strType)
-        {
-            std::string value = std::get<std::string>(attrValue);
-            if (value != std::get<std::string>(findAttr->second))
-            {
-                biosTableAttrs.erase(findAttr);
-                biosTableAttrs.emplace(attrName, value);
-            }
-        }
-    }
-    else
-    {
-        lg2::info("setBIOSTableAttr: Attribute {ATTR_NAME} is not found in "
-                  "biosTableAttrs",
-                  "ATTR_NAME", attrName);
-    }
+    auto swapVariant = [](const std::variant<std::string, int64_t>& in) {
+        return visit([](auto&& v) { return biosAttrCurrValue(v); }, in);
+    };
+    setBIOSTableAttrImpl(biosTableAttrs, attrName, swapVariant(attrValue),
+                         attrType);
 }
 
 void HypNetworkMgr::setDefaultBIOSTableAttrsOnIntf(const std::string& intf)
 {
-    biosTableAttrs.emplace("vmi_" + intf + "_ipv4_ipaddr", "0.0.0.0");
-    biosTableAttrs.emplace("vmi_" + intf + "_ipv4_gateway", "0.0.0.0");
-    biosTableAttrs.emplace("vmi_" + intf + "_ipv4_prefix_length", 0);
-    biosTableAttrs.emplace("vmi_" + intf + "_ipv4_method", "IPv4Static");
+    getDefaultBIOSTableAttrsOnIntf(
+        intf, "ipv4", std::inserter(biosTableAttrs, std::end(biosTableAttrs)));
 }
 
 void HypNetworkMgr::setDefaultHostnameInBIOSTableAttrs()
@@ -93,6 +143,7 @@ void HypNetworkMgr::setBIOSTableAttrs()
 {
     try
     {
+
         constexpr auto biosMgrIntf = "xyz.openbmc_project.BIOSConfig.Manager";
         constexpr auto biosMgrObj = "/xyz/openbmc_project/bios_config";
 
@@ -103,7 +154,6 @@ void HypNetworkMgr::setBIOSTableAttrs()
         std::vector<std::string> interfaces;
         interfaces.emplace_back(biosMgrIntf);
         auto depth = 0;
-
         auto mapperCall =
             bus.new_method_call(mapperBus, mapperObj, mapperIntf, "GetSubTree");
 
@@ -119,7 +169,20 @@ void HypNetworkMgr::setBIOSTableAttrs()
         ObjectTree objectTree;
         mapperReply.read(objectTree);
 
-        if (objectTree.empty())
+        auto fromFilteredList = [](auto& tree) {
+            auto filterview =
+                views::filter([&](auto& v) {
+                    return std::string::npos != v.first.find(biosMgrIntf);
+                }) |
+                views::transform([](auto& v) { return v.first; }) |
+                views::take(1);
+            auto ret = tree | filterview;
+            return !ret.empty() ? ret.front() : std::string();
+        };
+
+        auto objPath = objectTree.size() == 1 ? objectTree.begin()->first
+                                              : fromFilteredList(objectTree);
+        if (objPath.empty())
         {
             lg2::error(
                 "No Object has implemented the interface {INTERFACE_NAME}",
@@ -127,85 +190,28 @@ void HypNetworkMgr::setBIOSTableAttrs()
             elog<InternalFailure>();
         }
 
-        std::string objPath;
-
-        if (1 == objectTree.size())
-        {
-            objPath = objectTree.begin()->first;
-        }
-        else
-        {
-            // If there are more than 2 objects, object path must contain the
-            // interface name
-            for (auto const& object : objectTree)
-            {
-                lg2::info("{INTERFACE_NAME}", "INTERFACE_NAME", biosMgrIntf);
-                lg2::info("{OBJECT}", "OBJECT", object.first);
-
-                if (std::string::npos != object.first.find(biosMgrIntf))
-                {
-                    objPath = object.first;
-                    break;
-                }
-            }
-
-            if (objPath.empty())
-            {
-                lg2::error(
-                    "Can't find the object for the interface {INTERFACE_NAME}",
-                    "INTERFACE_NAME", biosMgrIntf);
-                elog<InternalFailure>();
-            }
-        }
-
         std::variant<BiosBaseTableType> response;
         getDBusProp(objPath, biosMgrIntf, "BaseBIOSTable").read(response);
 
-        const BiosBaseTableType* baseBiosTable =
-            std::get_if<BiosBaseTableType>(&response);
-
-        if (baseBiosTable == nullptr)
-        {
-            lg2::error("BaseBiosTable is empty. No attributes found!");
-            return;
-        }
-
-        for (const BiosBaseTableItemType& item : *baseBiosTable)
-        {
-            if (item.first.rfind("vmi", 0) == 0) // starts with the prefix
-            {
-                const std::string& itemType =
-                    std::get<biosBaseAttrType>(item.second);
-
-                if (itemType.compare(itemType.size() - intType.size(),
-                                     intType.size(), intType) == 0)
+        std::visit(
+            [&](auto&& arg) {
+                using T = std::decay_t<decltype(arg)>;
+                if constexpr (std::is_same_v<T, BiosBaseTableType>)
                 {
-                    const int64_t* currValue = std::get_if<int64_t>(
-                        &std::get<biosBaseCurrValue>(item.second));
-                    if (currValue != nullptr)
-                    {
-                        biosTableAttrs.emplace(item.first, *currValue);
-                    }
+                    auto con = arg | views::filter([](auto item) {
+                                   return item.first.rfind("vmi", 0) == 0;
+                               }) |
+                               views::transform(
+                                   [](auto item) { return convert(item); }) |
+                               views::filter(
+                                   [](auto item) { return item.has_value(); }) |
+                               views::transform(
+                                   [](auto item) { return item.value(); });
+                    biosTableAttrs = std::map<biosAttrName, biosAttrCurrValue>(
+                        con.begin(), con.end());
                 }
-                else if ((itemType.compare(itemType.size() - strType.size(),
-                                           strType.size(), strType) == 0) ||
-                         (itemType.compare(itemType.size() - enumType.size(),
-                                           enumType.size(), enumType) == 0))
-                {
-                    const std::string* currValue = std::get_if<std::string>(
-                        &std::get<biosBaseCurrValue>(item.second));
-                    if (currValue != nullptr)
-                    {
-                        biosTableAttrs.emplace(item.first, *currValue);
-                    }
-                }
-                else
-                {
-                    lg2::error("Unsupported datatype: The attribute is of "
-                               "unknown type");
-                }
-            }
-        }
+            },
+            response);
     }
     catch (const SdBusError& e)
     {
@@ -229,12 +235,23 @@ void HypNetworkMgr::createIfObjects()
     // network configurations on the both.
     // create eth0 and eth1 objects
     lg2::info("Creating eth0 and eth1 objects");
-    interfaces.emplace("eth0",
-                       std::make_unique<HypEthInterface>(
-                           bus, (objectPath + "/eth0").c_str(), "eth0", *this));
-    interfaces.emplace("eth1",
-                       std::make_unique<HypEthInterface>(
-                           bus, (objectPath + "/eth1").c_str(), "eth1", *this));
+
+    std::array<const char*, 2> names = {"eth0", "eth1"};
+    auto ifaces = names | views::transform([&](auto e) {
+                      return std::make_pair(
+                          std::string(e),
+                          std::make_unique<HypEthInterface>(
+                              bus, (objectPath + "/" + e).c_str(), e, *this));
+                  });
+    interfaces = ethIntfMapType(ifaces.begin(), ifaces.end());
+    // for (auto& p : interfaces)
+    // {
+    //     p.second->createIPAddressObjects();
+    // }
+
+    // // Call watch method to register for properties changed signal
+    // // This method can be called only once
+    // interfaces["eth0"]->watchBaseBiosTable();
 }
 
 void HypNetworkMgr::createSysConfObj()
