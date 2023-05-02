@@ -2,9 +2,11 @@
 #include "dhcp_configuration.hpp"
 #include "ipaddress.hpp"
 #include "neighbor.hpp"
+#include "static_gateway.hpp"
 #include "types.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
 #include "xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp"
+#include "xyz/openbmc_project/Network/StaticGateway/Create/server.hpp"
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
@@ -14,6 +16,7 @@
 #include <xyz/openbmc_project/Collection/DeleteAll/server.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 #include <xyz/openbmc_project/Network/MACAddress/server.hpp>
+#include <xyz/openbmc_project/Network/StaticGateway/server.hpp>
 #include <xyz/openbmc_project/Network/VLAN/server.hpp>
 #include <xyz/openbmc_project/Object/Delete/server.hpp>
 
@@ -31,6 +34,7 @@ using Ifaces = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress,
     sdbusplus::xyz::openbmc_project::Network::IP::server::Create,
     sdbusplus::xyz::openbmc_project::Network::Neighbor::server::CreateStatic,
+    sdbusplus::xyz::openbmc_project::Network::StaticGateway::server::Create,
     sdbusplus::xyz::openbmc_project::Collection::server::DeleteAll>;
 
 using VlanIfaces = sdbusplus::server::object_t<
@@ -45,6 +49,8 @@ using EthernetInterfaceIntf =
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface;
 using MacAddressIntf =
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress;
+using StaticGatewayIntf =
+    sdbusplus::xyz::openbmc_project::Network::server::StaticGateway;
 
 using ServerList = std::vector<std::string>;
 using ObjectPath = sdbusplus::message::object_path;
@@ -94,8 +100,13 @@ class EthernetInterface : public Ifaces
     std::unordered_map<stdplus::InAnyAddr, std::unique_ptr<Neighbor>>
         staticNeighbors;
 
+    /** @brief Persistent map of static route dbus objects and their names */
+    std::unordered_map<std::string, std::unique_ptr<StaticGateway>>
+        staticGateways;
+
     void addAddr(const AddressInfo& info);
     void addStaticNeigh(const NeighborInfo& info);
+    void addStaticGateway(const StaticGatewayInfo& info);
 
     /** @brief Updates the interface information based on new InterfaceInfo */
     void updateInfo(const InterfaceInfo& info, bool skipSignal = false);
@@ -107,6 +118,10 @@ class EthernetInterface : public Ifaces
     /** @brief Function used to load the nameservers.
      */
     void loadNameServers(const config::Parser& config);
+
+    /** @brief Function used to load the static routes.
+     */
+    void loadStaticGateways(const config::Parser& config);
 
     /** @brief Function to create ipAddress dbus object.
      *  @param[in] addressType - Type of ip address.
@@ -122,6 +137,15 @@ class EthernetInterface : public Ifaces
      *  @param[in] macAddress - Low level MAC address.
      */
     ObjectPath neighbor(std::string ipAddress, std::string macAddress) override;
+
+    /** @brief Function to create static route dbus object.
+     *  @param[in] destination - Destination IP address.
+     *  @param[in] gateway - Gateway
+     *  @parma[in] prefixLength - Number of network bits.
+     */
+    ObjectPath staticGateway(std::string destination, std::string gateway,
+                             size_t prefixLength,
+                             IP::Protocol protocolType) override;
 
     /** Set value of DHCPEnabled */
     DHCPConf dhcpEnabled() const override;
