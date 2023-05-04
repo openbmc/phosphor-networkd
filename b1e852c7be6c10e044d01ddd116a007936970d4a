@@ -18,6 +18,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae6787b8_2306d2e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-05-04T11:02:44Z",
+      "side": 1,
+      "message": "To cater this need: Earlier we decided:\nAfter the first netywork configuration change, will wait for 10 sec to update all the configs and then we will update the configuration file.",
+      "revId": "b1e852c7be6c10e044d01ddd116a007936970d4a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6822b465_01f48b05",
