@@ -212,9 +212,17 @@ DHCPVal getDHCPValue(const config::Parser& config)
         .value_or(DHCPVal{.v4 = true, .v6 = true});
 }
 
-bool getDHCPProp(const config::Parser& config, std::string_view key)
+bool getDHCPProp(const config::Parser& config, DHCPType dhcpType,
+                 std::string_view key)
 {
-    return systemdParseLast(config, "DHCP", key, config::parseBool)
+    std::string_view type = (dhcpType == DHCPType::v4) ? "DHCPv4" : "DHCPv6";
+
+    if (!config.map.contains(type))
+    {
+        type = "DHCP";
+    }
+
+    return systemdParseLast(config, type, key, config::parseBool)
         .value_or(true);
 }
 
