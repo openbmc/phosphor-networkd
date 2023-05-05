@@ -85,6 +85,12 @@ DHCPVal getDHCPValue(const config::Parser& config);
  */
 bool getDHCPProp(const config::Parser& config, std::string_view key);
 
+/** @brief Read a boolean DHCPv6 property from a conf file
+ *  @param[in] config - The parsed configuration.
+ *  @param[in] key - The property name.
+ */
+bool getDHCP6Prop(const config::Parser& config, std::string_view key);
+
 namespace internal
 {
 

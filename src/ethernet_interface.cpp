@@ -722,17 +722,30 @@ void EthernetInterface::writeConfigurationFile()
         }
     }
     {
-        auto& dhcp = config.map["DHCP"].emplace_back();
-        dhcp["ClientIdentifier"].emplace_back("mac");
+        auto& dhcp4 = config.map["DHCPV4"].emplace_back();
+        dhcp4["ClientIdentifier"].emplace_back("mac");
         const auto& conf = manager.get().getDHCPConf();
         auto dns_enabled = conf.dnsEnabled() ? "true" : "false";
-        dhcp["UseDNS"].emplace_back(dns_enabled);
-        dhcp["UseDomains"].emplace_back(dns_enabled);
-        dhcp["UseNTP"].emplace_back(conf.ntpEnabled() ? "true" : "false");
-        dhcp["UseHostname"].emplace_back(conf.hostNameEnabled() ? "true"
-                                                                : "false");
-        dhcp["SendHostname"].emplace_back(conf.sendHostNameEnabled() ? "true"
-                                                                     : "false");
+        dhcp4["UseDNS"].emplace_back(dns_enabled);
+        dhcp4["UseDomains"].emplace_back(dns_enabled);
+        dhcp4["UseNTP"].emplace_back(conf.ntpEnabled() ? "true" : "false");
+        dhcp4["UseHostname"].emplace_back(conf.hostNameEnabled() ? "true"
+                                                                 : "false");
+        dhcp4["SendHostname"].emplace_back(
+            conf.sendHostNameEnabled() ? "true" : "false");
+    }
+    {
+        auto& dhcp6 = config.map["DHCPV6"].emplace_back();
+        dhcp6["ClientIdentifier"].emplace_back("mac");
+        const auto& conf = manager.get().getDHCPConf();
+        auto dns_enabled = conf.dnsv6Enabled() ? "true" : "false";
+        dhcp6["UseDNS"].emplace_back(dns_enabled);
+        dhcp6["UseDomains"].emplace_back(dns_enabled);
+        dhcp6["UseNTP"].emplace_back(conf.ntpv6Enabled() ? "true" : "false");
+        dhcp6["UseHostname"].emplace_back(conf.hostNamev6Enabled() ? "true"
+                                                                   : "false");
+        dhcp6["SendHostname"].emplace_back(
+            conf.sendHostNameEnabled() ? "true" : "false");
     }
     auto path =
         config::pathForIntfConf(manager.get().getConfDir(), interfaceName());

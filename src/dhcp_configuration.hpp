@@ -66,14 +66,40 @@ class Configuration : public Iface
      */
     bool sendHostNameEnabled(bool value) override;
 
+    /** @brief If true then DNS servers received from the DHCPv6 server
+     *         will be used and take precedence over any statically
+     *         configured ones.
+     *  @param[in] value - true if DNS server needed from DHCPv6 server
+     *                     else false.
+     */
+    bool dnsv6Enabled(bool value) override;
+
+    /** @brief If true then NTP servers received from the DHCPv6 server
+               will be used by systemd-timesyncd.
+     *  @param[in] value - true if NTP server needed from DHCPv6 server
+     *                     else false.
+     */
+    bool ntpv6Enabled(bool value) override;
+
+    /** @brief If true then Hostname received from the DHCPv6 server will
+     *         be set as the hostname of the system
+     *  @param[in] value - true if hostname needed from the DHCPv6 server
+     *                     else false.
+     *
+     */
+    bool hostNamev6Enabled(bool value) override;
+
     /* @brief Network Manager needed the below function to know the
      *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled
               sendHostNameEnabled).
      *
      */
     using ConfigIntf::dnsEnabled;
+    using ConfigIntf::dnsv6Enabled;
     using ConfigIntf::hostNameEnabled;
+    using ConfigIntf::hostNamev6Enabled;
     using ConfigIntf::ntpEnabled;
+    using ConfigIntf::ntpv6Enabled;
     using ConfigIntf::sendHostNameEnabled;
 
   private:
