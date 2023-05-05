@@ -1,4 +1,5 @@
 #pragma once
+#include "dhcp_configuration.hpp"
 #include "ipaddress.hpp"
 #include "neighbor.hpp"
 #include "types.hpp"
@@ -8,6 +9,7 @@
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <stdplus/pinned.hpp>
+#include <stdplus/str/maps.hpp>
 #include <stdplus/zstring_view.hpp>
 #include <xyz/openbmc_project/Collection/DeleteAll/server.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
@@ -253,6 +255,14 @@ class EthernetInterface : public Ifaces
      *  @returns true/false value if the address is static
      */
     bool originIsManuallyAssigned(IP::AddressOrigin origin);
+
+    /** @brief Function to add DHCP configurations.
+     */
+    void addDHCPConfigurations();
+
+    /** @brief Map of DHCP conf objects.
+     */
+    stdplus::string_umap<std::unique_ptr<dhcp::Configuration>> dhcpConfigs;
 };
 
 } // namespace network
