@@ -210,7 +210,7 @@ DHCPVal getDHCPValue(const config::Parser& config)
 
 bool getDHCPProp(const config::Parser& config, std::string_view key)
 {
-    return systemdParseLast(config, "DHCP", key, config::parseBool)
+    return systemdParseLast(config, "DHCPV4", key, config::parseBool)
         .value_or(true);
 }
 
