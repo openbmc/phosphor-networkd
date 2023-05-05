@@ -1,5 +1,4 @@
 #pragma once
-#include "dhcp_configuration.hpp"
 #include "ethernet_interface.hpp"
 #include "system_configuration.hpp"
 #include "types.hpp"
@@ -93,14 +92,6 @@ class Manager : public ManagerIface
         return *systemConf;
     }
 
-    /** @brief gets the dhcp conf object.
-     *
-     */
-    inline auto& getDHCPConf()
-    {
-        return *dhcpConf;
-    }
-
     /** @brief Arms a timer to tell systemd-network to reload all of the network
      * configurations
      */
@@ -143,9 +134,6 @@ class Manager : public ManagerIface
 
     /** @brief pointer to system conf object. */
     std::unique_ptr<SystemConfiguration> systemConf = nullptr;
-
-    /** @brief pointer to dhcp conf object. */
-    std::unique_ptr<dhcp::Configuration> dhcpConf = nullptr;
 
     /** @brief Network Configuration directory. */
     std::filesystem::path confDir;
