@@ -208,9 +208,10 @@ DHCPVal getDHCPValue(const config::Parser& config)
         .value_or(DHCPVal{.v4 = true, .v6 = true});
 }
 
-bool getDHCPProp(const config::Parser& config, std::string_view key)
+bool getDHCPProp(const config::Parser& config, std::string_view key,
+                 std::string_view type)
 {
-    return systemdParseLast(config, "DHCP", key, config::parseBool)
+    return systemdParseLast(config, type, key, config::parseBool)
         .value_or(true);
 }
 
