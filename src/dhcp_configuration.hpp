@@ -10,7 +10,7 @@ namespace phosphor
 namespace network
 {
 
-class Manager; // forward declaration of network manager.
+class EthernetInterface;
 
 namespace dhcp
 {
@@ -32,9 +32,11 @@ class Configuration : public Iface
      *  @param[in] bus - Bus to attach to.
      *  @param[in] objPath - Path to attach at.
      *  @param[in] parent - Parent object.
+     *  @param[in] type - Network type.
      */
     Configuration(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
-                  stdplus::PinnedRef<Manager> parent);
+                  stdplus::PinnedRef<EthernetInterface> parent,
+                  stdplus::const_zstring type);
 
     /** @brief If true then DNS servers received from the DHCP server
      *         will be used and take precedence over any statically
@@ -66,7 +68,7 @@ class Configuration : public Iface
      */
     bool sendHostNameEnabled(bool value) override;
 
-    /* @brief Network Manager needed the below function to know the
+    /* @brief Ethernet Interface needed the below function to know the
      *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled
               sendHostNameEnabled).
      *
@@ -77,8 +79,8 @@ class Configuration : public Iface
     using ConfigIntf::sendHostNameEnabled;
 
   private:
-    /** @brief Network Manager object. */
-    stdplus::PinnedRef<Manager> manager;
+    /** @brief Ethernet Interface object. */
+    stdplus::PinnedRef<EthernetInterface> parent;
 };
 
 } // namespace dhcp
