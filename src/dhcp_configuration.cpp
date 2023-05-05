@@ -2,7 +2,6 @@
 
 #include "config_parser.hpp"
 #include "network_manager.hpp"
-#include "util.hpp"
 
 #include <sys/stat.h>
 
@@ -24,15 +23,16 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 Configuration::Configuration(sdbusplus::bus_t& bus,
                              stdplus::const_zstring objPath,
-                             stdplus::PinnedRef<Manager> parent) :
+                             stdplus::PinnedRef<EthernetInterface> parent,
+                             NetworkType type) :
     Iface(bus, objPath.c_str(), Iface::action::defer_emit),
-    manager(parent)
+    parent(parent), type(type)
 {
     config::Parser conf;
     std::filesystem::directory_entry newest_file;
     time_t newest_time = 0;
-    for (const auto& dirent :
-         std::filesystem::directory_iterator(manager.get().getConfDir()))
+    for (const auto& dirent : std::filesystem::directory_iterator(
+             parent.get().manager.get().getConfDir()))
     {
         struct stat st = {};
         stat(dirent.path().native().c_str(), &st);
@@ -49,10 +49,15 @@ Configuration::Configuration(sdbusplus::bus_t& bus,
         conf.setFile(newest_file.path());
     }
 
-    ConfigIntf::dnsEnabled(getDHCPProp(conf, "UseDNS"), true);
-    ConfigIntf::ntpEnabled(getDHCPProp(conf, "UseNTP"), true);
-    ConfigIntf::hostNameEnabled(getDHCPProp(conf, "UseHostname"), true);
-    ConfigIntf::sendHostNameEnabled(getDHCPProp(conf, "SendHostname"), true);
+    ConfigIntf::dnsEnabled(getDHCPProp(conf, type, "UseDNS"), true);
+    ConfigIntf::ntpEnabled(getDHCPProp(conf, type, "UseNTP"), true);
+    ConfigIntf::hostNameEnabled(getDHCPProp(conf, type, "UseHostname"), true);
+    if (type == NetworkType::dhcp4)
+    {
+        ConfigIntf::sendHostNameEnabled(getDHCPProp(conf, type, "SendHostname"),
+                                        true);
+    }
+
     emit_object_added();
 }
 
@@ -64,10 +69,8 @@ bool Configuration::sendHostNameEnabled(bool value)
     }
 
     auto name = ConfigIntf::sendHostNameEnabled(value);
-
-    manager.get().writeToConfigurationFile();
-    manager.get().reloadConfigs();
-
+    parent.get().writeConfigurationFile();
+    parent.get().manager.get().reloadConfigs();
     return name;
 }
 
@@ -79,8 +82,8 @@ bool Configuration::hostNameEnabled(bool value)
     }
 
     auto name = ConfigIntf::hostNameEnabled(value);
-    manager.get().writeToConfigurationFile();
-    manager.get().reloadConfigs();
+    parent.get().writeConfigurationFile();
+    parent.get().manager.get().reloadConfigs();
 
     return name;
 }
@@ -93,8 +96,8 @@ bool Configuration::ntpEnabled(bool value)
     }
 
     auto ntp = ConfigIntf::ntpEnabled(value);
-    manager.get().writeToConfigurationFile();
-    manager.get().reloadConfigs();
+    parent.get().writeConfigurationFile();
+    parent.get().manager.get().reloadConfigs();
 
     return ntp;
 }
@@ -107,8 +110,8 @@ bool Configuration::dnsEnabled(bool value)
     }
 
     auto dns = ConfigIntf::dnsEnabled(value);
-    manager.get().writeToConfigurationFile();
-    manager.get().reloadConfigs();
+    parent.get().writeConfigurationFile();
+    parent.get().manager.get().reloadConfigs();
 
     return dns;
 }
