@@ -115,6 +115,7 @@ EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     {
         EthernetInterface::defaultGateway6(stdplus::toStr(*info.defgw6), true);
     }
+    addDHCPConfigurations();
     emit_object_added();
 
     if (info.intf.vlan_id)
@@ -741,17 +742,27 @@ void EthernetInterface::writeConfigurationFile()
         }
     }
     {
-        auto& dhcp = config.map["DHCP"].emplace_back();
-        dhcp["ClientIdentifier"].emplace_back("mac");
-        const auto& conf = manager.get().getDHCPConf();
+        auto& dhcp4 = config.map["DHCPv4"].emplace_back();
+        dhcp4["ClientIdentifier"].emplace_back("mac");
+        const auto& conf = *dhcpConfigs["dhcp4"];
         auto dns_enabled = conf.dnsEnabled() ? "true" : "false";
-        dhcp["UseDNS"].emplace_back(dns_enabled);
-        dhcp["UseDomains"].emplace_back(dns_enabled);
-        dhcp["UseNTP"].emplace_back(conf.ntpEnabled() ? "true" : "false");
-        dhcp["UseHostname"].emplace_back(conf.hostNameEnabled() ? "true"
-                                                                : "false");
-        dhcp["SendHostname"].emplace_back(conf.sendHostNameEnabled() ? "true"
-                                                                     : "false");
+        dhcp4["UseDNS"].emplace_back(dns_enabled);
+        dhcp4["UseDomains"].emplace_back(dns_enabled);
+        dhcp4["UseNTP"].emplace_back(conf.ntpEnabled() ? "true" : "false");
+        dhcp4["UseHostname"].emplace_back(conf.hostNameEnabled() ? "true"
+                                                                 : "false");
+        dhcp4["SendHostname"].emplace_back(
+            conf.sendHostNameEnabled() ? "true" : "false");
+    }
+    {
+        auto& dhcp6 = config.map["DHCPv6"].emplace_back();
+        const auto& conf = *dhcpConfigs["dhcp6"];
+        auto dns_enabled = conf.dnsEnabled() ? "true" : "false";
+        dhcp6["UseDNS"].emplace_back(dns_enabled);
+        dhcp6["UseDomains"].emplace_back(dns_enabled);
+        dhcp6["UseNTP"].emplace_back(conf.ntpEnabled() ? "true" : "false");
+        dhcp6["UseHostname"].emplace_back(conf.hostNameEnabled() ? "true"
+                                                                 : "false");
     }
     auto path = config::pathForIntfConf(manager.get().getConfDir(),
                                         interfaceName());
@@ -938,6 +949,16 @@ void EthernetInterface::VlanProperties::delete_()
     }
 
     eth.get().manager.get().reloadConfigs();
+}
+
+void EthernetInterface::addDHCPConfigurations()
+{
+    this->dhcpConfigs.emplace(
+        "dhcp4", std::make_unique<dhcp::Configuration>(
+                     bus, objPath + "/dhcp4", *this, NetworkType::dhcp4));
+    this->dhcpConfigs.emplace(
+        "dhcp6", std::make_unique<dhcp::Configuration>(
+                     bus, objPath + "/dhcp6", *this, NetworkType::dhcp6));
 }
 
 } // namespace network
