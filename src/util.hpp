@@ -55,13 +55,22 @@ struct DHCPVal
 {
     bool v4, v6;
 };
+
+enum class DHCPType
+{
+    v4,
+    v6
+};
+
 DHCPVal getDHCPValue(const config::Parser& config);
 
 /** @brief Read a boolean DHCP property from a conf file
  *  @param[in] config - The parsed configuration.
+ *  @param[in] nwType - The network type.
  *  @param[in] key - The property name.
  */
-bool getDHCPProp(const config::Parser& config, std::string_view key);
+bool getDHCPProp(const config::Parser& config, DHCPType dhcpType,
+                 std::string_view key);
 
 namespace internal
 {

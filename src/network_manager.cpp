@@ -154,8 +154,6 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     std::filesystem::create_directories(confDir);
     systemConf = std::make_unique<phosphor::network::SystemConfiguration>(
         bus, (this->objPath / "config").str);
-    dhcpConf = std::make_unique<phosphor::network::dhcp::Configuration>(
-        bus, (this->objPath / "dhcp").str, *this);
 }
 
 void Manager::createInterface(const AllIntfInfo& info, bool enabled)
