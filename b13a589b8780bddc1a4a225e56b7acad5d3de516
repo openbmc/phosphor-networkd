@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42972399_8686572c",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-05-05T03:46:51Z",
+      "side": 1,
+      "message": "Destination can be set to 0.0.0.0 for the static default gateway setting. So this can be an optional parameter.",
+      "revId": "b13a589b8780bddc1a4a225e56b7acad5d3de516",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8dbf0481_6a41595f",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-05-05T03:46:51Z",
+      "side": 1,
+      "message": "Can gateway be the key for this map since destination is optional?",
+      "revId": "b13a589b8780bddc1a4a225e56b7acad5d3de516",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6eec19dc_a30b1dcd",
+        "filename": "test/test_ethernet_interface.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-05-05T03:46:51Z",
+      "side": 1,
+      "message": "Please add tests for static gateway address creation as well",
+      "revId": "b13a589b8780bddc1a4a225e56b7acad5d3de516",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
