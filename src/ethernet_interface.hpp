@@ -1,4 +1,5 @@
 #pragma once
+#include "dhcp_configuration.hpp"
 #include "ipaddress.hpp"
 #include "neighbor.hpp"
 #include "types.hpp"
@@ -252,6 +253,14 @@ class EthernetInterface : public Ifaces
      *  @returns true/false value if the address is static
      */
     bool originIsManuallyAssigned(IP::AddressOrigin origin);
+
+    /** @brief Function to add DHCP configurations.
+     */
+    void addDHCPConfigurations();
+
+    /** @brief Map of DHCP conf objects.
+     */
+    stdplus::string_umap<std::unique_ptr<dhcp::Configuration>> dhcpConfigs;
 };
 
 } // namespace network
