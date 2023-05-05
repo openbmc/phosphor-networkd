@@ -61,7 +61,8 @@ DHCPVal getDHCPValue(const config::Parser& config);
  *  @param[in] config - The parsed configuration.
  *  @param[in] key - The property name.
  */
-bool getDHCPProp(const config::Parser& config, std::string_view key);
+bool getDHCPProp(const config::Parser& config, std::string_view key,
+                 std::string_view type);
 
 namespace internal
 {
