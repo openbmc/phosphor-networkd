@@ -12,16 +12,17 @@
 #include <linux/rtnetlink.h>
 #include <net/if.h>
 
-#include <algorithm>
-#include <filesystem>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/raw.hpp>
 #include <stdplus/zstring.hpp>
+#include <xyz/openbmc_project/Common/error.hpp>
+
+#include <algorithm>
+#include <filesystem>
 #include <string>
 #include <unordered_map>
 #include <variant>
-#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {
@@ -77,8 +78,7 @@ EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                                      bool enabled) :
     EthernetInterface(bus, manager, info, makeObjPath(objRoot, *info.intf.name),
                       config, enabled)
-{
-}
+{}
 
 EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                                      stdplus::PinnedRef<Manager> manager,
@@ -475,9 +475,9 @@ void EthernetInterface::loadNameServers(const config::Parser& config)
 ServerList EthernetInterface::getNTPServerFromTimeSyncd()
 {
     ServerList servers; // Variable to capture the NTP Server IPs
-    auto method =
-        bus.get().new_method_call(TIMESYNCD_SERVICE, TIMESYNCD_SERVICE_PATH,
-                                  PROPERTY_INTERFACE, METHOD_GET);
+    auto method = bus.get().new_method_call(TIMESYNCD_SERVICE,
+                                            TIMESYNCD_SERVICE_PATH,
+                                            PROPERTY_INTERFACE, METHOD_GET);
 
     method.append(TIMESYNCD_INTERFACE, "LinkNTPServers");
 
@@ -734,8 +734,8 @@ void EthernetInterface::writeConfigurationFile()
         dhcp["SendHostname"].emplace_back(conf.sendHostNameEnabled() ? "true"
                                                                      : "false");
     }
-    auto path =
-        config::pathForIntfConf(manager.get().getConfDir(), interfaceName());
+    auto path = config::pathForIntfConf(manager.get().getConfDir(),
+                                        interfaceName());
     config.writeFile(path);
     lg2::info("Wrote networkd file: {FILE_PATH}", "FILE_PATH", path);
 }

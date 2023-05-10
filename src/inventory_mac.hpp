@@ -1,7 +1,8 @@
 #pragma once
-#include <memory>
 #include <sdbusplus/bus.hpp>
 #include <stdplus/pinned.hpp>
+
+#include <memory>
 
 namespace phosphor::network
 {

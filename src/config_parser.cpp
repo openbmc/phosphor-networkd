@@ -3,14 +3,15 @@
 #include <fmt/compile.h>
 #include <fmt/format.h>
 
-#include <functional>
-#include <iterator>
-#include <stdexcept>
 #include <stdplus/exception.hpp>
 #include <stdplus/fd/atomic.hpp>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/fmt.hpp>
 #include <stdplus/fd/line.hpp>
+
+#include <functional>
+#include <iterator>
+#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -156,8 +157,7 @@ struct Parse
 
     inline Parse(const fs::path& filename) :
         filename(filename), section(nullptr), lineno(0)
-    {
-    }
+    {}
 
     void pumpSection(std::string_view line)
     {
@@ -264,8 +264,7 @@ void Parser::setFile(const fs::path& filename)
         }
     }
     catch (const stdplus::exception::Eof&)
-    {
-    }
+    {}
     catch (const std::system_error& e)
     {
         fileExists = false;

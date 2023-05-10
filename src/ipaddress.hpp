@@ -5,9 +5,10 @@
 #include <sdbusplus/message/native_types.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <stdplus/pinned.hpp>
-#include <string_view>
 #include <xyz/openbmc_project/Network/IP/server.hpp>
 #include <xyz/openbmc_project/Object/Delete/server.hpp>
+
+#include <string_view>
 
 namespace phosphor
 {

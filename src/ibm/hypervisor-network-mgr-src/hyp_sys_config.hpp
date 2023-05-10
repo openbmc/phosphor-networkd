@@ -3,8 +3,9 @@
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
-#include <string>
 #include <xyz/openbmc_project/Network/SystemConfiguration/server.hpp>
+
+#include <string>
 
 namespace phosphor
 {

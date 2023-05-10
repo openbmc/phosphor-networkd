@@ -5,9 +5,10 @@
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
+#include <stdplus/raw.hpp>
+
 #include <cstring>
 #include <stdexcept>
-#include <stdplus/raw.hpp>
 #include <string_view>
 
 #include <gtest/gtest.h>

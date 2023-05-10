@@ -1,7 +1,8 @@
 #include "util.hpp"
 
-#include <stdexcept>
 #include <stdplus/raw.hpp>
+
+#include <stdexcept>
 #include <string>
 #include <string_view>
 

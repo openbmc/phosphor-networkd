@@ -5,18 +5,19 @@
 #include "types.hpp"
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
 
-#include <filesystem>
 #include <function2/function2.hpp>
-#include <memory>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/bus/match.hpp>
 #include <sdbusplus/message/native_types.hpp>
 #include <stdplus/pinned.hpp>
 #include <stdplus/zstring_view.hpp>
+#include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
+
+#include <filesystem>
+#include <memory>
 #include <string>
 #include <string_view>
 #include <vector>
-#include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
 
 namespace phosphor
 {

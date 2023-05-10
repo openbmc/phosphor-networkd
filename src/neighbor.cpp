@@ -5,8 +5,9 @@
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/elog.hpp>
-#include <string>
 #include <xyz/openbmc_project/Common/error.hpp>
+
+#include <string>
 
 namespace phosphor
 {
@@ -24,8 +25,7 @@ Neighbor::Neighbor(sdbusplus::bus_t& bus, std::string_view objRoot,
                    stdplus::PinnedRef<EthernetInterface> parent, InAddrAny addr,
                    ether_addr lladdr, State state) :
     Neighbor(bus, makeObjPath(objRoot, addr), parent, addr, lladdr, state)
-{
-}
+{}
 
 Neighbor::Neighbor(sdbusplus::bus_t& bus,
                    sdbusplus::message::object_path objPath,

@@ -14,13 +14,14 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <stdplus/raw.hpp>
+
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
 #include <map>
 #include <queue>
 #include <stdexcept>
-#include <stdplus/raw.hpp>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -151,157 +152,157 @@ ssize_t sendmsg_ack(std::queue<std::string>& msgs, std::string_view in)
     return in.size();
 }
 
-extern "C" {
-
-int ioctl(int fd, unsigned long int request, ...)
+extern "C"
 {
-    va_list vl;
-    va_start(vl, request);
-    void* data = va_arg(vl, void*);
-    va_end(vl);
-
-    auto req = reinterpret_cast<ifreq*>(data);
-    if (request == SIOCGIFFLAGS)
+    int ioctl(int fd, unsigned long int request, ...)
     {
-        auto it = mock_if.find(req->ifr_name);
-        if (it == mock_if.end())
+        va_list vl;
+        va_start(vl, request);
+        void* data = va_arg(vl, void*);
+        va_end(vl);
+
+        auto req = reinterpret_cast<ifreq*>(data);
+        if (request == SIOCGIFFLAGS)
         {
-            errno = ENXIO;
-            return -1;
+            auto it = mock_if.find(req->ifr_name);
+            if (it == mock_if.end())
+            {
+                errno = ENXIO;
+                return -1;
+            }
+            req->ifr_flags = it->second.flags;
+            return 0;
         }
-        req->ifr_flags = it->second.flags;
-        return 0;
-    }
-    else if (request == SIOCGIFMTU)
-    {
-        auto it = mock_if.find(req->ifr_name);
-        if (it == mock_if.end())
+        else if (request == SIOCGIFMTU)
         {
-            errno = ENXIO;
-            return -1;
+            auto it = mock_if.find(req->ifr_name);
+            if (it == mock_if.end())
+            {
+                errno = ENXIO;
+                return -1;
+            }
+            if (!it->second.mtu)
+            {
+                errno = EOPNOTSUPP;
+                return -1;
+            }
+            req->ifr_mtu = *it->second.mtu;
+            return 0;
         }
-        if (!it->second.mtu)
+
+        static auto real_ioctl =
+            reinterpret_cast<decltype(&ioctl)>(dlsym(RTLD_NEXT, "ioctl"));
+        return real_ioctl(fd, request, data);
+    }
+
+    int socket(int domain, int type, int protocol)
+    {
+        static auto real_socket =
+            reinterpret_cast<decltype(&socket)>(dlsym(RTLD_NEXT, "socket"));
+        int fd = real_socket(domain, type, protocol);
+        if (domain == AF_NETLINK && !(type & SOCK_RAW))
         {
-            errno = EOPNOTSUPP;
-            return -1;
+            fprintf(stderr, "Netlink sockets must be RAW\n");
+            abort();
         }
-        req->ifr_mtu = *it->second.mtu;
-        return 0;
+        if (domain == AF_NETLINK && protocol == NETLINK_ROUTE)
+        {
+            mock_rtnetlinks[fd] = {};
+        }
+        return fd;
     }
 
-    static auto real_ioctl =
-        reinterpret_cast<decltype(&ioctl)>(dlsym(RTLD_NEXT, "ioctl"));
-    return real_ioctl(fd, request, data);
-}
+    int close(int fd)
+    {
+        auto it = mock_rtnetlinks.find(fd);
+        if (it != mock_rtnetlinks.end())
+        {
+            mock_rtnetlinks.erase(it);
+        }
 
-int socket(int domain, int type, int protocol)
-{
-    static auto real_socket =
-        reinterpret_cast<decltype(&socket)>(dlsym(RTLD_NEXT, "socket"));
-    int fd = real_socket(domain, type, protocol);
-    if (domain == AF_NETLINK && !(type & SOCK_RAW))
-    {
-        fprintf(stderr, "Netlink sockets must be RAW\n");
-        abort();
-    }
-    if (domain == AF_NETLINK && protocol == NETLINK_ROUTE)
-    {
-        mock_rtnetlinks[fd] = {};
-    }
-    return fd;
-}
-
-int close(int fd)
-{
-    auto it = mock_rtnetlinks.find(fd);
-    if (it != mock_rtnetlinks.end())
-    {
-        mock_rtnetlinks.erase(it);
+        static auto real_close =
+            reinterpret_cast<decltype(&close)>(dlsym(RTLD_NEXT, "close"));
+        return real_close(fd);
     }
 
-    static auto real_close =
-        reinterpret_cast<decltype(&close)>(dlsym(RTLD_NEXT, "close"));
-    return real_close(fd);
-}
-
-ssize_t sendmsg(int sockfd, const struct msghdr* msg, int flags)
-{
-    auto it = mock_rtnetlinks.find(sockfd);
-    if (it == mock_rtnetlinks.end())
+    ssize_t sendmsg(int sockfd, const struct msghdr* msg, int flags)
     {
-        static auto real_sendmsg =
-            reinterpret_cast<decltype(&sendmsg)>(dlsym(RTLD_NEXT, "sendmsg"));
-        return real_sendmsg(sockfd, msg, flags);
+        auto it = mock_rtnetlinks.find(sockfd);
+        if (it == mock_rtnetlinks.end())
+        {
+            static auto real_sendmsg = reinterpret_cast<decltype(&sendmsg)>(
+                dlsym(RTLD_NEXT, "sendmsg"));
+            return real_sendmsg(sockfd, msg, flags);
+        }
+        auto& msgs = it->second;
+
+        validateMsgHdr(msg);
+        if (!msgs.empty())
+        {
+            fprintf(stderr, "Unread netlink responses\n");
+            abort();
+        }
+
+        ssize_t ret;
+        std::string_view iov(reinterpret_cast<char*>(msg->msg_iov[0].iov_base),
+                             msg->msg_iov[0].iov_len);
+
+        ret = sendmsg_link_dump(msgs, iov);
+        if (ret != 0)
+        {
+            return ret;
+        }
+
+        ret = sendmsg_ack(msgs, iov);
+        if (ret != 0)
+        {
+            return ret;
+        }
+
+        errno = ENOSYS;
+        return -1;
     }
-    auto& msgs = it->second;
 
-    validateMsgHdr(msg);
-    if (!msgs.empty())
+    ssize_t recvmsg(int sockfd, struct msghdr* msg, int flags)
     {
-        fprintf(stderr, "Unread netlink responses\n");
-        abort();
-    }
+        auto it = mock_rtnetlinks.find(sockfd);
+        if (it == mock_rtnetlinks.end())
+        {
+            static auto real_recvmsg = reinterpret_cast<decltype(&recvmsg)>(
+                dlsym(RTLD_NEXT, "recvmsg"));
+            return real_recvmsg(sockfd, msg, flags);
+        }
+        auto& msgs = it->second;
 
-    ssize_t ret;
-    std::string_view iov(reinterpret_cast<char*>(msg->msg_iov[0].iov_base),
-                         msg->msg_iov[0].iov_len);
+        validateMsgHdr(msg);
+        constexpr size_t required_buf_size = 8192;
+        if (msg->msg_iov[0].iov_len < required_buf_size)
+        {
+            fprintf(stderr, "recvmsg iov too short: %zu\n",
+                    msg->msg_iov[0].iov_len);
+            abort();
+        }
+        if (msgs.empty())
+        {
+            fprintf(stderr, "No pending netlink responses\n");
+            abort();
+        }
 
-    ret = sendmsg_link_dump(msgs, iov);
-    if (ret != 0)
-    {
+        ssize_t ret = 0;
+        auto data = reinterpret_cast<char*>(msg->msg_iov[0].iov_base);
+        while (!msgs.empty())
+        {
+            const auto& msg = msgs.front();
+            if (NLMSG_ALIGN(ret) + msg.size() > required_buf_size)
+            {
+                break;
+            }
+            ret = NLMSG_ALIGN(ret);
+            memcpy(data + ret, msg.data(), msg.size());
+            ret += msg.size();
+            msgs.pop();
+        }
         return ret;
     }
-
-    ret = sendmsg_ack(msgs, iov);
-    if (ret != 0)
-    {
-        return ret;
-    }
-
-    errno = ENOSYS;
-    return -1;
-}
-
-ssize_t recvmsg(int sockfd, struct msghdr* msg, int flags)
-{
-    auto it = mock_rtnetlinks.find(sockfd);
-    if (it == mock_rtnetlinks.end())
-    {
-        static auto real_recvmsg =
-            reinterpret_cast<decltype(&recvmsg)>(dlsym(RTLD_NEXT, "recvmsg"));
-        return real_recvmsg(sockfd, msg, flags);
-    }
-    auto& msgs = it->second;
-
-    validateMsgHdr(msg);
-    constexpr size_t required_buf_size = 8192;
-    if (msg->msg_iov[0].iov_len < required_buf_size)
-    {
-        fprintf(stderr, "recvmsg iov too short: %zu\n",
-                msg->msg_iov[0].iov_len);
-        abort();
-    }
-    if (msgs.empty())
-    {
-        fprintf(stderr, "No pending netlink responses\n");
-        abort();
-    }
-
-    ssize_t ret = 0;
-    auto data = reinterpret_cast<char*>(msg->msg_iov[0].iov_base);
-    while (!msgs.empty())
-    {
-        const auto& msg = msgs.front();
-        if (NLMSG_ALIGN(ret) + msg.size() > required_buf_size)
-        {
-            break;
-        }
-        ret = NLMSG_ALIGN(ret);
-        memcpy(data + ret, msg.data(), msg.size());
-        ret += msg.size();
-        msgs.pop();
-    }
-    return ret;
-}
 
 } // extern "C"

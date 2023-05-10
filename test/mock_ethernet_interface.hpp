@@ -13,8 +13,7 @@ class MockEthernetInterface : public EthernetInterface
     template <typename... Args>
     MockEthernetInterface(Args&&... args) :
         EthernetInterface(std::forward<Args>(args)..., /*nicEnabled=*/true)
-    {
-    }
+    {}
 
     MOCK_METHOD((ServerList), getNTPServerFromTimeSyncd, (), (override));
     MOCK_METHOD((ServerList), getNameServerFromResolvd, (), (override));

@@ -4,14 +4,15 @@
 #include <fmt/compile.h>
 #include <fmt/format.h>
 
-#include <exception>
-#include <fstream>
 #include <phosphor-logging/elog-errors.hpp>
-#include <stdexcept>
 #include <stdplus/fd/atomic.hpp>
 #include <stdplus/fd/fmt.hpp>
 #include <stdplus/gtest/tmp.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
+
+#include <exception>
+#include <fstream>
+#include <stdexcept>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

@@ -8,12 +8,13 @@
 #include <linux/sockios.h>
 #include <net/if.h>
 
-#include <algorithm>
-#include <optional>
 #include <phosphor-logging/lg2.hpp>
-#include <stdexcept>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/util/cexec.hpp>
+
+#include <algorithm>
+#include <optional>
+#include <stdexcept>
 #include <string_view>
 
 namespace phosphor::network::system
@@ -24,8 +25,8 @@ using std::literals::string_view_literals::operator""sv;
 static stdplus::Fd& getIFSock()
 {
     using namespace stdplus::fd;
-    static auto fd =
-        socket(SocketDomain::INet, SocketType::Datagram, SocketProto::IP);
+    static auto fd = socket(SocketDomain::INet, SocketType::Datagram,
+                            SocketProto::IP);
     return fd;
 }
 
@@ -85,8 +86,7 @@ EthInfo getEthInfo(stdplus::zstring_view ifname)
     return optionalIFReq(
                ifname, SIOCETHTOOL, "ETHTOOL"sv,
                [&](const ifreq&) {
-                   return EthInfo{.autoneg = edata.autoneg != 0,
-                                  .speed = edata.speed};
+        return EthInfo{.autoneg = edata.autoneg != 0, .speed = edata.speed};
                },
                &edata)
         .value_or(EthInfo{});
@@ -116,17 +116,16 @@ void deleteIntf(unsigned idx)
     ifinfomsg msg = {};
     msg.ifi_family = AF_UNSPEC;
     msg.ifi_index = idx;
-    netlink::performRequest(
-        NETLINK_ROUTE, RTM_DELLINK, NLM_F_REPLACE, msg,
-        [&](const nlmsghdr& hdr, std::string_view data) {
-            int err = 0;
-            if (hdr.nlmsg_type == NLMSG_ERROR)
-            {
-                err = netlink::extractRtData<nlmsgerr>(data).error;
-            }
-            throw std::runtime_error(
-                fmt::format("Failed to delete `{}`: {}", idx, strerror(err)));
-        });
+    netlink::performRequest(NETLINK_ROUTE, RTM_DELLINK, NLM_F_REPLACE, msg,
+                            [&](const nlmsghdr& hdr, std::string_view data) {
+        int err = 0;
+        if (hdr.nlmsg_type == NLMSG_ERROR)
+        {
+            err = netlink::extractRtData<nlmsgerr>(data).error;
+        }
+        throw std::runtime_error(
+            fmt::format("Failed to delete `{}`: {}", idx, strerror(err)));
+    });
 }
 
 } // namespace phosphor::network::system
