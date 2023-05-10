@@ -31,19 +31,16 @@ class Checked
 {
   public:
     struct unchecked
-    {
-    };
+    {};
 
     template <typename... Args>
     constexpr Checked(Args&&... args) : t(conCheck(std::forward<Args>(args)...))
-    {
-    }
+    {}
 
     template <typename... Args>
     constexpr Checked(unchecked, Args&&... args) :
         t(std::forward<Args>(args)...)
-    {
-    }
+    {}
 
     constexpr const T& get() const noexcept
     {

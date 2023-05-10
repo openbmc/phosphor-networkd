@@ -46,18 +46,16 @@ class IfAddr
     static void invalidPfx(uint8_t pfx);
 
   public:
-    constexpr IfAddr() : addr({}), pfx(0)
-    {
-    }
+    constexpr IfAddr() : addr({}), pfx(0) {}
 
     constexpr IfAddr(InAddrAny addr, uint8_t pfx) : addr(addr), pfx(pfx)
     {
         std::visit(
             [pfx](auto v) {
-                if (sizeof(v) * 8 < pfx)
-                {
-                    invalidPfx(pfx);
-                }
+            if (sizeof(v) * 8 < pfx)
+            {
+                invalidPfx(pfx);
+            }
             },
             addr);
     }
@@ -285,38 +283,38 @@ struct DecodeInt
             throw std::invalid_argument("Empty Str");
         }
         constexpr auto max = std::numeric_limits<T>::max();
-        auto ret =
-            std::accumulate(str.begin(), str.end(), T{}, [&](T r, char c) {
-                auto v = detail::charLookup[c];
-                if (v < 0 || v >= base)
+        auto ret = std::accumulate(str.begin(), str.end(), T{},
+                                   [&](T r, char c) {
+            auto v = detail::charLookup[c];
+            if (v < 0 || v >= base)
+            {
+                throw std::invalid_argument("Invalid numeral");
+            }
+            if constexpr (std::popcount(base) == 1)
+            {
+                constexpr auto shift = std::countr_zero(base);
+                constexpr auto maxshift = max >> shift;
+                if (r > maxshift)
                 {
-                    throw std::invalid_argument("Invalid numeral");
+                    throw std::overflow_error("Integer Decode");
                 }
-                if constexpr (std::popcount(base) == 1)
+                return (r << shift) | v;
+            }
+            else
+            {
+                constexpr auto maxbase = max / base;
+                if (r > maxbase)
                 {
-                    constexpr auto shift = std::countr_zero(base);
-                    constexpr auto maxshift = max >> shift;
-                    if (r > maxshift)
-                    {
-                        throw std::overflow_error("Integer Decode");
-                    }
-                    return (r << shift) | v;
+                    throw std::overflow_error("Integer Decode");
                 }
-                else
+                r *= base;
+                if (max - v < r)
                 {
-                    constexpr auto maxbase = max / base;
-                    if (r > maxbase)
-                    {
-                        throw std::overflow_error("Integer Decode");
-                    }
-                    r *= base;
-                    if (max - v < r)
-                    {
-                        throw std::overflow_error("Integer Decode");
-                    }
-                    return r + v;
+                    throw std::overflow_error("Integer Decode");
                 }
-            });
+                return r + v;
+            }
+        });
         return ret;
     }
 };
@@ -376,8 +374,7 @@ struct EncodeInt
 
 template <typename T>
 struct ToAddr
-{
-};
+{};
 
 template <>
 struct ToAddr<ether_addr>
@@ -524,8 +521,7 @@ struct ToAddr<IfAddr>
 
 template <typename T>
 struct ToStr
-{
-};
+{};
 
 template <>
 struct ToStr<char>
@@ -698,14 +694,14 @@ constexpr std::enable_if_t<vcontains<T, Types...>(), bool>
 {
     return std::visit(
         [t](auto v) {
-            if constexpr (std::is_same_v<T, decltype(v)>)
-            {
-                return v == t;
-            }
-            else
-            {
-                return false;
-            }
+        if constexpr (std::is_same_v<T, decltype(v)>)
+        {
+            return v == t;
+        }
+        else
+        {
+            return false;
+        }
         },
         v);
 }
@@ -777,26 +773,21 @@ namespace fmt
 {
 template <>
 struct formatter<ether_addr> : phosphor::network::detail::Format<ether_addr>
-{
-};
+{};
 template <>
 struct formatter<in_addr> : phosphor::network::detail::Format<in_addr>
-{
-};
+{};
 template <>
 struct formatter<in6_addr> : phosphor::network::detail::Format<in6_addr>
-{
-};
+{};
 template <>
-struct formatter<phosphor::network::InAddrAny>
-    : phosphor::network::detail::Format<phosphor::network::InAddrAny>
-{
-};
+struct formatter<phosphor::network::InAddrAny> :
+    phosphor::network::detail::Format<phosphor::network::InAddrAny>
+{};
 template <>
-struct formatter<phosphor::network::IfAddr>
-    : phosphor::network::detail::Format<phosphor::network::IfAddr>
-{
-};
+struct formatter<phosphor::network::IfAddr> :
+    phosphor::network::detail::Format<phosphor::network::IfAddr>
+{};
 } // namespace fmt
 
 namespace std

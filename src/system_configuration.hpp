@@ -5,8 +5,9 @@
 #include <sdbusplus/server/object.hpp>
 #include <stdplus/pinned.hpp>
 #include <stdplus/zstring.hpp>
-#include <string>
 #include <xyz/openbmc_project/Network/SystemConfiguration/server.hpp>
+
+#include <string>
 
 namespace phosphor
 {

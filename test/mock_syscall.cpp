@@ -14,13 +14,14 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <stdplus/raw.hpp>
+
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
 #include <map>
 #include <queue>
 #include <stdexcept>
-#include <stdplus/raw.hpp>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -151,8 +152,8 @@ ssize_t sendmsg_ack(std::queue<std::string>& msgs, std::string_view in)
     return in.size();
 }
 
-extern "C" {
-
+extern "C"
+{
 int ioctl(int fd, unsigned long int request, ...)
 {
     va_list vl;

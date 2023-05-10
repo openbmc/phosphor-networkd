@@ -6,10 +6,11 @@
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
+#include <xyz/openbmc_project/Common/error.hpp>
+
 #include <stdexcept>
 #include <string>
 #include <string_view>
-#include <xyz/openbmc_project/Common/error.hpp>
 
 namespace phosphor
 {
@@ -30,8 +31,7 @@ static auto makeObjPath(std::string_view root, IfAddr addr)
 
 template <typename T>
 struct Proto
-{
-};
+{};
 
 template <>
 struct Proto<in_addr>
@@ -49,8 +49,7 @@ IPAddress::IPAddress(sdbusplus::bus_t& bus, std::string_view objRoot,
                      stdplus::PinnedRef<EthernetInterface> parent, IfAddr addr,
                      AddressOrigin origin) :
     IPAddress(bus, makeObjPath(objRoot, addr), parent, addr, origin)
-{
-}
+{}
 
 IPAddress::IPAddress(sdbusplus::bus_t& bus,
                      sdbusplus::message::object_path objPath,

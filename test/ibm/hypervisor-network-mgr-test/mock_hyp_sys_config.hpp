@@ -17,8 +17,7 @@ class MockHypSysConfig : public phosphor::network::HypSysConfig
     MockHypSysConfig(sdbusplus::bus_t& bus, const std::string& objPath,
                      HypNetworkMgr& parent) :
         HypSysConfig(bus, objPath, parent)
-    {
-    }
+    {}
 
     void setHostname(std::string hn)
     {

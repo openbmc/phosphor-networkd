@@ -9,7 +9,6 @@
 
 #include <fmt/format.h>
 
-#include <chrono>
 #include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/manager.hpp>
@@ -20,6 +19,8 @@
 #include <sdeventplus/utility/timer.hpp>
 #include <stdplus/pinned.hpp>
 #include <stdplus/signal.hpp>
+
+#include <chrono>
 
 constexpr char DEFAULT_OBJPATH[] = "/xyz/openbmc_project/network";
 
@@ -34,8 +35,7 @@ class TimerExecutor : public DelayedExecutor
   public:
     TimerExecutor(sdeventplus::Event& event, std::chrono::seconds delay) :
         delay(delay), timer(event, nullptr)
-    {
-    }
+    {}
 
     void schedule() override
     {

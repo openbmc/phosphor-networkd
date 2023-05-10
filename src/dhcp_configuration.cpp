@@ -6,10 +6,11 @@
 
 #include <sys/stat.h>
 
-#include <filesystem>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
+
+#include <filesystem>
 
 namespace phosphor
 {

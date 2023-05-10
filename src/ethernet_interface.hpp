@@ -5,18 +5,19 @@
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
 #include "xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp"
 
-#include <optional>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <stdplus/pinned.hpp>
 #include <stdplus/zstring_view.hpp>
-#include <string>
-#include <vector>
 #include <xyz/openbmc_project/Collection/DeleteAll/server.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 #include <xyz/openbmc_project/Network/MACAddress/server.hpp>
 #include <xyz/openbmc_project/Network/VLAN/server.hpp>
 #include <xyz/openbmc_project/Object/Delete/server.hpp>
+
+#include <optional>
+#include <string>
+#include <vector>
 
 namespace phosphor
 {

@@ -1,8 +1,9 @@
 #pragma once
 #include "types.hpp"
 
-#include <cstdint>
 #include <stdplus/zstring_view.hpp>
+
+#include <cstdint>
 #include <string_view>
 
 namespace phosphor::network::system

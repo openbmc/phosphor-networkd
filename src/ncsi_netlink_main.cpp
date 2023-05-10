@@ -17,6 +17,7 @@
 #include "ncsi_util.hpp"
 
 #include <phosphor-logging/lg2.hpp>
+
 #include <string>
 #include <vector>
 

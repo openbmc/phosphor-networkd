@@ -2,9 +2,10 @@
 
 #include "config_parser.hpp"
 
-#include <filesystem>
 #include <sdbusplus/bus.hpp>
 #include <stdplus/gtest/tmp.hpp>
+
+#include <filesystem>
 
 #include <gtest/gtest.h>
 
@@ -24,8 +25,7 @@ class TestNetworkManager : public stdplus::gtest::TestWithTmp
     TestNetworkManager() :
         bus(sdbusplus::bus::new_default()),
         manager(bus, "/xyz/openbmc_test/abc", CaseTmpDir())
-    {
-    }
+    {}
 
     void deleteVLAN(std::string_view ifname)
     {

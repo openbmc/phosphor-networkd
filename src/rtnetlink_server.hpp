@@ -20,7 +20,6 @@ constexpr auto BUFSIZE = 4096;
  */
 class Server
 {
-
   public:
     /** @brief Constructor
      *

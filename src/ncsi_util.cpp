@@ -6,9 +6,10 @@
 #include <netlink/genl/genl.h>
 #include <netlink/netlink.h>
 
+#include <phosphor-logging/lg2.hpp>
+
 #include <iomanip>
 #include <iostream>
-#include <phosphor-logging/lg2.hpp>
 #include <vector>
 
 namespace phosphor
@@ -49,8 +50,7 @@ class Command
         std::span<const unsigned char> p = std::span<const unsigned char>()) :
         cmd(c),
         ncsi_cmd(nc), payload(p)
-    {
-    }
+    {}
 
     int cmd;
     int ncsi_cmd;
@@ -187,7 +187,6 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
             }
             if (channeltb[NCSI_CHANNEL_ATTR_LINK_STATE])
             {
-
                 auto link =
                     nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_LINK_STATE]);
                 lg2::debug("Channel Link State : {LINK_STATE}", "LINK_STATE",
@@ -237,8 +236,8 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     }
 
     auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
-    unsigned char* data =
-        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
+    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) +
+                          sizeof(NCSIPacketHeader);
     auto s = std::span<const unsigned char>(data, data_len);
 
     // Dump the response to stdout. Enhancement: option to save response data

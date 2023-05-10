@@ -4,11 +4,12 @@
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
-#include <array>
-#include <stdexcept>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/ops.hpp>
 #include <stdplus/raw.hpp>
+
+#include <array>
+#include <stdexcept>
 #include <system_error>
 
 using stdplus::raw::Aligned;
