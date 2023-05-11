@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "585d899a_b6024af4",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-11T01:47:20Z",
+      "side": 1,
+      "message": "Because of the `LambdaBodyIndentation: OuterScope` that arj/Ed added.",
+      "parentUuid": "3b4fc3de_71034ba3",
+      "revId": "a8164ae18ddf902f1687f233ad339485291f6c48",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3200edcc_b82f3ff4",
         "filename": "test/mock_syscall.cpp",
         "patchSetId": 1
@@ -31,6 +49,24 @@
       "writtenOn": "2023-05-11T01:39:50Z",
       "side": 1,
       "message": "Can we fix this to not indent? It\u0027s the same as `namespace`",
+      "revId": "a8164ae18ddf902f1687f233ad339485291f6c48",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee5b378a_4444654f",
+        "filename": "test/mock_syscall.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-11T01:47:20Z",
+      "side": 1,
+      "message": "It looks like there is a setting for that since clang-11.  Maybe the default changed.  I\u0027ll add an explicit value for that and we can apply it to docs.\n\nhttps://clang.llvm.org/docs/ClangFormatStyleOptions.html#indentexternblock",
+      "parentUuid": "3200edcc_b82f3ff4",
       "revId": "a8164ae18ddf902f1687f233ad339485291f6c48",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
