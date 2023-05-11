@@ -87,6 +87,24 @@
       "parentUuid": "3200edcc_b82f3ff4",
       "revId": "a8164ae18ddf902f1687f233ad339485291f6c48",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90ea9095_9f2204f3",
+        "filename": "test/mock_syscall.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-05-11T01:51:02Z",
+      "side": 1,
+      "message": "remote:   https://gerrit.openbmc.org/c/openbmc/docs/+/63385 clang-format: add IndentExternBlock setting [NEW]\n\nApplied here and docs.",
+      "parentUuid": "ee5b378a_4444654f",
+      "revId": "a8164ae18ddf902f1687f233ad339485291f6c48",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
