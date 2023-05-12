@@ -19,6 +19,8 @@
 #include <string>
 #include <vector>
 
+#define TOSTRING(x) #x
+
 namespace phosphor
 {
 namespace network
