@@ -1,0 +1,42 @@
+    1  cd  upstream/
+    2  ll
+    3  cd netdwoRA/
+    4  git status
+    5  clang -i src/ethernet_interface.cpp 
+    6  clang  src/ethernet_interface.cpp 
+    7  which clang
+    8  clang --version
+    9  sudo apt get-update clang
+   10  apt-get install clang
+   11  sudo apt-get install clang
+   12  clang --verson
+   13  clang --version
+   14  apt-get update clang
+   15  apt update
+   16  sudo apt update
+   17  sudo apt install clang-16.0
+   18  sudo apt install clang
+   19  clang --version
+   20  sudo apt install clang.16.0
+   21  sudo apt install clang-16
+   22  clang --version
+   23  which clang
+   24  clang --help
+   25  sudo apt install clang-16
+   26  sudo apt install clang-16.0.0-1
+   27  sudo apt install clang-16 --install-suggests
+   28  apt list --installed
+   29  apt list --installed | grep clang
+   30  which clang-16/lunar,now 1:16.0.0-1~exp5ubuntu3
+   31  where clang-16/lunar,now 1:16.0.0-1~exp5ubuntu3
+   32  which clang
+   33  clang-16/lunar,now 1:16.0.0-1~exp5ubuntu3 -i src/ethernet_interface.hpp 
+   34  sudo update-alternatives --list clang
+   35  sudo update-alternatives --set clang /usr/bin/clang-16
+   36  clang --version
+   37  clang -i src/ethernet_interface.hpp 
+   38  clang  src/ethernet_interface.hpp 
+   39  clang-format -i src/ethernet_interface.hpp 
+   40  clang-format -i src/ethernet_interface.cpp 
+   41  git diff src/ethernet_interface.cpp 
+   42  history > lhis
