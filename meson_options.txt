@@ -14,4 +14,8 @@ option('persist-mac', type: 'boolean',
        description: 'Permit the MAC address to be written to the systemd.network config')
 option('force-sync-mac', type: 'boolean',
        description: 'Force sync mac address no matter is first boot or not')
+option('dhcp-prefix-delegation', type: 'boolean',
+       description: 'Enable dhcp prefix delegation by default')
+option('uplink-interface-self', type: 'boolean',
+       description: 'Enable link uplink interface and set it to "self"')
 
