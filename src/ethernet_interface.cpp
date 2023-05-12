@@ -651,6 +651,13 @@ void EthernetInterface::writeConfigurationFile()
         lla.emplace_back("no");
 #endif
         network["IPv6AcceptRA"].emplace_back(ipv6AcceptRA() ? "true" : "false");
+        if (dhcp6())
+        {
+#ifdef SOLICIT_ENABLE_DHCP6_WITHOUT_RA
+            config.map["DHCPv6"].emplace_back()["WithoutRA"].emplace_back(
+                "solicit");
+#endif
+        }
         network["DHCP"].emplace_back(dhcp4() ? (dhcp6() ? "true" : "ipv4")
                                              : (dhcp6() ? "ipv6" : "false"));
         {
