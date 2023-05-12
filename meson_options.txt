@@ -14,4 +14,7 @@ option('persist-mac', type: 'boolean',
        description: 'Permit the MAC address to be written to the systemd.network config')
 option('force-sync-mac', type: 'boolean',
        description: 'Force sync mac address no matter is first boot or not')
+option('enable-dhcp6-without-ra', type: 'string',
+        value: 'no',
+        description: 'Enables stateful DHCPv6 without RA.')
 
