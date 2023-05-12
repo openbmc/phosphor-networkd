@@ -1,5 +1,7 @@
 [Match]
 Type=ether
+[DHCPv6]
+WithoutRA=@ENABLE_DHCP6_WITHOUT_RA@
 [Network]
 DHCP=true
 LinkLocalAddressing=@LINK_LOCAL_AUTOCONFIGURATION@
