@@ -22,6 +22,14 @@ conf_data.set(
 conf_data.set('SYNC_MAC_FROM_INVENTORY', get_option('sync-mac'))
 conf_data.set('PERSIST_MAC', get_option('persist-mac'))
 conf_data.set10('FORCE_SYNC_MAC_FROM_INVENTORY', get_option('force-sync-mac'))
+conf_data.set('DHCP_PREFIX_DELIGATION', get_option('dhcp-prefix-delegation'))
+
+if get_option('uplink-interface-self')
+    conf_data.set('UPLINK_INTERFACE', 'self')
+    if get_option('dhcp-prefix-delegation')
+        conf_data.set('SOLICIT_ENABLE_DHCP6_WITHOUT_RA', 'solicit')
+    endif
+endif
 
 sdbusplus_dep = dependency('sdbusplus')
 sdbusplusplus_prog = find_program('sdbus++', native: true)
