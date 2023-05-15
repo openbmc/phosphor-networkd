@@ -149,6 +149,10 @@ void EthernetInterface::updateInfo(const InterfaceInfo& info, bool skipSignal)
         EthernetInterfaceIntf::autoNeg(ethInfo.autoneg, skipSignal);
         EthernetInterfaceIntf::speed(ethInfo.speed, skipSignal);
     }
+    if (info.metric)
+    {
+        EthernetInterfaceIntf::mtu(*info.metric, skipSignal);
+    }
 }
 
 bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
@@ -356,6 +360,16 @@ bool EthernetInterface::dhcp4(bool value)
 bool EthernetInterface::dhcp6(bool value)
 {
     if (dhcp6() != EthernetInterfaceIntf::dhcp6(value))
+    {
+        writeConfigurationFile();
+        manager.get().reloadConfigs();
+    }
+    return value;
+}
+
+uint32_t EthernetInterface::metric(bool value)
+{
+    if (metric() != EthernetInterfaceIntf::metric(value))
     {
         writeConfigurationFile();
         manager.get().reloadConfigs();
@@ -692,24 +706,26 @@ void EthernetInterface::writeConfigurationFile()
                 }
             }
         }
+    }
+    {
+        auto& routes = config.map["Route"].emplace_back();
+        if (!dhcp4())
         {
-            auto& gateways = network["Gateway"];
-            if (!dhcp4())
+            routes["Metric"].emplace_back(std::to_string(metric()));
+            auto gateway = EthernetInterfaceIntf::defaultGateway();
+            if (!gateway.empty())
             {
-                auto gateway = EthernetInterfaceIntf::defaultGateway();
-                if (!gateway.empty())
-                {
-                    gateways.emplace_back(gateway);
-                }
+                routes["Gateway"].emplace_back(gateway);
             }
+        }
 
-            if (!dhcp6())
+        if (!dhcp6())
+        {
+            routes["Metric"].emplace_back(std::to_string(metric()));
+            auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
+            if (!gateway6.empty())
             {
-                auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
-                if (!gateway6.empty())
-                {
-                    gateways.emplace_back(gateway6);
-                }
+                routes["Gateway"].emplace_back(gateway6);
             }
         }
     }
@@ -736,6 +752,7 @@ void EthernetInterface::writeConfigurationFile()
                                                                 : "false");
         dhcp["SendHostname"].emplace_back(conf.sendHostNameEnabled() ? "true"
                                                                      : "false");
+        dhcp["RouteMetric"].emplace_back(std::to_string(metric()));
     }
     auto path =
         config::pathForIntfConf(manager.get().getConfDir(), interfaceName());

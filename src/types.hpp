@@ -91,6 +91,7 @@ struct InterfaceInfo
     std::optional<unsigned> parent_idx = std::nullopt;
     std::optional<std::string> kind = std::nullopt;
     std::optional<uint16_t> vlan_id = std::nullopt;
+    std::optional<unsigned> metric = std::nullopt;
 
     constexpr bool operator==(const InterfaceInfo& rhs) const noexcept
     {

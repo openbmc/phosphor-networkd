@@ -158,6 +158,12 @@ class EthernetInterface : public Ifaces
     bool ipv6AcceptRA(bool value) override;
     using EthernetInterfaceIntf::ipv6AcceptRA;
 
+    /** @brief sets the default metric for interface routes.
+     *
+     */
+    uint32_t metric(bool value);
+    using EthernetInterfaceIntf::metric;
+
     /** @brief sets the NTP servers.
      *  @param[in] value - vector of NTP servers.
      */
