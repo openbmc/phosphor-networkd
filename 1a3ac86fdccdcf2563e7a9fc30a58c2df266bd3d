@@ -18,6 +18,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c19ef928_51399b21",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-05-15T16:00:58Z",
+      "side": 1,
+      "message": "IMO this feature needs to be disabled by default. I expect most IPv6 environments are going to have both an RA and a DHCPv6 server if they\u0027re not using SLAAC. In that instance WithoutRA will not be consulted by systemd-networkd.",
+      "revId": "1a3ac86fdccdcf2563e7a9fc30a58c2df266bd3d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ea110db2_39e6d5c7",
@@ -31,6 +48,41 @@
       "writtenOn": "2023-05-14T16:36:11Z",
       "side": 1,
       "message": "\"information-request\"",
+      "revId": "1a3ac86fdccdcf2563e7a9fc30a58c2df266bd3d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "310fb536_1ebcb867",
+        "filename": "meson_options.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-05-15T16:00:58Z",
+      "side": 1,
+      "message": "The systemd.network man page indicates the default value for this entry is \"solicit\" only when\n\"If this is not specified, \"solicit\" is used when DHCPPrefixDelegation\u003d is enabled and UplinkInterface\u003d:self is specified in the [DHCPPrefixDelegation] section\"\nOtherwise it is assigned a value of \"no\".\nThe default value here needs to follow that paradigm.\nIf some other value is desired the company desiring a new value needs to be responsible for enabling something different.",
+      "parentUuid": "ea110db2_39e6d5c7",
+      "revId": "1a3ac86fdccdcf2563e7a9fc30a58c2df266bd3d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a39268a_2cc3f80f",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-05-15T16:00:58Z",
+      "side": 1,
+      "message": "Why doesn\u0027t the #ifdef also wrap the \u0027if (dhcp6())\u0027 portion of this too?",
       "revId": "1a3ac86fdccdcf2563e7a9fc30a58c2df266bd3d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
