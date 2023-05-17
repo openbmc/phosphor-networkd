@@ -209,6 +209,24 @@
       "parentUuid": "9a6f3ec3_1430ba75",
       "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75f9f08d_b0045c5f",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-05-17T09:29:00Z",
+      "side": 1,
+      "message": "Hi Johnathan, If I understand this correctly:\n\n1. Do not allow DHCPv6 client to work at BMC, if there is no router in the network. \u003d\u003e \nWe have some commits in flight where this network setting (WithoutRA) is controlled by a meson feature flag. With this, systems which are planning to support standalone DHCPv6 server (without a router in the network) can use this option to enable BMC to send out the DHCPv6 request packets without getting a ping from the Ipv6 router. \n@Ravi - this code needs to be modified to check the feature flag and then update the configuration file.\n\n2. IPMI does not provide a way to independently toggle the IPv6AcceptRA flag.\n\u003d\u003e \nRedfish provides the same functionality. Ravi has a bmcweb commit where he has separated out the SLAAC and Stateful DHCPv6 settings via that interface. \n\nAre these changes breaking IPMI? Since networkd has independent settings to enable the user to consume dynamic IPv6 in various ways, i think IPMI should be enhanced to provide a user interface for the same.",
+      "parentUuid": "244f0e60_85f14544",
+      "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
