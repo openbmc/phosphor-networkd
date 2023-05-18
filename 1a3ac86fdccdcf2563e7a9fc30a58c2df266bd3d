@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f74b769b_bd36c542",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-05-18T13:53:38Z",
+      "side": 1,
+      "message": "1/ Intent of this commit is to start the Stateful DHCP without the RA.\nNormal behavior is : if  RA message has the managed flag then the DHCPv6 client started, Now here we want to start the DHCPv6 client without having dependency on the RA message?\n\n2/ man page says \n\"if this is not specified, \"solicit\" is used when DHCPPrefixDelegation\u003d is enabled and UplinkInterface\u003d:self is specified in the [DHCPPrefixDelegation] section. Otherwise, defaults to \"no\", and the DHCPv6 client will be started when an RA is received\".\n\nAre we setting the [DHCPPrefixDelegation] [UplinkInterface] too?\n\nAlso please update the ethreal capture too",
+      "revId": "1a3ac86fdccdcf2563e7a9fc30a58c2df266bd3d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2a224715_cd47dace",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -101,6 +118,24 @@
       "writtenOn": "2023-05-18T09:37:31Z",
       "side": 1,
       "message": "Ack",
+      "parentUuid": "310fb536_1ebcb867",
+      "revId": "1a3ac86fdccdcf2563e7a9fc30a58c2df266bd3d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f283f1bf_310450a8",
+        "filename": "meson_options.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-05-18T13:53:38Z",
+      "side": 1,
+      "message": "typo: information-request",
       "parentUuid": "310fb536_1ebcb867",
       "revId": "1a3ac86fdccdcf2563e7a9fc30a58c2df266bd3d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
