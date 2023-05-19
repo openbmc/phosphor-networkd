@@ -262,6 +262,24 @@
       "parentUuid": "75f9f08d_b0045c5f",
       "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "878a0b95_962ed632",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1000053
+      },
+      "writtenOn": "2023-05-19T07:41:17Z",
+      "side": 1,
+      "message": "I\u0027m not going to comment on IPMI vs Redfish spec, my understanding \u0026 feedback on the DHCPv6 in general is:\nRouter with RA support in network is not a must to support DHCPv6. Router\u0027s RA can also act as a triggering point to initiate dhcpv6 message exchanges. \n\n   A client initiates a message exchange with a server or servers to\n   acquire or update configuration information of interest.  A client\n   has many reasons to initiate the configuration exchange.  Some of the\n   more common ones are:\n\n   1.  as part of the operating system configuration/bootstrap process,\n\n   2.  when requested to do so by the application layer (through an\n       operating-system-specific API),\n\n   3.  when a Router Advertisement indicates that DHCPv6 is available\n       for address configuration (see Section 4.2 of [RFC4861]),\n\n   4.  as required to extend the lifetime of address(es) and/or\n       delegated prefix(es), using Renew and Rebind messages, or\n\n   5.  upon the receipt of a Reconfigure message, when requested to do\n       so by a server.",
+      "parentUuid": "bc549e69_5f85704b",
+      "revId": "de1f8d5c2ee6816911329277450e849ecabae53a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
