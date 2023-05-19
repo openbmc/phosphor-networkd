@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd0c58ce_69ab4b63",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001786
+      },
+      "writtenOn": "2023-05-19T15:40:08Z",
+      "side": 1,
+      "message": "This is the draft change about metrics for interface routes. It have to be polished but I want to get feedback first about this particular option. Metric option also should be added in phosphor-dbus-interfaces for ethernet interface.",
+      "revId": "e5ee01af77eedb3e7fbe6bb898d22a30e71dbf3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e09ffa4a_c143bac2",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1001786
+      },
+      "writtenOn": "2023-05-19T15:40:08Z",
+      "side": 1,
+      "message": "Need it to be read on interface startup from systemd config as other options doing right now?",
+      "revId": "e5ee01af77eedb3e7fbe6bb898d22a30e71dbf3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
