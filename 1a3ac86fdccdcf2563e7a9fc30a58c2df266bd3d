@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6c297b25_5a3b97e7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-05-19T07:31:35Z",
+      "side": 1,
+      "message": "\u003e Normal behavior is : if RA message has the managed flag then the DHCPv6 client started, Now here we want to start the DHCPv6 client without having dependency on the RA message?\n\nYes Ratan. That was the intent. \n\n\u003e Are we setting the [DHCPPrefixDelegation] [UplinkInterface] too?\n\nWe should add these parameters as well, if (1) is acceptable to the community. I see IPMI has concerns about enabling this. So, there should be meson flags to get this set to the desired values via the recipes.",
+      "parentUuid": "584dbbcc_fd57ff1c",
+      "revId": "1a3ac86fdccdcf2563e7a9fc30a58c2df266bd3d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2a224715_cd47dace",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
