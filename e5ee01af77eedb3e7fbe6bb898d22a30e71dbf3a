@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "4df8b795_42589461",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001786
+      },
+      "writtenOn": "2023-05-22T11:21:48Z",
+      "side": 1,
+      "message": "As example, by default usually all configuration/manipulation/setup going through eth1 interface, both my interfaces (eth0, eth1) in correct state and both using DHCP. I\u0027m using eth1 as main one for everything but I want to change eth0 setup to Static but I did it wrong and because of this phosphor-networkd added default route via eth0 which leads to connection break via eth1 \u003d\u003e both connections are broken due to incorrect setup. So, it helps to set explicitly which interface route is primary even with wrong setup on eth0/eth1. If I set route metric 0 for eth1 - 0 and for eth0 - 1024, eth1 will be all the time accessible even with broken setup of eth0 and vice versa.",
+      "parentUuid": "4ecff9db_8c9a8c93",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 20
+      },
+      "revId": "e5ee01af77eedb3e7fbe6bb898d22a30e71dbf3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "fd0c58ce_69ab4b63",
