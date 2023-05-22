@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ab12ca8_09f1b9f2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-05-22T17:59:40Z",
+      "side": 1,
+      "message": "Not certain the new config file entries are required.",
+      "revId": "c0ce357e9cd7340fb901e7280cb92f5ac076ae53",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
