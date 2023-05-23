@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e62b8b9d_96bc1173",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-05-23T09:05:30Z",
+      "side": 1,
+      "message": "These configurations are needed in specific combinations - to support the standalone DHCPv6 server (Without RA). This usecase is as per the RFC and it is a use case for the meta-ibm layer. Grouped at https://gerrit.openbmc.org/q/topic:WithoutRA\n\nThe default values under meta-phosphor will remain the same as the systemd.network defaults. So, this will not break any systems.",
+      "parentUuid": "370bcc18_6d37df5d",
+      "revId": "1a3ac86fdccdcf2563e7a9fc30a58c2df266bd3d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2a224715_cd47dace",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
