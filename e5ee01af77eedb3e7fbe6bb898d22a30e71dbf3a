@@ -120,6 +120,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb2e7cec_7a3fb7d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-05-23T09:04:07Z",
+      "side": 1,
+      "message": "This is a DMTF repo. You will get access to this if you are a member of the Redfish DMTF community. This has details on the same usecase where we wanted to get the metric and static route added.",
+      "parentUuid": "d6757ea1_dde6bcf4",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 20
+      },
+      "revId": "e5ee01af77eedb3e7fbe6bb898d22a30e71dbf3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "fd0c58ce_69ab4b63",
