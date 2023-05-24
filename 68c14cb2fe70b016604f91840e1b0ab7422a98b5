@@ -68,6 +68,23 @@
       "message": "William/Ratan\n\ncan you please review this commit?",
       "revId": "68c14cb2fe70b016604f91840e1b0ab7422a98b5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8caa4ac8_6219f80d",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2023-05-24T10:15:26Z",
+      "side": 1,
+      "message": "We can optimise if and if..else condition by checking common conditions \"info.scope \u003d\u003d RT_SCOPE_UNIVERSE\" only once in top and \"info.flags \u0026 IFA_F_NOPREFIXROUTE\" only once for if..else conditions.",
+      "revId": "68c14cb2fe70b016604f91840e1b0ab7422a98b5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
