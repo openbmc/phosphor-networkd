@@ -44,7 +44,7 @@ Configuration::Configuration(sdbusplus::bus_t& bus,
     }
     if (newest_file != std::filesystem::directory_entry{})
     {
-        lg2::info("Using DHCP options from {FILE}", "FILE",
+        lg2::info("Using DHCP options from {CFG_FILE}", "CFG_FILE",
                   newest_file.path().native());
         conf.setFile(newest_file.path());
     }

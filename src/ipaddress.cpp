@@ -90,10 +90,10 @@ void IPAddress::delete_()
 {
     if (origin() != IP::AddressOrigin::Static)
     {
-        lg2::error("Tried to delete a non-static address {IP_ADDRESS} prefix "
-                   "{PREFIX} interface {INTERFACE_NAME}",
-                   "IP_ADDRESS", address(), "PREFIX", prefixLength(),
-                   "INTERFACE_NAME", parent.get().interfaceName());
+        lg2::error("Tried to delete a non-static address {NET_IP} prefix "
+                   "{NET_PFX} interface {NET_INTF}",
+                   "NET_IP", address(), "NET_PFX", prefixLength(), "NET_INTF",
+                   parent.get().interfaceName());
         elog<InternalFailure>();
     }
 

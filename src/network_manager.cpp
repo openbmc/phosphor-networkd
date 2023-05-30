@@ -186,7 +186,7 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
     }
     if (!info.intf.name)
     {
-        lg2::error("Can't create interface without name: {IFIDX}", "IFIDX",
+        lg2::error("Can't create interface without name: {NET_IDX}", "NET_IDX",
                    info.intf.idx);
         return;
     }
@@ -216,8 +216,8 @@ void Manager::addInterface(const InterfaceInfo& info)
             if (!ignored.contains(*info.name))
             {
                 ignored.emplace(*info.name);
-                lg2::info("Ignoring interface {INTERFACE_NAME}",
-                          "INTERFACE_NAME", *info.name);
+                lg2::info("Ignoring interface {NET_INTF}", "NET_INTF",
+                          *info.name);
             }
             ignoredIntf.emplace(info.idx);
             return;
@@ -399,7 +399,7 @@ void Manager::addDefGw(unsigned ifidx, InAddrAny addr)
     }
     else if (!ignoredIntf.contains(ifidx))
     {
-        lg2::error("Interface {IFIDX} not found for gw", "IFIDX", ifidx);
+        lg2::error("Interface {NET_IDX} not found for gw", "NET_IDX", ifidx);
     }
 }
 
@@ -461,7 +461,7 @@ ObjectPath Manager::vlan(std::string interfaceName, uint32_t id)
 {
     if (id == 0 || id >= 4095)
     {
-        lg2::error("VLAN ID {VLAN_ID} is not valid", "VLAN_ID", id);
+        lg2::error("VLAN ID {NET_VLAN} is not valid", "NET_VLAN", id);
         elog<InvalidArgument>(
             Argument::ARGUMENT_NAME("VLANId"),
             Argument::ARGUMENT_VALUE(std::to_string(id).c_str()));

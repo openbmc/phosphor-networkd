@@ -173,15 +173,17 @@ inline auto systemdParseLast(const config::Parser& config,
     else if (auto str = config.map.getLastValueString(section, key);
              str == nullptr)
     {
-        lg2::notice("Unable to get the value of {SECTION}[{KEY}] from {FILE}",
-                    "SECTION", section, "KEY", key, "FILE",
-                    config.getFilename());
+        lg2::notice(
+            "Unable to get the value of {CFG_SEC}[{CFG_KEY}] from {CFG_FILE}",
+            "CFG_SEC", section, "CFG_KEY", key, "CFG_FILE",
+            config.getFilename());
     }
     else if (auto val = fun(*str); !val)
     {
-        lg2::notice("Invalid value of {SECTION}[{KEY}] from {FILE}: {VALUE}",
-                    "SECTION", section, "KEY", key, "FILE",
-                    config.getFilename(), "VALUE", *str);
+        lg2::notice(
+            "Invalid value of {CFG_SEC}[{CFG_KEY}] from {CFG_FILE}: {CFG_VAL}",
+            "CFG_SEC", section, "CFG_KEY", key, "CFG_FILE",
+            config.getFilename(), "CFG_VAL", *str);
     }
     else
     {
