@@ -57,9 +57,8 @@ void setFirstBootMACOnInterface(const std::string& intf, const std::string& mac)
             auto returnMAC = interface.second->macAddress(mac);
             if (returnMAC == mac)
             {
-                lg2::info(
-                    "Setting MAC {MAC_ADDRESS} on interface {INTERFACE_NAME}",
-                    "MAC_ADDRESS", mac, "INTERFACE_NAME", intf);
+                lg2::info("Setting MAC {NET_MAC} on interface {NET_INTF}",
+                          "NET_MAC", mac, "NET_INTF", intf);
                 std::error_code ec;
                 if (std::filesystem::is_directory("/var/lib/network", ec))
                 {
@@ -101,8 +100,8 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
 
     if (objectTree.empty())
     {
-        lg2::error("No Object has implemented the interface {INTERFACE_NAME}",
-                   "INTERFACE_NAME", invNetworkIntf);
+        lg2::error("No Object has implemented the interface {NET_INTF}",
+                   "NET_INTF", invNetworkIntf);
         elog<InternalFailure>();
     }
 
@@ -120,8 +119,8 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
         // interface name
         for (const auto& object : objectTree)
         {
-            lg2::info("Get info on interface {INTERFACE_NAME}, object {OBJECT}",
-                      "INTERFACE_NAME", interfaceName, "OBJECT", object.first);
+            lg2::info("Get info on interface {NET_INTF}, object {OBJ}",
+                      "NET_INTF", interfaceName, "OBJ", object.first);
 
             if (std::string::npos != object.first.find(interfaceName.c_str()))
             {
@@ -133,9 +132,8 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
 
         if (objPath.empty())
         {
-            lg2::error(
-                "Can't find the object for the interface {INTERFACE_NAME}",
-                "INTERFACE_NAME", interfaceName);
+            lg2::error("Can't find the object for the interface {NET_INTF}",
+                       "NET_INTF", interfaceName);
             elog<InternalFailure>();
         }
     }
@@ -148,9 +146,9 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
     auto reply = bus.call(method);
     if (reply.is_method_error())
     {
-        lg2::error("Failed to get MACAddress for path {PATH} interface "
-                   "{INTERFACE_NAME}",
-                   "PATH", objPath, "INTERFACE_NAME", invNetworkIntf);
+        lg2::error(
+            "Failed to get MACAddress for path {DBUS_PATH} interface {DBUS_INTF}",
+            "DBUS_PATH", objPath, "DBUS_INTF", invNetworkIntf);
         elog<InternalFailure>();
     }
 
@@ -167,9 +165,9 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
         if (inventoryMAC != ether_addr{})
         {
             auto macStr = std::to_string(inventoryMAC);
-            lg2::info("Mac Address {MAC_ADDRESS} in Inventory on Interface "
-                      "{INTERFACE_NAME}",
-                      "MAC_ADDRESS", macStr, "INTERFACE_NAME", intfname);
+            lg2::info(
+                "Mac Address {NET_MAC} in Inventory on Interface {NET_INTF}",
+                "NET_MAC", macStr, "NET_INTF", intfname);
             setFirstBootMACOnInterface(intfname, macStr);
             first_boot_status.push_back(intfname);
             bool status = true;
@@ -179,9 +177,8 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
                                 first_boot_status.end(),
                                 keys.key()) != first_boot_status.end()))
                 {
-                    lg2::info(
-                        "Interface {INTERFACE_NAME} MAC is NOT set from VPD",
-                        "INTERFACE_NAME", keys.key());
+                    lg2::info("Interface {NET_INTF} MAC is NOT set from VPD",
+                              "NET_INTF", keys.key());
                     status = false;
                 }
             }
@@ -288,8 +285,8 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
 
         for (const auto& interfaces : interfacesProperties)
         {
-            lg2::info("Check {INTERFACE_NAME} for sdbus response",
-                      "INTERFACE_NAME", interfaces.first);
+            lg2::info("Check {DBUS_INTF} for sdbus response", "DBUS_INTF",
+                      interfaces.first);
             if (interfaces.first ==
                 "xyz.openbmc_project.Network.EthernetInterface")
             {

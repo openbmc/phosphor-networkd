@@ -67,8 +67,8 @@ inline auto optionalIFReq(stdplus::zstring_view ifname, unsigned long long cmd,
             if (unsupported.find(ukey) == unsupported.end())
             {
                 unsupported.emplace(std::move(ukey));
-                lg2::info("{CMD_NAME} not supported on {INTERFACE_NAME}",
-                          "CMD_NAME", cmdname, "INTERFACE_NAME", ifname);
+                lg2::info("{NET_IFREQ} not supported on {NET_INTF}",
+                          "NET_IFREQ", cmdname, "NET_INTF", ifname);
             }
             return ret;
         }
