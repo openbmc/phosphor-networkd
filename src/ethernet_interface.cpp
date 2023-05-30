@@ -444,18 +444,13 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
                                   Argument::ARGUMENT_VALUE(ip.c_str()));
         }
     }
-    try
-    {
-        EthernetInterfaceIntf::staticNameServers(value);
 
-        writeConfigurationFile();
-        manager.get().reloadConfigs();
-    }
-    catch (const InternalFailure& e)
-    {
-        lg2::error("Exception processing DNS entries: {ERROR}", "ERROR", e);
-    }
-    return EthernetInterfaceIntf::staticNameServers();
+    value = EthernetInterfaceIntf::staticNameServers(std::move(value));
+
+    writeConfigurationFile();
+    manager.get().reloadConfigs();
+
+    return value;
 }
 
 void EthernetInterface::loadNTPServers(const config::Parser& config)
@@ -602,18 +597,12 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
 
 ServerList EthernetInterface::staticNTPServers(ServerList value)
 {
-    try
-    {
-        EthernetInterfaceIntf::staticNTPServers(value);
+    value = EthernetInterfaceIntf::staticNTPServers(std::move(value));
 
-        writeConfigurationFile();
-        manager.get().reloadConfigs();
-    }
-    catch (InternalFailure& e)
-    {
-        lg2::error("Exception processing NTP entries: {ERROR}", "ERROR", e);
-    }
-    return EthernetInterfaceIntf::staticNTPServers();
+    writeConfigurationFile();
+    manager.get().reloadConfigs();
+
+    return value;
 }
 
 ServerList EthernetInterface::ntpServers(ServerList /*servers*/)
