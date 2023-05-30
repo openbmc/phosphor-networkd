@@ -41,6 +41,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "14d18ef9_fc210063",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 740,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-05-30T11:08:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de7756db_dd09791a",
+      "revId": "0f1d6041ec900711e733d5adcc3303dea9f52443",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f7762bdc_323e31d0",
@@ -54,6 +72,24 @@
       "writtenOn": "2023-05-30T11:08:15Z",
       "side": 1,
       "message": "Couldn\u0027t find \"SendHostname\" under DHCPv6 section",
+      "revId": "0f1d6041ec900711e733d5adcc3303dea9f52443",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d911aa0_359e369e",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-05-30T11:08:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f7762bdc_323e31d0",
       "revId": "0f1d6041ec900711e733d5adcc3303dea9f52443",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
