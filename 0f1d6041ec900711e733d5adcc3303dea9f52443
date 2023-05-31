@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "096a70c7_d9777db8",
+        "filename": "src/dhcp_configuration.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2023-05-31T07:44:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "964c1a41_9fee88c1",
+      "range": {
+        "startLine": 25,
+        "startChar": 52,
+        "endLine": 25,
+        "endChar": 71
+      },
+      "revId": "0f1d6041ec900711e733d5adcc3303dea9f52443",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de7756db_dd09791a",
@@ -107,6 +131,30 @@
       "writtenOn": "2023-05-30T11:08:15Z",
       "side": 1,
       "message": "Can use already available \"string_umap\" (defined in util file) like the below?\n```\nstring_umap\u003cstd::unique_ptr\u003cdhcp::Configuration\u003e\u003e dhcpConfigs;\n```",
+      "range": {
+        "startLine": 263,
+        "startChar": 4,
+        "endLine": 263,
+        "endChar": 22
+      },
+      "revId": "0f1d6041ec900711e733d5adcc3303dea9f52443",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a7d0a7c_b7eb9bd0",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2023-05-31T07:44:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a8160cc_93c25c6f",
       "range": {
         "startLine": 263,
         "startChar": 4,
