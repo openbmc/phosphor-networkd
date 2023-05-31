@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "29f3c90b_6467d13e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-05-31T13:51:03Z",
+      "side": 1,
+      "message": "Tested by section should be made mandatory for this repo as this is a sensitive and important application for the server. \nIf the changes are trivial; at least a sanity test needs to be done to ensure nothing broken.",
+      "revId": "b578bea87b4887fb87e5498abdb25efcf695a1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a439fe47_0dcbf900",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 1
