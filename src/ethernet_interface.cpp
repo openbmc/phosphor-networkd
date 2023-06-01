@@ -683,6 +683,15 @@ void EthernetInterface::writeConfigurationFile()
             {
                 if (originIsManuallyAssigned(addr.second->origin()))
                 {
+                    if ((std::holds_alternative<in_addr>(
+                            addr.first.getAddr())) &&
+                        (std::get<0>(addr.first.getAddr()).s_addr == 0))
+                    {
+                        // Avoid writing 0.0.0.0 to the configuration
+                        // file. Allowing 0.0.0.0 to be written causes
+                        // random 192 NAT addresses to be self-assigned.
+                        continue;
+                    }
                     address.emplace_back(
                         fmt::format("{}/{}", addr.second->address(),
                                     addr.second->prefixLength()));
