@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e06bb659_847951ef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-06-01T22:21:00Z",
+      "side": 1,
+      "message": "Proposed fix so that we don\u0027t end up with a spurious object either\nhttps://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/60772",
+      "revId": "afc5c71a7484c471155e55670f09922524c2bdfa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
