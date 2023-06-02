@@ -10,6 +10,7 @@
 
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/fd/create.hpp>
+#include <stdplus/hash/tuple.hpp>
 #include <stdplus/util/cexec.hpp>
 
 #include <algorithm>

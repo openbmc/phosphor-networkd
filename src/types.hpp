@@ -134,18 +134,6 @@ struct NeighborInfo
     }
 };
 
-constexpr std::size_t hash_multi() noexcept
-{
-    return 0;
-}
-
-template <typename T, typename... Args>
-constexpr std::size_t hash_multi(const T& v, const Args&... args) noexcept
-{
-    const std::size_t seed = hash_multi(args...);
-    return seed ^ (std::hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2));
-}
-
 namespace detail
 {
 
@@ -732,15 +720,6 @@ struct Format
 } // namespace detail
 } // namespace network
 } // namespace phosphor
-
-template <typename... Ts>
-struct std::hash<std::tuple<Ts...>>
-{
-    constexpr auto operator()(const std::tuple<Ts...>& t) const noexcept
-    {
-        return std::apply(phosphor::network::hash_multi<Ts...>, t);
-    }
-};
 
 template <>
 struct std::hash<in_addr>

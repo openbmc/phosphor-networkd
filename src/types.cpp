@@ -2,6 +2,8 @@
 
 #include <fmt/format.h>
 
+#include <stdplus/hash.hpp>
+
 void phosphor::network::IfAddr::invalidPfx(uint8_t pfx)
 {
     throw std::invalid_argument(fmt::format("Invalid prefix {}", pfx));
@@ -9,19 +11,18 @@ void phosphor::network::IfAddr::invalidPfx(uint8_t pfx)
 
 std::size_t std::hash<in_addr>::operator()(in_addr addr) const noexcept
 {
-    return std::hash<decltype(addr.s_addr)>{}(addr.s_addr);
+    return stdplus::hashMulti(addr.s_addr);
 }
 
 std::size_t std::hash<in6_addr>::operator()(in6_addr addr) const noexcept
 {
-    return phosphor::network::hash_multi(addr.s6_addr32[0], addr.s6_addr32[1],
-                                         addr.s6_addr32[2], addr.s6_addr32[3]);
+    return stdplus::hashMulti(addr.s6_addr32);
 }
 
 std::size_t std::hash<phosphor::network::IfAddr>::operator()(
     phosphor::network::IfAddr addr) const noexcept
 {
-    return phosphor::network::hash_multi(addr.getAddr(), addr.getPfx());
+    return stdplus::hashMulti(addr.getAddr(), addr.getPfx());
 }
 
 std::string std::to_string(ether_addr value)
