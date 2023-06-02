@@ -134,16 +134,6 @@ struct NeighborInfo
     }
 };
 
-struct string_hash : public std::hash<std::string_view>
-{
-    using is_transparent = void;
-};
-template <typename V>
-using string_umap =
-    std::unordered_map<std::string, V, string_hash, std::equal_to<>>;
-using string_uset =
-    std::unordered_set<std::string, string_hash, std::equal_to<>>;
-
 constexpr std::size_t hash_multi() noexcept
 {
     return 0;

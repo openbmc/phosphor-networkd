@@ -10,6 +10,7 @@
 #include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/bus/match.hpp>
+#include <stdplus/str/maps.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <filesystem>
@@ -28,7 +29,8 @@ using DbusObjectPath = std::string;
 using DbusInterface = std::string;
 using PropertyValue = std::string;
 using DbusService = std::string;
-using ObjectTree = string_umap<string_umap<std::vector<std::string>>>;
+using ObjectTree =
+    stdplus::string_umap<stdplus::string_umap<std::vector<std::string>>>;
 
 constexpr auto firstBootPath = "/var/lib/network/firstBoot_";
 constexpr auto configFile = "/usr/share/network/config.json";

@@ -2,10 +2,10 @@
 
 #include "hyp_ethernet_interface.hpp"
 #include "hyp_sys_config.hpp"
-#include "types.hpp"
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
+#include <stdplus/str/maps.hpp>
 
 namespace phosphor
 {
@@ -47,7 +47,7 @@ enum BiosBaseTableIndex
 };
 
 using SystemConfPtr = std::unique_ptr<HypSysConfig>;
-using ethIntfMapType = string_umap<std::unique_ptr<HypEthInterface>>;
+using ethIntfMapType = stdplus::string_umap<std::unique_ptr<HypEthInterface>>;
 
 /** @class Manager
  *  @brief Implementation for the

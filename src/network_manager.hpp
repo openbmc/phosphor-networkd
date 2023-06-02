@@ -10,6 +10,7 @@
 #include <sdbusplus/bus/match.hpp>
 #include <sdbusplus/message/native_types.hpp>
 #include <stdplus/pinned.hpp>
+#include <stdplus/str/maps.hpp>
 #include <stdplus/zstring_view.hpp>
 #include <xyz/openbmc_project/Common/FactoryReset/server.hpp>
 
@@ -111,7 +112,7 @@ class Manager : public ManagerIface
 
     /** @brief Persistent map of EthernetInterface dbus objects and their names
      */
-    string_umap<std::unique_ptr<EthernetInterface>> interfaces;
+    stdplus::string_umap<std::unique_ptr<EthernetInterface>> interfaces;
     std::unordered_map<unsigned, EthernetInterface*> interfacesByIdx;
     std::unordered_set<unsigned> ignoredIntf;
 
