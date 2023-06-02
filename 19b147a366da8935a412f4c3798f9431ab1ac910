@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69ce87d4_5656982e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-02T17:38:34Z",
+      "side": 1,
+      "message": "Would like to see this, and the validate GW commits enter service soon.",
+      "revId": "19b147a366da8935a412f4c3798f9431ab1ac910",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
