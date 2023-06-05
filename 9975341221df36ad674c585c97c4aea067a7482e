@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70996678_cc946f3d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-06-05T08:41:23Z",
+      "side": 1,
+      "message": "This commit also moves it to the interface level from the system level.\nPlease mention that as well in the commit message.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 39
+      },
+      "revId": "9975341221df36ad674c585c97c4aea067a7482e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33f02f0d_7efa0b41",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-06-05T08:41:23Z",
+      "side": 1,
+      "message": "Please mention what is the issue with this current implementation. Like - the changes done for the IPv4 setting impacts the IPv6 settings and gets applied to both interfaces.",
+      "revId": "9975341221df36ad674c585c97c4aea067a7482e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
