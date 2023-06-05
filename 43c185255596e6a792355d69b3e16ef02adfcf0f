@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af066057_76f0cc9b",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-06-05T05:24:30Z",
+      "side": 1,
+      "message": "Should we also mention about the co-existence of various IPv6 address types on an ethernet interface?",
+      "range": {
+        "startLine": 3,
+        "startChar": 25,
+        "endLine": 3,
+        "endChar": 54
+      },
+      "revId": "43c185255596e6a792355d69b3e16ef02adfcf0f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7ae0b70_6200796d",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-06-05T05:24:30Z",
+      "side": 1,
+      "message": "Can we rephrase this?",
+      "range": {
+        "startLine": 3,
+        "startChar": 72,
+        "endLine": 4,
+        "endChar": 38
+      },
+      "revId": "43c185255596e6a792355d69b3e16ef02adfcf0f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4598119e_0cb4b161",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-06-05T05:24:30Z",
+      "side": 1,
+      "message": "Stateful",
+      "range": {
+        "startLine": 64,
+        "startChar": 35,
+        "endLine": 64,
+        "endChar": 44
+      },
+      "revId": "43c185255596e6a792355d69b3e16ef02adfcf0f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a83f423a_f449ebc0",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-06-05T05:24:30Z",
+      "side": 1,
+      "message": "Should we also mention about \"Other information\" flag here - to tell about DNS, Domain name, etc, for how it is obtained?",
+      "range": {
+        "startLine": 72,
+        "startChar": 30,
+        "endLine": 72,
+        "endChar": 57
+      },
+      "revId": "43c185255596e6a792355d69b3e16ef02adfcf0f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
