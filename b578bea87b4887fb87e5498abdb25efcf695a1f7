@@ -33,6 +33,24 @@
       "message": "return EthernetInterfaceIntf::staticNameServers()\n\nvalue is the input parameter. Better to return what is stored after successful ConfigurationFile update.\n\nSame for NTPServers",
       "revId": "b578bea87b4887fb87e5498abdb25efcf695a1f7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6fb92778_8df6b738",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-06T15:47:40Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "a439fe47_0dcbf900",
+      "revId": "b578bea87b4887fb87e5498abdb25efcf695a1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
