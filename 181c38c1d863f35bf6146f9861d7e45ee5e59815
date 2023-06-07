@@ -16,6 +16,24 @@
       "message": "Changes look good.\nPlease add Tested By section\nAn edit in the config file/update in the interface gets the traces good ..etc.",
       "revId": "181c38c1d863f35bf6146f9861d7e45ee5e59815",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "025bb6e4_08b6e020",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-06-07T00:35:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f00380a_487d9627",
+      "revId": "181c38c1d863f35bf6146f9861d7e45ee5e59815",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
