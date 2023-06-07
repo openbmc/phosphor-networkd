@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ef1d6e9_57d098a9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-06-07T00:35:36Z",
+      "side": 1,
+      "message": "Definitely valuable for non-trivial changes, however you can\u0027t actually verify that this isn\u0027t broken because it never threw an exception to begin with. Obviously the happy path is still happy.",
+      "parentUuid": "29f3c90b_6467d13e",
+      "revId": "b578bea87b4887fb87e5498abdb25efcf695a1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a439fe47_0dcbf900",
@@ -49,6 +67,24 @@
       "side": 1,
       "message": "+1",
       "parentUuid": "a439fe47_0dcbf900",
+      "revId": "b578bea87b4887fb87e5498abdb25efcf695a1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64f1d562_1d9df425",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-06-07T00:35:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6fb92778_8df6b738",
       "revId": "b578bea87b4887fb87e5498abdb25efcf695a1f7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
