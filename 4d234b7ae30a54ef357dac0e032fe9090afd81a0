@@ -1,0 +1,186 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1fca7d79_f89ca717",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-08T19:00:04Z",
+      "side": 1,
+      "message": "Here are some observations related to this document.",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f3fd3cf_cf246458",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-08T19:00:04Z",
+      "side": 1,
+      "message": "I don\u0027t agree with the last sentence.\nEnabling RA in the systemd-networkd stack does not guarantee SLAAC. It only makes it possible.\n\nThe BMC will only receive a SLAAC address if the Routing Advertisement server on the local segment is configured to supply SLAAC addresses.\n\nIt\u0027s entirely possible that the RA server is configured to provide Stateful addresses in combination with a DHCPv6 server on the local segment.\n\nIt\u0027s just as possible that the RA will not supply any addresses other than auxiliary addresses (eg. DNS). This may be the mode of operation in the event the BMC is assigned a Static IPv6 address.\n\nIn my opinion it\u0027s misleading to conflate IPv6AcceptRA \u003d true to mean SLAAC.",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "460302f9_71e25204",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-08T19:00:04Z",
+      "side": 1,
+      "message": "Why are you leading with the least likely method of setting an IPv6 address?\n\nWhy aren\u0027t you adding an ipmitool example?\nipmitool raw 0x0c 0x01 $chnum 0x38 0x00 $enable 0xfd 0x45 0x60 0x07 0x10 0x54 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x99 0x86 0x80 0x00",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79a3c0b2_04265c11",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-08T19:00:04Z",
+      "side": 1,
+      "message": "IPMI example?",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2117a57_774d064b",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-08T19:00:04Z",
+      "side": 1,
+      "message": "This isn\u0027t really entirely accurate is it?\n\nThe initial state of the BMC is to enable DHCPv6. Unless the NIC\u0027s systemd.network configuration file has IPv6AcceptRA \u003d true (and an RA server exists), or WithoutRA \u003d solicit asserted, no IPv6 address will be assigned to the BMC via a DHCPv6 server on the network segment.\n\nIt is also a vendor controlled configuration as to whether WithoutRA is available.\n\nThus Stateful IPv6 requires more than just an active DHCPv6 server on the local segment.\n\nStateless IPv6 requires a RA server, configured to provide a SLAAC IPv6 range, on the local segment. If the RA server is not so configured there won\u0027t be SLAAC.",
+      "range": {
+        "startLine": 68,
+        "startChar": 1,
+        "endLine": 71,
+        "endChar": 29
+      },
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed5c073b_a96a6d0d",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-08T19:00:04Z",
+      "side": 1,
+      "message": "Is this header a misnomer?\nDHCPv6 has nothing to do with the address assignment. IMO this is conflating DHCPv4 terminology onto the IPv6 dynamic address model. SLAAC is a dynamic address assignment outside of the framework of DHCPv6.\n\nThe text, IMO, should be:\nStateless Address Autoconfiguration",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d68977f0_0cdb4d09",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-08T19:00:04Z",
+      "side": 1,
+      "message": "Enabling IPv6AcceptRA permits the BMC to receive IPv6 configuration directives from a Routing Advertisement server on the local network segment. The Routing Advertisement server is capable of:\n* Assigning a SLAAC IPv6 address\n* Assigning an IPv6 address Prefix Length\n* Gateway addresses\n* NTP server addresses\n* DNS server addresses\n* Et Cetera\n\nThe Routing Advertisement server is wholly responsible for determining the IPv6 state.",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 0
+      },
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff07527f_6e0d13af",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-08T19:00:04Z",
+      "side": 1,
+      "message": "IPMI:\nipmitool raw 0x0c 0x01 $chnum 0x40 $raval\nraval may be 0x3 (RA enabled) or 0x1 (RA disabled)",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd983d97_946c687f",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-08T19:00:04Z",
+      "side": 1,
+      "message": "You have no prelude or discussion to provide ahead of code fragments?\n\n\nIPMI:\n There is no way for IPMI to fully control Stateful DHCPv6.",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8929dc4e_2d6e3dd7",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-08T19:00:04Z",
+      "side": 1,
+      "message": "IMO the With Router Advertisement header should be \"Examples\". The \"scenarios\" should each be an example of a network segment server config. There needs to be more material supplied.\nExamples: \nNetwork segment with Router Advertisement Server and DHCPv6 Server\nNetwork segment with Router Advertisement Server only (SLAAC)\nNetwork segment with Router Advertisement Server only (BMC Static IPv6)\nNetwork segment with DHCPv6 Server only",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
