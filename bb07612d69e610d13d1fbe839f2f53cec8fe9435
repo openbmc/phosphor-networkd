@@ -145,6 +145,24 @@
       "message": "This should not be set to \u0027self\u0027. This should be read from the recipe. The default value for this is \"auto\"",
       "revId": "bb07612d69e610d13d1fbe839f2f53cec8fe9435",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f92534ce_ee41df37",
+        "filename": "meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2023-06-09T11:36:54Z",
+      "side": 1,
+      "message": "Removed extra parameters. Please review updated code.",
+      "parentUuid": "b3c7d879_050f7b31",
+      "revId": "bb07612d69e610d13d1fbe839f2f53cec8fe9435",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
