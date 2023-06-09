@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2142f40d_18cb89d6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-06-09T10:02:57Z",
+      "side": 1,
+      "message": "Configure DHCPv4 and DHCPv6 parameters independently ?",
+      "revId": "abfce72fdb8906e2d27c3f170f77dc34cc40c75e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "06e2b078_7344203d",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 12
@@ -14,6 +31,23 @@
       "writtenOn": "2023-06-05T09:20:01Z",
       "side": 1,
       "message": "@Johnathan, we believe IPMI will be impacted with this change. Could you please provide your thoughts?",
+      "revId": "abfce72fdb8906e2d27c3f170f77dc34cc40c75e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0483394e_9c040319",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-06-09T10:02:57Z",
+      "side": 1,
+      "message": "I think we dont need this function \ncan copy those two lines here",
       "revId": "abfce72fdb8906e2d27c3f170f77dc34cc40c75e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
