@@ -18,6 +18,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fb107d4_50f2cc4b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-06-09T15:45:26Z",
+      "side": 1,
+      "message": "Thank you, Johnathan for the detailed review. \nI am not an IPMI expert and have never used IPMI to set the network. Please feel free to push another commit on top of this - by adding IPMI commands and related details. \nOther feedbacks i will address soon and push the rework.",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3f3fd3cf_cf246458",
