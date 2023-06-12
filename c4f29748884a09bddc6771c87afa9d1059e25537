@@ -22,6 +22,29 @@
       },
       "revId": "c4f29748884a09bddc6771c87afa9d1059e25537",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1cae86d_2059e88d",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-06-12T17:35:46Z",
+      "side": 1,
+      "message": "Since we are reading from the file, doing substr of the read string - Should we validate the IP and the prefix here?",
+      "range": {
+        "startLine": 564,
+        "startChar": 0,
+        "endLine": 570,
+        "endChar": 1
+      },
+      "revId": "c4f29748884a09bddc6771c87afa9d1059e25537",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
