@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6304807_d22c52c4",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-06-12T08:46:42Z",
+      "side": 1,
+      "message": "Please use lg2",
+      "range": {
+        "startLine": 383,
+        "startChar": 8,
+        "endLine": 383,
+        "endChar": 11
+      },
+      "revId": "c4f29748884a09bddc6771c87afa9d1059e25537",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
