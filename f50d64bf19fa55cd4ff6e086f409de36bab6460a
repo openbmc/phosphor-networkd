@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ab7d743_0c6e712b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2023-06-14T06:38:02Z",
+      "side": 1,
+      "message": "As its possible for the interfaces to be on different subnets/networks, we think it should be possible configure these dhcp parameters independently.\n\nbmcweb : we are working on the changes in bmcweb in this commit, https://gerrit.openbmc.org/c/openbmc/bmcweb/+/63390\n\nIPMI : We\u0027re waiting to hear from Jonathan Mantey on this, as we\u0027re unable to asses the impact on IPMI.\n\nopenbmc-test-automation : We\u0027re discussing with the stake holders on this.",
+      "parentUuid": "ef513e94_5b21ad2b",
+      "revId": "f50d64bf19fa55cd4ff6e086f409de36bab6460a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9ea18a00_200eb289",
