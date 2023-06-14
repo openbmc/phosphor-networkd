@@ -45,6 +45,30 @@
       },
       "revId": "c4f29748884a09bddc6771c87afa9d1059e25537",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a201acb_ded3cd63",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-06-14T08:36:33Z",
+      "side": 1,
+      "message": "validation is done here\ntry\n{\n     ifaddr \u003d {addr, prefix};\n}\n\ncatch (const std::exception\u0026 e)\n{\n     auto msg \u003d fmt::format(\"Invalid static route {}\\n\", e.what());\n     log\u003clevel::ERR\u003e(msg.c_str());\n}",
+      "parentUuid": "b1cae86d_2059e88d",
+      "range": {
+        "startLine": 564,
+        "startChar": 0,
+        "endLine": 570,
+        "endChar": 1
+      },
+      "revId": "c4f29748884a09bddc6771c87afa9d1059e25537",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
