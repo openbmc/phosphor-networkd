@@ -70,6 +70,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e558341c_ff31c773",
+        "filename": "src/dhcp_configuration.hpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2023-06-14T07:30:57Z",
+      "side": 1,
+      "message": "As we\u0027re moving the dhcp objects from Network Manager level to Ethernet interface level, we have updated the parent object of dhcp configuration to EthernetInterface from Manager.",
+      "parentUuid": "9ea18a00_200eb289",
+      "revId": "f50d64bf19fa55cd4ff6e086f409de36bab6460a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "267d7c53_7fa0885a",
@@ -83,6 +101,30 @@
       "writtenOn": "2023-06-13T20:16:08Z",
       "side": 1,
       "message": "Is this the correct location to change these?\nThe IPv6AcceptRa section also has these two entries.\nDoes the value in DHCPv6 override IPv6AcceptRA?",
+      "range": {
+        "startLine": 748,
+        "startChar": 1,
+        "endLine": 749,
+        "endChar": 54
+      },
+      "revId": "f50d64bf19fa55cd4ff6e086f409de36bab6460a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30d0a172_d8aba6d4",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2023-06-14T07:30:57Z",
+      "side": 1,
+      "message": "These parameters were part of the DHCP section of the network configuration only.",
+      "parentUuid": "267d7c53_7fa0885a",
       "range": {
         "startLine": 748,
         "startChar": 1,
