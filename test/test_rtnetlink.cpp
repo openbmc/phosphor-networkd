@@ -91,7 +91,7 @@ TEST(AddrFromRtm, Regular)
     EXPECT_EQ(msg.ifa.ifa_flags, ret.flags);
     EXPECT_EQ(msg.ifa.ifa_scope, ret.scope);
     EXPECT_EQ(msg.ifa.ifa_index, ret.ifidx);
-    EXPECT_EQ((IfAddr{in_addr{hton(0xc0a80114)}, 28}), ret.ifaddr);
+    EXPECT_EQ((IfAddr{in_addr{stdplus::hton(0xc0a80114)}, 28}), ret.ifaddr);
 }
 
 TEST(AddrFromRtm, ExtraFlags)
@@ -139,7 +139,7 @@ TEST(NeighFromRtm, NoMac)
 
     auto ret = neighFromRtm(stdplus::raw::asView<char>(msg));
     EXPECT_EQ(msg.ndm.ndm_state, ret.state);
-    EXPECT_EQ((in_addr{hton(0xc0a80114)}), ret.addr);
+    EXPECT_EQ((in_addr{stdplus::hton(0xc0a80114)}), ret.addr);
     EXPECT_FALSE(ret.mac);
 }
 
@@ -160,7 +160,7 @@ TEST(NeighFromRtm, Full)
     msg.mac_hdr.rta_len = RTA_LENGTH(sizeof(msg.mac));
 
     auto ret = neighFromRtm(stdplus::raw::asView<char>(msg));
-    EXPECT_EQ((in_addr{hton(0xc0a80114)}), ret.addr);
+    EXPECT_EQ((in_addr{stdplus::hton(0xc0a80114)}), ret.addr);
     EXPECT_EQ((ether_addr{1, 2, 3, 4, 5, 6}), ret.mac);
 }
 
