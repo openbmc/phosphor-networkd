@@ -39,8 +39,8 @@ class Neighbor : public NeighborObj
      *  @param[in] state - The state of the neighbor entry.
      */
     Neighbor(sdbusplus::bus_t& bus, std::string_view objRoot,
-             stdplus::PinnedRef<EthernetInterface> parent, InAddrAny addr,
-             stdplus::EtherAddr lladdr, State state);
+             stdplus::PinnedRef<EthernetInterface> parent,
+             stdplus::InAnyAddr addr, stdplus::EtherAddr lladdr, State state);
 
     /** @brief Delete this d-bus object.
      */
@@ -66,8 +66,8 @@ class Neighbor : public NeighborObj
     sdbusplus::message::object_path objPath;
 
     Neighbor(sdbusplus::bus_t& bus, sdbusplus::message::object_path objPath,
-             stdplus::PinnedRef<EthernetInterface> parent, InAddrAny addr,
-             stdplus::EtherAddr lladdr, State state);
+             stdplus::PinnedRef<EthernetInterface> parent,
+             stdplus::InAnyAddr addr, stdplus::EtherAddr lladdr, State state);
 };
 
 } // namespace network

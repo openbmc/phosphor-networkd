@@ -76,8 +76,8 @@ class Manager : public ManagerIface
     void removeNeighbor(const NeighborInfo& info);
 
     /** @brief Add / remove default gateway for interface */
-    void addDefGw(unsigned ifidx, InAddrAny addr);
-    void removeDefGw(unsigned ifidx, InAddrAny addr);
+    void addDefGw(unsigned ifidx, stdplus::InAnyAddr addr);
+    void removeDefGw(unsigned ifidx, stdplus::InAnyAddr addr);
 
     /** @brief gets the network conf directory.
      */

@@ -104,11 +104,11 @@ EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
 
     if (info.defgw4)
     {
-        EthernetInterface::defaultGateway(std::to_string(*info.defgw4), true);
+        EthernetInterface::defaultGateway(stdplus::toStr(*info.defgw4), true);
     }
     if (info.defgw6)
     {
-        EthernetInterface::defaultGateway6(std::to_string(*info.defgw6), true);
+        EthernetInterface::defaultGateway6(stdplus::toStr(*info.defgw6), true);
     }
     emit_object_added();
 
@@ -217,16 +217,16 @@ void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
 ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
                                  uint8_t prefixLength, std::string)
 {
-    InAddrAny addr;
+    std::optional<stdplus::InAnyAddr> addr;
     try
     {
         switch (protType)
         {
             case IP::Protocol::IPv4:
-                addr = ToAddr<in_addr>{}(ipaddress);
+                addr.emplace(stdplus::fromStr<stdplus::In4Addr>(ipaddress));
                 break;
             case IP::Protocol::IPv6:
-                addr = ToAddr<in6_addr>{}(ipaddress);
+                addr.emplace(stdplus::fromStr<stdplus::In6Addr>(ipaddress));
                 break;
             default:
                 throw std::logic_error("Exhausted protocols");
@@ -239,10 +239,10 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("ipaddress"),
                               Argument::ARGUMENT_VALUE(ipaddress.c_str()));
     }
-    IfAddr ifaddr;
+    std::optional<stdplus::SubnetAny> ifaddr;
     try
     {
-        ifaddr = {addr, prefixLength};
+        ifaddr.emplace(*addr, prefixLength);
     }
     catch (const std::exception& e)
     {
@@ -250,16 +250,16 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
                    prefixLength, "ERROR", e);
         elog<InvalidArgument>(
             Argument::ARGUMENT_NAME("prefixLength"),
-            Argument::ARGUMENT_VALUE(std::to_string(prefixLength).c_str()));
+            Argument::ARGUMENT_VALUE(stdplus::toStr(prefixLength).c_str()));
     }
 
-    auto it = addrs.find(ifaddr);
+    auto it = addrs.find(*ifaddr);
     if (it == addrs.end())
     {
         it = std::get<0>(addrs.emplace(
-            ifaddr,
+            *ifaddr,
             std::make_unique<IPAddress>(bus, std::string_view(objPath), *this,
-                                        ifaddr, IP::AddressOrigin::Static)));
+                                        *ifaddr, IP::AddressOrigin::Static)));
     }
     else
     {
@@ -279,10 +279,10 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
 ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                                        std::string macAddress)
 {
-    InAddrAny addr;
+    std::optional<stdplus::InAnyAddr> addr;
     try
     {
-        addr = ToAddr<InAddrAny>{}(ipAddress);
+        addr.emplace(stdplus::fromStr<stdplus::InAnyAddr>(ipAddress));
     }
     catch (const std::exception& e)
     {
@@ -292,10 +292,10 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                               Argument::ARGUMENT_VALUE(ipAddress.c_str()));
     }
 
-    stdplus::EtherAddr lladdr;
+    std::optional<stdplus::EtherAddr> lladdr;
     try
     {
-        lladdr = stdplus::fromStr<stdplus::EtherAddr>(macAddress);
+        lladdr.emplace(stdplus::fromStr<stdplus::EtherAddr>(macAddress));
     }
     catch (const std::exception& e)
     {
@@ -305,17 +305,17 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                               Argument::ARGUMENT_VALUE(macAddress.c_str()));
     }
 
-    auto it = staticNeighbors.find(addr);
+    auto it = staticNeighbors.find(*addr);
     if (it == staticNeighbors.end())
     {
         it = std::get<0>(staticNeighbors.emplace(
-            addr, std::make_unique<Neighbor>(bus, std::string_view(objPath),
-                                             *this, addr, lladdr,
-                                             Neighbor::State::Permanent)));
+            *addr, std::make_unique<Neighbor>(bus, std::string_view(objPath),
+                                              *this, *addr, *lladdr,
+                                              Neighbor::State::Permanent)));
     }
     else
     {
-        auto str = stdplus::toStr(lladdr);
+        auto str = stdplus::toStr(*lladdr);
         if (it->second->macAddress() == str)
         {
             return it->second->getObjPath();
@@ -435,7 +435,7 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
     {
         try
         {
-            ip = std::to_string(ToAddr<InAddrAny>{}(ip));
+            ip = stdplus::toStr(stdplus::fromStr<stdplus::InAnyAddr>(ip));
         }
         catch (const std::exception& e)
         {
@@ -538,7 +538,7 @@ ServerList EthernetInterface::getNameServerFromResolvd()
     {
         int addressFamily = std::get<0>(*i);
         std::vector<uint8_t>& ipaddress = std::get<1>(*i);
-        servers.push_back(std::to_string(
+        servers.push_back(stdplus::toStr(
             addrFromBuf(addressFamily, stdplus::raw::asView<char>(ipaddress))));
     }
     return servers;
@@ -546,8 +546,8 @@ ServerList EthernetInterface::getNameServerFromResolvd()
 
 ObjectPath EthernetInterface::createVLAN(uint16_t id)
 {
-    auto intfName = fmt::format(FMT_COMPILE("{}.{}"), interfaceName(), id);
-    auto idStr = std::to_string(id);
+    auto idStr = stdplus::toStr(id);
+    auto intfName = fmt::format(FMT_COMPILE("{}.{}"), interfaceName(), idStr);
     if (manager.get().interfaces.find(intfName) !=
         manager.get().interfaces.end())
     {
@@ -817,7 +817,8 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
     {
         if (!gateway.empty())
         {
-            gateway = std::to_string(ToAddr<in_addr>{}(gateway));
+            gateway =
+                stdplus::toStr(stdplus::fromStr<stdplus::In4Addr>(gateway));
         }
     }
     catch (const std::exception& e)
@@ -846,7 +847,8 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
     {
         if (!gateway.empty())
         {
-            gateway = std::to_string(ToAddr<in6_addr>{}(gateway));
+            gateway =
+                stdplus::toStr(stdplus::fromStr<stdplus::In6Addr>(gateway));
         }
     }
     catch (const std::exception& e)

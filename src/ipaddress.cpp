@@ -22,10 +22,11 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using NotAllowed = sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
 using Reason = xyz::openbmc_project::Common::NotAllowed::REASON;
 
-static auto makeObjPath(std::string_view root, IfAddr addr)
+static auto makeObjPath(std::string_view root, stdplus::SubnetAny addr)
 {
     auto ret = sdbusplus::message::object_path(std::string(root));
-    ret /= std::to_string(addr);
+    stdplus::ToStrHandle<stdplus::ToStr<stdplus::SubnetAny>> tsh;
+    ret /= tsh(addr);
     return ret;
 }
 
@@ -34,31 +35,31 @@ struct Proto
 {};
 
 template <>
-struct Proto<in_addr>
+struct Proto<stdplus::In4Addr>
 {
     static inline constexpr auto value = IP::Protocol::IPv4;
 };
 
 template <>
-struct Proto<in6_addr>
+struct Proto<stdplus::In6Addr>
 {
     static inline constexpr auto value = IP::Protocol::IPv6;
 };
 
 IPAddress::IPAddress(sdbusplus::bus_t& bus, std::string_view objRoot,
-                     stdplus::PinnedRef<EthernetInterface> parent, IfAddr addr,
-                     AddressOrigin origin) :
+                     stdplus::PinnedRef<EthernetInterface> parent,
+                     stdplus::SubnetAny addr, AddressOrigin origin) :
     IPAddress(bus, makeObjPath(objRoot, addr), parent, addr, origin)
 {}
 
 IPAddress::IPAddress(sdbusplus::bus_t& bus,
                      sdbusplus::message::object_path objPath,
-                     stdplus::PinnedRef<EthernetInterface> parent, IfAddr addr,
-                     AddressOrigin origin) :
+                     stdplus::PinnedRef<EthernetInterface> parent,
+                     stdplus::SubnetAny addr, AddressOrigin origin) :
     IPIfaces(bus, objPath.str.c_str(), IPIfaces::action::defer_emit),
     parent(parent), objPath(std::move(objPath))
 {
-    IP::address(std::to_string(addr.getAddr()), true);
+    IP::address(stdplus::toStr(addr.getAddr()), true);
     IP::prefixLength(addr.getPfx(), true);
     IP::type(std::visit([](auto v) { return Proto<decltype(v)>::value; },
                         addr.getAddr()),

@@ -19,17 +19,17 @@ TEST(TestUtil, AddrFromBuf)
     std::string tooSmall(1, 'a');
     std::string tooLarge(24, 'a');
 
-    struct in_addr ip1 = {0x01020304};
+    stdplus::In4Addr ip1{1, 2, 3, 4};
     auto buf1 = stdplus::raw::asView<char>(ip1);
-    InAddrAny res1 = addrFromBuf(AF_INET, buf1);
+    auto res1 = addrFromBuf(AF_INET, buf1);
     EXPECT_EQ(ip1, res1);
     EXPECT_THROW(addrFromBuf(AF_INET, tooSmall), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_INET, tooLarge), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_UNSPEC, buf1), std::invalid_argument);
 
-    struct in6_addr ip2 = {0xfd, 0, 0, 0, 1};
+    stdplus::In6Addr ip2{0xfd, 0, 0, 0, 1};
     auto buf2 = stdplus::raw::asView<char>(ip2);
-    InAddrAny res2 = addrFromBuf(AF_INET6, buf2);
+    auto res2 = addrFromBuf(AF_INET6, buf2);
     EXPECT_EQ(ip2, res2);
     EXPECT_THROW(addrFromBuf(AF_INET6, tooSmall), std::runtime_error);
     EXPECT_THROW(addrFromBuf(AF_INET6, tooLarge), std::runtime_error);
