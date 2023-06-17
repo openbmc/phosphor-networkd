@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 
 #include <stdplus/net/addr/ether.hpp>
+#include <stdplus/numeric/endian.hpp>
 
 #include <algorithm>
 #include <array>
@@ -128,91 +129,6 @@ struct NeighborInfo
                mac == rhs.mac;
     }
 };
-
-namespace detail
-{
-
-template <typename T, uint8_t size = sizeof(T)>
-struct BswapAlign
-{
-    using type = T;
-};
-
-template <typename T>
-struct BswapAlign<T, 2>
-{
-    using type alignas(uint16_t) = T;
-};
-
-template <typename T>
-struct BswapAlign<T, 4>
-{
-    using type alignas(uint32_t) = T;
-};
-
-template <typename T>
-struct BswapAlign<T, 8>
-{
-    using type alignas(uint64_t) = T;
-};
-
-template <typename T>
-constexpr T bswapInt(typename BswapAlign<T>::type n) noexcept
-{
-    static_assert(std::is_trivially_copyable_v<T>);
-    if constexpr (sizeof(T) == 2)
-    {
-        reinterpret_cast<uint16_t&>(n) =
-            __builtin_bswap16(reinterpret_cast<uint16_t&>(n));
-    }
-    else if constexpr (sizeof(T) == 4)
-    {
-        reinterpret_cast<uint32_t&>(n) =
-            __builtin_bswap32(reinterpret_cast<uint32_t&>(n));
-    }
-    else if constexpr (sizeof(T) == 8)
-    {
-        reinterpret_cast<uint64_t&>(n) =
-            __builtin_bswap64(reinterpret_cast<uint64_t&>(n));
-    }
-    else
-    {
-        auto b = reinterpret_cast<std::byte*>(&n);
-        std::reverse(b, b + sizeof(n));
-    }
-    return n;
-}
-
-} // namespace detail
-
-template <typename T>
-constexpr T bswap(T n) noexcept
-{
-    return detail::bswapInt<T>(n);
-}
-
-template <typename T>
-constexpr T hton(T n) noexcept
-{
-    if constexpr (std::endian::native == std::endian::big)
-    {
-        return n;
-    }
-    else if constexpr (std::endian::native == std::endian::little)
-    {
-        return bswap(n);
-    }
-    else
-    {
-        static_assert(std::is_same_v<T, void>);
-    }
-}
-
-template <typename T>
-constexpr T ntoh(T n) noexcept
-{
-    return hton(n);
-}
 
 namespace detail
 {
@@ -369,7 +285,7 @@ struct ToAddr<in_addr>
             }
         }
         addr |= di(str);
-        return {hton(addr)};
+        return {stdplus::hton(addr)};
     }
 };
 
@@ -391,7 +307,7 @@ struct ToAddr<in6_addr>
             }
             if (loc != 0 && !str.empty())
             {
-                ret.s6_addr16[i++] = hton(di(str.substr(0, loc)));
+                ret.s6_addr16[i++] = stdplus::hton(di(str.substr(0, loc)));
             }
             if (i < 8 && str.size() > loc + 1 && str[loc + 1] == ':')
             {
@@ -422,7 +338,7 @@ struct ToAddr<in6_addr>
         {
             auto loc = str.rfind(':');
             ret.s6_addr16[j--] =
-                hton(di(str.substr(loc == str.npos ? 0 : loc + 1)));
+                stdplus::hton(di(str.substr(loc == str.npos ? 0 : loc + 1)));
             str.remove_suffix(loc == str.npos ? str.size() : str.size() - loc);
         }
         if (!str.empty())
@@ -487,7 +403,7 @@ struct ToStr<in_addr>
 
     constexpr char* operator()(char* buf, in_addr v) const noexcept
     {
-        auto n = bswap(ntoh(v.s_addr));
+        auto n = stdplus::bswap(stdplus::ntoh(v.s_addr));
         for (size_t i = 0; i < 3; ++i)
         {
             buf = ToStr<char>{}(EncodeInt<uint8_t, 10>{}(buf, n & 0xff), '.');
@@ -508,7 +424,7 @@ struct ToStr<in6_addr>
     {
         // IPv4 in IPv6 Addr
         if (v.s6_addr32[0] == 0 && v.s6_addr32[1] == 0 &&
-            v.s6_addr32[2] == hton(uint32_t(0xffff)))
+            v.s6_addr32[2] == stdplus::hton(uint32_t(0xffff)))
         {
             constexpr auto prefix = std::string_view("::ffff:");
             return ToStr<in_addr>{}(
@@ -553,7 +469,7 @@ struct ToStr<in6_addr>
                 i += skip_size - 1;
                 continue;
             }
-            buf = EncodeInt<uint16_t, 16>{}(buf, ntoh(v.s6_addr16[i]));
+            buf = EncodeInt<uint16_t, 16>{}(buf, stdplus::ntoh(v.s6_addr16[i]));
             if (i < 7)
             {
                 *(buf++) = ':';
