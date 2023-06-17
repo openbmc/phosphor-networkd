@@ -96,8 +96,8 @@ TEST_F(TestEthernetInterface, NoIPaddress)
 TEST_F(TestEthernetInterface, AddIPAddress)
 {
     createIPObject(IP::Protocol::IPv4, "10.10.10.10", 16);
-    EXPECT_THAT(interface.addrs, UnorderedElementsAre(Key(
-                                     IfAddr(in_addr{htonl(0x0a0a0a0a)}, 16))));
+    EXPECT_THAT(interface.addrs, UnorderedElementsAre(Key(stdplus::SubnetAny(
+                                     stdplus::In4Addr{10, 10, 10, 10}, 16))));
 }
 
 TEST_F(TestEthernetInterface, AddMultipleAddress)
@@ -106,17 +106,20 @@ TEST_F(TestEthernetInterface, AddMultipleAddress)
     createIPObject(IP::Protocol::IPv4, "20.20.20.20", 16);
     EXPECT_THAT(
         interface.addrs,
-        UnorderedElementsAre(Key(IfAddr(in_addr{htonl(0x0a0a0a0a)}, 16)),
-                             Key(IfAddr(in_addr{htonl(0x14141414)}, 16))));
+        UnorderedElementsAre(
+            Key(stdplus::SubnetAny(stdplus::In4Addr{10, 10, 10, 10}, 16)),
+            Key(stdplus::SubnetAny(stdplus::In4Addr{20, 20, 20, 20}, 16))));
 }
 
 TEST_F(TestEthernetInterface, DeleteIPAddress)
 {
     createIPObject(IP::Protocol::IPv4, "10.10.10.10", 16);
     createIPObject(IP::Protocol::IPv4, "20.20.20.20", 16);
-    interface.addrs.at(IfAddr(in_addr{htonl(0x0a0a0a0a)}, 16))->delete_();
-    EXPECT_THAT(interface.addrs, UnorderedElementsAre(Key(
-                                     IfAddr(in_addr{htonl(0x14141414)}, 16))));
+    interface.addrs
+        .at(stdplus::SubnetAny(stdplus::In4Addr{10, 10, 10, 10}, 16))
+        ->delete_();
+    EXPECT_THAT(interface.addrs, UnorderedElementsAre(Key(stdplus::SubnetAny(
+                                     stdplus::In4Addr{20, 20, 20, 20}, 16))));
 }
 
 TEST_F(TestEthernetInterface, CheckObjectPath)

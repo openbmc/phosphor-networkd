@@ -88,11 +88,11 @@ InterfaceInfo intfFromRtm(std::string_view msg)
 }
 
 template <typename Addr>
-static std::optional<std::tuple<unsigned, InAddrAny>>
+static std::optional<std::tuple<unsigned, stdplus::InAnyAddr>>
     parse(std::string_view msg)
 {
     std::optional<unsigned> ifIdx;
-    std::optional<InAddrAny> gw;
+    std::optional<stdplus::InAnyAddr> gw;
     while (!msg.empty())
     {
         auto [hdr, data] = extractRtAttr(msg);
@@ -113,7 +113,7 @@ static std::optional<std::tuple<unsigned, InAddrAny>>
     return std::nullopt;
 }
 
-std::optional<std::tuple<unsigned, InAddrAny>>
+std::optional<std::tuple<unsigned, stdplus::InAnyAddr>>
     gatewayFromRtm(std::string_view msg)
 {
     const auto& rtm = extractRtData<rtmsg>(msg);
@@ -124,9 +124,9 @@ std::optional<std::tuple<unsigned, InAddrAny>>
     switch (rtm.rtm_family)
     {
         case AF_INET:
-            return parse<in_addr>(msg);
+            return parse<stdplus::In4Addr>(msg);
         case AF_INET6:
-            return parse<in6_addr>(msg);
+            return parse<stdplus::In6Addr>(msg);
     }
     return std::nullopt;
 }
@@ -135,11 +135,8 @@ AddressInfo addrFromRtm(std::string_view msg)
 {
     const auto& ifa = extractRtData<ifaddrmsg>(msg);
 
-    AddressInfo ret;
-    ret.ifidx = ifa.ifa_index;
-    ret.flags = ifa.ifa_flags;
-    ret.scope = ifa.ifa_scope;
-    std::optional<InAddrAny> addr;
+    uint32_t flags = ifa.ifa_flags;
+    std::optional<stdplus::InAnyAddr> addr;
     while (!msg.empty())
     {
         auto [hdr, data] = extractRtAttr(msg);
@@ -149,15 +146,17 @@ AddressInfo addrFromRtm(std::string_view msg)
         }
         else if (hdr.rta_type == IFA_FLAGS)
         {
-            ret.flags = stdplus::raw::copyFromStrict<uint32_t>(data);
+            flags = stdplus::raw::copyFromStrict<uint32_t>(data);
         }
     }
     if (!addr)
     {
         throw std::runtime_error("Missing address");
     }
-    ret.ifaddr = {*addr, ifa.ifa_prefixlen};
-    return ret;
+    return AddressInfo{.ifidx = ifa.ifa_index,
+                       .ifaddr = stdplus::SubnetAny{*addr, ifa.ifa_prefixlen},
+                       .scope = ifa.ifa_scope,
+                       .flags = flags};
 }
 
 NeighborInfo neighFromRtm(std::string_view msg)

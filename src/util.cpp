@@ -11,6 +11,7 @@
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
+#include <stdplus/numeric/str.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <cctype>
@@ -134,7 +135,7 @@ std::optional<std::string> interfaceToUbootEthAddr(std::string_view intf)
     unsigned idx;
     try
     {
-        idx = DecodeInt<unsigned, 10>{}(intf);
+        idx = stdplus::StrToInt<10, unsigned>{}(intf);
     }
     catch (...)
     {

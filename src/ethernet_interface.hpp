@@ -86,10 +86,11 @@ class EthernetInterface : public Ifaces
     stdplus::PinnedRef<Manager> manager;
 
     /** @brief Persistent map of IPAddress dbus objects and their names */
-    std::unordered_map<IfAddr, std::unique_ptr<IPAddress>> addrs;
+    std::unordered_map<stdplus::SubnetAny, std::unique_ptr<IPAddress>> addrs;
 
     /** @brief Persistent map of Neighbor dbus objects and their names */
-    std::unordered_map<InAddrAny, std::unique_ptr<Neighbor>> staticNeighbors;
+    std::unordered_map<stdplus::InAnyAddr, std::unique_ptr<Neighbor>>
+        staticNeighbors;
 
     void addAddr(const AddressInfo& info);
     void addStaticNeigh(const NeighborInfo& info);
@@ -128,15 +129,15 @@ class EthernetInterface : public Ifaces
     using EthernetInterfaceIntf::dhcp6;
     bool dhcp6(bool value) override;
 
-    inline bool dhcpIsEnabled(in_addr) const
+    inline bool dhcpIsEnabled(stdplus::In4Addr) const
     {
         return dhcp4();
     }
-    inline bool dhcpIsEnabled(in6_addr) const
+    inline bool dhcpIsEnabled(stdplus::In6Addr) const
     {
         return dhcp6();
     }
-    inline bool dhcpIsEnabled(InAddrAny addr) const
+    inline bool dhcpIsEnabled(stdplus::InAnyAddr addr) const
     {
         return std::visit([&](auto v) { return dhcpIsEnabled(v); }, addr);
     }

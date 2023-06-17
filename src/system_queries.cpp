@@ -17,6 +17,7 @@
 #include <optional>
 #include <stdexcept>
 #include <string_view>
+#include <unordered_set>
 
 namespace phosphor::network::system
 {

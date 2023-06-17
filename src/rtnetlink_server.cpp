@@ -21,7 +21,7 @@ inline void rthandler(std::string_view data, auto&& cb)
     {
         return;
     }
-    cb(std::get<unsigned>(*ret), std::get<InAddrAny>(*ret));
+    cb(std::get<unsigned>(*ret), std::get<stdplus::InAnyAddr>(*ret));
 }
 
 static unsigned getIfIdx(const nlmsghdr& hdr, std::string_view data)

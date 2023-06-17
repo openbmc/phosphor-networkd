@@ -14,6 +14,7 @@
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/message.hpp>
+#include <stdplus/numeric/str.hpp>
 #include <stdplus/pinned.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
@@ -66,7 +67,7 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
         {
             throw std::invalid_argument("Invalid obj path");
         }
-        auto ifidx = DecodeInt<unsigned, 10>{}(obj.substr(sep + 3));
+        auto ifidx = stdplus::StrToInt<10, uint16_t>{}(obj.substr(sep + 3));
         const auto& state = std::get<std::string>(it->second);
         man.get().handleAdminState(state, ifidx);
     }
@@ -356,23 +357,20 @@ void Manager::removeNeighbor(const NeighborInfo& info)
     }
 }
 
-void Manager::addDefGw(unsigned ifidx, InAddrAny addr)
+void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
 {
     if (auto it = intfInfo.find(ifidx); it != intfInfo.end())
     {
         std::visit(
             [&](auto addr) {
-            if constexpr (std::is_same_v<in_addr, decltype(addr)>)
+            if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
             {
                 it->second.defgw4.emplace(addr);
             }
-            else if constexpr (std::is_same_v<in6_addr, decltype(addr)>)
-            {
-                it->second.defgw6.emplace(addr);
-            }
             else
             {
-                static_assert(!std::is_same_v<void, decltype(addr)>);
+                static_assert(std::is_same_v<stdplus::In6Addr, decltype(addr)>);
+                it->second.defgw6.emplace(addr);
             }
             },
             addr);
@@ -380,19 +378,17 @@ void Manager::addDefGw(unsigned ifidx, InAddrAny addr)
         {
             std::visit(
                 [&](auto addr) {
-                if constexpr (std::is_same_v<in_addr, decltype(addr)>)
+                if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
                 {
                     it->second->EthernetInterfaceIntf::defaultGateway(
-                        std::to_string(addr));
-                }
-                else if constexpr (std::is_same_v<in6_addr, decltype(addr)>)
-                {
-                    it->second->EthernetInterfaceIntf::defaultGateway6(
-                        std::to_string(addr));
+                        stdplus::toStr(addr));
                 }
                 else
                 {
-                    static_assert(!std::is_same_v<void, decltype(addr)>);
+                    static_assert(
+                        std::is_same_v<stdplus::In6Addr, decltype(addr)>);
+                    it->second->EthernetInterfaceIntf::defaultGateway6(
+                        stdplus::toStr(addr));
                 }
                 },
                 addr);
@@ -404,29 +400,26 @@ void Manager::addDefGw(unsigned ifidx, InAddrAny addr)
     }
 }
 
-void Manager::removeDefGw(unsigned ifidx, InAddrAny addr)
+void Manager::removeDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
 {
     if (auto it = intfInfo.find(ifidx); it != intfInfo.end())
     {
         std::visit(
             [&](auto addr) {
-            if constexpr (std::is_same_v<in_addr, decltype(addr)>)
+            if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
             {
                 if (it->second.defgw4 == addr)
                 {
                     it->second.defgw4.reset();
                 }
             }
-            else if constexpr (std::is_same_v<in6_addr, decltype(addr)>)
+            else
             {
+                static_assert(std::is_same_v<stdplus::In6Addr, decltype(addr)>);
                 if (it->second.defgw6 == addr)
                 {
                     it->second.defgw6.reset();
                 }
-            }
-            else
-            {
-                static_assert(!std::is_same_v<void, decltype(addr)>);
             }
             },
             addr);
@@ -434,23 +427,23 @@ void Manager::removeDefGw(unsigned ifidx, InAddrAny addr)
         {
             std::visit(
                 [&](auto addr) {
-                if constexpr (std::is_same_v<in_addr, decltype(addr)>)
+                if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
                 {
-                    if (it->second->defaultGateway() == std::to_string(addr))
+                    stdplus::ToStrHandle<stdplus::ToStr<stdplus::In4Addr>> tsh;
+                    if (it->second->defaultGateway() == tsh(addr))
                     {
                         it->second->EthernetInterfaceIntf::defaultGateway("");
                     }
                 }
-                else if constexpr (std::is_same_v<in6_addr, decltype(addr)>)
+                else
                 {
-                    if (it->second->defaultGateway6() == std::to_string(addr))
+                    static_assert(
+                        std::is_same_v<stdplus::In6Addr, decltype(addr)>);
+                    stdplus::ToStrHandle<stdplus::ToStr<stdplus::In6Addr>> tsh;
+                    if (it->second->defaultGateway6() == tsh(addr))
                     {
                         it->second->EthernetInterfaceIntf::defaultGateway6("");
                     }
-                }
-                else
-                {
-                    static_assert(!std::is_same_v<void, decltype(addr)>);
                 }
                 },
                 addr);

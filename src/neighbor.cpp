@@ -14,27 +14,30 @@ namespace phosphor
 namespace network
 {
 
-static auto makeObjPath(std::string_view root, InAddrAny addr)
+static auto makeObjPath(std::string_view root, stdplus::InAnyAddr addr)
 {
     auto ret = sdbusplus::message::object_path(std::string(root));
-    ret /= std::to_string(addr);
+    stdplus::ToStrHandle<stdplus::ToStr<stdplus::InAnyAddr>> tsh;
+    ret /= tsh(addr);
     return ret;
 }
 
 Neighbor::Neighbor(sdbusplus::bus_t& bus, std::string_view objRoot,
-                   stdplus::PinnedRef<EthernetInterface> parent, InAddrAny addr,
-                   stdplus::EtherAddr lladdr, State state) :
+                   stdplus::PinnedRef<EthernetInterface> parent,
+                   stdplus::InAnyAddr addr, stdplus::EtherAddr lladdr,
+                   State state) :
     Neighbor(bus, makeObjPath(objRoot, addr), parent, addr, lladdr, state)
 {}
 
 Neighbor::Neighbor(sdbusplus::bus_t& bus,
                    sdbusplus::message::object_path objPath,
-                   stdplus::PinnedRef<EthernetInterface> parent, InAddrAny addr,
-                   stdplus::EtherAddr lladdr, State state) :
+                   stdplus::PinnedRef<EthernetInterface> parent,
+                   stdplus::InAnyAddr addr, stdplus::EtherAddr lladdr,
+                   State state) :
     NeighborObj(bus, objPath.str.c_str(), NeighborObj::action::defer_emit),
     parent(parent), objPath(std::move(objPath))
 {
-    NeighborObj::ipAddress(std::to_string(addr), true);
+    NeighborObj::ipAddress(stdplus::toStr(addr), true);
     NeighborObj::macAddress(stdplus::toStr(lladdr), true);
     NeighborObj::state(state, true);
     emit_object_added();
