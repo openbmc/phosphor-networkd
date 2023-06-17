@@ -18,29 +18,6 @@ namespace config
 class Parser;
 }
 
-namespace mac_address
-{
-
-/** @brief Determines if the mac address is empty
- *  @param[in] mac - The mac address
- *  @return True if 00:00:00:00:00:00
- */
-bool isEmpty(const ether_addr& mac);
-
-/** @brief Determines if the mac address is a multicast address
- *  @param[in] mac - The mac address
- *  @return True if multicast bit is set
- */
-bool isMulticast(const ether_addr& mac);
-
-/** @brief Determines if the mac address is a unicast address
- *  @param[in] mac - The mac address
- *  @return True if not multicast or empty
- */
-bool isUnicast(const ether_addr& mac);
-
-} // namespace mac_address
-
 /* @brief converts a sockaddr for the specified address family into
  *        a type_safe InAddrAny.
  * @param[in] family - The address family of the buf

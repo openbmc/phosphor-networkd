@@ -40,7 +40,7 @@ class Neighbor : public NeighborObj
      */
     Neighbor(sdbusplus::bus_t& bus, std::string_view objRoot,
              stdplus::PinnedRef<EthernetInterface> parent, InAddrAny addr,
-             ether_addr lladdr, State state);
+             stdplus::EtherAddr lladdr, State state);
 
     /** @brief Delete this d-bus object.
      */
@@ -67,7 +67,7 @@ class Neighbor : public NeighborObj
 
     Neighbor(sdbusplus::bus_t& bus, sdbusplus::message::object_path objPath,
              stdplus::PinnedRef<EthernetInterface> parent, InAddrAny addr,
-             ether_addr lladdr, State state);
+             stdplus::EtherAddr lladdr, State state);
 };
 
 } // namespace network

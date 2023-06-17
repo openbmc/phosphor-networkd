@@ -216,24 +216,5 @@ bool getDHCPProp(const config::Parser& config, std::string_view key)
         .value_or(true);
 }
 
-namespace mac_address
-{
-
-bool isEmpty(const ether_addr& mac)
-{
-    return mac == ether_addr{};
-}
-
-bool isMulticast(const ether_addr& mac)
-{
-    return mac.ether_addr_octet[0] & 0b1;
-}
-
-bool isUnicast(const ether_addr& mac)
-{
-    return !isEmpty(mac) && !isMulticast(mac);
-}
-
-} // namespace mac_address
 } // namespace network
 } // namespace phosphor

@@ -1,7 +1,8 @@
 #pragma once
 #include <fmt/core.h>
-#include <net/ethernet.h>
 #include <netinet/in.h>
+
+#include <stdplus/net/addr/ether.hpp>
 
 #include <algorithm>
 #include <array>
@@ -13,12 +14,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <variant>
-
-constexpr bool operator==(ether_addr lhs, ether_addr rhs) noexcept
-{
-    return std::equal(lhs.ether_addr_octet, lhs.ether_addr_octet + 6,
-                      rhs.ether_addr_octet);
-}
 
 constexpr bool operator==(in_addr lhs, in_addr rhs) noexcept
 {
@@ -85,7 +80,7 @@ struct InterfaceInfo
     unsigned idx;
     unsigned flags;
     std::optional<std::string> name = std::nullopt;
-    std::optional<ether_addr> mac = std::nullopt;
+    std::optional<stdplus::EtherAddr> mac = std::nullopt;
     std::optional<unsigned> mtu = std::nullopt;
     std::optional<unsigned> parent_idx = std::nullopt;
     std::optional<std::string> kind = std::nullopt;
@@ -125,7 +120,7 @@ struct NeighborInfo
     unsigned ifidx;
     uint16_t state;
     std::optional<InAddrAny> addr;
-    std::optional<ether_addr> mac;
+    std::optional<stdplus::EtherAddr> mac;
 
     constexpr bool operator==(const NeighborInfo& rhs) const noexcept
     {
@@ -356,38 +351,6 @@ struct ToAddr
 {};
 
 template <>
-struct ToAddr<ether_addr>
-{
-    constexpr ether_addr operator()(std::string_view str) const
-    {
-        constexpr DecodeInt<uint8_t, 16> di;
-        ether_addr ret;
-        if (str.size() == 12 && str.find(":") == str.npos)
-        {
-            for (size_t i = 0; i < 6; ++i)
-            {
-                ret.ether_addr_octet[i] = di(str.substr(i * 2, 2));
-            }
-        }
-        else
-        {
-            for (size_t i = 0; i < 5; ++i)
-            {
-                auto loc = str.find(":");
-                ret.ether_addr_octet[i] = di(str.substr(0, loc));
-                str.remove_prefix(loc == str.npos ? str.size() : loc + 1);
-                if (str.empty())
-                {
-                    throw std::invalid_argument("Missing mac data");
-                }
-            }
-            ret.ether_addr_octet[5] = di(str);
-        }
-        return ret;
-    }
-};
-
-template <>
 struct ToAddr<in_addr>
 {
     constexpr in_addr operator()(std::string_view str) const
@@ -512,29 +475,6 @@ struct ToStr<char>
     {
         buf[0] = v;
         return buf + 1;
-    }
-};
-
-template <>
-struct ToStr<ether_addr>
-{
-    // 6 octets * 2 hex chars + 5 separators
-    static constexpr uint8_t buf_size = 17;
-    using buf_type = std::array<char, buf_size>;
-
-    constexpr char* operator()(char* buf, ether_addr v) const noexcept
-    {
-        for (char* ptr = buf + 2; ptr < buf + buf_size; ptr += 3)
-        {
-            *ptr = ':';
-        }
-        for (size_t i = 0; i < 6; ++i)
-        {
-            char* tmp = buf + i * 3;
-            uint8_t byte = v.ether_addr_octet[i];
-            EncodeInt<uint8_t, 16>{}(tmp, byte, 2);
-        }
-        return buf + buf_size;
     }
 };
 
@@ -742,9 +682,6 @@ struct std::hash<phosphor::network::IfAddr>
 namespace fmt
 {
 template <>
-struct formatter<ether_addr> : phosphor::network::detail::Format<ether_addr>
-{};
-template <>
 struct formatter<in_addr> : phosphor::network::detail::Format<in_addr>
 {};
 template <>
@@ -762,7 +699,6 @@ struct formatter<phosphor::network::IfAddr> :
 
 namespace std
 {
-string to_string(ether_addr value);
 string to_string(in_addr value);
 string to_string(in6_addr value);
 string to_string(phosphor::network::InAddrAny value);
@@ -775,11 +711,6 @@ constexpr std::enable_if_t<!std::is_same_v<phosphor::network::InAddrAny, T>,
     operator==(phosphor::network::InAddrAny lhs, T rhs) noexcept
 {
     return phosphor::network::detail::veq(rhs, lhs);
-}
-
-auto& operator<<(auto& os, ether_addr v)
-{
-    return os << phosphor::network::detail::ToStrBuf<ether_addr>{}(v);
 }
 
 auto& operator<<(auto& os, in_addr v)

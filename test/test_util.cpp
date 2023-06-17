@@ -52,43 +52,6 @@ TEST(TestUtil, InterfaceToUbootEthAddr)
 namespace mac_address
 {
 
-TEST(MacIsEmpty, True)
-{
-    EXPECT_TRUE(isEmpty({}));
-}
-
-TEST(MacIsEmpty, False)
-{
-    EXPECT_FALSE(isEmpty({1}));
-    EXPECT_FALSE(isEmpty({0, 0, 0, 1}));
-    EXPECT_FALSE(isEmpty({0, 0, 0, 0, 0, 1}));
-}
-
-TEST(MacIsMulticast, True)
-{
-    EXPECT_TRUE(isMulticast({255, 255, 255, 255, 255, 255}));
-    EXPECT_TRUE(isMulticast({1}));
-}
-
-TEST(MacIsMulticast, False)
-{
-    EXPECT_FALSE(isMulticast({0, 1, 2, 3, 4, 5}));
-    EXPECT_FALSE(isMulticast({0xfe, 255, 255, 255, 255, 255}));
-}
-
-TEST(MacIsUnicast, True)
-{
-    EXPECT_TRUE(isUnicast({0, 1, 2, 3, 4, 5}));
-    EXPECT_TRUE(isUnicast({0xfe, 255, 255, 255, 255, 255}));
-}
-
-TEST(MacIsUnicast, False)
-{
-    EXPECT_FALSE(isUnicast({}));
-    EXPECT_FALSE(isUnicast({1}));
-    EXPECT_FALSE(isUnicast({255, 255, 255, 255, 255, 255}));
-}
-
 TEST(IgnoredInterfaces, Empty)
 {
     auto ret = internal::parseInterfaces({});
