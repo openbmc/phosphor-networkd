@@ -67,9 +67,10 @@ InterfaceInfo intfFromRtm(std::string_view msg)
                 ret.name.emplace(data.begin(), data.end() - 1);
                 break;
             case IFLA_ADDRESS:
-                if (data.size() == sizeof(ether_addr))
+                if (data.size() == sizeof(stdplus::EtherAddr))
                 {
-                    ret.mac.emplace(stdplus::raw::copyFrom<ether_addr>(data));
+                    ret.mac.emplace(
+                        stdplus::raw::copyFrom<stdplus::EtherAddr>(data));
                 }
                 break;
             case IFLA_MTU:
@@ -171,7 +172,7 @@ NeighborInfo neighFromRtm(std::string_view msg)
         auto [hdr, data] = netlink::extractRtAttr(msg);
         if (hdr.rta_type == NDA_LLADDR)
         {
-            ret.mac = stdplus::raw::copyFrom<ether_addr>(data);
+            ret.mac = stdplus::raw::copyFrom<stdplus::EtherAddr>(data);
         }
         else if (hdr.rta_type == NDA_DST)
         {

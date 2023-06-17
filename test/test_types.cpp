@@ -12,14 +12,6 @@
 
 using std::literals::string_view_literals::operator""sv;
 
-TEST(EqualOperator, EthAddr)
-{
-    EXPECT_EQ((ether_addr{0x11, 0x22, 0x33, 0x44, 0x55, 0x66}),
-              (ether_addr{0x11, 0x22, 0x33, 0x44, 0x55, 0x66}));
-    EXPECT_EQ((ether_addr{}), (ether_addr{}));
-    EXPECT_NE((ether_addr{1}), (ether_addr{}));
-}
-
 TEST(EqualOperator, InAddr)
 {
     EXPECT_EQ((in_addr{0xff00ff00}), (in_addr{0xff00ff00}));
@@ -112,39 +104,6 @@ TEST(EqualOperator, InAddrAny)
     EXPECT_NE(InAddrAny(in6_addr{1}), InAddrAny(in6_addr{}));
 }
 
-TEST(ToAddr, EtherAddr)
-{
-    EXPECT_THROW(ToAddr<ether_addr>{}("0x:00:00:00:00:00"),
-                 std::invalid_argument);
-    EXPECT_THROW(ToAddr<ether_addr>{}("00:00:00:00:00"), std::invalid_argument);
-    EXPECT_THROW(ToAddr<ether_addr>{}("00:00:00:00:00:"),
-                 std::invalid_argument);
-    EXPECT_THROW(ToAddr<ether_addr>{}("00:00:00:00::00"),
-                 std::invalid_argument);
-    EXPECT_THROW(ToAddr<ether_addr>{}(":00:00:00:00:00"),
-                 std::invalid_argument);
-    EXPECT_THROW(ToAddr<ether_addr>{}("00::00:00:00:00"),
-                 std::invalid_argument);
-    EXPECT_THROW(ToAddr<ether_addr>{}(":::::"), std::invalid_argument);
-    EXPECT_THROW(ToAddr<ether_addr>{}("00:0:0:0:0"), std::invalid_argument);
-    EXPECT_THROW(ToAddr<ether_addr>{}("00:00:00:00:00:00:00"),
-                 std::invalid_argument);
-    EXPECT_THROW(ToAddr<ether_addr>{}(""), std::invalid_argument);
-    EXPECT_THROW(ToAddr<ether_addr>{}("123456789XYZ"), std::invalid_argument);
-    EXPECT_THROW(ToAddr<ether_addr>{}("123456789AB"), std::overflow_error);
-    EXPECT_THROW(ToAddr<ether_addr>{}("123456789ABCD"), std::overflow_error);
-
-    EXPECT_EQ((ether_addr{}), ToAddr<ether_addr>{}("00:00:00:00:00:00"));
-    EXPECT_EQ((ether_addr{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa}),
-              ToAddr<ether_addr>{}("FF:EE:DD:cc:bb:aa"));
-    EXPECT_EQ((ether_addr{0x00, 0x01, 0x02, 0x03, 0x04, 0x05}),
-              ToAddr<ether_addr>{}("0:1:2:3:4:5"));
-    EXPECT_EQ((ether_addr{0x01, 0x23, 0x45, 0x67, 0x89, 0xab}),
-              ToAddr<ether_addr>{}("0123456789AB"));
-    EXPECT_EQ((ether_addr{0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa}),
-              ToAddr<ether_addr>{}("FFEEDDccbbaa"));
-}
-
 TEST(ToAddr, InAddr)
 {
     EXPECT_THROW(ToAddr<in_addr>{}(""), std::invalid_argument);
@@ -234,17 +193,6 @@ TEST(ToAddr, IfAddr)
 namespace detail
 {
 
-TEST(BufMaker, EthAddr)
-{
-    ToStrBuf<ether_addr> abm;
-    EXPECT_EQ("11:22:33:44:55:66"sv,
-              abm(ether_addr{0x11, 0x22, 0x33, 0x44, 0x55, 0x66}));
-    EXPECT_EQ("01:02:03:04:05:67"sv,
-              abm(ether_addr{0x01, 0x02, 0x03, 0x04, 0x05, 0x67}));
-    EXPECT_EQ("00:00:00:00:00:00"sv,
-              abm(ether_addr{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}));
-}
-
 TEST(BufMaker, InAddr)
 {
     ToStrBuf<in_addr> abm;
@@ -286,22 +234,18 @@ TEST(BasicOps, AllAddrs)
 {
     EXPECT_NE(InAddrAny{in6_addr{}}, InAddrAny{in_addr{}});
 
-    EXPECT_EQ("a 01:00:00:00:00:00", fmt::format("a {}", ether_addr{1}));
     EXPECT_EQ("a 0.0.0.1", fmt::format("a {}", in_addr{htonl(1)}));
     EXPECT_EQ("a 0.0.0.1", fmt::format("a {}", InAddrAny{in_addr{htonl(1)}}));
     EXPECT_EQ("a 100::", fmt::format("a {}", in6_addr{1}));
     EXPECT_EQ("a 100::", fmt::format("a {}", InAddrAny{in6_addr{1}}));
     EXPECT_EQ("a 100::/90", fmt::format("a {}", IfAddr{in6_addr{1}, 90}));
 
-    EXPECT_EQ("01:00:00:00:00:00", std::to_string(ether_addr{1}));
     EXPECT_EQ("0.0.0.1", std::to_string(in_addr{htonl(1)}));
     EXPECT_EQ("0.0.0.1", std::to_string(InAddrAny{in_addr{htonl(1)}}));
     EXPECT_EQ("100::", std::to_string(in6_addr{1}));
     EXPECT_EQ("100::", std::to_string(InAddrAny{in6_addr{1}}));
     EXPECT_EQ("100::/22", std::to_string(IfAddr{in6_addr{1}, 22}));
 
-    EXPECT_EQ("a01:00:00:00:00:00",
-              (std::stringstream{} << "a" << ether_addr{1}).str());
     EXPECT_EQ("a0.0.0.1",
               (std::stringstream{} << "a" << in_addr{htonl(1)}).str());
     EXPECT_EQ(

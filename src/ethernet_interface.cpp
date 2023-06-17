@@ -136,7 +136,7 @@ void EthernetInterface::updateInfo(const InterfaceInfo& info, bool skipSignal)
     EthernetInterfaceIntf::linkUp(info.flags & IFF_RUNNING, skipSignal);
     if (info.mac)
     {
-        MacAddressIntf::macAddress(std::to_string(*info.mac), skipSignal);
+        MacAddressIntf::macAddress(stdplus::toStr(*info.mac), skipSignal);
     }
     if (info.mtu)
     {
@@ -203,7 +203,7 @@ void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
 
     if (auto it = staticNeighbors.find(*info.addr); it != staticNeighbors.end())
     {
-        it->second->NeighborObj::macAddress(std::to_string(*info.mac));
+        it->second->NeighborObj::macAddress(stdplus::toStr(*info.mac));
     }
     else
     {
@@ -292,10 +292,10 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                               Argument::ARGUMENT_VALUE(ipAddress.c_str()));
     }
 
-    ether_addr lladdr;
+    stdplus::EtherAddr lladdr;
     try
     {
-        lladdr = ToAddr<ether_addr>{}(macAddress);
+        lladdr = stdplus::fromStr<stdplus::EtherAddr>(macAddress);
     }
     catch (const std::exception& e)
     {
@@ -315,7 +315,7 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
     }
     else
     {
-        auto str = std::to_string(lladdr);
+        auto str = stdplus::toStr(lladdr);
         if (it->second->macAddress() == str)
         {
             return it->second->getObjPath();
@@ -558,10 +558,10 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
 
     auto objRoot = std::string_view(objPath).substr(0, objPath.rfind('/'));
     auto macStr = MacAddressIntf::macAddress();
-    std::optional<ether_addr> mac;
+    std::optional<stdplus::EtherAddr> mac;
     if (!macStr.empty())
     {
-        mac.emplace(ToAddr<ether_addr>{}(macStr));
+        mac.emplace(stdplus::fromStr<stdplus::EtherAddr>(macStr));
     }
     auto info = AllIntfInfo{InterfaceInfo{
         .type = ARPHRD_ETHER,
@@ -739,10 +739,10 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         elog<InternalFailure>();
     }
 #ifdef PERSIST_MAC
-    ether_addr newMAC;
+    stdplus::EtherAddr newMAC;
     try
     {
-        newMAC = ToAddr<ether_addr>{}(value);
+        newMAC = stdplus::fromStr<stdplus::EtherAddr>(value);
     }
     catch (const std::invalid_argument&)
     {
@@ -750,7 +750,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("MACAddress"),
                               Argument::ARGUMENT_VALUE(value.c_str()));
     }
-    if (!mac_address::isUnicast(newMAC))
+    if (!newMAC.isUnicast())
     {
         lg2::error("MAC Address {NET_MAC} is not valid", "NET_MAC", value);
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("MACAddress"),
@@ -758,10 +758,11 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
     }
 
     auto interface = interfaceName();
-    auto validMAC = std::to_string(newMAC);
+    auto validMAC = stdplus::toStr(newMAC);
 
     // We don't need to update the system if the address is unchanged
-    ether_addr oldMAC = ToAddr<ether_addr>{}(MacAddressIntf::macAddress());
+    auto oldMAC =
+        stdplus::fromStr<stdplus::EtherAddr>(MacAddressIntf::macAddress());
     if (newMAC != oldMAC)
     {
         // Update everything that depends on the MAC value

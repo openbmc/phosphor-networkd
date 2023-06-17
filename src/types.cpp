@@ -25,10 +25,6 @@ std::size_t std::hash<phosphor::network::IfAddr>::operator()(
     return stdplus::hashMulti(addr.getAddr(), addr.getPfx());
 }
 
-std::string std::to_string(ether_addr value)
-{
-    return string(phosphor::network::detail::ToStrBuf<ether_addr>{}(value));
-}
 std::string std::to_string(in_addr value)
 {
     return string(phosphor::network::detail::ToStrBuf<in_addr>{}(value));

@@ -76,7 +76,8 @@ void setFirstBootMACOnInterface(const std::string& intf, const std::string& mac)
     }
 }
 
-ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
+stdplus::EtherAddr getfromInventory(sdbusplus::bus_t& bus,
+                                    const std::string& intfName)
 {
     std::string interfaceName = configJson[intfName];
 
@@ -156,7 +157,7 @@ ether_addr getfromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
 
     std::variant<std::string> value;
     reply.read(value);
-    return ToAddr<ether_addr>{}(std::get<std::string>(value));
+    return stdplus::fromStr<stdplus::EtherAddr>(std::get<std::string>(value));
 }
 
 bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
@@ -164,9 +165,9 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
     try
     {
         auto inventoryMAC = getfromInventory(bus, intfname);
-        if (inventoryMAC != ether_addr{})
+        if (!inventoryMAC.isEmpty())
         {
-            auto macStr = std::to_string(inventoryMAC);
+            auto macStr = stdplus::toStr(inventoryMAC);
             lg2::info(
                 "Mac Address {NET_MAC} in Inventory on Interface {NET_INTF}",
                 "NET_MAC", macStr, "NET_INTF", intfname);

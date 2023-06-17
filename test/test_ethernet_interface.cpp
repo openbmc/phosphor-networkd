@@ -71,7 +71,7 @@ TEST_F(TestEthernetInterface, Fields)
     EXPECT_EQ("", interface.macAddress());
     EXPECT_FALSE(interface.linkUp());
 
-    constexpr ether_addr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};
+    constexpr stdplus::EtherAddr mac{0x11, 0x22, 0x33, 0x44, 0x55, 0x66};
     constexpr unsigned mtu = 150;
 
     AllIntfInfo info{InterfaceInfo{.type = ARPHRD_ETHER,
@@ -84,7 +84,7 @@ TEST_F(TestEthernetInterface, Fields)
                                "/xyz/openbmc_test/network"sv, config::Parser());
 
     EXPECT_EQ(mtu, intf.mtu());
-    EXPECT_EQ(std::to_string(mac), intf.macAddress());
+    EXPECT_EQ(stdplus::toStr(mac), intf.macAddress());
     EXPECT_TRUE(intf.linkUp());
 }
 
