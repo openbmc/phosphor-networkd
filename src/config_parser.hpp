@@ -3,7 +3,6 @@
 #include <filesystem>
 #include <functional>
 #include <optional>
-#include <ostream>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -52,6 +51,13 @@ class Checked
         return t;
     }
 
+    template <typename T2, typename Check2>
+    constexpr bool operator==(const Checked<T2, Check2>& rhs) const noexcept
+    {
+        static_assert(std::is_same_v<Check2, Check>);
+        return t == rhs.t;
+    }
+
     constexpr bool operator==(const auto& rhs) const noexcept
     {
         return t == rhs;
@@ -68,19 +74,6 @@ class Checked
         return t;
     }
 };
-
-template <typename T, typename Check>
-constexpr bool operator==(const auto& lhs,
-                          const Checked<T, Check>& rhs) noexcept
-{
-    return lhs == rhs.get();
-}
-
-template <typename T, typename Check>
-inline std::ostream& operator<<(std::ostream& s, const Checked<T, Check>& rhs)
-{
-    return s << rhs.get();
-}
 
 struct KeyCheck
 {

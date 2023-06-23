@@ -27,7 +27,7 @@ class HypNetworkMgr; // forward declaration of network manager.
 class HypSysConfig : public Iface
 {
   public:
-    HypSysConfig() = default;
+    HypSysConfig() = delete;
     HypSysConfig(const HypSysConfig&) = delete;
     HypSysConfig& operator=(const HypSysConfig&) = delete;
     HypSysConfig(HypSysConfig&&) = delete;
