@@ -187,7 +187,7 @@ class EthernetInterface : public Ifaces
 
     /** @brief delete all dbus objects.
      */
-    void deleteAll();
+    void deleteAll() override;
 
     /** @brief set the default v4 gateway of the interface.
      *  @param[in] gateway - default v4 gateway of the interface.

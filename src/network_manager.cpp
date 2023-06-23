@@ -20,14 +20,6 @@
 
 #include <filesystem>
 
-constexpr char SYSTEMD_BUSNAME[] = "org.freedesktop.systemd1";
-constexpr char SYSTEMD_PATH[] = "/org/freedesktop/systemd1";
-constexpr char SYSTEMD_INTERFACE[] = "org.freedesktop.systemd1.Manager";
-
-constexpr char NETWORKD_BUSNAME[] = "org.freedesktop.network1";
-constexpr char NETWORKD_PATH[] = "/org/freedesktop/network1";
-constexpr char NETWORKD_INTERFACE[] = "org.freedesktop.network1.Manager";
-
 namespace phosphor
 {
 namespace network
@@ -95,8 +87,9 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
         try
         {
             bus.get()
-                .new_method_call(NETWORKD_BUSNAME, NETWORKD_PATH,
-                                 NETWORKD_INTERFACE, "Reload")
+                .new_method_call("org.freedesktop.network1",
+                                 "/org/freedesktop/network1",
+                                 "org.freedesktop.network1.Manager", "Reload")
                 .call();
             lg2::info("Reloaded systemd-networkd");
         }
