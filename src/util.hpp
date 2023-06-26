@@ -25,15 +25,17 @@ constexpr bool validUnicast(in_addr addr) noexcept
     return s8net != 0u &&                // 0.0.0.0/8
            s8net != hton(0x7f000000u) && // 127.0.0.0/8
            s4net != hton(0xe0000000u) && // 224.0.0.0/4
-           addr.s_addr != 0xffffffffu;   // 255.255.255.255/32
+           addr.s_addr != 0xffffffffu && // 255.255.255.255/32
+           s8net != hton(0xa9000000u);   // 169.254.0.0/16
 }
 
 constexpr bool validUnicast(in6_addr addr) noexcept
 {
-    return addr != in6_addr{} && // ::/128
+    return addr != in6_addr{} &&                       // ::/128
            addr != in6_addr{0, 0, 0, 0, 0, 0, 0, 0,
                             0, 0, 0, 0, 0, 0, 0, 1} && // ::1/128
-           addr.s6_addr[0] != 0xff;                    // ff00::/8
+           addr.s6_addr[0] != 0xff &&                  // ff00::/8
+           !(addr.s6_addr[0] == 0xfe && (addr.s6_addr[1] & 0xc0) == 0x80);
 }
 
 constexpr bool validUnicast(InAddrAny addr) noexcept
