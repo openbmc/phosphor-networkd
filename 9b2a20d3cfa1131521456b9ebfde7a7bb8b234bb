@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5fe77c8a_8f0ee6b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-28T18:36:43Z",
+      "side": 1,
+      "message": "A couple of questions...\nLooks good to me otherwise.",
+      "revId": "9b2a20d3cfa1131521456b9ebfde7a7bb8b234bb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f72079b_a7368b0d",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-28T18:36:43Z",
+      "side": 1,
+      "message": "Is there a reason this isn\u0027t assigned std::nullopt?",
+      "revId": "9b2a20d3cfa1131521456b9ebfde7a7bb8b234bb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3dd1010f_363ddb0a",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-06-28T18:36:43Z",
+      "side": 1,
+      "message": "Also explicitly initialize?",
+      "revId": "9b2a20d3cfa1131521456b9ebfde7a7bb8b234bb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
