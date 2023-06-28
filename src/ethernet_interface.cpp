@@ -237,6 +237,10 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
             default:
                 throw std::logic_error("Exhausted protocols");
         }
+        if (!std::visit([](auto ip) { return validIntfIP(ip); }, *addr))
+        {
+            throw std::invalid_argument("not unicast");
+        }
     }
     catch (const std::exception& e)
     {
@@ -248,6 +252,10 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
     std::optional<stdplus::SubnetAny> ifaddr;
     try
     {
+        if (prefixLength == 0)
+        {
+            throw std::invalid_argument("default route");
+        }
         ifaddr.emplace(*addr, prefixLength);
     }
     catch (const std::exception& e)
