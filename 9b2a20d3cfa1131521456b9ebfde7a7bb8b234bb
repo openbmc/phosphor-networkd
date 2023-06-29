@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd76fa5b_4cce3082",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-06-29T09:43:10Z",
+      "side": 1,
+      "message": "The default constructor for `std::optional` always initializes to nullopt (see the api reference). But also, purely because the code flow guarantees that a value gets emplaced or control flow exits back up.",
+      "parentUuid": "7f72079b_a7368b0d",
+      "revId": "9b2a20d3cfa1131521456b9ebfde7a7bb8b234bb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3dd1010f_363ddb0a",
@@ -48,6 +66,24 @@
       "writtenOn": "2023-06-28T18:36:43Z",
       "side": 1,
       "message": "Also explicitly initialize?",
+      "revId": "9b2a20d3cfa1131521456b9ebfde7a7bb8b234bb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b8407f3_dc5d2c0a",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-06-29T09:43:10Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3dd1010f_363ddb0a",
       "revId": "9b2a20d3cfa1131521456b9ebfde7a7bb8b234bb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
