@@ -10,6 +10,9 @@
 namespace phosphor::network::netlink
 {
 
+using stdplus::operator""_sub;
+using stdplus::operator""_ip;
+
 TEST(IntfFromRtm, SmallMsg)
 {
     EXPECT_THROW(intfFromRtm("1"), std::runtime_error);
@@ -91,8 +94,7 @@ TEST(AddrFromRtm, Regular)
     EXPECT_EQ(msg.ifa.ifa_flags, ret.flags);
     EXPECT_EQ(msg.ifa.ifa_scope, ret.scope);
     EXPECT_EQ(msg.ifa.ifa_index, ret.ifidx);
-    EXPECT_EQ((stdplus::SubnetAny{stdplus::In4Addr{192, 168, 1, 20}, 28}),
-              ret.ifaddr);
+    EXPECT_EQ("192.168.1.20/28"_sub, ret.ifaddr);
 }
 
 TEST(AddrFromRtm, ExtraFlags)
@@ -140,7 +142,7 @@ TEST(NeighFromRtm, NoMac)
 
     auto ret = neighFromRtm(stdplus::raw::asView<char>(msg));
     EXPECT_EQ(msg.ndm.ndm_state, ret.state);
-    EXPECT_EQ((stdplus::In4Addr{192, 168, 1, 20}), ret.addr);
+    EXPECT_EQ("192.168.1.20"_ip, ret.addr);
     EXPECT_FALSE(ret.mac);
 }
 
@@ -161,7 +163,7 @@ TEST(NeighFromRtm, Full)
     msg.mac_hdr.rta_len = RTA_LENGTH(sizeof(msg.mac));
 
     auto ret = neighFromRtm(stdplus::raw::asView<char>(msg));
-    EXPECT_EQ((stdplus::In4Addr{192, 168, 1, 20}), ret.addr);
+    EXPECT_EQ("192.168.1.20"_ip, ret.addr);
     EXPECT_EQ((ether_addr{1, 2, 3, 4, 5, 6}), ret.mac);
 }
 
