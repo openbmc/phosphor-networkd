@@ -23,6 +23,7 @@ using sdbusplus::xyz::openbmc_project::Common::Error::InvalidArgument;
 using std::literals::string_view_literals::operator""sv;
 using testing::Key;
 using testing::UnorderedElementsAre;
+using stdplus::operator""_sub;
 
 class TestEthernetInterface : public stdplus::gtest::TestWithTmp
 {
@@ -110,30 +111,26 @@ TEST_F(TestEthernetInterface, AddIPAddress)
                  InvalidArgument);
 
     createIPObject(IP::Protocol::IPv4, "10.10.10.10", 16);
-    EXPECT_THAT(interface.addrs, UnorderedElementsAre(Key(stdplus::SubnetAny(
-                                     stdplus::In4Addr{10, 10, 10, 10}, 16))));
+    EXPECT_THAT(interface.addrs,
+                UnorderedElementsAre(Key("10.10.10.10/16"_sub)));
 }
 
 TEST_F(TestEthernetInterface, AddMultipleAddress)
 {
     createIPObject(IP::Protocol::IPv4, "10.10.10.10", 16);
     createIPObject(IP::Protocol::IPv4, "20.20.20.20", 16);
-    EXPECT_THAT(
-        interface.addrs,
-        UnorderedElementsAre(
-            Key(stdplus::SubnetAny(stdplus::In4Addr{10, 10, 10, 10}, 16)),
-            Key(stdplus::SubnetAny(stdplus::In4Addr{20, 20, 20, 20}, 16))));
+    EXPECT_THAT(interface.addrs,
+                UnorderedElementsAre(Key("10.10.10.10/16"_sub),
+                                     Key("20.20.20.20/16"_sub)));
 }
 
 TEST_F(TestEthernetInterface, DeleteIPAddress)
 {
     createIPObject(IP::Protocol::IPv4, "10.10.10.10", 16);
     createIPObject(IP::Protocol::IPv4, "20.20.20.20", 16);
-    interface.addrs
-        .at(stdplus::SubnetAny(stdplus::In4Addr{10, 10, 10, 10}, 16))
-        ->delete_();
-    EXPECT_THAT(interface.addrs, UnorderedElementsAre(Key(stdplus::SubnetAny(
-                                     stdplus::In4Addr{20, 20, 20, 20}, 16))));
+    interface.addrs.at("10.10.10.10/16"_sub)->delete_();
+    EXPECT_THAT(interface.addrs,
+                UnorderedElementsAre(Key("20.20.20.20/16"_sub)));
 }
 
 TEST_F(TestEthernetInterface, CheckObjectPath)
