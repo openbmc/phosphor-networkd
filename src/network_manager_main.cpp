@@ -33,7 +33,7 @@ class TimerExecutor : public DelayedExecutor
     using Timer = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
 
   public:
-    TimerExecutor(sdeventplus::Event& event, std::chrono::seconds delay) :
+    TimerExecutor(sdeventplus::Event& event, std::chrono::milliseconds delay) :
         delay(delay), timer(event, nullptr)
     {}
 
@@ -48,7 +48,7 @@ class TimerExecutor : public DelayedExecutor
     }
 
   private:
-    std::chrono::seconds delay;
+    std::chrono::milliseconds delay;
     Timer timer;
 };
 

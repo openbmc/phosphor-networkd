@@ -29,15 +29,6 @@ using ManagerIface = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::VLAN::server::Create,
     sdbusplus::xyz::openbmc_project::Common::server::FactoryReset>;
 
-class DelayedExecutor
-{
-  public:
-    virtual ~DelayedExecutor() = default;
-
-    virtual void schedule() = 0;
-    virtual void setCallback(fu2::unique_function<void()>&& cb) = 0;
-};
-
 /** @class Manager
  *  @brief OpenBMC network manager implementation.
  */

@@ -1,4 +1,5 @@
 #pragma once
+#include <function2/function2.hpp>
 #include <stdplus/net/addr/ether.hpp>
 #include <stdplus/net/addr/ip.hpp>
 #include <stdplus/net/addr/subnet.hpp>
@@ -10,6 +11,15 @@
 
 namespace phosphor::network
 {
+
+class DelayedExecutor
+{
+  public:
+    virtual ~DelayedExecutor() = default;
+
+    virtual void schedule() = 0;
+    virtual void setCallback(fu2::unique_function<void()>&& cb) = 0;
+};
 
 /** @class InterfaceInfo
  *  @brief Information about interfaces from the kernel
