@@ -68,7 +68,8 @@ int main()
     sdbusplus::server::manager_t objManager(bus, DEFAULT_OBJPATH);
 
     stdplus::Pinned<TimerExecutor> reload(event, std::chrono::seconds(3));
-    Manager manager(bus, reload, DEFAULT_OBJPATH, "/etc/systemd/network");
+    stdplus::Pinned<Manager> manager(bus, reload, DEFAULT_OBJPATH,
+                                     "/etc/systemd/network");
     netlink::Server svr(event, manager);
 
 #ifdef SYNC_MAC_FROM_INVENTORY
