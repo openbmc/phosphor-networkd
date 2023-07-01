@@ -36,7 +36,8 @@ static constexpr const char enabledMatch[] =
     "PropertiesChanged',arg0='org.freedesktop.network1.Link',";
 
 Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
-                 DelayedExecutor& reload, stdplus::zstring_view objPath,
+                 stdplus::PinnedRef<DelayedExecutor> reload,
+                 stdplus::zstring_view objPath,
                  const std::filesystem::path& confDir) :
     ManagerIface(bus, objPath.c_str(), ManagerIface::action::defer_emit),
     reload(reload), bus(bus), objPath(std::string(objPath)), confDir(confDir),
@@ -70,7 +71,7 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     }
         })
 {
-    reload.setCallback([&]() {
+    reload.get().setCallback([&]() {
         for (auto& hook : reloadPreHooks)
         {
             try

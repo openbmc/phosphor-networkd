@@ -44,7 +44,8 @@ class Manager : public ManagerIface
      *  @param[in] objPath - Path to attach at.
      *  @param[in] confDir - Network Configuration directory path.
      */
-    Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus, DelayedExecutor& reload,
+    Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+            stdplus::PinnedRef<DelayedExecutor> reload,
             stdplus::zstring_view objPath,
             const std::filesystem::path& confDir);
 
@@ -98,7 +99,7 @@ class Manager : public ManagerIface
      */
     inline void reloadConfigs()
     {
-        reload.schedule();
+        reload.get().schedule();
     }
 
     /** @brief Persistent map of EthernetInterface dbus objects and their names
@@ -122,7 +123,7 @@ class Manager : public ManagerIface
 
   protected:
     /** @brief Handle to the object used to trigger reloads of networkd. */
-    DelayedExecutor& reload;
+    stdplus::PinnedRef<DelayedExecutor> reload;
 
     /** @brief Persistent sdbusplus DBus bus connection. */
     stdplus::PinnedRef<sdbusplus::bus_t> bus;
