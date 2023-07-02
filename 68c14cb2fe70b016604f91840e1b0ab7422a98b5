@@ -175,6 +175,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1302263a_8a0c7e78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-07-02T17:41:30Z",
+      "side": 1,
+      "message": "I have tested below mentioned configurations and checked origin of different types of IP addresses.\n\n1. IPv4 and IPv6 static address configuration \n2. DHCPv4 and DHPCv6 enable/disable\n3. Linklocal and SLAAC address configuration.\n\nI noticed all these different address has got valid address origin populated with this commit",
+      "parentUuid": "b20866f8_09a74666",
+      "revId": "68c14cb2fe70b016604f91840e1b0ab7422a98b5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b545bfb4_68a2461c",
@@ -188,6 +206,30 @@
       "writtenOn": "2023-06-15T13:43:31Z",
       "side": 1,
       "message": "Do we still need this condition? if Yes why?",
+      "range": {
+        "startLine": 170,
+        "startChar": 0,
+        "endLine": 173,
+        "endChar": 5
+      },
+      "revId": "68c14cb2fe70b016604f91840e1b0ab7422a98b5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81a5e69e_23e373b0",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-07-02T17:41:30Z",
+      "side": 1,
+      "message": "Yes, does not need this condition anymore.\nwill remove",
+      "parentUuid": "b545bfb4_68a2461c",
       "range": {
         "startLine": 170,
         "startChar": 0,
