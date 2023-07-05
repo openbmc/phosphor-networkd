@@ -88,6 +88,24 @@
       "parentUuid": "049edaf1_ab530b5e",
       "revId": "d76f14763b976d550f3b3d04595e31f7ff55cf78",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c3ef963_fa9bad22",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-05T09:48:24Z",
+      "side": 1,
+      "message": "Since it is auto configured - there is no need for a user to manually set LinkLocal IP again. \nBut As William said - if someone in community wants a way to set it manually, then lets not block it with this commit. We can leave this responsibility to the user to choose the IP address wisely. Even the RFC does not mandate to block this.",
+      "parentUuid": "98b34c36_38531a05",
+      "revId": "d76f14763b976d550f3b3d04595e31f7ff55cf78",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
