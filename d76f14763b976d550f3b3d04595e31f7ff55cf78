@@ -106,6 +106,24 @@
       "parentUuid": "98b34c36_38531a05",
       "revId": "d76f14763b976d550f3b3d04595e31f7ff55cf78",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e851a41_ef109a4f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000053
+      },
+      "writtenOn": "2023-07-05T14:29:34Z",
+      "side": 1,
+      "message": "Why again user wants to configure it manually when it is already there always \u0026 auto configured by system.",
+      "parentUuid": "9c3ef963_fa9bad22",
+      "revId": "d76f14763b976d550f3b3d04595e31f7ff55cf78",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
