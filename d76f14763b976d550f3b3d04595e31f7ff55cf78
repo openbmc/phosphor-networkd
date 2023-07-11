@@ -178,6 +178,24 @@
       "parentUuid": "f5e6c6b4_0a6d6ad7",
       "revId": "d76f14763b976d550f3b3d04595e31f7ff55cf78",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbe53b1d_b3ede2d0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000053
+      },
+      "writtenOn": "2023-07-11T08:51:39Z",
+      "side": 1,
+      "message": "Sure, then it makes sense. Curious to know what use case that would be.",
+      "parentUuid": "47f5186d_ef23c328",
+      "revId": "d76f14763b976d550f3b3d04595e31f7ff55cf78",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
