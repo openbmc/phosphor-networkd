@@ -2,7 +2,7 @@
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
-#include <function2/function2.hpp>
+#include <stdplus/function_view.hpp>
 #include <stdplus/raw.hpp>
 
 #include <string_view>
@@ -19,7 +19,7 @@ namespace netlink
 /* @brief Called on each nlmsg received on the socket
  */
 using ReceiveCallback =
-    fu2::function_view<void(const nlmsghdr&, std::string_view)>;
+    stdplus::function_view<void(const nlmsghdr&, std::string_view)>;
 
 namespace detail
 {
