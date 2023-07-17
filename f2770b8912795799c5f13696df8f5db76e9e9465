@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3179ad7d_39a5246d",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-17T14:01:59Z",
+      "side": 1,
+      "message": "lg2 in the new methods.",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 233,
+        "endChar": 37
+      },
+      "revId": "f2770b8912795799c5f13696df8f5db76e9e9465",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7b03476_dc82a4ac",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-17T14:01:59Z",
+      "side": 1,
+      "message": "Can the destination be populated with 0 if this is not supplied by the user? This is needed to use this as a common interface to set the static gateways.",
+      "range": {
+        "startLine": 256,
+        "startChar": 42,
+        "endLine": 256,
+        "endChar": 59
+      },
+      "revId": "f2770b8912795799c5f13696df8f5db76e9e9465",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c3e9f0d_1b718cbb",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-17T14:01:59Z",
+      "side": 1,
+      "message": "lg2",
+      "range": {
+        "startLine": 578,
+        "startChar": 8,
+        "endLine": 578,
+        "endChar": 37
+      },
+      "revId": "f2770b8912795799c5f13696df8f5db76e9e9465",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
