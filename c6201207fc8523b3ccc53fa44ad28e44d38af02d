@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc1f3e2a_8d6cc1d1",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-07-17T06:33:19Z",
+      "side": 1,
+      "message": "This is incorrect, both DHCP and SLAAC can have MANAGETEMPADDR",
+      "revId": "c6201207fc8523b3ccc53fa44ad28e44d38af02d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
