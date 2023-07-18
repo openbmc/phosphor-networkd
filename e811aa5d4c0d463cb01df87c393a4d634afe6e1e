@@ -1,6 +1,52 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3c57395_ae5c9420",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-07-18T13:48:39Z",
+      "side": 1,
+      "message": "Can you describe more? what are those corner cases?",
+      "range": {
+        "startLine": 10,
+        "startChar": 12,
+        "endLine": 11,
+        "endChar": 70
+      },
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ada73f3_5c93d61d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-07-18T13:48:39Z",
+      "side": 1,
+      "message": "What is that complex logic? \n\nOnly DHCv4: DHCPConf::v4\nOnly DHCPv6: DHCPConf::v46\nDHCPv4 and DHCPv6: DHCPConf::both\nNo DHCPv4 and No DHCPv6: DHCPConf::none\n\nWhat is the complexity for set?",
+      "range": {
+        "startLine": 14,
+        "startChar": 20,
+        "endLine": 17,
+        "endChar": 0
+      },
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "82d45f60_3f76572e",
