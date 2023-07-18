@@ -315,6 +315,24 @@
       "parentUuid": "d7e61386_f755f61c",
       "revId": "68c14cb2fe70b016604f91840e1b0ab7422a98b5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "409c92d2_7e1b2ccf",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-07-18T02:43:31Z",
+      "side": 1,
+      "message": "I see RT_SCOPE_LINK set to link local ip addresses only.\neven in our existing code currently we decide link local address based on RT_SCOPE_LINK flag.\nfor static addresses IFA_F_PERMANENT along with RT_SCOPE_UNIVERSE",
+      "parentUuid": "196ae8b2_9edd1446",
+      "revId": "68c14cb2fe70b016604f91840e1b0ab7422a98b5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
