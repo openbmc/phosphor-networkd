@@ -71,6 +71,47 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "4304cae6_e64d8116",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-07-18T19:57:36Z",
+      "side": 1,
+      "message": "I\u0027m guessing this comment had to do with the existence of the additional enums. Without these v4v6stateless, v6stateless, etc... the author appears to be saying the burden on bmcweb is eliminated.\n\nNow IPMI becomes untenable. IPMI only controls IPv6AcceptRA, and DHCPv4. There is no way to independently control DHCPv6 from IPMI. This is a significant issue for Intel, as the BIOS UI has no mechanism for managing/configuring IPv6 in tandem with Redfish.",
+      "parentUuid": "12f8659e_e25383e5",
+      "range": {
+        "startLine": 14,
+        "startChar": 20,
+        "endLine": 17,
+        "endChar": 0
+      },
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f260b614_6e4e6e5a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-07-18T19:57:36Z",
+      "side": 1,
+      "message": "What is IPv6AutoConfig?",
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "82d45f60_3f76572e",
@@ -153,6 +194,23 @@
       "side": 1,
       "message": "I assume you must be looking for Johnathan Mantey? I am not too familiar with this networking stuff :)",
       "parentUuid": "5aab9afe_2e59a2e3",
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1727af04_45c1fe96",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-07-18T19:57:36Z",
+      "side": 1,
+      "message": "I can\u0027t say I fully understand the commit message meaning/intent.",
       "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
