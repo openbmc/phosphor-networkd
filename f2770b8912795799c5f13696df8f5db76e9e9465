@@ -47,6 +47,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d241792b_b3dab77b",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-07-19T14:00:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7b03476_dc82a4ac",
+      "range": {
+        "startLine": 256,
+        "startChar": 42,
+        "endLine": 256,
+        "endChar": 59
+      },
+      "revId": "f2770b8912795799c5f13696df8f5db76e9e9465",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2c3e9f0d_1b718cbb",
@@ -60,6 +84,30 @@
       "writtenOn": "2023-07-17T14:01:59Z",
       "side": 1,
       "message": "lg2",
+      "range": {
+        "startLine": 578,
+        "startChar": 8,
+        "endLine": 578,
+        "endChar": 37
+      },
+      "revId": "f2770b8912795799c5f13696df8f5db76e9e9465",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c9a6a0f_8199d39e",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-07-19T14:00:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c3e9f0d_1b718cbb",
       "range": {
         "startLine": 578,
         "startChar": 8,
