@@ -97,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c15fd59e_bae93baf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-07-20T18:25:02Z",
+      "side": 1,
+      "message": "say DHCPv4 is enabled DHCPEnabled property is set to DHCPConf::v4 enum.\nand now it redfish client wants to enable DHCPv6 then BMCWEB needs to have logic to check current DHCPEnabled value and then determine new DHCPEnabled property value to DHCPConf::both as DHCPEnabled has value DHCPConf::v4.\n\nthis logic get complicated while changing configuration of different v4/v6 combinations.\n\nchanging configuration from v6stateless to v4 or v6 or both \nchanging configuration  from v4stateless to v4 or v6 or both\n\nbmcweb needs to have logic to check all these combinations and set DHCPEnabled D-bus property values accordingly every time there is  DHCP config change.\n\nwe already have IPv6AcceptRa D-bus property which controls ipv6 stateless configuration directly, this commit avoids using DHCPConf::v4stateless and DHCPConf::v6stateless enums and bmcweb directly uses Ipv6AcceptRa D-bus property",
+      "parentUuid": "4304cae6_e64d8116",
+      "range": {
+        "startLine": 14,
+        "startChar": 20,
+        "endLine": 17,
+        "endChar": 0
+      },
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f260b614_6e4e6e5a",
         "filename": "/COMMIT_MSG",
         "patchSetId": 6
