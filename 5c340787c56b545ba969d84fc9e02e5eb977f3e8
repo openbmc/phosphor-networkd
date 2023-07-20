@@ -105,6 +105,30 @@
       },
       "revId": "5c340787c56b545ba969d84fc9e02e5eb977f3e8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5fc96361_c42ad426",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-07-20T14:35:25Z",
+      "side": 1,
+      "message": "Existing origin assignment logic already assigns origin default value to IP::AddressOrigin::Static and then changes origin to IP::AddressOrigin::DHCP if DHCP enabled. I think this is good, does not need any changes here.\nFor IPv6 addresses irrespective of default values anyways it checks flags and populates origin accordingly.",
+      "parentUuid": "d61a4b1f_9f59f00e",
+      "range": {
+        "startLine": 177,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 0
+      },
+      "revId": "5c340787c56b545ba969d84fc9e02e5eb977f3e8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
