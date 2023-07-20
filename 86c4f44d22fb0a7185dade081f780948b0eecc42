@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2fedc699_7d9823ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-07-20T18:27:59Z",
+      "side": 1,
+      "message": "This is why I suggested initializing using DHCP at the outset, and then letting the logic override that value via the ifa_flags. That removes the code reading the D-Bus state, which is undesirable.",
+      "parentUuid": "af294794_e84dcbdd",
+      "revId": "86c4f44d22fb0a7185dade081f780948b0eecc42",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "74523bf4_b4596ac4",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 3
