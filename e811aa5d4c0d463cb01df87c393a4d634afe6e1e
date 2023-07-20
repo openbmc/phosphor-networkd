@@ -169,6 +169,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b6495770_5057b4d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-07-20T20:56:30Z",
+      "side": 1,
+      "message": "The DHCPEnabled property in phosphor-networkd. all of the clients end up parsing it out in a manner similar to how it\u0027s constructed. They all want separate properties for v4 / v6, and they can access those now via `dhcp4` `dhcp6` `ipv6acceptra`.\n\nI was planning to make it standard that ipv6acceptra / dhcpv6 are tied together for ipmi, not just intel only.",
+      "parentUuid": "49004d18_69392351",
+      "range": {
+        "startLine": 14,
+        "startChar": 20,
+        "endLine": 17,
+        "endChar": 0
+      },
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f260b614_6e4e6e5a",
         "filename": "/COMMIT_MSG",
         "patchSetId": 6
