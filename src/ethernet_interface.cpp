@@ -174,6 +174,11 @@ bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
 void EthernetInterface::addAddr(const AddressInfo& info)
 {
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
+    if (dhcpIsEnabled(info.ifaddr.getAddr()))
+    {
+        origin = IP::AddressOrigin::DHCP;
+    }
+
 #ifdef LINK_LOCAL_AUTOCONFIGURATION
     if (info.scope == RT_SCOPE_LINK)
     {
