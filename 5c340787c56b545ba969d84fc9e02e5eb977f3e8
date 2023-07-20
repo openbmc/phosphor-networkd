@@ -81,6 +81,30 @@
       },
       "revId": "5c340787c56b545ba969d84fc9e02e5eb977f3e8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d61a4b1f_9f59f00e",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-07-20T14:13:29Z",
+      "side": 1,
+      "message": "Does it make sense to always assume DHCP is assigned (line 176), and then use the address flags to force a different value?\n\nI\u0027d also like to see all of the \u0027if\u0027 clauses be \u0027if/else if\u0027 clauses.\n Insert a line after 186 that is a solo \u0027else\u0027, and then make all other \u0027if\u0027 tests an \u0027if/else\u0027 chain.\n \nIf DHCP is assumed then lines 199-\u003e203 may be deleted.\n\nIf, on the other hand, lines 199-\u003e203 are to be kept, then I would like to see lines 177-\u003e180 be more targeted. It should only activate for \u0027::both\u0027 or \u0027::DHCPv4\u0027.",
+      "parentUuid": "9b5218cf_38d2a0b5",
+      "range": {
+        "startLine": 177,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 0
+      },
+      "revId": "5c340787c56b545ba969d84fc9e02e5eb977f3e8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
