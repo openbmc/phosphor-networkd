@@ -54,6 +54,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "029ceb13_7d59e80b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-07-20T17:44:14Z",
+      "side": 1,
+      "message": "sure, I will try to explore to query systemd-networkd directly.\ncan we keep this commit until we get fix with Systemd-networkd",
+      "parentUuid": "fcabcfb3_e0567b88",
+      "revId": "86c4f44d22fb0a7185dade081f780948b0eecc42",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "74523bf4_b4596ac4",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 3
