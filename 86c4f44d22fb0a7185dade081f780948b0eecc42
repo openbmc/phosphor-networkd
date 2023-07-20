@@ -16,6 +16,40 @@
       "message": "Some suggestions for the code.",
       "revId": "86c4f44d22fb0a7185dade081f780948b0eecc42",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62942453_a84a3913",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-07-20T14:25:38Z",
+      "side": 1,
+      "message": "Brief question.",
+      "revId": "86c4f44d22fb0a7185dade081f780948b0eecc42",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74523bf4_b4596ac4",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-07-20T14:25:38Z",
+      "side": 1,
+      "message": "Is there a reason this test is performed first?",
+      "revId": "86c4f44d22fb0a7185dade081f780948b0eecc42",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
