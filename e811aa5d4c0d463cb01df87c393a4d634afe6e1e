@@ -121,6 +121,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "be15346f_cbeb4228",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-07-20T20:24:03Z",
+      "side": 1,
+      "message": "Generally you should stop using this property, as I\u0027m planning to remove it in the future. Use `dhcp4` / `dhcp6` / `ipv6acceptra` fields in the application directly.\n\nWRT IPMI, it `dynamic ipv6 router` should probably enabled dhcp and accept RA. But we could probably live with it just toggling ipv6acceptra, it\u0027s just annoying that the dhcp part wouldn\u0027t get consistently set as part of that operation.",
+      "parentUuid": "c15fd59e_bae93baf",
+      "range": {
+        "startLine": 14,
+        "startChar": 20,
+        "endLine": 17,
+        "endChar": 0
+      },
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f260b614_6e4e6e5a",
         "filename": "/COMMIT_MSG",
         "patchSetId": 6
