@@ -145,6 +145,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "49004d18_69392351",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-07-20T20:45:01Z",
+      "side": 1,
+      "message": "Stop using which property?\n\nI have been planning to create an Intel only patch that ties IPv6AcceptRA and the DHCPv6 entry together.\nIt\u0027s the best I can think of for our system needs.\nOther options included an Intel OEM IPMI command.\nAlternately adding an OBMC Set/Get LAN specific OEM sub param. The trouble with this solution is a vendor may have already created an OEM sub command and performed a strong link over the phosphor-host-ipmid SetLanOem/GetLanOem function.\nAnother thought was to add some path via an IPMI Group Function, but I haven\u0027t investigated how that might be applied.",
+      "parentUuid": "be15346f_cbeb4228",
+      "range": {
+        "startLine": 14,
+        "startChar": 20,
+        "endLine": 17,
+        "endChar": 0
+      },
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f260b614_6e4e6e5a",
         "filename": "/COMMIT_MSG",
         "patchSetId": 6
