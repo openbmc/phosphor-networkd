@@ -136,6 +136,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "72171d3c_9cde5a14",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-07-20T18:32:35Z",
+      "side": 1,
+      "message": "there is a redfish property called IPv6AutoConfig which can directly control IPv6AcceptRa property",
+      "parentUuid": "f260b614_6e4e6e5a",
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "82d45f60_3f76572e",
