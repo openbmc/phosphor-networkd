@@ -1,13 +1,12 @@
 #include "config_parser.hpp"
 
-#include <fmt/chrono.h>
 #include <fmt/compile.h>
-#include <fmt/format.h>
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <stdplus/fd/atomic.hpp>
 #include <stdplus/fd/fmt.hpp>
 #include <stdplus/gtest/tmp.hpp>
+#include <stdplus/print.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <exception>
@@ -199,7 +198,7 @@ TEST_F(TestConfigParser, Perf)
 
     auto start = std::chrono::steady_clock::now();
     parser.setFile(filename);
-    fmt::print("Duration: {}\n", std::chrono::steady_clock::now() - start);
+    stdplus::print("Duration: {}\n", std::chrono::steady_clock::now() - start);
     // Make sure this test isn't enabled
     EXPECT_FALSE(true);
 }

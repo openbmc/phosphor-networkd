@@ -1,9 +1,8 @@
 #include "hyp_network_manager.hpp"
 
-#include <fmt/format.h>
-
 #include <phosphor-logging/log.hpp>
 #include <sdeventplus/event.hpp>
+#include <stdplus/print.hpp>
 
 using phosphor::logging::entry;
 using phosphor::logging::level;
@@ -59,7 +58,7 @@ int main(int /*argc*/, char** /*argv*/)
     }
     catch (const std::exception& e)
     {
-        fmt::print(stderr, "FAILED: {}", e.what());
+        stdplus::print(stderr, "FAILED: {}", e.what());
         fflush(stderr);
         return 1;
     }

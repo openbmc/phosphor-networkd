@@ -16,6 +16,7 @@
 #include <sdbusplus/message.hpp>
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/pinned.hpp>
+#include <stdplus/print.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <filesystem>
@@ -247,7 +248,7 @@ void Manager::removeInterface(const InterfaceInfo& info)
         if (nit != interfaces.end() && iit != interfacesByIdx.end() &&
             nit->second.get() != iit->second)
         {
-            fmt::print(stderr, "Removed interface desync detected\n");
+            stdplus::print(stderr, "Removed interface desync detected\n");
             fflush(stderr);
             std::abort();
         }

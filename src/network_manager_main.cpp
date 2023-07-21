@@ -7,8 +7,6 @@
 #include "rtnetlink_server.hpp"
 #include "types.hpp"
 
-#include <fmt/format.h>
-
 #include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/manager.hpp>
@@ -18,6 +16,7 @@
 #include <sdeventplus/utility/sdbus.hpp>
 #include <sdeventplus/utility/timer.hpp>
 #include <stdplus/pinned.hpp>
+#include <stdplus/print.hpp>
 #include <stdplus/signal.hpp>
 
 #include <chrono>
@@ -90,7 +89,7 @@ int main(int /*argc*/, char** /*argv*/)
     }
     catch (const std::exception& e)
     {
-        fmt::print(stderr, "FAILED: {}", e.what());
+        stdplus::print(stderr, "FAILED: {}", e.what());
         fflush(stderr);
         return 1;
     }
