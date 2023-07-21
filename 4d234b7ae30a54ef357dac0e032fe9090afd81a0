@@ -52,6 +52,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b981c12_80325947",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-21T10:06:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f3fd3cf_cf246458",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "460302f9_71e25204",
@@ -69,6 +87,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cca9d986_9f9d8b66",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-21T10:06:46Z",
+      "side": 1,
+      "message": "This is to just give dbus command example.\n\nI have not used IPMI any time. So did not add IPMI commands",
+      "parentUuid": "460302f9_71e25204",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "79a3c0b2_04265c11",
@@ -82,6 +118,24 @@
       "writtenOn": "2023-06-08T19:00:04Z",
       "side": 1,
       "message": "IPMI example?",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "319f78a4_6b17d811",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-21T10:06:46Z",
+      "side": 1,
+      "message": "I dont have them to update here. Probably a next commit on top of this from community who uses IPMI is appreciated.",
+      "parentUuid": "79a3c0b2_04265c11",
       "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -109,6 +163,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "31dec5bc_a7f00e04",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-21T10:06:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2117a57_774d064b",
+      "range": {
+        "startLine": 68,
+        "startChar": 1,
+        "endLine": 71,
+        "endChar": 29
+      },
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ed5c073b_a96a6d0d",
@@ -126,6 +204,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7968d33_b044e17e",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-21T10:06:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed5c073b_a96a6d0d",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d68977f0_0cdb4d09",
@@ -139,6 +235,30 @@
       "writtenOn": "2023-06-08T19:00:04Z",
       "side": 1,
       "message": "Enabling IPv6AcceptRA permits the BMC to receive IPv6 configuration directives from a Routing Advertisement server on the local network segment. The Routing Advertisement server is capable of:\n* Assigning a SLAAC IPv6 address\n* Assigning an IPv6 address Prefix Length\n* Gateway addresses\n* NTP server addresses\n* DNS server addresses\n* Et Cetera\n\nThe Routing Advertisement server is wholly responsible for determining the IPv6 state.",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 0
+      },
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff103f98_3f7d4989",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-21T10:06:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d68977f0_0cdb4d09",
       "range": {
         "startLine": 77,
         "startChar": 0,
@@ -168,6 +288,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3454bdf6_c9e799a4",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-21T10:06:46Z",
+      "side": 1,
+      "message": "Can i copy paste these commands here in this section? I dont have a way at my lab to try them out though.",
+      "parentUuid": "ff07527f_6e0d13af",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bd983d97_946c687f",
         "filename": "docs/IPv6-Network-Configuration.md",
         "patchSetId": 4
@@ -185,6 +323,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0fe2cc5e_026ecf12",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-21T10:06:46Z",
+      "side": 1,
+      "message": "I will add a prelude. Is it good to mention that IPMI has no way to control Stateful DHCPv6?",
+      "parentUuid": "bd983d97_946c687f",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8929dc4e_2d6e3dd7",
         "filename": "docs/IPv6-Network-Configuration.md",
         "patchSetId": 4
@@ -196,6 +352,24 @@
       "writtenOn": "2023-06-08T19:00:04Z",
       "side": 1,
       "message": "IMO the With Router Advertisement header should be \"Examples\". The \"scenarios\" should each be an example of a network segment server config. There needs to be more material supplied.\nExamples: \nNetwork segment with Router Advertisement Server and DHCPv6 Server\nNetwork segment with Router Advertisement Server only (SLAAC)\nNetwork segment with Router Advertisement Server only (BMC Static IPv6)\nNetwork segment with DHCPv6 Server only",
+      "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b5382ef_45caae46",
+        "filename": "docs/IPv6-Network-Configuration.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-07-21T10:06:46Z",
+      "side": 1,
+      "message": "Sure. I will add these scenarios.",
+      "parentUuid": "8929dc4e_2d6e3dd7",
       "revId": "4d234b7ae30a54ef357dac0e032fe9090afd81a0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
