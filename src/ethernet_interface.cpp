@@ -719,7 +719,7 @@ void EthernetInterface::writeConfigurationFile()
                 }
             }
 
-            if (!dhcp6())
+            if (!ipv6AcceptRA())
             {
                 auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
                 if (!gateway6.empty())
