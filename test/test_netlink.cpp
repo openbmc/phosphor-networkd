@@ -8,6 +8,7 @@
 #include <stdplus/raw.hpp>
 
 #include <cstring>
+#include <format>
 #include <stdexcept>
 #include <string_view>
 
@@ -302,7 +303,7 @@ class PerformRequest : public testing::Test
             system::mock_addIF(InterfaceInfo{.type = 1u,
                                              .idx = i + 1u,
                                              .flags = 0,
-                                             .name = fmt::format("eth{}", i)});
+                                             .name = std::format("eth{}", i)});
         }
 
         size_t cbCalls = 0;

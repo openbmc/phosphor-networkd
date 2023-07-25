@@ -8,6 +8,7 @@
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <exception>
+#include <format>
 #include <fstream>
 #include <stdexcept>
 
@@ -76,7 +77,7 @@ TEST(TestTypeChecking, Key)
 class TestConfigParser : public stdplus::gtest::TestWithTmp
 {
   public:
-    std::string filename = fmt::format("{}/eth0.network", CaseTmpDir());
+    std::string filename = std::format("{}/eth0.network", CaseTmpDir());
     Parser parser;
 
     void WriteSampleFile()
@@ -180,7 +181,7 @@ TEST_F(TestConfigParser, WriteConfigFile)
 TEST_F(TestConfigParser, Perf)
 {
     GTEST_SKIP();
-    stdplus::fd::AtomicWriter file(fmt::format("{}/tmp.XXXXXX", CaseTmpDir()),
+    stdplus::fd::AtomicWriter file(std::format("{}/tmp.XXXXXX", CaseTmpDir()),
                                    0600);
     stdplus::fd::FormatBuffer out(file);
     std::string obj(500, 'a');
