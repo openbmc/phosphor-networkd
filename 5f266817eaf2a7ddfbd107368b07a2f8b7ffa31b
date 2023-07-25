@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca72f844_810470c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-07-25T20:43:35Z",
+      "side": 1,
+      "message": "The intent is to eventually remove fmtlib in favor of using the stdlib formatting code since fmtlib was created to push the standard forward.",
+      "parentUuid": "f00f8829_142caa1d",
+      "revId": "5f266817eaf2a7ddfbd107368b07a2f8b7ffa31b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a413c501_40dabf11",
