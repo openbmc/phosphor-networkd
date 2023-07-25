@@ -390,12 +390,9 @@ int sendOemCommand(int ifindex, int package, int channel,
                "INTERFACE_INDEX", lg2::hex, ifindex);
     if (!payload.empty())
     {
-        std::string payloadStr;
-        for (auto& i : payload)
-        {
-            payloadStr += fmt::format(" {:02x}", (int)i);
-        }
-        lg2::debug("Payload :{PAYLOAD}", "PAYLOAD", payloadStr);
+        lg2::debug("Payload :{PAYLOAD}", "PAYLOAD",
+                   fmt::format("{:02x}",
+                               fmt::join(payload.begin(), payload.end(), " ")));
     }
 
     return internal::applyCmd(

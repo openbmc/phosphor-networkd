@@ -2,7 +2,6 @@
 
 #include "netlink.hpp"
 
-#include <fmt/format.h>
 #include <linux/ethtool.h>
 #include <linux/rtnetlink.h>
 #include <linux/sockios.h>
@@ -14,6 +13,7 @@
 #include <stdplus/util/cexec.hpp>
 
 #include <algorithm>
+#include <format>
 #include <optional>
 #include <stdexcept>
 #include <string_view>
@@ -126,7 +126,7 @@ void deleteIntf(unsigned idx)
             err = netlink::extractRtData<nlmsgerr>(data).error;
         }
         throw std::runtime_error(
-            fmt::format("Failed to delete `{}`: {}", idx, strerror(err)));
+            std::format("Failed to delete `{}`: {}", idx, strerror(err)));
     });
 }
 

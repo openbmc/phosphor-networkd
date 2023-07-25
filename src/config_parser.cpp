@@ -1,7 +1,5 @@
 #include "config_parser.hpp"
 
-#include <fmt/format.h>
-
 #include <stdplus/exception.hpp>
 #include <stdplus/fd/atomic.hpp>
 #include <stdplus/fd/create.hpp>
@@ -9,6 +7,7 @@
 #include <stdplus/fd/line.hpp>
 #include <stdplus/str/cat.hpp>
 
+#include <format>
 #include <functional>
 #include <iterator>
 #include <stdexcept>
@@ -164,7 +163,7 @@ struct Parse
         auto cpos = line.find(']');
         if (cpos == line.npos)
         {
-            warnings.emplace_back(fmt::format("{}:{}: Section missing ]",
+            warnings.emplace_back(std::format("{}:{}: Section missing ]",
                                               filename.get().native(), lineno));
         }
         else
@@ -174,7 +173,7 @@ struct Parse
                 if (!isspace(c))
                 {
                     warnings.emplace_back(
-                        fmt::format("{}:{}: Characters outside section name",
+                        std::format("{}:{}: Characters outside section name",
                                     filename.get().native(), lineno));
                     break;
                 }
@@ -196,7 +195,7 @@ struct Parse
         std::vector<std::string> new_warnings;
         if (epos == line.npos)
         {
-            new_warnings.emplace_back(fmt::format(
+            new_warnings.emplace_back(std::format(
                 "{}:{}: KV missing `=`", filename.get().native(), lineno));
         }
         auto k = line.substr(0, epos);
@@ -204,7 +203,7 @@ struct Parse
         if (section == nullptr)
         {
             new_warnings.emplace_back(
-                fmt::format("{}:{}: Key `{}` missing section",
+                std::format("{}:{}: Key `{}` missing section",
                             filename.get().native(), lineno, k));
         }
         if (!new_warnings.empty())
@@ -270,7 +269,7 @@ void Parser::setFile(const fs::path& filename)
         fileExists = false;
         // TODO: Pass exceptions once callers can handle them
         parse.warnings.emplace_back(
-            fmt::format("{}: Open error: {}", filename.native(), e.what()));
+            std::format("{}: Open error: {}", filename.native(), e.what()));
     }
 
     this->map = std::move(parse.map);

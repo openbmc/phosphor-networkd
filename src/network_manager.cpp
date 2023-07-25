@@ -17,9 +17,11 @@
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/pinned.hpp>
 #include <stdplus/print.hpp>
+#include <stdplus/str/cat.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <filesystem>
+#include <format>
 
 namespace phosphor
 {
@@ -29,6 +31,7 @@ namespace network
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
+using std::literals::string_view_literals::operator""sv;
 
 static constexpr const char enabledMatch[] =
     "type='signal',sender='org.freedesktop.network1',path_namespace='/org/"
@@ -134,7 +137,9 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     for (const auto& link : links)
     {
         unsigned ifidx = std::get<0>(link);
-        auto obj = fmt::format("/org/freedesktop/network1/link/_3{}", ifidx);
+        stdplus::ToStrHandle<stdplus::IntToStr<10, unsigned>> tsh;
+        auto obj = stdplus::strCat("/org/freedesktop/network1/link/_3"sv,
+                                   tsh(ifidx));
         auto req =
             bus.get().new_method_call("org.freedesktop.network1", obj.c_str(),
                                       "org.freedesktop.DBus.Properties", "Get");
@@ -297,7 +302,7 @@ void Manager::addAddress(const AddressInfo& info)
     else if (!ignoredIntf.contains(info.ifidx))
     {
         throw std::runtime_error(
-            fmt::format("Interface `{}` not found for addr", info.ifidx));
+            std::format("Interface `{}` not found for addr", info.ifidx));
     }
 }
 
@@ -331,7 +336,7 @@ void Manager::addNeighbor(const NeighborInfo& info)
     else if (!ignoredIntf.contains(info.ifidx))
     {
         throw std::runtime_error(
-            fmt::format("Interface `{}` not found for neigh", info.ifidx));
+            std::format("Interface `{}` not found for neigh", info.ifidx));
     }
 }
 

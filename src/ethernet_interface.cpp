@@ -6,7 +6,6 @@
 #include "system_queries.hpp"
 #include "util.hpp"
 
-#include <fmt/format.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
 #include <net/if_arp.h>
@@ -20,6 +19,7 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <format>
 #include <string>
 #include <unordered_map>
 #include <variant>
@@ -527,7 +527,7 @@ ServerList EthernetInterface::getNTPServerFromTimeSyncd()
 ServerList EthernetInterface::getNameServerFromResolvd()
 {
     ServerList servers;
-    auto OBJ_PATH = fmt::format("{}{}", RESOLVED_SERVICE_PATH, ifIdx);
+    auto OBJ_PATH = std::format("{}{}", RESOLVED_SERVICE_PATH, ifIdx);
 
     /*
       The DNS property under org.freedesktop.resolve1.Link interface contains
@@ -704,9 +704,7 @@ void EthernetInterface::writeConfigurationFile()
             {
                 if (originIsManuallyAssigned(addr.second->origin()))
                 {
-                    address.emplace_back(
-                        fmt::format("{}/{}", addr.second->address(),
-                                    addr.second->prefixLength()));
+                    address.emplace_back(stdplus::toStr(addr.first));
                 }
             }
         }
