@@ -1,7 +1,5 @@
 #include "config_parser.hpp"
 
-#include <fmt/compile.h>
-
 #include <phosphor-logging/elog-errors.hpp>
 #include <stdplus/fd/atomic.hpp>
 #include <stdplus/fd/fmt.hpp>
@@ -24,6 +22,7 @@ namespace config
 {
 
 using testing::ElementsAre;
+using std::literals::string_view_literals::operator""sv;
 
 TEST(TestConvert, iCaseEq)
 {
@@ -184,13 +183,15 @@ TEST_F(TestConfigParser, Perf)
     stdplus::fd::AtomicWriter file(fmt::format("{}/tmp.XXXXXX", CaseTmpDir()),
                                    0600);
     stdplus::fd::FormatBuffer out(file);
+    std::string obj(500, 'a');
+    std::string kv(500 * 70, 'b');
     for (size_t i = 0; i < 500; ++i)
     {
-        out.append(FMT_COMPILE("[{:a>{}}]\n"), "", i + 1);
+        out.appends("["sv, std::string_view{obj}.substr(0, i + 1), "[\n"sv);
         for (size_t j = 0; j < 70; j++)
         {
-            const size_t es = i * 70 + j + 1;
-            out.append(FMT_COMPILE("{:b>{}}={:c>{}}\n"), "", es, "", es);
+            auto sv = std::string_view(kv).substr(0, i * 70 + j + 1);
+            out.appends(sv, "="sv, sv, "\n"sv);
         }
     }
     out.flush();

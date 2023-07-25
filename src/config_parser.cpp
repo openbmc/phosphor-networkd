@@ -1,6 +1,5 @@
 #include "config_parser.hpp"
 
-#include <fmt/compile.h>
 #include <fmt/format.h>
 
 #include <stdplus/exception.hpp>
@@ -8,6 +7,7 @@
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/fmt.hpp>
 #include <stdplus/fd/line.hpp>
+#include <stdplus/str/cat.hpp>
 
 #include <functional>
 #include <iterator>
@@ -47,12 +47,12 @@ std::optional<bool> parseBool(std::string_view in) noexcept
 
 fs::path pathForIntfConf(const fs::path& dir, std::string_view intf)
 {
-    return dir / fmt::format(FMT_COMPILE("00-bmc-{}.network"), intf);
+    return dir / stdplus::strCat("00-bmc-"sv, intf, ".network"sv);
 }
 
 fs::path pathForIntfDev(const fs::path& dir, std::string_view intf)
 {
-    return dir / fmt::format(FMT_COMPILE("{}.netdev"), intf);
+    return dir / stdplus::strCat(intf, ".netdev"sv);
 }
 
 const std::string*
@@ -90,7 +90,7 @@ void KeyCheck::operator()(std::string_view s)
         if (c == '\n' || c == '=')
         {
             throw std::invalid_argument(
-                fmt::format(FMT_COMPILE("Invalid Config Key: {}"), s));
+                stdplus::strCat("Invalid Config Key: "sv, s));
         }
     }
 }
@@ -102,7 +102,7 @@ void SectionCheck::operator()(std::string_view s)
         if (c == '\n' || c == ']')
         {
             throw std::invalid_argument(
-                fmt::format(FMT_COMPILE("Invalid Config Section: {}"), s));
+                stdplus::strCat("Invalid Config Section: "sv, s));
         }
     }
 }
@@ -114,7 +114,7 @@ void ValueCheck::operator()(std::string_view s)
         if (c == '\n')
         {
             throw std::invalid_argument(
-                fmt::format(FMT_COMPILE("Invalid Config Value: {}"), s));
+                stdplus::strCat("Invalid Config Value: "sv, s));
         }
     }
 }
@@ -287,12 +287,12 @@ static void writeFileInt(const SectionMap& map, const fs::path& filename)
     {
         for (const auto& map : maps)
         {
-            out.append(FMT_COMPILE("[{}]\n"), section.get());
+            out.appends("["sv, section.get(), "]\n"sv);
             for (const auto& [key, vals] : map)
             {
                 for (const auto& val : vals)
                 {
-                    out.append(FMT_COMPILE("{}={}\n"), key.get(), val.get());
+                    out.appends(key.get(), "="sv, val.get(), "\n"sv);
                 }
             }
         }

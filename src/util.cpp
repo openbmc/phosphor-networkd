@@ -5,13 +5,13 @@
 #include "config_parser.hpp"
 #include "types.hpp"
 
-#include <fmt/compile.h>
-#include <fmt/format.h>
 #include <sys/wait.h>
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/numeric/str.hpp>
+#include <stdplus/str/buf.hpp>
+#include <stdplus/str/cat.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <cctype>
@@ -30,7 +30,7 @@ using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 namespace internal
 {
 
-void executeCommandinChildProcess(stdplus::const_zstring path, char** args)
+void executeCommandinChildProcess(stdplus::zstring_view path, char** args)
 {
     using namespace std::string_literals;
     pid_t pid = fork();
@@ -60,11 +60,11 @@ void executeCommandinChildProcess(stdplus::const_zstring path, char** args)
 
         if (status < 0)
         {
-            fmt::memory_buffer buf;
-            fmt::format_to(fmt::appender(buf), "`{}`", path);
+            stdplus::StrBuf buf;
+            stdplus::strAppend(buf, "`"sv, path, "`"sv);
             for (size_t i = 0; args[i] != nullptr; ++i)
             {
-                fmt::format_to(fmt::appender(buf), " `{}`", args[i]);
+                stdplus::strAppend(buf, " `"sv, args[i], "`"sv);
             }
             buf.push_back('\0');
             lg2::error("Unable to execute the command {CMD}: {STATUS}", "CMD",
@@ -145,7 +145,8 @@ std::optional<std::string> interfaceToUbootEthAddr(std::string_view intf)
     {
         return "ethaddr";
     }
-    return fmt::format(FMT_COMPILE("eth{}addr"), idx);
+    stdplus::ToStrHandle<stdplus::IntToStr<10, unsigned>> tsh;
+    return stdplus::strCat("eth"sv, tsh(idx), "addr"sv);
 }
 
 static std::optional<DHCPVal> systemdParseDHCP(std::string_view str)

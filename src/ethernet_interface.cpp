@@ -1,4 +1,3 @@
-#include "config.h"
 
 #include "ethernet_interface.hpp"
 
@@ -7,7 +6,6 @@
 #include "system_queries.hpp"
 #include "util.hpp"
 
-#include <fmt/compile.h>
 #include <fmt/format.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
@@ -16,6 +14,7 @@
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/raw.hpp>
+#include <stdplus/str/cat.hpp>
 #include <stdplus/zstring.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
@@ -66,7 +65,7 @@ inline decltype(std::declval<Func>()())
 
 static std::string makeObjPath(std::string_view root, std::string_view intf)
 {
-    auto ret = fmt::format(FMT_COMPILE("{}/{}"), root, intf);
+    auto ret = stdplus::strCat(root, "/"sv, intf);
     std::replace(ret.begin() + ret.size() - intf.size(), ret.end(), '.', '_');
     return ret;
 }
@@ -578,7 +577,7 @@ ServerList EthernetInterface::getNameServerFromResolvd()
 ObjectPath EthernetInterface::createVLAN(uint16_t id)
 {
     auto idStr = stdplus::toStr(id);
-    auto intfName = fmt::format(FMT_COMPILE("{}.{}"), interfaceName(), idStr);
+    auto intfName = stdplus::strCat(interfaceName(), "."sv, idStr);
     if (manager.get().interfaces.find(intfName) !=
         manager.get().interfaces.end())
     {

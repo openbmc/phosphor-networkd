@@ -2,7 +2,7 @@
 #include "types.hpp"
 
 #include <stdplus/raw.hpp>
-#include <stdplus/zstring.hpp>
+#include <stdplus/zstring_view.hpp>
 
 #include <optional>
 #include <string>
@@ -70,7 +70,7 @@ namespace internal
  * @param[in] path - path of the binary file which needs to be execeuted.
  * @param[in] args - arguments of the command.
  */
-void executeCommandinChildProcess(stdplus::const_zstring path, char** args);
+void executeCommandinChildProcess(stdplus::zstring_view path, char** args);
 
 /** @brief Get ignored interfaces from environment */
 std::string_view getIgnoredInterfacesEnv();
@@ -89,7 +89,7 @@ const std::unordered_set<std::string_view>& getIgnoredInterfaces();
  * @param[in] tArgs - arguments of the command.
  */
 template <typename... ArgTypes>
-void execute(stdplus::const_zstring path, ArgTypes&&... tArgs)
+void execute(stdplus::zstring_view path, ArgTypes&&... tArgs)
 {
     using expandType = char*[];
 
