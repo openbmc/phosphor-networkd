@@ -1,12 +1,13 @@
 #include "ncsi_util.hpp"
 
-#include <fmt/format.h>
 #include <linux/ncsi.h>
 #include <netlink/genl/ctrl.h>
 #include <netlink/genl/genl.h>
 #include <netlink/netlink.h>
 
 #include <phosphor-logging/lg2.hpp>
+#include <stdplus/numeric/str.hpp>
+#include <stdplus/str/buf.hpp>
 
 #include <iomanip>
 #include <iostream>
@@ -20,6 +21,25 @@ namespace ncsi
 {
 
 using CallBack = int (*)(struct nl_msg* msg, void* arg);
+
+static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
+{
+    stdplus::StrBuf ret;
+    if (c.empty())
+    {
+        return ret;
+    }
+    stdplus::IntToStr<16, uint8_t> its;
+    auto oit = ret.append(c.size() * 3 - 1);
+    auto cit = c.begin();
+    oit = its(oit, *cit++, 2);
+    for (; cit != c.end(); ++cit)
+    {
+        *oit++ = ' ';
+        oit = its(oit, *cit, 2);
+    }
+    return ret;
+}
 
 namespace internal
 {
@@ -238,12 +258,11 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
     unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) +
                           sizeof(NCSIPacketHeader);
-    auto s = std::span<const unsigned char>(data, data_len);
 
     // Dump the response to stdout. Enhancement: option to save response data
-    lg2::debug("Response : {DATA_LEN} bytes, {DATA}", "DATA_LEN", data_len,
-               "DATA",
-               fmt::format("{:02x}", fmt::join(s.begin(), s.end(), " ")));
+    auto str = toHexStr(std::span<const unsigned char>(data, data_len));
+    lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
+               "DATA", str);
 
     return 0;
 };
@@ -390,12 +409,7 @@ int sendOemCommand(int ifindex, int package, int channel,
                "INTERFACE_INDEX", lg2::hex, ifindex);
     if (!payload.empty())
     {
-        std::string payloadStr;
-        for (auto& i : payload)
-        {
-            payloadStr += fmt::format(" {:02x}", (int)i);
-        }
-        lg2::debug("Payload :{PAYLOAD}", "PAYLOAD", payloadStr);
+        lg2::debug("Payload: {PAYLOAD}", "PAYLOAD", toHexStr(payload));
     }
 
     return internal::applyCmd(
