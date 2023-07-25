@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f00f8829_142caa1d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-07-25T14:53:30Z",
+      "side": 1,
+      "message": "Would like clarification of your intent.",
+      "revId": "5f266817eaf2a7ddfbd107368b07a2f8b7ffa31b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a413c501_40dabf11",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-07-25T14:53:30Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem to meet the stated goal of removing fmt::format.\nWhy hasn\u0027t this changed to std::format?\nIs fmt::join also to be removed?",
+      "revId": "5f266817eaf2a7ddfbd107368b07a2f8b7ffa31b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
