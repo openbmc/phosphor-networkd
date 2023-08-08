@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7daf0450_f5fe9c21",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-08-08T08:16:53Z",
+      "side": 1,
+      "message": "I think this can go ahead - since there are no concerns from anyone. \n@William/Ratan any views?",
+      "parentUuid": "c8ad9dd4_51edaa7d",
+      "revId": "abfce72fdb8906e2d27c3f170f77dc34cc40c75e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0483394e_9c040319",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 12
