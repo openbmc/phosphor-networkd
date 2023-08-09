@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "613fa0cf_446aa69b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-08-09T19:14:57Z",
+      "side": 1,
+      "message": "The commit message is out of date with the proposed changes.",
+      "revId": "40c90e7c479feda34ca9e2329687dcf2ec922017",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9555cb99_81276b8d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-08-09T19:14:57Z",
+      "side": 1,
+      "message": "Have you tested to make sure the default config is \u0027no\u0027 before adding the meson override to your build?",
+      "revId": "40c90e7c479feda34ca9e2329687dcf2ec922017",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7180dfd4_0f2f8821",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-08-09T19:14:57Z",
+      "side": 1,
+      "message": "A few questions regarding the current state of the commit.",
+      "revId": "40c90e7c479feda34ca9e2329687dcf2ec922017",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11076565_43d7caa2",
+        "filename": "meson_options.txt",
+        "patchSetId": 14
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-08-09T19:14:57Z",
+      "side": 1,
+      "message": "Is this description in need of an update?",
+      "revId": "40c90e7c479feda34ca9e2329687dcf2ec922017",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
