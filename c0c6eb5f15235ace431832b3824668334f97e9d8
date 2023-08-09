@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "138de83e_6b1bbb84",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2023-08-09T18:57:16Z",
+      "side": 1,
+      "message": "What\u0027s the next step here?  Looking in the context of getting:\nhttps://gerrit.openbmc.org/c/openbmc/bmcweb/+/63390\n\nOff the review plate.",
+      "revId": "c0c6eb5f15235ace431832b3824668334f97e9d8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
