@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "30193542_2561841e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2023-08-10T07:58:35Z",
+      "side": 1,
+      "message": "Updated.",
+      "parentUuid": "613fa0cf_446aa69b",
+      "revId": "40c90e7c479feda34ca9e2329687dcf2ec922017",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9555cb99_81276b8d",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-08-09T19:14:57Z",
       "side": 1,
       "message": "Have you tested to make sure the default config is \u0027no\u0027 before adding the meson override to your build?",
+      "revId": "40c90e7c479feda34ca9e2329687dcf2ec922017",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27ba7408_b1a310b4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 14
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2023-08-10T07:58:35Z",
+      "side": 1,
+      "message": "Yes, As we are not providing any value , it will pick default value \"no\" and update it.",
+      "parentUuid": "9555cb99_81276b8d",
       "revId": "40c90e7c479feda34ca9e2329687dcf2ec922017",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -65,6 +101,24 @@
       "writtenOn": "2023-08-09T19:14:57Z",
       "side": 1,
       "message": "Is this description in need of an update?",
+      "revId": "40c90e7c479feda34ca9e2329687dcf2ec922017",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d97e2e64_f3595de1",
+        "filename": "meson_options.txt",
+        "patchSetId": 14
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2023-08-10T07:58:35Z",
+      "side": 1,
+      "message": "Updated description with \"Enables stateful DHCPv6 without RA.\"",
+      "parentUuid": "11076565_43d7caa2",
       "revId": "40c90e7c479feda34ca9e2329687dcf2ec922017",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
