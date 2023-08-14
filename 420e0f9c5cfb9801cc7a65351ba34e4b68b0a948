@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2a9e932_849da858",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 16
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2023-08-14T05:18:52Z",
+      "side": 1,
+      "message": "Yes, for interface config.",
+      "parentUuid": "8a799f14_913045f2",
+      "revId": "420e0f9c5cfb9801cc7a65351ba34e4b68b0a948",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3e11cfad_94ece334",
@@ -35,6 +53,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cad9ff79_9f2a6691",
+        "filename": "meson_options.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2023-08-14T05:18:52Z",
+      "side": 1,
+      "message": "\u0027dhcp6-without-RA\u0027 has three possible string values: solicit, information request, and no.\nSo keeping the dhcp6-without-Ra type \"string\" and setting the default to \u0027no\u0027.",
+      "parentUuid": "3e11cfad_94ece334",
+      "revId": "420e0f9c5cfb9801cc7a65351ba34e4b68b0a948",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1e040c48_f27edfc1",
@@ -48,6 +84,24 @@
       "writtenOn": "2023-08-11T22:37:13Z",
       "side": 1,
       "message": "```\n#ifdef DHCP6_WITHOUT_RA\n       config.map[\"DHCPv6\"].emplace_back()[\"WithoutRA\"].emplace_back(\"true\")\n#endif\n```",
+      "revId": "420e0f9c5cfb9801cc7a65351ba34e4b68b0a948",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "657381ab_d4131512",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2023-08-14T05:18:52Z",
+      "side": 1,
+      "message": "dhcp6-without-RA\u0027 has three possible string values: solicit, information request, and no.\nHere we are setting WithoutRA with \"solicit\" value which is a string.",
+      "parentUuid": "1e040c48_f27edfc1",
       "revId": "420e0f9c5cfb9801cc7a65351ba34e4b68b0a948",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
