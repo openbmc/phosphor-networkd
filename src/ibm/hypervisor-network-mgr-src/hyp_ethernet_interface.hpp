@@ -8,6 +8,7 @@
 #include <phosphor-logging/log.hpp>
 #include <sdbusplus/bus.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
+#include <xyz/openbmc_project/Network/IP/server.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 
 namespace phosphor
