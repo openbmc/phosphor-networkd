@@ -9,6 +9,7 @@
 #include <sdbusplus/bus.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
+#include <xyz/openbmc_project/Network/IP/server.hpp>
 
 namespace phosphor
 {
