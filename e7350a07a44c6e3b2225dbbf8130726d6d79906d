@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a60abb82_64c9e243",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 20
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-08-24T16:07:03Z",
+      "side": 1,
+      "message": "This seems wrong. Can remove this statement, as each interface had separate DHCP params - just that it is shared by both IPv4 and IPv6 currently.",
+      "range": {
+        "startLine": 12,
+        "startChar": 61,
+        "endLine": 13,
+        "endChar": 31
+      },
+      "revId": "e7350a07a44c6e3b2225dbbf8130726d6d79906d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ea08f949_9449d51b",
         "filename": "src/dhcp_configuration.cpp",
         "patchSetId": 20
