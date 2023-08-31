@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7731b66_2b42e7ab",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 20
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2023-08-31T06:48:56Z",
+      "side": 1,
+      "message": "Though each interface had separate params in the respective network configuration, modification of any parameter for any interface is impacting the other interface currently as mentioned here.",
+      "parentUuid": "a60abb82_64c9e243",
+      "range": {
+        "startLine": 12,
+        "startChar": 61,
+        "endLine": 13,
+        "endChar": 31
+      },
+      "revId": "e7350a07a44c6e3b2225dbbf8130726d6d79906d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ea08f949_9449d51b",
