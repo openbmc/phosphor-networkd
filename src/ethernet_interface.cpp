@@ -1,3 +1,4 @@
+#include "config.h"
 
 #include "ethernet_interface.hpp"
 
