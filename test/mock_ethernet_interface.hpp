@@ -16,7 +16,7 @@ class MockEthernetInterface : public EthernetInterface
     {}
 
     MOCK_METHOD((ServerList), getNTPServerFromTimeSyncd, (), (override));
-    MOCK_METHOD((ServerList), getNameServerFromResolvd, (), (override));
+    MOCK_METHOD((ServerList), getNameServerFromResolvd, (), (const override));
 };
 } // namespace network
 } // namespace phosphor
