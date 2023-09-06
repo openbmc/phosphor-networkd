@@ -170,6 +170,9 @@ class EthernetInterface : public Ifaces
      */
     ServerList staticNTPServers(ServerList value) override;
 
+    /** @brief Get value of nameservers */
+    ServerList nameservers() const override;
+
     /** @brief sets the Static DNS/nameservers.
      *  @param[in] value - vector of DNS servers.
      */
