@@ -525,7 +525,12 @@ ServerList EthernetInterface::getNTPServerFromTimeSyncd()
     return servers;
 }
 
-ServerList EthernetInterface::getNameServerFromResolvd()
+ServerList EthernetInterface::nameservers() const
+{
+    return getNameServerFromResolvd();
+}
+
+ServerList EthernetInterface::getNameServerFromResolvd() const
 {
     ServerList servers;
     auto OBJ_PATH = std::format("{}{}", RESOLVED_SERVICE_PATH, ifIdx);

@@ -170,6 +170,9 @@ class EthernetInterface : public Ifaces
      */
     ServerList staticNTPServers(ServerList value) override;
 
+    /** @brief Get value of nameservers */
+    ServerList nameservers() const override;
+
     /** @brief sets the Static DNS/nameservers.
      *  @param[in] value - vector of DNS servers.
      */
@@ -217,7 +220,7 @@ class EthernetInterface : public Ifaces
     /** @brief get the name server details from the network conf
      *
      */
-    virtual ServerList getNameServerFromResolvd();
+    virtual ServerList getNameServerFromResolvd() const;
 
     /** @brief Persistent sdbusplus DBus bus connection. */
     stdplus::PinnedRef<sdbusplus::bus_t> bus;
