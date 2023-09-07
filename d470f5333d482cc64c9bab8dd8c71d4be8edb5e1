@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a94ff3ab_2d437b67",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-09-07T07:24:13Z",
+      "side": 1,
+      "message": "Please mention that the current behavior is - dynamic name server is populated only when the networkd restarts. Any changes at the server side does not reflect at BMC on the fly.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 104
+      },
+      "revId": "d470f5333d482cc64c9bab8dd8c71d4be8edb5e1",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
