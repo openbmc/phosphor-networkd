@@ -39,12 +39,12 @@ static constexpr const char enabledMatch[] =
     "link',interface='org.freedesktop.DBus.Properties',member='"
     "PropertiesChanged',arg0='org.freedesktop.network1.Link',";
 
-Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus_,
                  stdplus::PinnedRef<DelayedExecutor> reload,
                  stdplus::zstring_view objPath,
                  const std::filesystem::path& confDir) :
-    ManagerIface(bus, objPath.c_str(), ManagerIface::action::defer_emit),
-    reload(reload), bus(bus), objPath(std::string(objPath)), confDir(confDir),
+    ManagerIface(bus_, objPath.c_str(), ManagerIface::action::defer_emit),
+    reload(reload), bus(bus_), objPath(std::string(objPath)), confDir(confDir),
     systemdNetworkdEnabledMatch(
         bus, enabledMatch,
         [man = stdplus::PinnedRef(*this)](sdbusplus::message_t& m) {
