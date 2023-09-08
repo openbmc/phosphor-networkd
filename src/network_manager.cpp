@@ -75,8 +75,8 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     }
         })
 {
-    reload.get().setCallback([&]() {
-        for (auto& hook : reloadPreHooks)
+    reload.get().setCallback([self = stdplus::PinnedRef(*this)]() {
+        for (auto& hook : self.get().reloadPreHooks)
         {
             try
             {
@@ -88,10 +88,10 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                            "ERROR", ex);
             }
         }
-        reloadPreHooks.clear();
+        self.get().reloadPreHooks.clear();
         try
         {
-            bus.get()
+            self.get().bus.get()
                 .new_method_call("org.freedesktop.network1",
                                  "/org/freedesktop/network1",
                                  "org.freedesktop.network1.Manager", "Reload")
@@ -101,13 +101,13 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
         catch (const sdbusplus::exception_t& ex)
         {
             lg2::error("Failed to reload configuration: {ERROR}", "ERROR", ex);
-            reloadPostHooks.clear();
+            self.get().reloadPostHooks.clear();
         }
-        for (auto& hook : reloadPostHooks)
+        for (auto& hook : self.get().reloadPostHooks)
         {
             try
             {
-                hook();
+                self.get().hook();
             }
             catch (const std::exception& ex)
             {
@@ -115,7 +115,7 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                            "ERROR", ex);
             }
         }
-        reloadPostHooks.clear();
+        self.get().reloadPostHooks.clear();
     });
     std::vector<
         std::tuple<int32_t, std::string, sdbusplus::message::object_path>>
