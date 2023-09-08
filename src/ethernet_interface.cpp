@@ -162,10 +162,10 @@ bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
 {
     return (
 #ifdef LINK_LOCAL_AUTOCONFIGURATION
+        (origin == IP::AddressOrigin::Static)
+#else
         (origin == IP::AddressOrigin::Static ||
          origin == IP::AddressOrigin::LinkLocal)
-#else
-        (origin == IP::AddressOrigin::Static)
 #endif
 
     );
