@@ -46,6 +46,30 @@
       },
       "revId": "d470f5333d482cc64c9bab8dd8c71d4be8edb5e1",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97eaff10_c7b57dc5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-09-11T14:25:05Z",
+      "side": 1,
+      "message": "This should go to the commit message, and also please set the line boundaries of the commit message.",
+      "parentUuid": "08bc90f0_447c8487",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 104
+      },
+      "revId": "d470f5333d482cc64c9bab8dd8c71d4be8edb5e1",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
