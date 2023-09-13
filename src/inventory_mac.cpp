@@ -268,7 +268,6 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
         else
         {
             registerSignals(bus);
-            EthInterfaceMatch = nullptr;
 
             if (setInventoryMACOnSystem(bus, infname))
             {
@@ -311,12 +310,10 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
     // collected by the time network service has come up, better to check the
     // VPD directly and set the MAC Address on the respective Interface.
 
-    bool registeredSignals = false;
     for (const auto& interfaceString : configJson.items())
     {
-        if ((FORCE_SYNC_MAC_FROM_INVENTORY ||
-             !std::filesystem::exists(firstBootPath + interfaceString.key())) &&
-            !registeredSignals)
+        if (FORCE_SYNC_MAC_FROM_INVENTORY ||
+            !std::filesystem::exists(firstBootPath + interfaceString.key()))
         {
             lg2::info("Check VPD for MAC: {REASON}", "REASON",
                       (FORCE_SYNC_MAC_FROM_INVENTORY)
@@ -327,7 +324,6 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
                 "interface='org.freedesktop.DBus.ObjectManager',type='signal',"
                 "member='InterfacesAdded',path='/xyz/openbmc_project/network'",
                 mycallback);
-            registeredSignals = true;
 
             for (const auto& intf : manager->interfaces)
             {
