@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "682ca524_a64becbc",
+        "filename": "src/inventory_mac.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1001422
+      },
+      "writtenOn": "2023-09-14T07:21:17Z",
+      "side": 0,
+      "message": "This change breaks when:\n- eth0 VPD hasn\u0027t been collected\n- eth1 VPD has been collected\n\nhandle_interface(eth1) will remove the sdbusplus::bus::match_t by setting EthInterfaceMatch to nullptr and thus eth0 will never see the InterfacesAdded dbus signal.\n\nThis code should do the following instead:\n- set EthInterfaceMatch outside of a loop when at least one firstBootPath doesn\u0027t exists.\n- remove EthInterfaceMatch only when all interfaces specified in the json have been updated.",
+      "range": {
+        "startLine": 314,
+        "startChar": 9,
+        "endLine": 314,
+        "endChar": 26
+      },
+      "revId": "5c1e1604ff9637630a7338392e37ba9d3fc2b359",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
