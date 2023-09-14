@@ -46,6 +46,30 @@
       },
       "revId": "5c1e1604ff9637630a7338392e37ba9d3fc2b359",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e30e791_c35c61c4",
+        "filename": "src/inventory_mac.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1001422
+      },
+      "writtenOn": "2023-09-14T08:42:36Z",
+      "side": 0,
+      "message": "I wasn\u0027t even looking at setInventoryMACOnSystem as EthInterfaceMatch is removed unconditionally in handle_interface. Looks lie removing line 271 does the trick.",
+      "parentUuid": "5b85f45c_07cfddbb",
+      "range": {
+        "startLine": 314,
+        "startChar": 9,
+        "endLine": 314,
+        "endChar": 26
+      },
+      "revId": "5c1e1604ff9637630a7338392e37ba9d3fc2b359",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
