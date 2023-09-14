@@ -22,6 +22,30 @@
       },
       "revId": "5c1e1604ff9637630a7338392e37ba9d3fc2b359",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b85f45c_07cfddbb",
+        "filename": "src/inventory_mac.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2023-09-14T08:18:33Z",
+      "side": 0,
+      "message": "In method \"setInventoryMACOnSystem\" which we call with the interface name, if:\n  1. MAC is present in the inventory, then fetch it, set it in network DBUS object, then push into first_boot_status vector.\n  2. For any interface, it checks if the first_boot_status vector contains all the specified interfaces, and only if it does, then it removes the EthInterfaceMatch.\n  \nOnly if \"setInventoryMACOnSystem\" method returns true, then the MACAddress match is removed.\n\nThe only thing is, EthInterfaceMatch removal in line 271, should be removed as the above-mentioned method handles it.\n\nI believe this should handle the case you specified. Or am I missing something?",
+      "parentUuid": "682ca524_a64becbc",
+      "range": {
+        "startLine": 314,
+        "startChar": 9,
+        "endLine": 314,
+        "endChar": 26
+      },
+      "revId": "5c1e1604ff9637630a7338392e37ba9d3fc2b359",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
