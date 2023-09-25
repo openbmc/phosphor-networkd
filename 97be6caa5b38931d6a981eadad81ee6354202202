@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f715dfc6_ab494ced",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000294
+      },
+      "writtenOn": "2023-09-25T02:05:32Z",
+      "side": 1,
+      "message": "According definition LINK_LOCAL_AUTOCONFIGURATION that means address will be assigned by LinkLocal. If revert this commit that means address will be assigned by Static, not LinkLocal when setting \"-Ddefault-link-local-autoconf\u003dtrue\" in phosphor-network configuration.\n\nI\u0027m not sure whether Static and LinkLocal is exclusive. If so, might be changed to as below then make sure all your testing are pass or not.\n\n#ifdef LINK_LOCAL_AUTOCONFIGURATION\n        origin \u003d\u003d IP::AddressOrigin::LinkLocal\n#else\n        origin \u003d\u003d IP::AddressOrigin::Static\n#endif",
+      "revId": "97be6caa5b38931d6a981eadad81ee6354202202",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
