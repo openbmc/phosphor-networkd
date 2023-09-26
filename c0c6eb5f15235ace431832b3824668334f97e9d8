@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cd818aea_3c2ba599",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2023-09-26T03:58:29Z",
+      "side": 1,
+      "message": "Yes. Still awaiting the maintainers feedback here.",
+      "parentUuid": "138de83e_6b1bbb84",
+      "revId": "c0c6eb5f15235ace431832b3824668334f97e9d8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "160c0d8b_c3aabb15",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 18
