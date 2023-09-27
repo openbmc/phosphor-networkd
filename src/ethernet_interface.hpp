@@ -257,12 +257,6 @@ class EthernetInterface : public Ifaces
                       const AllIntfInfo& info, std::string&& objPath,
                       const config::Parser& config, bool enabled);
 
-    /** @brief Determines if the address is manually assigned
-     *  @param[in] origin - The origin entry of the IP::Address
-     *  @returns true/false value if the address is static
-     */
-    bool originIsManuallyAssigned(IP::AddressOrigin origin);
-
     /** @brief Function to add DHCP configurations.
      */
     void addDHCPConfigurations();
