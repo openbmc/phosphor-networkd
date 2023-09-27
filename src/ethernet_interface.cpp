@@ -158,19 +158,6 @@ void EthernetInterface::updateInfo(const InterfaceInfo& info, bool skipSignal)
     }
 }
 
-bool EthernetInterface::originIsManuallyAssigned(IP::AddressOrigin origin)
-{
-    return (
-#ifdef LINK_LOCAL_AUTOCONFIGURATION
-        (origin == IP::AddressOrigin::Static)
-#else
-        (origin == IP::AddressOrigin::Static ||
-         origin == IP::AddressOrigin::LinkLocal)
-#endif
-
-    );
-}
-
 void EthernetInterface::addAddr(const AddressInfo& info)
 {
     IP::AddressOrigin origin = IP::AddressOrigin::Static;
@@ -708,7 +695,7 @@ void EthernetInterface::writeConfigurationFile()
             auto& address = network["Address"];
             for (const auto& addr : addrs)
             {
-                if (originIsManuallyAssigned(addr.second->origin()))
+                if (addr.second->origin() == IP::AddressOrigin::Static)
                 {
                     address.emplace_back(stdplus::toStr(addr.first));
                 }
