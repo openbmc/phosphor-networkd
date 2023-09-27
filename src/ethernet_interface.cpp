@@ -7,9 +7,11 @@
 #include "system_queries.hpp"
 #include "util.hpp"
 
+#include <fcntl.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
 #include <net/if_arp.h>
+#include <sys/stat.h>
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
@@ -794,6 +796,8 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         stdplus::fromStr<stdplus::EtherAddr>(MacAddressIntf::macAddress());
     if (newMAC != oldMAC)
     {
+        auto path = config::pathForIntfConf(manager.get().getConfDir(),
+                                            interface);
         // Update everything that depends on the MAC value
         for (const auto& [_, intf] : manager.get().interfaces)
         {
@@ -805,9 +809,10 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         MacAddressIntf::macAddress(validMAC);
 
         writeConfigurationFile();
-        manager.get().addReloadPreHook([interface]() {
+        manager.get().addReloadPreHook([interface, path]() {
             // The MAC and LLADDRs will only update if the NIC is already down
             system::setNICUp(interface, false);
+            utimensat(AT_FDCWD, path.c_str(), NULL, 0);
         });
         manager.get().reloadConfigs();
     }
