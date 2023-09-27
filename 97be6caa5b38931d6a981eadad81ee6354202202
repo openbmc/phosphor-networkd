@@ -16,6 +16,41 @@
       "message": "According definition LINK_LOCAL_AUTOCONFIGURATION that means address will be assigned by LinkLocal. If revert this commit that means address will be assigned by Static, not LinkLocal when setting \"-Ddefault-link-local-autoconf\u003dtrue\" in phosphor-network configuration.\n\nI\u0027m not sure whether Static and LinkLocal is exclusive. If so, might be changed to as below then make sure all your testing are pass or not.\n\n#ifdef LINK_LOCAL_AUTOCONFIGURATION\n        origin \u003d\u003d IP::AddressOrigin::LinkLocal\n#else\n        origin \u003d\u003d IP::AddressOrigin::Static\n#endif",
       "revId": "97be6caa5b38931d6a981eadad81ee6354202202",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b12c1e63_33838009",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-09-27T17:21:29Z",
+      "side": 1,
+      "message": "Some comments.",
+      "revId": "97be6caa5b38931d6a981eadad81ee6354202202",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df9046a9_1d348e64",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2023-09-27T17:21:29Z",
+      "side": 1,
+      "message": "I\u0027ve done some examination of this and have some observations.\n\n1. This function is only called in the process of writing the network.conf file.\n2. The state of the addresses being written is future state, not state currently active in the systemd-network stack.\n3. The LinkLocal origin is only active as the result of querying the ifa_flags, which is not performed prior to this code fragment.\n4. ipmitool and Redfish can only assign static addresses. There is no flag or mechanism for expressing a link local address.\n\nIn my opinion this function is not providing any benefit as a function. It should be eliminated and the code calling it needs to be rewritten as:\n                if (addr.second-\u003eorigin() \u003d\u003d IP::AddressOrigin::Static)\n                {\n                    address.emplace_back(stdplus::toStr(addr.first));\n                }\nOnce the configuration file is written, and reloaded, the IP address will be classified by systemd-network as link local based on the merits of the address provided.\n\nIn any case, there is an obvious regression in IP address assignment caused by swapping the logic in this function. It is, IMO, desirable to get back to more correct behavior soon.",
+      "parentUuid": "f715dfc6_ab494ced",
+      "revId": "97be6caa5b38931d6a981eadad81ee6354202202",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
