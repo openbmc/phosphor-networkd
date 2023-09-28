@@ -106,6 +106,8 @@ void setNICUp(std::string_view ifname, bool up)
     ifreq ifr = executeIFReq(ifname, SIOCGIFFLAGS);
     ifr.ifr_flags &= ~IFF_UP;
     ifr.ifr_flags |= up ? IFF_UP : 0;
+    lg2::info("Setting NIC {UPDOWN} on {NET_INTF}", "UPDOWN",
+              up ? "up"sv : "down"sv, "NET_INTF", ifname);
     getIFSock().ioctl(SIOCSIFFLAGS, &ifr);
 }
 
