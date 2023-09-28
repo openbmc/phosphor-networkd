@@ -1,2 +1,9 @@
-Checks: 'clang-analyzer-*'
+Checks: 'clang-analyzer-*,
+readability-function-size'
 WarningsAsErrors: 'clang-analyzer-*'
+CheckOptions:
+  - { key: readability-function-size.LineThreshold,     value: 100 }
+  - { key: readability-function-size.StatementThreshold,value: 100 }
+  - { key: readability-function-size.NestingThreshold,  value: 5 }
+  - { key: readability-function-size.VariableThreshold, value: 10 }
+  - { key: readability-function-size.ParameterThreshold,value: 6 }
