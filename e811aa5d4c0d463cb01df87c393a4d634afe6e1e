@@ -48,6 +48,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "37bcdf7d_b64bc8f8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-09-29T10:14:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "551c73fa_95fed0b5",
+      "range": {
+        "startLine": 10,
+        "startChar": 12,
+        "endLine": 11,
+        "endChar": 70
+      },
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2ada73f3_5c93d61d",
@@ -330,6 +354,24 @@
       "side": 1,
       "message": "Ravi, i think you should mention that this test is done via redfish commands",
       "parentUuid": "b5e9a42d_c46078eb",
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f750aabd_8d8c42a0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2023-09-29T10:14:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55f30d23_a13cbe5d",
       "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
