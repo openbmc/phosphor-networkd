@@ -1,12 +1,7 @@
 #include "hyp_network_manager.hpp"
 
-#include <phosphor-logging/log.hpp>
 #include <sdeventplus/event.hpp>
 #include <stdplus/print.hpp>
-
-using phosphor::logging::entry;
-using phosphor::logging::level;
-using phosphor::logging::log;
 
 constexpr char DEFAULT_HYP_NW_OBJPATH[] =
     "/xyz/openbmc_project/network/hypervisor";
