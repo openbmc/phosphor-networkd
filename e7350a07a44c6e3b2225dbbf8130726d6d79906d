@@ -69,6 +69,30 @@
       },
       "revId": "e7350a07a44c6e3b2225dbbf8130726d6d79906d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d4760ea_39ceaefb",
+        "filename": "src/dhcp_configuration.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2023-10-04T13:18:36Z",
+      "side": 1,
+      "message": "Existing code",
+      "parentUuid": "ea08f949_9449d51b",
+      "range": {
+        "startLine": 57,
+        "startChar": 8,
+        "endLine": 57,
+        "endChar": 32
+      },
+      "revId": "e7350a07a44c6e3b2225dbbf8130726d6d79906d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
