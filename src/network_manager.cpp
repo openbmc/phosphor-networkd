@@ -482,9 +482,6 @@ void Manager::reset()
     lg2::info("Network data purged.");
 }
 
-// Need to merge the below function with the code which writes the
-// config file during factory reset.
-// TODO openbmc/openbmc#1751
 void Manager::writeToConfigurationFile()
 {
     // write all the static ip address in the systemd-network conf file

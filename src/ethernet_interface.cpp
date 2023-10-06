@@ -649,9 +649,6 @@ ServerList EthernetInterface::ntpServers(ServerList /*servers*/)
 {
     elog<NotAllowed>(NotAllowedArgument::REASON("ReadOnly Property"));
 }
-// Need to merge the below function with the code which writes the
-// config file during factory reset.
-// TODO openbmc/openbmc#1751
 
 void EthernetInterface::writeConfigurationFile()
 {
