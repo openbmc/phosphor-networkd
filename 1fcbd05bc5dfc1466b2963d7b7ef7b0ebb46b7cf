@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4decc85_4ab79fd4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-10-06T14:54:37Z",
+      "side": 1,
+      "message": "Code changes LGTM, @william can you also take a look?",
+      "revId": "1fcbd05bc5dfc1466b2963d7b7ef7b0ebb46b7cf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f1240b3_0ee613d0",
+        "filename": "src/dhcp_configuration.hpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-10-06T14:54:37Z",
+      "side": 1,
+      "message": "add type here?",
+      "revId": "1fcbd05bc5dfc1466b2963d7b7ef7b0ebb46b7cf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
