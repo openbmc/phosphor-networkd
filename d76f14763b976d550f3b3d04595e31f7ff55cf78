@@ -267,6 +267,24 @@
       "parentUuid": "ef6bd635_1447a8f9",
       "revId": "d76f14763b976d550f3b3d04595e31f7ff55cf78",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39b92572_75016dc5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-10-12T11:30:47Z",
+      "side": 1,
+      "message": "In current code base we have the address origin as link local for auto configured or staticaly assigned link local address, and the consumers(bmcweb/ipmi) is taking decision based on the address origin.\nI am fine with this commit but it should not break others. I think we should not allow the static link local address assignment.\n@wak : Do you see the issue in this commit?",
+      "parentUuid": "866ab7f0_72949d4e",
+      "revId": "d76f14763b976d550f3b3d04595e31f7ff55cf78",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
