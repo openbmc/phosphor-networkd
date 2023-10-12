@@ -1,0 +1,7 @@
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Code-Review+2: William A. Kennington III <wak@google.com>
+Submitted-by: Yuxiao Zhang <yuxiaozhang@google.com>
+Submitted-at: Thu, 12 Oct 2023 20:58:54 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/67039
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
