@@ -882,6 +882,7 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
     if (gateway != defaultGateway())
     {
         gateway = EthernetInterfaceIntf::defaultGateway(std::move(gateway));
+        writeConfigurationFile();
         manager.get().reloadConfigs();
     }
     return gateway;
@@ -893,6 +894,7 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
     if (gateway != defaultGateway6())
     {
         gateway = EthernetInterfaceIntf::defaultGateway6(std::move(gateway));
+        writeConfigurationFile();
         manager.get().reloadConfigs();
     }
     return gateway;
