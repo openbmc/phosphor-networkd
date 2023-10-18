@@ -103,6 +103,86 @@
       "message": "Ping Vernon and William",
       "revId": "086231e4116dd34abdf3a78f5782fb1f00258c3a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62ed76ad_b10be986",
+        "filename": "src/dhcp_configuration.hpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-10-18T15:47:23Z",
+      "side": 1,
+      "message": "What are these magic strings?  Why are they not an enumeration?\n\nI see lots of string comparisons in the code with magic values and that doesn\u0027t seem appropriate.",
+      "revId": "086231e4116dd34abdf3a78f5782fb1f00258c3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b8a6e39_66200546",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-10-18T15:47:23Z",
+      "side": 1,
+      "message": "Why does this need to be a unique_ptr?  Why can\u0027t the map hold the value directly?",
+      "range": {
+        "startLine": 265,
+        "startChar": 25,
+        "endLine": 265,
+        "endChar": 61
+      },
+      "revId": "086231e4116dd34abdf3a78f5782fb1f00258c3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fd28149_233387d5",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-10-18T15:47:23Z",
+      "side": 1,
+      "message": "I personally find this type really irritating.  I don\u0027t know why we need type aliases around std::unordered_map that nobody knows what it is without looking it up.",
+      "range": {
+        "startLine": 265,
+        "startChar": 4,
+        "endLine": 265,
+        "endChar": 24
+      },
+      "revId": "086231e4116dd34abdf3a78f5782fb1f00258c3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c64eab1_ecc94041",
+        "filename": "src/util.hpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2023-10-18T15:47:23Z",
+      "side": 1,
+      "message": "Add to documentation above?\n\nDo you really want type to be the last parameter?  You\u0027re going to need to change all call-sites anyhow.  Why not do the obvious thing and put type first?",
+      "revId": "086231e4116dd34abdf3a78f5782fb1f00258c3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
