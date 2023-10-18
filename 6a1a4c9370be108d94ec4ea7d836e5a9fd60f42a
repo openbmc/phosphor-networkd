@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "721e4031_3d9cbf8f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-10-18T13:43:48Z",
+      "side": 1,
+      "message": "Seems this is specific to IBM, Can somebody from IBM first do the review?",
+      "revId": "6a1a4c9370be108d94ec4ea7d836e5a9fd60f42a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
