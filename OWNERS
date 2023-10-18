@@ -39,6 +39,7 @@ reviewers:
 - anoo@us.ibm.com
 - sunithaharish04@gmail.com
 - johnathanx.mantey@intel.com
+- raviteja28031990@gmail.com
 
 matchers:
 
@@ -55,3 +56,6 @@ openbmc:
 - name: Sunitha Harish
   email: sunithaharish04@gmail.com
   discord: Sunitha Harish
+- name: Ravi Teja
+  email: raviteja28031990@gmail.com
+  discord: raviteja
