@@ -86,6 +86,23 @@
       "message": "Can this be merged?",
       "revId": "086231e4116dd34abdf3a78f5782fb1f00258c3a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "196626e7_b78c579c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2023-10-18T15:07:24Z",
+      "side": 1,
+      "message": "Ping Vernon and William",
+      "revId": "086231e4116dd34abdf3a78f5782fb1f00258c3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
