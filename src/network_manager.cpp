@@ -73,7 +73,7 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
         lg2::error("AdministrativeState match parsing failed: {ERROR}", "ERROR",
                    e);
     }
-        })
+})
 {
     reload.get().setCallback([self = stdplus::PinnedRef(*this)]() {
         for (auto& hook : self.get().reloadPreHooks)
@@ -373,7 +373,7 @@ void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                 static_assert(std::is_same_v<stdplus::In6Addr, decltype(addr)>);
                 it->second.defgw6.emplace(addr);
             }
-            },
+        },
             addr);
         if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
         {
@@ -391,7 +391,7 @@ void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                     it->second->EthernetInterfaceIntf::defaultGateway6(
                         stdplus::toStr(addr));
                 }
-                },
+            },
                 addr);
         }
     }
@@ -422,7 +422,7 @@ void Manager::removeDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                     it->second.defgw6.reset();
                 }
             }
-            },
+        },
             addr);
         if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
         {
@@ -446,7 +446,7 @@ void Manager::removeDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                         it->second->EthernetInterfaceIntf::defaultGateway6("");
                     }
                 }
-                },
+            },
                 addr);
         }
     }

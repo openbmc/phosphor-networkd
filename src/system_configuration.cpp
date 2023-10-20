@@ -44,7 +44,7 @@ SystemConfiguration::SystemConfiguration(
     {
         lg2::error("Hostname match parsing failed: {ERROR}", "ERROR", e);
     }
-                  })
+})
 {
     try
     {

@@ -24,8 +24,8 @@ struct TestManagerData
     {
         EXPECT_CALL(mockReload, setCallback(testing::_))
             .WillOnce([&](fu2::unique_function<void()>&& cb) {
-                reloadCb = std::move(cb);
-            });
+            reloadCb = std::move(cb);
+        });
         return mockReload;
     }
 };

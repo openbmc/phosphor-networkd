@@ -89,7 +89,7 @@ EthInfo getEthInfo(stdplus::zstring_view ifname)
                ifname, SIOCETHTOOL, "ETHTOOL"sv,
                [&](const ifreq&) {
         return EthInfo{.autoneg = edata.autoneg != 0, .speed = edata.speed};
-               },
+    },
                &edata)
         .value_or(EthInfo{});
 }
