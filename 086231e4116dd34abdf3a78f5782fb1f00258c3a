@@ -122,6 +122,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "31c9d623_f2fcefb5",
+        "filename": "src/dhcp_configuration.hpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2023-10-31T05:44:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62ed76ad_b10be986",
+      "revId": "086231e4116dd34abdf3a78f5782fb1f00258c3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1b8a6e39_66200546",
@@ -168,6 +186,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd2ec63d_01b1f6e2",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2023-10-31T05:44:10Z",
+      "side": 1,
+      "message": "I could see the same type is used for similar data. Also there was a review comment to use it",
+      "parentUuid": "2fd28149_233387d5",
+      "range": {
+        "startLine": 265,
+        "startChar": 4,
+        "endLine": 265,
+        "endChar": 24
+      },
+      "revId": "086231e4116dd34abdf3a78f5782fb1f00258c3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c64eab1_ecc94041",
@@ -181,6 +223,24 @@
       "writtenOn": "2023-10-18T15:47:23Z",
       "side": 1,
       "message": "Add to documentation above?\n\nDo you really want type to be the last parameter?  You\u0027re going to need to change all call-sites anyhow.  Why not do the obvious thing and put type first?",
+      "revId": "086231e4116dd34abdf3a78f5782fb1f00258c3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc904aac_20625bd8",
+        "filename": "src/util.hpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2023-10-31T05:44:10Z",
+      "side": 1,
+      "message": "I\u0027ve moved type to second after config.",
+      "parentUuid": "7c64eab1_ecc94041",
       "revId": "086231e4116dd34abdf3a78f5782fb1f00258c3a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
