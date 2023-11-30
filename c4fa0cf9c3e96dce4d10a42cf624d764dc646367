@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "960d94d1_c198e8c8",
+        "filename": "test/meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2023-11-30T00:01:53Z",
+      "side": 1,
+      "message": "Keep this as `enabled()` since `auto` implies the build should still work without googletest.",
+      "revId": "c4fa0cf9c3e96dce4d10a42cf624d764dc646367",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
