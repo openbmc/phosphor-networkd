@@ -24,10 +24,8 @@ if get_option('sync-mac')
   main_srcs += [
     'inventory_mac.cpp',
   ]
-  # nlohmann_json might not have a pkg-config. It is header only so just make
-  # sure we can access the needed symbols from the header.
   main_deps += [
-    dependency('nlohmann_json', allow_fallback: true, required: false),
+    dependency('nlohmann_json', include_type: 'system')
   ]
 endif
 
