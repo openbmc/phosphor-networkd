@@ -14,7 +14,9 @@ static constexpr char HOSTNAMED_SVC[] = "org.freedesktop.hostname1";
 static constexpr char HOSTNAMED_OBJ[] = "/org/freedesktop/hostname1";
 static constexpr char HOSTNAMED_INTF[] = "org.freedesktop.hostname1";
 
+using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
 static constexpr char propMatch[] =
     "type='signal',sender='org.freedesktop.hostname1',"
@@ -77,12 +79,20 @@ std::string SystemConfiguration::hostName(std::string name)
         auto method = bus.get().new_method_call(
             HOSTNAMED_SVC, HOSTNAMED_OBJ, HOSTNAMED_INTF, "SetStaticHostname");
         method.append(name, /*interactive=*/false);
-        bus.get().call_noreply(method);
+        method.call();
         return SystemConfigIntf::hostName(std::move(name));
     }
-    catch (const std::exception& e)
+    catch (const sdbusplus::exception::SdBusError& e)
     {
-        lg2::error("Failed to set hostname: {ERROR}", "ERROR", e);
+        lg2::error("Failed to set hostname {HOSTNAME}: {ERROR} " , "Hostname",
+                   name, "ERROR", e);
+        auto dbusError = e.get_error();
+        if ((strcmp(dbusError->name,
+                    "org.freedesktop.DBus.Error.InvalidArgs") == 0))
+        {
+            elog<InvalidArgument>(Argument::ARGUMENT_NAME("Hostname"),
+                                  Argument::ARGUMENT_VALUE(name.c_str()));
+        }
     }
     return SystemConfigIntf::hostName();
 }
