@@ -284,6 +284,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d43b16fe_037b2e8b",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-01-12T18:36:23Z",
+      "side": 1,
+      "message": "looks like dhcp::Configuration is a Dbus object(polymorphic type) not a POD. I am not sure if \"copy\" or \"move\" it to the map container will work or not. Dbus may want to call some virtual function on it. We can try emplacing it though.",
+      "parentUuid": "93c03b26_137d0da3",
+      "range": {
+        "startLine": 265,
+        "startChar": 25,
+        "endLine": 265,
+        "endChar": 61
+      },
+      "revId": "086231e4116dd34abdf3a78f5782fb1f00258c3a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c64eab1_ecc94041",
         "filename": "src/util.hpp",
         "patchSetId": 22
