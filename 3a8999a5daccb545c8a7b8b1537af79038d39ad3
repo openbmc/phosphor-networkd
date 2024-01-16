@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f51ecd1f_19294be4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 34
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000003
+      },
+      "writtenOn": "2024-01-16T20:54:18Z",
+      "side": 1,
+      "message": "Replying to question of how IPMI will be impacted. The dcmihandler.hpp has the dhcp interface path hardcoded. Therefore the IPMI \"dcmi get_conf_parm\" command will fail trying to read the \"SendHostNameEnabled\" property.\n\nIPMI would need to be updated like the changes being done in bmcweb to handle these new dhcp paths.",
+      "revId": "3a8999a5daccb545c8a7b8b1537af79038d39ad3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
