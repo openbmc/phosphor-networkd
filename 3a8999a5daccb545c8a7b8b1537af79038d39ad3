@@ -34,6 +34,29 @@
       "parentUuid": "f51ecd1f_19294be4",
       "revId": "3a8999a5daccb545c8a7b8b1537af79038d39ad3",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48a46e00_8a9a5bc9",
+        "filename": "src/dhcp_configuration.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-01-18T16:26:04Z",
+      "side": 1,
+      "message": "At what point does this become an obvious breakdown in decomposition?",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 47
+      },
+      "revId": "3a8999a5daccb545c8a7b8b1537af79038d39ad3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
