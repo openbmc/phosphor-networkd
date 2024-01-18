@@ -22,6 +22,30 @@
       },
       "revId": "132c05ea6573958e6d99ec44706d5edc7a3435a5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae888c5b_e82f2216",
+        "filename": "src/system_configuration.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-01-18T18:10:45Z",
+      "side": 1,
+      "message": "looks like we don\u0027t get this hostname passed as part of exception.\nas part to redfish error we return given hostname string in response",
+      "parentUuid": "08e507b3_fa1b4360",
+      "range": {
+        "startLine": 87,
+        "startChar": 8,
+        "endLine": 87,
+        "endChar": 18
+      },
+      "revId": "132c05ea6573958e6d99ec44706d5edc7a3435a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
