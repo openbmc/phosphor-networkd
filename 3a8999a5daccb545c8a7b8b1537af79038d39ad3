@@ -57,6 +57,30 @@
       },
       "revId": "3a8999a5daccb545c8a7b8b1537af79038d39ad3",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e54a4d4_bbf9b1bd",
+        "filename": "src/dhcp_configuration.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2024-01-19T08:32:59Z",
+      "side": 1,
+      "message": "Apologies. Could you please explain decomposition? Are you mentioning about the reduced readability caused by method chaining?",
+      "parentUuid": "48a46e00_8a9a5bc9",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 47
+      },
+      "revId": "3a8999a5daccb545c8a7b8b1537af79038d39ad3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
