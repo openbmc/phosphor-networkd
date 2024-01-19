@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "673632af_3c906d92",
+        "filename": "src/system_configuration.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-01-19T04:31:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e8354e8_b7d28a7e",
+      "revId": "132c05ea6573958e6d99ec44706d5edc7a3435a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "08e507b3_fa1b4360",
@@ -79,6 +97,30 @@
       "side": 1,
       "message": "But you know the name from the `name` argument.",
       "parentUuid": "ae888c5b_e82f2216",
+      "range": {
+        "startLine": 87,
+        "startChar": 8,
+        "endLine": 87,
+        "endChar": 18
+      },
+      "revId": "132c05ea6573958e6d99ec44706d5edc7a3435a5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca4f6832_231dbbfa",
+        "filename": "src/system_configuration.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-01-19T04:31:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34a348d5_6d11b4b0",
       "range": {
         "startLine": 87,
         "startChar": 8,
