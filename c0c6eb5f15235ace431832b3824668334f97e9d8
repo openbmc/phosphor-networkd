@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7f672f92_3de3d18f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2024-01-24T04:51:33Z",
+      "side": 1,
+      "message": "@William/Ratan - can you please take this forward?",
+      "parentUuid": "cd818aea_3c2ba599",
+      "revId": "c0c6eb5f15235ace431832b3824668334f97e9d8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "160c0d8b_c3aabb15",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 18
