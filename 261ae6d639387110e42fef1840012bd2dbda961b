@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dde47eab_d2786a6f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2024-02-01T20:55:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1c24a03_48bc7392",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 49
+      },
+      "revId": "261ae6d639387110e42fef1840012bd2dbda961b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e6a789bf_16d4935f",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "578c8cb0_4c30374a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2024-02-01T20:55:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6a789bf_16d4935f",
+      "range": {
+        "startLine": 11,
+        "startChar": 67,
+        "endLine": 11,
+        "endChar": 70
+      },
+      "revId": "261ae6d639387110e42fef1840012bd2dbda961b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5d419ea3_375aa29c",
@@ -60,6 +108,30 @@
       "writtenOn": "2023-05-07T17:04:34Z",
       "side": 1,
       "message": "Instead of doing it here, why can\u0027t we have a logic in staticNameServers(value) method in line #431 to avoid duplicates?",
+      "range": {
+        "startLine": 682,
+        "startChar": 0,
+        "endLine": 682,
+        "endChar": 43
+      },
+      "revId": "261ae6d639387110e42fef1840012bd2dbda961b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65715f01_b4317dfd",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1001631
+      },
+      "writtenOn": "2024-02-01T20:55:17Z",
+      "side": 1,
+      "message": "Updated.",
+      "parentUuid": "5d419ea3_375aa29c",
       "range": {
         "startLine": 682,
         "startChar": 0,
