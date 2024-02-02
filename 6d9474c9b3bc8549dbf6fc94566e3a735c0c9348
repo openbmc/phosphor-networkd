@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80ce0355_c4e6cddd",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-02-02T21:04:56Z",
+      "side": 1,
+      "message": "Make this an unordered_set",
+      "revId": "6d9474c9b3bc8549dbf6fc94566e3a735c0c9348",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7dbf5c7_999bdfbc",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-02-02T21:04:56Z",
+      "side": 1,
+      "message": "if you use a set you can make this simply `dnsUniqueValues.contains(value)`",
+      "revId": "6d9474c9b3bc8549dbf6fc94566e3a735c0c9348",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
