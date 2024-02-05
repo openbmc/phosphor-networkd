@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c49d4300_1689249d",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2024-02-05T16:12:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a01f8527_a70a654b",
+      "revId": "46382c286eb8fefa83072a22fc41b0c61a10d7d6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b703cd5_a0e66376",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-02-02T21:14:03Z",
       "side": 1,
       "message": "nit: These could all be literal string_views, convert all of them and don\u0027t build the string.",
+      "revId": "46382c286eb8fefa83072a22fc41b0c61a10d7d6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e4c0b33_cb7a9eaa",
+        "filename": "src/util.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2024-02-05T16:12:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b703cd5_a0e66376",
       "revId": "46382c286eb8fefa83072a22fc41b0c61a10d7d6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -52,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8630355c_880821ee",
+        "filename": "src/util.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2024-02-05T16:12:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "87dc11c1_5cb427aa",
+      "revId": "46382c286eb8fefa83072a22fc41b0c61a10d7d6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "506dc855_83434ad8",
@@ -65,6 +119,24 @@
       "writtenOn": "2024-02-02T21:14:03Z",
       "side": 1,
       "message": "Maybe just call this `DHCPType` with `v4` / `v6`. Network type is a pretty vague concept, and probably would just be address family. You could even just re-use address family and AF_INET vs AF_INET6.",
+      "revId": "46382c286eb8fefa83072a22fc41b0c61a10d7d6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d914d245_940d6bc7",
+        "filename": "src/util.hpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2024-02-05T16:12:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "506dc855_83434ad8",
       "revId": "46382c286eb8fefa83072a22fc41b0c61a10d7d6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
