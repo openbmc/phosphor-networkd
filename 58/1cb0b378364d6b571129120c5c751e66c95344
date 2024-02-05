@@ -1,0 +1,8 @@
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Code-Review+2: William A. Kennington III <wak@google.com>
+Submitted-by: Nitin Kumar Kotania <gitnkotania@gmail.com>
+Submitted-at: Mon, 05 Feb 2024 09:06:16 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/61743
+Comments-Total: 22
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
