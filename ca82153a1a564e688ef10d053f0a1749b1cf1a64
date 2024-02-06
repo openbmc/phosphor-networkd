@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "045351dc_f9ce0da1",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 38
+      },
+      "lineNbr": 764,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2024-02-06T03:52:44Z",
+      "side": 1,
+      "message": "v6",
+      "range": {
+        "startLine": 764,
+        "startChar": 67,
+        "endLine": 764,
+        "endChar": 69
+      },
+      "revId": "ca82153a1a564e688ef10d053f0a1749b1cf1a64",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
