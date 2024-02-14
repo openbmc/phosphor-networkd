@@ -16,6 +16,24 @@
       "message": "I don\u0027t have any other comments here, @Patrick Are we good here?",
       "revId": "4331786f9081d0cfb69b22603679ea011d918edb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eafc707c_b2aa2332",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 39
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-02-14T12:35:30Z",
+      "side": 1,
+      "message": "Sure.  Ultimately you and @wak are the maintainers, so if you\u0027re happy with it, go ahead.",
+      "parentUuid": "afd313ab_382cc7c5",
+      "revId": "4331786f9081d0cfb69b22603679ea011d918edb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
