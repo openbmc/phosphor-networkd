@@ -58,6 +58,24 @@ int clearInterface(int ifindex);
  */
 int getInfo(int ifindex, int package);
 
+/* @brief  This function assigns a mask controlling responses to AEN from a
+ * package.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] payload - An array of bytes holding a 32-bit bitmask
+ * @returns 0 on success and negative value for failure.
+ */
+int setPackageMask(int ifindex, std::span<const unsigned char> payload);
+
+/* @brief  This function sets the AEN mask for the channels inside the selected
+ * package.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] payload - An array of bytes holding a 32-bit bitmask
+ * @returns 0 on success and negative value for failure.
+ */
+int setChannelMask(int ifindex, int package,
+                   std::span<const unsigned char> payload);
+
 } // namespace ncsi
 } // namespace network
 } // namespace phosphor

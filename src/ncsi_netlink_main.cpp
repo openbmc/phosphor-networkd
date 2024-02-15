@@ -38,6 +38,7 @@ int main(int argc, char** argv)
     int channelInt{};
     int indexInt{};
     int operationInt{DEFAULT_VALUE};
+    unsigned int maskInt{};
 
     // Parse out interface argument.
     auto ifIndex = (options)["index"];
@@ -156,6 +157,45 @@ int main(int argc, char** argv)
     else if ((options)["clear"] == "true")
     {
         return ncsi::clearInterface(indexInt);
+    }
+    else if ((options)["pmask"] == "true")
+    {
+        auto mask = (options)["mask"];
+        try
+        {
+            maskInt = stoul(mask, nullptr, 0);
+        }
+        catch (const std::exception& e)
+        {
+            exitWithError("Mask value is not valid", argv);
+        }
+        return ncsi::setPackageMask(
+            indexInt, std::span<const unsigned char>(
+                          reinterpret_cast<const unsigned char*>(&maskInt),
+                          reinterpret_cast<const unsigned char*>(&maskInt) +
+                              sizeof(uint32_t)));
+    }
+    else if ((options)["cmask"] == "true")
+    {
+        if (packageInt == DEFAULT_VALUE)
+        {
+            exitWithError("Package is not specified", argv);
+        }
+        auto mask = (options)["mask"];
+        try
+        {
+            maskInt = stoul(mask, nullptr, 0);
+        }
+        catch (const std::exception& e)
+        {
+            exitWithError("Mask value is not valid", argv);
+        }
+        return ncsi::setChannelMask(
+            indexInt, packageInt,
+            std::span<const unsigned char>(
+                reinterpret_cast<const unsigned char*>(&maskInt),
+                reinterpret_cast<const unsigned char*>(&maskInt) +
+                    sizeof(uint32_t)));
     }
     else
     {

@@ -9,8 +9,6 @@
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
 
-#include <iomanip>
-#include <iostream>
 #include <vector>
 
 namespace phosphor
@@ -345,7 +343,29 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
         return ret;
     }
 
-    if (cmd.ncsi_cmd != DEFAULT_VALUE)
+    if ((cmd.ncsi_cmd == ncsi_nl_commands::NCSI_CMD_SET_PACKAGE_MASK) ||
+        (cmd.ncsi_cmd == ncsi_nl_commands::NCSI_CMD_SET_CHANNEL_MASK))
+    {
+        if (cmd.payload.size() != sizeof(uint32_t))
+        {
+            lg2::error("Package/Channel mask must be 32-bits");
+            return -EINVAL;
+        }
+        int maskAttr = cmd.ncsi_cmd ==
+                               ncsi_nl_commands::NCSI_CMD_SET_PACKAGE_MASK
+                           ? NCSI_ATTR_PACKAGE_MASK
+                           : NCSI_ATTR_CHANNEL_MASK;
+        ret = nla_put_u32(
+            msg.get(), maskAttr,
+            *(reinterpret_cast<const uint32_t*>(cmd.payload.data())));
+        if (ret < 0)
+        {
+            lg2::error("Failed to set the mask attribute, RC : {RC}", "RC",
+                       ret);
+            return ret;
+        }
+    }
+    else if (cmd.ncsi_cmd == ncsi_nl_commands::NCSI_CMD_SEND_CMD)
     {
         std::vector<unsigned char> pl(sizeof(NCSIPacketHeader) +
                                       cmd.payload.size());
@@ -456,6 +476,29 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int setPackageMask(int ifindex, std::span<const unsigned char> payload)
+{
+    lg2::warning("Set Package Mask , INTERFACE_INDEX: {INTERFACE_INDEX} ",
+                 "INTERFACE_INDEX", lg2::hex, ifindex);
+    return internal::applyCmd(
+        ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_PACKAGE_MASK,
+                                   0, payload));
+}
+
+int setChannelMask(int ifindex, int package,
+                   std::span<const unsigned char> payload)
+{
+    lg2::warning(
+        "Set Channel Mask , INTERFACE_INDEX: {INTERFACE_INDEX}, PACKAGE : {PACKAGE}",
+        "INTERFACE_INDEX", lg2::hex, ifindex, "PACKAGE", lg2::hex, package);
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SET_CHANNEL_MASK, 0,
+                          payload),
+        package);
+    return 0;
 }
 
 } // namespace ncsi
