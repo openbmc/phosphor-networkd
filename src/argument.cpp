@@ -15,9 +15,7 @@
  */
 #include "argument.hpp"
 
-#include <algorithm>
 #include <iostream>
-#include <iterator>
 
 namespace phosphor
 {
@@ -76,6 +74,8 @@ void ArgumentParser::usage(char** argv)
     std::cerr << "    --set   | -s      Set a specific package/channel.\n";
     std::cerr << "    --clear | -r      Clear all the settings on the interface.\n";
     std::cerr << "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n";
+    std::cerr << "    --cmask=<mask> | -k <mask> Assign a channel mask\n";
+    std::cerr << "    --pmask=<mask> | -j <mask> Assign a package mask\n";
     std::cerr << "\n";
     std::cerr << "Example commands:\n";
     std::cerr << "    1) Retrieve topology information:\n";
@@ -88,9 +88,12 @@ void ArgumentParser::usage(char** argv)
     std::cerr << "         ncsi-netlink -x 3 -p 0 -r\n";
     std::cerr << "    5) Send NCSI Command\n";
     std::cerr << "         ncsi-netlink -x 3 -p 0 -c 0 -o 50000001572100\n";
+    std::cerr << "    6) Set package mask\n";
+    std::cerr << "         ncsi-netlink -x 3 -j 0x3\n";
+    std::cerr << "    7) Set channel mask\n";
+    std::cerr << "         ncsi-netlink -x 3 -p 0 -k 0x7\n";
     std::cerr << "\n";
     // clang-format on
-    std::cerr << std::flush;
 }
 
 const option ArgumentParser::options[] = {
@@ -102,10 +105,12 @@ const option ArgumentParser::options[] = {
     {"channel", required_argument, NULL, 'c'},
     {"index", required_argument, NULL, 'x'},
     {"help", no_argument, NULL, 'h'},
+    {"pmask", required_argument, NULL, 'j'},
+    {"cmask", required_argument, NULL, 'k'},
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsx:o:p:c:h?";
+const char* ArgumentParser::optionStr = "irsj:k:x:o:p:c:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
