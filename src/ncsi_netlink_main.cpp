@@ -157,6 +157,46 @@ int main(int argc, char** argv)
     {
         return ncsi::clearInterface(indexInt);
     }
+    else if (!(options)["pmask"].empty())
+    {
+        unsigned int mask{};
+        try
+        {
+            size_t lastChar{};
+            mask = std::stoul((options)["pmask"], &lastChar, 0);
+            if (lastChar < (options["pmask"].size()))
+            {
+                exitWithError("Package mask value is not valid", argv);
+            }
+        }
+        catch (const std::exception& e)
+        {
+            exitWithError("Package mask value is not valid", argv);
+        }
+        return ncsi::setPackageMask(indexInt, mask);
+    }
+    else if (!(options)["cmask"].empty())
+    {
+        if (packageInt == DEFAULT_VALUE)
+        {
+            exitWithError("Package is not specified", argv);
+        }
+        unsigned int mask{};
+        try
+        {
+            size_t lastChar{};
+            mask = stoul((options)["cmask"], &lastChar, 0);
+            if (lastChar < (options["cmask"].size()))
+            {
+                exitWithError("Channel mask value is not valid", argv);
+            }
+        }
+        catch (const std::exception& e)
+        {
+            exitWithError("Channel mask value is not valid", argv);
+        }
+        return ncsi::setChannelMask(indexInt, packageInt, mask);
+    }
     else
     {
         exitWithError("No Command specified", argv);
