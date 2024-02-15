@@ -15,9 +15,7 @@
  */
 #include "argument.hpp"
 
-#include <algorithm>
 #include <iostream>
-#include <iterator>
 
 namespace phosphor
 {
@@ -100,10 +98,12 @@ const option ArgumentParser::options[] = {
     {"channel", required_argument, NULL, 'c'},
     {"index", required_argument, NULL, 'x'},
     {"help", no_argument, NULL, 'h'},
+    {"pmask", required_argument, NULL, 'j'},
+    {"cmask", required_argument, NULL, 'k'},
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsx:o:p:c:h?";
+const char* ArgumentParser::optionStr = "irsj:k:x:o:p:c:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
