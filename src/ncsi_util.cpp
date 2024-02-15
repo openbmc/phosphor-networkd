@@ -38,6 +38,7 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
         *oit++ = ' ';
         oit = its(oit, *cit, 2);
     }
+    *oit = 0;
     return ret;
 }
 
@@ -66,14 +67,14 @@ class Command
     Command(Command&&) = default;
     Command& operator=(Command&&) = default;
     Command(
-        int c, int nc = DEFAULT_VALUE,
+        int ncsiCmd, int operation = DEFAULT_VALUE,
         std::span<const unsigned char> p = std::span<const unsigned char>()) :
-        cmd(c),
-        ncsi_cmd(nc), payload(p)
+        ncsi_cmd(ncsiCmd),
+        operation(operation), payload(p)
     {}
 
-    int cmd;
     int ncsi_cmd;
+    int operation;
     std::span<const unsigned char> payload;
 };
 
@@ -300,11 +301,12 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
         return -ENOMEM;
     }
 
-    auto msgHdr = genlmsg_put(msg.get(), 0, 0, driverID, 0, flags, cmd.cmd, 0);
+    auto msgHdr = genlmsg_put(msg.get(), NL_AUTO_PORT, NL_AUTO_SEQ, driverID, 0,
+                              flags, cmd.ncsi_cmd, 0);
     if (!msgHdr)
     {
         lg2::error("Unable to add the netlink headers , COMMAND : {COMMAND}",
-                   "COMMAND", cmd.cmd);
+                   "COMMAND", cmd.ncsi_cmd);
         return -ENOMEM;
     }
 
@@ -352,7 +354,7 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
         std::copy(cmd.payload.begin(), cmd.payload.end(),
                   pl.begin() + sizeof(NCSIPacketHeader));
 
-        hdr->type = cmd.ncsi_cmd;
+        hdr->type = cmd.operation;
         hdr->length = htons(cmd.payload.size());
 
         ret = nla_put(msg.get(), ncsi_nl_attrs::NCSI_ATTR_DATA, pl.size(),
@@ -398,11 +400,9 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
 
 } // namespace internal
 
-int sendOemCommand(int ifindex, int package, int channel,
+int sendOemCommand(int ifindex, int package, int channel, int operation,
                    std::span<const unsigned char> payload)
 {
-    constexpr auto cmd = 0x50;
-
     lg2::debug("Send OEM Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
                "INTERFACE_INDEX: {INTERFACE_INDEX}",
                "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
@@ -414,7 +414,8 @@ int sendOemCommand(int ifindex, int package, int channel,
 
     return internal::applyCmd(
         ifindex,
-        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, cmd, payload),
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, operation,
+                          payload),
         package, channel, NONE, internal::sendCallBack);
 }
 

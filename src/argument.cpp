@@ -67,16 +67,29 @@ void ArgumentParser::usage(char** argv)
 {
     std::cerr << "Usage: " << argv[0] << " [options]\n";
     std::cerr << "Options:\n";
-    std::cerr << "    --help            Print this menu.\n";
-    std::cerr << "    --info=<info>     Retrieve info about NCSI topology.\n";
-    std::cerr << "    --set=<set>       Set a specific package/channel.\n";
-    std::cerr
-        << "    --clear=<clear>   Clear all the settings on the interface.\n";
-    std::cerr
-        << "    --oem-payload=<hex data> Send an OEM command with payload.\n";
-    std::cerr << "    --package=<package>  Specify a package.\n";
-    std::cerr << "    --channel=<channel> Specify a channel.\n";
-    std::cerr << "    --index=<device index> Specify device ifindex.\n";
+    // clang-format off
+    std::cerr << "    --help | -h       Print this menu.\n";
+    std::cerr << "    --index=<device index> | -x <device index> Specify device ifindex.\n";
+    std::cerr << "    --package=<package> | -p <package> Specify a package.\n";
+    std::cerr << "    --channel=<channel> | -c <channel> Specify a channel.\n";
+    std::cerr << "    --info  | -i      Retrieve info about NCSI topology.\n";
+    std::cerr << "    --set   | -s      Set a specific package/channel.\n";
+    std::cerr << "    --clear | -r      Clear all the settings on the interface.\n";
+    std::cerr << "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n";
+    std::cerr << "\n";
+    std::cerr << "Example commands:\n";
+    std::cerr << "    1) Retrieve topology information:\n";
+    std::cerr << "         ncsi-netlink -x 3 -p 0 -i\n";
+    std::cerr << "    2) Set preferred package\n";
+    std::cerr << "         ncsi-netlink -x 3 -p 0 -s\n";
+    std::cerr << "    3) Set preferred channel\n";
+    std::cerr << "         ncsi-netlink -x 3 -p 0 -c 1 -s\n";
+    std::cerr << "    4) Clear preferred channel\n";
+    std::cerr << "         ncsi-netlink -x 3 -p 0 -r\n";
+    std::cerr << "    5) Send NCSI Command\n";
+    std::cerr << "         ncsi-netlink -x 3 -p 0 -c 0 -o 50000001572100\n";
+    std::cerr << "\n";
+    // clang-format on
     std::cerr << std::flush;
 }
 
@@ -92,7 +105,7 @@ const option ArgumentParser::options[] = {
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "i:s:r:o:p:c:x:h?";
+const char* ArgumentParser::optionStr = "irsx:o:p:c:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
