@@ -1,0 +1,9 @@
+Code-Review+1: Sunitha Harish <sunithaharish04@gmail.com>
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Code-Review+2: Ratan Gupta <ratankgupta31@gmail.com>
+Submitted-by: Jishnu C M <jishnunambiarcm@duck.com>
+Submitted-at: Fri, 16 Feb 2024 14:57:53 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/63124
+Comments-Total: 86
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
