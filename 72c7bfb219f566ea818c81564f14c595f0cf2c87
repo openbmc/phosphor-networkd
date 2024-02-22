@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9de61808_df0d052d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 45
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-02-22T03:47:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae9686fb_222a3d71",
+      "range": {
+        "startLine": 11,
+        "startChar": 5,
+        "endLine": 11,
+        "endChar": 16
+      },
+      "revId": "72c7bfb219f566ea818c81564f14c595f0cf2c87",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a51f585_fd28356b",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-02-20T07:02:55Z",
       "side": 1,
       "message": "should it throw error ? Or just ignore this prefix length 0 ?",
+      "range": {
+        "startLine": 626,
+        "startChar": 27,
+        "endLine": 626,
+        "endChar": 43
+      },
+      "revId": "72c7bfb219f566ea818c81564f14c595f0cf2c87",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3eac3dbb_f5eb7a5d",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-02-22T03:47:49Z",
+      "side": 1,
+      "message": "I think we don\u0027t this check.",
+      "parentUuid": "9a51f585_fd28356b",
       "range": {
         "startLine": 626,
         "startChar": 27,
@@ -72,6 +120,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "214cfef1_22386985",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-02-22T03:47:49Z",
+      "side": 1,
+      "message": "yes we are not having destination on Dbus, but while updating systemd-networkd config file there is a format followed to configure prefixlength for this particular gateway \"Destination/Prefix\", so using default destination address while updating systemd config file",
+      "parentUuid": "cc655e0e_fcc9ea86",
+      "range": {
+        "startLine": 921,
+        "startChar": 14,
+        "endLine": 922,
+        "endChar": 78
+      },
+      "revId": "72c7bfb219f566ea818c81564f14c595f0cf2c87",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8cc79748_4eeccc30",
         "filename": "test/test_ethernet_interface.cpp",
         "patchSetId": 45
@@ -83,6 +155,24 @@
       "writtenOn": "2024-02-20T07:02:55Z",
       "side": 1,
       "message": "What happens when a delete request comes for a non-existing static gateway ?",
+      "revId": "72c7bfb219f566ea818c81564f14c595f0cf2c87",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef884da6_9554a6a5",
+        "filename": "test/test_ethernet_interface.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-02-22T03:47:49Z",
+      "side": 1,
+      "message": "for each static gateway, there is a new object gets created similar to IP address and other objects\nif there is object, then object not found error thrown",
+      "parentUuid": "8cc79748_4eeccc30",
       "revId": "72c7bfb219f566ea818c81564f14c595f0cf2c87",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
