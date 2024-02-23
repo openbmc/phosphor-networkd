@@ -95,6 +95,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "71d26eb7_3b19ea1c",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-02-23T10:27:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3eac3dbb_f5eb7a5d",
+      "range": {
+        "startLine": 626,
+        "startChar": 27,
+        "endLine": 626,
+        "endChar": 43
+      },
+      "revId": "72c7bfb219f566ea818c81564f14c595f0cf2c87",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cc655e0e_fcc9ea86",
@@ -142,6 +166,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0e7bd3e_629016fa",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-02-23T10:27:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "214cfef1_22386985",
+      "range": {
+        "startLine": 921,
+        "startChar": 14,
+        "endLine": 922,
+        "endChar": 78
+      },
+      "revId": "72c7bfb219f566ea818c81564f14c595f0cf2c87",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8cc79748_4eeccc30",
@@ -173,6 +221,24 @@
       "side": 1,
       "message": "for each static gateway, there is a new object gets created similar to IP address and other objects\nif there is object, then object not found error thrown",
       "parentUuid": "8cc79748_4eeccc30",
+      "revId": "72c7bfb219f566ea818c81564f14c595f0cf2c87",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb3d78da_4438632a",
+        "filename": "test/test_ethernet_interface.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-02-23T10:27:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef884da6_9554a6a5",
       "revId": "72c7bfb219f566ea818c81564f14c595f0cf2c87",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
