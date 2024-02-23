@@ -49,6 +49,7 @@ Configuration::Configuration(sdbusplus::bus_t& bus,
         conf.setFile(newest_file.path());
     }
 
+    ConfigIntf::domainEnabled(getDHCPProp(conf, type, "UseDomains"), true);
     ConfigIntf::dnsEnabled(getDHCPProp(conf, type, "UseDNS"), true);
     ConfigIntf::ntpEnabled(getDHCPProp(conf, type, "UseNTP"), true);
     ConfigIntf::hostNameEnabled(getDHCPProp(conf, type, "UseHostname"), true);
@@ -114,6 +115,20 @@ bool Configuration::dnsEnabled(bool value)
     parent.get().reloadConfigs();
 
     return dns;
+}
+
+bool Configuration::domainEnabled(bool value)
+{
+    if (value == domainEnabled())
+    {
+        return value;
+    }
+
+    auto domain = ConfigIntf::domainEnabled(value);
+    parent.get().writeConfigurationFile();
+    parent.get().reloadConfigs();
+
+    return domain;
 }
 
 } // namespace dhcp
