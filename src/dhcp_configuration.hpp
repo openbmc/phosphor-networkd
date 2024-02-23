@@ -47,6 +47,12 @@ class Configuration : public Iface
      */
     bool dnsEnabled(bool value) override;
 
+    /** @brief If true then domain names received from the DHCP server
+     *  @param[in] value - true if domain names needed from DHCP server
+     *                     else false.
+     */
+    bool domainEnabled(bool value) override;
+
     /** @brief If true then NTP servers received from the DHCP server
                will be used by systemd-timesyncd.
      *  @param[in] value - true if NTP server needed from DHCP server
