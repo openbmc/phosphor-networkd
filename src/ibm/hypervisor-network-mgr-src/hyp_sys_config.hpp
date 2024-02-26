@@ -3,6 +3,7 @@
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
+#include <stdplus/pinned.hpp>
 #include <xyz/openbmc_project/Network/SystemConfiguration/server.hpp>
 
 #include <string>
@@ -39,8 +40,9 @@ class HypSysConfig : public Iface
      *  @param[in] objPath - Path to attach at.
      *  @param[in] parent - Parent object.
      */
-    HypSysConfig(sdbusplus::bus_t& bus, const std::string& objPath,
-                 HypNetworkMgr& parent) :
+    HypSysConfig(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                 const std::string& objPath,
+                 stdplus::PinnedRef<HypNetworkMgr> parent) :
         Iface(bus, objPath.c_str(), Iface::action::defer_emit),
         bus(bus), manager(parent){};
 
@@ -65,10 +67,10 @@ class HypSysConfig : public Iface
     void setHostNameInBios(const std::string& name);
 
     /** @brief Persistent sdbusplus DBus bus connection. */
-    sdbusplus::bus_t& bus;
+    stdplus::PinnedRef<sdbusplus::bus_t> bus;
 
     /** @brief Hyp Network Manager object. */
-    HypNetworkMgr& manager;
+    stdplus::PinnedRef<HypNetworkMgr> manager;
 };
 
 } // namespace network

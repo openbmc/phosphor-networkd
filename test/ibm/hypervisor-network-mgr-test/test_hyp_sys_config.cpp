@@ -15,7 +15,7 @@ namespace network
 class TestHypSysConfig : public testing::Test
 {
   public:
-    sdbusplus::bus_t bus;
+    stdplus::Pinned<sdbusplus::bus_t> bus;
     HypNetworkMgr manager;
     MockHypSysConfig sysConfigObj;
     TestHypSysConfig() :
