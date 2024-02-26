@@ -6,6 +6,7 @@
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/elog.hpp>
 #include <sdbusplus/bus.hpp>
+#include <stdplus/pinned.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 #include <xyz/openbmc_project/Network/IP/server.hpp>
@@ -51,7 +52,7 @@ class HypEthInterface : public CreateIface
      *  @param[in] path - Path to attach at.
      *  @param[in] parent - parent object.
      */
-    HypEthInterface(sdbusplus::bus_t& bus, const char* path,
+    HypEthInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus, const char* path,
                     std::string_view intfName, HypNetworkMgr& parent) :
         CreateIface(bus, path, CreateIface::action::defer_emit),
         bus(bus), objectPath(path), manager(parent)
@@ -101,7 +102,7 @@ class HypEthInterface : public CreateIface
 
   protected:
     /** @brief sdbusplus DBus bus connection. */
-    sdbusplus::bus_t& bus;
+    stdplus::PinnedRef<sdbusplus::bus_t> bus;
 
     /** @brief object path */
     std::string objectPath;
