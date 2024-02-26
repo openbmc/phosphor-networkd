@@ -5,7 +5,9 @@
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
+#include <stdplus/pinned.hpp>
 #include <stdplus/str/maps.hpp>
+#include <stdplus/zstring_view.hpp>
 
 namespace phosphor
 {
@@ -67,8 +69,10 @@ class HypNetworkMgr
      *  @param[in] bus - Bus to attach to.
      *  @param[in] path - Path to attach at.
      */
-    HypNetworkMgr(sdbusplus::bus_t& bus, const char* path) :
-        bus(bus), objectPath(path){};
+    HypNetworkMgr(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                  stdplus::zstring_view path) :
+        bus(bus),
+        objectPath(std::string(path)){};
 
     /** @brief Get the BaseBiosTable attributes
      *
@@ -150,10 +154,10 @@ class HypNetworkMgr
     void setBIOSTableAttrs();
 
     /** @brief sdbusplus DBus bus connection. */
-    sdbusplus::bus_t& bus;
+    stdplus::PinnedRef<sdbusplus::bus_t> bus;
 
     /** @brief object path */
-    std::string objectPath;
+    sdbusplus::message::object_path objectPath;
 
     /** @brief pointer to system conf object. */
     SystemConfPtr systemConf = nullptr;
