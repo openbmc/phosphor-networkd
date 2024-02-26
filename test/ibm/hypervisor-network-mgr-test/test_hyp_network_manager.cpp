@@ -15,7 +15,7 @@ namespace network
 class TestHypNetworkManager : public testing::Test
 {
   public:
-    sdbusplus::bus_t bus;
+    stdplus::Pinned bus;
     HypNetworkMgr manager;
     TestHypNetworkManager() :
         bus(sdbusplus::bus::new_default()),
