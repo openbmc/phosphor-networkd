@@ -15,13 +15,15 @@ namespace network
 class TestHypSysConfig : public testing::Test
 {
   public:
-    sdbusplus::bus_t bus;
+    stdplus::Pinned<sdbusplus::bus_t> bus;
     HypNetworkMgr manager;
     MockHypSysConfig sysConfigObj;
     TestHypSysConfig() :
         bus(sdbusplus::bus::new_default()),
         manager(bus, "/xyz/openbmc_test/network/hypervisor"),
-        sysConfigObj(bus, "/xyz/openbmc_test/network/hypervisor/config",
+        sysConfigObj(bus,
+                     sdbusplus::message::object_path(
+                         "/xyz/openbmc_test/network/hypervisor/config"),
                      manager)
     {
         manager.setDefaultHostnameInBIOSTableAttrs();
