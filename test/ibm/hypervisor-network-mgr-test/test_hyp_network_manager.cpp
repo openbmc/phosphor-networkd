@@ -15,8 +15,8 @@ namespace network
 class TestHypNetworkManager : public testing::Test
 {
   public:
-    sdbusplus::bus_t bus;
-    HypNetworkMgr manager;
+    stdplus::Pinned<sdbusplus::bus_t> bus;
+    stdplus::PinnedRef<HypNetworkMgr> manager;
     TestHypNetworkManager() :
         bus(sdbusplus::bus::new_default()),
         manager(bus, "/xyz/openbmc_test/network/hypervisor")
@@ -25,9 +25,9 @@ class TestHypNetworkManager : public testing::Test
         // method call to set default values in the local copy
         // of the bios attributes should be called for ipv6 as well
 
-        manager.setDefaultBIOSTableAttrsOnIntf("if0");
-        manager.setDefaultBIOSTableAttrsOnIntf("if1");
-        manager.setDefaultHostnameInBIOSTableAttrs();
+        manager.get().setDefaultBIOSTableAttrsOnIntf("if0");
+        manager.get().setDefaultBIOSTableAttrsOnIntf("if1");
+        manager.get().setDefaultHostnameInBIOSTableAttrs();
     }
 
     ~TestHypNetworkManager() = default;
@@ -35,7 +35,7 @@ class TestHypNetworkManager : public testing::Test
 
 TEST_F(TestHypNetworkManager, getDefaultBiosTableAttr)
 {
-    biosTableType biosAttrs = manager.getBIOSTableAttrs();
+    biosTableType biosAttrs = manager.get().getBIOSTableAttrs();
     auto itr = biosAttrs.find("vmi_if0_ipv4_method");
     if (itr != biosAttrs.end())
     {
@@ -48,8 +48,8 @@ TEST_F(TestHypNetworkManager, setHostnameInBiosTableAndGet)
 {
     std::string attribute = "vmi_hostname";
     std::string value = "testHostname";
-    manager.setBIOSTableAttr(attribute, value, "String");
-    biosTableType biosAttrs = manager.getBIOSTableAttrs();
+    manager.get().setBIOSTableAttr(attribute, value, "String");
+    biosTableType biosAttrs = manager.get().getBIOSTableAttrs();
     auto itr = biosAttrs.find("vmi_hostname");
     if (itr != biosAttrs.end())
     {

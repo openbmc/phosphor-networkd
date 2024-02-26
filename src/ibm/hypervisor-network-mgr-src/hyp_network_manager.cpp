@@ -104,12 +104,12 @@ void HypNetworkMgr::setBIOSTableAttrs()
         interfaces.emplace_back(biosMgrIntf);
         auto depth = 0;
 
-        auto mapperCall = bus.new_method_call(mapperBus, mapperObj, mapperIntf,
-                                              "GetSubTree");
+        auto mapperCall = bus.get().new_method_call(mapperBus, mapperObj,
+                                                    mapperIntf, "GetSubTree");
 
         mapperCall.append(biosMgrObj, depth, interfaces);
 
-        auto mapperReply = bus.call(mapperCall);
+        auto mapperReply = mapperCall.call();
         if (mapperReply.is_method_error())
         {
             lg2::error("Error in mapper call");
@@ -229,19 +229,24 @@ void HypNetworkMgr::createIfObjects()
     // network configurations on the both.
     // create eth0 and eth1 objects
     lg2::info("Creating eth0 and eth1 objects");
-    interfaces.emplace("eth0",
-                       std::make_unique<HypEthInterface>(
-                           bus, (objectPath + "/eth0").c_str(), "eth0", *this));
-    interfaces.emplace("eth1",
-                       std::make_unique<HypEthInterface>(
-                           bus, (objectPath + "/eth1").c_str(), "eth1", *this));
+    interfaces.emplace(
+        "eth0",
+        std::make_unique<HypEthInterface>(
+            bus, sdbusplus::message::object_path(objectPath.str + "/eth0"),
+            "eth0", *this));
+    interfaces.emplace(
+        "eth1",
+        std::make_unique<HypEthInterface>(
+            bus, sdbusplus::message::object_path(objectPath.str + "/eth1"),
+            "eth1", *this));
 }
 
 void HypNetworkMgr::createSysConfObj()
 {
     systemConf.reset(nullptr);
-    this->systemConf =
-        std::make_unique<HypSysConfig>(bus, objectPath + "/config", *this);
+    this->systemConf = std::make_unique<HypSysConfig>(
+        bus, sdbusplus::message::object_path(objectPath.str + "/config"),
+        *this);
 }
 
 } // namespace network
