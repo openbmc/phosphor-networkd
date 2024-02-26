@@ -14,8 +14,8 @@ namespace network
 class MockHypSysConfig : public phosphor::network::HypSysConfig
 {
   public:
-    MockHypSysConfig(sdbusplus::bus_t& bus, const std::string& objPath,
-                     HypNetworkMgr& parent) :
+    MockHypSysConfig(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                     const std::string& objPath, HypNetworkMgr& parent) :
         HypSysConfig(bus, objPath, parent)
     {}
 

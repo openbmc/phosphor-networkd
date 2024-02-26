@@ -1,6 +1,7 @@
 #include "hyp_network_manager.hpp"
 
 #include <sdeventplus/event.hpp>
+#include <stdplus/pinned.hpp>
 #include <stdplus/print.hpp>
 
 constexpr char DEFAULT_HYP_NW_OBJPATH[] =
@@ -15,7 +16,7 @@ namespace network
 
 int main()
 {
-    auto bus = sdbusplus::bus::new_default();
+    stdplus::Pinned bus = sdbusplus::bus::new_default();
 
     // Add sdbusplus ObjectManager
     sdbusplus::server::manager_t objManager(bus, DEFAULT_HYP_NW_OBJPATH);
