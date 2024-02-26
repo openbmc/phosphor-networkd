@@ -11,7 +11,7 @@ using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
 biosTableType HypEthInterface::getBiosAttrsMap()
 {
-    return manager.getBIOSTableAttrs();
+    return manager.get().getBIOSTableAttrs();
 }
 
 bool HypEthInterface::ipv6AcceptRA(bool value)
