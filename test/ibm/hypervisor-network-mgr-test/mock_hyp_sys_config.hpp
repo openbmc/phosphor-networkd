@@ -14,15 +14,16 @@ namespace network
 class MockHypSysConfig : public phosphor::network::HypSysConfig
 {
   public:
-    MockHypSysConfig(sdbusplus::bus_t& bus, const std::string& objPath,
-                     HypNetworkMgr& parent) :
+    MockHypSysConfig(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                     const std::string& objPath,
+                     stdplus::PinnedRef<HypNetworkMgr> parent) :
         HypSysConfig(bus, objPath, parent)
     {}
 
     void setHostname(std::string hn)
     {
         SysConfigIntf::hostName(hn);
-        manager.setBIOSTableAttr("vmi_hostname", hn, "String");
+        manager.get().setBIOSTableAttr("vmi_hostname", hn, "String");
     }
 
     const std::string getHostname()

@@ -5,6 +5,7 @@
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
+#include <stdplus/pinned.hpp>
 #include <stdplus/str/maps.hpp>
 
 namespace phosphor
@@ -67,7 +68,7 @@ class HypNetworkMgr
      *  @param[in] bus - Bus to attach to.
      *  @param[in] path - Path to attach at.
      */
-    HypNetworkMgr(sdbusplus::bus_t& bus, const char* path) :
+    HypNetworkMgr(stdplus::PinnedRef<sdbusplus::bus_t> bus, const char* path) :
         bus(bus), objectPath(path){};
 
     /** @brief Get the BaseBiosTable attributes
@@ -150,7 +151,7 @@ class HypNetworkMgr
     void setBIOSTableAttrs();
 
     /** @brief sdbusplus DBus bus connection. */
-    sdbusplus::bus_t& bus;
+    stdplus::PinnedRef<sdbusplus::bus_t> bus;
 
     /** @brief object path */
     std::string objectPath;

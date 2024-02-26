@@ -104,12 +104,12 @@ void HypNetworkMgr::setBIOSTableAttrs()
         interfaces.emplace_back(biosMgrIntf);
         auto depth = 0;
 
-        auto mapperCall = bus.new_method_call(mapperBus, mapperObj, mapperIntf,
-                                              "GetSubTree");
+        auto mapperCall = bus.get().new_method_call(mapperBus, mapperObj,
+                                                    mapperIntf, "GetSubTree");
 
         mapperCall.append(biosMgrObj, depth, interfaces);
 
-        auto mapperReply = bus.call(mapperCall);
+        auto mapperReply = mapperCall.call();
         if (mapperReply.is_method_error())
         {
             lg2::error("Error in mapper call");
