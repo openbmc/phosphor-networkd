@@ -15,8 +15,8 @@ namespace network
 class TestHypSysConfig : public testing::Test
 {
   public:
-    sdbusplus::bus_t bus;
-    HypNetworkMgr manager;
+    stdplus::Pinned<sdbusplus::bus_t> bus;
+    stdplus::PinnedRef<HypNetworkMgr> manager;
     MockHypSysConfig sysConfigObj;
     TestHypSysConfig() :
         bus(sdbusplus::bus::new_default()),
@@ -24,7 +24,7 @@ class TestHypSysConfig : public testing::Test
         sysConfigObj(bus, "/xyz/openbmc_test/network/hypervisor/config",
                      manager)
     {
-        manager.setDefaultHostnameInBIOSTableAttrs();
+        manager.get().setDefaultHostnameInBIOSTableAttrs();
     }
 
     ~TestHypSysConfig() = default;
@@ -35,7 +35,7 @@ TEST_F(TestHypSysConfig, setAndGetHostName)
     std::string newHostName = "hostname1";
     sysConfigObj.setHostname(newHostName);
 
-    biosTableType biosAttrs = manager.getBIOSTableAttrs();
+    biosTableType biosAttrs = manager.get().getBIOSTableAttrs();
     auto itr = biosAttrs.find("vmi_hostname");
     if (itr != biosAttrs.end())
     {
