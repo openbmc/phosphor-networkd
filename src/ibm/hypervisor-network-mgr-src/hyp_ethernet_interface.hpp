@@ -6,6 +6,7 @@
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/elog.hpp>
 #include <sdbusplus/bus.hpp>
+#include <stdplus/pinned.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 #include <xyz/openbmc_project/Network/IP/server.hpp>
@@ -49,12 +50,15 @@ class HypEthInterface : public CreateIface
     /** @brief Constructor to put object onto bus at a dbus path.
      *  @param[in] bus - Bus to attach to.
      *  @param[in] path - Path to attach at.
+     *  @param[in] intfName - ethernet interface id (eth0/eth1)
      *  @param[in] parent - parent object.
      */
-    HypEthInterface(sdbusplus::bus_t& bus, const char* path,
-                    std::string_view intfName, HypNetworkMgr& parent) :
-        CreateIface(bus, path, CreateIface::action::defer_emit),
-        bus(bus), objectPath(path), manager(parent)
+    HypEthInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
+                    sdbusplus::message::object_path path,
+                    std::string_view intfName,
+                    stdplus::PinnedRef<HypNetworkMgr> parent) :
+        CreateIface(bus, path.str.c_str(), CreateIface::action::defer_emit),
+        bus(bus), objectPath(std::move(path)), manager(parent)
     {
         HypEthernetIntf::interfaceName(intfName.data(), true);
         emit_object_added();
@@ -101,13 +105,13 @@ class HypEthInterface : public CreateIface
 
   protected:
     /** @brief sdbusplus DBus bus connection. */
-    sdbusplus::bus_t& bus;
+    stdplus::PinnedRef<sdbusplus::bus_t> bus;
 
     /** @brief object path */
-    std::string objectPath;
+    sdbusplus::message::object_path objectPath;
 
     /** @brief Parent of this object */
-    HypNetworkMgr& manager;
+    stdplus::PinnedRef<HypNetworkMgr> manager;
 
   private:
     /** @brief Determines if DHCP is active for the IP::Protocol supplied.
