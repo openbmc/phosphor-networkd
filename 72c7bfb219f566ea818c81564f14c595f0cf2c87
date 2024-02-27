@@ -72,6 +72,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "337ecc4c_c17ec9a7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 45
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-02-27T11:30:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1109b4a2_fabbe5fe",
+      "range": {
+        "startLine": 11,
+        "startChar": 5,
+        "endLine": 11,
+        "endChar": 16
+      },
+      "revId": "72c7bfb219f566ea818c81564f14c595f0cf2c87",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a51f585_fd28356b",
@@ -228,6 +252,30 @@
       "side": 1,
       "message": "Please confirm this works fine. What was the test case for this?",
       "parentUuid": "d0e7bd3e_629016fa",
+      "range": {
+        "startLine": 921,
+        "startChar": 14,
+        "endLine": 922,
+        "endChar": 78
+      },
+      "revId": "72c7bfb219f566ea818c81564f14c595f0cf2c87",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c40e713d_9fe6400f",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 922,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-02-27T11:30:26Z",
+      "side": 1,
+      "message": "tested by adding IPv6 static gateway",
+      "parentUuid": "a39c44a3_5bc7b447",
       "range": {
         "startLine": 921,
         "startChar": 14,
