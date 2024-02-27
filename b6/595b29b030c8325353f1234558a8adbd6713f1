@@ -1,0 +1,9 @@
+Code-Review+1: Sunitha Harish <sunithaharish04@gmail.com>
+Code-Review+2: William A. Kennington III <wak@google.com>
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Submitted-by: Ravi Teja <raviteja28031990@gmail.com>
+Submitted-at: Tue, 27 Feb 2024 10:49:40 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/69604
+Comments-Total: 1
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
