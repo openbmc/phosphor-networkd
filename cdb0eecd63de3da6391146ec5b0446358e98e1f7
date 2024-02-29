@@ -16,6 +16,23 @@
       "message": "William/Ratan \ncan you please review this commit",
       "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05e3f028_8857c9fe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 48
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-02-29T19:57:54Z",
+      "side": 1,
+      "message": "Hi William/Ratan\n\ncan you please review this commit \nbmcweb commit is ready for merge\nhttps://gerrit.openbmc.org/c/openbmc/bmcweb/+/62255",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
