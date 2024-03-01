@@ -33,6 +33,125 @@
       "message": "Hi William/Ratan\n\ncan you please review this commit \nbmcweb commit is ready for merge\nhttps://gerrit.openbmc.org/c/openbmc/bmcweb/+/62255",
       "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cc0d77f_e0c2d01b",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-03-01T21:10:59Z",
+      "side": 1,
+      "message": "This should not be read from the config, it should be discovered over netlink to match the other network info loading. It needs to interact meaningfully with the older `defaultGateway` variable.",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "402f32ea_794a9288",
+        "filename": "src/static_gateway.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-03-01T21:10:59Z",
+      "side": 1,
+      "message": "Gateways don\u0027t have a prefix length, this should be removed.",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf34bac1_5a54333e",
+        "filename": "src/types.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-03-01T21:10:59Z",
+      "side": 1,
+      "message": "Gateways don\u0027t have a prefix length other than 0, just drop this.",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "662ae0e8_14d3d581",
+        "filename": "src/types.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-03-01T21:10:59Z",
+      "side": 1,
+      "message": "Gateways do not have destinations, destination of a gateway is by definition `{}`",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b416443b_4e1a4b51",
+        "filename": "src/types.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-03-01T21:10:59Z",
+      "side": 1,
+      "message": "Should be an InAnyAddr instead of a string.",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce4fd126_884b2d60",
+        "filename": "src/types.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-03-01T21:10:59Z",
+      "side": 1,
+      "message": "Not needed, the gateway address already adequately encodes the protocol info. See how IP objects are created.",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d491421e_a21b647b",
+        "filename": "src/types.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-03-01T21:10:59Z",
+      "side": 1,
+      "message": "InAnyAddr",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
