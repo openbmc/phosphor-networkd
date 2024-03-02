@@ -54,6 +54,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dd79bbcb_bf62b570",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-03-02T09:16:47Z",
+      "side": 1,
+      "message": "yes, i understand but could not get this configured ip gateway configuration from RTNetlink.",
+      "parentUuid": "0cc0d77f_e0c2d01b",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "402f32ea_794a9288",
         "filename": "src/static_gateway.hpp",
         "patchSetId": 48
@@ -65,6 +83,24 @@
       "writtenOn": "2024-03-01T21:10:59Z",
       "side": 1,
       "message": "Gateways don\u0027t have a prefix length, this should be removed.",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c9f78ff_90ee73e8",
+        "filename": "src/static_gateway.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-03-02T09:16:47Z",
+      "side": 1,
+      "message": "I see difference in routing table bases on prefix, don\u0027t you think this needed to route based given prefix?\n\nKernel IPv6 routing table there is difference based on prefix value.\nDestination                                 Next Hop                             Flags Metric Ref    Use Iface\n::/64                                       2002:803:15f:345::1                     UGH   1024   1        0 eth0\n\n\nwithout prefix if we add route\n\n::/0                                        2003:403:15f:345::1                     UGH   1024   1        0 eth0",
+      "parentUuid": "402f32ea_794a9288",
       "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
