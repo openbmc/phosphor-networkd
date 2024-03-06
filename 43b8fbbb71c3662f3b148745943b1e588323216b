@@ -22,6 +22,30 @@
       },
       "revId": "43b8fbbb71c3662f3b148745943b1e588323216b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6beb1a70_68766612",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2024-03-06T05:49:33Z",
+      "side": 1,
+      "message": "Followed the upstream way of handling the path.\n\nAFAIU, ztring_view is the same as string_view, but just that with the former it is guaranteed to have null termination.\n\nWilliam has a commit in stdplus repo, that introduces this type. https://github.com/openbmc/stdplus/commit/61a81bc814aa51b6aaf7ada8dc4285597e0061f3\n\nWilliam, if there\u0027s something more on this, can you please add it here?",
+      "parentUuid": "de825751_1e2443fd",
+      "range": {
+        "startLine": 73,
+        "startChar": 18,
+        "endLine": 73,
+        "endChar": 40
+      },
+      "revId": "43b8fbbb71c3662f3b148745943b1e588323216b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
