@@ -499,11 +499,7 @@ void Manager::handleAdminState(std::string_view state, unsigned ifidx)
     {
         bool managed = state != "unmanaged";
         systemdNetworkdEnabled.insert_or_assign(ifidx, managed);
-        if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
-        {
-            it->second->EthernetInterfaceIntf::nicEnabled(managed);
-        }
-        else if (auto it = intfInfo.find(ifidx); it != intfInfo.end())
+        if (auto it = intfInfo.find(ifidx); it != intfInfo.end())
         {
             createInterface(it->second, managed);
         }
