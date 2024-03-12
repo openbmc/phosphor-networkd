@@ -451,13 +451,6 @@ bool EthernetInterface::nicEnabled(bool value)
 
     EthernetInterfaceIntf::nicEnabled(value);
     writeConfigurationFile();
-    if (!value)
-    {
-        // We only need to bring down the interface, networkd will always bring
-        // up managed interfaces
-        manager.get().addReloadPreHook(
-            [ifname = interfaceName()]() { system::setNICUp(ifname, false); });
-    }
     manager.get().reloadConfigs();
 
     return value;
@@ -673,7 +666,7 @@ void EthernetInterface::writeConfigurationFile()
 #endif
         if (!EthernetInterfaceIntf::nicEnabled())
         {
-            link["Unmanaged"].emplace_back("yes");
+            link["ActivationPolicy"].emplace_back("down");
         }
     }
     {
