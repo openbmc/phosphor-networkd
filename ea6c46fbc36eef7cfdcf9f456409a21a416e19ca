@@ -16,6 +16,24 @@
       "message": "set ActivationPolicy to \"up\" when interface enabled?",
       "revId": "ea6c46fbc36eef7cfdcf9f456409a21a416e19ca",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a699e418_52b8af88",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-03-13T04:39:56Z",
+      "side": 1,
+      "message": "looks like ActivationPolicy default value is \"up\" right?",
+      "parentUuid": "1b68e5e5_5bddf4c8",
+      "revId": "ea6c46fbc36eef7cfdcf9f456409a21a416e19ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
