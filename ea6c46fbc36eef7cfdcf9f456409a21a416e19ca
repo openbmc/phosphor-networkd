@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ced7f38c_99dfd62f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-03-13T13:36:07Z",
+      "side": 1,
+      "message": "Do you want me to add content describing initial state?\n\nBy default the systemd service file has no entry, which means the ActivationPolicy is true.",
+      "parentUuid": "122371dc_28dd1180",
+      "range": {
+        "startLine": 27,
+        "startChar": 11,
+        "endLine": 27,
+        "endChar": 32
+      },
+      "revId": "ea6c46fbc36eef7cfdcf9f456409a21a416e19ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "28a4ac81_aee90c4a",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -43,6 +67,47 @@
         "endLine": 28,
         "endChar": 36
       },
+      "revId": "ea6c46fbc36eef7cfdcf9f456409a21a416e19ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31b7f2c5_9d0f9f7c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-03-13T13:36:07Z",
+      "side": 1,
+      "message": "Yes, because it\u0027s part of the configuration file, in the same wasy as the other NIC configuration elements.",
+      "parentUuid": "28a4ac81_aee90c4a",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 36
+      },
+      "revId": "ea6c46fbc36eef7cfdcf9f456409a21a416e19ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1c1b564_f413b456",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-03-13T13:36:07Z",
+      "side": 1,
+      "message": "Thanks for the swift review everyone!",
       "revId": "ea6c46fbc36eef7cfdcf9f456409a21a416e19ca",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -84,6 +149,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d8ccf8c7_02670d89",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-03-13T13:36:07Z",
+      "side": 1,
+      "message": "The default action, when ActivationPolicy is not written is for the NIC to be IFF_UP.\nThe defacto service configuration does not write ActivationPolicy.\nI tested \"initial state\" by erasing 00-bmc-eth1.network to confirm the NIC was active.\nI then used the Redfish commands to disable and re-enable the NIC.",
+      "parentUuid": "a699e418_52b8af88",
+      "revId": "ea6c46fbc36eef7cfdcf9f456409a21a416e19ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ab1f00f5_94b92d43",
         "filename": "src/network_manager.cpp",
         "patchSetId": 2
@@ -95,6 +178,24 @@
       "writtenOn": "2024-03-13T04:48:32Z",
       "side": 1,
       "message": "no longer using Unmanaged flag right?\ndo we still need this?\nsystemdNetworkdEnabled.insert_or_assign(ifidx, managed);",
+      "revId": "ea6c46fbc36eef7cfdcf9f456409a21a416e19ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dffe2dad_21dc9b5d",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-03-13T13:36:07Z",
+      "side": 1,
+      "message": "This isn\u0027t the configuration file \"Unmanaged\" entry. Rather, I believe this to be the value reported from \u0027networkctl\u0027\nIDX LINK TYPE     OPERATIONAL SETUP     \n  1 lo   loopback carrier     unmanaged\n  2 eth0 ether    routable    configured\n  3 eth1 ether    routable    configured\n  \n  So I think this is still living code.",
+      "parentUuid": "ab1f00f5_94b92d43",
       "revId": "ea6c46fbc36eef7cfdcf9f456409a21a416e19ca",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
