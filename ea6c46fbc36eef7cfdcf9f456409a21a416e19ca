@@ -213,6 +213,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c46cf0e2_672ca5c7",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-03-14T08:46:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d8ccf8c7_02670d89",
+      "revId": "ea6c46fbc36eef7cfdcf9f456409a21a416e19ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ab1f00f5_94b92d43",
@@ -244,6 +262,24 @@
       "side": 1,
       "message": "This isn\u0027t the configuration file \"Unmanaged\" entry. Rather, I believe this to be the value reported from \u0027networkctl\u0027\nIDX LINK TYPE     OPERATIONAL SETUP     \n  1 lo   loopback carrier     unmanaged\n  2 eth0 ether    routable    configured\n  3 eth1 ether    routable    configured\n  \n  So I think this is still living code.",
       "parentUuid": "ab1f00f5_94b92d43",
+      "revId": "ea6c46fbc36eef7cfdcf9f456409a21a416e19ca",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01a5501d_e2b2f40a",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-03-14T08:46:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dffe2dad_21dc9b5d",
       "revId": "ea6c46fbc36eef7cfdcf9f456409a21a416e19ca",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
