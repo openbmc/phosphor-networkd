@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d8ad6aa_216cce21",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2024-03-19T10:06:42Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "9154ae9a_a07f1f01",
+      "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5c2137fa_a64c4191",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-03-19T04:12:32Z",
       "side": 1,
       "message": "Same as above",
+      "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc1a47a6_a8a5743d",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2024-03-19T10:06:42Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "5c2137fa_a64c4191",
       "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -52,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "38501f68_c418d707",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2024-03-19T10:06:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04a41e7b_7744cc38",
+      "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a9f4d29c_60717652",
@@ -65,6 +119,24 @@
       "writtenOn": "2024-03-19T04:12:32Z",
       "side": 1,
       "message": "Don\u0027t we need to return from here as no need to proceed further?",
+      "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0df73686_0283b8d1",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2024-03-19T10:06:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9f4d29c_60717652",
       "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -86,6 +158,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa8c3cfd_2987d99c",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ip_interface.hpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2024-03-19T10:06:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8648faa3_ed39dd5a",
+      "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b95381c5_d26df892",
@@ -99,6 +189,24 @@
       "writtenOn": "2024-03-19T04:12:32Z",
       "side": 1,
       "message": "nit: fix alignment",
+      "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb1204fc_0f3413e0",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ip_interface.hpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2024-03-19T10:06:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b95381c5_d26df892",
       "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
