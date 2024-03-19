@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9154ae9a_a07f1f01",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1001496
+      },
+      "writtenOn": "2024-03-19T04:12:32Z",
+      "side": 1,
+      "message": "What to check for dhcp as assigning static IP? directly disable?",
+      "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c2137fa_a64c4191",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1001496
+      },
+      "writtenOn": "2024-03-19T04:12:32Z",
+      "side": 1,
+      "message": "Same as above",
+      "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04a41e7b_7744cc38",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1001496
+      },
+      "writtenOn": "2024-03-19T04:12:32Z",
+      "side": 1,
+      "message": "nit: *Gateway",
+      "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9f4d29c_60717652",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1001496
+      },
+      "writtenOn": "2024-03-19T04:12:32Z",
+      "side": 1,
+      "message": "Don\u0027t we need to return from here as no need to proceed further?",
+      "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8648faa3_ed39dd5a",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ip_interface.hpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1001496
+      },
+      "writtenOn": "2024-03-19T04:12:32Z",
+      "side": 1,
+      "message": "nit: fix alignment",
+      "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b95381c5_d26df892",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ip_interface.hpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1001496
+      },
+      "writtenOn": "2024-03-19T04:12:32Z",
+      "side": 1,
+      "message": "nit: fix alignment",
+      "revId": "723b21282fd8871612013ea5b2b3fdc81e3d3e34",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
