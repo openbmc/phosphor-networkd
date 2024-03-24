@@ -11,8 +11,6 @@ class Manager;
 namespace netlink
 {
 
-constexpr auto BUFSIZE = 4096;
-
 /** General rtnetlink server which waits for the POLLIN event
     and calls the  call back once it gets the event.
     Usage would be create the server with the  call back
