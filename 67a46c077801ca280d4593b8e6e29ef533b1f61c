@@ -181,6 +181,30 @@
       },
       "revId": "67a46c077801ca280d4593b8e6e29ef533b1f61c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b864762a_e7861966",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1000900
+      },
+      "writtenOn": "2024-04-03T21:03:53Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "07dd1447_12ac743c",
+      "range": {
+        "startLine": 348,
+        "startChar": 12,
+        "endLine": 348,
+        "endChar": 20
+      },
+      "revId": "67a46c077801ca280d4593b8e6e29ef533b1f61c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
