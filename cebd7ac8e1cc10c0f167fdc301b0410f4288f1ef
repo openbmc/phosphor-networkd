@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0e67e41_0f13ffc1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-04-03T18:15:26Z",
+      "side": 1,
+      "message": "Changed the cmd.ncsi_cmd to cmd.operation, per the review comment.\nNo other change.",
+      "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
