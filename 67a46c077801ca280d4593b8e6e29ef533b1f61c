@@ -18,6 +18,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "25e10485_defbbcc5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-04-03T14:04:38Z",
+      "side": 1,
+      "message": "Thank you for the review Jonathan.",
+      "revId": "67a46c077801ca280d4593b8e6e29ef533b1f61c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6a68b3b6_817b4b8b",
@@ -37,6 +54,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ade17436_29309f13",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-04-03T14:04:38Z",
+      "side": 1,
+      "message": "You correctly surmise this is a NUL termination.\nDuring my testing I did discover there were conditions that resulted in a runaway string getting printed.\nAdding this prevents the utility from presenting semi-random output data.",
+      "parentUuid": "6a68b3b6_817b4b8b",
+      "revId": "67a46c077801ca280d4593b8e6e29ef533b1f61c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5d499b6f_3dcaec7b",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 1
@@ -48,6 +83,30 @@
       "writtenOn": "2024-04-03T03:04:43Z",
       "side": 1,
       "message": "Should this also be changed to `operation`?",
+      "range": {
+        "startLine": 348,
+        "startChar": 12,
+        "endLine": 348,
+        "endChar": 20
+      },
+      "revId": "67a46c077801ca280d4593b8e6e29ef533b1f61c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0debef8_9f756d24",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-04-03T14:04:38Z",
+      "side": 1,
+      "message": "This is still accurate as ncsi_cmd.\nBefore my change the ncsi_cmd, and the \"operation\" were identical. Thus only one NCSI command, with an identical operation could be issued.\nThis is inflexible.\nWith my proposed change, the ncsi_cmd and the \u0027operation\u0027 taken by the ncsi_cmd can be tailored to access other features supported via NCSI.",
+      "parentUuid": "5d499b6f_3dcaec7b",
       "range": {
         "startLine": 348,
         "startChar": 12,
