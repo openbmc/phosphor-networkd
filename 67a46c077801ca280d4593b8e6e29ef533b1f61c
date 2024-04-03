@@ -70,6 +70,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8eb8d48e_0de4a6cc",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000900
+      },
+      "writtenOn": "2024-04-03T16:19:23Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "ade17436_29309f13",
+      "revId": "67a46c077801ca280d4593b8e6e29ef533b1f61c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5d499b6f_3dcaec7b",
@@ -107,6 +125,30 @@
       "side": 1,
       "message": "This is still accurate as ncsi_cmd.\nBefore my change the ncsi_cmd, and the \"operation\" were identical. Thus only one NCSI command, with an identical operation could be issued.\nThis is inflexible.\nWith my proposed change, the ncsi_cmd and the \u0027operation\u0027 taken by the ncsi_cmd can be tailored to access other features supported via NCSI.",
       "parentUuid": "5d499b6f_3dcaec7b",
+      "range": {
+        "startLine": 348,
+        "startChar": 12,
+        "endLine": 348,
+        "endChar": 20
+      },
+      "revId": "67a46c077801ca280d4593b8e6e29ef533b1f61c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eee8378e_450c8abc",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1000900
+      },
+      "writtenOn": "2024-04-03T16:19:23Z",
+      "side": 1,
+      "message": "But it looks like `nsci_cmd` can never be assigned `DEFAULT_VALUE`. This conditional block seems like it should only run if there is a payload (as with an OEM command), so it would make sense to check `operation` instead which is only set for OEM commands.",
+      "parentUuid": "a0debef8_9f756d24",
       "range": {
         "startLine": 348,
         "startChar": 12,
