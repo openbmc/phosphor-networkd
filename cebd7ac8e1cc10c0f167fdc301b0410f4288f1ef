@@ -16,6 +16,40 @@
       "message": "Changed the cmd.ncsi_cmd to cmd.operation, per the review comment.\nNo other change.",
       "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73980a74_333b88e5",
+        "filename": "src/argument.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-04-04T09:42:28Z",
+      "side": 1,
+      "message": "why to turn off clang-format??\nits always suggested to follow clang-formats",
+      "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48a438de_d1205a3a",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-04-04T09:42:28Z",
+      "side": 1,
+      "message": "add check for nullptr?",
+      "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
