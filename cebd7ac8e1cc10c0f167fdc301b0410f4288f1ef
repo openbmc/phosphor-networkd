@@ -18,6 +18,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "942caf61_b822b376",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-04-04T14:08:17Z",
+      "side": 1,
+      "message": "Ravi,\nThanks for the comments.",
+      "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "73980a74_333b88e5",
@@ -37,6 +54,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "96ff5dca_dfefcf61",
+        "filename": "src/argument.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-04-04T14:08:17Z",
+      "side": 1,
+      "message": "It is difficult to see the format of the help text when it is wrapped into weird chunks by an auto formatting tool.\nYes, it is always *suggested* to leave it on.\nIt is not *mandated* to always leave it on.\n\nLine 74 and 76 in the left pane are examples of what I\u0027m trying to avoid.\nIn my opinion I have a valid use case for blocking the formatting.",
+      "parentUuid": "73980a74_333b88e5",
+      "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "48a438de_d1205a3a",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 2
@@ -48,6 +83,24 @@
       "writtenOn": "2024-04-04T09:42:28Z",
       "side": 1,
       "message": "add check for nullptr?",
+      "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93c98008_4b41c21d",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-04-04T14:08:17Z",
+      "side": 1,
+      "message": "Can you clarify?\nThe incoming string is not empty.\noit is initialized with a number of bytes to hold the incoming decode.\noit is filled with data by the for loop.\nI don\u0027t understand why I\u0027d do a nullptr check after the pointer has already been used.\nI can see value in making sure the \u00270\u0027 doesn\u0027t go past the end of the StrBuf.\nIn that instance line 33 needs to be changed to stop shriking the StrBuf one byte.",
+      "parentUuid": "48a438de_d1205a3a",
       "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
