@@ -53,11 +53,7 @@ Configuration::Configuration(sdbusplus::bus_t& bus,
     ConfigIntf::dnsEnabled(getDHCPProp(conf, type, "UseDNS"), true);
     ConfigIntf::ntpEnabled(getDHCPProp(conf, type, "UseNTP"), true);
     ConfigIntf::hostNameEnabled(getDHCPProp(conf, type, "UseHostname"), true);
-    if (type == DHCPType::v4)
-    {
-        ConfigIntf::sendHostNameEnabled(getDHCPProp(conf, type, "SendHostname"),
-                                        true);
-    }
+    ConfigIntf::sendHostNameEnabled(getDHCPProp(conf, type, "SendHostname"), true);
 
     emit_object_added();
 }
