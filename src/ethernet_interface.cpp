@@ -759,13 +759,14 @@ void EthernetInterface::writeConfigurationFile()
             }
         }
         {
-            auto& gateways = network["Gateway"];
             if (!dhcp4())
             {
-                auto gateway = EthernetInterfaceIntf::defaultGateway();
-                if (!gateway.empty())
+                auto gateway4 = EthernetInterfaceIntf::defaultGateway();
+                if (!gateway4.empty())
                 {
-                    gateways.emplace_back(gateway);
+                    auto& gateway4route = config.map["Route"].emplace_back();
+                    gateway4route["Gateway"].emplace_back(gateway4);
+                    gateway4route["GatewayOnLink"].emplace_back("true");
                 }
             }
 
@@ -774,7 +775,9 @@ void EthernetInterface::writeConfigurationFile()
                 auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
                 if (!gateway6.empty())
                 {
-                    gateways.emplace_back(gateway6);
+                    auto& gateway6route = config.map["Route"].emplace_back();
+                    gateway6route["Gateway"].emplace_back(gateway6);
+                    gateway6route["GatewayOnLink"].emplace_back("true");
                 }
             }
         }
