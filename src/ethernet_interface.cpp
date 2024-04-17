@@ -118,8 +118,6 @@ EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     {
         EthernetInterface::defaultGateway6(stdplus::toStr(*info.defgw6), true);
     }
-    dhcp4Conf.emplace(bus, this->objPath + "/dhcp4", *this, DHCPType::v4);
-    dhcp6Conf.emplace(bus, this->objPath + "/dhcp6", *this, DHCPType::v6);
     emit_object_added();
 
     if (info.intf.vlan_id)
@@ -130,6 +128,8 @@ EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
         }
         vlan.emplace(bus, this->objPath.c_str(), info.intf, *this);
     }
+    dhcp4Conf.emplace(bus, this->objPath + "/dhcp4", *this, DHCPType::v4);
+    dhcp6Conf.emplace(bus, this->objPath + "/dhcp6", *this, DHCPType::v6);
     for (const auto& [_, addr] : info.addrs)
     {
         addAddr(addr);
@@ -775,7 +775,8 @@ void EthernetInterface::writeConfigurationFile()
         dhcp6["UseDomains"].emplace_back(tfStr(dhcp6Conf->domainEnabled()));
         dhcp6["UseNTP"].emplace_back(tfStr(dhcp6Conf->ntpEnabled()));
         dhcp6["UseHostname"].emplace_back(tfStr(dhcp6Conf->hostNameEnabled()));
-        dhcp6["SendHostname"].emplace_back(tfStr(dhcp6Conf->sendHostNameEnabled()));
+        dhcp6["SendHostname"].emplace_back(
+            tfStr(dhcp6Conf->sendHostNameEnabled()));
     }
     auto path = config::pathForIntfConf(manager.get().getConfDir(),
                                         interfaceName());
