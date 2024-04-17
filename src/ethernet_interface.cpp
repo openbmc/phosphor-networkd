@@ -7,14 +7,13 @@
 #include "system_queries.hpp"
 #include "util.hpp"
 
-#include <fcntl.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
 #include <net/if_arp.h>
-#include <sys/stat.h>
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
+#include <stdplus/fd/create.hpp>
 #include <stdplus/raw.hpp>
 #include <stdplus/str/cat.hpp>
 #include <stdplus/zstring.hpp>
@@ -664,6 +663,32 @@ static constexpr std::string_view tfStr(bool value)
     return value ? "true"sv : "false"sv;
 }
 
+static void writeUpdatedTime(const std::filesystem::path &netFile)
+{
+    // JFFS2 doesn't have the time granularity to deal with sub-second
+    // updates. Since we can have multiple file updates within a second
+    // around a reload, we need a location which gives that precision for
+    // future networkd detected reloads. TMPFS gives us this property.
+    if (manager.get().getConfDir() == "/etc/systemd/network"sv)
+    {
+        auto dir = stdplus::strCat(netFile.native(), ".d");
+        dir.replace(1, 3, "run"); // Replace /etc with /run
+        auto file = dir + "/updated.conf";
+        try
+        {
+            std::filesystem::create_directories(dir);
+            using namespace stdplus::fd;
+            open(file, OpenFlags(OpenAccess::WriteOnly).set(OpenFlag::Create),
+                 0644);
+        }
+        catch (const std::exception& e)
+        {
+            lg2::error("Failed to write time updated file {FILE}: {ERROR}",
+                       "FILE", file, "ERROR", e.what());
+        }
+    }
+}
+
 void EthernetInterface::writeConfigurationFile()
 {
     config::Parser config;
@@ -782,6 +807,7 @@ void EthernetInterface::writeConfigurationFile()
                                         interfaceName());
     config.writeFile(path);
     lg2::info("Wrote networkd file: {CFG_FILE}", "CFG_FILE", path);
+    writeUpdatedTime(path);
 }
 
 std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
@@ -818,8 +844,6 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         stdplus::fromStr<stdplus::EtherAddr>(MacAddressIntf::macAddress());
     if (newMAC != oldMAC)
     {
-        auto path = config::pathForIntfConf(manager.get().getConfDir(),
-                                            interface);
         // Update everything that depends on the MAC value
         for (const auto& [_, intf] : manager.get().interfaces)
         {
@@ -831,10 +855,11 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         MacAddressIntf::macAddress(validMAC);
 
         writeConfigurationFile();
-        manager.get().addReloadPreHook([interface, path]() {
+        manager.get().addReloadPreHook([interface, manager]() {
             // The MAC and LLADDRs will only update if the NIC is already down
             system::setNICUp(interface, false);
-            utimensat(AT_FDCWD, path.c_str(), NULL, 0);
+            writeUpdatedTime(config::pathForIntfConf(manager.get().getConfDir(),
+                                            interface));
         });
         manager.get().reloadConfigs();
     }
