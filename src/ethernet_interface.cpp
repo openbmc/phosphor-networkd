@@ -775,6 +775,8 @@ void EthernetInterface::writeConfigurationFile()
         dhcp6["UseDomains"].emplace_back(tfStr(dhcp6Conf->domainEnabled()));
         dhcp6["UseNTP"].emplace_back(tfStr(dhcp6Conf->ntpEnabled()));
         dhcp6["UseHostname"].emplace_back(tfStr(dhcp6Conf->hostNameEnabled()));
+        dhcp6["SendHostname"].emplace_back(
+            tfStr(dhcp6Conf->sendHostNameEnabled()));
     }
     auto path = config::pathForIntfConf(manager.get().getConfDir(),
                                         interfaceName());
