@@ -74,6 +74,32 @@ static std::string makeObjPath(std::string_view root, std::string_view intf)
     return ret;
 }
 
+// JFFS2 doesn't have the time granularity to deal with sub-second
+// updates. Since we can have multiple file updates within a second
+// around a reload, we need a location which gives that precision for
+// future networkd detected reloads. TMPFS gives us this property.
+
+static void markUpdatedtime(std::string_view path) {
+    if (path == "/etc/systemd/network"sv)
+    {
+        auto dir = stdplus::strCat(path.native(), ".d");
+        dir.replace(1, 3, "run"); // Replace /etc with /run
+        auto file = dir + "/updated.conf";
+        try
+        {
+            std::filesystem::create_directories(dir);
+            using namespace stdplus::fd;
+            open(file, OpenFlags(OpenAccess::WriteOnly).set(OpenFlag::Create),
+                 0644);
+        }
+        catch (const std::exception& e)
+        {
+            lg2::error("Failed to write time updated file {FILE}: {ERROR}",
+                       "FILE", file, "ERROR", e.what());
+        }
+    }
+}
+
 template <typename Addr>
 static bool validIntfIP(Addr a) noexcept
 {
@@ -784,28 +810,7 @@ void EthernetInterface::writeConfigurationFile()
     config.writeFile(path);
     lg2::info("Wrote networkd file: {CFG_FILE}", "CFG_FILE", path);
 
-    // JFFS2 doesn't have the time granularity to deal with sub-second
-    // updates. Since we can have multiple file updates within a second
-    // around a reload, we need a location which gives that precision for
-    // future networkd detected reloads. TMPFS gives us this property.
-    if (manager.get().getConfDir() == "/etc/systemd/network"sv)
-    {
-        auto dir = stdplus::strCat(path.native(), ".d");
-        dir.replace(1, 3, "run"); // Replace /etc with /run
-        auto file = dir + "/updated.conf";
-        try
-        {
-            std::filesystem::create_directories(dir);
-            using namespace stdplus::fd;
-            open(file, OpenFlags(OpenAccess::WriteOnly).set(OpenFlag::Create),
-                 0644);
-        }
-        catch (const std::exception& e)
-        {
-            lg2::error("Failed to write time updated file {FILE}: {ERROR}",
-                       "FILE", file, "ERROR", e.what());
-        }
-    }
+    markUpdatedtime(path);
 }
 
 std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
@@ -858,7 +863,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         manager.get().addReloadPreHook([interface, path]() {
             // The MAC and LLADDRs will only update if the NIC is already down
             system::setNICUp(interface, false);
-            utimensat(AT_FDCWD, path.c_str(), NULL, 0);
+            markUpdatedtime(path);
         });
         manager.get().reloadConfigs();
     }
