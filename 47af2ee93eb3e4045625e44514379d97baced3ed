@@ -70,6 +70,24 @@
       "parentUuid": "3a98c6e6_4d97ad46",
       "revId": "47af2ee93eb3e4045625e44514379d97baced3ed",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a52a40a9_4b0e569e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-04-17T11:58:08Z",
+      "side": 1,
+      "message": "this network routing issue which i have mentioned above applie to ipv4 only\nsure that can be done for ipv6 as well, but need to make sure this ipv6 default gateway and static ipv6 gateway both of them works properly for ipv6 setup\nhttps://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/63033\ncan we use this commit for ipv6 gateway?",
+      "parentUuid": "1d90c773_a21434b0",
+      "revId": "47af2ee93eb3e4045625e44514379d97baced3ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
