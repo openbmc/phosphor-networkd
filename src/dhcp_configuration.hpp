@@ -89,7 +89,6 @@ class Configuration : public Iface
   private:
     /** @brief Ethernet Interface object. */
     stdplus::PinnedRef<EthernetInterface> parent;
-    DHCPType type;
 };
 
 } // namespace dhcp

@@ -118,7 +118,8 @@ EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     {
         EthernetInterface::defaultGateway6(stdplus::toStr(*info.defgw6), true);
     }
-    addDHCPConfigurations();
+    dhcp4Conf.emplace(bus, this->objPath + "/dhcp4", *this, DHCPType::v4);
+    dhcp6Conf.emplace(bus, this->objPath + "/dhcp6", *this, DHCPType::v6);
     emit_object_added();
 
     if (info.intf.vlan_id)
@@ -658,6 +659,11 @@ ServerList EthernetInterface::ntpServers(ServerList /*servers*/)
     elog<NotAllowed>(NotAllowedArgument::REASON("ReadOnly Property"));
 }
 
+static constexpr std::string_view tfStr(bool value)
+{
+    return value ? "true"sv : "false"sv;
+}
+
 void EthernetInterface::writeConfigurationFile()
 {
     config::Parser config;
@@ -756,27 +762,18 @@ void EthernetInterface::writeConfigurationFile()
     {
         auto& dhcp4 = config.map["DHCPv4"].emplace_back();
         dhcp4["ClientIdentifier"].emplace_back("mac");
-        const auto& conf = *dhcpConfigs[static_cast<int>(DHCPType::v4)];
-        auto dns_enabled = conf.dnsEnabled() ? "true" : "false";
-        auto domain_enabled = conf.domainEnabled() ? "true" : "false";
-        dhcp4["UseDNS"].emplace_back(dns_enabled);
-        dhcp4["UseDomains"].emplace_back(domain_enabled);
-        dhcp4["UseNTP"].emplace_back(conf.ntpEnabled() ? "true" : "false");
-        dhcp4["UseHostname"].emplace_back(conf.hostNameEnabled() ? "true"
-                                                                 : "false");
-        dhcp4["SendHostname"].emplace_back(
-            conf.sendHostNameEnabled() ? "true" : "false");
+        dhcp4["UseDNS"].emplace_back(tfStr(dhcp4Conf->dnsEnabled());
+        dhcp4["UseDomains"].emplace_back(tfStr(dhcp4Conf->domainEnabled()));
+        dhcp4["UseNTP"].emplace_back(tfStr(dhcp4Conf->ntpEnabled()));
+        dhcp4["UseHostname"].emplace_back(tfStr(dhcp4Conf->hostNameEnabled()));
+        dhcp4["SendHostname"].emplace_back(tfStr(dhcp4Conf->sendHostNameEnabled()));
     }
     {
         auto& dhcp6 = config.map["DHCPv6"].emplace_back();
-        const auto& conf = *dhcpConfigs[static_cast<int>(DHCPType::v6)];
-        auto dns_enabled = conf.dnsEnabled() ? "true" : "false";
-        auto domain_enabled = conf.domainEnabled() ? "true" : "false";
-        dhcp6["UseDNS"].emplace_back(dns_enabled);
-        dhcp6["UseDomains"].emplace_back(domain_enabled);
-        dhcp6["UseNTP"].emplace_back(conf.ntpEnabled() ? "true" : "false");
-        dhcp6["UseHostname"].emplace_back(conf.hostNameEnabled() ? "true"
-                                                                 : "false");
+        dhcp6["UseDNS"].emplace_back(tfStr(dhcp6Conf->dnsEnabled());
+        dhcp6["UseDomains"].emplace_back(tfStr(dhcp6Conf->domainEnabled()));
+        dhcp6["UseNTP"].emplace_back(tfStr(dhcp6Conf->ntpEnabled()));
+        dhcp6["UseHostname"].emplace_back(tfStr(dhcp6Conf->hostNameEnabled()));
     }
     auto path = config::pathForIntfConf(manager.get().getConfDir(),
                                         interfaceName());
@@ -968,14 +965,6 @@ void EthernetInterface::VlanProperties::delete_()
     }
 
     eth.get().manager.get().reloadConfigs();
-}
-
-void EthernetInterface::addDHCPConfigurations()
-{
-    this->dhcpConfigs.emplace_back(std::make_unique<dhcp::Configuration>(
-        bus, objPath + "/dhcp4", *this, DHCPType::v4));
-    this->dhcpConfigs.emplace_back(std::make_unique<dhcp::Configuration>(
-        bus, objPath + "/dhcp6", *this, DHCPType::v6));
 }
 
 void EthernetInterface::reloadConfigs()

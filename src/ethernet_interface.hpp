@@ -248,6 +248,8 @@ class EthernetInterface : public Ifaces
     };
     std::optional<VlanProperties> vlan;
 
+    std::optional<dhcp::Configuration> dhcp4Conf, dhcp6Conf;
+
     friend class TestEthernetInterface;
     friend class TestNetworkManager;
 
@@ -262,14 +264,6 @@ class EthernetInterface : public Ifaces
      *  @returns true/false value if the address is static
      */
     bool originIsManuallyAssigned(IP::AddressOrigin origin);
-
-    /** @brief Function to add DHCP configurations.
-     */
-    void addDHCPConfigurations();
-
-    /** @brief Map of DHCP conf objects.
-     */
-    std::vector<std::unique_ptr<dhcp::Configuration>> dhcpConfigs;
 };
 
 } // namespace network

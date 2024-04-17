@@ -26,7 +26,7 @@ Configuration::Configuration(sdbusplus::bus_t& bus,
                              stdplus::PinnedRef<EthernetInterface> parent,
                              DHCPType type) :
     Iface(bus, objPath.c_str(), Iface::action::defer_emit),
-    parent(parent), type(type)
+    parent(parent),
 {
     config::Parser conf;
     std::filesystem::directory_entry newest_file;
