@@ -722,16 +722,19 @@ void EthernetInterface::writeConfigurationFile()
             }
         }
         {
-            auto& gateways = network["Gateway"];
             if (!dhcp4())
             {
-                auto gateway = EthernetInterfaceIntf::defaultGateway();
-                if (!gateway.empty())
+                auto gateway4 = EthernetInterfaceIntf::defaultGateway();
+                if (!gateway4.empty())
                 {
                     gateways.emplace_back(gateway);
+                    auto& gateway4route = config.map["Route"].emplace_back();
+                    gateway4route["Gateway"].emplace_back(gateway4);
+                    gateway4route["GatewayOnLink"].emplace_back("true");
                 }
             }
 
+            auto& gateways = network["Gateway"];
             if (!ipv6AcceptRA())
             {
                 auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
