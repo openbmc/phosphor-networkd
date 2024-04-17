@@ -15,6 +15,7 @@
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
+#include <stdplus/fd/create.hpp>
 #include <stdplus/raw.hpp>
 #include <stdplus/str/cat.hpp>
 #include <stdplus/zstring.hpp>
@@ -782,6 +783,29 @@ void EthernetInterface::writeConfigurationFile()
                                         interfaceName());
     config.writeFile(path);
     lg2::info("Wrote networkd file: {CFG_FILE}", "CFG_FILE", path);
+
+    // JFFS2 doesn't have the time granularity to deal with sub-second
+    // updates. Since we can have multiple file updates within a second
+    // around a reload, we need a location which gives that precision for
+    // future networkd detected reloads. TMPFS gives us this property.
+    if (manager.get().getConfDir() == "/etc/systemd/network"sv)
+    {
+        static constexpr auto root = "/run/systemd/network"sv;
+        auto dir = config::pathForIntfConf(root, interfaceName()) + ".d";
+        auto file = dir + "/updated.conf";
+        try
+        {
+            std::filesystem::create_directories(dir);
+            using namespace stdplus::fd;
+            open(file, OpenFlags(OpenAccess::WriteOnly).set(OpenFlag::Create),
+                 0644);
+        }
+        catch (const std::exception& e)
+        {
+            lg2::error("Failed to write time updated file {FILE}: {ERROR}",
+                       "FILE", file, "ERROR", e.what());
+        }
+    }
 }
 
 std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
