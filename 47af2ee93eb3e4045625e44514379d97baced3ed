@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc830b0b_4f278b12",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-04-17T16:53:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a4ae9d9_d842cf21",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 21
+      },
+      "revId": "47af2ee93eb3e4045625e44514379d97baced3ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "088a21fb_28c94b36",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b86dd1b9_24bc80e3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-04-17T16:53:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "088a21fb_28c94b36",
+      "range": {
+        "startLine": 14,
+        "startChar": 23,
+        "endLine": 14,
+        "endChar": 38
+      },
+      "revId": "47af2ee93eb3e4045625e44514379d97baced3ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bb51a015_632e760c",
@@ -60,6 +108,24 @@
       "writtenOn": "2024-04-17T13:16:32Z",
       "side": 1,
       "message": "Please add a blank line at the end \nPlease give a sample of the ethernet file like\n[Route]\nGatewayOnLink\u003dtrue\nGateway\u003dxxx.xxx.xxx.xxx",
+      "revId": "47af2ee93eb3e4045625e44514379d97baced3ed",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2016731c_476870a8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-04-17T16:53:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb51a015_632e760c",
       "revId": "47af2ee93eb3e4045625e44514379d97baced3ed",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
