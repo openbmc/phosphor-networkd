@@ -33,6 +33,24 @@
       "message": "Is this change made to fix any timing issues seen as corner cases?\nWe have seen some missing updates to the networkd, while regressing the network setting PATCH operations back to back.",
       "revId": "945878a406ba415d23bc8ae31794e95af88ba07a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4516ac48_c9d01101",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-04-19T20:20:30Z",
+      "side": 1,
+      "message": "It\u0027s possible but I would have to look at the specific logs for issues you are seeing",
+      "parentUuid": "ceb8ca36_c08d6804",
+      "revId": "945878a406ba415d23bc8ae31794e95af88ba07a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
