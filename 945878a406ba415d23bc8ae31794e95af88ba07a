@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "506aa864_990ab2c5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-04-19T02:42:59Z",
+      "side": 1,
+      "message": "```\nApr 18 19:07:06 jrxi11-nfd01.prod.google.com systemd[1]: Starting Phosphor Network Manager...\nApr 18 19:07:07 jrxi11-nfd01.prod.google.com phosphor-network-manager[23512]: ETHTOOL not supported on dummy0\nApr 18 19:07:07 jrxi11-nfd01.prod.google.com phosphor-network-manager[23512]: ETHTOOL not supported on gbmcbrdummy\nApr 18 19:07:07 jrxi11-nfd01.prod.google.com systemd[1]: Started Phosphor Network Manager.\nApr 18 19:08:18 jrxi11-nfd01.prod.google.com phosphor-network-manager[23512]: Wrote networkd file: /etc/systemd/network/00-bmc-ncsi.network\nApr 18 19:08:21 jrxi11-nfd01.prod.google.com phosphor-network-manager[23512]: Setting NIC down on ncsi\nApr 18 19:08:21 jrxi11-nfd01.prod.google.com phosphor-network-manager[23512]: Reloaded systemd-networkd\nfoot@jrxi11-nfd01:~# stat /run/systemd/network/00-bmc-ncsi.network.d/updated.conf\n  File: /run/systemd/network/00-bmc-ncsi.network.d/updated.conf\n  Size: 0         \tBlocks: 0          IO Block: 4096   regular empty file\nDevice: eh/14d\tInode: 1683        Links: 1\nAccess: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)\nAccess: 2024-04-18 19:08:22.265147425 -0700\nModify: 2024-04-18 19:08:21.245146514 -0700\n```",
+      "revId": "945878a406ba415d23bc8ae31794e95af88ba07a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
