@@ -79,6 +79,14 @@ configure_file(
     'systemdutildir') / 'network')
 
 configure_file(
+  input: '60-phosphor-networkd-eth1-default.network.in',
+  output: '60-phosphor-networkd-eth1-default.network',
+  configuration: conf_data,
+  install: true,
+  install_dir: dependency('systemd').get_variable(
+    'systemdutildir') / 'network')
+
+configure_file(
   input: 'xyz.openbmc_project.Network.service.in',
   output: 'xyz.openbmc_project.Network.service',
   configuration: {
