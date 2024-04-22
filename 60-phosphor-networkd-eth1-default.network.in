@@ -1,0 +1,15 @@
+[Match]
+Type=ether
+[Network]
+DHCP=true
+LinkLocalAddressing=ipv6
+IPv6AcceptRA=@ENABLE_IPV6_ACCEPT_RA@
+[DHCP]
+ClientIdentifier=mac
+UseDNS=true
+UseDomains=true
+UseNTP=true
+UseHostname=true
+SendHostname=true
+[IPv6AcceptRA]
+DHCPv6Client=true
