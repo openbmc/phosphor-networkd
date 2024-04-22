@@ -717,7 +717,14 @@ void EthernetInterface::writeConfigurationFile()
         auto& network = config.map["Network"].emplace_back();
         auto& lla = network["LinkLocalAddressing"];
 #ifdef LINK_LOCAL_AUTOCONFIGURATION
-        lla.emplace_back("yes");
+        if (interfaceName() == "eth0")
+        {
+            lla.emplace_back("yes");
+        }
+        else if (interfaceName() == "eth1")
+        {
+            lla.emplace_back("ipv6");
+        }
 #else
         lla.emplace_back("no");
 #endif
