@@ -1,6 +1,9 @@
 [Unit]
 Description=Hypervisor Network Manager
+Wants=xyz.openbmc_project.biosconfig_manager.service
 After=xyz.openbmc_project.biosconfig_manager.service
+Wants=pldmd.service
+After=pldmd.service
 
 [Service]
 ExecStart=/usr/bin/hyp-network-manager
