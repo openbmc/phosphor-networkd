@@ -68,8 +68,7 @@ class Command
     Command(
         int c, int nc = DEFAULT_VALUE,
         std::span<const unsigned char> p = std::span<const unsigned char>()) :
-        cmd(c),
-        ncsi_cmd(nc), payload(p)
+        cmd(c), ncsi_cmd(nc), payload(p)
     {}
 
     int cmd;
