@@ -72,6 +72,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d6e385a7_244b46b0",
+        "filename": "src/argument.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000163
+      },
+      "writtenOn": "2024-04-29T21:32:54Z",
+      "side": 1,
+      "message": "I don\u0027t mind the clang-format off thing, but if you want to work around it, you might consider just printing one long string:\n\nstd::cerr \u003c\u003c\n    \"    --help | -h ...\\n\"\n    \"...\\n\"\n    \"....a very long line \"\n    \"split into two\\n\"\n    \"\\n\";",
+      "parentUuid": "96ff5dca_dfefcf61",
+      "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "48a438de_d1205a3a",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 2
