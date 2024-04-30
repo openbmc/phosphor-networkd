@@ -35,6 +35,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1144ac1a_c5a291f3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-04-30T14:20:40Z",
+      "side": 1,
+      "message": "Updated the commit per latest comments.",
+      "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "73980a74_333b88e5",
@@ -90,6 +107,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9a4667db_2b1ec5fa",
+        "filename": "src/argument.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-04-30T14:20:40Z",
+      "side": 1,
+      "message": "I chose to use the long line method instead.\nIt gets rid of the repeated std::cerr boilerplate.\nIt prevents having to fight over appropriateness of disabling clang formatting.\n\nI removed the explicit std::flush because each of the \"\\n\" chars performs a flush action anyway.",
+      "parentUuid": "d6e385a7_244b46b0",
+      "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "48a438de_d1205a3a",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 2
@@ -137,6 +172,24 @@
       "side": 1,
       "message": "Yeah, the -1 on line 33 should be removed. While strbuf normally does have more capacity than the current length, there is no guarantee, so this extra write could cause an out of bounds write.",
       "parentUuid": "93c98008_4b41c21d",
+      "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0b08ac4_a7638962",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-04-30T14:20:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1c492f1_1b2d0628",
       "revId": "cebd7ac8e1cc10c0f167fdc301b0410f4288f1ef",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
