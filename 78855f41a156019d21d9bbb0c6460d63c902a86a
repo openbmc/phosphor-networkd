@@ -54,6 +54,57 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b51404aa_e2017b26",
+        "filename": "src/argument.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000163
+      },
+      "writtenOn": "2024-05-03T20:29:57Z",
+      "side": 1,
+      "message": "-m seems redundant here. why not just make it\n--cmask\u003d\u003cbitmask\u003e | -k \u003cbitmask\u003e\n--pmask\u003d\u003cbitmask\u003e | -j \u003cbitmask\u003e",
+      "revId": "78855f41a156019d21d9bbb0c6460d63c902a86a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df8a9f79_72d33328",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1000163
+      },
+      "writtenOn": "2024-05-03T20:29:57Z",
+      "side": 1,
+      "message": "a span over a multibyte integer representation causes my blood pressure to spike. :) \n\nWould a more c++-like mechanism be better here? a variant, maybe?",
+      "revId": "78855f41a156019d21d9bbb0c6460d63c902a86a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2952c70e_7a6d086b",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1000163
+      },
+      "writtenOn": "2024-05-03T20:29:57Z",
+      "side": 1,
+      "message": "sizeof(unsigned int) or sizeof(decltype(maskInt)) to safe.\n\nBest to not max int types, even if they are commonly the same size. Either that or change maskInt to be a uint32_t above.",
+      "revId": "78855f41a156019d21d9bbb0c6460d63c902a86a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "00a8c7f4_5f0809e2",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 1
