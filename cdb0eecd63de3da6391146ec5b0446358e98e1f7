@@ -143,6 +143,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0f8d0404_b869fd6b",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-05-06T06:39:03Z",
+      "side": 1,
+      "message": "Hi William\n\nI have removed this method which tries to load static gateways from static network configuration files",
+      "parentUuid": "7eaa87d4_5b657025",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "402f32ea_794a9288",
         "filename": "src/static_gateway.hpp",
         "patchSetId": 48
@@ -211,6 +229,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0840dd7e_ccf6e9bb",
+        "filename": "src/types.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-05-06T06:39:03Z",
+      "side": 1,
+      "message": "I have pushed this commit to remove prefix length D-bus property \nhttps://gerrit.openbmc.org/c/openbmc/phosphor-dbus-interfaces/+/71271\nand updated latest patch set accordingly",
+      "parentUuid": "cf34bac1_5a54333e",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "662ae0e8_14d3d581",
@@ -224,6 +260,24 @@
       "writtenOn": "2024-03-01T21:10:59Z",
       "side": 1,
       "message": "Gateways do not have destinations, destination of a gateway is by definition `{}`",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba7b9547_60f3d832",
+        "filename": "src/types.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-05-06T06:39:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "662ae0e8_14d3d581",
       "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -258,6 +312,24 @@
       "writtenOn": "2024-03-01T21:10:59Z",
       "side": 1,
       "message": "Not needed, the gateway address already adequately encodes the protocol info. See how IP objects are created.",
+      "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7e9cde1_85e8cbd4",
+        "filename": "src/types.hpp",
+        "patchSetId": 48
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-05-06T06:39:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce4fd126_884b2d60",
       "revId": "cdb0eecd63de3da6391146ec5b0446358e98e1f7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
