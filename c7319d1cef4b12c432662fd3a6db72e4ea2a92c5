@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80361c12_a72db65b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2024-05-06T06:24:05Z",
+      "side": 1,
+      "message": "Please provide more reasoning as why only one interface lla will work",
+      "range": {
+        "startLine": 9,
+        "startChar": 60,
+        "endLine": 10,
+        "endChar": 45
+      },
+      "revId": "c7319d1cef4b12c432662fd3a6db72e4ea2a92c5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
