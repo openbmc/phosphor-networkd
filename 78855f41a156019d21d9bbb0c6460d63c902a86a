@@ -69,6 +69,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43b9f259_706d71ae",
+        "filename": "src/argument.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-05-07T15:31:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b51404aa_e2017b26",
+      "revId": "78855f41a156019d21d9bbb0c6460d63c902a86a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "df8a9f79_72d33328",
@@ -82,6 +100,24 @@
       "writtenOn": "2024-05-03T20:29:57Z",
       "side": 1,
       "message": "a span over a multibyte integer representation causes my blood pressure to spike. :) \n\nWould a more c++-like mechanism be better here? a variant, maybe?",
+      "revId": "78855f41a156019d21d9bbb0c6460d63c902a86a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ceac037_810d8af7",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-05-07T15:31:55Z",
+      "side": 1,
+      "message": "The problem is the consumer of this is the Command class, which takes a std::span as the way to get multi-byte content.\nI\u0027m not going to rewrite the command handler for a debug utility.\nI\u0027ll move the std::span into the setPackageMask function to make it more obvious who needs that format.",
+      "parentUuid": "df8a9f79_72d33328",
       "revId": "78855f41a156019d21d9bbb0c6460d63c902a86a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -103,6 +139,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e7dcb60_6fb85ee8",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-05-07T15:31:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2952c70e_7a6d086b",
+      "revId": "78855f41a156019d21d9bbb0c6460d63c902a86a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "00a8c7f4_5f0809e2",
@@ -116,6 +170,30 @@
       "writtenOn": "2024-02-22T21:39:33Z",
       "side": 1,
       "message": "Is `warning` the correct log level for this?",
+      "range": {
+        "startLine": 483,
+        "startChar": 4,
+        "endLine": 483,
+        "endChar": 16
+      },
+      "revId": "78855f41a156019d21d9bbb0c6460d63c902a86a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0378db27_2078b1e0",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-05-07T15:31:55Z",
+      "side": 1,
+      "message": "Nope.",
+      "parentUuid": "00a8c7f4_5f0809e2",
       "range": {
         "startLine": 483,
         "startChar": 4,
