@@ -16,6 +16,24 @@
       "message": "I have removed PrefixLength property in StaticGateway D-bus interface and method\nhttps://gerrit.openbmc.org/c/openbmc/phosphor-dbus-interfaces/+/71271\n\nUpdated this commit implementation accordingly, CI failure is expected since there is D-bus interface changes involved",
       "revId": "7eae5b938afc09a6f8857f06ba540f89a7954f1b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1baeeddf_2f2e5d1b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 51
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-05-08T16:14:43Z",
+      "side": 1,
+      "message": "This commit d-bus commit got merged\nplease review this commit",
+      "parentUuid": "384dc82d_7326c7d9",
+      "revId": "7eae5b938afc09a6f8857f06ba540f89a7954f1b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
