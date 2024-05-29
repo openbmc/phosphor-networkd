@@ -16,6 +16,23 @@
       "message": "Restored patchset 5 items inadvertently overwritten by an update to the stacked commit phosphor-networkd/+/69450",
       "revId": "3327ec9b07d37ac97c2fe3ecf9283f5b37dae899",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13bd64e0_5f7a500e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-05-29T19:13:12Z",
+      "side": 1,
+      "message": "Ratan, William,\nAre there any more actions I need to take to merge this?",
+      "revId": "3327ec9b07d37ac97c2fe3ecf9283f5b37dae899",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
