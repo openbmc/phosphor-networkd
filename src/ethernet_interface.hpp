@@ -108,6 +108,14 @@ class EthernetInterface : public Ifaces
      */
     void loadNameServers(const config::Parser& config);
 
+    /** @brief Function used to watch change in NTP server.
+     */
+    void watchNTPServers();
+
+    /** @brief Function to watch status of systemd timesyncd.
+     */
+    void watchTimeSyncActiveState();
+
     /** @brief Function to create ipAddress dbus object.
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipAddress- IP address.
@@ -258,6 +266,9 @@ class EthernetInterface : public Ifaces
                       stdplus::PinnedRef<Manager> manager,
                       const AllIntfInfo& info, std::string&& objPath,
                       const config::Parser& config, bool enabled);
+
+    std::unique_ptr<sdbusplus::bus::match::match> ntpServerMatch;
+    std::unique_ptr<sdbusplus::bus::match::match> activeStateMatch;
 };
 
 } // namespace network
