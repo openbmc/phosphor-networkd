@@ -108,6 +108,10 @@ class EthernetInterface : public Ifaces
      */
     void loadNameServers(const config::Parser& config);
 
+    /** @brief Function used to watch change in NTP server.
+     */
+    void watchNTPServers();
+
     /** @brief Function to create ipAddress dbus object.
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipAddress- IP address.
@@ -264,6 +268,8 @@ class EthernetInterface : public Ifaces
      *  @returns true/false value if the address is static
      */
     bool originIsManuallyAssigned(IP::AddressOrigin origin);
+
+    std::unique_ptr<sdbusplus::bus::match::match> ntpServerMatch;
 };
 
 } // namespace network
