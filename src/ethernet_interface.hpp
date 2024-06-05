@@ -283,6 +283,7 @@ class EthernetInterface : public Ifaces
                       stdplus::PinnedRef<Manager> manager,
                       const AllIntfInfo& info, std::string&& objPath,
                       const config::Parser& config, bool enabled);
+
 };
 
 } // namespace network
