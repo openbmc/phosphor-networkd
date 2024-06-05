@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "99ea7fba_df49c516",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-06-05T17:24:14Z",
+      "side": 1,
+      "message": "looks like same NTPServers gets updated on both ethernet interfaces, this behaviour needs to be fixed",
+      "revId": "bc2308e3e09aeaecc319e673b91558ada404630e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "33751fe2_ee965424",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 2
@@ -20,6 +37,23 @@
         "endLine": 1018,
         "endChar": 58
       },
+      "revId": "bc2308e3e09aeaecc319e673b91558ada404630e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "742722f3_c6f9cd69",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-06-05T17:24:14Z",
+      "side": 1,
+      "message": "how do we differentiate on which ethernet interface NTPServers gets updated?\nLook like currently NTPServers gets updated on both eth0 and eth1 interfaces\n\nExample: If eth1 connected to DHCP and gets NetworkProvided NTPServers\nthen Eth1 interface NTPServers configuration should be updated.",
       "revId": "bc2308e3e09aeaecc319e673b91558ada404630e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
