@@ -74,6 +74,24 @@
       "parentUuid": "742722f3_c6f9cd69",
       "revId": "bc2308e3e09aeaecc319e673b91558ada404630e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "268bf376_8f31c45f",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2024-06-13T06:02:05Z",
+      "side": 1,
+      "message": "systemd has accepted the defect as request for enhancement.",
+      "parentUuid": "8738e1e1_e82dfd58",
+      "revId": "bc2308e3e09aeaecc319e673b91558ada404630e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
