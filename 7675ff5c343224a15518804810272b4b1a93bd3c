@@ -16,6 +16,23 @@
       "message": "I\u0027ve updated per the comments received.",
       "revId": "7675ff5c343224a15518804810272b4b1a93bd3c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd6c276e_c5d3378b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-06-17T19:54:49Z",
+      "side": 1,
+      "message": "William or Ratan,\nplease approve and merge this.",
+      "revId": "7675ff5c343224a15518804810272b4b1a93bd3c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
