@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6380a782_01f5090d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-06-17T13:44:43Z",
+      "side": 1,
+      "message": "Will you apply the following change to the text, rather than fixing a misspelled word?",
+      "revId": "0792f272473da31cc3b2430afdca7b77f8ba6120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63e58849_c62257f6",
+        "filename": "src/inventory_mac.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-06-17T13:44:43Z",
+      "side": 1,
+      "message": "Rewrite altogether?\n\"The VPD may already have been assigned because phosphor-inventory-manager started ahead of the network service. Read the VPD directly and assign the MAC address despite this possibility.\"",
+      "revId": "0792f272473da31cc3b2430afdca7b77f8ba6120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
