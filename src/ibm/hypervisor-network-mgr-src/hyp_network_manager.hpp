@@ -144,7 +144,7 @@ class HypNetworkMgr
 
     /** @brief Setter method for biosTableAttrs data member
      *         GET operation on the BIOS table to
-     *         read all the hyp attrbutes (name, value pair)
+     *         read all the hyp attributes (name, value pair)
      *         and push them to biosTableAttrs data member
      */
     void setBIOSTableAttrs();

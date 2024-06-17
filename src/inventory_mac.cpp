@@ -206,7 +206,7 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
     return true;
 }
 
-// register the macthes to be monitored from inventory manager
+// register the matches to be monitored from inventory manager
 void registerSignals(sdbusplus::bus_t& bus)
 {
     lg2::info("Registering the Inventory Signals Matcher");
@@ -306,9 +306,10 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
             }
         }
     };
-    // Incase if phosphor-inventory-manager started early and the VPD is already
-    // collected by the time network service has come up, better to check the
-    // VPD directly and set the MAC Address on the respective Interface.
+
+    // The VPD may already have been assigned because phosphor-inventory-manager
+    // started ahead of the network service. Read the VPD directly and assign
+    // the MAC address despite this possibility.
 
     for (const auto& interfaceString : configJson.items())
     {

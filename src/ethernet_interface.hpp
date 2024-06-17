@@ -75,7 +75,7 @@ class EthernetInterface : public Ifaces
      *  @param[in] manager - parent object.
      *  @param[in] info - Interface information.
      *  @param[in] objRoot - Path to attach at.
-     *  @param[in] config - The parsed configuation file.
+     *  @param[in] config - The parsed configuration file.
      *  @param[in] vlan - The id of the vlan if configured
      *  @param[in] enabled - Determine if systemd-networkd is managing this link
      */
