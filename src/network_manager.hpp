@@ -154,7 +154,7 @@ class Manager : public ManagerIface
     std::vector<fu2::unique_function<void()>> reloadPreHooks;
     std::vector<fu2::unique_function<void()>> reloadPostHooks;
 
-    /** @brief Handles the recipt of an adminstrative state string */
+    /** @brief Handles the receipt of an administrative state string */
     void handleAdminState(std::string_view state, unsigned ifidx);
 
     /** @brief Creates the interface in the maps */
