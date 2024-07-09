@@ -32,6 +32,7 @@ int main(int argc, char** argv)
 {
     using namespace phosphor::network;
     using namespace phosphor::network::ncsi;
+    lg2::info("Hello, World");
     // Read arguments.
     auto options = ArgumentParser(argc, argv);
     int packageInt{};
