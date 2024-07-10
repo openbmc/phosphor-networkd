@@ -35,6 +35,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "32813953_9da3aa81",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2024-07-10T09:47:33Z",
+      "side": 1,
+      "message": "I think phosphor-networkd need not wait to get this merged until we get the systemd fix to move the timesyncd to interface level. This commit gets in a better behaviour to the system.\n\nCan this get merged William?",
+      "revId": "bc2308e3e09aeaecc319e673b91558ada404630e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "33751fe2_ee965424",
