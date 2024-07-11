@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1a96665_7685f7d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-11T07:41:15Z",
+      "side": 1,
+      "message": "root@bmc:~# ./ncsi-netlink --index\u003d2 --package\u003d0  --show-stats\nshow-stats option selected \ngetStats function started \napplycmd function started \nsendCallBack function started \n\u003c7\u003e Response 226 bytes: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 1b c4 e0 85 00 00 00 00 1b bb a7 ff 00 00 00 00 00 40 22 a6 00 00 00 00 00 90 cf 90 00 00 00 00 00 0d 25 9b 00 00 00 00 00 26 28 86 00 00 00 00 00 01 14 8e 00 00 00 00 00 00 05 ad 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 1f cd 50 00 65 a1 f0 00 2c e8 a2 00 0a 0c 37 00 00 18 1c 00 00 00 00 00 00 00 00 00 01 d0 b3 00 1b 97 de 00 05 0a 0f 00 00 1a cd 00 04 cb 53 00 00 49 b1 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 33 ae 60 02\nroot@bmc:~#",
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
