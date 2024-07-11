@@ -1,3 +1,6 @@
+
+
+
 /**
  * Copyright © 2018 IBM Corporation
  *
@@ -20,6 +23,8 @@
 
 #include <string>
 #include <vector>
+
+#include <iostream>
 
 static void exitWithError(const char* err, char** argv)
 {
@@ -143,6 +148,11 @@ int main(int argc, char** argv)
     else if ((options)["clear"] == "true")
     {
         return ncsi::clearInterface(indexInt);
+    }
+    else if ((options)["show-stats"] == "true")
+    {
+        std::cout<<"show-stats option selected "<<std::endl;
+        return ncsi::getStats(indexInt, packageInt);
     }
     else
     {

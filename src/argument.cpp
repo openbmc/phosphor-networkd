@@ -1,3 +1,5 @@
+
+
 /**
  * Copyright © 2018 IBM Corporation
  *
@@ -74,6 +76,7 @@ void ArgumentParser::usage(char** argv)
         << "    --clear=<clear>   Clear all the settings on the interface.\n";
     std::cerr
         << "    --oem-payload=<hex data> Send an OEM command with payload.\n";
+    std::cerr << "    --show controller packet statistics>.\n"  ;
     std::cerr << "    --package=<package>  Specify a package.\n";
     std::cerr << "    --channel=<channel> Specify a channel.\n";
     std::cerr << "    --index=<device index> Specify device ifindex.\n";
@@ -81,6 +84,7 @@ void ArgumentParser::usage(char** argv)
 }
 
 const option ArgumentParser::options[] = {
+    {"show-stats", no_argument, NULL, 'S'},
     {"info", no_argument, NULL, 'i'},
     {"set", no_argument, NULL, 's'},
     {"clear", no_argument, NULL, 'r'},
@@ -92,7 +96,7 @@ const option ArgumentParser::options[] = {
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "i:s:r:o:p:c:x:h?";
+const char* ArgumentParser::optionStr = "S:i:s:r:o:p:c:x:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";

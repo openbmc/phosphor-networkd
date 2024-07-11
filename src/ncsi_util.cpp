@@ -1,3 +1,5 @@
+
+
 #include "ncsi_util.hpp"
 
 #include <linux/ncsi.h>
@@ -241,7 +243,7 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     };
 
     *(int*)arg = 0;
-
+      std::cout<<"sendCallBack function started "<<std::endl;
     auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
     if (ret)
     {
@@ -272,6 +274,7 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
              CallBack function = nullptr)
 {
     int cb_ret = 0;
+     std::cout<<"applycmd function started "<<std::endl;
     nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
     if (socket == nullptr)
     {
@@ -455,6 +458,37 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+
+int getStats(int ifindex, int package)
+{
+
+   // std::span<const unsigned char> payload(nullptr, 0);
+   /* lg2::debug(
+        "Get Info , PACKAGE : {PACKAGE}, INTERFACE_INDEX: {INTERFACE_INDEX}",
+        "PACKAGE", lg2::hex, package, "INTERFACE_INDEX", lg2::hex, ifindex);
+    if (package == DEFAULT_VALUE)
+    {
+        return internal::applyCmd(
+            ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_PKG_INFO),
+            package, DEFAULT_VALUE, NLM_F_DUMP, internal::infoCallBack);
+    }
+    else
+    {
+        return internal::applyCmd(ifindex, ncsi_nl_commands::NCSI_CMD_PKG_INFO,
+                                  package, DEFAULT_VALUE, NONE,
+                                  internal::infoCallBack);
+    }*/
+
+        std::cout<<"getStats function started "<<std::endl;
+       return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, 0x18),
+        package, NONE, NONE, internal::sendCallBack);
+    
+
+
 }
 
 } // namespace ncsi
