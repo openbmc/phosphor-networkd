@@ -33,6 +33,121 @@
       "message": "Hi Patrick/Amithash,\n\nI am working on porting ncsi-util commands from YV3 to ncsi-netlink tool. As part of that I have made changes to port show-statistics command.\nWanted to get your feedback on the approach. \n\nThis is still work in progress and I have marked by review as private.\n\nI have included the test results(which are hex as of now). I am working to display textual representation.\n\nPlease review and let me know if this approach looks good.\n\nThanks \n\nSharan",
       "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9176c69a_2e14ffbc",
+        "filename": "src/argument.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-07-12T08:57:38Z",
+      "side": 1,
+      "message": "Remove the extra \"\u003e\"",
+      "range": {
+        "startLine": 79,
+        "startChar": 57,
+        "endLine": 79,
+        "endChar": 58
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b0579c0_b553a1ad",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-07-12T08:57:38Z",
+      "side": 1,
+      "message": "remove the commented out code",
+      "range": {
+        "startLine": 466,
+        "startChar": 0,
+        "endLine": 482,
+        "endChar": 7
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22cf44fb_037c6e9c",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-07-12T08:57:38Z",
+      "side": 1,
+      "message": "correct the indentation",
+      "range": {
+        "startLine": 484,
+        "startChar": 0,
+        "endLine": 487,
+        "endChar": 69
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee4c5ba6_b34282ff",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-07-12T08:57:38Z",
+      "side": 1,
+      "message": "what is 0x18 for?",
+      "range": {
+        "startLine": 487,
+        "startChar": 63,
+        "endLine": 487,
+        "endChar": 67
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c5d067c_92f605c2",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-07-12T08:57:38Z",
+      "side": 1,
+      "message": "Use the correct description. This is for retrieving the statistics right?",
+      "range": {
+        "startLine": 60,
+        "startChar": 11,
+        "endLine": 60,
+        "endChar": 53
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
