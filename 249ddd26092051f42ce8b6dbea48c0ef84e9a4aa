@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "37f0d9c3_ba6b8ad0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-13T22:03:03Z",
+      "side": 1,
+      "message": "Needs a better commit message.",
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe939471_6ebf6b4b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-13T22:03:03Z",
+      "side": 1,
+      "message": "I don\u0027t think you\u0027re currently in the Meta CLA, which we will need to get added.  I\u0027ve put instructions on the internal documentaion.\n\nYou\u0027ll need to update your name here to match what ends up in the CLA (which looks like it will be \"Sharanabasappa K\").",
+      "range": {
+        "startLine": 10,
+        "startChar": 15,
+        "endLine": 10,
+        "endChar": 30
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "e1a96665_7685f7d5",
@@ -52,6 +92,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "10cc7abf_216e4482",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-13T22:03:03Z",
+      "side": 1,
+      "message": "We\u0027ll need to get you added to the Meta CLA.\n\nThere are tools in the CI that will check against clang-format, which your submission didn\u0027t use (and thus your submission will fail).  You could proactively run the linter / formatter tools.",
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9176c69a_2e14ffbc",
@@ -77,6 +134,63 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "846136f3_e719990e",
+        "filename": "src/argument.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-13T22:03:03Z",
+      "side": 1,
+      "message": "Do we need a \"short\" for every one?  This one doesn\u0027t seem particularly intuitive so I\u0027d probably leave it out if we can.",
+      "range": {
+        "startLine": 87,
+        "startChar": 37,
+        "endLine": 87,
+        "endChar": 41
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b344129a_406b7470",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-13T22:03:03Z",
+      "side": 1,
+      "message": "Debugging left in?",
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e79c9cab_6d574af8",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-13T22:03:03Z",
+      "side": 1,
+      "message": "Remove misc debugging statements throughout.",
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0b0579c0_b553a1ad",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 1
@@ -94,6 +208,23 @@
         "endLine": 482,
         "endChar": 7
       },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5f04446_7800d297",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-13T22:03:03Z",
+      "side": 1,
+      "message": "What does the result of this look like?  Probably put it in a \"Tested\" section in the commit message.\n\nI\u0027m a bit surprised to see that we have no parsing here at all.  Is this just going to come out as a blob of bytes?  Can we add some structure to it?",
       "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
