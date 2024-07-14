@@ -16,6 +16,23 @@
       "message": "Ratan, William,\nIs there anything else to be done in order to merge this commit?",
       "revId": "9f2ccebe31c60c798d332c15d8629d6ca8953cc4",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2425aeb4_841f92d6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2024-07-14T03:35:18Z",
+      "side": 1,
+      "message": "Jonathan, Apologies for the delay, I am out for vacation, Will do the review next week.",
+      "revId": "9f2ccebe31c60c798d332c15d8629d6ca8953cc4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
