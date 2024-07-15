@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e8f1cec_7571688c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-15T13:51:58Z",
+      "side": 1,
+      "message": "Patchset 4 fixes formatting difference between clang-format versions only.",
+      "revId": "21f10d4c1da93d8de0efbddfd7b68e2cb1a56c4f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
