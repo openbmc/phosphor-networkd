@@ -1,5 +1,7 @@
 #include "ncsi_util.hpp"
 
+#include <arpa/inet.h>
+#include <endian.h>
 #include <linux/ncsi.h>
 #include <netlink/genl/ctrl.h>
 #include <netlink/genl/genl.h>
@@ -268,6 +270,39 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return 0;
 };
 
+CallBack statsCallback = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) +
+                          sizeof(NCSIPacketHeader);
+
+    printNCSICompletionCodes(data);
+
+    return 0;
+};
+
 int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
              int channel = DEFAULT_VALUE, int flags = NONE,
              CallBack function = nullptr)
@@ -456,6 +491,132 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int getStats(int ifindex, int package)
+{
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                          NCSI_CMD_GET_CONTROLLER_PACKET_STATISTICS),
+        package, NONE, NONE, internal::statsCallback);
+}
+
+void printNCSICompletionCodes(unsigned char* rcv_buf)
+{
+    int cc_resp = (rcv_buf[0] << 8) + rcv_buf[1];
+    int cc_reason = (rcv_buf[2] << 8) + rcv_buf[3];
+
+    std::cout << "NC-SI Command Response:" << std::endl;
+    std::cout << "Response: 0x" << cc_resp << " "
+              << "Reason: 0x" << cc_reason << std::endl;
+
+    printNCSIControllerStats(&rcv_buf[4]);
+
+    return;
+}
+
+void printNCSIControllerStats(unsigned char* rcv_buf)
+{
+    NCSIControllerPacketStatsResponse* pResp =
+        (NCSIControllerPacketStatsResponse*)rcv_buf;
+
+    setlocale(LC_ALL, "");
+    std::cout << "\nNIC statistics" << std::endl;
+
+    uint64_t totalBytesReceived = be64toh(pResp->totalBytesRcvd);
+    uint64_t totalBytesTransmitted = be64toh(pResp->totalBytesTx);
+    uint64_t totalUnicastPacketReceived = be64toh(pResp->totalUnicastPktsRcvd);
+    uint64_t totalMulticastPacketReceived =
+        be64toh(pResp->totalMulticastPktsRcvd);
+    uint64_t totalBroadcastPacketReceived =
+        be64toh(pResp->totalBroadcastPktsRcvd);
+    uint64_t totalUnicastPacketTransmitted = be64toh(pResp->totalUnicastPktsTx);
+    uint64_t totalMulticastPacketTransmitted =
+        be64toh(pResp->totalMulticastPktsTx);
+    uint64_t totalBroadcastPacketTransmitted =
+        be64toh(pResp->totalBroadcastPktsTx);
+    uint64_t ValidBytesReceived = be64toh(pResp->validBytesRcvd);
+    std::cout << "Counters cleared last read (MSB): "
+              << ntohl(pResp->countersClearedFromLastReadMSB) << std::endl;
+    std::cout << "Counters cleared last read (LSB): "
+              << ntohl(pResp->countersClearedFromLastReadLSB) << std::endl;
+    std::cout << "Total Bytes Received: " << totalBytesReceived << std::endl;
+    std::cout << "Total Bytes Transmitted: " << totalBytesTransmitted
+              << std::endl;
+    std::cout << "Total Unicast Packet Received: " << totalUnicastPacketReceived
+              << std::endl;
+    std::cout << "Total Multicast Packet Received: "
+              << totalMulticastPacketReceived << std::endl;
+    std::cout << "Total Broadcast Packet Received: "
+              << totalBroadcastPacketReceived << std::endl;
+    std::cout << "Total Unicast Packet Transmitted: "
+              << totalUnicastPacketTransmitted << std::endl;
+    std::cout << "Total Multicast Packet Transmitted: "
+              << totalMulticastPacketTransmitted << std::endl;
+    std::cout << "Total Broadcast Packet Transmitted: "
+              << totalBroadcastPacketTransmitted << std::endl;
+    std::cout << "FCS Receive Errors: " << ntohl(pResp->fcsReceiveErrs)
+              << std::endl;
+    std::cout << "Alignment Errors: " << ntohl(pResp->alignmentErrs)
+              << std::endl;
+    std::cout << "False Carrier Detections: "
+              << ntohl(pResp->falseCarrierDetections) << std::endl;
+    std::cout << "Runt Packets Received: " << ntohl(pResp->runtPktsRcvd)
+              << std::endl;
+    std::cout << "Jabber Packets Received: " << ntohl(pResp->jabberPktsRcvd)
+              << std::endl;
+    std::cout << "Pause XON Frames Received: "
+              << ntohl(pResp->pauseXOnFramesRcvd) << std::endl;
+    std::cout << "Pause XOFF Frames Received: "
+              << ntohl(pResp->pauseXOffFramesRcvd) << std::endl;
+    std::cout << "Pause XON Frames Transmitted: "
+              << ntohl(pResp->pauseXOnFramesTx) << std::endl;
+    std::cout << "Pause XOFF Frames Transmitted: "
+              << ntohl(pResp->pauseXOffFramesTx) << std::endl;
+    std::cout << "Single Collision Transmit Frames: "
+              << ntohl(pResp->singleCollisionTxFrames) << std::endl;
+    std::cout << "Multiple Collision Transmit Frames: "
+              << ntohl(pResp->multipleCollisionTxFrames) << std::endl;
+    std::cout << "Late Collision Frames: " << ntohl(pResp->lateCollisionFrames)
+              << std::endl;
+    std::cout << "Excessive Collision Frames: "
+              << ntohl(pResp->excessiveCollisionFrames) << std::endl;
+    std::cout << "Control Frames Received: " << ntohl(pResp->controlFramesRcvd)
+              << std::endl;
+    std::cout << "64-Byte Frames Received: " << ntohl(pResp->rxFrame_64)
+              << std::endl;
+    std::cout << "65-127 Byte Frames Received: " << ntohl(pResp->rxFrame_65_127)
+              << std::endl;
+    std::cout << "128-255 Byte Frames Received: "
+              << ntohl(pResp->rxFrame_128_255) << std::endl;
+    std::cout << "256-511 Byte Frames Received: "
+              << ntohl(pResp->rxFrame_256_511) << std::endl;
+    std::cout << "512-1023 Byte Frames Received: "
+              << ntohl(pResp->rxFrame_512_1023) << std::endl;
+    std::cout << "1024-1522 Byte Frames Received: "
+              << ntohl(pResp->rxFrame_1024_1522) << std::endl;
+    std::cout << "1523-9022 Byte Frames Received: "
+              << ntohl(pResp->rxFrame_1523_9022) << std::endl;
+    std::cout << "64-Byte Frames Transmitted: " << ntohl(pResp->txFrame_64)
+              << std::endl;
+    std::cout << "65-127 Byte Frames Transmitted: "
+              << ntohl(pResp->txFrame_65_127) << std::endl;
+    std::cout << "128-255 Byte Frames Transmitted: "
+              << ntohl(pResp->txFrame_128_255) << std::endl;
+    std::cout << "256-511 Byte Frames Transmitted: "
+              << ntohl(pResp->txFrame_256_511) << std::endl;
+    std::cout << "512-1023 Byte Frames Transmitted: "
+              << ntohl(pResp->txFrame_512_1023) << std::endl;
+    std::cout << "1024-1522 Byte Frames Transmitted: "
+              << ntohl(pResp->txFrame_1024_1522) << std::endl;
+    std::cout << "1523-9022 Byte Frames Transmitted: "
+              << ntohl(pResp->txFrame_1523_9022) << std::endl;
+    std::cout << "Valid Bytes Received: " << ValidBytesReceived << std::endl;
+    std::cout << "Error Runt Packets Received: "
+              << ntohl(pResp->errRuntPacketsRcvd) << std::endl;
+    std::cout << "Error Jabber Packets Received: "
+              << ntohl(pResp->errJabberPacketsRcvd) << std::endl;
 }
 
 } // namespace ncsi
