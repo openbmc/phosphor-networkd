@@ -1,5 +1,7 @@
 #include "ncsi_util.hpp"
 
+#include "ncsi_stats.hpp"
+
 #include <linux/ncsi.h>
 #include <netlink/genl/ctrl.h>
 #include <netlink/genl/genl.h>
@@ -9,6 +11,8 @@
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
 
+#include <cstring>
+#include <iostream>
 #include <vector>
 
 namespace phosphor
@@ -43,18 +47,6 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 namespace internal
 {
 
-struct NCSIPacketHeader
-{
-    uint8_t MCID;
-    uint8_t revision;
-    uint8_t reserved;
-    uint8_t id;
-    uint8_t type;
-    uint8_t channel;
-    uint16_t length;
-    uint32_t rsvd[2];
-};
-
 class Command
 {
   public:
@@ -77,6 +69,112 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+// converts a 64-bit/32-bit big-endian integer to a host-endian integer
+static NCSIControllerPacketStatsResponse
+    convertStatsToHostEndianess(std::span<uint8_t> inVar)
+{
+    NCSIControllerPacketStatsResponse localVar{};
+    localVar.header.MCID = inVar[0];
+    localVar.header.revision = inVar[1];
+    localVar.header.reserved = inVar[2];
+    localVar.header.id = inVar[3];
+    localVar.header.type = inVar[4];
+    localVar.header.channel = inVar[5];
+    std::memmove(&localVar.header.length, &inVar[6], 2);
+    std::memmove(&localVar.header.rsvd[0], &inVar[8], 4);
+    std::memmove(&localVar.header.rsvd[1], &inVar[12], 4);
+    std::memmove(&localVar.response, &inVar[16], 2);
+    std::memmove(&localVar.reason, &inVar[18], 2);
+    std::memmove(&localVar.countersClearedFromLastReadMSB, &inVar[20], 4);
+    std::memmove(&localVar.countersClearedFromLastReadLSB, &inVar[24], 4);
+    std::memmove(&localVar.totalBytesRcvd, &inVar[28], 8);
+    std::memmove(&localVar.totalBytesTx, &inVar[36], 8);
+    std::memmove(&localVar.totalUnicastPktsRcvd, &inVar[44], 8);
+    std::memmove(&localVar.totalMulticastPktsRcvd, &inVar[52], 8);
+    std::memmove(&localVar.totalBroadcastPktsRcvd, &inVar[60], 8);
+    std::memmove(&localVar.totalUnicastPktsTx, &inVar[68], 8);
+    std::memmove(&localVar.totalMulticastPktsTx, &inVar[76], 8);
+    std::memmove(&localVar.totalBroadcastPktsTx, &inVar[84], 8);
+    std::memmove(&localVar.fcsReceiveErrs, &inVar[92], 4);
+    std::memmove(&localVar.alignmentErrs, &inVar[96], 4);
+    std::memmove(&localVar.falseCarrierDetections, &inVar[100], 4);
+    std::memmove(&localVar.runtPktsRcvd, &inVar[104], 4);
+    std::memmove(&localVar.jabberPktsRcvd, &inVar[108], 4);
+    std::memmove(&localVar.pauseXOnFramesRcvd, &inVar[112], 4);
+    std::memmove(&localVar.pauseXOffFramesRcvd, &inVar[116], 4);
+    std::memmove(&localVar.pauseXOnFramesTx, &inVar[120], 4);
+    std::memmove(&localVar.pauseXOffFramesTx, &inVar[124], 4);
+    std::memmove(&localVar.singleCollisionTxFrames, &inVar[128], 4);
+    std::memmove(&localVar.multipleCollisionTxFrames, &inVar[132], 4);
+    std::memmove(&localVar.lateCollisionFrames, &inVar[136], 4);
+    std::memmove(&localVar.excessiveCollisionFrames, &inVar[140], 4);
+    std::memmove(&localVar.controlFramesRcvd, &inVar[144], 4);
+    std::memmove(&localVar.rxFrame_64, &inVar[148], 4);
+    std::memmove(&localVar.rxFrame_65_127, &inVar[152], 4);
+    std::memmove(&localVar.rxFrame_128_255, &inVar[156], 4);
+    std::memmove(&localVar.rxFrame_256_511, &inVar[160], 4);
+    std::memmove(&localVar.rxFrame_512_1023, &inVar[164], 4);
+    std::memmove(&localVar.rxFrame_1024_1522, &inVar[168], 4);
+    std::memmove(&localVar.rxFrame_1523_9022, &inVar[172], 4);
+    std::memmove(&localVar.txFrame_64, &inVar[176], 4);
+    std::memmove(&localVar.txFrame_65_127, &inVar[180], 4);
+    std::memmove(&localVar.txFrame_128_255, &inVar[184], 4);
+    std::memmove(&localVar.txFrame_256_511, &inVar[188], 4);
+    std::memmove(&localVar.txFrame_512_1023, &inVar[192], 4);
+    std::memmove(&localVar.txFrame_1024_1522, &inVar[196], 4);
+    std::memmove(&localVar.txFrame_1523_9022, &inVar[200], 4);
+    std::memmove(&localVar.validBytesRcvd, &inVar[204], 8);
+    std::memmove(&localVar.errRuntPacketsRcvd, &inVar[212], 4);
+    std::memmove(&localVar.errJabberPacketsRcvd, &inVar[216], 4);
+    localVar.countersClearedFromLastReadMSB =
+        ntohl(localVar.countersClearedFromLastReadMSB);
+    localVar.countersClearedFromLastReadLSB =
+        ntohl(localVar.countersClearedFromLastReadLSB);
+    localVar.totalBytesRcvd = be64toh(localVar.totalBytesRcvd);
+    localVar.totalBytesTx = be64toh(localVar.totalBytesTx);
+    localVar.totalUnicastPktsRcvd = be64toh(localVar.totalUnicastPktsRcvd);
+    localVar.totalMulticastPktsRcvd = be64toh(localVar.totalMulticastPktsRcvd);
+    localVar.totalBroadcastPktsRcvd = be64toh(localVar.totalBroadcastPktsRcvd);
+    localVar.totalUnicastPktsTx = be64toh(localVar.totalUnicastPktsTx);
+    localVar.totalMulticastPktsTx = be64toh(localVar.totalMulticastPktsTx);
+    localVar.totalBroadcastPktsTx = be64toh(localVar.totalBroadcastPktsTx);
+    localVar.validBytesRcvd = be64toh(localVar.validBytesRcvd);
+    localVar.fcsReceiveErrs = ntohl(localVar.fcsReceiveErrs);
+    localVar.alignmentErrs = ntohl(localVar.alignmentErrs);
+    localVar.falseCarrierDetections = ntohl(localVar.falseCarrierDetections);
+    localVar.runtPktsRcvd = ntohl(localVar.runtPktsRcvd);
+    localVar.jabberPktsRcvd = ntohl(localVar.jabberPktsRcvd);
+    localVar.pauseXOnFramesRcvd = ntohl(localVar.pauseXOnFramesRcvd);
+    localVar.pauseXOffFramesRcvd = ntohl(localVar.pauseXOffFramesRcvd);
+    localVar.pauseXOnFramesTx = ntohl(localVar.pauseXOnFramesTx);
+    localVar.pauseXOffFramesTx = ntohl(localVar.pauseXOffFramesTx);
+    localVar.singleCollisionTxFrames = ntohl(localVar.singleCollisionTxFrames);
+    localVar.multipleCollisionTxFrames =
+        ntohl(localVar.multipleCollisionTxFrames);
+    localVar.lateCollisionFrames = ntohl(localVar.lateCollisionFrames);
+    localVar.excessiveCollisionFrames =
+        ntohl(localVar.excessiveCollisionFrames);
+    localVar.controlFramesRcvd = ntohl(localVar.controlFramesRcvd);
+    localVar.rxFrame_64 = ntohl(localVar.rxFrame_64);
+    localVar.rxFrame_65_127 = ntohl(localVar.rxFrame_65_127);
+    localVar.rxFrame_128_255 = ntohl(localVar.rxFrame_128_255);
+    localVar.rxFrame_256_511 = ntohl(localVar.rxFrame_256_511);
+    localVar.rxFrame_512_1023 = ntohl(localVar.rxFrame_512_1023);
+    localVar.rxFrame_1024_1522 = ntohl(localVar.rxFrame_1024_1522);
+    localVar.rxFrame_1523_9022 = ntohl(localVar.rxFrame_1523_9022);
+    localVar.txFrame_64 = ntohl(localVar.txFrame_64);
+    localVar.txFrame_65_127 = ntohl(localVar.txFrame_65_127);
+    localVar.txFrame_128_255 = ntohl(localVar.txFrame_128_255);
+    localVar.txFrame_256_511 = ntohl(localVar.txFrame_256_511);
+    localVar.txFrame_512_1023 = ntohl(localVar.txFrame_512_1023);
+    localVar.txFrame_1024_1522 = ntohl(localVar.txFrame_1024_1522);
+    localVar.txFrame_1523_9022 = ntohl(localVar.txFrame_1523_9022);
+    localVar.errRuntPacketsRcvd = ntohl(localVar.errRuntPacketsRcvd);
+    localVar.errJabberPacketsRcvd = ntohl(localVar.errJabberPacketsRcvd);
+
+    return localVar;
+}
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -261,6 +359,43 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
+
+    return 0;
+};
+
+CallBack statsCallback = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    auto data_len = nla_len(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
+
+    uint8_t* data = (uint8_t*)nla_data(tb[NCSI_ATTR_DATA]);
+
+    auto endianCorrect =
+        convertStatsToHostEndianess(std::span<uint8_t>(data, data_len));
+
+    std::cout << endianCorrect;
 
     return 0;
 };
@@ -505,6 +640,15 @@ int setChannelMask(int ifindex, int package, unsigned int mask)
                           payload),
         package);
     return 0;
+}
+
+int getStats(int ifindex, int package)
+{
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                          ncsiCmdGetStatistics),
+        package, NONE, NONE, internal::statsCallback);
 }
 
 } // namespace ncsi
