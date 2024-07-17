@@ -21,6 +21,8 @@
 #include <string>
 #include <vector>
 
+#include <iostream>
+
 static void exitWithError(const char* err, char** argv)
 {
     phosphor::network::ncsi::ArgumentParser::usage(argv);
@@ -156,6 +158,10 @@ int main(int argc, char** argv)
     else if ((options)["clear"] == "true")
     {
         return ncsi::clearInterface(indexInt);
+    }
+    else if ((options)["show-stats"] == "true")
+    {
+        return ncsi::getStats(indexInt, packageInt);
     }
     else
     {

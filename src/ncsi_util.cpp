@@ -1,3 +1,5 @@
+
+
 #include "ncsi_util.hpp"
 
 #include <linux/ncsi.h>
@@ -12,7 +14,8 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
-
+#include <arpa/inet.h>
+#include <endian.h>
 namespace phosphor
 {
 namespace network
@@ -242,7 +245,7 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     };
 
     *(int*)arg = 0;
-
+      
     auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
     if (ret)
     {
@@ -259,12 +262,12 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
     unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) +
                           sizeof(NCSIPacketHeader);
-
-    // Dump the response to stdout. Enhancement: option to save response data
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
-
+    
+   // st_data= new[data_len];
+    print_ncsi_controller_stats(data);
     return 0;
 };
 
@@ -273,6 +276,7 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
              CallBack function = nullptr)
 {
     int cb_ret = 0;
+    
     nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
     if (socket == nullptr)
     {
@@ -456,6 +460,75 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int getStats(int ifindex, int package)
+{
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, NCSI_GET_CONTROLLER_PACKET_STATISTICS),
+        package, NONE, NONE, internal::sendCallBack);
+}
+
+void print_ncsi_controller_stats(unsigned char *rcv_buf)
+{
+  
+  NCSI_Controller_Packet_Stats_Response *pResp = (NCSI_Controller_Packet_Stats_Response *)rcv_buf;
+
+  setlocale(LC_ALL, "");
+  std::cout<<"\nNIC statistics"<<std::endl;
+
+    uint64_t totalBytesReceived = be64toh(pResp->total_bytes_rcvd);
+    uint64_t totalBytesTransmitted = be64toh(pResp->total_bytes_tx);
+    uint64_t totalUnicastPacketReceived= be64toh(pResp->total_unicast_pkts_rcvd);
+    uint64_t  totalMulticastPacketReceived= be64toh(pResp->total_multicast_pkts_rcvd);
+    uint64_t totalBroadcastPacketReceived= be64toh(pResp->total_broadcast_pkts_rcvd);
+    uint64_t totalUnicastPacketTransmitted= be64toh(pResp->total_unicast_pkts_tx);
+    uint64_t totalMulticastPacketTransmitted= be64toh(pResp->total_multicast_pkts_tx);
+    uint64_t totalBroadcastPacketTransmitted= be64toh(pResp->total_broadcast_pkts_tx);
+    uint64_t ValidBytesReceived= be64toh(pResp->valid_bytes_rcvd);
+    std::cout<<"Counters cleared last read (MSB): "<<ntohl(pResp->counters_cleared_from_last_read_MSB)<<std::endl;
+    std::cout<<"Counters cleared last read (LSB): "<<ntohl(pResp->counters_cleared_from_last_read_LSB)<<std::endl;
+    std::cout<<"Total Bytes Received:"<< std::hex <<totalBytesReceived<<std::endl;
+    std::cout<<"Total Bytes Transmitted: "<< std::hex <<totalBytesTransmitted<<std::endl;
+    std::cout<<"Total Unicast Packet Received:"<<std::hex <<totalUnicastPacketReceived<<std::endl;
+    std::cout<<"Total Multicast Packet Received:" <<std::hex <<totalMulticastPacketReceived<<std::endl;
+    std::cout<<"Total Broadcast Packet Received:" <<std::hex <<totalBroadcastPacketReceived<<std::endl;
+    std::cout<<"Total Unicast Packet Transmitted: "<<std::hex  <<totalUnicastPacketTransmitted<<std::endl;
+    std::cout<<"Total Multicast Packet Transmitted:"<<std::hex  <<totalMulticastPacketTransmitted<<std::endl;
+    std::cout<<"Total Broadcast Packet Transmitted:" <<std::hex <<totalBroadcastPacketTransmitted<<std::endl;
+    std::cout<<"FCS Receive Errors: "<<ntohl(pResp->fcs_receive_errs)<<std::endl;
+    std::cout<<"Alignment Errors: "<<ntohl(pResp->alignment_errs)<<std::endl;
+    std::cout<<"False Carrier Detections: "<<ntohl(pResp->false_carrier_detections)<<std::endl;
+    std::cout<<"Runt Packets Received: "<<ntohl(pResp->runt_pkts_rcvd)<<std::endl;
+    std::cout<<"Jabber Packets Received: "<<ntohl(pResp->jabber_pkts_rcvd)<<std::endl;
+    std::cout<<"Pause XON Frames Received: "<<ntohl(pResp->pause_xon_frames_rcvd)<<std::endl;
+    std::cout<<"Pause XOFF Frames Received: "<<ntohl(pResp->pause_xoff_frames_rcvd)<<std::endl;
+    std::cout<<"Pause XON Frames Transmitted: "<<ntohl(pResp->pause_xon_frames_tx)<<std::endl;
+    std::cout<<"Pause XOFF Frames Transmitted: "<<ntohl(pResp->pause_xoff_frames_tx)<<std::endl;
+    std::cout<<"Single Collision Transmit Frames: "<<ntohl(pResp->single_collision_tx_frames)<<std::endl;
+    std::cout<<"Multiple Collision Transmit Frames: "<<ntohl(pResp->multiple_collision_tx_frames)<<std::endl;
+    std::cout<<"Late Collision Frames: "<<ntohl(pResp->late_collision_frames)<<std::endl;
+    std::cout<<"Excessive Collision Frames: "<<ntohl(pResp->excessive_collision_frames)<<std::endl;
+    std::cout<<"Control Frames Received: "<<ntohl(pResp->control_frames_rcvd)<<std::endl;
+    std::cout<<"64-Byte Frames Received: "<<ntohl(pResp->rx_frame_64)<<std::endl;
+    std::cout<<"65-127 Byte Frames Received: "<<ntohl(pResp->rx_frame_65_127)<<std::endl;
+    std::cout<<"128-255 Byte Frames Received: "<<ntohl(pResp->rx_frame_128_255)<<std::endl;
+    std::cout<<"256-511 Byte Frames Received: "<<ntohl(pResp->rx_frame_256_511)<<std::endl;
+    std::cout<<"512-1023 Byte Frames Received: "<<ntohl(pResp->rx_frame_512_1023)<<std::endl;
+    std::cout<<"1024-1522 Byte Frames Received: "<<ntohl(pResp->rx_frame_1024_1522)<<std::endl;
+    std::cout<<"1523-9022 Byte Frames Received: "<<ntohl(pResp->rx_frame_1523_9022)<<std::endl;
+    std::cout<<"64-Byte Frames Transmitted: "<<ntohl(pResp->tx_frame_64)<<std::endl;
+    std::cout<<"65-127 Byte Frames Transmitted: "<<ntohl(pResp->tx_frame_65_127)<<std::endl;
+    std::cout<<"128-255 Byte Frames Transmitted: "<<ntohl(pResp->tx_frame_128_255)<<std::endl;
+    std::cout<<"256-511 Byte Frames Transmitted: "<<ntohl(pResp->tx_frame_256_511)<<std::endl;
+    std::cout<<"512-1023 Byte Frames Transmitted: "<<ntohl(pResp->tx_frame_512_1023)<<std::endl;
+    std::cout<<"1024-1522 Byte Frames Transmitted: "<<ntohl(pResp->tx_frame_1024_1522)<<std::endl;
+    std::cout<<"1523-9022 Byte Frames Transmitted: "<<ntohl(pResp->tx_frame_1523_9022)<<std::endl;
+    std::cout<<"Valid Bytes Received:" <<std::hex <<ValidBytesReceived<<std::endl;
+    std::cout<<"Error Runt Packets Received: " <<ntohl(pResp->err_runt_packets_rcvd)<<std::endl;
+    std::cout<<"Error Jabber Packets Received: "<<ntohl(pResp->err_jabber_packets_rcvd)<<std::endl;
+
 }
 
 } // namespace ncsi
