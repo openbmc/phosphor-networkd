@@ -268,6 +268,39 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return 0;
 };
 
+CallBack statsCallback = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) +
+                          sizeof(NCSIPacketHeader);
+
+    convertStatsToHostEndianess(data);
+
+    return 0;
+};
+
 int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
              int channel = DEFAULT_VALUE, int flags = NONE,
              CallBack function = nullptr)
@@ -456,6 +489,130 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int getStats(int ifindex, int package)
+{
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                          NCSI_CMD_GET_CONTROLLER_PACKET_STATISTICS),
+        package, NONE, NONE, internal::statsCallback);
+}
+
+void convertStatsToHostEndianess(unsigned char* raw_data)
+{
+    NCSIControllerPacketStatsResponse* rcv_buf =
+        static_cast<NCSIControllerPacketStatsResponse*>(
+            static_cast<void*>(raw_data));
+    rcv_buf->countersClearedFromLastReadMSB =
+        ntohl(rcv_buf->countersClearedFromLastReadMSB);
+    rcv_buf->countersClearedFromLastReadLSB =
+        ntohl(rcv_buf->countersClearedFromLastReadLSB);
+    rcv_buf->totalBytesRcvd = be64toh(rcv_buf->totalBytesRcvd);
+    rcv_buf->totalBytesTx = be64toh(rcv_buf->totalBytesTx);
+    rcv_buf->totalUnicastPktsRcvd = be64toh(rcv_buf->totalUnicastPktsRcvd);
+    rcv_buf->totalMulticastPktsRcvd = be64toh(rcv_buf->totalMulticastPktsRcvd);
+    rcv_buf->totalBroadcastPktsRcvd = be64toh(rcv_buf->totalBroadcastPktsRcvd);
+    rcv_buf->totalUnicastPktsTx = be64toh(rcv_buf->totalUnicastPktsTx);
+    rcv_buf->totalMulticastPktsTx = be64toh(rcv_buf->totalMulticastPktsTx);
+    rcv_buf->totalBroadcastPktsTx = be64toh(rcv_buf->totalBroadcastPktsTx);
+    rcv_buf->validBytesRcvd = be64toh(rcv_buf->validBytesRcvd);
+    rcv_buf->fcsReceiveErrs = ntohl(rcv_buf->fcsReceiveErrs);
+    rcv_buf->alignmentErrs = ntohl(rcv_buf->alignmentErrs);
+    rcv_buf->falseCarrierDetections = ntohl(rcv_buf->falseCarrierDetections);
+    rcv_buf->runtPktsRcvd = ntohl(rcv_buf->runtPktsRcvd);
+    rcv_buf->jabberPktsRcvd = ntohl(rcv_buf->jabberPktsRcvd);
+    rcv_buf->pauseXOnFramesRcvd = ntohl(rcv_buf->pauseXOnFramesRcvd);
+    rcv_buf->pauseXOffFramesRcvd = ntohl(rcv_buf->pauseXOffFramesRcvd);
+    rcv_buf->pauseXOnFramesTx = ntohl(rcv_buf->pauseXOnFramesTx);
+    rcv_buf->pauseXOffFramesTx = ntohl(rcv_buf->pauseXOffFramesTx);
+    rcv_buf->singleCollisionTxFrames = ntohl(rcv_buf->singleCollisionTxFrames);
+    rcv_buf->multipleCollisionTxFrames =
+        ntohl(rcv_buf->multipleCollisionTxFrames);
+    rcv_buf->lateCollisionFrames = ntohl(rcv_buf->lateCollisionFrames);
+    rcv_buf->excessiveCollisionFrames =
+        ntohl(rcv_buf->excessiveCollisionFrames);
+    rcv_buf->controlFramesRcvd = ntohl(rcv_buf->controlFramesRcvd);
+    rcv_buf->rxFrame_64 = ntohl(rcv_buf->rxFrame_64);
+    rcv_buf->rxFrame_65_127 = ntohl(rcv_buf->rxFrame_65_127);
+    rcv_buf->rxFrame_128_255 = ntohl(rcv_buf->rxFrame_128_255);
+    rcv_buf->rxFrame_256_511 = ntohl(rcv_buf->rxFrame_256_511);
+    rcv_buf->rxFrame_512_1023 = ntohl(rcv_buf->rxFrame_512_1023);
+    rcv_buf->rxFrame_1024_1522 = ntohl(rcv_buf->rxFrame_1024_1522);
+    rcv_buf->rxFrame_1523_9022 = ntohl(rcv_buf->rxFrame_1523_9022);
+    rcv_buf->txFrame_64 = ntohl(rcv_buf->txFrame_64);
+    rcv_buf->txFrame_65_127 = ntohl(rcv_buf->txFrame_65_127);
+    rcv_buf->txFrame_128_255 = ntohl(rcv_buf->txFrame_128_255);
+    rcv_buf->txFrame_256_511 = ntohl(rcv_buf->txFrame_256_511);
+    rcv_buf->txFrame_512_1023 = ntohl(rcv_buf->txFrame_512_1023);
+    rcv_buf->txFrame_1024_1522 = ntohl(rcv_buf->txFrame_1024_1522);
+    rcv_buf->txFrame_1523_9022 = ntohl(rcv_buf->txFrame_1523_9022);
+    rcv_buf->errRuntPacketsRcvd = ntohl(rcv_buf->errRuntPacketsRcvd);
+    rcv_buf->errJabberPacketsRcvd = ntohl(rcv_buf->errJabberPacketsRcvd);
+
+    printNCSIControllerStats(
+        static_cast<const NCSIControllerPacketStatsResponse*>(rcv_buf));
+}
+
+void printNCSIControllerStats(const NCSIControllerPacketStatsResponse* pResp)
+{
+    setlocale(LC_ALL, "");
+    std::cout
+        << "\nNIC statistics: "
+        << "\nresponse: " << pResp->response << "\nreason: " << pResp->reason
+        << "\nCounters cleared last read (MSB): "
+        << pResp->countersClearedFromLastReadMSB
+        << "\nCounters cleared last read (LSB): "
+        << pResp->countersClearedFromLastReadLSB
+        << "\nTotal Bytes Received: " << pResp->totalBytesRcvd
+        << "\nTotal Bytes Transmitted: " << pResp->totalBytesTx
+        << "\nTotal Unicast Packet Received: " << pResp->totalUnicastPktsRcvd
+        << "\nTotal Multicast Packet Received: "
+        << pResp->totalMulticastPktsRcvd
+        << "\nTotal Broadcast Packet Received: "
+        << pResp->totalBroadcastPktsRcvd
+        << "\nTotal Unicast Packet Transmitted: " << pResp->totalUnicastPktsTx
+        << "\nTotal Multicast Packet Transmitted: "
+        << pResp->totalMulticastPktsTx
+        << "\nTotal Broadcast Packet Transmitted: "
+        << pResp->totalBroadcastPktsTx
+        << "\nFCS Receive Errors: " << pResp->fcsReceiveErrs
+        << "\nAlignment Errors: " << pResp->alignmentErrs
+        << "\nFalse Carrier Detections: " << pResp->falseCarrierDetections
+        << "\nRunt Packets Received: " << pResp->runtPktsRcvd
+        << "\nJabber Packets Received: " << pResp->jabberPktsRcvd
+        << "\nPause XON Frames Received: " << pResp->pauseXOnFramesRcvd
+        << "\nPause XOFF Frames Received: " << pResp->pauseXOffFramesRcvd
+        << "\nPause XON Frames Transmitted: " << pResp->pauseXOnFramesTx
+        << "\nPause XOFF Frames Transmitted: " << pResp->pauseXOffFramesTx
+        << "\nSingle Collision Transmit Frames: "
+        << pResp->singleCollisionTxFrames
+        << "\nMultiple Collision Transmit Frames: "
+        << pResp->multipleCollisionTxFrames
+        << "\nLate Collision Frames: " << pResp->lateCollisionFrames
+        << "\nExcessive Collision Frames: " << pResp->excessiveCollisionFrames
+        << "\nControl Frames Received: " << pResp->controlFramesRcvd
+        << "\n64-Byte Frames Received: " << pResp->rxFrame_64
+        << "\n65-127 Byte Frames Received: " << pResp->rxFrame_65_127
+        << "\n128-255 Byte Frames Received: "
+        << "\n128-255 Byte Frames Received: " << pResp->rxFrame_128_255
+        << "\n256-511 Byte Frames Received: " << pResp->rxFrame_256_511
+        << "\n512-1023 Byte Frames Received: " << pResp->rxFrame_512_1023
+        << "\n1024-1522 Byte Frames Received: " << pResp->rxFrame_1024_1522
+        << "\n1523-9022 Byte Frames Received: " << pResp->rxFrame_1523_9022
+        << "\n64-Byte Frames Transmitted: " << pResp->txFrame_64
+        << "\n65-127 Byte Frames Transmitted: "
+        << "\n65-127 Byte Frames Transmitted: " << pResp->txFrame_65_127
+        << "\n128-255 Byte Frames Transmitted: " << pResp->txFrame_128_255
+        << "\n256-511 Byte Frames Transmitted: " << pResp->txFrame_256_511
+        << "\n512-1023 Byte Frames Transmitted: " << pResp->txFrame_512_1023
+        << "\n1024-1522 Byte Frames Transmitted: " << pResp->txFrame_1024_1522
+        << "\n1523-9022 Byte Frames Transmitted: " << pResp->txFrame_1523_9022
+        << "\nValid Bytes Received: " << pResp->validBytesRcvd
+        << "\nError Runt Packets Received: " << pResp->errRuntPacketsRcvd
+        << "\nError Jabber Packets Received: " << pResp->errJabberPacketsRcvd
+        << "\n";
 }
 
 } // namespace ncsi
