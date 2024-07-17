@@ -43,18 +43,6 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 namespace internal
 {
 
-struct NCSIPacketHeader
-{
-    uint8_t MCID;
-    uint8_t revision;
-    uint8_t reserved;
-    uint8_t id;
-    uint8_t type;
-    uint8_t channel;
-    uint16_t length;
-    uint32_t rsvd[2];
-};
-
 class Command
 {
   public:
@@ -77,6 +65,116 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+// converts a 64-bit/32-bit big-endian integer to a host-endian integer
+static NCSIControllerPacketStatsResponse
+    convertStatsToHostEndianess(NCSIControllerPacketStatsResponse* inVar)
+{
+    NCSIControllerPacketStatsResponse localVar{};
+    localVar.countersClearedFromLastReadMSB =
+        ntohl(inVar->countersClearedFromLastReadMSB);
+    localVar.countersClearedFromLastReadLSB =
+        ntohl(inVar->countersClearedFromLastReadLSB);
+    localVar.totalBytesRcvd = be64toh(inVar->totalBytesRcvd);
+    localVar.totalBytesTx = be64toh(inVar->totalBytesTx);
+    localVar.totalUnicastPktsRcvd = be64toh(inVar->totalUnicastPktsRcvd);
+    localVar.totalMulticastPktsRcvd = be64toh(inVar->totalMulticastPktsRcvd);
+    localVar.totalBroadcastPktsRcvd = be64toh(inVar->totalBroadcastPktsRcvd);
+    localVar.totalUnicastPktsTx = be64toh(inVar->totalUnicastPktsTx);
+    localVar.totalMulticastPktsTx = be64toh(inVar->totalMulticastPktsTx);
+    localVar.totalBroadcastPktsTx = be64toh(inVar->totalBroadcastPktsTx);
+    localVar.validBytesRcvd = be64toh(inVar->validBytesRcvd);
+    localVar.fcsReceiveErrs = ntohl(inVar->fcsReceiveErrs);
+    localVar.alignmentErrs = ntohl(inVar->alignmentErrs);
+    localVar.falseCarrierDetections = ntohl(inVar->falseCarrierDetections);
+    localVar.runtPktsRcvd = ntohl(inVar->runtPktsRcvd);
+    localVar.jabberPktsRcvd = ntohl(inVar->jabberPktsRcvd);
+    localVar.pauseXOnFramesRcvd = ntohl(inVar->pauseXOnFramesRcvd);
+    localVar.pauseXOffFramesRcvd = ntohl(inVar->pauseXOffFramesRcvd);
+    localVar.pauseXOnFramesTx = ntohl(inVar->pauseXOnFramesTx);
+    localVar.pauseXOffFramesTx = ntohl(inVar->pauseXOffFramesTx);
+    localVar.singleCollisionTxFrames = ntohl(inVar->singleCollisionTxFrames);
+    localVar.multipleCollisionTxFrames =
+        ntohl(inVar->multipleCollisionTxFrames);
+    localVar.lateCollisionFrames = ntohl(inVar->lateCollisionFrames);
+    localVar.excessiveCollisionFrames = ntohl(inVar->excessiveCollisionFrames);
+    localVar.controlFramesRcvd = ntohl(inVar->controlFramesRcvd);
+    localVar.rxFrame_64 = ntohl(inVar->rxFrame_64);
+    localVar.rxFrame_65_127 = ntohl(inVar->rxFrame_65_127);
+    localVar.rxFrame_128_255 = ntohl(inVar->rxFrame_128_255);
+    localVar.rxFrame_256_511 = ntohl(inVar->rxFrame_256_511);
+    localVar.rxFrame_512_1023 = ntohl(inVar->rxFrame_512_1023);
+    localVar.rxFrame_1024_1522 = ntohl(inVar->rxFrame_1024_1522);
+    localVar.rxFrame_1523_9022 = ntohl(inVar->rxFrame_1523_9022);
+    localVar.txFrame_64 = ntohl(inVar->txFrame_64);
+    localVar.txFrame_65_127 = ntohl(inVar->txFrame_65_127);
+    localVar.txFrame_128_255 = ntohl(inVar->txFrame_128_255);
+    localVar.txFrame_256_511 = ntohl(inVar->txFrame_256_511);
+    localVar.txFrame_512_1023 = ntohl(inVar->txFrame_512_1023);
+    localVar.txFrame_1024_1522 = ntohl(inVar->txFrame_1024_1522);
+    localVar.txFrame_1523_9022 = ntohl(inVar->txFrame_1523_9022);
+    localVar.errRuntPacketsRcvd = ntohl(inVar->errRuntPacketsRcvd);
+    localVar.errJabberPacketsRcvd = ntohl(inVar->errJabberPacketsRcvd);
+
+    return localVar;
+}
+
+// print the NCSI controller packet stats
+static void
+    printNCSIControllerPacketStats(NCSIControllerPacketStatsResponse& pResp)
+{
+    setlocale(LC_ALL, "");
+    std::cout
+        << "\nNIC statistics: " << "\nResponse: " << pResp.response
+        << "\nReason: " << pResp.reason
+        << "\nCounters cleared last read (MSB): "
+        << pResp.countersClearedFromLastReadMSB
+        << "\nCounters cleared last read (LSB): "
+        << pResp.countersClearedFromLastReadLSB
+        << "\nTotal Bytes Received: " << pResp.totalBytesRcvd
+        << "\nTotal Bytes Transmitted: " << pResp.totalBytesTx
+        << "\nTotal Unicast Packet Received: " << pResp.totalUnicastPktsRcvd
+        << "\nTotal Multicast Packet Received: " << pResp.totalMulticastPktsRcvd
+        << "\nTotal Broadcast Packet Received: " << pResp.totalBroadcastPktsRcvd
+        << "\nTotal Unicast Packet Transmitted: " << pResp.totalUnicastPktsTx
+        << "\nTotal Multicast Packet Transmitted: "
+        << pResp.totalMulticastPktsTx
+        << "\nTotal Broadcast Packet Transmitted: "
+        << pResp.totalBroadcastPktsTx << "\nFCS Receive Errors: "
+        << pResp.fcsReceiveErrs << "\nAlignment Errors: " << pResp.alignmentErrs
+        << "\nFalse Carrier Detections: " << pResp.falseCarrierDetections
+        << "\nRunt Packets Received: " << pResp.runtPktsRcvd
+        << "\nJabber Packets Received: " << pResp.jabberPktsRcvd
+        << "\nPause XON Frames Received: " << pResp.pauseXOnFramesRcvd
+        << "\nPause XOFF Frames Received: " << pResp.pauseXOffFramesRcvd
+        << "\nPause XON Frames Transmitted: " << pResp.pauseXOnFramesTx
+        << "\nPause XOFF Frames Transmitted: " << pResp.pauseXOffFramesTx
+        << "\nSingle Collision Transmit Frames: "
+        << pResp.singleCollisionTxFrames
+        << "\nMultiple Collision Transmit Frames: "
+        << pResp.multipleCollisionTxFrames
+        << "\nLate Collision Frames: " << pResp.lateCollisionFrames
+        << "\nExcessive Collision Frames: " << pResp.excessiveCollisionFrames
+        << "\nControl Frames Received: " << pResp.controlFramesRcvd
+        << "\n64-Byte Frames Received: " << pResp.rxFrame_64
+        << "\n65-127 Byte Frames Received: " << pResp.rxFrame_65_127
+        << "\n128-255 Byte Frames Received: " << pResp.rxFrame_128_255
+        << "\n256-511 Byte Frames Received: " << pResp.rxFrame_256_511
+        << "\n512-1023 Byte Frames Received: " << pResp.rxFrame_512_1023
+        << "\n1024-1522 Byte Frames Received: " << pResp.rxFrame_1024_1522
+        << "\n1523-9022 Byte Frames Received: " << pResp.rxFrame_1523_9022
+        << "\n64-Byte Frames Transmitted: " << pResp.txFrame_64
+        << "\n65-127 Byte Frames Transmitted: " << pResp.txFrame_65_127
+        << "\n128-255 Byte Frames Transmitted: " << pResp.txFrame_128_255
+        << "\n256-511 Byte Frames Transmitted: " << pResp.txFrame_256_511
+        << "\n512-1023 Byte Frames Transmitted: " << pResp.txFrame_512_1023
+        << "\n1024-1522 Byte Frames Transmitted: " << pResp.txFrame_1024_1522
+        << "\n1523-9022 Byte Frames Transmitted: " << pResp.txFrame_1523_9022
+        << "\nValid Bytes Received: " << pResp.validBytesRcvd
+        << "\nError Runt Packets Received: " << pResp.errRuntPacketsRcvd
+        << "\nError Jabber Packets Received: " << pResp.errJabberPacketsRcvd
+        << "\n";
+}
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -261,6 +359,40 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
+
+    return 0;
+};
+
+CallBack statsCallback = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    auto endianCorrect = convertStatsToHostEndianess(
+        reinterpret_cast<NCSIControllerPacketStatsResponse*>(
+            nla_data(tb[NCSI_ATTR_DATA])));
+
+    printNCSIControllerPacketStats(endianCorrect);
 
     return 0;
 };
@@ -505,6 +637,15 @@ int setChannelMask(int ifindex, int package, unsigned int mask)
                           payload),
         package);
     return 0;
+}
+
+int getStats(int ifindex, int package)
+{
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                          ncsiCmdGetStatistics),
+        package, NONE, NONE, internal::statsCallback);
 }
 
 } // namespace ncsi
