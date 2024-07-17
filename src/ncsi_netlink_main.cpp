@@ -197,6 +197,10 @@ int main(int argc, char** argv)
         }
         return ncsi::setChannelMask(indexInt, packageInt, mask);
     }
+    else if ((options)["stats"] == "true")
+    {
+        return ncsi::getStats(indexInt, packageInt);
+    }
     else
     {
         exitWithError("No Command specified", argv);
