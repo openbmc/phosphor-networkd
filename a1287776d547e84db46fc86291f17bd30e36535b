@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c99dba83_fc82fe63",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-18T06:36:30Z",
+      "side": 1,
+      "message": "Hi Patrick,\n\nThanks for reviewing the code. I have incorporated the comments. I will remove the short option.\n\nBest Regards,\nsharanu.k",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}

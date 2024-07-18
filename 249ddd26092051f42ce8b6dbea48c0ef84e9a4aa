@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "28f49a31_55f8b6c1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-18T06:36:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37f0d9c3_ba6b8ad0",
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fe939471_6ebf6b4b",
@@ -31,6 +49,30 @@
       "writtenOn": "2024-07-13T22:03:03Z",
       "side": 1,
       "message": "I don\u0027t think you\u0027re currently in the Meta CLA, which we will need to get added.  I\u0027ve put instructions on the internal documentaion.\n\nYou\u0027ll need to update your name here to match what ends up in the CLA (which looks like it will be \"Sharanabasappa K\").",
+      "range": {
+        "startLine": 10,
+        "startChar": 15,
+        "endLine": 10,
+        "endChar": 30
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40b504d9_ae4897d3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-18T06:36:30Z",
+      "side": 1,
+      "message": "Updated as per your suggestion.",
+      "parentUuid": "fe939471_6ebf6b4b",
       "range": {
         "startLine": 10,
         "startChar": 15,
@@ -109,6 +151,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3845f29e_b710152b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-18T06:36:30Z",
+      "side": 1,
+      "message": "sure Patrick I have sent the request at https://www.internalfb.com/amp/ACL/CATEGORY_GROUP%3Aopenbmc-lf-cla",
+      "parentUuid": "10cc7abf_216e4482",
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9176c69a_2e14ffbc",
@@ -172,6 +232,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e36070c_217f144f",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-18T06:36:30Z",
+      "side": 1,
+      "message": "The debug statements have been eliminated.",
+      "parentUuid": "b344129a_406b7470",
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e79c9cab_6d574af8",
@@ -185,6 +263,24 @@
       "writtenOn": "2024-07-13T22:03:03Z",
       "side": 1,
       "message": "Remove misc debugging statements throughout.",
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f62f67a_33e9f9e2",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-18T06:36:30Z",
+      "side": 1,
+      "message": "The debug statements have been eliminated.",
+      "parentUuid": "e79c9cab_6d574af8",
       "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
