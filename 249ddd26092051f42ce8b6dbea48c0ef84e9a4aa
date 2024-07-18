@@ -325,6 +325,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c445b886_11f8ad2d",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-18T22:00:01Z",
+      "side": 1,
+      "message": "Please mark comments as \"resolved\" if you\u0027ve addressed them.",
+      "parentUuid": "d5f04446_7800d297",
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "22cf44fb_037c6e9c",
