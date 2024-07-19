@@ -3,6 +3,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "08a7bd1d_97258f19",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "What is the provenance of this commit?\nAn early submission message references YV3.\nWhat\u0027s YV3?\nIs the source code being pulled licensed to permit the release?",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c97306a2_bc0aae25",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "This text exceeds the commit message maximum length.\nCommit messages are expected to have\n50 chars for the message header\nand 72 chars for all other lines.\n\nThe \u003c7\u003e ..... message exceeds 72 chars by a very wide margin.",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9796215f_49b12ba7",
         "filename": "/COMMIT_MSG",
         "patchSetId": 4
@@ -14,6 +48,23 @@
       "writtenOn": "2024-07-18T22:00:01Z",
       "side": 1,
       "message": "Lets use decimal for things that make sense to be decimal (ie. counts).  This should be fixed throughout.",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c02467c_80e766c6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "All of these numbers look suspect.\nAfter an AC cycle on my system, and left to idle for a few minutes I get, with patch 4 to output decimal values:\nTotal Bytes Received: 0\nTotal Bytes Transmitted: 3135326126080\nTotal Unicast Packet Received: 23875723198464\nTotal Multicast Packet Received: 4294967296\nTotal Broadcast Packet Received: 0\nTotal Unicast Packet Transmitted: 25769803776\nTotal Multicast Packet Transmitted: 0\nTotal Broadcast Packet Transmitted: 188978561024\n\nThere\u0027s really no way these values can be accurate in the space of 4 to 5 minutes on a basically idle interface.",
       "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -31,6 +82,23 @@
       "writtenOn": "2024-07-18T06:36:30Z",
       "side": 1,
       "message": "Hi Patrick,\n\nThanks for reviewing the code. I have incorporated the comments. I will remove the short option.\n\nBest Regards,\nsharanu.k",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3cb0cad0_c0fb5a10",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "Here are some observations regarding the current state of the commit.",
       "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -54,6 +122,41 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "23787b30_98a5b35a",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "+1\nThis is not needed",
+      "parentUuid": "2388787a_e4bb39c4",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6ba192a_76430903",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "remove extraneous blank lines",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d97555f7_6e1950e1",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 4
@@ -65,6 +168,91 @@
       "writtenOn": "2024-07-18T22:00:01Z",
       "side": 1,
       "message": "?",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa1478e2_69f5d9d6",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "Is this temporary?\nThis appears to be co-opting the SendOEM command packet handler.",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a740d727_2aa54650",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "remove blank line",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97e729f1_6892e115",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "I agree with Patrick, these should all be displayed in decimal.",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4e49f2e_49b01f85",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "inconsistent formatting.\nThis line uses \":\"\nmost others use \": \"\nfavor the latter.",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2c676d7_2a7a27f4",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "Please follow definition format from linux/ncsi.h\nNCSI_CMD_GET_CONTROLLER_PACKET_STATISTICS",
       "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -88,6 +276,41 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "667aae7d_5c6765cc",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "Isn\u0027t snake case frowned upon?\nCamel case is found in all other struct definitions",
+      "parentUuid": "2106870b_c71563dd",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47d4c799_769c6be6",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "This data structure appears to be missing the response code and the reason code. With these entries in place the packet trans/recv numbers look more sensible than the code as submitted.",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "730126e1_92bb4a8f",
         "filename": "src/ncsi_util.hpp",
         "patchSetId": 4
@@ -99,6 +322,24 @@
       "writtenOn": "2024-07-18T22:00:01Z",
       "side": 1,
       "message": "Is there a pointer to a spec we should add here?  DSPxxxx , section yy.zz?",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18bd25ab_e44cbdce",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-19T18:20:28Z",
+      "side": 1,
+      "message": "DSP0222 NCSI Spec 8.4.50",
+      "parentUuid": "730126e1_92bb4a8f",
       "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
