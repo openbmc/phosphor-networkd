@@ -9,6 +9,10 @@ namespace network
 namespace ncsi
 {
 
+//NCSI RESPONSE PACKET TYPE
+//Response packet type for Get Link Status
+#define NCSI_CMD_GET_LINK_STATUS_RESP 0x8a
+
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
 
@@ -57,6 +61,43 @@ int clearInterface(int ifindex);
  * @returns 0 on success and negative value for failure.
  */
 int getInfo(int ifindex, int package);
+
+/* @brief  This function will ask underlying NCSI driver
+ *         to send an NCSI control packet type
+ *         with the specified payload as data.
+ *         This function talks with the NCSI driver over
+ *         netlink messages.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] channel - Channel number with in the package.
+ * @param[in] ncsiCntl- NCSI control packet type
+ * @param[in] payload - data to send.
+ * @returns 0 on success and negative value for failure.
+ */
+int sendControlPacket(int ifindex, int package, int channel, int ncsiCntl,
+                      std::span<const unsigned char> payload);
+
+/* @brief  This function is used to print the NCSI
+ *         Response for particular response packet
+ *         type
+ * @param[in] ncsiRespType - NCSI Response packet type.
+ * @param[in] ncsiRespLen - NCSI Response Message length..
+ * @param[in] respBuf - NCSI response buffer.
+ * @returns 0 on success and negative value for failure.
+ */
+int printNCSIResponse(int ncsiRespType, int ncsiRespLen, unsigned char* respBuf);
+
+/* @brief  This function is used to print the NCSI
+ *         Response and Reason completion codes
+ * @param[in] respBufCode - NCSI response buffer.
+ */
+void printCompletionCodes(unsigned char* respBufCode);
+
+/* @brief  This function is used to print the NCSI
+ *         Link status related info
+ * @param[in] msgdata - NCSI response message data.
+ */
+void printLinkStatus(unsigned char* msgdata);
 
 } // namespace ncsi
 } // namespace network
