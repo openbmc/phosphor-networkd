@@ -95,8 +95,8 @@ EthernetInterface::EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                                      std::string&& objPath,
                                      const config::Parser& config,
                                      bool enabled) :
-    Ifaces(bus, objPath.c_str(), Ifaces::action::defer_emit),
-    manager(manager), bus(bus), objPath(std::move(objPath))
+    Ifaces(bus, objPath.c_str(), Ifaces::action::defer_emit), manager(manager),
+    bus(bus), objPath(std::move(objPath))
 {
     interfaceName(*info.intf.name, true);
     auto dhcpVal = getDHCPValue(config);
