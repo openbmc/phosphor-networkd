@@ -157,6 +157,10 @@ int main(int argc, char** argv)
     {
         return ncsi::clearInterface(indexInt);
     }
+    else if ((options)["link-status"] == "true")
+    {
+        return ncsi::getLinkStatus(indexInt, packageInt, channelInt);
+    }
     else
     {
         exitWithError("No Command specified", argv);
