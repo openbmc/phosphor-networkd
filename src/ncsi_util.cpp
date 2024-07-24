@@ -57,6 +57,85 @@ struct NCSIPacketHeader
     uint32_t rsvd[2];
 };
 
+struct ncsiCompletionCodes
+{
+    uint16_t completionCodeResponse;
+    uint16_t completionCodeReason;
+};
+
+// Get Link Status Response Structure
+// DSP0222 NCSI Spec 8.4.24
+union linkStatus
+{
+    struct
+    {
+        uint32_t linkFlag:1;
+        uint32_t speedDuplex:4;
+        uint32_t autoNegotiateEn:1;
+        uint32_t autoNegoationComplete:1;
+        uint32_t parallelDetection:1;
+        uint32_t rsvd:1;
+        uint32_t linkPartner1000FullDuplex:1;
+        uint32_t linkPartner1000HalfDuplex:1;
+        uint32_t linkPartner100T4:1;
+        uint32_t linkPartner100FullDuplex:1;
+        uint32_t linkPartner100HalfDuplex:1;
+        uint32_t linkPartner10FullDuplex:1;
+        uint32_t linkPartner10HalfDuplex:1;
+        uint32_t txFlowControl:1;
+        uint32_t rxFlowControl:1;
+        uint32_t linkPartnerFlowControl:2;
+        uint32_t serdes:1;
+        uint32_t oemLinkSpeedValid:1;
+        uint32_t modulationScheme:2;
+        uint32_t extSpeedDuplex:8;
+    } bits;
+    uint32_t link;
+};
+
+union otherIndications
+{
+    struct
+    {
+        uint32_t hostNCDriverStatus:1;
+        uint32_t rsvd:31;
+    } bits;
+    uint32_t other;
+};
+
+struct getLinkStatusResponse
+{
+    NCSIPacketHeader linkRespHdr;
+    ncsiCompletionCodes linkStatCodes;
+    linkStatus linkStat;
+    otherIndications othInd;
+    uint32_t oemLinkStatus;
+};
+
+constexpr std::array<const char*, 21> linkSpeedString = {
+    "n/a",
+    "10BASE-T half-duplex",
+    "10BASE-T full-duplex",
+    "100BASE-TX half-duplex",
+    "100BASE-T4",
+    "100BASE-TX full-duplex",
+    "1000BASE-T half-duplex",
+    "1000BASE-T full-duplex",
+    "10Gbps",
+    "20Gbps",
+    "25Gbps",
+    "40Gbps",
+    "50Gbps",
+    "100Gbps",
+    "2.5Gbps",
+    "5Gbps",
+    "1Gbps (non BASE-T)",
+    "200Gbps",
+    "400Gbps",
+    "800Gbps",
+    "reserved",
+};
+
 class Command
 {
   public:
@@ -80,6 +159,210 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+void printLinkStatus(const getLinkStatusResponse* linkRcv)
+{
+    unsigned int speed_duplex;
+    linkStatus linkstatus;
+
+    lg2::debug("NCSI Response Code : {RESPONSE_CODE}", "RESPONSE_CODE",
+               lg2::hex, linkRcv->linkStatCodes.completionCodeResponse);
+    lg2::debug("NCSI Reason Code : {REASON_CODE}", "REASON_CODE", lg2::hex,
+               linkRcv->linkStatCodes.completionCodeReason);
+
+    linkstatus.link = linkRcv->linkStat.link;
+
+    if (linkstatus.bits.linkFlag)
+    {
+        lg2::debug("Link Status : Link is Up");
+    }
+    else
+    {
+        lg2::debug("Link Status : Link is Down");
+    }
+
+    speed_duplex = (linkstatus.bits.speedDuplex == useExt)
+                       ? linkstatus.bits.extSpeedDuplex
+                       : linkstatus.bits.speedDuplex;
+
+    auto speedInd = std::find_if(linkSpeedString.begin(), linkSpeedString.end(),
+                                 [speed_duplex](const char*) {
+        return speed_duplex < linkSpeedString.size();
+    });
+
+    if (speedInd == linkSpeedString.end())
+    {
+        lg2::debug("Speed and duplex : unknown");
+    }
+    else
+    {
+        lg2::debug("Speed and duplex : {SPEED_DUPLEX_STR}", "SPEED_DUPLEX_STR",
+                   linkSpeedString[speed_duplex]);
+    }
+
+    if (linkstatus.bits.autoNegotiateEn)
+    {
+        lg2::debug("Auto-negotiation : Enabled");
+        if (linkstatus.bits.autoNegoationComplete)
+        {
+            lg2::debug("Auto-negotiation completed : Yes");
+        }
+        else
+        {
+            lg2::debug("Auto-negotiation completed : No");
+        }
+    }
+    else
+    {
+        lg2::debug("Auto-negotiation : Disabled");
+    }
+
+    if (linkstatus.bits.parallelDetection)
+    {
+        lg2::debug("Parallel Detection : Used");
+    }
+    else
+    {
+        lg2::debug("Parallel Detection : Not used");
+    }
+
+    if (linkstatus.bits.txFlowControl)
+    {
+        lg2::debug("TX Flow Control : Enabled");
+    }
+    else
+    {
+        lg2::debug("TX Flow Control : Disabled");
+    }
+
+    if (linkstatus.bits.rxFlowControl)
+    {
+        lg2::debug("RX Flow Control : Enabled");
+    }
+    else
+    {
+        lg2::debug("RX Flow Control : Disabled");
+    }
+
+    if (linkstatus.bits.serdes)
+    {
+        lg2::debug("SerDes Status : Used as Direct attach interface");
+    }
+    else
+    {
+        lg2::debug("SerDes Status : Not used/used to connect ext PHY");
+    }
+
+    if (linkstatus.bits.oemLinkSpeedValid)
+    {
+        lg2::debug("OEM Link Speed setting : Valid");
+    }
+    else
+    {
+        lg2::debug("OEM Link Speed setting : Invalid");
+    }
+
+    if (linkstatus.bits.modulationScheme == useNRZ)
+    {
+        lg2::debug("Modulation Scheme : NRZ");
+    }
+    else if (linkstatus.bits.modulationScheme == usePAMFour)
+    {
+        lg2::debug("Modulation Scheme : PAM4");
+    }
+    else
+    {
+        lg2::debug("Modulation Scheme : unknown");
+    }
+
+    if (!linkstatus.bits.serdes
+        && linkstatus.bits.autoNegotiateEn
+        && linkstatus.bits.autoNegoationComplete)
+    {
+        lg2::debug("Link Partner Advertised Settings :");
+        if (linkstatus.bits.linkPartner1000FullDuplex)
+        {
+            lg2::debug("    Speed and Duplex 1000TFD : capable");
+        }
+        else
+        {
+            lg2::debug("    Speed and Duplex 1000TFD : Not capable");
+        }
+
+        if (linkstatus.bits.linkPartner1000HalfDuplex)
+        {
+            lg2::debug("    Speed and Duplex 1000THD : capable");
+        }
+        else
+        {
+            lg2::debug("    Speed and Duplex 1000THD : Not capable");
+        }
+
+        if (linkstatus.bits.linkPartner100T4)
+        {
+            lg2::debug("    Speed and Duplex 100T4 : capable");
+        }
+        else
+        {
+            lg2::debug("    Speed and Duplex 100T4 : Not capable");
+        }
+
+        if (linkstatus.bits.linkPartner100FullDuplex)
+        {
+            lg2::debug("    Speed and Duplex 100TXFD : capable");
+        }
+        else
+        {
+            lg2::debug("    Speed and Duplex 100TXFD : Not capable");
+        }
+
+        if (linkstatus.bits.linkPartner100HalfDuplex)
+        {
+            lg2::debug("    Speed and Duplex 100TXHD : capable");
+        }
+        else
+        {
+            lg2::debug("    Speed and Duplex 100TXHD : Not capable");
+        }
+
+        if (linkstatus.bits.linkPartner10FullDuplex)
+        {
+            lg2::debug("    Speed and Duplex 10TFD : capable");
+        }
+        else
+        {
+            lg2::debug("    Speed and Duplex 10TFD : Not capable");
+        }
+
+        if (linkstatus.bits.linkPartner10HalfDuplex)
+        {
+            lg2::debug("    Speed and Duplex 10THD : capable");
+        }
+        else
+        {
+            lg2::debug("    Speed and Duplex 10THD : Not capable");
+        }
+
+
+        if (linkstatus.bits.linkPartnerFlowControl == useSym)
+        {
+            lg2::debug("    LinkPartner FlowControl : symmetric");
+        }
+        else if (linkstatus.bits.linkPartnerFlowControl == useAsym)
+        {
+            lg2::debug("    LinkPartner FlowControl : asymmetric");
+        }
+        else if (linkstatus.bits.linkPartnerFlowControl == useSymAsym)
+        {
+            lg2::debug("    LinkPartner FlowControl : symmetric/asymmetric");
+        }
+        else
+        {
+            lg2::debug("    LinkPartner FlowControl : Not capable");
+        }
+    }
+    return;
+}
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -265,6 +548,52 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
 
+    return 0;
+};
+
+CallBack linkStatusCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    getLinkStatusResponse* linkResp =
+        (getLinkStatusResponse*)nla_data(tb[NCSI_ATTR_DATA]);
+    lg2::debug("NCSI Response packet type : {RESPONSE_PKT_TYPE}",
+               "RESPONSE_PKT_TYPE", lg2::hex, linkResp->linkRespHdr.type);
+
+    auto respHdrLen = htons(linkResp->linkRespHdr.length);
+    lg2::debug("NCSI Response length : {RESPONSE_LEN}", "RESPONSE_LEN",
+               lg2::hex, respHdrLen);
+
+    // Convert link status response to Host Endianess
+    linkResp->linkStatCodes.completionCodeResponse =
+        ntohl(linkResp->linkStatCodes.completionCodeResponse);
+    linkResp->linkStatCodes.completionCodeReason =
+        ntohl(linkResp->linkStatCodes.completionCodeReason);
+    linkResp->linkStat.link = ntohl(linkResp->linkStat.link);
+
+    printLinkStatus(static_cast<const getLinkStatusResponse*>(linkResp));
     return 0;
 };
 
@@ -456,6 +785,19 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int getLinkStatus(int ifindex, int package, int channel)
+{
+    lg2::debug("Send NCSI Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
+               "INTERFACE_INDEX: {INTERFACE_INDEX}",
+               "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
+               "INTERFACE_INDEX", lg2::hex, ifindex);
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                          NCSI_CMD_GET_LINK_STATUS),
+        package, channel, NONE, internal::linkStatusCallBack);
 }
 
 } // namespace ncsi
