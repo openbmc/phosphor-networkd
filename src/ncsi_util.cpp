@@ -57,6 +57,83 @@ struct NCSIPacketHeader
     uint32_t rsvd[2];
 };
 
+struct ncsiCompletionCodes
+{
+    uint16_t completionCodeResponse;
+    uint16_t completionCodeReason;
+};
+
+// Get Link Status Response Structure
+// DSP0222 NCSI Spec 8.4.24
+union linkStatus
+{
+    struct
+    {
+        uint32_t linkFlag:1;
+        uint32_t speedDuplex:4;
+        uint32_t autoNegotiateEn:1;
+        uint32_t autoNegoationComplete:1;
+        uint32_t parallelDetection:1;
+        uint32_t rsvd:1;
+        uint32_t linkPartner1000FullDuplex:1;
+        uint32_t linkPartner1000HalfDuplex:1;
+        uint32_t linkPartner100T4:1;
+        uint32_t linkPartner100FullDuplex:1;
+        uint32_t linkPartner100HalfDuplex:1;
+        uint32_t linkPartner10FullDuplex:1;
+        uint32_t linkPartner10HalfDuplex:1;
+        uint32_t txFlowControl:1;
+        uint32_t rxFlowControl:1;
+        uint32_t linkPartnerFlowControl:2;
+        uint32_t serdes:1;
+        uint32_t oemLinkSpeedValid:1;
+        uint32_t modulationScheme:2;
+        uint32_t extSpeedDuplex:8;
+    } bits;
+    uint32_t link;
+};
+
+union otherIndications
+{
+    struct
+    {
+        uint32_t hostNCDriverStatus:1;
+        uint32_t rsvd:31;
+    } bits;
+    uint32_t other;
+};
+
+struct getLinkStatusResponse
+{
+    linkStatus linkStat;
+    otherIndications othInd;
+    uint32_t oemLinkStatus;
+};
+
+const char* linkSpeedString[] = {
+    "n/a",
+    "10BASE-T half-duplex",
+    "10BASE-T full-duplex",
+    "100BASE-TX half-duplex",
+    "100BASE-T4",
+    "100BASE-TX full-duplex",
+    "1000BASE-T half-duplex",
+    "1000BASE-T full-duplex",
+    "10Gbps",
+    "20Gbps",
+    "25Gbps",
+    "40Gbps",
+    "50Gbps",
+    "100Gbps",
+    "2.5Gbps",
+    "5Gbps",
+    "1Gbps (non BASE-T)",
+    "200Gbps",
+    "400Gbps",
+    "800Gbps",
+    "reserved",
+};
+
 class Command
 {
   public:
@@ -80,6 +157,80 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+void printCompletionCodes(unsigned char* respBufCode)
+{
+    uint8_t* codeBuf = respBufCode;
+    struct ncsiCompletionCodes code;
+
+    code.completionCodeResponse = (codeBuf[0] << 8) + codeBuf[1];
+    code.completionCodeReason = (codeBuf[2] << 8) + codeBuf[3];
+
+    lg2::debug("NCSI Response Code : {RESPONSE_CODE}", "RESPONSE_CODE",
+               lg2::hex, code.completionCodeResponse);
+    lg2::debug("NCSI Reason Code : {REASON_CODE}", "REASON_CODE", lg2::hex,
+               code.completionCodeReason);
+    return;
+}
+
+void printLinkStatus(unsigned char* msgdata)
+{
+    int speed_duplex;
+    getLinkStatusResponse* plink = (getLinkStatusResponse*)(msgdata);
+
+    linkStatus linkstatus;
+    linkstatus.link = ntohl(plink->linkStat.link);
+
+    if (linkstatus.bits.linkFlag)
+    {
+        lg2::debug("Link Status : Link is Up");
+    }
+    else
+    {
+        lg2::debug("Link Status : Link is Down");
+    }
+
+    if (linkstatus.bits.speedDuplex < 0xf)
+    {
+        speed_duplex = linkstatus.bits.speedDuplex;
+    }
+    else
+    {
+        speed_duplex = linkstatus.bits.extSpeedDuplex;
+    }
+
+    if ((speed_duplex < 0) || (linkSpeedString[speed_duplex] == NULL))
+    {
+        lg2::debug("Speed and duplex : unknown");
+    }
+    else
+    {
+        lg2::debug("Speed and duplex : {SPEED_DUPLEX_STR}", "SPEED_DUPLEX_STR",
+                   linkSpeedString[speed_duplex]);
+    }
+    return;
+}
+
+int printNCSIResponse(int ncsiRespType, int ncsiRespLen, unsigned char* respBuf)
+{
+    unsigned char* ncsiMsgData = respBuf + sizeof(ncsiCompletionCodes);
+
+    printCompletionCodes(respBuf);
+
+    switch (ncsiRespType)
+    {
+        case NCSI_CMD_GET_LINK_STATUS_RESP:
+            printLinkStatus(ncsiMsgData);
+            break;
+        default:
+            // Dump the response to stdout.
+            auto str = toHexStr(
+                std::span<const unsigned char>(ncsiMsgData, ncsiRespLen));
+            lg2::debug("Command Specific Response {DATA_LEN} bytes: {DATA}",
+                       "DATA_LEN", ncsiRespLen, "DATA", str);
+    }
+    return 0;
+}
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -266,6 +417,50 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
                "DATA", str);
 
     return 0;
+};
+
+CallBack sendCntrlCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    NCSIPacketHeader* ncsiRespHdr =
+        (NCSIPacketHeader*)nla_data(tb[NCSI_ATTR_DATA]);
+
+    lg2::debug("NCSI Response packet type : {RESPONSE_PKT_TYPE}",
+               "RESPONSE_PKT_TYPE", lg2::hex, ncsiRespHdr->type);
+
+    auto respHdrLen = htons(ncsiRespHdr->length);
+    lg2::debug("NCSI Response length : {RESPONSE_LEN}", "RESPONSE_LEN",
+               lg2::hex, respHdrLen);
+
+    // Below data points to ncsi response
+    // [completion codes + command specific response]
+    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) +
+                          sizeof(NCSIPacketHeader);
+
+    return printNCSIResponse(ncsiRespHdr->type, respHdrLen, data);
 };
 
 int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
@@ -456,6 +651,25 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int sendControlPacket(int ifindex, int package, int channel, int ncsiCntl,
+                      std::span<const unsigned char> payload)
+{
+    lg2::debug("Send NCSI Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
+               "INTERFACE_INDEX: {INTERFACE_INDEX}",
+               "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
+               "INTERFACE_INDEX", lg2::hex, ifindex);
+    if (!payload.empty())
+    {
+        lg2::debug("Payload: {PAYLOAD}", "PAYLOAD", toHexStr(payload));
+    }
+
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, ncsiCntl,
+                          payload),
+        package, channel, NONE, internal::sendCntrlCallBack);
 }
 
 } // namespace ncsi

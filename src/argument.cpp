@@ -88,6 +88,8 @@ void ArgumentParser::usage(char** argv)
            "         ncsi-netlink -x 3 -p 0 -r\n"
            "    5) Send NCSI Command\n"
            "         ncsi-netlink -x 3 -p 0 -c 0 -o 50000001572100\n"
+           "    6) Get Link Status\n"
+           "         ncsi-netlink -x 2 -p 0 -c 0 0x0a\n"
            "\n";
 }
 
