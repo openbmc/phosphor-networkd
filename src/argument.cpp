@@ -75,6 +75,7 @@ void ArgumentParser::usage(char** argv)
            "    --info  | -i      Retrieve info about NCSI topology.\n"
            "    --set   | -s      Set a specific package/channel.\n"
            "    --clear | -r      Clear all the settings on the interface.\n"
+           "    --link-status | -l      Get link status.\n"
            "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n"
            "\n"
            "Example commands:\n"
@@ -88,6 +89,8 @@ void ArgumentParser::usage(char** argv)
            "         ncsi-netlink -x 3 -p 0 -r\n"
            "    5) Send NCSI Command\n"
            "         ncsi-netlink -x 3 -p 0 -c 0 -o 50000001572100\n"
+           "    6) Get Link Status\n"
+           "         ncsi-netlink -x 2 -p 0 -c 0 -l\n"
            "\n";
 }
 
@@ -95,6 +98,7 @@ const option ArgumentParser::options[] = {
     {"info", no_argument, NULL, 'i'},
     {"set", no_argument, NULL, 's'},
     {"clear", no_argument, NULL, 'r'},
+    {"link-status", no_argument, NULL, 'l'},
     {"oem-payload", required_argument, NULL, 'o'},
     {"package", required_argument, NULL, 'p'},
     {"channel", required_argument, NULL, 'c'},
@@ -103,7 +107,7 @@ const option ArgumentParser::options[] = {
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsx:o:p:c:h?";
+const char* ArgumentParser::optionStr = "irslx:o:p:c:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";

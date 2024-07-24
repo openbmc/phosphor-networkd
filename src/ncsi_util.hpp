@@ -9,6 +9,12 @@ namespace network
 namespace ncsi
 {
 
+// NCSI PACKET TYPE
+// Control packet type for Get Link Status
+#define NCSI_CMD_GET_LINK_STATUS 0x0a
+// Response packet type for Get Link Status
+#define NCSI_CMD_GET_LINK_STATUS_RESP 0x8a
+
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
 
@@ -57,6 +63,23 @@ int clearInterface(int ifindex);
  * @returns 0 on success and negative value for failure.
  */
 int getInfo(int ifindex, int package);
+
+/* @brief  This function will ask underlying NCSI driver
+ *         to get info on link status and other flags.
+ *         This function talks with the NCSI driver over
+ *         netlink messages.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] channel - Channel number with in the package.
+ * @returns 0 on success and negative value for failure.
+ */
+int getLinkStatus(int ifindex, int package, int channel);
+
+/* @brief  This function is used to print the NCSI
+ *         Link status related info
+ * @param[in] msgdata - NCSI response message data.
+ */
+void printLinkStatus(unsigned char* msgdata);
 
 } // namespace ncsi
 } // namespace network
