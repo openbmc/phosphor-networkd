@@ -20,6 +20,10 @@ namespace network
 namespace ncsi
 {
 
+// NCSI PACKET TYPE
+// Control packet type for Get Link Status
+static constexpr auto ncsiCmdGetLinkStatus = 0x0a;
+
 using CallBack = int (*)(struct nl_msg* msg, void* arg);
 
 static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
@@ -45,6 +49,14 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 namespace internal
 {
 
+// Link status bit fields
+static constexpr auto useExt = 0xf;
+static constexpr auto useNRZ = 1;
+static constexpr auto usePAMFour = 2;
+static constexpr auto useSym = 1;
+static constexpr auto useAsym = 2;
+static constexpr auto useSymAsym = 3;
+
 struct NCSIPacketHeader
 {
     uint8_t MCID;
@@ -55,6 +67,69 @@ struct NCSIPacketHeader
     uint8_t channel;
     uint16_t length;
     uint32_t rsvd[2];
+};
+
+struct ncsiCompletionCodes
+{
+    uint16_t completionCodeResponse;
+    uint16_t completionCodeReason;
+};
+
+// Get Link Status Response
+// DSP0222 NCSI Spec 8.4.24
+
+// Link status bits mask
+static constexpr auto linkFlagMask = 0x00000001;
+static constexpr auto speedDuplexMask = 0x0000001E;
+static constexpr auto autoNegotiateEnMask = 0x00000020;
+static constexpr auto autoNegoationCompleteMask = 0x00000040;
+static constexpr auto parallelDetectionMask = 0x00000080;
+static constexpr auto linkPartner1000FullDuplexMask = 0x00000200;
+static constexpr auto linkPartner1000HalfDuplexMask = 0x00000400;
+static constexpr auto linkPartner100T4Mask = 0x00000800;
+static constexpr auto linkPartner100FullDuplexMask = 0x00001000;
+static constexpr auto linkPartner100HalfDuplexMask = 0x00002000;
+static constexpr auto linkPartner10FullDuplexMask = 0x00004000;
+static constexpr auto linkPartner10HalfDuplexMask = 0x00008000;
+static constexpr auto txFlowControlMask = 0x00010000;
+static constexpr auto rxFlowControlMask = 0x00020000;
+static constexpr auto linkPartnerFlowControlMask = 0x000C0000;
+static constexpr auto serdesMask = 0x00100000;
+static constexpr auto oemLinkSpeedValidMask = 0x00200000;
+static constexpr auto modulationSchemeMask = 0x00C00000;
+static constexpr auto extSpeedDuplexMask = 0xFF000000;
+
+struct getLinkStatusResponse
+{
+    NCSIPacketHeader linkRespHdr;
+    ncsiCompletionCodes linkStatCodes;
+    uint32_t linkStatus;
+    uint32_t otherIndications;
+    uint32_t oemLinkStatus;
+};
+
+constexpr std::array<const char*, 21> linkSpeedString = {
+    "n/a",
+    "10BASE-T half-duplex",
+    "10BASE-T full-duplex",
+    "100BASE-TX half-duplex",
+    "100BASE-T4",
+    "100BASE-TX full-duplex",
+    "1000BASE-T half-duplex",
+    "1000BASE-T full-duplex",
+    "10Gbps",
+    "20Gbps",
+    "25Gbps",
+    "40Gbps",
+    "50Gbps",
+    "100Gbps",
+    "2.5Gbps",
+    "5Gbps",
+    "1Gbps (non BASE-T)",
+    "200Gbps",
+    "400Gbps",
+    "800Gbps",
+    "reserved",
 };
 
 class Command
@@ -79,6 +154,186 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+unsigned int getFirstSetBitPos(unsigned int num)
+{
+    unsigned int bitIndex = 0;
+    for (int i = 0; num != 0; i++)
+    {
+        if (num & (1 << i))
+        {
+            bitIndex = i;
+            break;
+        }
+    }
+    return bitIndex;
+}
+
+void printLinkStatus(const getLinkStatusResponse* linkRcv)
+{
+    unsigned int speed_duplex;
+
+    lg2::debug("NCSI Response Code : {RESPONSE_CODE}", "RESPONSE_CODE",
+               lg2::hex, linkRcv->linkStatCodes.completionCodeResponse);
+    lg2::debug("NCSI Reason Code : {REASON_CODE}", "REASON_CODE", lg2::hex,
+               linkRcv->linkStatCodes.completionCodeReason);
+
+    lg2::debug("Link Status : Link is {UP_DOWN}", "UP_DOWN",
+               (linkRcv->linkStatus & linkFlagMask) >>
+                       getFirstSetBitPos(linkFlagMask)
+                   ? "Up"
+                   : "Down");
+
+    speed_duplex = (((linkRcv->linkStatus & speedDuplexMask) >>
+                     getFirstSetBitPos(speedDuplexMask)) == useExt)
+                       ? (linkRcv->linkStatus & extSpeedDuplexMask) >>
+                             getFirstSetBitPos(extSpeedDuplexMask)
+                       : (linkRcv->linkStatus & speedDuplexMask) >>
+                             getFirstSetBitPos(speedDuplexMask);
+
+    auto speedInd =
+        std::find_if(linkSpeedString.begin(), linkSpeedString.end(),
+                     [speed_duplex](const char*) {
+                         return speed_duplex < linkSpeedString.size();
+                     });
+
+    lg2::debug("Speed and duplex : {SPEED_DUPLEX_STR}", "SPEED_DUPLEX_STR",
+               (speedInd == linkSpeedString.end())
+                   ? "Unknown"
+                   : linkSpeedString[speed_duplex]);
+
+    if ((linkRcv->linkStatus & autoNegotiateEnMask) >>
+        getFirstSetBitPos(autoNegotiateEnMask))
+    {
+        lg2::debug("Auto-negotiation : Enabled");
+        lg2::debug("Auto-negotiation completed : {YES_NO}", "YES_NO",
+                   (linkRcv->linkStatus & autoNegoationCompleteMask) >>
+                           getFirstSetBitPos(autoNegoationCompleteMask)
+                       ? "Yes"
+                       : "No");
+    }
+    else
+    {
+        lg2::debug("Auto-negotiation : Disabled");
+    }
+
+    lg2::debug("Parallel Detection : {USED_NOTUSED}", "USED_NOTUSED",
+               (linkRcv->linkStatus & parallelDetectionMask) >>
+                       getFirstSetBitPos(parallelDetectionMask)
+                   ? "Used"
+                   : "Not used");
+
+    lg2::debug("TX Flow Control : {ENABLE_DISABLE}", "ENABLE_DISABLE",
+               (linkRcv->linkStatus & txFlowControlMask) >>
+                       getFirstSetBitPos(txFlowControlMask)
+                   ? "Enabled"
+                   : "Disabled");
+
+    lg2::debug("RX Flow Control : {ENABLE_DISABLE}", "ENABLE_DISABLE",
+               (linkRcv->linkStatus & rxFlowControlMask) >>
+                       getFirstSetBitPos(rxFlowControlMask)
+                   ? "Enabled"
+                   : "Disabled");
+
+    lg2::debug("SerDes Status : {USED_NOTUSED}", "USED_NOTUSED",
+               (linkRcv->linkStatus & serdesMask) >>
+                       getFirstSetBitPos(serdesMask)
+                   ? "Used as Direct attach interface"
+                   : "Not used/used to connect ext PHY");
+
+    lg2::debug("OEM Link Speed setting : {VALID_INVALID}", "VALID_INVALID",
+               (linkRcv->linkStatus & oemLinkSpeedValidMask) >>
+                       getFirstSetBitPos(oemLinkSpeedValidMask)
+                   ? "Valid"
+                   : "Invalid");
+
+    if (((linkRcv->linkStatus & modulationSchemeMask) >>
+         getFirstSetBitPos(modulationSchemeMask)) == useNRZ)
+    {
+        lg2::debug("Modulation Scheme : NRZ");
+    }
+    else if (((linkRcv->linkStatus & modulationSchemeMask) >>
+              getFirstSetBitPos(modulationSchemeMask)) == usePAMFour)
+    {
+        lg2::debug("Modulation Scheme : PAM4");
+    }
+    else
+    {
+        lg2::debug("Modulation Scheme : Unknown");
+    }
+
+    if (!((linkRcv->linkStatus & serdesMask) >>
+          getFirstSetBitPos(serdesMask)) &&
+        ((linkRcv->linkStatus & autoNegotiateEnMask) >>
+         getFirstSetBitPos(autoNegotiateEnMask)) &&
+        (linkRcv->linkStatus & autoNegoationCompleteMask) >>
+            getFirstSetBitPos(autoNegoationCompleteMask))
+    {
+        lg2::debug("Link Partner Advertised Settings :");
+        lg2::debug("    Speed and Duplex 1000TFD : {CAPABILITY}", "CAPABILITY",
+                   (linkRcv->linkStatus & linkPartner1000FullDuplexMask) >>
+                           getFirstSetBitPos(linkPartner1000FullDuplexMask)
+                       ? "Capable"
+                       : "Not capable");
+
+        lg2::debug("    Speed and Duplex 1000THD : {CAPABILITY}", "CAPABILITY",
+                   (linkRcv->linkStatus & linkPartner1000HalfDuplexMask) >>
+                           getFirstSetBitPos(linkPartner1000HalfDuplexMask)
+                       ? "Capable"
+                       : "Not capable");
+
+        lg2::debug("    Speed and Duplex 100T4 : {CAPABILITY}", "CAPABILITY",
+                   (linkRcv->linkStatus & linkPartner100T4Mask) >>
+                           getFirstSetBitPos(linkPartner100T4Mask)
+                       ? "Capable"
+                       : "Not capable");
+
+        lg2::debug("    Speed and Duplex 100TXFD : {CAPABILITY}", "CAPABILITY",
+                   (linkRcv->linkStatus & linkPartner100FullDuplexMask) >>
+                           getFirstSetBitPos(linkPartner100FullDuplexMask)
+                       ? "Capable"
+                       : "Not capable");
+
+        lg2::debug("    Speed and Duplex 100TXHD : {CAPABILITY}", "CAPABILITY",
+                   (linkRcv->linkStatus & linkPartner100HalfDuplexMask) >>
+                           getFirstSetBitPos(linkPartner100HalfDuplexMask)
+                       ? "Capable"
+                       : "Not capable");
+
+        lg2::debug("    Speed and Duplex 10TFD : {CAPABILITY}", "CAPABILITY",
+                   (linkRcv->linkStatus & linkPartner10FullDuplexMask) >>
+                           getFirstSetBitPos(linkPartner10FullDuplexMask)
+                       ? "Capable"
+                       : "Not capable");
+
+        lg2::debug("    Speed and Duplex 10THD : {CAPABILITY}", "CAPABILITY",
+                   (linkRcv->linkStatus & linkPartner10HalfDuplexMask) >>
+                           getFirstSetBitPos(linkPartner10HalfDuplexMask)
+                       ? "Capable"
+                       : "Not capable");
+
+        if (((linkRcv->linkStatus & linkPartnerFlowControlMask) >>
+             getFirstSetBitPos(linkPartnerFlowControlMask)) == useSym)
+        {
+            lg2::debug("    LinkPartner FlowControl : Symmetric");
+        }
+        else if (((linkRcv->linkStatus & linkPartnerFlowControlMask) >>
+                  getFirstSetBitPos(linkPartnerFlowControlMask)) == useAsym)
+        {
+            lg2::debug("    LinkPartner FlowControl : Asymmetric");
+        }
+        else if (((linkRcv->linkStatus & linkPartnerFlowControlMask) >>
+                  getFirstSetBitPos(linkPartnerFlowControlMask)) == useSymAsym)
+        {
+            lg2::debug("    LinkPartner FlowControl : Symmetric/Asymmetric");
+        }
+        else
+        {
+            lg2::debug("    LinkPartner FlowControl : Not capable");
+        }
+    }
+    return;
+}
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -264,6 +519,52 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
 
+    return 0;
+};
+
+CallBack linkStatusCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    getLinkStatusResponse* linkResp =
+        (getLinkStatusResponse*)nla_data(tb[NCSI_ATTR_DATA]);
+    lg2::debug("NCSI Response packet type : {RESPONSE_PKT_TYPE}",
+               "RESPONSE_PKT_TYPE", lg2::hex, linkResp->linkRespHdr.type);
+
+    auto respHdrLen = htons(linkResp->linkRespHdr.length);
+    lg2::debug("NCSI Response length : {RESPONSE_LEN}", "RESPONSE_LEN",
+               lg2::hex, respHdrLen);
+
+    // Convert link status response to Host Endianess
+    linkResp->linkStatCodes.completionCodeResponse =
+        ntohl(linkResp->linkStatCodes.completionCodeResponse);
+    linkResp->linkStatCodes.completionCodeReason =
+        ntohl(linkResp->linkStatCodes.completionCodeReason);
+    linkResp->linkStatus = ntohl(linkResp->linkStatus);
+
+    printLinkStatus(static_cast<const getLinkStatusResponse*>(linkResp));
     return 0;
 };
 
@@ -455,6 +756,19 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int getLinkStatus(int ifindex, int package, int channel)
+{
+    lg2::debug("Send NCSI Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
+               "INTERFACE_INDEX: {INTERFACE_INDEX}",
+               "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
+               "INTERFACE_INDEX", lg2::hex, ifindex);
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                          ncsiCmdGetLinkStatus),
+        package, channel, NONE, internal::linkStatusCallBack);
 }
 
 } // namespace ncsi
