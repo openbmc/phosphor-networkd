@@ -9,8 +9,18 @@ namespace network
 namespace ncsi
 {
 
+// NCSI PACKET TYPE
+// Control packet type for Get Link Status
+#define NCSI_CMD_GET_LINK_STATUS 0x0a
+
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
+constexpr auto useExt = 0xf;
+constexpr auto useNRZ = 1;
+constexpr auto usePAMFour = 2;
+constexpr auto useSym = 1;
+constexpr auto useAsym = 2;
+constexpr auto useSymAsym = 3;
 
 /* @brief  This function will ask underlying NCSI driver
  *         to send an OEM command (command type 0x50) with
@@ -57,6 +67,17 @@ int clearInterface(int ifindex);
  * @returns 0 on success and negative value for failure.
  */
 int getInfo(int ifindex, int package);
+
+/* @brief  This function will ask underlying NCSI driver
+ *         to get info on link status and other flags.
+ *         This function talks with the NCSI driver over
+ *         netlink messages.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] channel - Channel number with in the package.
+ * @returns 0 on success and negative value for failure.
+ */
+int getLinkStatus(int ifindex, int package, int channel);
 
 } // namespace ncsi
 } // namespace network
