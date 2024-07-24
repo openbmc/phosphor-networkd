@@ -196,6 +196,9 @@ int main(int argc, char** argv)
             exitWithError("Channel mask value is not valid", argv);
         }
         return ncsi::setChannelMask(indexInt, packageInt, mask);
+    else if ((options)["link-status"] == "true")
+    {
+        return ncsi::getLinkStatus(indexInt, packageInt, channelInt);
     }
     else
     {

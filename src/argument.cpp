@@ -66,16 +66,17 @@ void ArgumentParser::usage(char** argv)
     std::cerr << "Usage: " << argv[0] << " [options]\n";
     std::cerr
         << "Options:\n"
-           "    --help | -h       Print this menu.\n"
+           "    --help | -h                                Print this menu.\n"
            "    --index=<device index> | -x <device index> Specify device ifindex.\n"
-           "    --package=<package> | -p <package> Specify a package.\n"
-           "    --channel=<channel> | -c <channel> Specify a channel.\n"
-           "    --info  | -i      Retrieve info about NCSI topology.\n"
-           "    --set   | -s      Set a specific package/channel.\n"
-           "    --clear | -r      Clear all the settings on the interface.\n"
-           "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n"
-           "    --pmask=<mask> | -j <mask> Bitmask to enable/disable packages\n"
-           "    --cmask=<mask> | -k <mask> Bitmask to enable/disable channels\n"
+           "    --package=<package> | -p <package>         Specify a package.\n"
+           "    --channel=<channel> | -c <channel>         Specify a channel.\n"
+           "    --info  | -i                               Retrieve info about NCSI topology.\n"
+           "    --set   | -s                               Set a specific package/channel.\n"
+           "    --clear | -r                               Clear all the settings on the interface.\n"
+           "    --pmask=<mask> | -j <mask>                 Bitmask to enable/disable packages\n"
+           "    --cmask=<mask> | -k <mask>                 Bitmask to enable/disable channels\n"
+           "    --link-status | -l                         Get link status.\n"
+           "    --oem-payload=<hexData..> | -o <hexData..> Send an OEM command with payload.\n"
            "\n"
            "Example commands:\n"
            "    1) Retrieve topology information:\n"
@@ -92,6 +93,8 @@ void ArgumentParser::usage(char** argv)
            "         ncsi-netlink -x 3 -j 1\n"
            "    7) Set Channel Mask\n"
            "         ncsi-netlink -x 3 -p 0 -k 1\n"
+           "    8) Get Link Status\n"
+           "         ncsi-netlink -x 2 -p 0 -c 0 -l\n"
            "\n";
 }
 
@@ -99,6 +102,7 @@ const option ArgumentParser::options[] = {
     {"info", no_argument, NULL, 'i'},
     {"set", no_argument, NULL, 's'},
     {"clear", no_argument, NULL, 'r'},
+    {"link-status", no_argument, NULL, 'l'},
     {"oem-payload", required_argument, NULL, 'o'},
     {"package", required_argument, NULL, 'p'},
     {"channel", required_argument, NULL, 'c'},
@@ -109,7 +113,7 @@ const option ArgumentParser::options[] = {
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsj:k:x:o:p:c:h?";
+const char* ArgumentParser::optionStr = "irslj:k:x:o:p:c:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
