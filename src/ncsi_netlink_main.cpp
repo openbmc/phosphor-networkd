@@ -159,7 +159,32 @@ int main(int argc, char** argv)
     }
     else
     {
-        exitWithError("No Command specified", argv);
+        // Capture NC-SI commands/control packet type
+        // Get Link Status ex: ncsi-netlink -x 2 -p 0 -c 0 0x0a
+        int ncsiCntl = (int)strtoul(argv[optind++], NULL, 0);
+
+        // As per NC-SI spec DSP0222_1_0_2
+        // Valid control packet type range from
+        // 0x00(clear init status),0x01 ....0x62
+        if (ncsiCntl <= 0x62)
+        {
+            std::vector<unsigned char> msgPayload;
+            int payloadLength = argc-optind;
+            int i;
+
+            for (i=0; i<payloadLength; ++i)
+            {
+                  msgPayload.push_back((int)strtoul(argv[i + optind], NULL, 0));
+            }
+
+            return ncsi::sendControlPacket(indexInt,
+                packageInt, channelInt, ncsiCntl,
+                std::span<const unsigned char>(msgPayload.begin(), msgPayload.end()));
+        }
+        else
+        {
+            exitWithError("No/Invalid(greater than 0x62) Command specified", argv);
+        }
     }
     return 0;
 }
