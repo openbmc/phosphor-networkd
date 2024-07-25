@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4f17f88_c58cbcf5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "This commit is to port the ncsi-util show statistics functionality to ncsi-netlink.",
+      "parentUuid": "08a7bd1d_97258f19",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c97306a2_bc0aae25",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-07-19T18:20:28Z",
       "side": 1,
       "message": "This text exceeds the commit message maximum length.\nCommit messages are expected to have\n50 chars for the message header\nand 72 chars for all other lines.\n\nThe \u003c7\u003e ..... message exceeds 72 chars by a very wide margin.",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5f29990_ad687b1d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c97306a2_bc0aae25",
       "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -52,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "500c92c2_e10eb01a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9796215f_49b12ba7",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0c02467c_80e766c6",
@@ -65,6 +119,24 @@
       "writtenOn": "2024-07-19T18:20:28Z",
       "side": 1,
       "message": "All of these numbers look suspect.\nAfter an AC cycle on my system, and left to idle for a few minutes I get, with patch 4 to output decimal values:\nTotal Bytes Received: 0\nTotal Bytes Transmitted: 3135326126080\nTotal Unicast Packet Received: 23875723198464\nTotal Multicast Packet Received: 4294967296\nTotal Broadcast Packet Received: 0\nTotal Unicast Packet Transmitted: 25769803776\nTotal Multicast Packet Transmitted: 0\nTotal Broadcast Packet Transmitted: 188978561024\n\nThere\u0027s really no way these values can be accurate in the space of 4 to 5 minutes on a basically idle interface.",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "abdb54ac_674b2ab8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Made the changes to correct this.",
+      "parentUuid": "0c02467c_80e766c6",
       "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -138,6 +210,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8064edf2_bbd7bc4f",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23787b30_98a5b35a",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e6ba192a_76430903",
@@ -151,6 +241,24 @@
       "writtenOn": "2024-07-19T18:20:28Z",
       "side": 1,
       "message": "remove extraneous blank lines",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b38572d_e374baa9",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6ba192a_76430903",
       "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -172,6 +280,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8db40d3f_723ac9e4",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d97555f7_6e1950e1",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa1478e2_69f5d9d6",
@@ -185,6 +311,24 @@
       "writtenOn": "2024-07-19T18:20:28Z",
       "side": 1,
       "message": "Is this temporary?\nThis appears to be co-opting the SendOEM command packet handler.",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3f340c8_c4c3f2a6",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa1478e2_69f5d9d6",
       "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -206,6 +350,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "16625579_83c1a956",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a740d727_2aa54650",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "370badca_39f7f022",
@@ -219,6 +381,24 @@
       "writtenOn": "2024-07-23T20:27:01Z",
       "side": 1,
       "message": "Use new CallBack function to display status instead of sendCallBack. sendCallBack is used by sendOemCallback. The changes you are making in sendCallBack will result in the sendOemCallback command too.",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ed50e63_38a820c3",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "370badca_39f7f022",
       "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -240,6 +420,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3071100_2b0d31aa",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97e729f1_6892e115",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d4e49f2e_49b01f85",
@@ -257,6 +455,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd831a9d_6ed2df71",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4e49f2e_49b01f85",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f2c676d7_2a7a27f4",
@@ -270,6 +486,24 @@
       "writtenOn": "2024-07-19T18:20:28Z",
       "side": 1,
       "message": "Please follow definition format from linux/ncsi.h\nNCSI_CMD_GET_CONTROLLER_PACKET_STATISTICS",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6155a721_14ecec84",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2c676d7_2a7a27f4",
       "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -309,6 +543,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "79def778_249b031d",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "667aae7d_5c6765cc",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "47d4c799_769c6be6",
@@ -322,6 +574,24 @@
       "writtenOn": "2024-07-19T18:20:28Z",
       "side": 1,
       "message": "This data structure appears to be missing the response code and the reason code. With these entries in place the packet trans/recv numbers look more sensible than the code as submitted.",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95d8926d_c61792d7",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47d4c799_769c6be6",
       "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -361,6 +631,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a05dc7d8_078f7366",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "18bd25ab_e44cbdce",
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30b6d107_0e9c5f77",
@@ -374,6 +662,30 @@
       "writtenOn": "2024-07-18T22:00:01Z",
       "side": 1,
       "message": "nit: you\u0027re still going to have minor formatting issues like this stray whitespace.  Doesn\u0027t seem like you\u0027re running clang-format.",
+      "range": {
+        "startLine": 113,
+        "startChar": 55,
+        "endLine": 113,
+        "endChar": 56
+      },
+      "revId": "a1287776d547e84db46fc86291f17bd30e36535b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f2e0710_4ee44758",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-25T05:56:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30b6d107_0e9c5f77",
       "range": {
         "startLine": 113,
         "startChar": 55,
