@@ -265,9 +265,9 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return 0;
 };
 
-int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
-             int channel = DEFAULT_VALUE, int flags = NONE,
-             CallBack function = nullptr)
+int applyCmd(Interface& interface, const Command& cmd,
+             int package = DEFAULT_VALUE, int channel = DEFAULT_VALUE,
+             int flags = NONE, CallBack function = nullptr)
 {
     int cb_ret = 0;
     nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
@@ -333,12 +333,13 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
         }
     }
 
-    ret = nla_put_u32(msg.get(), ncsi_nl_attrs::NCSI_ATTR_IFINDEX, ifindex);
+    ret = nla_put_u32(msg.get(), ncsi_nl_attrs::NCSI_ATTR_IFINDEX,
+                      interface.ifindex);
     if (ret < 0)
     {
         lg2::error("Failed to set the attribute , RC : {RC} INTERFACE : "
                    "{INTERFACE}",
-                   "RC", ret, "INTERFACE", lg2::hex, ifindex);
+                   "RC", ret, "INTERFACE", lg2::hex, interface.ifindex);
         return ret;
     }
 
@@ -419,88 +420,91 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
 
 } // namespace internal
 
-int sendOemCommand(int ifindex, int package, int channel, int operation,
-                   std::span<const unsigned char> payload)
+int sendOemCommand(Interface& interface, int package, int channel,
+                   int operation, std::span<const unsigned char> payload)
 {
     lg2::debug("Send OEM Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
                "INTERFACE_INDEX: {INTERFACE_INDEX}",
                "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
-               "INTERFACE_INDEX", lg2::hex, ifindex);
+               "INTERFACE_INDEX", lg2::hex, interface.ifindex);
     if (!payload.empty())
     {
         lg2::debug("Payload: {PAYLOAD}", "PAYLOAD", toHexStr(payload));
     }
 
     return internal::applyCmd(
-        ifindex,
+        interface,
         internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, operation,
                           payload),
         package, channel, NONE, internal::sendCallBack);
 }
 
-int setChannel(int ifindex, int package, int channel)
+int setChannel(Interface& interface, int package, int channel)
 {
     lg2::debug(
         "Set CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, INTERFACE_INDEX: "
         "{INTERFACE_INDEX}",
         "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
-        "INTERFACE_INDEX", lg2::hex, ifindex);
+        "INTERFACE_INDEX", lg2::hex, interface.ifindex);
     return internal::applyCmd(
-        ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_INTERFACE),
+        interface, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_INTERFACE),
         package, channel);
 }
 
-int clearInterface(int ifindex)
+int clearInterface(Interface& interface)
 {
     lg2::debug("ClearInterface , INTERFACE_INDEX : {INTERFACE_INDEX}",
-               "INTERFACE_INDEX", lg2::hex, ifindex);
+               "INTERFACE_INDEX", lg2::hex, interface.ifindex);
     return internal::applyCmd(
-        ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE));
+        interface,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE));
 }
 
-int getInfo(int ifindex, int package)
+int getInfo(Interface& interface, int package)
 {
     lg2::debug(
         "Get Info , PACKAGE : {PACKAGE}, INTERFACE_INDEX: {INTERFACE_INDEX}",
-        "PACKAGE", lg2::hex, package, "INTERFACE_INDEX", lg2::hex, ifindex);
+        "PACKAGE", lg2::hex, package, "INTERFACE_INDEX", lg2::hex,
+        interface.ifindex);
     if (package == DEFAULT_VALUE)
     {
         return internal::applyCmd(
-            ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_PKG_INFO),
+            interface, internal::Command(ncsi_nl_commands::NCSI_CMD_PKG_INFO),
             package, DEFAULT_VALUE, NLM_F_DUMP, internal::infoCallBack);
     }
     else
     {
-        return internal::applyCmd(ifindex, ncsi_nl_commands::NCSI_CMD_PKG_INFO,
-                                  package, DEFAULT_VALUE, NONE,
-                                  internal::infoCallBack);
+        return internal::applyCmd(interface,
+                                  ncsi_nl_commands::NCSI_CMD_PKG_INFO, package,
+                                  DEFAULT_VALUE, NONE, internal::infoCallBack);
     }
 }
 
-int setPackageMask(int ifindex, unsigned int mask)
+int setPackageMask(Interface& interface, unsigned int mask)
 {
     lg2::debug(
         "Set Package Mask , INTERFACE_INDEX: {INTERFACE_INDEX} MASK: {MASK}",
-        "INTERFACE_INDEX", lg2::hex, ifindex, "MASK", lg2::hex, mask);
+        "INTERFACE_INDEX", lg2::hex, interface.ifindex, "MASK", lg2::hex, mask);
     auto payload = std::span<const unsigned char>(
         reinterpret_cast<const unsigned char*>(&mask),
         reinterpret_cast<const unsigned char*>(&mask) + sizeof(decltype(mask)));
     return internal::applyCmd(
-        ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_PACKAGE_MASK,
-                                   0, payload));
+        interface,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SET_PACKAGE_MASK, 0,
+                          payload));
 }
 
-int setChannelMask(int ifindex, int package, unsigned int mask)
+int setChannelMask(Interface& interface, int package, unsigned int mask)
 {
     lg2::debug(
         "Set Channel Mask , INTERFACE_INDEX: {INTERFACE_INDEX}, PACKAGE : {PACKAGE} MASK: {MASK}",
-        "INTERFACE_INDEX", lg2::hex, ifindex, "PACKAGE", lg2::hex, package,
-        "MASK", lg2::hex, mask);
+        "INTERFACE_INDEX", lg2::hex, interface.ifindex, "PACKAGE", lg2::hex,
+        package, "MASK", lg2::hex, mask);
     auto payload = std::span<const unsigned char>(
         reinterpret_cast<const unsigned char*>(&mask),
         reinterpret_cast<const unsigned char*>(&mask) + sizeof(decltype(mask)));
     return internal::applyCmd(
-        ifindex,
+        interface,
         internal::Command(ncsi_nl_commands::NCSI_CMD_SET_CHANNEL_MASK, 0,
                           payload),
         package);
