@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05fc9829_4080b402",
+        "filename": "src/argument.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-26T13:19:49Z",
+      "side": 1,
+      "message": "What is this??\n\nI don\u0027t think anyone wants to remember a bunch of random magic numbers that they insert on the command line.",
+      "range": {
+        "startLine": 92,
+        "startChar": 49,
+        "endLine": 92,
+        "endChar": 56
+      },
+      "revId": "4c9939290a14e95f95d07438f342a75c3ff0777f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05cdad18_260503ed",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-26T13:19:49Z",
+      "side": 1,
+      "message": "Absolutely not.  I don\u0027t think we want to see a generic \"send random bytes out NCSI\" tool because that\u0027s just going to lead to people elsewhere hardcoding random strings of bytes in scripts and tools.\n\nIf you just want to send random strings of bytes, use net-cat (nc).",
+      "revId": "4c9939290a14e95f95d07438f342a75c3ff0777f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
