@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91ebbedf_c8930894",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-07-26T04:19:57Z",
+      "side": 1,
+      "message": "Hi Patrick/Jonathan,\n\nThanks for reviewing the code. I have incorporated all the review comments. Please review the updated patchset and let me know your feedback.\n\nThanks\nBest Regards\nSharan",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
