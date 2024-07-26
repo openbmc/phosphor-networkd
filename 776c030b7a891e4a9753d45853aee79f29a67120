@@ -208,6 +208,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c80402a8_c14a9f49",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-26T21:24:28Z",
+      "side": 1,
+      "message": "Yes.  This whole function needs to be cleaned up in that regard, not just the one property.",
+      "parentUuid": "6a405a2c_f33cbbfc",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d3c10c8c_89891ef4",
         "filename": "src/ncsi_util.hpp",
         "patchSetId": 10
