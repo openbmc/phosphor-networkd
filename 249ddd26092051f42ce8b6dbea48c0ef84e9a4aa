@@ -192,6 +192,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bf92906_e8a5f6e1",
+        "filename": "src/argument.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-26T13:26:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9176c69a_2e14ffbc",
+      "range": {
+        "startLine": 79,
+        "startChar": 57,
+        "endLine": 79,
+        "endChar": 58
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "846136f3_e719990e",
@@ -332,6 +356,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aedc9548_b47e14b7",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-26T13:26:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b0579c0_b553a1ad",
+      "range": {
+        "startLine": 466,
+        "startChar": 0,
+        "endLine": 482,
+        "endChar": 7
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d5f04446_7800d297",
@@ -413,6 +461,54 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "11e76e57_042e003b",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-26T13:26:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "22cf44fb_037c6e9c",
+      "range": {
+        "startLine": 484,
+        "startChar": 0,
+        "endLine": 487,
+        "endChar": 69
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a802fa73_98f914f1",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-26T13:26:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee4c5ba6_b34282ff",
+      "range": {
+        "startLine": 487,
+        "startChar": 63,
+        "endLine": 487,
+        "endChar": 67
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3c5d067c_92f605c2",
@@ -426,6 +522,30 @@
       "writtenOn": "2024-07-12T08:57:38Z",
       "side": 1,
       "message": "Use the correct description. This is for retrieving the statistics right?",
+      "range": {
+        "startLine": 60,
+        "startChar": 11,
+        "endLine": 60,
+        "endChar": 53
+      },
+      "revId": "249ddd26092051f42ce8b6dbea48c0ef84e9a4aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b88f2a1d_085ee3fb",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-07-26T13:26:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c5d067c_92f605c2",
       "range": {
         "startLine": 60,
         "startChar": 11,
