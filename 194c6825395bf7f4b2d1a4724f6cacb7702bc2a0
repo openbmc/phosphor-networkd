@@ -16,6 +16,24 @@
       "message": "Please resubmit after fixing the CI build issues,\n\nopenbmc/phosphor-networkd \n    Formatting code under /data0/jenkins/workspace/ci-repository/openbmc/phosphor-networkd\n    markdownlint: cannot find .markdownlint.yaml; using /data0/jenkins/workspace/ci-repository/openbmc/openbmc-build-scripts/config/markdownlint.yaml\n    prettier: cannot find .prettierrc.yaml; using /data0/jenkins/workspace/ci-repository/openbmc/openbmc-build-scripts/config/prettierrc.yaml\n    Running commit_gitlint\n-: UC1 Line contains hard tab characters (\\t): \"\tncsi-netlink -x 2 -p 0 -c 0 0xa\"\n    Running commit_spelling",
       "revId": "194c6825395bf7f4b2d1a4724f6cacb7702bc2a0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5063122_d689337a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-26T07:35:32Z",
+      "side": 1,
+      "message": "Hi Johnathan,\nHave fixed CI build issues and submitted patch.\nRegards,\nSurendra A.",
+      "parentUuid": "ce2e2d9a_aec6a85e",
+      "revId": "194c6825395bf7f4b2d1a4724f6cacb7702bc2a0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
