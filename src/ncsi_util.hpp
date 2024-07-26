@@ -1,6 +1,7 @@
 #pragma once
 
 #include <span>
+#include <string>
 
 namespace phosphor
 {
@@ -16,6 +17,8 @@ struct Interface
 {
     int ifindex;
 };
+
+std::string to_string(Interface& interface);
 
 /* @brief  This function will ask underlying NCSI driver
  *         to send an OEM command (command type 0x50) with
