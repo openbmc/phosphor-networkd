@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc8a1d89_f2c2be90",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-26T17:58:27Z",
+      "side": 1,
+      "message": "It would be nice if you performed some additional reporting.\nI used back to back calls, when I fixed the data structure, to confirm the packet count values appeared to be sensible.\nIt\u0027s hard to tell from your example output that the xmit/rcv byte counts are reported accurately.\nIs there some way you can confirm the numbers reported?",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "91ebbedf_c8930894",
@@ -18,6 +35,142 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9fa3ddf_30c8bd37",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-26T17:58:27Z",
+      "side": 1,
+      "message": "Here are some recommendations",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1026f425_c71a9f06",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-26T17:58:27Z",
+      "side": 1,
+      "message": "Why are these files being included?\nCompilation is successful without these present.",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f44e2a8a_60aa4983",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-26T17:58:27Z",
+      "side": 1,
+      "message": "If this is to block compilation errors:\nPrefer [[maybe_unused]] void* arg in the function prototype.\n\nThis is C++, so prefer nullptr to the C style code here:\narg \u003d nullptr;\nDon\u0027t do this in this function. Use the maybe_unused method.",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "850522f1_9b4caea9",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-26T17:58:27Z",
+      "side": 1,
+      "message": "Create and call a ConvertStatsToHostEndianess() fcn,\nthen call printNCSIControllerStats()",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92255e8d_83673d0f",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-26T17:58:27Z",
+      "side": 1,
+      "message": "I\u0027d prefer to see the resp and reason codes added to the NCSIControllerPacketStatsResponse structure.\nThis allows:\nNCSIControllerPacketStatsResponse* foo \u003d static_cast\u003cNCSIController....*\u003e(rcv_buf).\ninstead of manual byte shifting/combining.\nIn addition, the print controller stats function performs this work.\nWhy is it separate?\n\nPer Patricks suggestion, make this a be64toh and ntohl modification function.",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1da9b203_7903c243",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-26T17:58:27Z",
+      "side": 1,
+      "message": "Send a const ptr to buff that includes the resp code/reason.\nDon\u0027t manually index.",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8bef1939_98b38893",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-26T17:58:27Z",
+      "side": 1,
+      "message": "Why isn\u0027t this:\nprintNCSIControllerStats(const NCSIControllerPacketStats* stats)\nstd::cout \u003c\u003c \"TX stats\" \u003c\u003c stats-\u003etotalBytesTX;",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db71e7db_5f54fd90",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-26T17:58:27Z",
+      "side": 1,
+      "message": "Suggest to change this whole section to:\nstd::cout \u003c\u003c \"\\nNIC statistics\"\n       \"\\nCounters cleared ... (MSB): \" \u003c\u003c var1\n       \"\\nCounters cleared ... (LSB): \" \u003c\u003c var2\n       .....\n       \"Error Jabber Packets Received: \" \u003c\u003c lastVar \"\\n\";\n\nThat way there\u0027s only a single cout.\nSee the usage() model in argument.cpp",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "32c431e5_258bd4bd",
@@ -31,6 +184,41 @@
       "writtenOn": "2024-07-26T13:26:48Z",
       "side": 1,
       "message": "Can\u0027t we do this when we read the structure in instead of when we\u0027re printing it out?  If someone later on adds additional code that uses the structure in original format we\u0027re going to end up with these random be64toh sprinkled around.",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a405a2c_f33cbbfc",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-26T17:58:27Z",
+      "side": 1,
+      "message": "Doesn\u0027t this advice also apply to all of the ntohl() too?",
+      "parentUuid": "32c431e5_258bd4bd",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3c10c8c_89891ef4",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-26T17:58:27Z",
+      "side": 1,
+      "message": "Perhaps submit a kernel commit that adds this to ncsi.h?",
       "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
