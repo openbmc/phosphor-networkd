@@ -339,7 +339,7 @@ int applyCmd(Interface& interface, const Command& cmd,
     {
         lg2::error("Failed to set the attribute , RC : {RC} INTERFACE : "
                    "{INTERFACE}",
-                   "RC", ret, "INTERFACE", lg2::hex, interface.ifindex);
+                   "RC", ret, "INTERFACE", interface);
         return ret;
     }
 
@@ -420,13 +420,18 @@ int applyCmd(Interface& interface, const Command& cmd,
 
 } // namespace internal
 
+std::string to_string(Interface& interface)
+{
+    return std::to_string(interface.ifindex);
+}
+
 int sendOemCommand(Interface& interface, int package, int channel,
                    int operation, std::span<const unsigned char> payload)
 {
     lg2::debug("Send OEM Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
-               "INTERFACE_INDEX: {INTERFACE_INDEX}",
+               "INTERFACE: {INTERFACE}",
                "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
-               "INTERFACE_INDEX", lg2::hex, interface.ifindex);
+               "INTERFACE", this);
     if (!payload.empty())
     {
         lg2::debug("Payload: {PAYLOAD}", "PAYLOAD", toHexStr(payload));
@@ -441,11 +446,10 @@ int sendOemCommand(Interface& interface, int package, int channel,
 
 int setChannel(Interface& interface, int package, int channel)
 {
-    lg2::debug(
-        "Set CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, INTERFACE_INDEX: "
-        "{INTERFACE_INDEX}",
-        "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
-        "INTERFACE_INDEX", lg2::hex, interface.ifindex);
+    lg2::debug("Set CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, INTERFACE : "
+               "{INTERFACE}",
+               "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
+               "INTERFACE", interface);
     return internal::applyCmd(
         interface, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_INTERFACE),
         package, channel);
@@ -453,8 +457,7 @@ int setChannel(Interface& interface, int package, int channel)
 
 int clearInterface(Interface& interface)
 {
-    lg2::debug("ClearInterface , INTERFACE_INDEX : {INTERFACE_INDEX}",
-               "INTERFACE_INDEX", lg2::hex, interface.ifindex);
+    lg2::debug("ClearInterface , INTERFACE : {INTERFACE}", "INTERFACE", interface);
     return internal::applyCmd(
         interface,
         internal::Command(ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE));
@@ -462,10 +465,8 @@ int clearInterface(Interface& interface)
 
 int getInfo(Interface& interface, int package)
 {
-    lg2::debug(
-        "Get Info , PACKAGE : {PACKAGE}, INTERFACE_INDEX: {INTERFACE_INDEX}",
-        "PACKAGE", lg2::hex, package, "INTERFACE_INDEX", lg2::hex,
-        interface.ifindex);
+    lg2::debug("Get Info , PACKAGE : {PACKAGE}, INTERFACE: {INTERFACE}",
+               "PACKAGE", lg2::hex, package, "INTERFACE", interface);
     if (package == DEFAULT_VALUE)
     {
         return internal::applyCmd(
@@ -482,9 +483,8 @@ int getInfo(Interface& interface, int package)
 
 int setPackageMask(Interface& interface, unsigned int mask)
 {
-    lg2::debug(
-        "Set Package Mask , INTERFACE_INDEX: {INTERFACE_INDEX} MASK: {MASK}",
-        "INTERFACE_INDEX", lg2::hex, interface.ifindex, "MASK", lg2::hex, mask);
+    lg2::debug("Set Package Mask , INTERFACE: {INTERFACE} MASK: {MASK}",
+               "INTERFACE", interface, "MASK", lg2::hex, mask);
     auto payload = std::span<const unsigned char>(
         reinterpret_cast<const unsigned char*>(&mask),
         reinterpret_cast<const unsigned char*>(&mask) + sizeof(decltype(mask)));
@@ -497,9 +497,9 @@ int setPackageMask(Interface& interface, unsigned int mask)
 int setChannelMask(Interface& interface, int package, unsigned int mask)
 {
     lg2::debug(
-        "Set Channel Mask , INTERFACE_INDEX: {INTERFACE_INDEX}, PACKAGE : {PACKAGE} MASK: {MASK}",
-        "INTERFACE_INDEX", lg2::hex, interface.ifindex, "PACKAGE", lg2::hex,
-        package, "MASK", lg2::hex, mask);
+        "Set Channel Mask , INTERFACE: {INTERFACE}, PACKAGE : {PACKAGE} MASK: {MASK}",
+        "INTERFACE", interface, "PACKAGE", lg2::hex, package, "MASK", lg2::hex,
+        mask);
     auto payload = std::span<const unsigned char>(
         reinterpret_cast<const unsigned char*>(&mask),
         reinterpret_cast<const unsigned char*>(&mask) + sizeof(decltype(mask)));
