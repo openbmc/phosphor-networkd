@@ -138,8 +138,8 @@ int main(int argc, char** argv)
             exitWithError("Package not specified.", argv);
         }
 
-        return ncsi::sendOemCommand(
-            interface, packageInt, channelInt, operationInt,
+        return interface.sendOemCommand(
+            packageInt, channelInt, operationInt,
             std::span<const unsigned char>(payload.begin(), payload.end()));
     }
     else if ((options)["set"] == "true")
@@ -149,15 +149,15 @@ int main(int argc, char** argv)
         {
             exitWithError("Package not specified.", argv);
         }
-        return ncsi::setChannel(interface, packageInt, channelInt);
+        return interface.setChannel(packageInt, channelInt);
     }
     else if ((options)["info"] == "true")
     {
-        return ncsi::getInfo(interface, packageInt);
+        return interface.getInfo(packageInt);
     }
     else if ((options)["clear"] == "true")
     {
-        return ncsi::clearInterface(interface);
+        return interface.clearInterface();
     }
     else if (!(options)["pmask"].empty())
     {
@@ -175,7 +175,7 @@ int main(int argc, char** argv)
         {
             exitWithError("Package mask value is not valid", argv);
         }
-        return ncsi::setPackageMask(interface, mask);
+        return interface.setPackageMask(mask);
     }
     else if (!(options)["cmask"].empty())
     {
@@ -197,7 +197,7 @@ int main(int argc, char** argv)
         {
             exitWithError("Channel mask value is not valid", argv);
         }
-        return ncsi::setChannelMask(interface, packageInt, mask);
+        return interface.setChannelMask(packageInt, mask);
     }
     else
     {
