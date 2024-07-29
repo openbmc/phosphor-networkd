@@ -19,7 +19,9 @@
 #include <phosphor-logging/lg2.hpp>
 
 #include <string>
+#include <cstring>
 #include <vector>
+#include <iostream>
 
 static void exitWithError(const char* err, char** argv)
 {
@@ -157,9 +159,23 @@ int main(int argc, char** argv)
     {
         return ncsi::clearInterface(indexInt);
     }
+    else if ((options)["get"] != ArgumentParser::emptyString)
+    {
+        auto getArg = options.operator[](std::string("get"));
+        std::cerr << "getArg=" << getArg << "\n";
+        if (getArg == "vid")
+        {
+            return ncsi::getVersionID(indexInt, packageInt, channelInt);
+        }
+        else
+        {
+            exitWithError("Invalid get operator specified", argv);
+        }
+    }
     else
     {
         exitWithError("No Command specified", argv);
     }
-    return 0;
+
+    //return 0;
 }
