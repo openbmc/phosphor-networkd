@@ -157,9 +157,22 @@ int main(int argc, char** argv)
     {
         return ncsi::clearInterface(indexInt);
     }
+    else if ((options)["get"] != ArgumentParser::emptyString)
+    {
+        const std::string& getArg{(options)["get"]};
+        if (getArg == "vid")
+        {
+            return ncsi::getVersionID(indexInt, packageInt, channelInt);
+        }
+        else
+        {
+            exitWithError("Invalid get operator specified", argv);
+        }
+    }
     else
     {
         exitWithError("No Command specified", argv);
     }
+
     return 0;
 }
