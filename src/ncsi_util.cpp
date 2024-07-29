@@ -9,6 +9,7 @@
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
 
+#include <sstream>
 #include <vector>
 
 namespace phosphor
@@ -18,9 +19,7 @@ namespace network
 namespace ncsi
 {
 
-using CallBack = int (*)(struct nl_msg* msg, void* arg);
-
-static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
+stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 {
     stdplus::StrBuf ret;
     if (c.empty())
@@ -39,83 +38,42 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
     *oit = 0;
     return ret;
 }
-
 namespace internal
 {
-
-struct NCSIPacketHeader
-{
-    uint8_t MCID;
-    uint8_t revision;
-    uint8_t reserved;
-    uint8_t id;
-    uint8_t type;
-    uint8_t channel;
-    uint16_t length;
-    uint32_t rsvd[2];
-};
-
-class Command
-{
-  public:
-    Command() = delete;
-    ~Command() = default;
-    Command(const Command&) = delete;
-    Command& operator=(const Command&) = delete;
-    Command(Command&&) = default;
-    Command& operator=(Command&&) = default;
-    Command(
-        int ncsiCmd, int operation = DEFAULT_VALUE,
-        std::span<const unsigned char> p = std::span<const unsigned char>()) :
-        ncsi_cmd(ncsiCmd), operation(operation), payload(p)
-    {}
-
-    int ncsi_cmd;
-    int operation;
-    std::span<const unsigned char> payload;
-};
-
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
-
     struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
     struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
         {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
         {NLA_U32, 0, 0},    {NLA_U32, 0, 0},
     };
-
     struct nlattr* packagetb[NCSI_PKG_ATTR_MAX + 1] = {nullptr};
     struct nla_policy packagePolicy[NCSI_PKG_ATTR_MAX + 1] = {
         {NLA_UNSPEC, 0, 0}, {NLA_NESTED, 0, 0}, {NLA_U32, 0, 0},
         {NLA_FLAG, 0, 0},   {NLA_NESTED, 0, 0},
     };
-
     struct nlattr* channeltb[NCSI_CHANNEL_ATTR_MAX + 1] = {nullptr};
     struct nla_policy channelPolicy[NCSI_CHANNEL_ATTR_MAX + 1] = {
         {NLA_UNSPEC, 0, 0}, {NLA_NESTED, 0, 0}, {NLA_U32, 0, 0},
         {NLA_FLAG, 0, 0},   {NLA_NESTED, 0, 0}, {NLA_UNSPEC, 0, 0},
     };
-
     *(int*)arg = 0;
-
     auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
     if (!tb[NCSI_ATTR_PACKAGE_LIST])
     {
         lg2::error("No Packages");
         return -1;
     }
-
     auto attrTgt = static_cast<nlattr*>(nla_data(tb[NCSI_ATTR_PACKAGE_LIST]));
     if (!attrTgt)
     {
         lg2::error("Package list attribute is null");
         return -1;
     }
-
     auto rem = nla_len(tb[NCSI_ATTR_PACKAGE_LIST]);
     nla_for_each_nested(attrTgt, tb[NCSI_ATTR_PACKAGE_LIST], rem)
     {
@@ -126,7 +84,6 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
             lg2::error("Failed to parse package nested");
             return -1;
         }
-
         if (packagetb[NCSI_PKG_ATTR_ID])
         {
             auto attrID = nla_get_u32(packagetb[NCSI_PKG_ATTR_ID]);
@@ -137,15 +94,12 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
         {
             lg2::debug("Package with no id");
         }
-
         if (packagetb[NCSI_PKG_ATTR_FORCED])
         {
             lg2::debug("This package is forced");
         }
-
         auto channelListTarget = static_cast<nlattr*>(
             nla_data(packagetb[NCSI_PKG_ATTR_CHANNEL_LIST]));
-
         auto channelrem = nla_len(packagetb[NCSI_PKG_ATTR_CHANNEL_LIST]);
         nla_for_each_nested(channelListTarget,
                             packagetb[NCSI_PKG_ATTR_CHANNEL_LIST], channelrem)
@@ -157,7 +111,6 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
                 lg2::error("Failed to parse channel nested");
                 return -1;
             }
-
             if (channeltb[NCSI_CHANNEL_ATTR_ID])
             {
                 auto channel = nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_ID]);
@@ -171,7 +124,6 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
                     lg2::debug("Channel Not Active : {CHANNEL}", "CHANNEL",
                                lg2::hex, channel);
                 }
-
                 if (channeltb[NCSI_CHANNEL_ATTR_FORCED])
                 {
                     lg2::debug("Channel is forced");
@@ -181,7 +133,6 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
             {
                 lg2::debug("Channel with no ID");
             }
-
             if (channeltb[NCSI_CHANNEL_ATTR_VERSION_MAJOR])
             {
                 auto major =
@@ -227,6 +178,34 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     }
     return (int)NL_SKIP;
 };
+int getNcsiCommandPayload(struct nl_msg* msg, void* arg,
+                          std::span<const unsigned char>& payload)
+{
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+    *(int*)arg = 0;
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+    auto data_len = nla_len(tb[NCSI_ATTR_DATA]);
+    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]);
+    payload = std::span<const unsigned char>(data, data_len);
+    return 0;
+}
 
 CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -237,37 +216,30 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
         {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
         {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
     };
-
     *(int*)arg = 0;
-
     auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
     if (ret)
     {
         lg2::error("Failed to parse package");
         return ret;
     }
-
     if (tb[NCSI_ATTR_DATA] == nullptr)
     {
         lg2::error("Response: No data");
         return -1;
     }
-
     auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
     unsigned char* data =
         (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
-
     // Dump the response to stdout. Enhancement: option to save response data
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
-
     return 0;
 };
 
-int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
-             int channel = DEFAULT_VALUE, int flags = NONE,
-             CallBack function = nullptr)
+int applyCmd(int ifindex, const Command& cmd, int package, int channel,
+             int flags, CallBack function)
 {
     int cb_ret = 0;
     nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
@@ -276,28 +248,24 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
         lg2::error("Unable to allocate memory for the socket");
         return -ENOMEM;
     }
-
     auto ret = genl_connect(socket.get());
     if (ret < 0)
     {
         lg2::error("Failed to open the socket , RC : {RC}", "RC", ret);
         return ret;
     }
-
     auto driverID = genl_ctrl_resolve(socket.get(), "NCSI");
     if (driverID < 0)
     {
         lg2::error("Failed to resolve, RC : {RC}", "RC", ret);
         return driverID;
     }
-
     nlMsgPtr msg(nlmsg_alloc(), &::nlmsg_free);
     if (msg == nullptr)
     {
         lg2::error("Unable to allocate memory for the message");
         return -ENOMEM;
     }
-
     auto msgHdr = genlmsg_put(msg.get(), NL_AUTO_PORT, NL_AUTO_SEQ, driverID, 0,
                               flags, cmd.ncsi_cmd, 0);
     if (!msgHdr)
@@ -306,7 +274,6 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
                    "COMMAND", cmd.ncsi_cmd);
         return -ENOMEM;
     }
-
     if (package != DEFAULT_VALUE)
     {
         ret = nla_put_u32(msg.get(), ncsi_nl_attrs::NCSI_ATTR_PACKAGE_ID,
@@ -319,7 +286,6 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
             return ret;
         }
     }
-
     if (channel != DEFAULT_VALUE)
     {
         ret = nla_put_u32(msg.get(), ncsi_nl_attrs::NCSI_ATTR_CHANNEL_ID,
@@ -332,7 +298,6 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
             return ret;
         }
     }
-
     ret = nla_put_u32(msg.get(), ncsi_nl_attrs::NCSI_ATTR_IFINDEX, ifindex);
     if (ret < 0)
     {
@@ -341,7 +306,6 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
                    "RC", ret, "INTERFACE", lg2::hex, ifindex);
         return ret;
     }
-
     if ((cmd.ncsi_cmd == ncsi_nl_commands::NCSI_CMD_SET_PACKAGE_MASK) ||
         (cmd.ncsi_cmd == ncsi_nl_commands::NCSI_CMD_SET_CHANNEL_MASK))
     {
@@ -369,13 +333,10 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
         std::vector<unsigned char> pl(
             sizeof(NCSIPacketHeader) + cmd.payload.size());
         NCSIPacketHeader* hdr = (NCSIPacketHeader*)pl.data();
-
         std::copy(cmd.payload.begin(), cmd.payload.end(),
                   pl.begin() + sizeof(NCSIPacketHeader));
-
         hdr->type = cmd.operation;
         hdr->length = htons(cmd.payload.size());
-
         ret = nla_put(msg.get(), ncsi_nl_attrs::NCSI_ATTR_DATA, pl.size(),
                       pl.data());
         if (ret < 0)
@@ -384,26 +345,21 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
                        ret);
             return ret;
         }
-
         nl_socket_disable_seq_check(socket.get());
     }
-
     if (function)
     {
         cb_ret = 1;
-
         // Add a callback function to the socket
         nl_socket_modify_cb(socket.get(), NL_CB_VALID, NL_CB_CUSTOM, function,
                             &cb_ret);
     }
-
     ret = nl_send_auto(socket.get(), msg.get());
     if (ret < 0)
     {
         lg2::error("Failed to send the message , RC : {RC}", "RC", ret);
         return ret;
     }
-
     do
     {
         ret = nl_recvmsgs_default(socket.get());
@@ -413,10 +369,8 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
             break;
         }
     } while (cb_ret);
-
     return ret;
 }
-
 } // namespace internal
 
 int sendOemCommand(int ifindex, int package, int channel, int operation,
@@ -430,14 +384,12 @@ int sendOemCommand(int ifindex, int package, int channel, int operation,
     {
         lg2::debug("Payload: {PAYLOAD}", "PAYLOAD", toHexStr(payload));
     }
-
     return internal::applyCmd(
         ifindex,
         internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, operation,
                           payload),
         package, channel, NONE, internal::sendCallBack);
 }
-
 int setChannel(int ifindex, int package, int channel)
 {
     lg2::debug(
@@ -449,7 +401,6 @@ int setChannel(int ifindex, int package, int channel)
         ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_INTERFACE),
         package, channel);
 }
-
 int clearInterface(int ifindex)
 {
     lg2::debug("ClearInterface , INTERFACE_INDEX : {INTERFACE_INDEX}",
@@ -457,7 +408,6 @@ int clearInterface(int ifindex)
     return internal::applyCmd(
         ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE));
 }
-
 int getInfo(int ifindex, int package)
 {
     lg2::debug(
@@ -476,7 +426,6 @@ int getInfo(int ifindex, int package)
                                   internal::infoCallBack);
     }
 }
-
 int setPackageMask(int ifindex, unsigned int mask)
 {
     lg2::debug(
@@ -489,7 +438,6 @@ int setPackageMask(int ifindex, unsigned int mask)
         ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_PACKAGE_MASK,
                                    0, payload));
 }
-
 int setChannelMask(int ifindex, int package, unsigned int mask)
 {
     lg2::debug(
@@ -506,7 +454,6 @@ int setChannelMask(int ifindex, int package, unsigned int mask)
         package);
     return 0;
 }
-
 } // namespace ncsi
 } // namespace network
 } // namespace phosphor
