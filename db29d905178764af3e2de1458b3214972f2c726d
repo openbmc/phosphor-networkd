@@ -1,0 +1,242 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12a31dfa_7b84aaf8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "Perhaps this is too much for this util.",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65923a22_70b0a1b0",
+        "filename": "src/argument.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "an effort was made to align the \nhelp\ninfo\nset\nclear\ndescription messages\n\nPerhaps all the help text should be aligned to the same level as \"Specify device ifindex\"?",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7720a54b_a9dc4842",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "Consider using a std::array instead?\nThat way the NULL test below, which needs modification anyway, doesn\u0027t need to be done?",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfb6c728_8b1e53d9",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "Don\u0027t pass an unsigned char, and then cast it.\nPass a ptr to the data structure instead.\n\nMake this a \u0027const\u0027 ptr?",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20f498f7_11dc8a37",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "Perform all endianess modifications in the getLinkStatusResponse callback.",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "506951f7_01c4dc4a",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "Please create a constexpr for the 0xf magic number.\nIs speedDuplex \u003d\u003d 0xf a \"reserved value, go look at extSpeedDuplex\" indicator?\nDoes it make sense to do this:\nspeed_duplex \u003d linkstatus.bits.speedDuplex;\nif (speed_duplex \u003d\u003d rsvd_val)\n  speed_duplex  \u003d linkstatus.bits.extSpeedDuplex;\n??\nI\u0027d be inclined to make this a ternary.\nspeed_duplex \u003d (val \u003d\u003d rsvd) ? linkstatus.bits.speedDuplex : ....;",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3291286e_6ffdfb45",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "This is C++. Do not use 0 or NULL to check for invalid pointers.\nUse nullptr instead.\nIf this is a std::array instead, you could probably use a find() function call. That will keep you inside the range of the array.\nThis is off the top of my head:\n\nauto it \u003d find_if(....);\nif (*it \u003d\u003d linkspeedarray.c_end())\n  // print unknown;\nprint *it;",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31d12dbf_07b58eaa",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "If you aren\u0027t using \u0027arg\u0027 apply the C++ atribute\n[[maybe_unused]]",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "585be73f_f78dcd96",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "This line is unnecessary in combination with the [[maybe_unused]] attribute.\nIt also looks suspect because I expect arg to be input data.",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00f85dac_de3657d5",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "Adjust data for host endianess (ntohl) here before calling print()",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1809dba3_3b122d15",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "Why not just make the data structure include the header, and then pass a const ptr to the print function?\nDon\u0027t bother with the error prone math, and allow the compiler to manage the indexing.",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "608dbab1_1b05a1b2",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "printLinkStatus(static_cast\u003clinkstatus\u003e(ncsiRespHdr));\nPerhaps add const to the conversion too.",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a82afcb6_4a334ebd",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "Remove?\nThis isn\u0027t used anywhere in this commit.",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2c5c9cb_7a52b162",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-07-29T16:35:00Z",
+      "side": 1,
+      "message": "Don\u0027t define this here, as it isn\u0027t used outside ncsi_util.cpp",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
