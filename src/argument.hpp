@@ -4,6 +4,7 @@
 
 #include <map>
 #include <string>
+#include <linux/ncsi.h>
 
 namespace phosphor
 {
