@@ -425,87 +425,84 @@ std::string to_string(Interface& interface)
     return std::to_string(interface.ifindex);
 }
 
-int sendOemCommand(Interface& interface, int package, int channel,
-                   int operation, std::span<const unsigned char> payload)
+int Interface::sendOemCommand(int package, int channel, int operation,
+                              std::span<const unsigned char> payload)
 {
     lg2::debug("Send OEM Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
                "INTERFACE: {INTERFACE}",
                "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
-               "INTERFACE", interface);
+               "INTERFACE", this);
     if (!payload.empty())
     {
         lg2::debug("Payload: {PAYLOAD}", "PAYLOAD", toHexStr(payload));
     }
 
     return internal::applyCmd(
-        interface,
+        *this,
         internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, operation,
                           payload),
         package, channel, NONE, internal::sendCallBack);
 }
 
-int setChannel(Interface& interface, int package, int channel)
+int Interface::setChannel(int package, int channel)
 {
     lg2::debug("Set CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, INTERFACE : "
                "{INTERFACE}",
                "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
-               "INTERFACE", interface);
+               "INTERFACE", this);
     return internal::applyCmd(
-        interface, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_INTERFACE),
+        *this, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_INTERFACE),
         package, channel);
 }
 
-int clearInterface(Interface& interface)
+int Interface::clearInterface()
 {
-    lg2::debug("ClearInterface , INTERFACE : {INTERFACE}", "INTERFACE",
-               interface);
+    lg2::debug("ClearInterface , INTERFACE : {INTERFACE}", "INTERFACE", this);
     return internal::applyCmd(
-        interface,
-        internal::Command(ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE));
+        *this, internal::Command(ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE));
 }
 
-int getInfo(Interface& interface, int package)
+int Interface::getInfo(int package)
 {
     lg2::debug("Get Info , PACKAGE : {PACKAGE}, INTERFACE: {INTERFACE}",
-               "PACKAGE", lg2::hex, package, "INTERFACE", interface);
+               "PACKAGE", lg2::hex, package, "INTERFACE", this);
     if (package == DEFAULT_VALUE)
     {
         return internal::applyCmd(
-            interface, internal::Command(ncsi_nl_commands::NCSI_CMD_PKG_INFO),
+            *this, internal::Command(ncsi_nl_commands::NCSI_CMD_PKG_INFO),
             package, DEFAULT_VALUE, NLM_F_DUMP, internal::infoCallBack);
     }
     else
     {
-        return internal::applyCmd(interface,
-                                  ncsi_nl_commands::NCSI_CMD_PKG_INFO, package,
-                                  DEFAULT_VALUE, NONE, internal::infoCallBack);
+        return internal::applyCmd(*this, ncsi_nl_commands::NCSI_CMD_PKG_INFO,
+                                  package, DEFAULT_VALUE, NONE,
+                                  internal::infoCallBack);
     }
 }
 
-int setPackageMask(Interface& interface, unsigned int mask)
+int Interface::setPackageMask(unsigned int mask)
 {
     lg2::debug("Set Package Mask , INTERFACE: {INTERFACE} MASK: {MASK}",
-               "INTERFACE", interface, "MASK", lg2::hex, mask);
+               "INTERFACE", this, "MASK", lg2::hex, mask);
     auto payload = std::span<const unsigned char>(
         reinterpret_cast<const unsigned char*>(&mask),
         reinterpret_cast<const unsigned char*>(&mask) + sizeof(decltype(mask)));
     return internal::applyCmd(
-        interface,
-        internal::Command(ncsi_nl_commands::NCSI_CMD_SET_PACKAGE_MASK, 0,
-                          payload));
+        *this, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_PACKAGE_MASK, 0,
+                                 payload));
 }
 
-int setChannelMask(Interface& interface, int package, unsigned int mask)
+int Interface::setChannelMask(int package, unsigned int mask)
 {
     lg2::debug(
         "Set Channel Mask , INTERFACE: {INTERFACE}, PACKAGE : {PACKAGE} MASK: {MASK}",
-        "INTERFACE", interface, "PACKAGE", lg2::hex, package, "MASK", lg2::hex,
+        "INTERFACE", this, "PACKAGE", lg2::hex, package, "MASK", lg2::hex,
         mask);
     auto payload = std::span<const unsigned char>(
         reinterpret_cast<const unsigned char*>(&mask),
         reinterpret_cast<const unsigned char*>(&mask) + sizeof(decltype(mask)));
     return internal::applyCmd(
-        interface,
+        *this,
         internal::Command(ncsi_nl_commands::NCSI_CMD_SET_CHANNEL_MASK, 0,
                           payload),
         package);
