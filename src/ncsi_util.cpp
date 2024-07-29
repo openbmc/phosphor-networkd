@@ -4,6 +4,7 @@
 #include <netlink/genl/ctrl.h>
 #include <netlink/genl/genl.h>
 #include <netlink/netlink.h>
+#include "argument.hpp"
 
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/numeric/str.hpp>
@@ -268,6 +269,67 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return 0;
 };
 
+//These offsets are relative to the beginning of the respone header
+#define NCSIVERSN_OFFSET 20
+#define FWV_OFFSET       40
+#define PCIDID_OFFSET    44
+#define PCIVID_OFFSET    46
+#define PCISSID_OFFSET   48
+#define PCISVID_OFFSET   50
+#define MNFTRID_OFFSET   54
+
+CallBack getVersionCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    auto data_len = nla_len(tb[NCSI_ATTR_DATA]);
+    unsigned char *respdata = (unsigned char *)(nla_data(tb[NCSI_ATTR_DATA]));
+     auto str = toHexStr(std::span<const unsigned char>(respdata, data_len));
+    lg2::info("Command Specific Response {DATA_LEN} bytes: {DATA}",
+              "DATA_LEN", data_len, "DATA", str);
+
+    unsigned char *pncsiversn = (unsigned char *)(respdata + NCSIVERSN_OFFSET);
+    auto ncsiversn = toHexStr(std::span<const unsigned char>(pncsiversn, 4));
+    lg2::info("NCSI version (BCD): {NCSI_VERSION}", "NCSI_VERSION", ncsiversn);
+
+    unsigned char *pfwversion = (unsigned char *)(respdata + FWV_OFFSET);
+    auto fwversion = toHexStr(std::span<const unsigned char>(pfwversion, 4));
+    lg2::info("Firmware version: {FW_VERSION_ID}", "FW_VERSION_ID", fwversion);
+    //memcpy((void *)VersionId, pfwversion, 4);
+
+    unsigned short pcivid = *(unsigned short *)(respdata + PCIVID_OFFSET);
+    unsigned short pcidid = *(unsigned short *)(respdata + PCIDID_OFFSET);
+    lg2::info("PciVendor: {PCI_VENDOR_ID}", "PCI_VENDOR_ID", lg2::hex, pcivid);
+    lg2::info("PciDevice: {PCI_DEVICE_ID}", "PCI_DEVICE_ID", lg2::hex, pcidid);
+
+    unsigned short mnftrid = *(unsigned short *)(respdata + MNFTRID_OFFSET);
+    lg2::info("Manufacturer Id (IANA): {MANUFACTURER_ID}", "MANUFACTURER_ID",
+              mnftrid);
+
+    return 0;
+};
+
+
 int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
              int channel = DEFAULT_VALUE, int flags = NONE,
              CallBack function = nullptr)
@@ -456,6 +518,22 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int getVersion(int ifindex, int package, int channel)
+{
+    constexpr auto ncsi_cmd = NCSI_CMD_GET_VERSION;
+
+    printf("getVersion dx=%d pkg=%d chnl=%d", ifindex, package, channel);
+
+    lg2::debug(
+               "GetVersion , PACKAGE : {PACKAGE}, INTERFACE_INDEX: {INTERFACE_INDEX}",
+               "PACKAGE", lg2::hex, package, "INTERFACE_INDEX", lg2::hex, ifindex);
+
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, ncsi_cmd),
+        package, channel, NONE, internal::getVersionCallBack);
 }
 
 } // namespace ncsi

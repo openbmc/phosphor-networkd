@@ -4,6 +4,21 @@
 
 #include <map>
 #include <string>
+#include <linux/ncsi.h>
+
+/**
+ * struct ncsi_cmd_get_version - NCSI command to get version information
+ *
+ * @major: Major version number
+ * @minor: Minor version number
+ * @build: Build version number
+ */
+struct ncsi_cmd_get_version {
+    unsigned  major;
+    unsigned char  minor;
+    unsigned short  build;
+};
+typedef struct ncsi_cmd_get_version ncsi_cmd_get_version_t;
 
 namespace phosphor
 {
