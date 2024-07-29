@@ -72,9 +72,10 @@ void ArgumentParser::usage(char** argv)
            "    --index=<device index> | -x <device index> Specify device ifindex.\n"
            "    --package=<package> | -p <package> Specify a package.\n"
            "    --channel=<channel> | -c <channel> Specify a channel.\n"
-           "    --info  | -i      Retrieve info about NCSI topology.\n"
-           "    --set   | -s      Set a specific package/channel.\n"
-           "    --clear | -r      Clear all the settings on the interface.\n"
+           "    --info    | -i      Retrieve info about NCSI topology.\n"
+           "    --get     | -g      <vid/ncsi/parms ...> get specific data about the interface.\n"
+           "    --set     | -s      Set a specific package/channel.\n"
+           "    --clear   | -r      Clear all the settings on the interface.\n"
            "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n"
            "\n"
            "Example commands:\n"
@@ -88,6 +89,9 @@ void ArgumentParser::usage(char** argv)
            "         ncsi-netlink -x 3 -p 0 -r\n"
            "    5) Send NCSI Command\n"
            "         ncsi-netlink -x 3 -p 0 -c 0 -o 50000001572100\n"
+           "    6) Get Version ID:\n"
+           "         ncsi-netlink -x 2 -p 0 -c 0 --get vid\n"
+           "         ncsi-netlink -x 2 -p 0 -c 0 -g vid\n"
            "\n";
 }
 
@@ -95,6 +99,7 @@ const option ArgumentParser::options[] = {
     {"info", no_argument, NULL, 'i'},
     {"set", no_argument, NULL, 's'},
     {"clear", no_argument, NULL, 'r'},
+    {"get", required_argument, NULL, 'g'},
     {"oem-payload", required_argument, NULL, 'o'},
     {"package", required_argument, NULL, 'p'},
     {"channel", required_argument, NULL, 'c'},
@@ -103,7 +108,7 @@ const option ArgumentParser::options[] = {
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsx:o:p:c:h?";
+const char* ArgumentParser::optionStr = "irsx:g:o:p:c:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
