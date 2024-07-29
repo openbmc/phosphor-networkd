@@ -20,6 +20,8 @@ namespace network
 namespace ncsi
 {
 
+#define NCSI_CMD_GET_VERSION 0x15
+
 using CallBack = int (*)(struct nl_msg* msg, void* arg);
 
 static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
@@ -57,6 +59,32 @@ struct NCSIPacketHeader
     uint32_t rsvd[2];
 };
 
+struct ncsiCompletionCodes
+{
+    uint16_t completionCodeResponse;
+    uint16_t completionCodeReason;
+};
+
+struct versionIdData
+{
+    uint8_t  ncsiVersion[8];
+    uint8_t  firmwareName[12];
+    uint32_t firmwareVersion;
+    uint16_t pciDevId;
+    uint16_t pciVenId;
+    uint16_t pciSSID;
+    uint16_t pciSubVenId;
+    uint32_t manufacturerId;
+    uint32_t checksum;
+};
+
+struct getVersionIdResponse
+{
+    NCSIPacketHeader linkRespHdr;
+    ncsiCompletionCodes linkStatCodes;
+    struct versionIdData versnIdData;
+};
+
 class Command
 {
   public:
@@ -69,7 +97,8 @@ class Command
     Command(
         int ncsiCmd, int operation = DEFAULT_VALUE,
         std::span<const unsigned char> p = std::span<const unsigned char>()) :
-        ncsi_cmd(ncsiCmd), operation(operation), payload(p)
+        ncsi_cmd(ncsiCmd),
+        operation(operation), payload(p)
     {}
 
     int ncsi_cmd;
@@ -256,13 +285,96 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     }
 
     auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
-    unsigned char* data =
-        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
+    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) +
+                          sizeof(NCSIPacketHeader);
 
     // Dump the response to stdout. Enhancement: option to save response data
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
+
+    return 0;
+};
+
+std::string ncsiBCDToStr(const std::vector<uint8_t>& rawBCD)
+{
+    uint8_t byte = 0;
+    uint8_t nibble = 0;
+    std::string bcdStr{};
+
+    for (auto i = 0; i <= 2; i++)
+    {
+        byte = rawBCD.at(i);
+        nibble = (byte >> 4);
+        if (nibble < 10)
+        {
+            bcdStr.push_back(static_cast<char>(nibble + 0x30));
+        }
+
+        nibble = (byte & 0x0F);
+        if (nibble < 10)
+        {
+            bcdStr.push_back(static_cast<char>(nibble + 0x30));
+        }
+
+        bcdStr.push_back('.');
+    }
+
+    // Step on the trailing dot ...
+    bcdStr.back() = rawBCD.at(3);
+    bcdStr.push_back(rawBCD.at(7));
+
+    return bcdStr;
+}
+
+CallBack getVersionIdCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    getVersionIdResponse* getVersnIdResp =
+        reinterpret_cast<getVersionIdResponse*>(nla_data(tb[NCSI_ATTR_DATA]));
+
+    std::vector<uint8_t> rawBCD(getVersnIdResp->versnIdData.ncsiVersion,
+                                getVersnIdResp->versnIdData.ncsiVersion + 8);
+    lg2::debug("NCSI version (BCD): {NCSI_VERSION}", "NCSI_VERSION",
+               ncsiBCDToStr(rawBCD));
+
+    auto fwVersn =
+        std::span<const unsigned char>
+            (reinterpret_cast<const unsigned char *>(
+                &getVersnIdResp->versnIdData.firmwareVersion),
+                4);
+    lg2::debug("Firmware version: {FW_VERSION_ID}", "FW_VERSION_ID",
+               toHexStr(fwVersn));
+
+    lg2::debug("PciVendor: {PCI_VENDOR_ID}", "PCI_VENDOR_ID", lg2::hex,
+               ntohs(getVersnIdResp->versnIdData.pciVenId));
+
+    lg2::debug("PciDevice: {PCI_DEVICE_ID}", "PCI_DEVICE_ID", lg2::hex,
+               ntohs(getVersnIdResp->versnIdData.pciVenId));
+
+    lg2::debug("IANA Manufacturer Id: {MANUFACTURER_ID}", "MANUFACTURER_ID",
+               ntohl(getVersnIdResp->versnIdData.manufacturerId));
 
     return 0;
 };
@@ -346,8 +458,8 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
 
     if (cmd.operation != DEFAULT_VALUE)
     {
-        std::vector<unsigned char> pl(
-            sizeof(NCSIPacketHeader) + cmd.payload.size());
+        std::vector<unsigned char> pl(sizeof(NCSIPacketHeader) +
+                                      cmd.payload.size());
         NCSIPacketHeader* hdr = (NCSIPacketHeader*)pl.data();
 
         std::copy(cmd.payload.begin(), cmd.payload.end(),
@@ -455,6 +567,16 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int getVersionID(int ifindex, int package, int channel)
+{
+    constexpr auto ncsi_cmd = NCSI_CMD_GET_VERSION;
+
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, ncsi_cmd),
+        package, channel, NONE, internal::getVersionIdCallBack);
 }
 
 } // namespace ncsi
