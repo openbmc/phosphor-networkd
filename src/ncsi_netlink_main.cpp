@@ -19,7 +19,9 @@
 #include <phosphor-logging/lg2.hpp>
 
 #include <string>
+#include <cstring>
 #include <vector>
+#include <iostream>
 
 static void exitWithError(const char* err, char** argv)
 {
@@ -156,6 +158,10 @@ int main(int argc, char** argv)
     else if ((options)["clear"] == "true")
     {
         return ncsi::clearInterface(indexInt);
+    }
+    else if ((options)["version"] == "true")
+    {
+        return ncsi::getVersionID(indexInt, packageInt, channelInt);
     }
     else
     {

@@ -268,6 +268,50 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return 0;
 };
 
+CallBack getVersionIdCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    auto respdata = reinterpret_cast<const unsigned char *>(nla_data(tb[NCSI_ATTR_DATA]));
+
+    auto ncsiVer = std::span<const unsigned char>((respdata + NCSIVERSN_OFFSET), 4);
+    lg2::info("NCSI version (BCD): {NCSI_VERSION}", "NCSI_VERSION", toHexStr(ncsiVer));
+
+    auto fwVersion = std::span<const unsigned char>((respdata + FWV_OFFSET), 4);
+    lg2::info("Firmware version: {FW_VERSION_ID}", "FW_VERSION_ID", toHexStr(fwVersion));
+
+    lg2::info("PciVendor: {PCI_VENDOR_ID}", "PCI_VENDOR_ID", lg2::hex,
+              static_cast<unsigned short>(*(respdata + PCIVID_OFFSET)));
+    lg2::info("PciDevice: {PCI_DEVICE_ID}", "PCI_DEVICE_ID", lg2::hex,
+              static_cast<unsigned short>(*(respdata + PCIDID_OFFSET)));
+
+    lg2::info("Manufacturer Id (IANA): {MANUFACTURER_ID}", "MANUFACTURER_ID",
+              static_cast<unsigned short> (*(respdata + MNFTRID_OFFSET)));
+
+    return 0;
+};
+
+
 int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
              int channel = DEFAULT_VALUE, int flags = NONE,
              CallBack function = nullptr)
@@ -456,6 +500,16 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int getVersionID(int ifindex, int package, int channel)
+{
+    constexpr auto ncsi_cmd = NCSI_CMD_GET_VERSION;
+
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, ncsi_cmd),
+        package, channel, NONE, internal::getVersionIdCallBack);
 }
 
 } // namespace ncsi
