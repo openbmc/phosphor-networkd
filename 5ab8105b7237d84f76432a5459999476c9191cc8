@@ -49,6 +49,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a35afbd0_2f4c91be",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-07-30T19:02:50Z",
+      "side": 1,
+      "message": "*remove",
+      "parentUuid": "f42f2a3f_bd1c6b5e",
+      "range": {
+        "startLine": 24,
+        "startChar": 7,
+        "endLine": 24,
+        "endChar": 8
+      },
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f0ab51d9_80615b31",
         "filename": "src/ncsi_netlink_main.cpp",
         "patchSetId": 1
