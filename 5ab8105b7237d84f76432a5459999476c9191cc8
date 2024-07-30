@@ -26,6 +26,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "255dbbdf_10b23c60",
+        "filename": "src/argument.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-07-30T22:10:51Z",
+      "side": 1,
+      "message": "\"--version | -v\" option instead of \"--get\" will be more meaningful here.",
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7405a93_6a20a8b1",
+        "filename": "src/argument.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-07-30T22:10:51Z",
+      "side": 1,
+      "message": "I don\u0027t see this structure used anywhere in the code.",
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f42f2a3f_bd1c6b5e",
         "filename": "src/ncsi_netlink_main.cpp",
         "patchSetId": 1
@@ -84,6 +118,125 @@
       "writtenOn": "2024-07-29T23:55:11Z",
       "side": 1,
       "message": "We need a standard way of implementing --get xyz in general.\nI propose --get:(Capabilities/LinkStat/NCSI/Parameters/Version) ... AND ...\n-g (c/l/n/p/v)",
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "018b694c_2fa3d844",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-07-30T22:10:51Z",
+      "side": 1,
+      "message": "Remove this debug print",
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "abdd19b6_c6951d8f",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-07-30T22:10:51Z",
+      "side": 1,
+      "message": "You don\u0027t need to include this header file. You can use the ncsi_util.hpp for any new declaration.",
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa7c3cb7_634e57e3",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-07-30T22:10:51Z",
+      "side": 1,
+      "message": "Please move these macros to ncsi_util.hpp header file",
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4d3f14f_96f63e69",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-07-30T22:10:51Z",
+      "side": 1,
+      "message": "Avoid the debug messages",
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e3c2d8f_1c82979f",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 529,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-07-30T22:10:51Z",
+      "side": 1,
+      "message": "Avoid this message",
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7cd8fdea_6b963128",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-07-30T22:10:51Z",
+      "side": 1,
+      "message": "You don\u0027t need this macro of CMT_LINK_STATUS_RESP in the code",
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86f0ba7b_921bf4ab",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-07-30T22:10:51Z",
+      "side": 1,
+      "message": "Add the message for Channel params too",
       "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
