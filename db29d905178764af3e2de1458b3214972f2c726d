@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "57870e46_079df7ae",
+        "filename": "src/argument.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-30T21:29:37Z",
+      "side": 1,
+      "message": "Alligned description text as suggested.",
+      "parentUuid": "65923a22_70b0a1b0",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7720a54b_a9dc4842",
@@ -48,6 +66,24 @@
       "writtenOn": "2024-07-29T16:35:00Z",
       "side": 1,
       "message": "Consider using a std::array instead?\nThat way the NULL test below, which needs modification anyway, doesn\u0027t need to be done?",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d642e9e8_822273be",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-30T21:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7720a54b_a9dc4842",
       "revId": "db29d905178764af3e2de1458b3214972f2c726d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -69,6 +105,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7003fe19_5156e006",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-30T21:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfb6c728_8b1e53d9",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "20f498f7_11dc8a37",
@@ -82,6 +136,24 @@
       "writtenOn": "2024-07-29T16:35:00Z",
       "side": 1,
       "message": "Perform all endianess modifications in the getLinkStatusResponse callback.",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68f9ed77_0102495e",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-30T21:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20f498f7_11dc8a37",
       "revId": "db29d905178764af3e2de1458b3214972f2c726d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -103,6 +175,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3da7c86a_c68075fe",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-30T21:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "506951f7_01c4dc4a",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3291286e_6ffdfb45",
@@ -116,6 +206,24 @@
       "writtenOn": "2024-07-29T16:35:00Z",
       "side": 1,
       "message": "This is C++. Do not use 0 or NULL to check for invalid pointers.\nUse nullptr instead.\nIf this is a std::array instead, you could probably use a find() function call. That will keep you inside the range of the array.\nThis is off the top of my head:\n\nauto it \u003d find_if(....);\nif (*it \u003d\u003d linkspeedarray.c_end())\n  // print unknown;\nprint *it;",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "794d0ae1_77d45cd4",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-30T21:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3291286e_6ffdfb45",
       "revId": "db29d905178764af3e2de1458b3214972f2c726d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -171,6 +279,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f93a379b_7f37d75d",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-30T21:29:37Z",
+      "side": 1,
+      "message": "If i am using ntohl on length it prints as NCSI Response length : 0x100000 which is invalid ,but with htons it prints as NCSI Response length : 0x10 which is expected.",
+      "parentUuid": "00f85dac_de3657d5",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1809dba3_3b122d15",
@@ -184,6 +310,24 @@
       "writtenOn": "2024-07-29T16:35:00Z",
       "side": 1,
       "message": "Why not just make the data structure include the header, and then pass a const ptr to the print function?\nDon\u0027t bother with the error prone math, and allow the compiler to manage the indexing.",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25a2cccd_8c9e34e9",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-30T21:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1809dba3_3b122d15",
       "revId": "db29d905178764af3e2de1458b3214972f2c726d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -205,6 +349,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5745086_dd0c4587",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-30T21:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "608dbab1_1b05a1b2",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a82afcb6_4a334ebd",
@@ -218,6 +380,24 @@
       "writtenOn": "2024-07-29T16:35:00Z",
       "side": 1,
       "message": "Remove?\nThis isn\u0027t used anywhere in this commit.",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10c9df87_916c0538",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-30T21:29:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a82afcb6_4a334ebd",
       "revId": "db29d905178764af3e2de1458b3214972f2c726d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
