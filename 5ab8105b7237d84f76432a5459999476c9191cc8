@@ -3,6 +3,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fe7e97eb_74937391",
+        "filename": "src/argument.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-07-30T19:02:25Z",
+      "side": 1,
+      "message": "Need a descriptive message like the other options for e.g\n--get | -g         Get Version ID",
+      "range": {
+        "startLine": 78,
+        "startChar": 16,
+        "endLine": 78,
+        "endChar": 34
+      },
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f42f2a3f_bd1c6b5e",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-07-30T19:02:25Z",
+      "side": 1,
+      "message": "remote extra space",
+      "range": {
+        "startLine": 24,
+        "startChar": 7,
+        "endLine": 24,
+        "endChar": 8
+      },
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f0ab51d9_80615b31",
         "filename": "src/ncsi_netlink_main.cpp",
         "patchSetId": 1
@@ -14,6 +60,23 @@
       "writtenOn": "2024-07-29T23:55:11Z",
       "side": 1,
       "message": "We need a standard way of implementing --get xyz in general.\nI propose --get:(Capabilities/LinkStat/NCSI/Parameters/Version) ... AND ...\n-g (c/l/n/p/v)",
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b83af38c_408f380a",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-07-30T19:02:25Z",
+      "side": 1,
+      "message": "doxygen for this?",
       "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
