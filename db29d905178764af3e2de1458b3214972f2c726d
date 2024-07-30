@@ -417,6 +417,24 @@
       "message": "Don\u0027t define this here, as it isn\u0027t used outside ncsi_util.cpp",
       "revId": "db29d905178764af3e2de1458b3214972f2c726d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9b585fa_ba5c833e",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-30T21:30:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2c5c9cb_7a52b162",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
