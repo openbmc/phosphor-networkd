@@ -1,4 +1,4 @@
-/*   *
+/**
  * Copyright © 2018 IBM Corporation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +19,11 @@
 #include <phosphor-logging/lg2.hpp>
 
 #include <string>
+#include <cstring>
 #include <vector>
+#include <iostream>
 
-static   void exitWithError(const char* err, char** argv)
+static void exitWithError(const char* err, char** argv)
 {
     phosphor::network::ncsi::ArgumentParser::usage(argv);
     lg2::error("ERROR: {ERROR}", "ERROR", err);
@@ -157,9 +159,9 @@ int main(int argc, char** argv)
     {
         return ncsi::clearInterface(indexInt);
     }
-    else if ((options)["get"] == "true")
+    else if ((options)["version"] == "true")
     {
-        std::cout << "get (version): selected " << std::endl;
+        //std::cerr << "get version selected " << std::endl;
         return ncsi::getVersion(indexInt, packageInt, channelInt);
     }
     else

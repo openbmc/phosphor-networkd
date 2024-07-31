@@ -4,7 +4,7 @@
 #include <netlink/genl/ctrl.h>
 #include <netlink/genl/genl.h>
 #include <netlink/netlink.h>
-#include "argument.hpp"
+//#include "argument.hpp"
 
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/numeric/str.hpp>
@@ -269,15 +269,6 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return 0;
 };
 
-//These offsets are relative to the beginning of the respone header
-#define NCSIVERSN_OFFSET 20
-#define FWV_OFFSET       40
-#define PCIDID_OFFSET    44
-#define PCIVID_OFFSET    46
-#define PCISSID_OFFSET   48
-#define PCISVID_OFFSET   50
-#define MNFTRID_OFFSET   54
-
 CallBack getVersionCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
@@ -304,9 +295,9 @@ CallBack getVersionCallBack = [](struct nl_msg* msg, void* arg) {
 
     auto data_len = nla_len(tb[NCSI_ATTR_DATA]);
     unsigned char *respdata = (unsigned char *)(nla_data(tb[NCSI_ATTR_DATA]));
-     auto str = toHexStr(std::span<const unsigned char>(respdata, data_len));
-    lg2::info("Command Specific Response {DATA_LEN} bytes: {DATA}",
-              "DATA_LEN", data_len, "DATA", str);
+    auto str = toHexStr(std::span<const unsigned char>(respdata, data_len));
+    //lg2::info("Command Specific Response {DATA_LEN} bytes: {DATA}",
+    //          "DATA_LEN", data_len, "DATA", str);
 
     unsigned char *pncsiversn = (unsigned char *)(respdata + NCSIVERSN_OFFSET);
     auto ncsiversn = toHexStr(std::span<const unsigned char>(pncsiversn, 4));
@@ -524,11 +515,7 @@ int getVersion(int ifindex, int package, int channel)
 {
     constexpr auto ncsi_cmd = NCSI_CMD_GET_VERSION;
 
-    printf("getVersion dx=%d pkg=%d chnl=%d", ifindex, package, channel);
-
-    lg2::debug(
-               "GetVersion , PACKAGE : {PACKAGE}, INTERFACE_INDEX: {INTERFACE_INDEX}",
-               "PACKAGE", lg2::hex, package, "INTERFACE_INDEX", lg2::hex, ifindex);
+    //printf("getVersion dx=%d pkg=%d chnl=%d", ifindex, package, channel);
 
     return internal::applyCmd(
         ifindex,
