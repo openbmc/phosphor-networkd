@@ -247,6 +247,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8f99a690_e61c13f1",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-07-31T15:08:08Z",
+      "side": 1,
+      "message": "Hi John, After using [[maybe_unused]] we are seeing ncsi-netlink prints link status response and control stucks there.It is not exiting.We are looking into it.",
+      "parentUuid": "31d12dbf_07b58eaa",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "585be73f_f78dcd96",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 8
