@@ -85,6 +85,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "069ce9a3_f6b25811",
+        "filename": "src/argument.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-01T19:43:49Z",
+      "side": 1,
+      "message": "How much additional modification is expected?\nIf there are more \u0027get\u0027 style pending then perhaps\n-g \u003cextra-option\u003e\nparadigm makes more sense.\n\nI\u0027d rather not see \u0027version\u0027 used for get-channel-version.\n--version usually means the version of the program.\ngcc --version\ngcc (GCC) 14.1.1 20240701 (Red Hat 14.1.1-7)\n\nI expect ncsi-netlink to follow common models.",
+      "parentUuid": "255dbbdf_10b23c60",
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d7405a93_6a20a8b1",
         "filename": "src/argument.hpp",
         "patchSetId": 1
@@ -464,6 +482,24 @@
       "side": 1,
       "message": "The comment flower box is in doxygen format right?  It\u0027s been to long. \nI just followed the model above. Are you saying we should or should not use doxygen style for the function introduction ?",
       "parentUuid": "b83af38c_408f380a",
+      "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87dd76b6_49b6483f",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-01T19:43:49Z",
+      "side": 1,
+      "message": "Does OpenBMC use doxygen?\nIf this isn\u0027t in the repo now, please don\u0027t add it.",
+      "parentUuid": "d559975f_2e017a47",
       "revId": "5ab8105b7237d84f76432a5459999476c9191cc8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }

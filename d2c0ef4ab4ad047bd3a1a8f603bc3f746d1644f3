@@ -1,0 +1,129 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbe99141_6c8401ed",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-01T19:43:49Z",
+      "side": 1,
+      "message": "Remove commented debugging code.\nPrefer \"\\n\" to std::endl.\nMy understanding is \"\\n\" implicitly does a std::flush.\nI\u0027m also told std::endl is \"\\n\" \u0026\u0026 std::flush",
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef9d1992_20987a30",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-01T19:43:49Z",
+      "side": 1,
+      "message": "Don\u0027t push commented code.",
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81deb82e_9978da68",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-01T19:43:49Z",
+      "side": 1,
+      "message": "[[maybe_unused]] void* arg\n\nIf you applied this, I\u0027m curious what issues you saw.\nI applied this in other ncsi-netlink commits, and had no problems.",
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92dfac84_e149d497",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-01T19:43:49Z",
+      "side": 1,
+      "message": "remove in favor of [[maybe_unused]]",
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd8d6c18_22894197",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-01T19:43:49Z",
+      "side": 1,
+      "message": "Do any of the response packet fields need to be corrected for endianess?\n\nPerhaps switch to this:\n    auto respdata \u003d\n        reinterpret_cast\u003cconst unsigned char*\u003e(nla_data(tb[NCSI_ATTR_DATA]));\n    auto ncsiVer \u003d std::span\u003cconst unsigned char\u003e(respdata + NCSIVERSN_OFFSET, 4);\n    lg2::info(\"NCSI version (BCD): {NCSI_VERSION}\", \"NCSI_VERSION\",\n              toHexStr(ncsiVer));\n\nNow you can use std::span methods on ncsiVer, such as ncsiVer.size().\nThis also makes the toHexStr() call easier to read.\n\nPrefer C++ style casts:\n    lg2::info(\"PciVendor: {PCI_VENDOR_ID}\", \"PCI_VENDOR_ID\", lg2::hex,\n              static_cast\u003cunsigned short\u003e(*(respdata + PCIVID_OFFSET)));",
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e9700f3_f7586408",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-01T19:43:49Z",
+      "side": 1,
+      "message": "Suggest naming this getVersionID? That is the NCSI command name.\nYou\u0027re retrieving version content from a specific package/channel combination, not the revision of the ncsi-netlink utility.",
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "192a3b21_c0895997",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-01T19:43:49Z",
+      "side": 1,
+      "message": "replace \"with in\"\nshould be \"within\"",
+      "range": {
+        "startLine": 76,
+        "startChar": 39,
+        "endLine": 76,
+        "endChar": 46
+      },
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
