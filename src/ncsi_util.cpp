@@ -268,6 +268,48 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return 0;
 };
 
+CallBack sendAenCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    unsigned char *data = (unsigned char *)(nla_data(tb[NCSI_ATTR_DATA]));
+    unsigned char *resp = (unsigned char *)(data + AEN_RESPONSE_HEADER_SIZE);
+    auto resphdr = toHexStr(std::span<const unsigned char>(resp, 4));
+    //lg2::info("NCSI RESPONSE PACKET : {RESP_HDR}", "RESP_HDR", resphdr);
+
+    unsigned char *code = (unsigned char *)(resp + AEN_RESPONSE_CODE);
+    auto respcode = toHexStr(std::span<const unsigned char>(code, 4));
+    lg2::info("NCSI AEN RESPONSE CODE : {RESP_CODE}", "RESP_CODE", respcode);
+
+    unsigned char *reason = (unsigned char *)(resp + AEN_REASON_CODE);
+    auto respreason = toHexStr(std::span<const unsigned char>(reason, 4));
+    lg2::info("NCSI AEN REASON CODE: {REASON_CODE}", "REASON_CODE", respreason);
+    
+    return 0;
+};
+
 int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
              int channel = DEFAULT_VALUE, int flags = NONE,
              CallBack function = nullptr)
@@ -456,6 +498,17 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int aenEnable(int ifindex, int package)
+{
+    lg2::debug(
+        "Get Info , PACKAGE : {PACKAGE}, INTERFACE_INDEX: {INTERFACE_INDEX}",
+        "PACKAGE", lg2::hex, package, "INTERFACE_INDEX", lg2::hex, ifindex);
+        return internal::applyCmd(ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                                  NCSI_CMD_AEN_ENABLE),
+                                  package, NONE, NONE,
+                                  internal::sendAenCallBack);
 }
 
 } // namespace ncsi

@@ -12,6 +12,12 @@ namespace ncsi
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
 
+#define AEN_RESPONSE_HEADER_SIZE         16
+#define AEN_RESPONSE_CODE                18
+#define AEN_REASON_CODE                  20
+
+#define NCSI_CMD_AEN_ENABLE 0x8
+
 /* @brief  This function will ask underlying NCSI driver
  *         to send an OEM command (command type 0x50) with
  *         the specified payload as the OEM data.
@@ -57,6 +63,8 @@ int clearInterface(int ifindex);
  * @returns 0 on success and negative value for failure.
  */
 int getInfo(int ifindex, int package);
+
+int aenEnable(int ifindex, int package);
 
 } // namespace ncsi
 } // namespace network
