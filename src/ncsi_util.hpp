@@ -12,6 +12,20 @@ namespace ncsi
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
 
+constexpr auto disableAENMask = 0x00000000;
+constexpr auto enableLinkAENMask = 0x00000001;
+constexpr auto enableLinkConfigAENMask = 0x00000010;
+constexpr auto enableLinkNCdriverAENMask = 0x00000011;
+constexpr auto enableConfigAENMask = 0x00000100;
+constexpr auto enableConfigNCdriverAENMask = 0x00000101;
+constexpr auto enableHostNCdriverAENMask = 0x00000110;
+constexpr auto enableAENMask = 0x00000111;
+
+constexpr auto AEN_RESPONSE_CODE = 18;
+constexpr auto AEN_REASON_CODE = 20;
+
+constexpr auto NCSI_CMD_AEN_ENABLE = 0x8;
+
 /* @brief  This function will ask underlying NCSI driver
  *         to send an OEM command (command type 0x50) with
  *         the specified payload as the OEM data.
@@ -57,6 +71,8 @@ int clearInterface(int ifindex);
  * @returns 0 on success and negative value for failure.
  */
 int getInfo(int ifindex, int package);
+
+int aenEnable(int ifindex, int package, int channel, int AENInt);
 
 } // namespace ncsi
 } // namespace network
