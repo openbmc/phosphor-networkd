@@ -384,12 +384,9 @@ int applyCmd(Interface& interface, const Command& cmd,
         nl_socket_disable_seq_check(socket.get());
     }
 
-    if (function)
-    {
-        // Add a callback function to the socket
-        nl_socket_modify_cb(socket.get(), NL_CB_VALID, NL_CB_CUSTOM, function,
-                            NULL);
-    }
+    // Add a callback function to the socket
+    enum nl_cb_kind cb_kind = function ? NL_CB_CUSTOM : NL_CB_DEFAULT;
+    nl_socket_modify_cb(socket.get(), NL_CB_VALID, cb_kind, function, NULL);
 
     ret = nl_send_auto(socket.get(), msg.get());
     if (ret < 0)
