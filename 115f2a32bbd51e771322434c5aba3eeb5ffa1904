@@ -1,0 +1,205 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "90cc4081_5be986be",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-01T09:48:12Z",
+      "side": 1,
+      "message": "why commented out? delete if not required.",
+      "range": {
+        "startLine": 628,
+        "startChar": 1,
+        "endLine": 631,
+        "endChar": 63
+      },
+      "revId": "115f2a32bbd51e771322434c5aba3eeb5ffa1904",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51ddfc40_06d7ca53",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-01T09:48:12Z",
+      "side": 1,
+      "message": "using tab?",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 50
+      },
+      "revId": "115f2a32bbd51e771322434c5aba3eeb5ffa1904",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5182233_fb63fd53",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-01T09:48:12Z",
+      "side": 1,
+      "message": "replace tab with space",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 49
+      },
+      "revId": "115f2a32bbd51e771322434c5aba3eeb5ffa1904",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "883b9db6_d9304555",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-01T09:48:12Z",
+      "side": 1,
+      "message": "need to use camelCase",
+      "range": {
+        "startLine": 74,
+        "startChar": 2,
+        "endLine": 79,
+        "endChar": 21
+      },
+      "revId": "115f2a32bbd51e771322434c5aba3eeb5ffa1904",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e049a451_2f3e79e0",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-01T09:48:12Z",
+      "side": 1,
+      "message": "why are they commented out? better remove if not being used",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 31
+      },
+      "revId": "115f2a32bbd51e771322434c5aba3eeb5ffa1904",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b9bf815_6795f757",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-01T09:48:12Z",
+      "side": 1,
+      "message": "why are these commented out?",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 25
+      },
+      "revId": "115f2a32bbd51e771322434c5aba3eeb5ffa1904",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5367500b_d8544954",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-01T09:48:12Z",
+      "side": 1,
+      "message": "responseCode",
+      "range": {
+        "startLine": 98,
+        "startChar": 18,
+        "endLine": 98,
+        "endChar": 31
+      },
+      "revId": "115f2a32bbd51e771322434c5aba3eeb5ffa1904",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22d64629_8521438a",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-01T09:48:12Z",
+      "side": 1,
+      "message": "reasonCode",
+      "revId": "115f2a32bbd51e771322434c5aba3eeb5ffa1904",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6d52d7d_720135cf",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-01T09:48:12Z",
+      "side": 1,
+      "message": "printNcsiCapabilities",
+      "range": {
+        "startLine": 164,
+        "startChar": 5,
+        "endLine": 164,
+        "endChar": 28
+      },
+      "revId": "115f2a32bbd51e771322434c5aba3eeb5ffa1904",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}

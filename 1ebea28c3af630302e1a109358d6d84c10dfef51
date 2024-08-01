@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1298f87_6008fdea",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-01T09:48:12Z",
+      "side": 0,
+      "message": "why is this removed?",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 0
+      },
+      "revId": "1ebea28c3af630302e1a109358d6d84c10dfef51",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
