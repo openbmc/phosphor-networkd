@@ -38,6 +38,7 @@ int main(int argc, char** argv)
     int channelInt{};
     int indexInt{};
     int operationInt{DEFAULT_VALUE};
+    int AENInt{};
 
     // Parse out interface argument.
     auto ifIndex = (options)["index"];
@@ -196,6 +197,49 @@ int main(int argc, char** argv)
             exitWithError("Channel mask value is not valid", argv);
         }
         return ncsi::setChannelMask(indexInt, packageInt, mask);
+    }
+    else if ((options)["AEN"] != ArgumentParser::emptyString)
+    {
+        auto AEN = stoi((options)["AEN"], nullptr);
+        if (AEN < 0 || AEN > 7)
+        {
+            exitWithError("AEN value must be between 0 and 7", argv);
+        }
+        else
+        {
+            switch (AEN)
+            {
+                case 0:
+                    AENInt = disableAENMask;
+                    break;
+                case 1:
+                    AENInt = enableLinkAENMask;
+                    break;
+                case 2:
+                    AENInt = enableLinkConfigAENMask;
+                    break;
+                case 3:
+                    AENInt = enableLinkNCdriverAENMask;
+                    break;
+                case 4:
+                    AENInt = enableConfigAENMask;
+                    break;
+                case 5:
+                    AENInt = enableConfigNCdriverAENMask;
+                    break;
+                case 6:
+                    AENInt = enableHostNCdriverAENMask;
+                    break;
+                case 7:
+                    AENInt = enableAENMask;
+                    break;
+                default:
+                    // Additional check for negative case
+                    exitWithError("Invalid AEN value", argv);
+                    break;
+            }
+        }
+        return ncsi::aenEnable(indexInt, packageInt, channelInt, AENInt);
     }
     else
     {
