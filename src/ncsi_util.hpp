@@ -12,6 +12,11 @@ namespace ncsi
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
 
+#define AEN_RESPONSE_CODE                18
+#define AEN_REASON_CODE                  20
+
+#define NCSI_CMD_AEN_ENABLE 0x8
+
 /* @brief  This function will ask underlying NCSI driver
  *         to send an OEM command (command type 0x50) with
  *         the specified payload as the OEM data.
@@ -57,6 +62,17 @@ int clearInterface(int ifindex);
  * @returns 0 on success and negative value for failure.
  */
 int getInfo(int ifindex, int package);
+
+/* @brief  This function will ask underlying NCSI driver
+ *         to enable AEN for the given package and channel.
+ *         This function talks with the NCSI driver over
+ *         netlink messages.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] channel - Channel number with in the package.
+ * @returns 0 on success and negative value for failure.
+ */
+int aenEnable(int ifindex, int package, int channel);
 
 } // namespace ncsi
 } // namespace network

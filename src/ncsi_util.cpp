@@ -57,6 +57,18 @@ struct NCSIPacketHeader
     uint32_t rsvd[2];
 };
 
+struct ncsiCompletionCodes
+{
+    uint16_t completionCodeResponse;
+    uint16_t completionCodeReason;
+};
+
+struct aenEnableResponse
+{
+    NCSIPacketHeader aenEnableHeader;
+    ncsiCompletionCodes aenEnableCodes;
+};
+
 class Command
 {
   public:
@@ -268,6 +280,43 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return 0;
 };
 
+CallBack sendAenCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    aenEnableResponse* aenResp = static_cast<aenEnableResponse*>(nla_data(tb[NCSI_ATTR_DATA]));
+
+    lg2::debug("NCSI AEN Response packet type : {RESPONSE_PKT_TYPE}",
+               "RESPONSE_PKT_TYPE", lg2::hex, aenResp->aenEnableHeader.type);
+    lg2::debug("NCSI AEN Response code : {RESPONSE_CODE}",
+               "RESPONSE_CODE", lg2::hex, aenResp->aenEnableCodes.completionCodeResponse);
+    lg2::debug("NCSI AEN Reason Code : {REASON_CODE}",
+               "REASON_CODE", lg2::hex, aenResp->aenEnableCodes.completionCodeReason);
+    return 0;
+};
+
 int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
              int channel = DEFAULT_VALUE, int flags = NONE,
              CallBack function = nullptr)
@@ -456,6 +505,19 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int aenEnable(int ifindex, int package, int channel)
+{
+    lg2::debug(
+        "AEN Enable , PACKAGE : {PACKAGE}, INTERFACE_INDEX: {INTERFACE_INDEX}, "
+        "CHANNEL : {CHANNEL}","PACKAGE", lg2::hex, package, "INTERFACE_INDEX",
+        lg2::hex, ifindex, "CHANNEL", lg2::hex, channel);
+        return internal::applyCmd(ifindex,
+                        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                                  NCSI_CMD_AEN_ENABLE),
+                                  package, channel, NONE,
+                                  internal::sendAenCallBack);
 }
 
 } // namespace ncsi
