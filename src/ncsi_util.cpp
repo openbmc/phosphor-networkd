@@ -268,6 +268,40 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return 0;
 };
 
+CallBack sendAenCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    auto *data = reinterpret_cast<const unsigned char *>(nla_data(tb[NCSI_ATTR_DATA]));
+    lg2::info("NCSI AEN RESPONSE CODE : {RESP_CODE}", "RESP_CODE", lg2::hex,
+              static_cast<unsigned short> (*(data + AEN_RESPONSE_CODE)));
+    lg2::info("NCSI AEN REASON CODE: {REASON_CODE}", "REASON_CODE", lg2::hex,
+              static_cast<unsigned short> (*(data + AEN_REASON_CODE)));
+    return 0;
+};
+
 int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
              int channel = DEFAULT_VALUE, int flags = NONE,
              CallBack function = nullptr)
@@ -456,6 +490,17 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int aenEnable(int ifindex, int package, int channel)
+{
+    lg2::debug(
+        "Get Info , PACKAGE : {PACKAGE}, INTERFACE_INDEX: {INTERFACE_INDEX}",
+        "PACKAGE", lg2::hex, package, "INTERFACE_INDEX", lg2::hex, ifindex);
+        return internal::applyCmd(ifindex, internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                                  NCSI_CMD_AEN_ENABLE),
+                                  package, channel, NONE,
+                                  internal::sendAenCallBack);
 }
 
 } // namespace ncsi
