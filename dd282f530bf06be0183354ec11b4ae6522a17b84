@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ca01899_1a6c2f7f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-01T19:47:13Z",
+      "side": 1,
+      "message": "Please don\u0027t do this.\nThe revision control system is very good at keeping track of source code changes.\n\nThe commit message should describe the changes made, and the reasons the changes are made.\n\nIt should complete with a\nTested:\nsubblock that describes how you tested the code worked as expected.\nIt should be, IMO, reasonably detailed.\n\"Passed test suites\" is too vague, IMO.",
+      "revId": "dd282f530bf06be0183354ec11b4ae6522a17b84",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ad92c067_0505055b",
@@ -14,6 +31,23 @@
       "writtenOn": "2024-08-01T19:43:49Z",
       "side": 1,
       "message": "Some suggested changes.",
+      "revId": "dd282f530bf06be0183354ec11b4ae6522a17b84",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "490039d8_15fd99e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-01T19:47:13Z",
+      "side": 1,
+      "message": "Please update the commit message.",
       "revId": "dd282f530bf06be0183354ec11b4ae6522a17b84",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
