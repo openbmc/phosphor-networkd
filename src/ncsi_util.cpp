@@ -243,7 +243,7 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
     if (ret)
     {
-        lg2::error("Failed to parse package");
+        lg2::error("Failed to parse message");
         return ret;
     }
 
