@@ -78,7 +78,7 @@ class Command
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
 
-CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
+CallBack infoCallBack = [](struct nl_msg* msg, void*) {
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
 
@@ -99,8 +99,6 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
         {NLA_UNSPEC, 0, 0}, {NLA_NESTED, 0, 0}, {NLA_U32, 0, 0},
         {NLA_FLAG, 0, 0},   {NLA_NESTED, 0, 0}, {NLA_UNSPEC, 0, 0},
     };
-
-    *(int*)arg = 0;
 
     auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
     if (!tb[NCSI_ATTR_PACKAGE_LIST])
@@ -228,7 +226,7 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     return (int)NL_SKIP;
 };
 
-CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
+CallBack sendCallBack = [](struct nl_msg* msg, void*) {
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
     struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
@@ -237,8 +235,6 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
         {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
         {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
     };
-
-    *(int*)arg = 0;
 
     auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
     if (ret)
@@ -269,7 +265,6 @@ int applyCmd(Interface& interface, const Command& cmd,
              int package = DEFAULT_VALUE, int channel = DEFAULT_VALUE,
              int flags = NONE, CallBack function = nullptr)
 {
-    int cb_ret = 0;
     nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
     if (socket == nullptr)
     {
@@ -391,11 +386,9 @@ int applyCmd(Interface& interface, const Command& cmd,
 
     if (function)
     {
-        cb_ret = 1;
-
         // Add a callback function to the socket
         nl_socket_modify_cb(socket.get(), NL_CB_VALID, NL_CB_CUSTOM, function,
-                            &cb_ret);
+                            NULL);
     }
 
     ret = nl_send_auto(socket.get(), msg.get());
@@ -405,17 +398,14 @@ int applyCmd(Interface& interface, const Command& cmd,
         return ret;
     }
 
-    do
+    ret = nl_recvmsgs_default(socket.get());
+    if (ret < 0)
     {
-        ret = nl_recvmsgs_default(socket.get());
-        if (ret < 0)
-        {
-            lg2::error("Failed to receive the message , RC : {RC}", "RC", ret);
-            break;
-        }
-    } while (cb_ret);
+        lg2::error("Failed to receive the message , RC : {RC}", "RC", ret);
+        return ret;
+    }
 
-    return ret;
+    return (int)NL_STOP;
 }
 
 } // namespace internal
