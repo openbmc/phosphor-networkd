@@ -16,6 +16,80 @@
       "message": "Hi Timothy,John,Patrick\nResolved all comments.Kindly review and provide feedback.",
       "revId": "86afd5e22452b9df721e2675fcf8a1c06b2f197d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9f361dd_450b8c1a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-02T16:29:00Z",
+      "side": 1,
+      "message": "Some additional observations on the latest commit",
+      "revId": "86afd5e22452b9df721e2675fcf8a1c06b2f197d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d16f2edb_354a000c",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-02T16:29:00Z",
+      "side": 1,
+      "message": "You\u0027re repeating the pattern that begins on line 175 many times below.\nThere\u0027s many duplicated strings that only differ by a \"Yes\"/\"No\" or \"Up\"/\"Down\".\nThe code would consume less vertical space if it followed this pattern:\n\n    lg2::debug(\"Link Status : Link is {UPDOWN}\", \"UPDOWN\",\n               linkstatus.bits.linkFlag ? \"Up\" : \"Down\");",
+      "revId": "86afd5e22452b9df721e2675fcf8a1c06b2f197d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f21e823_53b6af1a",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-02T16:29:00Z",
+      "side": 1,
+      "message": "Capitalize to match \"Not capable\"?\ni.e. \"Capable\"\nIt looks a little weird to have\nxyz: capable\nzzy: Not capable",
+      "range": {
+        "startLine": 284,
+        "startChar": 55,
+        "endLine": 284,
+        "endChar": 62
+      },
+      "revId": "86afd5e22452b9df721e2675fcf8a1c06b2f197d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f849c018_39558a6b",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-02T16:29:00Z",
+      "side": 1,
+      "message": "Move these definitions and constexprs to ncsi_util.cpp?\nMake the constexprs static?\nNo other module is using these.",
+      "revId": "86afd5e22452b9df721e2675fcf8a1c06b2f197d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
