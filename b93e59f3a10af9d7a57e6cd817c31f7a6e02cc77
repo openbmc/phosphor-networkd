@@ -16,6 +16,108 @@
       "message": "Hi Patrick/Jonathan,\n\nThanks for reviewing the code. I have incorporated all the review comments. Please review the updated patchset and let me know your feedback.\n\nThanks\nBest Regards\nSharan",
       "revId": "b93e59f3a10af9d7a57e6cd817c31f7a6e02cc77",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "85a9c6c1_99a12d1b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-02T20:12:36Z",
+      "side": 1,
+      "message": "Recommendations.",
+      "revId": "b93e59f3a10af9d7a57e6cd817c31f7a6e02cc77",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e34f820_87082c80",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-02T20:12:36Z",
+      "side": 1,
+      "message": "If you add the NCISPacketHeader to NCSIControllerPacketStatsResponse, then this could be changed to:\nconvertStatsToHostEndianess(reinterpret_cast\u003cNCSIControllerPacketStatsResponse*\u003ensl_data(tb[NCSI_ATTR_DATA]));\nand there\u0027s no need to create a temporary variable or perform error prone pointer arithmetic.\n\nShouldn\u0027t convertStats...() only convert the statistics data?\nIt seems that the printStats...() function should be called immediately after the convertStats...() function. See my comments below",
+      "revId": "b93e59f3a10af9d7a57e6cd817c31f7a6e02cc77",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d7eb488_3bf419d2",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-02T20:12:36Z",
+      "side": 1,
+      "message": "I recommend changing this to use copy elision.\nNCSIControllerPacketStatsResponse convertStatsToHostEndianess(NCSIControllerPacketStatsResponse *inVar)\n{\n    NCSIControllerPacketStatsResponse localVar{};\n    // Do all the endianess conversions filling in the localVar\n    localVar.countersClearedFromLastReadMSB \u003d notohl(inVar.....);\n    return localVar;  // will not copy, will use move semantics.\n}",
+      "revId": "b93e59f3a10af9d7a57e6cd817c31f7a6e02cc77",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "317a7e9b_ba00b703",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-02T20:12:36Z",
+      "side": 1,
+      "message": "Don\u0027t do this here.",
+      "revId": "b93e59f3a10af9d7a57e6cd817c31f7a6e02cc77",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "547dc12e_28c66669",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-02T20:12:36Z",
+      "side": 1,
+      "message": "Change the passed parameter to a `const NCSIControllerPacket....\u0026 resp)`\nif you use the prior change you can \nauto endianCorrect \u003d convertStatsToHostEndianess(reinterpret_cast\u003cNCSIControllerPacketStatsResponse*\u003ensl_data(tb[NCSI_ATTR_DATA])));\nprintNCSIControllerStats(endianCorrect);\n\nOr just chain the two calls together eliminating the \u0027auto endianCorrect\u0027 var.",
+      "revId": "b93e59f3a10af9d7a57e6cd817c31f7a6e02cc77",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e866d64_9c2c8379",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-02T20:12:36Z",
+      "side": 1,
+      "message": "This function, and the next are effectively private?\nShouldn\u0027t the prototype be inside ncsi_util.cpp?\nApply \u0027static\u0027 keyword?",
+      "revId": "b93e59f3a10af9d7a57e6cd817c31f7a6e02cc77",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
