@@ -263,6 +263,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e11963d_48389516",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-02T11:18:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f99a690_e61c13f1",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "585be73f_f78dcd96",
@@ -276,6 +294,24 @@
       "writtenOn": "2024-07-29T16:35:00Z",
       "side": 1,
       "message": "This line is unnecessary in combination with the [[maybe_unused]] attribute.\nIt also looks suspect because I expect arg to be input data.",
+      "revId": "db29d905178764af3e2de1458b3214972f2c726d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cabc9702_7a64a405",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-02T11:18:57Z",
+      "side": 1,
+      "message": "Hi John, setting value of arg to 0 is necessary, since in function applyCmd,value of arg is passed in below NL API which is 1(cb_ret) and there is while loop at end of this function ( while (cb_ret);) which will wait till arg value is 0.So arg value is used and required to set to 0 otherwise control stucks.\n\ncb_ret \u003d 1;\n        // Add a callback function to the socket\nnl_socket_modify_cb(socket.get(), NL_CB_VALID, NL_CB_CUSTOM, function,\n                            \u0026cb_ret);\n............\n } while (cb_ret);",
+      "parentUuid": "585be73f_f78dcd96",
       "revId": "db29d905178764af3e2de1458b3214972f2c726d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },

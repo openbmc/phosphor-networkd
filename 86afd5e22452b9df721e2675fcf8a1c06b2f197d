@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a9d718c_b8201d00",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-02T11:18:57Z",
+      "side": 1,
+      "message": "Hi Timothy,John,Patrick\nResolved all comments.Kindly review and provide feedback.",
+      "revId": "86afd5e22452b9df721e2675fcf8a1c06b2f197d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
