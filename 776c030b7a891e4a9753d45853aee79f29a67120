@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "5657f536_75e8b1ca",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-02T10:11:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc8a1d89_f2c2be90",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "91ebbedf_c8930894",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 10
@@ -69,6 +87,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a1d6c45_45c49821",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-02T10:11:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1026f425_c71a9f06",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f44e2a8a_60aa4983",
@@ -82,6 +118,24 @@
       "writtenOn": "2024-07-26T17:58:27Z",
       "side": 1,
       "message": "If this is to block compilation errors:\nPrefer [[maybe_unused]] void* arg in the function prototype.\n\nThis is C++, so prefer nullptr to the C style code here:\narg \u003d nullptr;\nDon\u0027t do this in this function. Use the maybe_unused method.",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "257dad44_4f3f9a9b",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-02T10:11:26Z",
+      "side": 1,
+      "message": "1) After using [[maybe_unused]] we are facing ncsi-netlink prints show stats response and control stucks there.It is not exiting.We are looking into it.\n\n2) With this also arg \u003d nullptr getting the same behaviour.",
+      "parentUuid": "f44e2a8a_60aa4983",
       "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -103,6 +157,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "190afa75_f6f73da8",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-02T10:11:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "850522f1_9b4caea9",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "92255e8d_83673d0f",
@@ -116,6 +188,24 @@
       "writtenOn": "2024-07-26T17:58:27Z",
       "side": 1,
       "message": "I\u0027d prefer to see the resp and reason codes added to the NCSIControllerPacketStatsResponse structure.\nThis allows:\nNCSIControllerPacketStatsResponse* foo \u003d static_cast\u003cNCSIController....*\u003e(rcv_buf).\ninstead of manual byte shifting/combining.\nIn addition, the print controller stats function performs this work.\nWhy is it separate?\n\nPer Patricks suggestion, make this a be64toh and ntohl modification function.",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59311085_29368756",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-02T10:11:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "92255e8d_83673d0f",
       "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -137,6 +227,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "661132a0_74b12eaf",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-02T10:11:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1da9b203_7903c243",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8bef1939_98b38893",
@@ -154,6 +262,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "494d464a_432a929a",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-02T10:11:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8bef1939_98b38893",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "db71e7db_5f54fd90",
@@ -167,6 +293,24 @@
       "writtenOn": "2024-07-26T17:58:27Z",
       "side": 1,
       "message": "Suggest to change this whole section to:\nstd::cout \u003c\u003c \"\\nNIC statistics\"\n       \"\\nCounters cleared ... (MSB): \" \u003c\u003c var1\n       \"\\nCounters cleared ... (LSB): \" \u003c\u003c var2\n       .....\n       \"Error Jabber Packets Received: \" \u003c\u003c lastVar \"\\n\";\n\nThat way there\u0027s only a single cout.\nSee the usage() model in argument.cpp",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82607236_406a7486",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-02T10:11:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db71e7db_5f54fd90",
       "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -224,6 +368,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9b6f5c6_d359730c",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-02T10:11:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c80402a8_c14a9f49",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d3c10c8c_89891ef4",
@@ -237,6 +399,24 @@
       "writtenOn": "2024-07-26T17:58:27Z",
       "side": 1,
       "message": "Perhaps submit a kernel commit that adds this to ncsi.h?",
+      "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08e96202_37e71802",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-02T10:11:26Z",
+      "side": 1,
+      "message": "Will do. Just wanted to check which repo does this change go to if I add to ncsi.h?",
+      "parentUuid": "d3c10c8c_89891ef4",
       "revId": "776c030b7a891e4a9753d45853aee79f29a67120",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
