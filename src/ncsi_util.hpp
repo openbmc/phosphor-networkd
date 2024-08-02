@@ -45,23 +45,6 @@ enum {
 #define REASON_INFO_NOT_AVAIL       0x0006
 #define REASON_UNKNOWN_CMD_TYPE     0x7FFF
 
-// defined in DSP0222 Table 9
-struct NCSIPacketHeader
-{
-// 16 bytes NC-SI header
-    uint8_t MCID;
-	// For NC-SI 1.0 spec, this field has to set 0x01
-    uint8_t revision;
-    uint8_t reserved;// Reserved has to set to 0x00
-    uint8_t id;
-    uint8_t type;
-    uint8_t channel;
-	// Payload Length = 12 bits, 4 bits are reserved
-    uint16_t length;
-    uint32_t rsvd[2];
-};
-
-
 //Get Capabilities Command (0x16)
 //DSP0222 NCSI Spec 8.4.45
 
@@ -70,33 +53,23 @@ struct NCSIPacketHeader
 //Get Capabilities Response Structure
 //DSP0222 NCSI Spec 8.4.46
 
-struct NCSI_Get_Capabilities_Response {
-  uint32_t capabilities_flags;
-  uint32_t broadcast_packet_filter_capabilities;
-  uint32_t multicast_packet_filter_capabilities;
-  uint32_t buffering_capabilities;
-  uint32_t aen_control_support;
-  uint32_t filter_cnt;
-  //uint32_t vlan_filter_cnt:8;
-  //uint32_t mixed_filter_cnt:8;
-  //uint32_t multicast_filter_cnt:8;
-  //uint32_t unicast_filter_cnt:8;
-  //uint8_t  vlan_filter_cnt;
-  //uint8_t  mixed_filter_cnt;
-  //uint8_t  multicast_filter_cnt;
-  //uint8_t  unicast_filter_cnt;
+struct NCSIgetCapabilitiesResponse {
+  uint32_t capabilitiesFlags;
+  uint32_t broadcastPacketFilterCapabilities;
+  uint32_t multicastPacketFilterCapabilities;
+  uint32_t bufferingCapabilities;
+  uint32_t aenControlSupport;
+  uint32_t filterCnt;
   uint16_t reserved;
-  //uint8_t  vlan_mode_support;
-  //uint8_t  channel_cnt;
-  uint16_t  vlan_mode_support:8;
-  uint16_t  channel_cnt:8;
+  uint16_t vlanModeSupport:8;
+  uint16_t channelCnt:8;
 };
 
 /* NC-SI Response Packet */
-struct NCSI_Response_Packet {
+struct NCSIresponsePacket {
 /* end of NC-SI header */
-  unsigned short  Response_Code;
-  unsigned short  Reason_Code;
+  unsigned short  responseCode;
+  unsigned short  reasonCode;
 };
 
 constexpr auto DEFAULT_VALUE = -1;
@@ -161,8 +134,7 @@ int getCapabilities(int ifindex, int package);
  * @param[in] rcv_buf - NCSI response buffer.
  * @returns void.
  */
-void print_ncsi_capabilities(unsigned char *rcv_buf);
-
+void printNcsiCapabilities(unsigned char *rcvBuf);
 
 } // namespace ncsi
 } // namespace network
