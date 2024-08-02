@@ -46,6 +46,22 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 namespace internal
 {
 
+// defined in DSP0222 Table 9
+struct NCSIPacketHeader
+{
+// 16 bytes NC-SI header
+    uint8_t MCID;
+// For NC-SI 1.0 spec, this field has to set 0x01
+    uint8_t revision;
+    uint8_t reserved;// Reserved has to set to 0x00
+    uint8_t id;
+    uint8_t type;
+    uint8_t channel;
+// Payload Length = 12 bits, 4 bits are reserved
+    uint16_t length;
+    uint32_t rsvd[2];
+};
+
 class Command
 {
   public:
@@ -221,7 +237,7 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
 };
 
 // NCSI response code string
-const char *ncsi_resp_string[RESP_MAX] = {
+const char *ncsiRespString[RESP_MAX] = {
   "COMMAND_COMPLETED",
   "COMMAND_FAILED",
   "COMMAND_UNAVAILABLE",
@@ -229,7 +245,7 @@ const char *ncsi_resp_string[RESP_MAX] = {
 };
 
 // NCSI reason code string
-const char *ncsi_reason_string[NUM_NCSI_REASON_CODE] = {
+const char *ncsiReasonString[NUM_NCSI_REASON_CODE] = {
   "NO_ERROR",
   "INTF_INIT_REQD",
   "PARAM_INVALID",
@@ -241,7 +257,7 @@ const char *ncsi_reason_string[NUM_NCSI_REASON_CODE] = {
 };
 
 // NCSI command name
-const char *ncsi_cmd_string[NUM_NCSI_CDMS] = {
+const char *ncsiCmdString[NUM_NCSI_CDMS] = {
   "CLEAR_INITIAL_STATE",
   "SELECT_PACKAGE",
   "DESELECT_PACKAGE",
@@ -272,7 +288,7 @@ const char *ncsi_cmd_string[NUM_NCSI_CDMS] = {
 };
 
 const char *
-ncsi_cmd_type_to_name(int cmd)
+ncsiCmdTypeToName(int cmd)
 {
   switch (cmd) {
     case NCSI_OEM_CMD:
@@ -280,81 +296,81 @@ ncsi_cmd_type_to_name(int cmd)
     default:
       if ((cmd < 0) ||
           (cmd >= NUM_NCSI_CDMS) ||
-          (ncsi_cmd_string[cmd] == NULL)) {
+          (ncsiCmdString[cmd] == NULL)) {
         return "unknown_ncsi_cmd";
       } else {
-        return ncsi_cmd_string[cmd];
+        return ncsiCmdString[cmd];
       }
   }
 }
 
 const char *
-ncsi_cc_resp_name(int cc_resp)
+ncsiCcRespName(int ccResp)
 {
-  if ((cc_resp < 0) ||
-      (cc_resp >= RESP_MAX) ||
-      (ncsi_resp_string[cc_resp] == NULL)) {
+  if ((ccResp < 0) ||
+      (ccResp >= RESP_MAX) ||
+      (ncsiRespString[ccResp] == NULL)) {
     return "unknown_response";
   } else {
-    return ncsi_resp_string[cc_resp];
+    return ncsiRespString[ccResp];
   }
 }
 
 
 const char *
-ncsi_cc_reson_name(int cc_reason)
+ncsiCcResonName(int ccReason)
 {
-  switch (cc_reason) {
+  switch (ccReason) {
     case REASON_UNKNOWN_CMD_TYPE:
       return "UNKNOWN_CMD_TYPE";
     default:
-      if ((cc_reason < 0) ||
-          (cc_reason >= NUM_NCSI_REASON_CODE) ||
-          (ncsi_reason_string[cc_reason] == NULL)) {
+      if ((ccReason < 0) ||
+          (ccReason >= NUM_NCSI_REASON_CODE) ||
+          (ncsiReasonString[ccReason] == NULL)) {
         return "unknown_reason";
       } else {
-        return ncsi_reason_string[cc_reason];
+        return ncsiReasonString[ccReason];
       }
   }
 }
 
 int
-get_cmd_status(NCSI_Response_Packet *rcvBuf)
+getCmdStatus(NCSIresponsePacket *rcvBuf)
 {
-  int cc_resp = rcvBuf->Response_Code;
+  int ccResp = rcvBuf->responseCode;
 
-  return (cc_resp);
+  return (ccResp);
 }
 
-void print_ncsi_completion_codes(NCSI_Response_Packet *rcvBuf)
+void printNcsiCompletionCodes(NCSIresponsePacket *rcvBuf)
 {
-  int cc_resp = rcvBuf->Response_Code;
-  int cc_reason = rcvBuf->Reason_Code;
+  int ccResp = rcvBuf->responseCode;
+  int ccReason = rcvBuf->reasonCode;
 
   cout<<"NC-SI Command Response:"<<endl;
-  cout<<"Response: "<<ncsi_cc_resp_name(cc_resp)<<" ("<<"0x"<<hex<<cc_resp<<")"<<endl;
-  cout<<"Reason: "<<ncsi_cc_reson_name(cc_reason)<<" ("<<"0x"<<hex<<cc_reason<<")"<<endl;
+  cout<<"Response: "<<ncsiCcRespName(ccResp)<<" ("<<"0x"<<hex<<ccResp<<")"<<endl;
+  cout<<"Reason: "<<ncsiCcResonName(ccReason)<<" ("<<"0x"<<hex<<ccReason<<")"<<endl;
 
   return;
 }
 
 void
-print_ncsi_resp(unsigned char *data, int dataLen, int cmdSent)
+printNcsiResp(unsigned char *data, int dataLen, int cmdSent)
 {
-  NCSI_Response_Packet *rcvBuf = reinterpret_cast<NCSI_Response_Packet *>(data);
+  NCSIresponsePacket *rcvBuf = reinterpret_cast<NCSIresponsePacket *>(data);
 
-  cout<<"cmd: "<<ncsi_cmd_type_to_name(cmdSent)<<"("<<"0x"<<hex<<cmdSent<<")"<<endl;
-  print_ncsi_completion_codes(rcvBuf);
-  if (get_cmd_status(rcvBuf) != RESP_COMMAND_COMPLETED)
+  cout<<"cmd: "<<ncsiCmdTypeToName(cmdSent)<<"("<<"0x"<<hex<<cmdSent<<")"<<endl;
+  printNcsiCompletionCodes(rcvBuf);
+  if (getCmdStatus(rcvBuf) != RESP_COMMAND_COMPLETED)
   {
     return;
   }
 
-  dataLen = (dataLen - sizeof(NCSI_Response_Packet));
-  data=(data + sizeof(NCSI_Response_Packet));
+  dataLen = (dataLen - sizeof(NCSIresponsePacket));
+  data=(data + sizeof(NCSIresponsePacket));
     switch (cmdSent) {
      case NCSI_GET_CAPABILITIES:
-       print_ncsi_capabilities(data);
+       printNcsiCapabilities(data);
        break;
     default:
      cout<<"Payload length = "<<dataLen<<endl;
@@ -392,20 +408,20 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
         return -1;
     }
 
-    auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
+    auto dataLen = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
     unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) +
                           sizeof(NCSIPacketHeader);
 
     // Dump the response to stdout. Enhancement: option to save response data
-    auto str = toHexStr(std::span<const unsigned char>(data, data_len));
-    lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
+    auto str = toHexStr(std::span<const unsigned char>(data, dataLen));
+    lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", dataLen,
                "DATA", str);
 
 
     NCSIPacketHeader *rcvHdr = reinterpret_cast<NCSIPacketHeader *>(nla_data(tb[NCSI_ATTR_DATA]));
     int cmdSent = ((rcvHdr->type) & 0x7f) ;
      // Print NCSI response..
-    print_ncsi_resp(data,data_len,cmdSent);
+    printNcsiResp(data,dataLen,cmdSent);
     return 0;
 };
 
@@ -609,28 +625,24 @@ int getCapabilities(int ifindex, int package)
 
 
 void
-print_ncsi_capabilities(unsigned char *data)
+printNcsiCapabilities(unsigned char *data)
 {
-  NCSI_Get_Capabilities_Response *pResp =
-  reinterpret_cast<NCSI_Get_Capabilities_Response *>(data);
+  NCSIgetCapabilitiesResponse *pResp =
+  reinterpret_cast<NCSIgetCapabilitiesResponse *>(data);
 
   setlocale(LC_ALL, "");
   cout<<"\nGet Capabilities response"<<endl;
-  cout<<"  capabilities_flags = "<<"0x"<<hex<<ntohl(pResp->capabilities_flags)<<endl;
-  cout<<"  broadcast_packet_filter_capabilities = "<<"0x"<<hex<<ntohl(pResp->broadcast_packet_filter_capabilities)<<endl;
-  cout<<"  multicast_packet_filter_capabilities = "<<"0x"<<hex<<ntohl(pResp->multicast_packet_filter_capabilities)<<endl;
-  cout<<"  buffering_capabilities = "<<"0x"<<hex<<ntohl(pResp->buffering_capabilities)<<endl;
-  cout<<"  aen_control_support = "<<"0x"<<hex<<ntohl(pResp->aen_control_support)<<endl;
-  cout<<"  unicast_filter_cnt = "<<(((pResp->filter_cnt) & 0xff000000UL) >> 24)<<endl;
-  cout<<"  multicast_filter_cnt = "<<(((pResp->filter_cnt) & 0x00ff0000UL) >> 16)<<endl;
-  cout<<"  mixed_filter_cnt = "<<(((pResp->filter_cnt) & 0x0000ff00UL) >> 8)<<endl;
-  cout<<"  vlan_filter_cnt = "<<(((pResp->filter_cnt) & 0x000000ffUL) >> 0)<<endl;
-  //cout<<"  unicast_filter_cnt = "<<pResp->unicast_filter_cnt<<endl;
-  //cout<<"  multicast_filter_cnt = "<<pResp->multicast_filter_cnt<<endl;
-  //cout<<"  mixed_filter_cnt = "<<pResp->mixed_filter_cnt<<endl;
-  //cout<<"  vlan_filter_cnt = "<<pResp->vlan_filter_cnt<<endl;
-  cout<<"  channel_cnt = "<<pResp->channel_cnt<<endl;
-  cout<<"  vlan_mode_support = "<<pResp->vlan_mode_support<<endl;
+  cout<<"  capabilities_flags = "<<"0x"<<hex<<ntohl(pResp->capabilitiesFlags)<<endl;
+  cout<<"  broadcast_packet_filter_capabilities = "<<"0x"<<hex<<ntohl(pResp->broadcastPacketFilterCapabilities)<<endl;
+  cout<<"  multicast_packet_filter_capabilities = "<<"0x"<<hex<<ntohl(pResp->multicastPacketFilterCapabilities)<<endl;
+  cout<<"  buffering_capabilities = "<<"0x"<<hex<<ntohl(pResp->bufferingCapabilities)<<endl;
+  cout<<"  aen_control_support = "<<"0x"<<hex<<ntohl(pResp->aenControlSupport)<<endl;
+  cout<<"  unicast_filter_cnt = "<<(((pResp->filterCnt) & 0xff000000UL) >> 24)<<endl;
+  cout<<"  multicast_filter_cnt = "<<(((pResp->filterCnt) & 0x00ff0000UL) >> 16)<<endl;
+  cout<<"  mixed_filter_cnt = "<<(((pResp->filterCnt) & 0x0000ff00UL) >> 8)<<endl;
+  cout<<"  vlan_filter_cnt = "<<(((pResp->filterCnt) & 0x000000ffUL) >> 0)<<endl;
+  cout<<"  channel_cnt = "<<pResp->channelCnt<<endl;
+  cout<<"  vlan_mode_support = "<<pResp->vlanModeSupport<<endl;
 }
 
 
