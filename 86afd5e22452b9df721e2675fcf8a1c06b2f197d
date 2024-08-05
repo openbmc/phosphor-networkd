@@ -52,6 +52,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe99b3cf_840eedb6",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-05T05:01:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d16f2edb_354a000c",
+      "revId": "86afd5e22452b9df721e2675fcf8a1c06b2f197d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0f21e823_53b6af1a",
@@ -75,6 +93,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf7ca8d3_8f571903",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-05T05:01:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f21e823_53b6af1a",
+      "range": {
+        "startLine": 284,
+        "startChar": 55,
+        "endLine": 284,
+        "endChar": 62
+      },
+      "revId": "86afd5e22452b9df721e2675fcf8a1c06b2f197d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f849c018_39558a6b",
@@ -88,6 +130,24 @@
       "writtenOn": "2024-08-02T16:29:00Z",
       "side": 1,
       "message": "Move these definitions and constexprs to ncsi_util.cpp?\nMake the constexprs static?\nNo other module is using these.",
+      "revId": "86afd5e22452b9df721e2675fcf8a1c06b2f197d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7fe8d53_ef148681",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-05T05:01:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f849c018_39558a6b",
       "revId": "86afd5e22452b9df721e2675fcf8a1c06b2f197d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
