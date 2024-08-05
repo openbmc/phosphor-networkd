@@ -16,6 +16,23 @@
       "message": "Hi John, \nAs suggested reduced vertical space using terinay operator and resolved other comments.Kindly review. Thanks",
       "revId": "6c9003c99b1d878e60bb94db2bb8382311f232f0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffd2ab16_8f99fbf7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-05T13:49:22Z",
+      "side": 1,
+      "message": "Thank you for making the requested changes.\nI\u0027m going to allow others to supply comments now.\nYou will need one more +1 before a maintainer will take a look at the code.\nHave someone on your team review, and provide feedback.\nI could add some comments myself, but I don\u0027t want to bikeshed this commit.",
+      "revId": "6c9003c99b1d878e60bb94db2bb8382311f232f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
