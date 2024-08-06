@@ -16,6 +16,24 @@
       "message": "These should all be `sh`?",
       "revId": "68b487017e670d8567345bfbe3492e933391431f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d9affe8_252c5106",
+        "filename": "docs/Network-Configuration.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000397
+      },
+      "writtenOn": "2024-08-06T23:53:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26417f8a_185add91",
+      "revId": "68b487017e670d8567345bfbe3492e933391431f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
