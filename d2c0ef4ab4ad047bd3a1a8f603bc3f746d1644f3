@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca2a269f_ea919cab",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-06T18:06:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dbe99141_6c8401ed",
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef9d1992_20987a30",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-08-01T19:43:49Z",
       "side": 1,
       "message": "Don\u0027t push commented code.",
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9892d72_e271fcc5",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-06T18:06:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef9d1992_20987a30",
       "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -52,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b902633_fee0996d",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-06T18:06:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81deb82e_9978da68",
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "92dfac84_e149d497",
@@ -65,6 +119,24 @@
       "writtenOn": "2024-08-01T19:43:49Z",
       "side": 1,
       "message": "remove in favor of [[maybe_unused]]",
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b7ada76_b20036a3",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-06T18:06:16Z",
+      "side": 1,
+      "message": "I have tried commenting out this line and adding [[maybe_unused]] to the argument in the function header.  In both cases the program displays the results but then hangs waiting for \u003cCntl\u003eC.  Has anyone else observed this ? I am leaving this as is.",
+      "parentUuid": "92dfac84_e149d497",
       "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -86,6 +158,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "73f73df6_dae13f0c",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-06T18:06:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dd8d6c18_22894197",
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7e9700f3_f7586408",
@@ -103,6 +193,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e581525_70fb0882",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-06T18:06:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e9700f3_f7586408",
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "192a3b21_c0895997",
@@ -116,6 +224,30 @@
       "writtenOn": "2024-08-01T19:43:49Z",
       "side": 1,
       "message": "replace \"with in\"\nshould be \"within\"",
+      "range": {
+        "startLine": 76,
+        "startChar": 39,
+        "endLine": 76,
+        "endChar": 46
+      },
+      "revId": "d2c0ef4ab4ad047bd3a1a8f603bc3f746d1644f3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d596d0a_64cb028c",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-06T18:06:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "192a3b21_c0895997",
       "range": {
         "startLine": 76,
         "startChar": 39,
