@@ -23,9 +23,9 @@ interface object.
 5. VLANInterface: This describes the VLAN-specific properties.
 6. Bond: This describes the interface bonding parameters.
 
-# DbusObjects
+## DbusObjects
 
-## Interface Objects
+### Interface Objects
 
 Interface objects can be physical as well as virtual.
 
@@ -34,7 +34,7 @@ virtual interface object it can be deleted.
 
 Example: `/xyz/openbmc_project/network/eth0`
 
-## IPAddress Objects
+### IPAddress Objects
 
 There can be multiple IP address objects under an interface object. These
 objects can be deleted by the delete function.
@@ -47,15 +47,15 @@ IPv6 objects will have the following D-Bus object path.
 
 Example: `/xyz/openbmc_project/network/eth0/ipv6/5dfghilp/`
 
-## Conf Object
+### Conf Object
 
 This object will have the system configuration related parameters.
 
 Example: `/xyz/openbmc_project/network/conf`
 
-# UseCases
+## UseCases
 
-## Configure IP address:
+### Configure IP address:
 
 ```text
 busctl call xyz.openbmc_project.Network /xyz/openbmc_project/network/<interface>
@@ -68,9 +68,9 @@ curl -c cjar -b cjar -k -H "Content-Type: application/json" -X POST -d
 }' https://<hostname/ip>/xyz/openbmc_project/network/eth0/action/IP
 ```
 
-## Configure Default Gateway
+### Configure Default Gateway
 
-### Get
+#### Get
 
 ```text
 busctl get-property xyz.openbmc_project.Network
@@ -81,7 +81,7 @@ curl -c cjar -b cjar -k -H "Content-Type: application/json" -X GET
 https://<hostname/ip>/xyz/openbmc_project/network/config/attr/DefaultGateway
 ```
 
-### Set
+#### Set
 
 ```text
 busctl set-property xyz.openbmc_project.Network
@@ -97,9 +97,9 @@ https://<hostname/ip>/xyz/openbmc_project/network/config/attr/DefaultGateway
 NOTE: Since the system does not allow unpingable gateway address, make sure the
 gateway address is pingable.
 
-## Configure HostName
+### Configure HostName
 
-### Get
+#### Get
 
 ```text
 busctl get-property xyz.openbmc_project.Network
@@ -110,7 +110,7 @@ curl -c cjar -b cjar -k -H "Content-Type: application/json" -X GET
 https://<hostname/ip>/xyz/openbmc_project/network/config/attr/HostName
 ```
 
-### Set
+#### Set
 
 ```text
 busctl set-property xyz.openbmc_project.Network
@@ -122,7 +122,7 @@ curl -c cjar -b cjar -k -H "Content-Type: application/json" -X PUT -d '{"data":
 https://<hostname/ip>/xyz/openbmc_project/network/config/attr/HostName
 ```
 
-## Delete IP address
+### Delete IP address
 
 ```text
 busctl call xyz.openbmc_project.Network
@@ -138,9 +138,9 @@ curl -c cjar -b cjar -k -H "Content-Type: application/json" -X DELETE
 https://<hostname/ip>/xyz/openbmc_project/network/eth0/ipv4/fbfc29b
 ```
 
-## Configure DHCP
+### Configure DHCP
 
-### Get
+#### Get
 
 ```text
 busctl get-property xyz.openbmc_project.Network
@@ -151,7 +151,7 @@ curl -c cjar -b cjar -k -H "Content-Type: application/json" -X GET
 https://<hostname/ip>/xyz/openbmc_project/network/eth0/attr/DHCPEnabled
 ```
 
-### Set
+#### Set
 
 ```text
 busctl set-property xyz.openbmc_project.Network
@@ -162,9 +162,9 @@ curl -c cjar -b cjar -k -H "Content-Type: application/json" -X PUT -d '{"data":
 1}' https://<hostname/ip>/xyz/openbmc_project/network/eth0/attr/DHCPEnabled
 ```
 
-## Configure MACAddress
+### Configure MACAddress
 
-### Get
+#### Get
 
 ```text
 busctl get-property xyz.openbmc_project.Network
@@ -175,7 +175,7 @@ curl -c cjar -b cjar -k -H "Content-Type: application/json" -X GET
 https://<hostname/ip>/xyz/openbmc_project/network/eth0/attr/MACAddress
 ```
 
-### Set
+#### Set
 
 NOTE: MAC address should be LOCAL ADMIN MAC (2nd bit of first byte should be
 on).
@@ -190,7 +190,7 @@ curl -c cjar -b cjar -k -H "Content-Type: application/jon" -X PUT -d '{"data":
 https://<hostname/ip>/xyz/openbmc_project/network/eth0/attr/MACAddress
 ```
 
-## Network factory reset
+### Network factory reset
 
 ```text
 busctl call xyz.openbmc_project.Network /xyz/openbmc_project/network
@@ -200,9 +200,9 @@ curl -c cjar -b cjar -k -H "Content-Type: application/json" -X POST -d
 '{"data":[] }' https://<hostname/ip>/xyz/openbmc_project/network/action/Reset
 ```
 
-## VLAN
+### VLAN
 
-### Create
+#### Create
 
 ```text
 curl -c cjar -b cjar -k -H "Content-Type: application/json" -X POST -d
@@ -210,7 +210,7 @@ curl -c cjar -b cjar -k -H "Content-Type: application/json" -X POST -d
 https://<hostname/ip>/xyz/openbmc_project/network/action/VLAN
 ```
 
-### Delete
+#### Delete
 
 ```text
 curl -c cjar -b cjar -k -H "Content-Type: application/json" -X DELETE
@@ -220,13 +220,13 @@ busctl call xyz.openbmc_project.Network /xyz/openbmc_project/network/eth0_50
 xyz.openbmc_project.Object.Delete Delete
 ```
 
-### Enumerate
+#### Enumerate
 
 ```text
 curl -c cjar -b cjar -k -H "Content-Type: application/json" -X GET
 https://<hostname/ip>/xyz/openbmc_project/network/eth0_50/enumerate
 ```
 
-### Configure IP on VLAN Interface
+#### Configure IP on VLAN Interface
 
 Please refer to the "Configure IP address" section.
