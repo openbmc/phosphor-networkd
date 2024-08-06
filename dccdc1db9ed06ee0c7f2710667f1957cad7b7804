@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4da99ed_f96761fe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-06T20:39:59Z",
+      "side": 1,
+      "message": "In addition to the inline comments, I have the following comments in response to an email I received on this commit.\nFor some reason they don\u0027t seem to be visible here.\n1. It\u0027s not recommended to +1 your own submission. I\u0027d recommend sending email requests for attention to non-maintainers. Only after getting all the \"Submit Requirements\" applied would I email maintainers for attention, and only after allowing the maintainers an opportunity to review on their own schedule.\n\n2. There are numerous commits in flight, each fighting for a command line switch. As I mentioned I consider \u0027-v/--version\u0027 apropos of the ncsi_netlink executable version.\nWe can\u0027t really mess with the current set of command line switches without potentially messing up existing users.\nAt the same time I\u0027d rather not see an alphabet soup of difficult to remember single char switch names.\nMy suggestion is to add \u0027-o/--option\u0027 and then apply mandatory string option names, such as:\n-o get-vid, -o get-aen, -o set-aen [1|0], etc....\n\n3. Doxygen: \n   Do not \"de-doxygenate\" the source. Follow the existing paradigm. If it is doxygen, then ignore my comments regarding adding more like code comments.",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9f2f60a_ebc41205",
+        "filename": "src/argument.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-06T20:39:59Z",
+      "side": 1,
+      "message": "No elements from ncsi.h are inside this file.\nAs a result the ncsi.h file does not need to be in argument.hpp",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d73ce31_494281db",
+        "filename": "src/argument.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-06T20:39:59Z",
+      "side": 1,
+      "message": "Why is this added here?\nArgument parsing doesn\u0027t need ncsi constants does it?",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5c9072e_4dcde225",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-06T20:39:59Z",
+      "side": 1,
+      "message": "What functions are using cstring and iostream?\nPlease remove these if they aren\u0027t needed.",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4844865b_50c5c6cc",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-06T20:39:59Z",
+      "side": 1,
+      "message": "This is required to terminate the callback.\nI did not know that at the time I wrote the comment.\nThis looked like an unused variable placeholder, thus using maybe_unused.\nIt would have been nice to have had a comment from the original author indicating it had a purpose.",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b60c2fff_ebef256d",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-06T20:39:59Z",
+      "side": 1,
+      "message": "I recommend following the paradigm I suggested for:\nhttps://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/73039\nWhere the NCSI_HDR is part of a data structure describing the version ID response packet.\nDoing so would get rid of most (all?) of the pointer arithmetic, and the manual std::span creation.",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d2ca0dfb_db7be44f",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-06T20:39:59Z",
+      "side": 1,
+      "message": "All of these #defines are private to ncsi_util.cpp.\nI recommend placing them there.",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
