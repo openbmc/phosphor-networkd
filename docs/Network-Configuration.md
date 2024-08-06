@@ -55,7 +55,7 @@ Example: `/xyz/openbmc_project/network/conf`
 
 ## UseCases
 
-### Configure IP address:
+### Configure IP address
 
 ```sh
 busctl call xyz.openbmc_project.Network /xyz/openbmc_project/network/<interface>
