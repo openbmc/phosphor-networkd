@@ -1,7 +1,11 @@
 #pragma once
 
+#include <stdint.h>
+
+#include <optional>
 #include <span>
 #include <string>
+#include <vector>
 
 namespace phosphor
 {
@@ -12,6 +16,29 @@ namespace ncsi
 
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
+
+struct ChannelInfo
+{
+    uint32_t id;
+    bool active;
+    bool forced;
+    uint32_t version_major, version_minor;
+    std::string version;
+    uint32_t link_state;
+    std::vector<uint16_t> vlan_ids;
+};
+
+struct PackageInfo
+{
+    uint32_t id;
+    bool forced;
+    std::vector<ChannelInfo> channels;
+};
+
+struct InterfaceInfo
+{
+    std::vector<PackageInfo> packages;
+};
 
 struct Interface
 {
@@ -50,11 +77,13 @@ struct Interface
 
     /* @brief  This function is used to dump all the info
      *         of the package and the channels underlying
-     *         the package.
-     * @param[in] package - NCSI Package.
-     * @returns 0 on success and negative value for failure.
+     *         the package, or all packages if DEFAULT_VALUE
+     *         is passed
+     * @param[in] package - NCSI Package
+     * @returns an InterfaceInfo with package data the specified pacakge,
+     *          or all packages if none is specified.
      */
-    int getInfo(int package);
+    std::optional<InterfaceInfo> getInfo(int package);
 
     /* @brief  This function assigns a mask controlling responses to AEN from a
      * package.
