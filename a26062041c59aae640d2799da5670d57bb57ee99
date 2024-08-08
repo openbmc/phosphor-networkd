@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf1d8aa3_1a726396",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-08T10:48:04Z",
+      "side": 1,
+      "message": "Align this text as above",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62b3e672_bec1193b",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-08T10:48:04Z",
+      "side": 1,
+      "message": "try to include in response structure instead of adding",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b5a76db_ce408106",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-08T10:48:04Z",
+      "side": 1,
+      "message": "Please remove code for dumping of data",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f7519ab_f42f1197",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 623,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-08T10:48:04Z",
+      "side": 1,
+      "message": "Need to create separate callback",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "293fec74_368c735a",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-08T10:48:04Z",
+      "side": 1,
+      "message": "should not recieve the data as unsigned char,recieve as constant response structure",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33d013db_86907a54",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-08T10:48:04Z",
+      "side": 1,
+      "message": "Use Macros instead of magic numbers",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9ce834f_7699aa68",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-08T10:48:04Z",
+      "side": 1,
+      "message": "use getNCSICapabilities",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
