@@ -123,8 +123,8 @@ static stdplus::ManagedFd makeSock()
 Server::Server(sdeventplus::Event& event, Manager& manager) :
     sock(makeSock()),
     io(event, sock.get(), EPOLLIN | EPOLLET, [&](auto&&... args) {
-    return eventHandler(manager, std::forward<decltype(args)>(args)...);
-})
+        return eventHandler(manager, std::forward<decltype(args)>(args)...);
+    })
 {
     auto cb = [&](const nlmsghdr& hdr, std::string_view data) {
         handler(manager, hdr, data);
