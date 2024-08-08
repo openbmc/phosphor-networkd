@@ -85,12 +85,10 @@ EthInfo getEthInfo(stdplus::zstring_view ifname)
 {
     ethtool_cmd edata = {};
     edata.cmd = ETHTOOL_GSET;
-    return optionalIFReq(
-               ifname, SIOCETHTOOL, "ETHTOOL"sv,
-               [&](const ifreq&) {
+    return optionalIFReq(ifname, SIOCETHTOOL, "ETHTOOL"sv,
+                         [&](const ifreq&) {
         return EthInfo{.autoneg = edata.autoneg != 0, .speed = edata.speed};
-    },
-               &edata)
+    }, &edata)
         .value_or(EthInfo{});
 }
 

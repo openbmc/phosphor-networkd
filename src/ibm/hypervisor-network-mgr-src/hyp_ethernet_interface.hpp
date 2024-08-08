@@ -53,8 +53,8 @@ class HypEthInterface : public CreateIface
      */
     HypEthInterface(sdbusplus::bus_t& bus, const char* path,
                     std::string_view intfName, HypNetworkMgr& parent) :
-        CreateIface(bus, path, CreateIface::action::defer_emit),
-        bus(bus), objectPath(path), manager(parent)
+        CreateIface(bus, path, CreateIface::action::defer_emit), bus(bus),
+        objectPath(path), manager(parent)
     {
         HypEthernetIntf::interfaceName(intfName.data(), true);
         emit_object_added();
