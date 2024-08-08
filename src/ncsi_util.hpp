@@ -58,6 +58,15 @@ int clearInterface(int ifindex);
  */
 int getInfo(int ifindex, int package);
 
+/* @brief  This function will ask underlying NCSI driver
+ *         to get the NIC Capabilities.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] channel - Channel number within the package.
+ * @returns 0 on success and negative value for failure.
+ */
+int getCapabilities(int ifindex, int package, int channel);
+
 } // namespace ncsi
 } // namespace network
 } // namespace phosphor
