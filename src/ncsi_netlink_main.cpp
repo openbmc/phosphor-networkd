@@ -157,6 +157,10 @@ int main(int argc, char** argv)
     {
         return ncsi::clearInterface(indexInt);
     }
+    else if ((options)["show-cap"] == "true")
+    {
+        return ncsi::getCapabilities(indexInt, packageInt);
+    }
     else
     {
         exitWithError("No Command specified", argv);
