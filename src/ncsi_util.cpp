@@ -78,7 +78,19 @@ class Command
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
 
-CallBack infoCallBack = [](struct nl_msg* msg, void*) {
+struct infoCallBackContext
+{
+    InterfaceInfo* info;
+};
+
+CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
+    if (arg == nullptr)
+    {
+        lg2::error("Internal error: invalid info callback context");
+        return -1;
+    }
+
+    struct infoCallBackContext* info = (struct infoCallBackContext*)arg;
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
 
@@ -125,11 +137,12 @@ CallBack infoCallBack = [](struct nl_msg* msg, void*) {
             return -1;
         }
 
+        PackageInfo pkg;
+
         if (packagetb[NCSI_PKG_ATTR_ID])
         {
             auto attrID = nla_get_u32(packagetb[NCSI_PKG_ATTR_ID]);
-            lg2::debug("Package has id : {ATTR_ID}", "ATTR_ID", lg2::hex,
-                       attrID);
+            pkg.id = attrID;
         }
         else
         {
@@ -138,7 +151,7 @@ CallBack infoCallBack = [](struct nl_msg* msg, void*) {
 
         if (packagetb[NCSI_PKG_ATTR_FORCED])
         {
-            lg2::debug("This package is forced");
+            pkg.forced = true;
         }
 
         auto channelListTarget = static_cast<nlattr*>(
@@ -153,75 +166,59 @@ CallBack infoCallBack = [](struct nl_msg* msg, void*) {
             if (ret < 0)
             {
                 lg2::error("Failed to parse channel nested");
-                return -1;
+                continue;
             }
+
+            ChannelInfo chan;
 
             if (channeltb[NCSI_CHANNEL_ATTR_ID])
             {
-                auto channel = nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_ID]);
-                if (channeltb[NCSI_CHANNEL_ATTR_ACTIVE])
-                {
-                    lg2::debug("Channel Active : {CHANNEL}", "CHANNEL",
-                               lg2::hex, channel);
-                }
-                else
-                {
-                    lg2::debug("Channel Not Active : {CHANNEL}", "CHANNEL",
-                               lg2::hex, channel);
-                }
-
-                if (channeltb[NCSI_CHANNEL_ATTR_FORCED])
-                {
-                    lg2::debug("Channel is forced");
-                }
+                chan.id = nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_ID]);
+                chan.active = !!channeltb[NCSI_CHANNEL_ATTR_ACTIVE];
+                chan.forced = !!channeltb[NCSI_CHANNEL_ATTR_FORCED];
             }
             else
             {
                 lg2::debug("Channel with no ID");
+                continue;
             }
 
             if (channeltb[NCSI_CHANNEL_ATTR_VERSION_MAJOR])
             {
-                auto major =
+                chan.version_major =
                     nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_VERSION_MAJOR]);
-                lg2::debug("Channel Major Version : {CHANNEL_MAJOR_VERSION}",
-                           "CHANNEL_MAJOR_VERSION", lg2::hex, major);
             }
             if (channeltb[NCSI_CHANNEL_ATTR_VERSION_MINOR])
             {
-                auto minor =
+                chan.version_minor =
                     nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_VERSION_MINOR]);
-                lg2::debug("Channel Minor Version : {CHANNEL_MINOR_VERSION}",
-                           "CHANNEL_MINOR_VERSION", lg2::hex, minor);
             }
             if (channeltb[NCSI_CHANNEL_ATTR_VERSION_STR])
             {
-                auto str =
+                chan.version =
                     nla_get_string(channeltb[NCSI_CHANNEL_ATTR_VERSION_STR]);
-                lg2::debug("Channel Version Str : {CHANNEL_VERSION_STR}",
-                           "CHANNEL_VERSION_STR", str);
             }
             if (channeltb[NCSI_CHANNEL_ATTR_LINK_STATE])
             {
-                auto link =
+                chan.link_state =
                     nla_get_u32(channeltb[NCSI_CHANNEL_ATTR_LINK_STATE]);
-                lg2::debug("Channel Link State : {LINK_STATE}", "LINK_STATE",
-                           lg2::hex, link);
             }
             if (channeltb[NCSI_CHANNEL_ATTR_VLAN_LIST])
             {
-                lg2::debug("Active Vlan ids");
                 auto vids = channeltb[NCSI_CHANNEL_ATTR_VLAN_LIST];
                 auto vid = static_cast<nlattr*>(nla_data(vids));
                 auto len = nla_len(vids);
                 while (nla_ok(vid, len))
                 {
                     auto id = nla_get_u16(vid);
-                    lg2::debug("VID : {VLAN_ID}", "VLAN_ID", id);
+                    chan.vlan_ids.push_back(id);
                     vid = nla_next(vid, &len);
                 }
             }
+            pkg.channels.push_back(chan);
         }
+
+        info->info->packages.push_back(pkg);
     }
     return static_cast<int>(NL_STOP);
 };
@@ -263,7 +260,7 @@ CallBack sendCallBack = [](struct nl_msg* msg, void*) {
 
 int applyCmd(Interface& interface, const Command& cmd,
              int package = DEFAULT_VALUE, int channel = DEFAULT_VALUE,
-             int flags = NONE, CallBack function = nullptr)
+             int flags = NONE, CallBack function = nullptr, void* arg = nullptr)
 {
     nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
     if (socket == nullptr)
@@ -386,7 +383,7 @@ int applyCmd(Interface& interface, const Command& cmd,
 
     // Add a callback function to the socket
     enum nl_cb_kind cb_kind = function ? NL_CB_CUSTOM : NL_CB_DEFAULT;
-    nl_socket_modify_cb(socket.get(), NL_CB_VALID, cb_kind, function, nullptr);
+    nl_socket_modify_cb(socket.get(), NL_CB_VALID, cb_kind, function, arg);
 
     ret = nl_send_auto(socket.get(), msg.get());
     if (ret < 0)
@@ -449,22 +446,28 @@ int Interface::clearInterface()
         *this, internal::Command(ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE));
 }
 
-int Interface::getInfo(int package)
+std::optional<InterfaceInfo> Interface::getInfo(int package)
 {
+    int rc, flags = package == DEFAULT_VALUE ? NLM_F_DUMP : NONE;
+    InterfaceInfo info;
+
     lg2::debug("Get Info , PACKAGE : {PACKAGE}, INTERFACE: {INTERFACE}",
                "PACKAGE", lg2::hex, package, "INTERFACE", this);
-    if (package == DEFAULT_VALUE)
+
+    struct internal::infoCallBackContext ctx = {
+        .info = &info,
+    };
+
+    rc = internal::applyCmd(
+        *this, internal::Command(ncsi_nl_commands::NCSI_CMD_PKG_INFO), package,
+        DEFAULT_VALUE, flags, internal::infoCallBack, &ctx);
+
+    if (rc < 0)
     {
-        return internal::applyCmd(
-            *this, internal::Command(ncsi_nl_commands::NCSI_CMD_PKG_INFO),
-            package, DEFAULT_VALUE, NLM_F_DUMP, internal::infoCallBack);
+        return {};
     }
-    else
-    {
-        return internal::applyCmd(*this, ncsi_nl_commands::NCSI_CMD_PKG_INFO,
-                                  package, DEFAULT_VALUE, NONE,
-                                  internal::infoCallBack);
-    }
+
+    return info;
 }
 
 int Interface::setPackageMask(unsigned int mask)
