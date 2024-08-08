@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
+using namespace std;
 
 namespace phosphor
 {
@@ -45,16 +46,97 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 namespace internal
 {
 
-struct NCSIPacketHeader
+const int OPER_TYPE_MASK = 0x7f;
+
+#define UNICAST_FILTER_MASK(x) (((x) & 0xff000000UL) >> 24)
+#define MULTICAST_FILTER_MASK(x) (((x) & 0x00ff0000UL) >> 16)
+#define MIXED_FILTER_MASK(x) (((x) & 0x0000ff00UL) >> 8)
+#define VLAN_FILTER_MASK(x) (((x) & 0x000000ffUL) >> 0)
+
+
+#define NCSI_MAX_PAYLOAD 1480 // maximum payload size
+// max ethernet frame size = 1518
+// ethernet headr (14) + nc-si header (16) + nc-si payload (1480) + nc-si checksum (4) + 4 (FCS) = 1518
+
+// Maximum NC-SI netlink response
+ // Kernel sends all frame data after ethernet header, including FCS,
+ // as netlink response data.
+ //    nc-si header (16) + nc-si payload (1480) + nc-si checksum (4) + FCS (4) = 1504
+ //
+#define NCSI_MAX_NL_RESPONSE (sizeof(NCSIpacketHeader) + NCSI_MAX_PAYLOAD + 4 + 4)
+
+
+//NCSI OEM Commands
+#define NCSI_OEM_CMD 0x50
+#define NUM_NCSI_CDMS 27
+
+enum {
+  RESP_COMMAND_COMPLETED = 0,
+  RESP_COMMAND_FAILED,
+  RESP_COMMAND_UNAVAILABLE,
+  RESP_COMMAND_UNSUPPORTED,
+  RESP_MAX, /* max number of response code. */
+};
+
+
+#define NUM_NCSI_REASON_CODE             8
+#define REASON_NO_ERROR             0x0000
+#define REASON_INTF_INIT_REQD       0x0001
+#define REASON_PARAM_INVALID        0x0002
+#define REASON_CHANNEL_NOT_RDY      0x0003
+#define REASON_PKG_NOT_RDY          0x0004
+#define REASON_INVALID_PAYLOAD_LEN  0x0005
+#define REASON_INFO_NOT_AVAIL       0x0006
+#define REASON_UNKNOWN_CMD_TYPE     0x7FFF
+
+//Get Capabilities Command (0x16)
+//DSP0222 NCSI Spec 8.4.45
+
+#define NCSI_GET_CAPABILITIES 0x16
+
+//Get Capabilities Response Structure
+//DSP0222 NCSI Spec 8.4.46
+
+struct NCSIgetCapabilitiesInfo {
+  uint32_t capabilitiesFlags;
+  uint32_t broadcastPacketFilterCapabilities;
+  uint32_t multicastPacketFilterCapabilities;
+  uint32_t bufferingCapabilities;
+  uint32_t aenControlSupport;
+  uint32_t filterCnt;
+  uint16_t reserved;
+  uint16_t vlanModeSupport:8;
+  uint16_t channelCnt:8;
+};
+
+/* NC-SI Response Packet */
+struct NCSIcompletionCodes {
+/* end of NC-SI header */
+  unsigned short  responseCode;
+  unsigned short  reasonCode;
+};
+
+// defined in DSP0222 Table 9
+struct NCSIpacketHeader
 {
+// 16 bytes NC-SI header
     uint8_t MCID;
+// For NC-SI 1.0 spec, this field has to set 0x01
     uint8_t revision;
-    uint8_t reserved;
+    uint8_t reserved;// Reserved has to set to 0x00
     uint8_t id;
     uint8_t type;
     uint8_t channel;
+// Payload Length = 12 bits, 4 bits are reserved
     uint16_t length;
     uint32_t rsvd[2];
+};
+
+struct NCSIgetCapabilitiesResponse
+{
+    NCSIpacketHeader capRespHdr;
+    NCSIcompletionCodes capComCodes;
+    NCSIgetCapabilitiesInfo capabilitiesInfo;
 };
 
 class Command
@@ -80,6 +162,162 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+
+// NCSI response code string
+const char *NCSIrespString[RESP_MAX] = {
+  "COMMAND_COMPLETED",
+  "COMMAND_FAILED",
+  "COMMAND_UNAVAILABLE",
+  "COMMAND_UNSUPPORTED",
+};
+
+// NCSI reason code string
+const char *NCSIreasonString[NUM_NCSI_REASON_CODE] = {
+  "NO_ERROR",
+  "INTF_INIT_REQD",
+  "PARAM_INVALID",
+  "CHANNEL_NOT_RDY",
+  "PKG_NOT_RDY",
+  "INVALID_PAYLOAD_LEN",
+  "INFO_NOT_AVAIL",
+  "UNKNOWN_CMD_TYPE",
+};
+
+// NCSI command name
+const char *NCSIcmdString[NUM_NCSI_CDMS] = {
+  "CLEAR_INITIAL_STATE",
+  "SELECT_PACKAGE",
+  "DESELECT_PACKAGE",
+  "ENABLE_CHANNEL",
+  "DISABLE_CHANNEL",
+  "RESET_CHANNEL",
+  "ENABLE_CHANNEL_NETWORK_TX",
+  "DISABLE_CHANNEL_NETWORK_TX",
+  "AEN_ENABLE",
+  "SET_LINK",
+  "GET_LINK_STATUS",
+  "SET_VLAN_FILTER",
+  "ENABLE_VLAN",
+  "DISABLE_VLAN",
+  "SET_MAC_ADDRESS",
+  "invalid",  // no command 0x0f
+  "ENABLE_BROADCAST_FILTERING",
+  "DISABLE_BROADCAST_FILTERING",
+  "ENABLE_GLOBAL_MULTICAST_FILTERING",
+  "DISABLE_GLOBAL_MULTICAST_FILTERING",
+  "SET_NCSI_FLOW_CONTROL",
+  "GET_VERSION_ID",
+  "GET_CAPABILITIES",
+  "GET_PARAMETERS",
+  "GET_CONTROLLER_PACKET_STATISTICS",
+  "GET_NCSI_STATISTICS",
+  "GET_NCSI_PASS_THROUGH_STATISTICS",
+};
+
+const char *
+NCSIcmdTypeToName(int cmd)
+{
+  switch (cmd) {
+    case NCSI_OEM_CMD:
+      return "NCSI_OEM_CMD";
+    default:
+      if ((cmd < 0) ||
+          (cmd >= NUM_NCSI_CDMS) ||
+          (NCSIcmdString[cmd] == NULL)) {
+        return "unknown_ncsi_cmd";
+      } else {
+        return NCSIcmdString[cmd];
+      }
+  }
+}
+
+const char *
+NCSIccRespName(int ccResp)
+{
+  if ((ccResp < 0) ||
+      (ccResp >= RESP_MAX) ||
+      (NCSIrespString[ccResp] == NULL)) {
+    return "unknown_response";
+  } else {
+    return NCSIrespString[ccResp];
+  }
+}
+
+
+const char *
+NCSIccResonName(int ccReason)
+{
+  switch (ccReason) {
+    case REASON_UNKNOWN_CMD_TYPE:
+      return "UNKNOWN_CMD_TYPE";
+    default:
+      if ((ccReason < 0) ||
+          (ccReason >= NUM_NCSI_REASON_CODE) ||
+          (NCSIreasonString[ccReason] == NULL)) {
+        return "unknown_reason";
+      } else {
+        return NCSIreasonString[ccReason];
+      }
+  }
+}
+
+int
+getCmdStatus(const NCSIcompletionCodes *capComCodes)
+{
+  int ccResp = capComCodes->responseCode;
+
+  return (ccResp);
+}
+
+void printNCSIcompletionCodes(const NCSIcompletionCodes *capComCodes)
+{
+  int ccResp = capComCodes->responseCode;
+  int ccReason = capComCodes->reasonCode;
+
+  cout<<"NC-SI Command Response:"<<endl;
+  cout<<"Response: "<<NCSIccRespName(ccResp)<<" ("<<"0x"<<hex<<ccResp<<")"<<endl;
+  cout<<"Reason: "<<NCSIccResonName(ccReason)<<" ("<<"0x"<<hex<<ccReason<<")"<<endl;
+
+  return;
+}
+
+void
+printNCSIcapabilities(const NCSIgetCapabilitiesResponse* capRcv)
+{
+  setlocale(LC_ALL, "");
+
+  unsigned char cmdSent = ((capRcv->capRespHdr.type) & OPER_TYPE_MASK) ; // clear MSB and keep lower 7 bits to know command sent.
+  cout<<"cmd: "<<NCSIcmdTypeToName(static_cast<int>(cmdSent))<<"("<<"0x"<<hex<<static_cast<int>(cmdSent)<<")"<<endl;
+  printNCSIcompletionCodes(static_cast<const NCSIcompletionCodes*>(&(capRcv->capComCodes)));
+  if (getCmdStatus(static_cast<const NCSIcompletionCodes*>(&(capRcv->capComCodes))) != RESP_COMMAND_COMPLETED)
+  {
+    return;
+  }
+
+  if(static_cast<int>(cmdSent) != NCSI_GET_CAPABILITIES)
+  {
+    auto dataLen = (htons(capRcv->capRespHdr.length));
+    cout<<"Payload length = "<<dataLen<<endl;
+    auto str = toHexStr(std::span<const unsigned char>(reinterpret_cast<const unsigned char*>(&capRcv->capComCodes), dataLen));
+    lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", dataLen,
+               "DATA", str);
+    return;
+  }
+  cout<<"\nGet Capabilities response"<<endl;
+  cout<<"  capabilities_flags = "<<"0x"<<hex<<ntohl(capRcv->capabilitiesInfo.capabilitiesFlags)<<endl;
+  cout<<"  broadcast_packet_filter_capabilities = "<<"0x"<<hex<<ntohl(capRcv->capabilitiesInfo.broadcastPacketFilterCapabilities)<<endl;
+  cout<<"  multicast_packet_filter_capabilities = "<<"0x"<<hex<<ntohl(capRcv->capabilitiesInfo.multicastPacketFilterCapabilities)<<endl;
+  cout<<"  buffering_capabilities = "<<"0x"<<hex<<ntohl(capRcv->capabilitiesInfo.bufferingCapabilities)<<endl;
+  cout<<"  aen_control_support = "<<"0x"<<hex<<ntohl(capRcv->capabilitiesInfo.aenControlSupport)<<endl;
+  cout<<"  unicast_filter_cnt = "<<(UNICAST_FILTER_MASK(capRcv->capabilitiesInfo.filterCnt))<<endl;
+  cout<<"  multicast_filter_cnt = "<<(MULTICAST_FILTER_MASK(capRcv->capabilitiesInfo.filterCnt))<<endl;
+  cout<<"  mixed_filter_cnt = "<<(MIXED_FILTER_MASK(capRcv->capabilitiesInfo.filterCnt))<<endl;
+  cout<<"  vlan_filter_cnt = "<<(VLAN_FILTER_MASK(capRcv->capabilitiesInfo.filterCnt))<<endl;
+  cout<<"  channel_cnt = "<<capRcv->capabilitiesInfo.channelCnt<<endl;
+  cout<<"  vlan_mode_support = "<<capRcv->capabilitiesInfo.vlanModeSupport<<endl;
+  return;
+}
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -256,15 +494,60 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
         return -1;
     }
 
-    auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
+    auto dataLen = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIpacketHeader);
     unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) +
-                          sizeof(NCSIPacketHeader);
+                          sizeof(NCSIpacketHeader);
 
     // Dump the response to stdout. Enhancement: option to save response data
-    auto str = toHexStr(std::span<const unsigned char>(data, data_len));
-    lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
+    auto str = toHexStr(std::span<const unsigned char>(data, dataLen));
+    lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", dataLen,
                "DATA", str);
 
+    return 0;
+};
+
+CallBack getCapabilitiesCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    NCSIgetCapabilitiesResponse* capabilitiesResp =
+        (NCSIgetCapabilitiesResponse*)nla_data(tb[NCSI_ATTR_DATA]);
+    lg2::debug("NCSI Response packet type : {RESPONSE_PKT_TYPE}",
+               "RESPONSE_PKT_TYPE", lg2::hex, capabilitiesResp->capRespHdr.type);
+
+    auto respHdrLen = htons(capabilitiesResp->capRespHdr.length);
+    lg2::debug("NCSI Response length : {RESPONSE_LEN}", "RESPONSE_LEN",
+               lg2::hex, respHdrLen);
+
+    // Convert capabilities status response to Host Endianess
+    capabilitiesResp->capComCodes.responseCode =
+        ntohl(capabilitiesResp->capComCodes.responseCode);
+    capabilitiesResp->capComCodes.reasonCode =
+        ntohl(capabilitiesResp->capComCodes.reasonCode);
+
+    printNCSIcapabilities(static_cast<const NCSIgetCapabilitiesResponse*>(capabilitiesResp));
     return 0;
 };
 
@@ -347,12 +630,12 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
 
     if (cmd.operation != DEFAULT_VALUE)
     {
-        std::vector<unsigned char> pl(sizeof(NCSIPacketHeader) +
+        std::vector<unsigned char> pl(sizeof(NCSIpacketHeader) +
                                       cmd.payload.size());
-        NCSIPacketHeader* hdr = (NCSIPacketHeader*)pl.data();
+        NCSIpacketHeader* hdr = (NCSIpacketHeader*)pl.data();
 
         std::copy(cmd.payload.begin(), cmd.payload.end(),
-                  pl.begin() + sizeof(NCSIPacketHeader));
+                  pl.begin() + sizeof(NCSIpacketHeader));
 
         hdr->type = cmd.operation;
         hdr->length = htons(cmd.payload.size());
@@ -456,6 +739,18 @@ int getInfo(int ifindex, int package)
                                   package, DEFAULT_VALUE, NONE,
                                   internal::infoCallBack);
     }
+}
+
+int getCapabilities(int ifindex, int package, int channel)
+{
+    lg2::debug("Send NCSI Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
+               "INTERFACE_INDEX: {INTERFACE_INDEX}",
+               "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
+               "INTERFACE_INDEX", lg2::hex, ifindex);
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, NCSI_GET_CAPABILITIES),
+        package, channel, NONE, internal::getCapabilitiesCallBack);
 }
 
 } // namespace ncsi
