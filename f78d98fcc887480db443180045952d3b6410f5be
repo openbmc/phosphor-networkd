@@ -48,6 +48,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "980f05ac_d41d65f9",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1002114
+      },
+      "writtenOn": "2024-08-09T06:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ba0e534_9d45d416",
+      "range": {
+        "startLine": 300,
+        "startChar": 4,
+        "endLine": 300,
+        "endChar": 74
+      },
+      "revId": "f78d98fcc887480db443180045952d3b6410f5be",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a63741ec_5a6022ff",
@@ -79,6 +103,24 @@
       "side": 1,
       "message": "Removed extra space",
       "parentUuid": "a63741ec_5a6022ff",
+      "revId": "f78d98fcc887480db443180045952d3b6410f5be",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2041c326_ee9e686c",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1002114
+      },
+      "writtenOn": "2024-08-09T06:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2f38ad3_2b989c54",
       "revId": "f78d98fcc887480db443180045952d3b6410f5be",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
