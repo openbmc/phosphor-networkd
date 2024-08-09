@@ -73,6 +73,7 @@ void ArgumentParser::usage(char** argv)
            "    --info  | -i      Retrieve info about NCSI topology.\n"
            "    --set   | -s      Set a specific package/channel.\n"
            "    --clear | -r      Clear all the settings on the interface.\n"
+           "    --NCSI-stats | -n Get NCSI statistics.\n"
            "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n"
            "    --pmask=<mask> | -j <mask> Bitmask to enable/disable packages\n"
            "    --cmask=<mask> | -k <mask> Bitmask to enable/disable channels\n"
@@ -92,6 +93,8 @@ void ArgumentParser::usage(char** argv)
            "         ncsi-netlink -x 3 -j 1\n"
            "    7) Set Channel Mask\n"
            "         ncsi-netlink -x 3 -p 0 -k 1\n"
+           "    8) Get NCSI Statistics\n"
+           "         ncsi-netlink -x 2 -p 0 -c 0 -n\n"
            "\n";
 }
 
@@ -99,6 +102,7 @@ const option ArgumentParser::options[] = {
     {"info", no_argument, NULL, 'i'},
     {"set", no_argument, NULL, 's'},
     {"clear", no_argument, NULL, 'r'},
+    {"NCSI-stats", no_argument, NULL, 'n'},
     {"oem-payload", required_argument, NULL, 'o'},
     {"package", required_argument, NULL, 'p'},
     {"channel", required_argument, NULL, 'c'},
@@ -109,7 +113,7 @@ const option ArgumentParser::options[] = {
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsj:k:x:o:p:c:h?";
+const char* ArgumentParser::optionStr = "irsnj:k:x:o:p:c:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
