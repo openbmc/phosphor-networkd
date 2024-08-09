@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1d307c7_06449cad",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-09T07:00:41Z",
+      "side": 1,
+      "message": "AEN enable??",
+      "revId": "fb841935ffae99b699facdb509be088e72354dea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cccb0e7_4f0bf54c",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-09T07:00:41Z",
+      "side": 1,
+      "message": "use static cast here",
+      "revId": "fb841935ffae99b699facdb509be088e72354dea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53c1e991_159b25b2",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-09T07:00:41Z",
+      "side": 1,
+      "message": "instead of adding logic include in structure and just print as struct memeber.no need to use static cast here",
+      "revId": "fb841935ffae99b699facdb509be088e72354dea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88bcf405_b4a1c116",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-09T07:00:41Z",
+      "side": 1,
+      "message": "function description and param description missed?",
+      "revId": "fb841935ffae99b699facdb509be088e72354dea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
