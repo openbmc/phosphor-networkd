@@ -9,6 +9,7 @@
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
 
+#include <iostream>
 #include <vector>
 
 namespace phosphor
@@ -17,6 +18,10 @@ namespace network
 {
 namespace ncsi
 {
+
+// NCSI PACKET TYPE
+// Control packet type for Get NCSI Statistics
+static constexpr auto ncsiCmdGetNCSIStatistics = 0x19;
 
 using CallBack = int (*)(struct nl_msg* msg, void* arg);
 
@@ -55,6 +60,25 @@ struct NCSIPacketHeader
     uint32_t rsvd[2];
 };
 
+struct NCSIResponsePacketStatus
+{
+    uint16_t responseCode;
+    uint16_t reasonCode;
+};
+
+struct NCSIStatsResponse
+{
+    NCSIPacketHeader respPktHdr;
+    NCSIResponsePacketStatus respPktStatus;
+    uint32_t cmdsRcvd;
+    uint32_t ctrlPktsDropped;
+    uint32_t cmdTypeErrs;
+    uint32_t cmdChksumErrs;
+    uint32_t rxPkts;
+    uint32_t txPkts;
+    uint32_t aensSent;
+}; // DSP0222 NCSI Spec 8.4.52
+
 class Command
 {
   public:
@@ -77,6 +101,20 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+static void printNCSIStats(const NCSIStatsResponse* NCSIStatsResp)
+{
+    setlocale(LC_ALL, "");
+    std::cout
+        << "\nNIC NC-SI statistics "
+        << "\nNC-SI Commands Received: " << NCSIStatsResp->cmdsRcvd
+        << "\nNC-SI Control Packets Dropped: " << NCSIStatsResp->ctrlPktsDropped
+        << "\nNC-SI Command Type Errors: " << NCSIStatsResp->cmdTypeErrs
+        << "\nNC-SI Commands Checksum Errors: " << NCSIStatsResp->cmdChksumErrs
+        << "\nNC-SI Receive Packets: " << NCSIStatsResp->rxPkts
+        << "\nNC-SI Transmit Packets: " << NCSIStatsResp->txPkts
+        << "\nAENs Sent: " << NCSIStatsResp->aensSent << "\n";
+}
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -261,6 +299,67 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
+
+    return 0;
+};
+
+CallBack getNCSIStatsCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    NCSIStatsResponse* NCSIStatsResp =
+        std::bit_cast<NCSIStatsResponse*>(nla_data(tb[NCSI_ATTR_DATA]));
+
+    lg2::debug("NCSI Response packet type : {RESPONSE_PKT_TYPE}",
+               "RESPONSE_PKT_TYPE", lg2::hex, NCSIStatsResp->respPktHdr.type);
+
+    auto respHdrLen = htons(NCSIStatsResp->respPktHdr.length);
+    lg2::debug("NCSI Response length : {RESPONSE_LEN}", "RESPONSE_LEN",
+               lg2::hex, respHdrLen);
+
+    // Convert packet status response to Host Endianess
+    NCSIStatsResp->respPktStatus.responseCode =
+        ntohs(NCSIStatsResp->respPktStatus.responseCode);
+    NCSIStatsResp->respPktStatus.reasonCode =
+        ntohs(NCSIStatsResp->respPktStatus.reasonCode);
+
+    lg2::debug("NCSI Response Code : {RESPONSE_CODE}", "RESPONSE_CODE",
+               lg2::hex, NCSIStatsResp->respPktStatus.responseCode);
+    lg2::debug("NCSI Reason Code : {REASON_CODE}", "REASON_CODE", lg2::hex,
+               NCSIStatsResp->respPktStatus.reasonCode);
+
+    // Convert payload to Host Endianess
+    NCSIStatsResp->cmdsRcvd = ntohl(NCSIStatsResp->cmdsRcvd);
+    NCSIStatsResp->ctrlPktsDropped = ntohl(NCSIStatsResp->ctrlPktsDropped);
+    NCSIStatsResp->cmdTypeErrs = ntohl(NCSIStatsResp->cmdTypeErrs);
+    NCSIStatsResp->cmdChksumErrs = ntohl(NCSIStatsResp->cmdChksumErrs);
+    NCSIStatsResp->rxPkts = ntohl(NCSIStatsResp->rxPkts);
+    NCSIStatsResp->txPkts = ntohl(NCSIStatsResp->txPkts);
+    NCSIStatsResp->aensSent = ntohl(NCSIStatsResp->aensSent);
+
+    printNCSIStats(static_cast<const NCSIStatsResponse*>(NCSIStatsResp));
 
     return 0;
 };
@@ -505,6 +604,15 @@ int setChannelMask(int ifindex, int package, unsigned int mask)
                           payload),
         package);
     return 0;
+}
+
+int getNCSIStats(int ifindex, int package, int channel)
+{
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                          ncsiCmdGetNCSIStatistics),
+        package, channel, NONE, internal::getNCSIStatsCallBack);
 }
 
 } // namespace ncsi
