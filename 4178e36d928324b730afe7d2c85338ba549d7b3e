@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92570379_ab70ed92",
+        "filename": "src/argument.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-09T20:12:23Z",
+      "side": 1,
+      "message": "Henry, We need to incorporate Johnathan Mantey\u0027s feedback:\n\nThere are numerous commits in flight, each fighting for a command line switch. As I mentioned I consider \u0027-v/--version\u0027 apropos of the ncsi_netlink executable version.\nWe can\u0027t really mess with the current set of command line switches without potentially messing up existing users.\nAt the same time I\u0027d rather not see an alphabet soup of difficult to remember single char switch names.\nMy suggestion is to add \u0027-o/--option\u0027 and then apply mandatory string option names, such as:\n-o get-vid, -o get-aen, -o set-aen [1|0], etc....\n\nSo, in this case, we need to add -o get-vid instead of --version/-v",
+      "range": {
+        "startLine": 78,
+        "startChar": 15,
+        "endLine": 78,
+        "endChar": 54
+      },
+      "revId": "4178e36d928324b730afe7d2c85338ba549d7b3e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab097fbc_74630e0e",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-09T20:12:23Z",
+      "side": 1,
+      "message": "Also, this one,\nDoxygen:\nDo not \"de-doxygenate\" the source. Follow the existing paradigm. If it is doxygen, then ignore my comments regarding adding more like code comments.\n\ni.e., use: /* * * * */ (similar to what is already present)\n\ninstead of \n\n//\n//\n//\n//\n//",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 55
+      },
+      "revId": "4178e36d928324b730afe7d2c85338ba549d7b3e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
