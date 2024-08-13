@@ -9,6 +9,7 @@
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
 
+#include <cstdint>
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -19,6 +20,8 @@ namespace network
 {
 namespace ncsi
 {
+
+#define NCSI_CMD_GET_PARAMETERS 0x17
 
 using CallBack = int (*)(struct nl_msg* msg, void* arg);
 
@@ -79,6 +82,66 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+struct NCSIGetParametersResponse
+{
+    uint8_t macAddrCnt;
+    uint16_t reserved0;
+    uint8_t macAddrFlags;
+    uint8_t vlanTagCnt;
+    uint8_t reserved1;
+    uint16_t vlanTagFlags;
+    uint32_t linkSettings;
+    uint32_t broadcastPacketFilterSettings;
+    uint32_t configurationFlags;
+    uint8_t vlanMode;
+    uint8_t flowCtrlEnable;
+    uint16_t reserved2;
+    uint32_t aenControl;
+    uint32_t mac1;
+    uint32_t mac2;
+    uint32_t mac3;
+}; // DSP0222 NCSI Spec 8.4.50
+
+/* NC-SI Response Complition codes */
+struct ncsiCompletionCodes
+{
+    uint16_t completionCodeResponse;
+    uint16_t completionCodeReason;
+};
+
+struct getParamResponse
+{
+    NCSIPacketHeader paramRespHdr;
+    ncsiCompletionCodes paramStatCode;
+    NCSIGetParametersResponse paramResp;
+};
+
+void printNCSIGetParam(NCSIGetParametersResponse* pResp)
+{
+    std::cout
+        << "\nGet Parameters response" << "\n  macAddrFlags = " << std::hex
+        << std::setw(2) << std::setfill('0')
+        << static_cast<int>(pResp->macAddrFlags)
+        << "\n  macAddrCnt = " << std::hex << std::setw(2) << std::setfill('0')
+        << static_cast<int>(pResp->macAddrCnt) << "\n  vlanTagFlags = 0x"
+        << std::hex << ntohs(pResp->vlanTagFlags)
+        << "\n  vlanTagCnt = " << std::hex << std::setw(2) << std::setfill('0')
+        << static_cast<int>(pResp->vlanTagCnt) << "\n  linkSettings = 0x"
+        << std::hex << ntohl(pResp->linkSettings)
+        << "\n  broadcastPacketFilterSettings = 0x" << std::hex
+        << ntohl(pResp->broadcastPacketFilterSettings)
+        << "\n  configurationFlags = 0x" << std::hex
+        << ntohl(pResp->configurationFlags)
+        << "\n  flowCtrlEnable = " << std::hex << std::setw(2)
+        << std::setfill('0') << static_cast<int>(pResp->flowCtrlEnable)
+        << "\n  vlanMode = " << std::hex << std::setw(2) << std::setfill('0')
+        << static_cast<int>(pResp->vlanMode) << "\n  aenControl = 0x"
+        << std::hex << ntohl(pResp->aenControl) << "\n  mac1 = 0x" << std::hex
+        << ntohl(pResp->mac1) << "\n  mac2 = 0x" << std::hex
+        << ntohl(pResp->mac2) << "\n  mac3 = 0x" << std::hex
+        << ntohl(pResp->mac3) << std::endl;
+}
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -264,6 +327,183 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
 
+    return 0;
+};
+CallBack paramCallback = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+    unsigned char* data =
+        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
+    // Extract the completion code and print the response
+    getParamResponse paramResp;
+    if (memmove(&paramResp.paramStatCode.completionCodeResponse, data + 0,
+                sizeof(uint16_t)) !=
+        &paramResp.paramStatCode.completionCodeResponse)
+    {
+        lg2::error("Failed to extract completion code response");
+        return -1;
+    }
+    if (memmove(&paramResp.paramStatCode.completionCodeReason, data + 2,
+                sizeof(uint16_t)) !=
+        &paramResp.paramStatCode.completionCodeReason)
+    {
+        lg2::error("Failed to extract completion code reason");
+        return -1;
+    }
+    // Extract the get parameter response
+    if (memmove(&paramResp.paramResp.macAddrCnt, data + 4, sizeof(uint8_t)) !=
+        &paramResp.paramResp.macAddrCnt)
+    {
+        lg2::error("Failed to extract mac address count");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.reserved0, data + 5, sizeof(uint16_t)) !=
+        &paramResp.paramResp.reserved0)
+    {
+        lg2::error("Failed to extract reserved0");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.macAddrFlags, data + 7, sizeof(uint8_t)) !=
+        &paramResp.paramResp.macAddrFlags)
+    {
+        lg2::error("Failed to extract mac address flags");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.vlanTagCnt, data + 8, sizeof(uint8_t)) !=
+        &paramResp.paramResp.vlanTagCnt)
+    {
+        lg2::error("Failed to extract vlan tag count");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.reserved1, data + 9, sizeof(uint8_t)) !=
+        &paramResp.paramResp.reserved1)
+    {
+        lg2::error("Failed to extract reserved1");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.vlanTagFlags, data + 10,
+                sizeof(uint16_t)) != &paramResp.paramResp.vlanTagFlags)
+    {
+        lg2::error("Failed to extract vlan tag flags");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.linkSettings, data + 12,
+                sizeof(uint32_t)) != &paramResp.paramResp.linkSettings)
+    {
+        lg2::error("Failed to extract link settings");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.broadcastPacketFilterSettings, data + 16,
+                sizeof(uint32_t)) !=
+        &paramResp.paramResp.broadcastPacketFilterSettings)
+    {
+        lg2::error("Failed to extract broadcast packet filter settings");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.configurationFlags, data + 20,
+                sizeof(uint32_t)) != &paramResp.paramResp.configurationFlags)
+    {
+        lg2::error("Failed to extract configuration flags");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.vlanMode, data + 24, sizeof(uint8_t)) !=
+        &paramResp.paramResp.vlanMode)
+    {
+        lg2::error("Failed to extract vlan mode");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.flowCtrlEnable, data + 25,
+                sizeof(uint8_t)) != &paramResp.paramResp.flowCtrlEnable)
+    {
+        lg2::error("Failed to extract flow control enable");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.reserved2, data + 26, sizeof(uint16_t)) !=
+        &paramResp.paramResp.reserved2)
+    {
+        lg2::error("Failed to extract reserved2");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.aenControl, data + 28, sizeof(uint32_t)) !=
+        &paramResp.paramResp.aenControl)
+    {
+        lg2::error("Failed to extract aen control");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.mac1, data + 32, sizeof(uint32_t)) !=
+        &paramResp.paramResp.mac1)
+    {
+        lg2::error("Failed to extract mac1");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.mac2, data + 36, sizeof(uint32_t)) !=
+        &paramResp.paramResp.mac2)
+    {
+        lg2::error("Failed to extract mac2");
+        return -1;
+    }
+    if (memmove(&paramResp.paramResp.mac3, data + 40, sizeof(uint32_t)) !=
+        &paramResp.paramResp.mac3)
+    {
+        lg2::error("Failed to extract mac3");
+        return -1;
+    }
+
+    NCSIPacketHeader paramRespHdrObj;
+    data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]);
+    // Extract the header of the response
+    if (memmove(&paramRespHdrObj.type, data + 4, sizeof(uint8_t)) !=
+        &paramRespHdrObj.type)
+    {
+        lg2::error("Failed to extract response header type");
+        return -1;
+    }
+    if (memmove(&paramRespHdrObj.length, data + 6, sizeof(uint16_t)) !=
+        &paramRespHdrObj.length)
+    {
+        lg2::error("Failed to extract response header length");
+        return -1;
+    }
+
+    auto respHdrtype = paramRespHdrObj.type;
+    lg2::debug("NCSI Response packet type : {RESPONSE_PKT_TYPE}",
+               "RESPONSE_PKT_TYPE", lg2::hex, respHdrtype);
+    auto respHdrLen = htons(paramRespHdrObj.length);
+    lg2::debug("NCSI Response length : {RESPONSE_LEN}", "RESPONSE_LEN",
+               lg2::hex, respHdrLen);
+
+    getParamResponse* paramRespPtr = &paramResp;
+    // Convert link status response to Host Endianess
+    auto completionCodeResponse =
+        ntohl(paramRespPtr->paramStatCode.completionCodeResponse);
+    auto completionCodeReason =
+        ntohl(paramRespPtr->paramStatCode.completionCodeReason);
+    lg2::debug("NCSI Response Code : {RESPONSE_CODE}", "RESPONSE_CODE",
+               lg2::hex, completionCodeResponse);
+    lg2::debug("NCSI Reason Code : {REASON_CODE}", "REASON_CODE", lg2::hex,
+               completionCodeReason);
+    auto paramRsp = paramRespPtr->paramResp;
+    printNCSIGetParam(&paramRsp);
     return 0;
 };
 
@@ -456,7 +696,19 @@ int getInfo(int ifindex, int package)
                                   internal::infoCallBack);
     }
 }
+int getParam(int ifindex, int package, int channel)
+{
+    lg2::debug("Send NCSI Command, CHANNEL: {CHANNEL}, PACKAGE: {PACKAGE}, "
+               "INTERFACE_INDEX: {INTERFACE_INDEX}",
+               "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
+               "INTERFACE_INDEX", lg2::hex, ifindex);
 
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                          NCSI_CMD_GET_PARAMETERS),
+        package, NONE, NONE, internal::paramCallback);
+}
 } // namespace ncsi
 } // namespace network
 } // namespace phosphor
