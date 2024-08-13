@@ -157,6 +157,10 @@ int main(int argc, char** argv)
     {
         return ncsi::clearInterface(indexInt);
     }
+    else if ((options)["get-param"] == "true")
+    {
+        return ncsi::getParam(indexInt, packageInt);
+    }
     else
     {
         exitWithError("No Command specified", argv);

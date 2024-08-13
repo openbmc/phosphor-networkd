@@ -12,7 +12,7 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
-
+using namespace std;
 namespace phosphor
 {
 namespace network
@@ -80,6 +80,146 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+// NCSI response code string
+const char *ncsiRespString[RESP_MAX] = {
+  "COMMAND_COMPLETED",
+  "COMMAND_FAILED",
+  "COMMAND_UNAVAILABLE",
+  "COMMAND_UNSUPPORTED",
+};
+
+// NCSI reason code string
+const char *ncsiReasonString[NUM_NCSI_REASON_CODE] = {
+  "NO_ERROR",
+  "INTF_INIT_REQD",
+  "PARAM_INVALID",
+  "CHANNEL_NOT_RDY",
+  "PKG_NOT_RDY",
+  "INVALID_PAYLOAD_LEN",
+  "INFO_NOT_AVAIL",
+  "UNKNOWN_CMD_TYPE",
+};
+
+// NCSI command name
+const char *ncsiCmdString[NUM_NCSI_CDMS] = {
+  "CLEAR_INITIAL_STATE",
+  "SELECT_PACKAGE",
+  "DESELECT_PACKAGE",
+  "ENABLE_CHANNEL",
+  "DISABLE_CHANNEL",
+  "RESET_CHANNEL",
+  "ENABLE_CHANNEL_NETWORK_TX",
+  "DISABLE_CHANNEL_NETWORK_TX",
+  "AEN_ENABLE",
+  "SET_LINK",
+  "GET_LINK_STATUS",
+  "SET_VLAN_FILTER",
+  "ENABLE_VLAN",
+  "DISABLE_VLAN",
+  "SET_MAC_ADDRESS",
+  "invalid",  // no command 0x0f
+  "ENABLE_BROADCAST_FILTERING",
+  "DISABLE_BROADCAST_FILTERING",
+  "ENABLE_GLOBAL_MULTICAST_FILTERING",
+  "DISABLE_GLOBAL_MULTICAST_FILTERING",
+  "SET_NCSI_FLOW_CONTROL",
+  "GET_VERSION_ID",
+  "GET_CAPABILITIES",
+  "GET_PARAMETERS",
+  "GET_CONTROLLER_PACKET_STATISTICS",
+  "GET_NCSI_STATISTICS",
+  "GET_NCSI_PASS_THROUGH_STATISTICS",
+};
+
+const char * ncsiCmdTypeToName(int cmd)
+{
+  switch (cmd) {
+    case NCSI_OEM_CMD:
+      return "NCSI_OEM_CMD";
+    default:
+      if ((cmd < 0) ||
+          (cmd >= NUM_NCSI_CDMS) ||
+          (ncsiCmdString[cmd] == NULL)) {
+        return "unknown_ncsi_cmd";
+      } else {
+        return ncsiCmdString[cmd];
+      }
+  }
+}
+
+const char* ncsiCcRespName(int ccResp)
+{
+  if ((ccResp < 0) ||
+      (ccResp >= RESP_MAX) ||
+      (ncsiRespString[ccResp] == NULL)) {
+    return "unknown_response";
+  } else {
+    return ncsiRespString[ccResp];
+  }
+}
+
+
+const char* ncsiCcResonName(int ccReason)
+{
+  switch (ccReason) {
+    case REASON_UNKNOWN_CMD_TYPE:
+      return "UNKNOWN_CMD_TYPE";
+    default:
+      if ((ccReason < 0) ||
+          (ccReason >= NUM_NCSI_REASON_CODE) ||
+          (ncsiReasonString[ccReason] == NULL)) {
+        return "unknown_reason";
+      } else {
+        return ncsiReasonString[ccReason];
+      }
+  }
+}
+
+int getCmdStatus(NCSIresponsePacket *rcvBuf)
+{
+  int ccResp = rcvBuf->responseCode;
+
+  return (ccResp);
+}
+
+void printNcsiCompletionCodes(NCSIresponsePacket *rcvBuf)
+{
+  int ccResp = rcvBuf->responseCode;
+  int ccReason = rcvBuf->reasonCode;
+
+  cout<<"NC-SI Command Response:"<<endl;
+  cout<<"Response: "<<ncsiCcRespName(ccResp)<<" ("<<"0x"<<hex<<ccResp<<")"<<endl;
+  cout<<"Reason: "<<ncsiCcResonName(ccReason)<<" ("<<"0x"<<hex<<ccReason<<")"<<endl;
+
+  return;
+}
+void printNcsiResp(unsigned char *data, int dataLen, int cmdSent)
+{
+  NCSIresponsePacket *rcvBuf = reinterpret_cast<NCSIresponsePacket *>(data);
+
+  cout<<"cmd: "<<ncsiCmdTypeToName(cmdSent)<<"("<<"0x"<<hex<<cmdSent<<")"<<endl;
+  printNcsiCompletionCodes(rcvBuf);
+  if (getCmdStatus(rcvBuf) != RESP_COMMAND_COMPLETED)
+  {
+    return;
+  }
+
+  data=(data + sizeof(NCSIresponsePacket));
+    switch (cmdSent) {
+     case NCSI_CMD_GET_PARAMETRS:
+       printNCSIGetParam(data);
+       break;
+    default:
+     cout<<"Payload length = "<<dataLen<<endl;
+    auto str = toHexStr(std::span<const unsigned char>(data, dataLen));
+        lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", dataLen,
+               "DATA", str);
+       break;
+    };
+
+  return;
+}
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -267,6 +407,51 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
 
     return 0;
 };
+CallBack paramCallback = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    NCSIPacketHeader* PktHdr = (NCSIPacketHeader*)nla_data(tb[NCSI_ATTR_DATA]);
+    #ifdef __DEBUG
+    lg2::debug("NCSI Response packet type : {RESPONSE_PKT_TYPE}",
+            "RESPONSE_PKT_TYPE", lg2::hex, PktHdr->type);
+    #endif
+    auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
+    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) +
+                          sizeof(NCSIPacketHeader);
+    #ifdef __DEBUG
+    //print the response packet in hex format for debugging in intervels of 16 bytes
+    for (int i = 0; i < (int)data_len; ++i) {
+        if (i && !(i%16))
+            printf("\n");
+		printf("0x%x ", *(data+i));
+	}
+    printf("\n");
+    #endif
+    printNcsiResp(data,data_len,NCSI_CMD_GET_PARAMETRS);
+    return 0;
+};
+
 
 int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
              int channel = DEFAULT_VALUE, int flags = NONE,
@@ -457,7 +642,61 @@ int getInfo(int ifindex, int package)
                                   internal::infoCallBack);
     }
 }
+int getParam(int ifindex, int package)
+{
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                          NCSI_CMD_GET_PARAMETRS),
+        package, NONE, NONE, internal::paramCallback);
+}
+void printNCSICompletionCodes(unsigned char* rcv_buf)
+{
+    int cc_resp = (rcv_buf[0] << 8) + rcv_buf[1];
+    int cc_reason = (rcv_buf[2] << 8) + rcv_buf[3];
 
+    std::cout << "NC-SI Command Response:" << std::endl;
+    std::cout << "Response: 0x" << cc_resp << " "
+              << "Reason: 0x" << cc_reason << std::endl;
+
+    printNCSIGetParam(&rcv_buf[4]);
+    //printNCSIGetParam(rcv_buf);
+    return;
+}
+void printNCSIGetParam(unsigned char* rcv_buf)
+{
+ NCSIGetParametersResponse* pResp =
+        (NCSIGetParametersResponse*)rcv_buf;
+
+  /*std::cout <<"\nGet Parameters response"<< std::endl;
+  std::cout << "  macAddrFlags = " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(pResp->macAddrFlags) << std::endl;
+  std::cout << "  macAddrCnt = " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(pResp->macAddrCnt) << std::endl;
+  std::cout << "  vlanTagFlags = 0x" << std::hex << ntohs(pResp->vlanTagFlags)<< std::endl;
+  std::cout << "  vlanTagCnt = " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(pResp->vlanTagCnt) << std::endl;
+  std::cout << "  linkSettings = 0x" << std::hex << ntohl(pResp->linkSettings)<< std::endl;
+  std::cout << "  broadcastPacketFilterSettings = 0x" << std::hex << ntohl(pResp->broadcastPacketFilterSettings)<< std::endl;
+  std::cout << "  configurationFlags = 0x" << std::hex << ntohl(pResp->configurationFlags)<< std::endl;
+  std::cout << "  flowCtrlEnable = " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(pResp->flowCtrlEnable) << std::endl;
+  std::cout << "  vlanMode = " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(pResp->vlanMode) << std::endl;
+  std::cout << "  aenControl = 0x" << std::hex << ntohl(pResp->aenControl)<< std::endl;
+  std::cout << "  mac1 = 0x" << std::hex << ntohl(pResp->mac1)<< std::endl;
+  std::cout << "  mac2 = 0x" << std::hex << ntohl(pResp->mac2)<< std::endl;
+  std::cout << "  mac3 = 0x" << std::hex << ntohl(pResp->mac3)<< std::endl;*/
+  std::cout <<"\nGet Parameters response"
+   << "\n  macAddrFlags = " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(pResp->macAddrFlags)
+   << "\n  macAddrCnt = " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(pResp->macAddrCnt)
+   << "\n  vlanTagFlags = 0x" << std::hex << ntohs(pResp->vlanTagFlags)
+   << "\n  vlanTagCnt = " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(pResp->vlanTagCnt)
+   << "\n  linkSettings = 0x" << std::hex << ntohl(pResp->linkSettings)
+   << "\n  broadcastPacketFilterSettings = 0x" << std::hex << ntohl(pResp->broadcastPacketFilterSettings)
+   << "\n  configurationFlags = 0x" << std::hex << ntohl(pResp->configurationFlags)
+   << "\n  flowCtrlEnable = " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(pResp->flowCtrlEnable)
+   << "\n  vlanMode = " << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(pResp->vlanMode)
+   << "\n  aenControl = 0x" << std::hex << ntohl(pResp->aenControl)
+   << "\n  mac1 = 0x" << std::hex << ntohl(pResp->mac1)
+   << "\n  mac2 = 0x" << std::hex << ntohl(pResp->mac2)
+   << "\n  mac3 = 0x" << std::hex << ntohl(pResp->mac3)<< std::endl;
+}
 } // namespace ncsi
 } // namespace network
 } // namespace phosphor
