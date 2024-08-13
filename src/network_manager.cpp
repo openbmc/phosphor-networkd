@@ -48,32 +48,33 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     systemdNetworkdEnabledMatch(
         bus, enabledMatch,
         [man = stdplus::PinnedRef(*this)](sdbusplus::message_t& m) {
-    std::string intf;
-    std::unordered_map<std::string, std::variant<std::string>> values;
-    try
-    {
-        m.read(intf, values);
-        auto it = values.find("AdministrativeState");
-        if (it == values.end())
-        {
-            return;
-        }
-        const std::string_view obj = m.get_path();
-        auto sep = obj.rfind('/');
-        if (sep == obj.npos || sep + 3 > obj.size())
-        {
-            throw std::invalid_argument("Invalid obj path");
-        }
-        auto ifidx = stdplus::StrToInt<10, uint16_t>{}(obj.substr(sep + 3));
-        const auto& state = std::get<std::string>(it->second);
-        man.get().handleAdminState(state, ifidx);
-    }
-    catch (const std::exception& e)
-    {
-        lg2::error("AdministrativeState match parsing failed: {ERROR}", "ERROR",
-                   e);
-    }
-})
+            std::string intf;
+            std::unordered_map<std::string, std::variant<std::string>> values;
+            try
+            {
+                m.read(intf, values);
+                auto it = values.find("AdministrativeState");
+                if (it == values.end())
+                {
+                    return;
+                }
+                const std::string_view obj = m.get_path();
+                auto sep = obj.rfind('/');
+                if (sep == obj.npos || sep + 3 > obj.size())
+                {
+                    throw std::invalid_argument("Invalid obj path");
+                }
+                auto ifidx =
+                    stdplus::StrToInt<10, uint16_t>{}(obj.substr(sep + 3));
+                const auto& state = std::get<std::string>(it->second);
+                man.get().handleAdminState(state, ifidx);
+            }
+            catch (const std::exception& e)
+            {
+                lg2::error("AdministrativeState match parsing failed: {ERROR}",
+                           "ERROR", e);
+            }
+        })
 {
     reload.get().setCallback([self = stdplus::PinnedRef(*this)]() {
         for (auto& hook : self.get().reloadPreHooks)
@@ -360,8 +361,7 @@ void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
 {
     if (auto it = intfInfo.find(ifidx); it != intfInfo.end())
     {
-        std::visit(
-            [&](auto addr) {
+        std::visit([&](auto addr) {
             if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
             {
                 it->second.defgw4.emplace(addr);
@@ -371,12 +371,10 @@ void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                 static_assert(std::is_same_v<stdplus::In6Addr, decltype(addr)>);
                 it->second.defgw6.emplace(addr);
             }
-        },
-            addr);
+        }, addr);
         if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
         {
-            std::visit(
-                [&](auto addr) {
+            std::visit([&](auto addr) {
                 if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
                 {
                     it->second->EthernetInterfaceIntf::defaultGateway(
@@ -389,8 +387,7 @@ void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                     it->second->EthernetInterfaceIntf::defaultGateway6(
                         stdplus::toStr(addr));
                 }
-            },
-                addr);
+            }, addr);
         }
     }
     else if (!ignoredIntf.contains(ifidx))
@@ -403,8 +400,7 @@ void Manager::removeDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
 {
     if (auto it = intfInfo.find(ifidx); it != intfInfo.end())
     {
-        std::visit(
-            [&](auto addr) {
+        std::visit([&](auto addr) {
             if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
             {
                 if (it->second.defgw4 == addr)
@@ -420,12 +416,10 @@ void Manager::removeDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                     it->second.defgw6.reset();
                 }
             }
-        },
-            addr);
+        }, addr);
         if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
         {
-            std::visit(
-                [&](auto addr) {
+            std::visit([&](auto addr) {
                 if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
                 {
                     stdplus::ToStrHandle<stdplus::ToStr<stdplus::In4Addr>> tsh;
@@ -444,8 +438,7 @@ void Manager::removeDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                         it->second->EthernetInterfaceIntf::defaultGateway6("");
                     }
                 }
-            },
-                addr);
+            }, addr);
         }
     }
 }
