@@ -3,6 +3,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6c581ec2_ea223c8b",
+        "filename": "src/argument.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-08-14T22:34:31Z",
+      "side": 1,
+      "message": "Please change it to --stats or --statistics",
+      "revId": "43d1562f3ba5783a297a785d6087e66bf7b81243",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f25f312_032ecae0",
+        "filename": "src/argument.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-08-14T22:34:31Z",
+      "side": 1,
+      "message": "Please change it to \"stats\" or \"statistics\"",
+      "revId": "43d1562f3ba5783a297a785d6087e66bf7b81243",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "401d09c8_de582d97",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 24
