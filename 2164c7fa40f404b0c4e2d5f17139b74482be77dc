@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96fcfb4f_0e09e462",
+        "filename": "src/argument.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-08-14T21:43:21Z",
+      "side": 1,
+      "message": "Please don\u0027t change the optionStr parser order for index.\nJust add your option alone like this \"irsxg:o:p:c:h?\"",
+      "revId": "2164c7fa40f404b0c4e2d5f17139b74482be77dc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25f9d680_8d38f7c3",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-08-14T21:43:21Z",
+      "side": 1,
+      "message": "Please remove these lines as per Johnathan comments. Looks like these changes came back again from the old Patchset 5",
+      "revId": "2164c7fa40f404b0c4e2d5f17139b74482be77dc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8e3d6d7_29af2d59",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-08-14T21:43:21Z",
+      "side": 1,
+      "message": "Must return int value. Don\u0027t comment this line.",
+      "revId": "2164c7fa40f404b0c4e2d5f17139b74482be77dc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d597e16_903d3a12",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-08-14T21:43:21Z",
+      "side": 1,
+      "message": "You don\u0027t need this #define here as you have moved to ncsi_util.cpp",
+      "revId": "2164c7fa40f404b0c4e2d5f17139b74482be77dc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
