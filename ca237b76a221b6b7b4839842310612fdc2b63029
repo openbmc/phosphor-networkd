@@ -1,0 +1,208 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7102775_2b066b19",
+        "filename": "src/argument.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1002147
+      },
+      "writtenOn": "2024-08-14T21:53:48Z",
+      "side": 1,
+      "message": "change it to \"capabilities\" instead of \"show-cap\"",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a8cdfc5_c2e97f5d",
+        "filename": "src/argument.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1002147
+      },
+      "writtenOn": "2024-08-14T21:53:48Z",
+      "side": 1,
+      "message": "change it to \"capabilities\" instead of \"show-cap\"",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34419e20_90f716fb",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1002147
+      },
+      "writtenOn": "2024-08-14T21:53:48Z",
+      "side": 1,
+      "message": "change it to \"capabilities\" instead of \"show-cap\"",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f31fcbfe_5ab34ad2",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1002147
+      },
+      "writtenOn": "2024-08-14T21:53:48Z",
+      "side": 1,
+      "message": "Do you need this ?",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbc76c4b_09042398",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1002147
+      },
+      "writtenOn": "2024-08-14T21:53:48Z",
+      "side": 1,
+      "message": "Can you move all this defines and enums and structs to header file",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4562b9db_af33e5b7",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1002147
+      },
+      "writtenOn": "2024-08-14T21:53:48Z",
+      "side": 1,
+      "message": "struct NCSICapabilitiesInfo_ {\n\n} NCSICapabilitiesInfo;",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fff424e7_d979999c",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1002147
+      },
+      "writtenOn": "2024-08-14T21:53:48Z",
+      "side": 1,
+      "message": "struct NCSICapabilitiesResponse_{\n}NCSICapabilitiesResponse;",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a005ea32_166938e2",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1002147
+      },
+      "writtenOn": "2024-08-14T21:53:48Z",
+      "side": 1,
+      "message": "Can  all this  const char*  moved to a header file ?",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4fc0b73_cbd4d944",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1002147
+      },
+      "writtenOn": "2024-08-14T21:53:48Z",
+      "side": 1,
+      "message": "Can you do clang-format -i \u003cfile \u003e . I don\u0027t this is formatted correctly",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80cc02d8_428b09d3",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1002147
+      },
+      "writtenOn": "2024-08-14T21:53:48Z",
+      "side": 1,
+      "message": "Use this format in all places if (ret) {\n}",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46b2c859_784ee43e",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1002147
+      },
+      "writtenOn": "2024-08-14T21:53:48Z",
+      "side": 1,
+      "message": "to get the NIC Capabilities.",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44032896_54e0ed4d",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1002147
+      },
+      "writtenOn": "2024-08-14T21:53:48Z",
+      "side": 1,
+      "message": "Remove this line",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
