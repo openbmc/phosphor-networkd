@@ -173,6 +173,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2b6ac693_02245447",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-08-14T22:31:06Z",
+      "side": 1,
+      "message": "Please move this #include to ncsi_util.cpp as it is private to ncsi_util.cpp and not used by other files",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "46b2c859_784ee43e",
         "filename": "src/ncsi_util.hpp",
         "patchSetId": 2
