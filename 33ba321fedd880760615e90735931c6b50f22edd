@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22f71635_76bee6b3",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-08-14T22:55:39Z",
+      "side": 1,
+      "message": "Please move this #include to ncsi_util.cpp",
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59bb987f_cae5e295",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-08-14T22:55:39Z",
+      "side": 1,
+      "message": "Please move these #define and enums to ncsi_util.cpp",
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
