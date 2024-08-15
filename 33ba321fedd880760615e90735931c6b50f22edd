@@ -1,6 +1,115 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e174e18_40c96b60",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-15T21:39:05Z",
+      "side": 1,
+      "message": "Fix build errors. Use the correct binary \n\n./ncsi-netlink -x 2 -p 0 -c 0 -P instead of \n./ncsi-netlink-rafi -x 2 -p 0 -c 0 -P",
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdc1c88a_a31cd60c",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-15T21:39:05Z",
+      "side": 1,
+      "message": "As mentioned, use only that is relevant to the command in review. And refer https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/73039/19/src/ncsi_util.cpp",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 196,
+        "endChar": 1
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0fff2912_9855c866",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-15T21:39:05Z",
+      "side": 1,
+      "message": "spelling.. correct at all places \n\nNCSI_CMD_GET_PARAMETERS",
+      "range": {
+        "startLine": 650,
+        "startChar": 26,
+        "endLine": 650,
+        "endChar": 48
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff041cc8_a468eab9",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-15T21:39:05Z",
+      "side": 1,
+      "message": "Refer https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/73039/19/src/ncsi_util.cpp#175",
+      "range": {
+        "startLine": 653,
+        "startChar": 0,
+        "endLine": 665,
+        "endChar": 1
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36836ad7_00d7745d",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-15T21:39:05Z",
+      "side": 1,
+      "message": "Don\u0027t comment code. Delete code that is not required.",
+      "range": {
+        "startLine": 671,
+        "startChar": 1,
+        "endLine": 684,
+        "endChar": 77
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "22f71635_76bee6b3",
@@ -31,6 +140,121 @@
       "writtenOn": "2024-08-14T22:55:39Z",
       "side": 1,
       "message": "Please move these #define and enums to ncsi_util.cpp",
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9e688dd_817b3198",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-15T21:39:05Z",
+      "side": 1,
+      "message": "Where is this being used? Please remove if not used.",
+      "range": {
+        "startLine": 12,
+        "startChar": 8,
+        "endLine": 12,
+        "endChar": 24
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "710739c1_73eef8fb",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-15T21:39:05Z",
+      "side": 1,
+      "message": "Remove if unused. I don\u0027t see it being used anywhere in this review",
+      "range": {
+        "startLine": 21,
+        "startChar": 8,
+        "endLine": 21,
+        "endChar": 28
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7e9bd81_cd391c18",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-15T21:39:05Z",
+      "side": 1,
+      "message": "This review is for NCSI_GET_PARAMETERS. Why is NCSI_OEM_CMD needed? Remove",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 25
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d88bc1a4_25dc1d88",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-15T21:39:05Z",
+      "side": 1,
+      "message": "I see a lot of defines used that are not applicable to the command in review(Get Parameters). Use only which is relevant.",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 42
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d384729_da4d3979",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-15T21:39:05Z",
+      "side": 1,
+      "message": "completion code should be part of the structure. Refer https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/73039/19/src/ncsi_util.cpp",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 0
+      },
       "revId": "33ba321fedd880760615e90735931c6b50f22edd",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
