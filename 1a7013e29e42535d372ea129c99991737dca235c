@@ -1,0 +1,276 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39ddd0ff_8ac8770f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "excess blank space",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77be195a_358f5229",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "Update syntax",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "147af50c_507e3178",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "why the _htf?",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93606ef3_d3052f22",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "My results that seem to show this isn\u0027t quite correct:\nroot@bmc-mac0007e9343c6e:/tmp# ncsi-netlink  -x 3 -p 0 -c 0 -g vid\n\u003c7\u003e NCSI version (BCD): f1 f1 f0 00  \u003c- not BCD\n\u003c7\u003e Firmware version: 00 00 f7 43\n\u003c7\u003e PciVendor: 0x8680 \u003c- I expect 0x8086\n\u003c7\u003e PciDevice: 0x8680\n\u003c7\u003e IANA Manufacturer Id: 343",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "111b4694_053d8541",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "excise _htf",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26660cb1_d1334c80",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "Some comments on the most recent commit.",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aebcdc85_35dc9703",
+        "filename": "src/argument.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "Perhaps generalize this?\n--get | -g     \u003coption\u003e\n    \u003coption\u003e is one of:\n    vid: Get NCSI Version ID\n    ncsi: Get whatever this gets\n    ....: space for future options",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecb1495b_15d8b12b",
+        "filename": "src/argument.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "IMO, choose one example showing how to use the new feature.\nI added these examples because it required reading the source code to figure out what the necessary switch combinations were.\nI think one example is sufficient.\nThank you for making this happen before a defacto API congealed.",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18f16231_4ef600e5",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "const std::string\u0026 getArg{options[\"get\"]};\nOBMC prefers calling out the explicit type if it\u0027s not obvious what is being returned.\nThis format is more conventional C++, and should avoid a copy operation.",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8460db3c_befbbf76",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "debug message.... please remove",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad45a8c7_640e0c0c",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "Use C++ casting?",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a56eccd_3b349020",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "Perhaps build a templatized toHexStr overload that accepts int types, and does the nasty recasting to std::span inside?\ntoHexStr(\u0026getVersonIdResp....., sizeof(getVersnIdResp-\u003evar))\n?\nOther people are going to need to do this same casting mess.",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04acc3f7_7cf03108",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "As noted in the commit message comments... this doesn\u0027t look correct.\nOther commits are collecting the response data, and passing them through a big endian to host endian function to massage the output data.\n\nMy brief look at the NCSI spec seems to show the NCSI version is not BCD. Perhaps the FW version is?\n\nOther commits are using a \u0027convertToHostEndian()\u0027 function that returns a reference to the response structure (i.e. getVersionIdResponse\u0026 convertEndianess(nla_data...))\n\nThen the return value is sent to an output function (i.e. printNCSIVer()).",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98423421_efe656b3",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "I notice this value is correctly printing 343 for the Intel NCSI device in my system. It\u0027s doing so because of the ntohl() call.",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9bcaa21_41c4b846",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "align with @brief line, as is done in prior prototype.",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef7abdff_a2b9595f",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-15T20:01:01Z",
+      "side": 1,
+      "message": "follow paradigm:\nparam[in] should be @param[in]",
+      "revId": "1a7013e29e42535d372ea129c99991737dca235c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
