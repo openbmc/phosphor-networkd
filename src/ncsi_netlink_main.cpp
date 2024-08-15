@@ -30,6 +30,8 @@ static void exitWithError(const char* err, char** argv)
 
 int main(int argc, char** argv)
 {
+    lg2::error("Hello World\n");
+    lg2::error("Hello World\n");
     using namespace phosphor::network;
     using namespace phosphor::network::ncsi;
     // Read arguments.
