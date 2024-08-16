@@ -48,32 +48,33 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     systemdNetworkdEnabledMatch(
         bus, enabledMatch,
         [man = stdplus::PinnedRef(*this)](sdbusplus::message_t& m) {
-    std::string intf;
-    std::unordered_map<std::string, std::variant<std::string>> values;
-    try
-    {
-        m.read(intf, values);
-        auto it = values.find("AdministrativeState");
-        if (it == values.end())
-        {
-            return;
-        }
-        const std::string_view obj = m.get_path();
-        auto sep = obj.rfind('/');
-        if (sep == obj.npos || sep + 3 > obj.size())
-        {
-            throw std::invalid_argument("Invalid obj path");
-        }
-        auto ifidx = stdplus::StrToInt<10, uint16_t>{}(obj.substr(sep + 3));
-        const auto& state = std::get<std::string>(it->second);
-        man.get().handleAdminState(state, ifidx);
-    }
-    catch (const std::exception& e)
-    {
-        lg2::error("AdministrativeState match parsing failed: {ERROR}", "ERROR",
-                   e);
-    }
-})
+            std::string intf;
+            std::unordered_map<std::string, std::variant<std::string>> values;
+            try
+            {
+                m.read(intf, values);
+                auto it = values.find("AdministrativeState");
+                if (it == values.end())
+                {
+                    return;
+                }
+                const std::string_view obj = m.get_path();
+                auto sep = obj.rfind('/');
+                if (sep == obj.npos || sep + 3 > obj.size())
+                {
+                    throw std::invalid_argument("Invalid obj path");
+                }
+                auto ifidx =
+                    stdplus::StrToInt<10, uint16_t>{}(obj.substr(sep + 3));
+                const auto& state = std::get<std::string>(it->second);
+                man.get().handleAdminState(state, ifidx);
+            }
+            catch (const std::exception& e)
+            {
+                lg2::error("AdministrativeState match parsing failed: {ERROR}",
+                           "ERROR", e);
+            }
+        })
 {
     reload.get().setCallback([self = stdplus::PinnedRef(*this)]() {
         for (auto& hook : self.get().reloadPreHooks)
@@ -139,8 +140,8 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     {
         unsigned ifidx = std::get<0>(link);
         stdplus::ToStrHandle<stdplus::IntToStr<10, unsigned>> tsh;
-        auto obj = stdplus::strCat("/org/freedesktop/network1/link/_3"sv,
-                                   tsh(ifidx));
+        auto obj =
+            stdplus::strCat("/org/freedesktop/network1/link/_3"sv, tsh(ifidx));
         auto req =
             bus.get().new_method_call("org.freedesktop.network1", obj.c_str(),
                                       "org.freedesktop.DBus.Properties", "Get");
@@ -362,34 +363,36 @@ void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
     {
         std::visit(
             [&](auto addr) {
-            if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
-            {
-                it->second.defgw4.emplace(addr);
-            }
-            else
-            {
-                static_assert(std::is_same_v<stdplus::In6Addr, decltype(addr)>);
-                it->second.defgw6.emplace(addr);
-            }
-        },
-            addr);
-        if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
-        {
-            std::visit(
-                [&](auto addr) {
                 if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
                 {
-                    it->second->EthernetInterfaceIntf::defaultGateway(
-                        stdplus::toStr(addr));
+                    it->second.defgw4.emplace(addr);
                 }
                 else
                 {
                     static_assert(
                         std::is_same_v<stdplus::In6Addr, decltype(addr)>);
-                    it->second->EthernetInterfaceIntf::defaultGateway6(
-                        stdplus::toStr(addr));
+                    it->second.defgw6.emplace(addr);
                 }
             },
+            addr);
+        if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
+        {
+            std::visit(
+                [&](auto addr) {
+                    if constexpr (std::is_same_v<stdplus::In4Addr,
+                                                 decltype(addr)>)
+                    {
+                        it->second->EthernetInterfaceIntf::defaultGateway(
+                            stdplus::toStr(addr));
+                    }
+                    else
+                    {
+                        static_assert(
+                            std::is_same_v<stdplus::In6Addr, decltype(addr)>);
+                        it->second->EthernetInterfaceIntf::defaultGateway6(
+                            stdplus::toStr(addr));
+                    }
+                },
                 addr);
         }
     }
@@ -405,46 +408,52 @@ void Manager::removeDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
     {
         std::visit(
             [&](auto addr) {
-            if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
-            {
-                if (it->second.defgw4 == addr)
-                {
-                    it->second.defgw4.reset();
-                }
-            }
-            else
-            {
-                static_assert(std::is_same_v<stdplus::In6Addr, decltype(addr)>);
-                if (it->second.defgw6 == addr)
-                {
-                    it->second.defgw6.reset();
-                }
-            }
-        },
-            addr);
-        if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
-        {
-            std::visit(
-                [&](auto addr) {
                 if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
                 {
-                    stdplus::ToStrHandle<stdplus::ToStr<stdplus::In4Addr>> tsh;
-                    if (it->second->defaultGateway() == tsh(addr))
+                    if (it->second.defgw4 == addr)
                     {
-                        it->second->EthernetInterfaceIntf::defaultGateway("");
+                        it->second.defgw4.reset();
                     }
                 }
                 else
                 {
                     static_assert(
                         std::is_same_v<stdplus::In6Addr, decltype(addr)>);
-                    stdplus::ToStrHandle<stdplus::ToStr<stdplus::In6Addr>> tsh;
-                    if (it->second->defaultGateway6() == tsh(addr))
+                    if (it->second.defgw6 == addr)
                     {
-                        it->second->EthernetInterfaceIntf::defaultGateway6("");
+                        it->second.defgw6.reset();
                     }
                 }
             },
+            addr);
+        if (auto it = interfacesByIdx.find(ifidx); it != interfacesByIdx.end())
+        {
+            std::visit(
+                [&](auto addr) {
+                    if constexpr (std::is_same_v<stdplus::In4Addr,
+                                                 decltype(addr)>)
+                    {
+                        stdplus::ToStrHandle<stdplus::ToStr<stdplus::In4Addr>>
+                            tsh;
+                        if (it->second->defaultGateway() == tsh(addr))
+                        {
+                            it->second->EthernetInterfaceIntf::defaultGateway(
+                                "");
+                        }
+                    }
+                    else
+                    {
+                        static_assert(
+                            std::is_same_v<stdplus::In6Addr, decltype(addr)>);
+                        stdplus::ToStrHandle<stdplus::ToStr<stdplus::In6Addr>>
+                            tsh;
+                        if (it->second->defaultGateway6() == tsh(addr))
+                        {
+                            it->second->EthernetInterfaceIntf::defaultGateway6(
+                                "");
+                        }
+                    }
+                },
                 addr);
         }
     }

@@ -104,8 +104,8 @@ void HypNetworkMgr::setBIOSTableAttrs()
         interfaces.emplace_back(biosMgrIntf);
         auto depth = 0;
 
-        auto mapperCall = bus.new_method_call(mapperBus, mapperObj, mapperIntf,
-                                              "GetSubTree");
+        auto mapperCall =
+            bus.new_method_call(mapperBus, mapperObj, mapperIntf, "GetSubTree");
 
         mapperCall.append(biosMgrObj, depth, interfaces);
 

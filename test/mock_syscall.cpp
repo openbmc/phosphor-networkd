@@ -105,8 +105,8 @@ ssize_t sendmsg_link_dump(std::queue<std::string>& msgs, std::string_view in)
         const auto nlbegin = msgBuf.size();
         msgBuf.append(NLMSG_SPACE(sizeof(ifinfomsg)), '\0');
         {
-            auto& info = *reinterpret_cast<ifinfomsg*>(msgBuf.data() + nlbegin +
-                                                       NLMSG_HDRLEN);
+            auto& info = *reinterpret_cast<ifinfomsg*>(
+                msgBuf.data() + nlbegin + NLMSG_HDRLEN);
             info.ifi_index = i.idx;
             info.ifi_flags = i.flags;
         }

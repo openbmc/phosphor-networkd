@@ -55,12 +55,13 @@ TEST(IntfFromRtm, AllAttrs)
     msg.mtu_hdr.rta_len = RTA_LENGTH(sizeof(msg.mtu));
 
     auto info = intfFromRtm(stdplus::raw::asView<char>(msg));
-    auto expected = InterfaceInfo{.type = 4,
-                                  .idx = 1,
-                                  .flags = 2,
-                                  .name = "eth0",
-                                  .mac = ether_addr{0, 1, 2, 3, 4, 5},
-                                  .mtu = 50};
+    auto expected = InterfaceInfo{
+        .type = 4,
+        .idx = 1,
+        .flags = 2,
+        .name = "eth0",
+        .mac = ether_addr{0, 1, 2, 3, 4, 5},
+        .mtu = 50};
     EXPECT_EQ(info, expected);
 }
 

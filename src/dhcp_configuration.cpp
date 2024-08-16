@@ -17,12 +17,10 @@ namespace dhcp
 using namespace phosphor::network;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
-Configuration::Configuration(sdbusplus::bus_t& bus,
-                             stdplus::const_zstring objPath,
-                             stdplus::PinnedRef<EthernetInterface> parent,
-                             DHCPType type) :
-    Iface(bus, objPath.c_str(), Iface::action::defer_emit),
-    parent(parent)
+Configuration::Configuration(
+    sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
+    stdplus::PinnedRef<EthernetInterface> parent, DHCPType type) :
+    Iface(bus, objPath.c_str(), Iface::action::defer_emit), parent(parent)
 {
     config::Parser conf(config::pathForIntfConf(
         parent.get().manager.get().getConfDir(), parent.get().interfaceName()));

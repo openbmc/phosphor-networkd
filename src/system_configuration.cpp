@@ -26,34 +26,35 @@ static constexpr char propMatch[] =
 
 SystemConfiguration::SystemConfiguration(
     stdplus::PinnedRef<sdbusplus::bus_t> bus, stdplus::const_zstring objPath) :
-    Iface(bus, objPath.c_str(), Iface::action::defer_emit),
-    bus(bus), hostnamePropMatch(
-                  bus, propMatch,
-                  [sc = stdplus::PinnedRef(*this)](sdbusplus::message_t& m) {
-    std::string intf;
-    std::unordered_map<std::string, std::variant<std::string>> values;
-    try
-    {
-        m.read(intf, values);
-        auto it = values.find("Hostname");
-        if (it == values.end())
-        {
-            return;
-        }
-        sc.get().Iface::hostName(std::get<std::string>(it->second));
-    }
-    catch (const std::exception& e)
-    {
-        lg2::error("Hostname match parsing failed: {ERROR}", "ERROR", e);
-    }
-})
+    Iface(bus, objPath.c_str(), Iface::action::defer_emit), bus(bus),
+    hostnamePropMatch(
+        bus, propMatch,
+        [sc = stdplus::PinnedRef(*this)](sdbusplus::message_t& m) {
+            std::string intf;
+            std::unordered_map<std::string, std::variant<std::string>> values;
+            try
+            {
+                m.read(intf, values);
+                auto it = values.find("Hostname");
+                if (it == values.end())
+                {
+                    return;
+                }
+                sc.get().Iface::hostName(std::get<std::string>(it->second));
+            }
+            catch (const std::exception& e)
+            {
+                lg2::error("Hostname match parsing failed: {ERROR}", "ERROR",
+                           e);
+            }
+        })
 {
     try
     {
         std::variant<std::string> name;
-        auto req = bus.get().new_method_call(HOSTNAMED_SVC, HOSTNAMED_OBJ,
-                                             "org.freedesktop.DBus.Properties",
-                                             "Get");
+        auto req =
+            bus.get().new_method_call(HOSTNAMED_SVC, HOSTNAMED_OBJ,
+                                      "org.freedesktop.DBus.Properties", "Get");
 
         req.append(HOSTNAMED_INTF, "Hostname");
         auto reply = req.call();
