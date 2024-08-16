@@ -86,8 +86,8 @@ stdplus::EtherAddr getfromInventory(sdbusplus::bus_t& bus,
 
     auto depth = 0;
 
-    auto mapperCall = bus.new_method_call(mapperBus, mapperObj, mapperIntf,
-                                          "GetSubTree");
+    auto mapperCall =
+        bus.new_method_call(mapperBus, mapperObj, mapperIntf, "GetSubTree");
 
     mapperCall.append(invRoot, depth, interfaces);
 
@@ -177,8 +177,8 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
             for (const auto& keys : configJson.items())
             {
                 if (!(std::find(first_boot_status.begin(),
-                                first_boot_status.end(),
-                                keys.key()) != first_boot_status.end()))
+                                first_boot_status.end(), keys.key()) !=
+                      first_boot_status.end()))
                 {
                     lg2::info("Interface {NET_INTF} MAC is NOT set from VPD",
                               "NET_INTF", keys.key());

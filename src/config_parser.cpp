@@ -54,9 +54,8 @@ fs::path pathForIntfDev(const fs::path& dir, std::string_view intf)
     return dir / stdplus::strCat(intf, ".netdev"sv);
 }
 
-const std::string*
-    SectionMap::getLastValueString(std::string_view section,
-                                   std::string_view key) const noexcept
+const std::string* SectionMap::getLastValueString(
+    std::string_view section, std::string_view key) const noexcept
 {
     auto sit = find(section);
     if (sit == end())

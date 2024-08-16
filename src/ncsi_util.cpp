@@ -69,8 +69,7 @@ class Command
     Command(
         int ncsiCmd, int operation = DEFAULT_VALUE,
         std::span<const unsigned char> p = std::span<const unsigned char>()) :
-        ncsi_cmd(ncsiCmd),
-        operation(operation), payload(p)
+        ncsi_cmd(ncsiCmd), operation(operation), payload(p)
     {}
 
     int ncsi_cmd;
@@ -257,8 +256,8 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     }
 
     auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
-    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) +
-                          sizeof(NCSIPacketHeader);
+    unsigned char* data =
+        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
 
     // Dump the response to stdout. Enhancement: option to save response data
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
@@ -347,8 +346,8 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
 
     if (cmd.operation != DEFAULT_VALUE)
     {
-        std::vector<unsigned char> pl(sizeof(NCSIPacketHeader) +
-                                      cmd.payload.size());
+        std::vector<unsigned char> pl(
+            sizeof(NCSIPacketHeader) + cmd.payload.size());
         NCSIPacketHeader* hdr = (NCSIPacketHeader*)pl.data();
 
         std::copy(cmd.payload.begin(), cmd.payload.end(),

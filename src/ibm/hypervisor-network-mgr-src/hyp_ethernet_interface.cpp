@@ -59,12 +59,12 @@ bool HypEthInterface::dhcpIsEnabled(HypIP::Protocol family)
 HypEthInterface::DHCPConf HypEthInterface::dhcpEnabled(DHCPConf value)
 {
     auto old4 = HypEthernetIntf::dhcp4();
-    auto new4 = HypEthernetIntf::dhcp4(value == DHCPConf::v4 ||
-                                       value == DHCPConf::v4v6stateless ||
-                                       value == DHCPConf::both);
+    auto new4 = HypEthernetIntf::dhcp4(
+        value == DHCPConf::v4 || value == DHCPConf::v4v6stateless ||
+        value == DHCPConf::both);
     auto old6 = HypEthernetIntf::dhcp6();
-    auto new6 = HypEthernetIntf::dhcp6(value == DHCPConf::v6 ||
-                                       value == DHCPConf::both);
+    auto new6 = HypEthernetIntf::dhcp6(
+        value == DHCPConf::v6 || value == DHCPConf::both);
     auto oldra = HypEthernetIntf::ipv6AcceptRA();
     auto newra = HypEthernetIntf::ipv6AcceptRA(
         value == DHCPConf::v6stateless || value == DHCPConf::v4v6stateless ||
