@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "93c4caa5_d3616cb7",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1002166
+      },
+      "writtenOn": "2024-08-16T12:44:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c93585fb_238ef723",
+      "revId": "3828bcdf4f1aba1cdd8825aaa7cc23832fee9bcf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bc870059_e038e462",
@@ -35,6 +53,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8610acfe_b559ddaa",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1002166
+      },
+      "writtenOn": "2024-08-16T12:44:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc870059_e038e462",
+      "revId": "3828bcdf4f1aba1cdd8825aaa7cc23832fee9bcf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be3aa435_74fe9e24",
@@ -48,6 +84,24 @@
       "writtenOn": "2024-08-14T22:52:21Z",
       "side": 1,
       "message": "Please move all these definition to ncsi_util.cpp as these structures are private to ncsi_util.cpp and used by other internal functions.",
+      "revId": "3828bcdf4f1aba1cdd8825aaa7cc23832fee9bcf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2a75ee8_97408fbd",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1002166
+      },
+      "writtenOn": "2024-08-16T12:44:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be3aa435_74fe9e24",
       "revId": "3828bcdf4f1aba1cdd8825aaa7cc23832fee9bcf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
