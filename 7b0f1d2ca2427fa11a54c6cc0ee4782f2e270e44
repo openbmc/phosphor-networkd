@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00df4b12_e5949e78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-19T14:37:40Z",
+      "side": 1,
+      "message": "Here are some additional comments on commit 9",
+      "revId": "7b0f1d2ca2427fa11a54c6cc0ee4782f2e270e44",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89f7bd0e_b5e0906e",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-19T14:37:40Z",
+      "side": 1,
+      "message": "I don\u0027t know if it is necessary.\nLook into whether you need to use __attribute__ ((PACKED)) for these structures.",
+      "revId": "7b0f1d2ca2427fa11a54c6cc0ee4782f2e270e44",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1250998a_6f724e2b",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-19T14:37:40Z",
+      "side": 1,
+      "message": "Remove comment",
+      "revId": "7b0f1d2ca2427fa11a54c6cc0ee4782f2e270e44",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a56b426_c43c06e7",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-19T14:37:40Z",
+      "side": 1,
+      "message": "suggestion:\nTake advantage of C++ containers, and move mechanics.\nSkeleton example:\nstd::string ncsiBCDToStr(const std::vector\u003cuint8_t\u003e\u0026 raw)\n{\n    std::string bcd{};\n    for (const auto it : raw)\n    {\n        bcd.push_back(it);\n    }\n    // calculate correction for last element\n    bcd.at(last_idx) \u003d correction;\n    return bcd;\n}\n\nYou can iterate over the vector without having to manually deal with bounds checking.\nYou can build the version string piece by piece without having to manually calculate the last char. You just add your last calculation to the end.\nLastly, because \u0027bcd\u0027 is a local string, and you are returning that local string, C++ will use move mechanics to transfer the scope of the string to the caller.\nLook for ways to avoid using raw C pointers.",
+      "revId": "7b0f1d2ca2427fa11a54c6cc0ee4782f2e270e44",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0646ddac_cfa11afe",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-19T14:37:40Z",
+      "side": 1,
+      "message": "Following the suggestion above you can replace this with:\n    std::vector\u003cuint8_t\u003e foo(\n        getVersnIdResp-\u003eversnIdData.ncsiVersion,\n        getVersnIdResp-\u003eversnIdData.firmwareName - 1);\n    lg2::debug(\"your message....\", ....., ncsiBCDToStr(foo));",
+      "revId": "7b0f1d2ca2427fa11a54c6cc0ee4782f2e270e44",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
