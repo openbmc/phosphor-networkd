@@ -211,6 +211,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe5560de_41aea92e",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-19T19:16:42Z",
+      "side": 1,
+      "message": "The guidelines for OpenBMC development is to avoid hiding the \u0027std\u0027 namespace in the way.\nThe \u0027using\u0027 keyword is typically reserved for performing an alias on complex D-Bus data structures.\nOpenBMC source uses the fully qualified names for \u0027std\u0027, \u0027boost\u0027, and others.\nPlease don\u0027t alias \u0027std\u0027 away.",
+      "parentUuid": "1abf624b_4b2a0c4e",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dbc76c4b_09042398",
@@ -259,6 +277,24 @@
       "side": 1,
       "message": "this may not be required, it declare a variable of this structure.",
       "parentUuid": "4562b9db_af33e5b7",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8afe9ec0_44df5ad5",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-19T19:16:42Z",
+      "side": 1,
+      "message": "Double check to see if `__attribute__ ((packed))` is needed.",
+      "parentUuid": "d3e18c09_5e5dedf2",
       "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68967c93_984efc7f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-19T19:16:42Z",
+      "side": 1,
+      "message": "This is a brief bit of feedback.\nPlease only submit changes that have been re-formatted by clang-format.",
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
