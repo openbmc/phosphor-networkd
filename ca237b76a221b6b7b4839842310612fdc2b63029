@@ -35,6 +35,42 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "343b8b11_39a40110",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-19T11:15:08Z",
+      "side": 1,
+      "message": "taken care",
+      "parentUuid": "6a310924_0cf647ce",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b21d5737_46bbcb97",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-19T11:15:08Z",
+      "side": 1,
+      "message": "resolved",
+      "parentUuid": "c4a8f1ee_9149242e",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a7102775_2b066b19",
@@ -48,6 +84,24 @@
       "writtenOn": "2024-08-14T21:53:48Z",
       "side": 1,
       "message": "change it to \"capabilities\" instead of \"show-cap\"",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2002a6b_afb81c6e",
+        "filename": "src/argument.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-19T11:15:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7102775_2b066b19",
       "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -69,6 +123,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a40fc34_6edb2b33",
+        "filename": "src/argument.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-19T11:15:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a8cdfc5_c2e97f5d",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "34419e20_90f716fb",
@@ -86,6 +158,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "787a0b46_a1469222",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-19T11:15:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34419e20_90f716fb",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f31fcbfe_5ab34ad2",
@@ -99,6 +189,24 @@
       "writtenOn": "2024-08-14T21:53:48Z",
       "side": 1,
       "message": "Do you need this ?",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1abf624b_4b2a0c4e",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-19T11:15:08Z",
+      "side": 1,
+      "message": "Yes, so I could use cout/cin directly without scope resolution std::",
+      "parentUuid": "f31fcbfe_5ab34ad2",
       "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -139,6 +247,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d3e18c09_5e5dedf2",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-19T11:15:08Z",
+      "side": 1,
+      "message": "this may not be required, it declare a variable of this structure.",
+      "parentUuid": "4562b9db_af33e5b7",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fff424e7_d979999c",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 2
@@ -150,6 +276,24 @@
       "writtenOn": "2024-08-14T21:53:48Z",
       "side": 1,
       "message": "struct NCSICapabilitiesResponse_{\n}NCSICapabilitiesResponse;",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12d406fc_539e71e9",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-19T11:15:08Z",
+      "side": 1,
+      "message": "same as above",
+      "parentUuid": "fff424e7_d979999c",
       "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -222,6 +366,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ce625d0_01cb603d",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-19T11:15:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b6ac693_02245447",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "46b2c859_784ee43e",
@@ -239,6 +401,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b9b4487_3770f4af",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-19T11:15:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46b2c859_784ee43e",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "44032896_54e0ed4d",
@@ -252,6 +432,24 @@
       "writtenOn": "2024-08-14T21:53:48Z",
       "side": 1,
       "message": "Remove this line",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ac325d1_69173338",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-19T11:15:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44032896_54e0ed4d",
       "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
