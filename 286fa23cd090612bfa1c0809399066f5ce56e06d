@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a2bb0a9_bb016381",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-19T21:08:50Z",
+      "side": 1,
+      "message": "I am now inclined to approve this.\nYou need to get your UID added to the Gerrit system by your appointed admin.\nAfter this reaches a Verified +1 I\u0027ll add my +1.",
+      "revId": "286fa23cd090612bfa1c0809399066f5ce56e06d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
