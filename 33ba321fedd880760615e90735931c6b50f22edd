@@ -41,6 +41,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b260ed10_f5f4edf8",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-08-19T11:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bdc1c88a_a31cd60c",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 196,
+        "endChar": 1
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0fff2912_9855c866",
@@ -54,6 +78,30 @@
       "writtenOn": "2024-08-15T21:39:05Z",
       "side": 1,
       "message": "spelling.. correct at all places \n\nNCSI_CMD_GET_PARAMETERS",
+      "range": {
+        "startLine": 650,
+        "startChar": 26,
+        "endLine": 650,
+        "endChar": 48
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54aed56b_e8a18b0c",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-08-19T11:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0fff2912_9855c866",
       "range": {
         "startLine": 650,
         "startChar": 26,
@@ -87,6 +135,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c090bcf8_75cb627d",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-08-19T11:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff041cc8_a468eab9",
+      "range": {
+        "startLine": 653,
+        "startChar": 0,
+        "endLine": 665,
+        "endChar": 1
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "36836ad7_00d7745d",
@@ -110,6 +182,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b795f1db_95cfc888",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-08-19T11:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36836ad7_00d7745d",
+      "range": {
+        "startLine": 671,
+        "startChar": 1,
+        "endLine": 684,
+        "endChar": 77
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "22f71635_76bee6b3",
@@ -123,6 +219,24 @@
       "writtenOn": "2024-08-14T22:55:39Z",
       "side": 1,
       "message": "Please move this #include to ncsi_util.cpp",
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5011deee_e3ba0927",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-08-19T11:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "22f71635_76bee6b3",
       "revId": "33ba321fedd880760615e90735931c6b50f22edd",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -167,6 +281,48 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "627a0424_1a65ca5c",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-08-19T11:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9e688dd_817b3198",
+      "range": {
+        "startLine": 12,
+        "startChar": 8,
+        "endLine": 12,
+        "endChar": 24
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42aeac93_e77d99ff",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-08-19T11:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59bb987f_cae5e295",
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "710739c1_73eef8fb",
@@ -180,6 +336,30 @@
       "writtenOn": "2024-08-15T21:39:05Z",
       "side": 1,
       "message": "Remove if unused. I don\u0027t see it being used anywhere in this review",
+      "range": {
+        "startLine": 21,
+        "startChar": 8,
+        "endLine": 21,
+        "endChar": 28
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed2f4406_bf7a2bcd",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-08-19T11:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "710739c1_73eef8fb",
       "range": {
         "startLine": 21,
         "startChar": 8,
@@ -213,6 +393,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8920a971_a5f6f78e",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-08-19T11:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7e9bd81_cd391c18",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 25
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d88bc1a4_25dc1d88",
@@ -236,6 +440,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ff16084_3564e8db",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-08-19T11:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d88bc1a4_25dc1d88",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 42
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9d384729_da4d3979",
@@ -249,6 +477,30 @@
       "writtenOn": "2024-08-15T21:39:05Z",
       "side": 1,
       "message": "completion code should be part of the structure. Refer https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/73039/19/src/ncsi_util.cpp",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 0
+      },
+      "revId": "33ba321fedd880760615e90735931c6b50f22edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29c5e0e7_5454de68",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-08-19T11:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d384729_da4d3979",
       "range": {
         "startLine": 52,
         "startChar": 0,
