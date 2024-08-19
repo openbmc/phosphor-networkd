@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d08ed250_044c74e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-19T19:54:40Z",
+      "side": 1,
+      "message": "Need the OpenBMC CI build results",
+      "revId": "e60a0d66e61a84261e4f5e574bd87da5e638910f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
