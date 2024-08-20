@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a16eaa7b_a5ecac75",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-08-20T16:30:23Z",
+      "side": 1,
+      "message": "OpenBMC CI Build fails.\n\n@Sunder, you need to run clang-format -i",
+      "revId": "8418d7287b3be41706e3a841de4b906eaec90325",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
