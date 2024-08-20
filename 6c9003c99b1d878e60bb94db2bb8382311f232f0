@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "60b956a3_b03331a2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 19
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-20T15:39:44Z",
+      "side": 1,
+      "message": "nit: this still doesn\u0027t match your name in the CLA.",
+      "range": {
+        "startLine": 32,
+        "startChar": 23,
+        "endLine": 32,
+        "endChar": 25
+      },
+      "revId": "6c9003c99b1d878e60bb94db2bb8382311f232f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "674ed73f_780af088",
@@ -48,6 +71,46 @@
       "writtenOn": "2024-08-05T18:11:54Z",
       "side": 1,
       "message": "Looks good",
+      "revId": "6c9003c99b1d878e60bb94db2bb8382311f232f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9c659828_48640bc6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-20T15:39:44Z",
+      "side": 1,
+      "message": "Adding AndrewJ for best practices on struct unpacking.  It seems like this union approach is quite unsafe.",
+      "revId": "6c9003c99b1d878e60bb94db2bb8382311f232f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "477dbe3f_1fe84508",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-20T15:39:44Z",
+      "side": 1,
+      "message": "Are we really cool with doing this?  This seems very compiler and architecture specific.  I\u0027m pretty sure that little endian vs big endian lays out the structure in completely the opposite way.",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 2
+      },
       "revId": "6c9003c99b1d878e60bb94db2bb8382311f232f0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
