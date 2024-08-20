@@ -88,6 +88,8 @@ void ArgumentParser::usage(char** argv)
            "         ncsi-netlink -x 3 -p 0 -r\n"
            "    5) Send NCSI Command\n"
            "         ncsi-netlink -x 3 -p 0 -c 0 -o 50000001572100\n"
+           "    6) Disable Global Multicast Filter\n"
+           "         ncsi-netlink -x 2 -p 0 -c 0 -m"
            "\n";
 }
 
@@ -95,6 +97,7 @@ const option ArgumentParser::options[] = {
     {"info", no_argument, NULL, 'i'},
     {"set", no_argument, NULL, 's'},
     {"clear", no_argument, NULL, 'r'},
+    {"dgmf", no_argument, NULL, 'm'},
     {"oem-payload", required_argument, NULL, 'o'},
     {"package", required_argument, NULL, 'p'},
     {"channel", required_argument, NULL, 'c'},
@@ -103,7 +106,7 @@ const option ArgumentParser::options[] = {
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsx:o:p:c:h?";
+const char* ArgumentParser::optionStr = "irsmx:o:p:c:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
