@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "66d9ba63_5a3420bb",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T02:18:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62b3e672_bec1193b",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9b5a76db_ce408106",
@@ -48,6 +66,24 @@
       "writtenOn": "2024-08-08T10:48:04Z",
       "side": 1,
       "message": "Please remove code for dumping of data",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e198ccdd_46667322",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T02:18:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b5a76db_ce408106",
       "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -69,6 +105,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "49f77bb9_ee1729b8",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 623,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T02:18:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f7519ab_f42f1197",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "293fec74_368c735a",
@@ -82,6 +136,24 @@
       "writtenOn": "2024-08-08T10:48:04Z",
       "side": 1,
       "message": "should not recieve the data as unsigned char,recieve as constant response structure",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9cfc32d8_6fdb3ebf",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T02:18:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "293fec74_368c735a",
       "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -103,6 +175,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed0f34cd_e8988808",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T02:18:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33d013db_86907a54",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a9ce834f_7699aa68",
@@ -116,6 +206,24 @@
       "writtenOn": "2024-08-08T10:48:04Z",
       "side": 1,
       "message": "use getNCSICapabilities",
+      "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04594ea5_b619d5ca",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T02:18:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9ce834f_7699aa68",
       "revId": "a26062041c59aae640d2799da5670d57bb57ee99",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
