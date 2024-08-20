@@ -229,6 +229,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fc0e546_a8a3ad69",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T10:57:50Z",
+      "side": 1,
+      "message": "Ok, remove it.",
+      "parentUuid": "fe5560de_41aea92e",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dbc76c4b_09042398",
@@ -242,6 +260,24 @@
       "writtenOn": "2024-08-14T21:53:48Z",
       "side": 1,
       "message": "Can you move all this defines and enums and structs to header file",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e934fc4_d5cccee3",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T10:57:50Z",
+      "side": 1,
+      "message": "It is few lines, let us localize to this command cpp.",
+      "parentUuid": "dbc76c4b_09042398",
       "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -299,6 +335,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "33d81bde_fa468dc5",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T10:57:50Z",
+      "side": 1,
+      "message": "So far I didn\u0027t see any portable issue avoiding this attribute.",
+      "parentUuid": "8afe9ec0_44df5ad5",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fff424e7_d979999c",
@@ -334,6 +388,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "390824dd_28d02304",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T10:57:50Z",
+      "side": 1,
+      "message": "variable declaration is not required",
+      "parentUuid": "12d406fc_539e71e9",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a005ea32_166938e2",
@@ -347,6 +419,24 @@
       "writtenOn": "2024-08-14T21:53:48Z",
       "side": 1,
       "message": "Can  all this  const char*  moved to a header file ?",
+      "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "497809e1_8ad186f2",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T10:57:50Z",
+      "side": 1,
+      "message": "let\u0027s localize to this file. It is not used for another command.",
+      "parentUuid": "a005ea32_166938e2",
       "revId": "ca237b76a221b6b7b4839842310612fdc2b63029",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },

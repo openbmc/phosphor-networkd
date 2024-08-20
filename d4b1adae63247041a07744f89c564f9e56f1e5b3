@@ -52,6 +52,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5745563d_a97c8bd8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T10:57:50Z",
+      "side": 1,
+      "message": "Did changes as per OpenBMC CI report.",
+      "parentUuid": "68967c93_984efc7f",
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "60058d07_3dce60d9",
@@ -111,6 +129,30 @@
       "writtenOn": "2024-08-19T19:46:12Z",
       "side": 1,
       "message": "reserved2",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 51
+      },
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "44b72247_08456611",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T10:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66ba37ca_619b9610",
       "range": {
         "startLine": 108,
         "startChar": 0,
@@ -190,6 +232,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9ac512d_1feaa7d8",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T10:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb492324_8f07cedd",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 232,
+        "endChar": 9
+      },
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fbdb7650_a7ac2822",
@@ -236,6 +302,54 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae207c5e_e3a05b99",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T10:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "179c1932_f15c451b",
+      "range": {
+        "startLine": 259,
+        "startChar": 2,
+        "endLine": 270,
+        "endChar": 9
+      },
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce760f74_88406773",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T10:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbdb7650_a7ac2822",
+      "range": {
+        "startLine": 270,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 9
+      },
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8fb6707a_fc848c36",
@@ -253,6 +367,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "01ba184e_ed669eff",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T10:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8fb6707a_fc848c36",
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bc0729c3_4cdc5f74",
@@ -266,6 +398,30 @@
       "writtenOn": "2024-08-19T19:46:12Z",
       "side": 1,
       "message": "within",
+      "range": {
+        "startLine": 64,
+        "startChar": 39,
+        "endLine": 64,
+        "endChar": 46
+      },
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79679412_0974670d",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-20T10:57:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc0729c3_4cdc5f74",
       "range": {
         "startLine": 64,
         "startChar": 39,
