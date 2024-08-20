@@ -6,6 +6,7 @@ executable(
   'ncsi-netlink',
   'argument.cpp',
   'ncsi_netlink_main.cpp',
+  'ncsi_disable_multicast.cpp',
   'ncsi_util.cpp',
   implicit_include_directories: false,
   include_directories: src_includes,

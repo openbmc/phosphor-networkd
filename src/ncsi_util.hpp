@@ -1,5 +1,8 @@
 #pragma once
 
+#include <netlink/netlink.h>
+
+#include <cstdint>
 #include <span>
 
 namespace phosphor
@@ -9,8 +12,54 @@ namespace network
 namespace ncsi
 {
 
+using CallBack = int (*)(struct nl_msg* msg, void* arg);
+
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
+
+namespace internal
+{
+
+struct NCSIPacketHeader
+{
+    uint8_t MCID;
+    uint8_t revision;
+    uint8_t reserved;
+    uint8_t id;
+    uint8_t type;
+    uint8_t channel;
+    uint16_t length;
+    uint32_t rsvd[2];
+};
+
+class Command
+{
+  public:
+    Command() = delete;
+    ~Command() = default;
+    Command(const Command&) = delete;
+    Command& operator=(const Command&) = delete;
+    Command(Command&&) = default;
+    Command& operator=(Command&&) = default;
+    Command(
+        int ncsiCmd, int operation = DEFAULT_VALUE,
+        std::span<const unsigned char> p = std::span<const unsigned char>()) :
+        ncsi_cmd(ncsiCmd), operation(operation), payload(p)
+    {}
+
+    int ncsi_cmd;
+    int operation;
+    std::span<const unsigned char> payload;
+};
+
+std::span<const unsigned char>
+    getNcsiCommandPayload(struct nl_msg* msg, void* arg);
+
+int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
+             int channel = DEFAULT_VALUE, int flags = NONE,
+             CallBack function = nullptr);
+
+} // namespace internal
 
 /* @brief  This function will ask underlying NCSI driver
  *         to send an OEM command (command type 0x50) with
