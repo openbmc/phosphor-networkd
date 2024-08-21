@@ -18,6 +18,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "915eaba9_c29ca59c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-21T18:14:04Z",
+      "side": 1,
+      "message": "What is the concern?",
+      "revId": "21f10d4c1da93d8de0efbddfd7b68e2cb1a56c4f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "42673ab6_fc5ee10e",
@@ -31,6 +48,30 @@
       "writtenOn": "2024-08-21T15:23:38Z",
       "side": 1,
       "message": "what about if the pmask is \"0x1\"? Is it a error condition?",
+      "range": {
+        "startLine": 167,
+        "startChar": 11,
+        "endLine": 167,
+        "endChar": 18
+      },
+      "revId": "21f10d4c1da93d8de0efbddfd7b68e2cb1a56c4f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "055ee006_94a67dec",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-21T18:14:04Z",
+      "side": 1,
+      "message": "This is just the argument parser.\nIt really can\u0027t know how many packages are in your system.\nIs that the question?\nLine 167 is only confirming a valid dec/oct/hex number was supplied.\nOr are you asking if \u00270x\u0027 prefixed numbers work, which they do.",
+      "parentUuid": "42673ab6_fc5ee10e",
       "range": {
         "startLine": 167,
         "startChar": 11,
