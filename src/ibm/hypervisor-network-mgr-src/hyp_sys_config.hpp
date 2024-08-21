@@ -1,5 +1,4 @@
 #pragma once
-#include "hyp_network_manager.hpp"
 
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>

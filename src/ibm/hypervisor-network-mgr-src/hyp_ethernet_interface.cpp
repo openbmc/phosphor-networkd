@@ -1,5 +1,7 @@
 #include "hyp_ethernet_interface.hpp"
 
+#include "hyp_network_manager.hpp"
+
 namespace phosphor
 {
 namespace network

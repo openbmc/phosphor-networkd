@@ -1,6 +1,5 @@
 #pragma once
 
-#include "hyp_network_manager.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
 
 #include <phosphor-logging/elog-errors.hpp>

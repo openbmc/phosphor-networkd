@@ -12,9 +12,6 @@ namespace phosphor
 namespace network
 {
 
-class HypEthInterface;
-class HypSysConfig;
-
 using biosAttrName = std::string;
 using biosAttrType = std::string;
 using biosAttrIsReadOnly = bool;

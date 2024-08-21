@@ -2,6 +2,7 @@
 
 #include "config.h"
 
+#include "hyp_network_manager.hpp"
 #include "hyp_sys_config.hpp"
 
 #include <gmock/gmock.h>
