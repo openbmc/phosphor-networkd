@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6f41cb2_6c545dc8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-21T08:01:28Z",
+      "side": 1,
+      "message": "I have rebased to master.I observed below files which are not used/modified by me are reflecting in OpenBMC CI clang format errors.\nsrc/dhcp_configuration.cpp\nsrc/ethernet_interface.cpp\nsrc/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.hpp\nsrc/ibm/hypervisor-network-mgr-src/hyp_network_manager.hpp\nsrc/ibm/hypervisor-network-mgr-src/hyp_sys_config.hpp\nsrc/network_manager.cpp\nsrc/ncsi_util.cpp\nsrc/network_manager.cpp\nsrc/rtnetlink_server.cpp\nsrc/system_configuration.cpp\nsrc/system_queries.cpp\ntest/ibm/hypervisor-network-mgr-test/mock_hyp_sys_config.hpp",
+      "revId": "600ce06e9f3813aa832ec35645b32471d5a91ecf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
