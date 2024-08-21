@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1a86641_ffb95d7c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 23
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-21T11:37:52Z",
+      "side": 1,
+      "message": "I manually fixed up clang-format issues for you after I merged the overall clang-format fixups (which were inducing a bunch of changes in your commit that were unrelated).  There are still outstanding review comments related to struct unpacking that needs to be resolved.",
+      "revId": "66f718bb5329904147172f3fa1cb499379f736ba",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
