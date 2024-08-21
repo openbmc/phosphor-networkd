@@ -113,6 +113,30 @@
       },
       "revId": "6c9003c99b1d878e60bb94db2bb8382311f232f0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a2a59c3_bb50e072",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2024-08-21T01:31:54Z",
+      "side": 1,
+      "message": "This really should be avoided. Extraction of fields is best done using a shift-and-mask approach.\n\nFrom `11.4.9 Bit-fields` (`[class.bit]`) in N4860 ([C++20 draft standard](https://wg21.link/std20)):\n\n\u003e Allocation of bit-fields within a class object is implementation-defined. Alignment of bit-fields is implementation-defined. Bit-fields are packed into some addressable allocation\nunit. [Note: Bit-fields straddle allocation units on some machines and not on others. Bit-fields are assigned right-to-left on some machines, left-to-right on others. — end note]\n\nThey\u0027re not portable and a whole bunch of pain. I really recommend avoiding them (they also have a whole bunch of concurrency problems, but that might not be a concern here).",
+      "parentUuid": "477dbe3f_1fe84508",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 2
+      },
+      "revId": "6c9003c99b1d878e60bb94db2bb8382311f232f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
