@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b31e720e_fbc38cf5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-21T11:24:53Z",
+      "side": 1,
+      "message": "There was a pending commit for the clang-18 upgrade.  When you ran clang-format manually you induced a lot of code changes in your commit that were unrelated.  I\u0027ve rebased your commit manually for you to avoid this.",
+      "revId": "27f9d2d99e757ddd9d3e42b258738fff0944512e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
