@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e66ada2_87abe3f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-21T11:18:54Z",
+      "side": 1,
+      "message": "@Sunder - Please click \"done\" and reply if you\u0027ve resolved all of the outstanding comments.  There are still 5 marked unresolved.",
+      "revId": "75894ecc1a3838f365d0945ce750b5f92938d9ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
