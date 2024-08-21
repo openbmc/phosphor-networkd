@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1747608_0d033b30",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-21T11:32:24Z",
+      "side": 1,
+      "message": "Manually resolved merge conflicts from outstanding clang-format commit for you.",
+      "revId": "af0027252f7e233ef22e269f3adabb34dd60ff1f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
