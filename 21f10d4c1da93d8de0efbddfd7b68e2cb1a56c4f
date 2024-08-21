@@ -16,6 +16,29 @@
       "message": "Patchset 4 fixes formatting difference between clang-format versions only.",
       "revId": "21f10d4c1da93d8de0efbddfd7b68e2cb1a56c4f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42673ab6_fc5ee10e",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2024-08-21T15:23:38Z",
+      "side": 1,
+      "message": "what about if the pmask is \"0x1\"? Is it a error condition?",
+      "range": {
+        "startLine": 167,
+        "startChar": 11,
+        "endLine": 167,
+        "endChar": 18
+      },
+      "revId": "21f10d4c1da93d8de0efbddfd7b68e2cb1a56c4f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
