@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "89fe7fd1_7cf96502",
+        "filename": "src/argument.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-22T16:09:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9f2f60a_ebc41205",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9d73ce31_494281db",
@@ -52,6 +70,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef41a1d8_3054283e",
+        "filename": "src/argument.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-22T16:09:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d73ce31_494281db",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a5c9072e_4dcde225",
@@ -65,6 +101,24 @@
       "writtenOn": "2024-08-06T20:39:59Z",
       "side": 1,
       "message": "What functions are using cstring and iostream?\nPlease remove these if they aren\u0027t needed.",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a06ede0_ae5671e8",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-22T16:09:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5c9072e_4dcde225",
       "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -104,6 +158,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6089f749_cf28327f",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-22T16:09:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4844865b_50c5c6cc",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b60c2fff_ebef256d",
@@ -121,6 +193,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a8bfb50_55c1493f",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-22T16:09:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b60c2fff_ebef256d",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d2ca0dfb_db7be44f",
@@ -134,6 +224,24 @@
       "writtenOn": "2024-08-06T20:39:59Z",
       "side": 1,
       "message": "All of these #defines are private to ncsi_util.cpp.\nI recommend placing them there.",
+      "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a136ab8a_2409f89f",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-22T16:09:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2ca0dfb_db7be44f",
       "revId": "dccdc1db9ed06ee0c7f2710667f1957cad7b7804",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }

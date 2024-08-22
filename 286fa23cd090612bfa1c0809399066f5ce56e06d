@@ -16,6 +16,57 @@
       "message": "I am now inclined to approve this.\nYou need to get your UID added to the Gerrit system by your appointed admin.\nAfter this reaches a Verified +1 I\u0027ll add my +1.",
       "revId": "286fa23cd090612bfa1c0809399066f5ce56e06d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "426832e4_86c8211f",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-22T16:09:35Z",
+      "side": 1,
+      "message": "OOPS.  I will fix this right away.",
+      "revId": "286fa23cd090612bfa1c0809399066f5ce56e06d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a905af80_92f1cdf6",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-22T16:09:35Z",
+      "side": 1,
+      "message": "We need to remember that the input is a fixed length (6) array of BCD. Three bytes",
+      "revId": "286fa23cd090612bfa1c0809399066f5ce56e06d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f8fc266_4b997c10",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-22T16:09:35Z",
+      "side": 1,
+      "message": "The length is specified properly  this way.",
+      "revId": "286fa23cd090612bfa1c0809399066f5ce56e06d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }

@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2c3ab51_29ec70bb",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-22T16:09:35Z",
+      "side": 1,
+      "message": "We don\u0027t need/use the completion codes except as a placeholder.\nThe alignment must be proper because we are retrieving the ncsiVersion data properly.",
+      "parentUuid": "89f7bd0e_b5e0906e",
+      "revId": "7b0f1d2ca2427fa11a54c6cc0ee4782f2e270e44",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1250998a_6f724e2b",
@@ -52,6 +70,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "39819246_b463120b",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-22T16:09:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1250998a_6f724e2b",
+      "revId": "7b0f1d2ca2427fa11a54c6cc0ee4782f2e270e44",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5a56b426_c43c06e7",
@@ -65,6 +101,24 @@
       "writtenOn": "2024-08-19T14:37:40Z",
       "side": 1,
       "message": "suggestion:\nTake advantage of C++ containers, and move mechanics.\nSkeleton example:\nstd::string ncsiBCDToStr(const std::vector\u003cuint8_t\u003e\u0026 raw)\n{\n    std::string bcd{};\n    for (const auto it : raw)\n    {\n        bcd.push_back(it);\n    }\n    // calculate correction for last element\n    bcd.at(last_idx) \u003d correction;\n    return bcd;\n}\n\nYou can iterate over the vector without having to manually deal with bounds checking.\nYou can build the version string piece by piece without having to manually calculate the last char. You just add your last calculation to the end.\nLastly, because \u0027bcd\u0027 is a local string, and you are returning that local string, C++ will use move mechanics to transfer the scope of the string to the caller.\nLook for ways to avoid using raw C pointers.",
+      "revId": "7b0f1d2ca2427fa11a54c6cc0ee4782f2e270e44",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c530fde6_2827d220",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-22T16:09:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a56b426_c43c06e7",
       "revId": "7b0f1d2ca2427fa11a54c6cc0ee4782f2e270e44",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
