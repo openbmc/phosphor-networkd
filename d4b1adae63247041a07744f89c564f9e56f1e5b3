@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "42b57173_cf70b25d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-22T05:40:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e15bc11_6064ac73",
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "68967c93_984efc7f",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
@@ -93,6 +111,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb764b87_4317f169",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-22T05:40:27Z",
+      "side": 1,
+      "message": "Vella suggested to retain the completion code interpretaion.",
+      "parentUuid": "60058d07_3dce60d9",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 42
+      },
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "51cccac2_cf5c71e8",
@@ -106,6 +148,30 @@
       "writtenOn": "2024-08-19T19:46:12Z",
       "side": 1,
       "message": "Where are these used? Remove if unused.",
+      "range": {
+        "startLine": 68,
+        "startChar": 2,
+        "endLine": 71,
+        "endChar": 46
+      },
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d7885af_d71df3b7",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-22T05:40:27Z",
+      "side": 1,
+      "message": "Vella suggested to retain the completion code interpretaion.",
+      "parentUuid": "51cccac2_cf5c71e8",
       "range": {
         "startLine": 68,
         "startChar": 2,
@@ -186,6 +252,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "14559186_0f600d6a",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-22T05:40:27Z",
+      "side": 1,
+      "message": "Vella suggested to retain the completion code interpretaion.",
+      "parentUuid": "06804c5a_517804c3",
+      "range": {
+        "startLine": 159,
+        "startChar": 0,
+        "endLine": 161,
+        "endChar": 24
+      },
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "69cc2985_4fd30eae",
@@ -199,6 +289,30 @@
       "writtenOn": "2024-08-19T19:46:12Z",
       "side": 1,
       "message": "Where are these used? Remove if unused.",
+      "range": {
+        "startLine": 166,
+        "startChar": 2,
+        "endLine": 173,
+        "endChar": 21
+      },
+      "revId": "d4b1adae63247041a07744f89c564f9e56f1e5b3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2601e16e_535e73f2",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-22T05:40:27Z",
+      "side": 1,
+      "message": "Vella suggested to retain the completion code interpretaion.",
+      "parentUuid": "69cc2985_4fd30eae",
       "range": {
         "startLine": 166,
         "startChar": 2,

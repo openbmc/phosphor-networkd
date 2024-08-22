@@ -41,6 +41,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f904c027_a532b6c6",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-22T05:40:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db7fcde6_2e7f0a3d",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 55
+      },
+      "revId": "27f9d2d99e757ddd9d3e42b258738fff0944512e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "60a67005_8aa2d824",
@@ -64,6 +88,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "97e4e617_282805b6",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-22T05:40:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60a67005_8aa2d824",
+      "range": {
+        "startLine": 81,
+        "startChar": 7,
+        "endLine": 81,
+        "endChar": 30
+      },
+      "revId": "27f9d2d99e757ddd9d3e42b258738fff0944512e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "353b5d0a_7c2d6a43",
@@ -77,6 +125,30 @@
       "writtenOn": "2024-08-21T11:27:37Z",
       "side": 1,
       "message": "We should not be relying on C-struct-unpacking.  This is not portable or safe.",
+      "range": {
+        "startLine": 504,
+        "startChar": 0,
+        "endLine": 505,
+        "endChar": 67
+      },
+      "revId": "27f9d2d99e757ddd9d3e42b258738fff0944512e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2d90df0_fe53846b",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-22T05:40:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "353b5d0a_7c2d6a43",
       "range": {
         "startLine": 504,
         "startChar": 0,
