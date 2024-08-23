@@ -16,6 +16,23 @@
       "message": "Rebase only",
       "revId": "8e3c1fbd4e3b1b05256b2dc702d84ebc9d51d773",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6dce37ce_1063e4db",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-08-23T20:31:02Z",
+      "side": 1,
+      "message": "I really don\u0027t think any of this admin state handling logic works correctly with this change.",
+      "revId": "8e3c1fbd4e3b1b05256b2dc702d84ebc9d51d773",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ],
   "submitRequirementResults": []
