@@ -41,6 +41,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4dced520_0f483840",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-23T19:25:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea56a678_1a46c237",
+      "range": {
+        "startLine": 72,
+        "startChar": 7,
+        "endLine": 72,
+        "endChar": 26
+      },
+      "revId": "aadfd17a353141b6b4bd1db704929fb09769cb4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1ea97a25_1664a679",
@@ -54,6 +78,24 @@
       "writtenOn": "2024-08-23T13:42:01Z",
       "side": 1,
       "message": "nit: Suggest putting these all into a namespace since you\u0027ve added a lot of free standing variables.",
+      "revId": "aadfd17a353141b6b4bd1db704929fb09769cb4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b35a026_44aa16cf",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-23T19:25:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ea97a25_1664a679",
       "revId": "aadfd17a353141b6b4bd1db704929fb09769cb4d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -106,6 +148,30 @@
       "writtenOn": "2024-08-23T13:42:01Z",
       "side": 1,
       "message": "Unsafe C-style cast onto packed struct.",
+      "range": {
+        "startLine": 550,
+        "startChar": 0,
+        "endLine": 551,
+        "endChar": 61
+      },
+      "revId": "aadfd17a353141b6b4bd1db704929fb09769cb4d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f5509ab_4fac23ac",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-23T19:25:16Z",
+      "side": 1,
+      "message": "Hi Patrick,\nAs suggested updated to c++ style unpacking.Also observed this style of casting/unpacking being is used in multiple places in  phosphorus-networkd repo.\n   auto* linkResp \u003d\n        static_cast\u003cgetLinkStatusResponse*\u003e(nla_data(tb[NCSI_ATTR_DATA]));\nPlease provide comment on this.\nRegards,\nSurendra A.",
+      "parentUuid": "35b5d5c3_919d20bf",
       "range": {
         "startLine": 550,
         "startChar": 0,
