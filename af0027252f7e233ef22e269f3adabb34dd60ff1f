@@ -85,6 +85,24 @@
       "parentUuid": "d689348c_3ee74795",
       "revId": "af0027252f7e233ef22e269f3adabb34dd60ff1f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1eafd5a_e0852f79",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-08-23T13:36:43Z",
+      "side": 1,
+      "message": "Removed the __attribute__((packed)) for the structures and extracted the data from the response using memmove",
+      "parentUuid": "0150460a_c677c56f",
+      "revId": "af0027252f7e233ef22e269f3adabb34dd60ff1f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
