@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "66b668e1_620d129e",
+        "filename": "src/argument.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-23T15:48:10Z",
+      "side": 1,
+      "message": "Thanks you for your recommendation.However, it appears that \"show-stats\" is the correct command.",
+      "parentUuid": "6c581ec2_ea223c8b",
+      "revId": "43d1562f3ba5783a297a785d6087e66bf7b81243",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3f25f312_032ecae0",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-08-14T22:34:31Z",
       "side": 1,
       "message": "Please change it to \"stats\" or \"statistics\"",
+      "revId": "43d1562f3ba5783a297a785d6087e66bf7b81243",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0d8369f_7eaca763",
+        "filename": "src/argument.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-23T15:48:10Z",
+      "side": 1,
+      "message": "Thanks you for your recommendation.However, it appears that \"show-stats\" is the correct command.",
+      "parentUuid": "3f25f312_032ecae0",
       "revId": "43d1562f3ba5783a297a785d6087e66bf7b81243",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -52,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "26fcb0ec_51abc440",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-23T15:48:10Z",
+      "side": 1,
+      "message": "structure NCSIControllerPacketStatsResponse accesses the NCSIPacketHeader structure object, which has been moved from ncsi_util.cpp to ncdi_util.hpp",
+      "parentUuid": "401d09c8_de582d97",
+      "revId": "43d1562f3ba5783a297a785d6087e66bf7b81243",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5685c94b_7b703c0d",
@@ -65,6 +119,24 @@
       "writtenOn": "2024-08-14T22:25:27Z",
       "side": 1,
       "message": "Please move this #include to ncsi_util.cpp as it is private to ncsi_utill.cpp",
+      "revId": "43d1562f3ba5783a297a785d6087e66bf7b81243",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7a25bd9_c13849c8",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-23T15:48:10Z",
+      "side": 1,
+      "message": "Thanks for reviewing.structure NCSIControllerPacketStatsResponse data members are defined in fixed integer width type so \u003ccstdint\u003e header file is required here.",
+      "parentUuid": "5685c94b_7b703c0d",
       "revId": "43d1562f3ba5783a297a785d6087e66bf7b81243",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -86,6 +158,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "90325e40_3d6edacf",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-23T15:48:10Z",
+      "side": 1,
+      "message": "As per Johnathan Mantey suggestion, this should be submitted as a kernel commit.\nwe are waiting for which repo does this change go to if I add to ncsi.h?",
+      "parentUuid": "55e52bbd_dc14f69b",
+      "revId": "43d1562f3ba5783a297a785d6087e66bf7b81243",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b99d7d14_79e863ba",
@@ -99,6 +189,24 @@
       "writtenOn": "2024-08-14T22:25:27Z",
       "side": 1,
       "message": "Please move this internal structures to ncsi_util.cpp.\nThere are few other commits also uses the same NCSIPacketHeader structure. Moving these definitions to ncsi_util.cpp will helps on resolving conflicts and redundant definitions in features",
+      "revId": "43d1562f3ba5783a297a785d6087e66bf7b81243",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf406745_5cb53a20",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-23T15:48:10Z",
+      "side": 1,
+      "message": "structure NCSIControllerPacketStatsResponse accesses the NCSIPacketHeader structure object, which has been moved from ncsi_util.cpp to ncdi_util.hpp",
+      "parentUuid": "b99d7d14_79e863ba",
       "revId": "43d1562f3ba5783a297a785d6087e66bf7b81243",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
