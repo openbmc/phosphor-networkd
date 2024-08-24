@@ -16,12 +16,14 @@
 #include "argument.hpp"
 
 #include <iostream>
+
 namespace phosphor
 {
 namespace network
 {
 namespace ncsi
 {
+
 ArgumentParser::ArgumentParser(int argc, char** argv)
 {
     int option = 0;
@@ -32,17 +34,20 @@ ArgumentParser::ArgumentParser(int argc, char** argv)
             usage(argv);
             exit(-1);
         }
+
         auto i = &options[0];
         while ((i->val != option) && (i->val != 0))
         {
             ++i;
         }
+
         if (i->val)
         {
             arguments[i->name] = (i->has_arg ? optarg : trueString);
         }
     }
 }
+
 const std::string& ArgumentParser::operator[](const std::string& opt)
 {
     auto i = arguments.find(opt);
@@ -55,6 +60,7 @@ const std::string& ArgumentParser::operator[](const std::string& opt)
         return i->second;
     }
 }
+
 void ArgumentParser::usage(char** argv)
 {
     std::cerr << "Usage: " << argv[0] << " [options]\n";
@@ -64,15 +70,11 @@ void ArgumentParser::usage(char** argv)
            "    --index=<device index> | -x <device index> Specify device ifindex.\n"
            "    --package=<package> | -p <package> Specify a package.\n"
            "    --channel=<channel> | -c <channel> Specify a channel.\n"
-           "    --info    | -i      Retrieve info about NCSI topology.\n"
-           "    --get     | -g      <option> \n"
-           "          <option> is one of ...\n"
-           "          vid:  NC-SI Version ID\n"
-           "          ncsi: NC-SI statistics\n"
-           "          mac-addr: MAC address\n"
-           "          ....: . . .\n"
-           "    --set     | -s      Set a specific package/channel.\n"
-           "    --clear   | -r      Clear all the settings on the interface.\n"
+           "    --info  | -i      Retrieve info about NCSI topology.\n"
+           "    --set   | -s      Set a specific package/channel.\n"
+           "    --filter=<num> | -F <num> Set the mac address filter num.\n"
+           "    --set-mac=<hex data...>flags | M <hex data...>flags Set mac address.\n"
+           "    --clear | -r      Clear all the settings on the interface.\n"
            "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n"
            "    --pmask=<mask> | -j <mask> Bitmask to enable/disable packages\n"
            "    --cmask=<mask> | -k <mask> Bitmask to enable/disable channels\n"
@@ -92,28 +94,34 @@ void ArgumentParser::usage(char** argv)
            "         ncsi-netlink -x 3 -j 1\n"
            "    7) Set Channel Mask\n"
            "         ncsi-netlink -x 3 -p 0 -k 1\n"
-           "    8) Get Version ID:\n"
-           "         ncsi-netlink -x 2 -p 0 -c 0 --get vid\n"
+           "   Xy) Set the 12-digit mac address in hex:{U(ni)/M(ulti):E(nable)/D(isable)}\n"
+           "         ncsi-netlink -x 2 -p 0 -c 0 -F 1 --set-mac=0123456789AB   Unicast Enable\n"
+           "         ncsi-netlink -x 2 -p 0 -c 0 -F 1 --set-mac=0123456789ABME Multicast Enable\n"
+           "         ncsi-netlink -x 2 -p 0 -c 0 -F 1 --set-mac=0123456789ABUD Unicast Disable\n"
            "\n";
 }
+
 const option ArgumentParser::options[] = {
     {"info", no_argument, NULL, 'i'},
     {"set", no_argument, NULL, 's'},
     {"clear", no_argument, NULL, 'r'},
-    {"get", required_argument, NULL, 'g'},
     {"oem-payload", required_argument, NULL, 'o'},
     {"package", required_argument, NULL, 'p'},
     {"channel", required_argument, NULL, 'c'},
     {"index", required_argument, NULL, 'x'},
+    {"filter", required_argument, NULL, 'F'},
+    {"set-mac", required_argument, NULL, 'M'},
     {"help", no_argument, NULL, 'h'},
     {"pmask", required_argument, NULL, 'j'},
     {"cmask", required_argument, NULL, 'k'},
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsj:k:x:g:o:p:c:h?";
+const char* ArgumentParser::optionStr = "irsj:k:x:o:p:c:F:M:h?";
+
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
+
 } // namespace ncsi
 } // namespace network
 } // namespace phosphor
