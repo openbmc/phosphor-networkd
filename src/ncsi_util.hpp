@@ -1,6 +1,8 @@
 #pragma once
 
+#include <cstdint>
 #include <span>
+#include <string>
 
 namespace phosphor
 {
@@ -75,6 +77,16 @@ int setPackageMask(int ifindex, unsigned int mask);
  */
 int setChannelMask(int ifindex, int package, unsigned int mask);
 
+/* @brief  This function sets the mac address for a
+ *         specific interface & channel
+ *         the package.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] channel - channel
+ * @param[in] macAddr - the new mac address
+ * @returns 0 on success and negative value for failure.
+ */
+int setMacAddr(int ifindex, int channel, const std::string& macAddr,
+               const uint8_t& maFlags);
 } // namespace ncsi
 } // namespace network
 } // namespace phosphor
