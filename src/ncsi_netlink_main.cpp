@@ -15,6 +15,7 @@
  */
 #include "argument.hpp"
 #include "ncsi_util.hpp"
+#include "util.hpp"
 
 #include <phosphor-logging/lg2.hpp>
 
@@ -26,6 +27,16 @@ static void exitWithError(const char* err, char** argv)
     phosphor::network::ncsi::ArgumentParser::usage(argv);
     lg2::error("ERROR: {ERROR}", "ERROR", err);
     exit(EXIT_FAILURE);
+}
+
+bool isAllHexDigits(const std::string& hexStr) {
+
+    for (char c : hexStr) {
+        if (!std::isxdigit(c))
+            return false;
+    }
+
+    return true;
 }
 
 int main(int argc, char** argv)
@@ -139,6 +150,17 @@ int main(int argc, char** argv)
         return ncsi::sendOemCommand(
             indexInt, packageInt, channelInt, operationInt,
             std::span<const unsigned char>(payload.begin(), payload.end()));
+    }
+    const std::string& macAddrStr{(options)["set-mac"]};
+    if (!macAddrStr.empty())
+    {
+        if (macAddrStr.size() != 12)
+            exitWithError("Invalid MAC address: specify 12 hex digits.", argv);
+
+        if (!isAllHexDigits(macAddrStr))
+            exitWithError("MAC addresses must be all hex digits (0..9; A..F).", argv);
+
+        return ncsi::setMacAddr(indexInt, channelInt, macAddrStr);
     }
     else if ((options)["set"] == "true")
     {

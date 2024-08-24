@@ -58,6 +58,16 @@ int clearInterface(int ifindex);
  */
 int getInfo(int ifindex, int package);
 
+
+/* @brief  This function sets the mac address for a
+ *         specific interface & channel
+ *         the package.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] channel - channel
+ * @param[in] macAddr - the new mac address
+ * @returns 0 on success and negative value for failure.
+ */
+int setMacAddr(int ifindex, int channel, const std::string & macAddr);
 } // namespace ncsi
 } // namespace network
 } // namespace phosphor
