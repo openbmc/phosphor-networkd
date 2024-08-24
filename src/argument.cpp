@@ -72,6 +72,7 @@ void ArgumentParser::usage(char** argv)
            "    --channel=<channel> | -c <channel> Specify a channel.\n"
            "    --info  | -i      Retrieve info about NCSI topology.\n"
            "    --set   | -s      Set a specific package/channel.\n"
+           "    --set-mac=<hex data...>flags | M <hex data...>flags Set mac address.\n"
            "    --clear | -r      Clear all the settings on the interface.\n"
            "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n"
            "    --pmask=<mask> | -j <mask> Bitmask to enable/disable packages\n"
@@ -92,6 +93,10 @@ void ArgumentParser::usage(char** argv)
            "         ncsi-netlink -x 3 -j 1\n"
            "    7) Set Channel Mask\n"
            "         ncsi-netlink -x 3 -p 0 -k 1\n"
+           "    Xy) Set the 12-digit mac address in hex {(U)ni/(M)ulti; (E)nable/(D)isable}\n"
+           "        ncsi-netlink -x 2 -c 1 --set-mac=0123456789ABC   unicast enable\n "
+           "        ncsi-netlink -x 2 -c 1 --set-mac=0123456789ABCME multi-cast enable\n "
+           "        ncsi-netlink -x 2 -c 1 --set-mac=0123456789ABCUD unicast disable\n"
            "\n";
 }
 
@@ -103,13 +108,14 @@ const option ArgumentParser::options[] = {
     {"package", required_argument, NULL, 'p'},
     {"channel", required_argument, NULL, 'c'},
     {"index", required_argument, NULL, 'x'},
+    {"set-mac", required_argument, NULL, 'M'},
     {"help", no_argument, NULL, 'h'},
     {"pmask", required_argument, NULL, 'j'},
     {"cmask", required_argument, NULL, 'k'},
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsj:k:x:o:p:c:h?";
+const char* ArgumentParser::optionStr = "irsj:k:x:o:p:c:M:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
