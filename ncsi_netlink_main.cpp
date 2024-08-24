@@ -53,7 +53,7 @@ int main(int argc, char** argv)
     int filterInt{};
     int operationInt{DEFAULT_VALUE};
 
-    // Parse out the interface argument.
+    // Parse out interface argument.
     auto ifIndex = (options)["index"];
     try
     {
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
                       argv);
     }
 
-    // Parse out the package argument.
+    // Parse out package argument.
     auto package = (options)["package"];
     try
     {
@@ -86,7 +86,7 @@ int main(int argc, char** argv)
         packageInt = DEFAULT_VALUE;
     }
 
-    // Parse out the channel argument.
+    // Parse out channel argument.
     auto channel = (options)["channel"];
     try
     {
@@ -102,8 +102,11 @@ int main(int argc, char** argv)
         channelInt = DEFAULT_VALUE;
     }
 
-    // Parse out the filter argument.
     auto filter = (options)["filter"];
+    //if (!(filterStr.empty()))
+    //{
+    //    filterInt = static_cast<uint8_t>(stoi(filterStr, nullptr));
+    //}
     try
     {
         filterInt = stoi(filter, nullptr);
@@ -209,8 +212,8 @@ int main(int argc, char** argv)
                           argv);
         }
 
-        return ncsi::setMacAddr(indexInt, packageInt, channelInt, macAddrStr,
-                                filterInt, maFlags);
+        return ncsi::setMacAddr(indexInt, packageInt, channelInt,
+                                macAddrStr, filterInt, maFlags);
     }
     else if ((options)["set"] == "true")
     {
