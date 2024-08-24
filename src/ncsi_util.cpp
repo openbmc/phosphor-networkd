@@ -1,3 +1,4 @@
+
 #include "ncsi_util.hpp"
 
 #include <linux/ncsi.h>
@@ -17,6 +18,7 @@ namespace network
 {
 namespace ncsi
 {
+#define NCSI_CMD_SET_MAC_ADDR 0x0E
 
 using CallBack = int (*)(struct nl_msg* msg, void* arg);
 
@@ -55,6 +57,40 @@ struct NCSIPacketHeader
     uint32_t rsvd[2];
 };
 
+struct setMacAddrData
+{
+    uint8_t macAddr[6];
+    uint8_t macAddrNum;
+    uint8_t macAddrFlags;
+    uint32_t checksum;
+    uint8_t padding[18];
+};
+
+struct setMacAddrCmdPkt
+{
+    struct NCSIPacketHeader ncsiPktHdr;
+    struct setMacAddrData macAddrData;
+};
+
+struct ncsiCompletionCodes
+{
+    uint16_t completionCodeResponse;
+    uint16_t completionCodeReason;
+};
+
+struct setMacAddrRespData
+{
+    uint32_t checksum;
+    uint8_t   padding[22];
+};
+
+struct setMacAddrResponse
+{
+    NCSIPacketHeader ncsiRespHdr;
+    ncsiCompletionCodes ncsiCCodes;
+    struct setMacAddrRespData macAddrRespData;
+};
+
 class Command
 {
   public:
@@ -67,7 +103,8 @@ class Command
     Command(
         int ncsiCmd, int operation = DEFAULT_VALUE,
         std::span<const unsigned char> p = std::span<const unsigned char>()) :
-        ncsi_cmd(ncsiCmd), operation(operation), payload(p)
+        ncsi_cmd(ncsiCmd),
+        operation(operation), payload(p)
     {}
 
     int ncsi_cmd;
@@ -254,8 +291,8 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     }
 
     auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
-    unsigned char* data =
-        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
+    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) +
+                          sizeof(NCSIPacketHeader);
 
     // Dump the response to stdout. Enhancement: option to save response data
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
@@ -366,8 +403,8 @@ int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
     }
     else if (cmd.ncsi_cmd == ncsi_nl_commands::NCSI_CMD_SEND_CMD)
     {
-        std::vector<unsigned char> pl(
-            sizeof(NCSIPacketHeader) + cmd.payload.size());
+        std::vector<unsigned char> pl(sizeof(NCSIPacketHeader) +
+                                      cmd.payload.size());
         NCSIPacketHeader* hdr = (NCSIPacketHeader*)pl.data();
 
         std::copy(cmd.payload.begin(), cmd.payload.end(),
@@ -505,6 +542,55 @@ int setChannelMask(int ifindex, int package, unsigned int mask)
                           payload),
         package);
     return 0;
+}
+
+void asciiToPackedHex(const std::string& asciHexDigits, std::vector<uint8_t> packedHex)
+{
+    uint8_t hi_nbl;
+    uint8_t lo_nbl;
+    uint8_t nibble;
+    uint16_t i = 0;
+
+    for (unsigned char byte : asciHexDigits)
+    {
+        nibble = byte & 0x0F;
+        if (byte > 0x40)
+            nibble += 9; // 0x1 --> 0xA; 0x2 --> 0xB
+
+        if ((i % 2) == 0)
+            hi_nbl = nibble;
+        else
+        {
+            lo_nbl = nibble;
+            packedHex.push_back((hi_nbl << 4) + lo_nbl);
+        }
+
+        i++;
+    }
+}
+
+int setMacAddr(int ifindex, int channel, const std::string& macAddr, const uint8_t& macAddrFlags)
+{
+    struct internal::setMacAddrData strMacAddrData;
+    size_t  setSz = sizeof(struct internal::setMacAddrData);
+    unsigned char* pStr = reinterpret_cast<unsigned char*>(&strMacAddrData);
+
+    lg2::debug("Set Mac Address , INTERFACE_INDEX: {INTERFACE_INDEX}"
+                "CHANNEL: {CHANNEL} MAC_ADDRESS: {MAC_ADDRESS} FLAGS : {FLAGS}",
+                "INTERFACE_INDEX", lg2::hex, ifindex,
+                "CHANNEL", lg2::hex, channel,
+                "MAC_ADDRESS", macAddr, "FLAGS", lg2::hex, macAddrFlags);
+
+    std::vector<uint8_t> macAddrVctr(strMacAddrData.macAddr,
+                                     strMacAddrData.macAddr + 6);
+    asciiToPackedHex(macAddr, macAddrVctr);
+    strMacAddrData.macAddrFlags = macAddrFlags;
+
+    std::span<const unsigned char> payload(pStr, setSz);
+
+    return internal::applyCmd(
+        ifindex, internal::Command(NCSI_CMD_SET_MAC_ADDR, NONE, payload),
+        NONE, channel, NONE, internal::sendCallBack);
 }
 
 } // namespace ncsi
