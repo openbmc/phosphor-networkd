@@ -1,3 +1,4 @@
+
 #include "ncsi_util.hpp"
 
 #include <linux/ncsi.h>
@@ -17,7 +18,6 @@ namespace network
 {
 namespace ncsi
 {
-
 using CallBack = int (*)(struct nl_msg* msg, void* arg);
 
 static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
@@ -55,6 +55,34 @@ struct NCSIPacketHeader
     uint32_t rsvd[2];
 };
 
+struct setMacAddrData
+{
+    uint8_t macAddr[6];
+    uint8_t macAddrNum;
+    uint8_t macAddrFlags;
+    uint32_t checksum;
+    uint8_t padding[18];
+};
+
+struct ncsiCompletionCodes
+{
+    uint16_t completionCodeResponse;
+    uint16_t completionCodeReason;
+};
+
+struct setMacAddrRespData
+{
+    uint32_t checksum;
+    uint8_t padding[22];
+};
+
+struct setMacAddrResponse
+{
+    NCSIPacketHeader ncsiRespHdr;
+    ncsiCompletionCodes ncsiCCodes;
+    struct setMacAddrRespData macAddrRespData;
+};
+
 class Command
 {
   public:
@@ -77,6 +105,27 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+int displayResponseInfo(NCSIPacketHeader* respInfo)
+{
+    unsigned char* respData = reinterpret_cast<unsigned char*>(respInfo);
+    respData += 4;
+    uint8_t cmtype = *respData;
+
+    respData = reinterpret_cast<unsigned char*>(respInfo);
+    respData += sizeof(NCSIPacketHeader);
+    uint16_t responseCode = (*(reinterpret_cast<uint16_t*>(respData)));
+
+    respData += sizeof(uint16_t);
+    uint16_t reason = (*(reinterpret_cast<uint16_t*>(respData)));
+
+    lg2::debug("Display Response Data: CTL_MSG_TYPE:{CTL_MSG_TYPE}"
+               " RESPONSE_CODE:{RESPONSE_CODE} REASON:{REASON}",
+               "CTL_MSG_TYPE", lg2::hex, cmtype, "RESPONSE_CODE", lg2::hex,
+               responseCode, "REASON", lg2::hex, reason);
+
+    return 0;
+}
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -228,6 +277,40 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     return (int)NL_SKIP;
 };
 
+int getNcsiResponsePayload(struct nl_msg* msg, void* arg,
+                           std::span<const unsigned char>& payload)
+{
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    auto data_len = nla_len(tb[NCSI_ATTR_DATA]);
+    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]);
+    payload = std::span<const unsigned char>(data, data_len);
+
+    return 0;
+}
+
 CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
@@ -261,6 +344,24 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
+
+    return 0;
+};
+
+CallBack setMacAddressCallBack = [](struct nl_msg* msg, void* arg) {
+    std::span<const unsigned char> payload;
+    auto ret = getNcsiResponsePayload(msg, arg, payload);
+
+    if (ret != 0)
+    {
+        return ret;
+    }
+
+    std::vector<unsigned char> payloadVec(payload.begin(), payload.end());
+    struct NCSIPacketHeader* data =
+        reinterpret_cast<struct NCSIPacketHeader*>(&payloadVec[0]);
+
+    displayResponseInfo(data);
 
     return 0;
 };
@@ -505,6 +606,68 @@ int setChannelMask(int ifindex, int package, unsigned int mask)
                           payload),
         package);
     return 0;
+}
+
+void asciiToPackedHex(const std::string& asciHexDigits,
+                      std::vector<uint8_t> packedHex)
+{
+    uint8_t hi_nbl = 0;
+    uint8_t lo_nbl = 0;
+    uint8_t nibble = 0;
+    uint16_t i = 0;
+
+    for (unsigned char byte : asciHexDigits)
+    {
+        nibble = byte & 0x0F;
+        if (byte > 0x40)
+        {
+            nibble += 9; // 0x1 --> 0xA; 0x2 --> 0xB
+        }
+
+        if ((i % 2) == 0)
+        {
+            hi_nbl = nibble;
+        }
+        else
+        {
+            lo_nbl = nibble;
+            packedHex.push_back((hi_nbl << 4) + lo_nbl);
+        }
+
+        i++;
+    }
+}
+
+int setMacAddr(int ifindex, int package, int channel,
+               const std::string& macAddr, const uint8_t& filter,
+               const uint8_t& macAddrFlags)
+{
+    constexpr auto ncsi_cmd = 0x0E;
+
+    struct internal::setMacAddrData strMacAddrData;
+    size_t setSz = sizeof(struct internal::setMacAddrData);
+    unsigned char* pStr = reinterpret_cast<unsigned char*>(&strMacAddrData);
+
+    lg2::debug("Set Mac Address: INTERFACE_INDEX:{INTERFACE_INDEX}"
+               " MAC_ADDRESS:{MAC_ADDRESS} FILTER:{FILTER} FLAGS:{FLAGS}",
+               "INTERFACE_INDEX", ifindex, "MAC_ADDRESS", macAddr, "FILTER",
+               filter, "FLAGS", lg2::hex, macAddrFlags);
+
+    std::fill(reinterpret_cast<char*>(pStr),
+              reinterpret_cast<char*>(pStr + setSz), 0);
+    std::vector<uint8_t> macAddrVctr(strMacAddrData.macAddr,
+                                     strMacAddrData.macAddr + 6);
+    asciiToPackedHex(macAddr, macAddrVctr);
+    strMacAddrData.macAddrNum = filter;
+    strMacAddrData.macAddrFlags = macAddrFlags;
+
+    std::span<const unsigned char> payload(pStr, setSz);
+
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, ncsi_cmd,
+                          payload),
+        package, channel, NONE, internal::setMacAddressCallBack);
 }
 
 } // namespace ncsi
