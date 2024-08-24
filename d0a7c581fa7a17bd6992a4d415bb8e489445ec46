@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "668de3ae_17a8007a",
+        "filename": "src/argument.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1002114
+      },
+      "writtenOn": "2024-08-24T15:56:55Z",
+      "side": 1,
+      "message": "Hi Johnathan, addressed review comments. Kindly check",
+      "parentUuid": "975f7332_0e2fb3b2",
+      "revId": "d0a7c581fa7a17bd6992a4d415bb8e489445ec46",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7ea3a9f3_0e9bdafe",
         "filename": "src/ncsi_netlink_main.cpp",
         "patchSetId": 8
@@ -48,6 +66,24 @@
       "writtenOn": "2024-08-12T18:15:14Z",
       "side": 1,
       "message": ".... channelInt, AENInt);",
+      "revId": "d0a7c581fa7a17bd6992a4d415bb8e489445ec46",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c981413f_2e01f023",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1002114
+      },
+      "writtenOn": "2024-08-24T15:56:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ea3a9f3_0e9bdafe",
       "revId": "d0a7c581fa7a17bd6992a4d415bb8e489445ec46",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -69,6 +105,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aeb8df29_ca063b9e",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1002114
+      },
+      "writtenOn": "2024-08-24T15:56:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "657ffbaa_a63b8b9b",
+      "revId": "d0a7c581fa7a17bd6992a4d415bb8e489445ec46",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ad7c56f9_244c3567",
@@ -82,6 +136,24 @@
       "writtenOn": "2024-08-12T18:15:14Z",
       "side": 1,
       "message": "Add input for assigning values between 0...7",
+      "revId": "d0a7c581fa7a17bd6992a4d415bb8e489445ec46",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2698cdd2_4f5a4de4",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1002114
+      },
+      "writtenOn": "2024-08-24T15:56:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad7c56f9_244c3567",
       "revId": "d0a7c581fa7a17bd6992a4d415bb8e489445ec46",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
