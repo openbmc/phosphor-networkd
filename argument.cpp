@@ -72,7 +72,7 @@ void ArgumentParser::usage(char** argv)
            "    --channel=<channel> | -c <channel> Specify a channel.\n"
            "    --info  | -i      Retrieve info about NCSI topology.\n"
            "    --set   | -s      Set a specific package/channel.\n"
-           "    --filter | -F     Set the mac address filter num.\n"
+           "    --filter=<num> | -F <num> Set the mac address filter num.\n"
            "    --set-mac=<hex data...>flags | M <hex data...>flags Set mac address.\n"
            "    --clear | -r      Clear all the settings on the interface.\n"
            "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n"

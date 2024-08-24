@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     int packageInt{};
     int channelInt{};
     int indexInt{};
-    uint8_t filterInt{NONE};
+    int filterInt{};
     int operationInt{DEFAULT_VALUE};
 
     // Parse out interface argument.
@@ -102,10 +102,23 @@ int main(int argc, char** argv)
         channelInt = DEFAULT_VALUE;
     }
 
-    auto filterStr = (options)["filter"];
-    if (!(filterStr.empty()))
+    auto filter = (options)["filter"];
+    //if (!(filterStr.empty()))
+    //{
+    //    filterInt = static_cast<uint8_t>(stoi(filterStr, nullptr));
+    //}
+    try
     {
-        filterInt = static_cast<uint8_t>(stoi(filterStr, nullptr));
+        filterInt = stoi(filter, nullptr);
+    }
+    catch (const std::exception& e)
+    {
+        filterInt = DEFAULT_VALUE;
+    }
+
+    if (filterInt < 0)
+    {
+        filterInt = DEFAULT_VALUE;
     }
 
     auto payloadStr = (options)["oem-payload"];
@@ -200,9 +213,7 @@ int main(int argc, char** argv)
         }
 
         return ncsi::setMacAddr(indexInt, packageInt, channelInt,
-                                const_cast<const std::string&>(macAddrStr),
-                                const_cast<const uint8_t&>(filterInt),
-                                const_cast<const uint8_t&>(maFlags));
+                                macAddrStr, filterInt, maFlags);
     }
     else if ((options)["set"] == "true")
     {
