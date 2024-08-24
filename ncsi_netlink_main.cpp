@@ -103,6 +103,10 @@ int main(int argc, char** argv)
     }
 
     auto filter = (options)["filter"];
+    //if (!(filterStr.empty()))
+    //{
+    //    filterInt = static_cast<uint8_t>(stoi(filterStr, nullptr));
+    //}
     try
     {
         filterInt = stoi(filter, nullptr);
