@@ -103,6 +103,10 @@ int main(int argc, char** argv)
     }
 
     auto filter = (options)["filter"];
+    //if (!(filterStr.empty()))
+    //{
+    //    filterInt = static_cast<uint8_t>(stoi(filterStr, nullptr));
+    //}
     try
     {
         filterInt = stoi(filter, nullptr);
@@ -208,8 +212,8 @@ int main(int argc, char** argv)
                           argv);
         }
 
-        return ncsi::setMacAddr(indexInt, packageInt, channelInt, macAddrStr,
-                                filterInt, maFlags);
+        return ncsi::setMacAddr(indexInt, packageInt, channelInt,
+                                macAddrStr, filterInt, maFlags);
     }
     else if ((options)["set"] == "true")
     {
