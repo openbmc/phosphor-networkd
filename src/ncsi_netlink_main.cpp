@@ -28,6 +28,17 @@ static void exitWithError(const char* err, char** argv)
     exit(EXIT_FAILURE);
 }
 
+bool isAllHexDigits(const std::string& hexStr)
+{
+    for (char c : hexStr)
+    {
+        if (!std::isxdigit(c))
+            return false;
+    }
+
+    return true;
+}
+
 int main(int argc, char** argv)
 {
     using namespace phosphor::network;
@@ -139,6 +150,40 @@ int main(int argc, char** argv)
         return ncsi::sendOemCommand(
             indexInt, packageInt, channelInt, operationInt,
             std::span<const unsigned char>(payload.begin(), payload.end()));
+    }
+    const std::string& macAddrArg{(options)["set-mac"]};
+    if (!macAddrArg.empty())
+    {
+        if (macAddrArg.size() != 12)
+            if (macAddrArg.size() < 12)
+                exitWithError("Invalid MAC address: specify 12 hex digits.",
+                              argv);
+
+        if (macAddrArg.size() > 12)
+            if (macAddrArg.size() != 14)
+                exitWithError("Specify 12 digit MAC address; (M/U); (E/D).",
+                              argv);
+
+        std::string macAddrStr = macAddrArg;
+        std::transform(macAddrStr.begin(), macAddrStr.end(), macAddrStr.begin(),
+                       ::toupper);
+
+        uint8_t maFlags = 0x01; // Default to Unicast:Enable
+        if (macAddrStr.size() == 14)
+        {
+            maFlags = (macAddrStr.at(12) == 'M') ? 0x80 : 0;
+            maFlags = (macAddrStr.at(13) == 'D') ? maFlags : (maFlags | 0x01);
+        }
+
+        macAddrStr.resize(12);
+
+        if (!isAllHexDigits(macAddrStr))
+            exitWithError("MAC addresses must be all hex digits (0..9; A..F).",
+                          argv);
+
+        return ncsi::setMacAddr(indexInt, channelInt,
+                                const_cast<const std::string&>(macAddrStr),
+                                const_cast<const uint8_t&>(maFlags));
     }
     else if ((options)["set"] == "true")
     {
