@@ -125,4 +125,3 @@ const std::string ArgumentParser::emptyString = "";
 } // namespace ncsi
 } // namespace network
 } // namespace phosphor
-

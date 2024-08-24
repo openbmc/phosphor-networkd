@@ -28,6 +28,19 @@ static void exitWithError(const char* err, char** argv)
     exit(EXIT_FAILURE);
 }
 
+bool isAllHexDigits(const std::string& hexStr)
+{
+    for (char c : hexStr)
+    {
+        if (!std::isxdigit(c))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 int main(int argc, char** argv)
 {
     using namespace phosphor::network;
@@ -37,9 +50,10 @@ int main(int argc, char** argv)
     int packageInt{};
     int channelInt{};
     int indexInt{};
+    int filterInt{};
     int operationInt{DEFAULT_VALUE};
 
-    // Parse out interface argument.
+    // Parse out the interface argument.
     auto ifIndex = (options)["index"];
     try
     {
@@ -56,7 +70,7 @@ int main(int argc, char** argv)
                       argv);
     }
 
-    // Parse out package argument.
+    // Parse out the package argument.
     auto package = (options)["package"];
     try
     {
@@ -72,7 +86,7 @@ int main(int argc, char** argv)
         packageInt = DEFAULT_VALUE;
     }
 
-    // Parse out channel argument.
+    // Parse out the channel argument.
     auto channel = (options)["channel"];
     try
     {
@@ -86,6 +100,22 @@ int main(int argc, char** argv)
     if (channelInt < 0)
     {
         channelInt = DEFAULT_VALUE;
+    }
+
+    // Parse out the filter argument.
+    auto filter = (options)["filter"];
+    try
+    {
+        filterInt = stoi(filter, nullptr);
+    }
+    catch (const std::exception& e)
+    {
+        filterInt = DEFAULT_VALUE;
+    }
+
+    if (filterInt < 0)
+    {
+        filterInt = DEFAULT_VALUE;
     }
 
     auto payloadStr = (options)["oem-payload"];
@@ -139,6 +169,48 @@ int main(int argc, char** argv)
         return ncsi::sendOemCommand(
             indexInt, packageInt, channelInt, operationInt,
             std::span<const unsigned char>(payload.begin(), payload.end()));
+    }
+    else if (!(options)["set-mac"].empty())
+    {
+        auto macAddrArg = (options)["set-mac"];
+        std::string macAddrStr = macAddrArg;
+        std::transform(macAddrStr.begin(), macAddrStr.end(), macAddrStr.begin(),
+                       ::toupper);
+
+        uint8_t maFlags = 0x01; // Default to Unicast:Enable
+        if (macAddrStr.size() != 12)
+        {
+            if (macAddrStr.size() < 12)
+            {
+                exitWithError("Invalid MAC address: specify 12 hex digits.",
+                              argv);
+            }
+            else
+            {
+                if (macAddrStr.size() != 14)
+                {
+                    exitWithError(
+                        "Invalid length != 14: specify 12 hex digits+U/M+E/D.",
+                        argv);
+                }
+                else
+                {
+                    maFlags = (macAddrStr.at(12) == 'M') ? 0x80 : 0;
+                    maFlags =
+                        (macAddrStr.at(13) == 'D') ? maFlags : (maFlags | 0x01);
+                }
+            }
+        }
+
+        macAddrStr.resize(12);
+        if (!isAllHexDigits(macAddrStr))
+        {
+            exitWithError("MAC addresses must be all hex digits (0..9|A..F).",
+                          argv);
+        }
+
+        return ncsi::setMacAddr(indexInt, packageInt, channelInt, macAddrStr,
+                                filterInt, maFlags);
     }
     else if ((options)["set"] == "true")
     {
@@ -203,3 +275,4 @@ int main(int argc, char** argv)
     }
     return 0;
 }
+
