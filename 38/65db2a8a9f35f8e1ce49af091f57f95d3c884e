@@ -1,0 +1,8 @@
+Code-Review+2: Ratan Gupta <ratankgupta31@gmail.com>
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Submitted-by: Johnathan Mantey <johnathanx.mantey@intel.com>
+Submitted-at: Mon, 26 Aug 2024 17:15:31 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/66805
+Comments-Total: 15
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
