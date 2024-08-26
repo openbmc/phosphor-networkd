@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d586e393_bcca174f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 27
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002140
+      },
+      "writtenOn": "2024-08-26T07:25:48Z",
+      "side": 1,
+      "message": "Hi Patrick,\n\nChanged to stats now.\n\nThanks\nsharanu",
+      "revId": "99d055e3a33bb7f27277d635c42e0a25b39d3ccd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
