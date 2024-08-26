@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9922b233_53225ae0",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2024-08-26T17:13:21Z",
+      "side": 1,
+      "message": "TIMESYNCD_INTERFACE ??",
+      "range": {
+        "startLine": 1033,
+        "startChar": 26,
+        "endLine": 1033,
+        "endChar": 59
+      },
+      "revId": "e85d93d7f5ea6dc3159241b02cbe4dcd49c559aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
