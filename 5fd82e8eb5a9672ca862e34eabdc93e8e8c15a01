@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f08cb4c_f9b92037",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 27
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-26T10:01:10Z",
+      "side": 1,
+      "message": "Hi Andrew,\nUpdated code as per your suggestion.Updated helper function with __builtin_ffsll .Kindly review.\nRegards,\nSurendra A.",
+      "revId": "5fd82e8eb5a9672ca862e34eabdc93e8e8c15a01",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
