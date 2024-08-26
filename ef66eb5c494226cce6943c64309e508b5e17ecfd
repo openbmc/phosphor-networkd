@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2482b161_508f08e6",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2024-08-26T06:29:51Z",
+      "side": 1,
+      "message": "Eh? Drop this and use `ffsll()`? Or `__builtin_ffsll()`?",
+      "range": {
+        "startLine": 161,
+        "startChar": 0,
+        "endLine": 172,
+        "endChar": 20
+      },
+      "revId": "ef66eb5c494226cce6943c64309e508b5e17ecfd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b757c95b_5b63e67d",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2024-08-26T06:29:51Z",
+      "side": 1,
+      "message": "I think something like (not tested at all):\n\n```\nstd::uint32_t field_get(std::uint32_t value, std::uint32_t mask)\n{\n    return static_cast\u003cstd::uint32_t\u003e((value \u0026 mask) \u003e\u003e __builtin_ffsll(mask));\n}\n```\n\nThen you can turn this into:\n\n```\nlg2::debug(\"Parallel Detection : {USED_NOTUSED}\",\n           \"USED_NOTUSED\", field_get(linkRcv-\u003elinkStatus, parallelDetectionMask));\n```\n\nIt\u0027s probably worth having a look at how the kernel solves these things:\n\nhttps://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/bitfield.h?h\u003dv6.11-rc5#n145",
+      "range": {
+        "startLine": 225,
+        "startChar": 15,
+        "endLine": 226,
+        "endChar": 63
+      },
+      "revId": "ef66eb5c494226cce6943c64309e508b5e17ecfd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
