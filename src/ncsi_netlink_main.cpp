@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include "argument.hpp"
+#include "ncsi_pass_stat.hpp"
 #include "ncsi_util.hpp"
 
 #include <phosphor-logging/lg2.hpp>
@@ -196,6 +197,10 @@ int main(int argc, char** argv)
             exitWithError("Channel mask value is not valid", argv);
         }
         return ncsi::setChannelMask(indexInt, packageInt, mask);
+    }
+    else if ((options)["passthrough-stats"] == "true")
+    {
+        return ncsi::getNCSIPassthroughStats(indexInt, packageInt, channelInt);
     }
     else
     {
