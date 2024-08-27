@@ -6,8 +6,6 @@
 #include <netlink/netlink.h>
 
 #include <phosphor-logging/lg2.hpp>
-#include <stdplus/numeric/str.hpp>
-#include <stdplus/str/buf.hpp>
 
 #include <vector>
 
@@ -19,26 +17,6 @@ namespace ncsi
 {
 
 using CallBack = int (*)(struct nl_msg* msg, void* arg);
-
-static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
-{
-    stdplus::StrBuf ret;
-    if (c.empty())
-    {
-        return ret;
-    }
-    stdplus::IntToStr<16, uint8_t> its;
-    auto oit = ret.append(c.size() * 3);
-    auto cit = c.begin();
-    oit = its(oit, *cit++, 2);
-    for (; cit != c.end(); ++cit)
-    {
-        *oit++ = ' ';
-        oit = its(oit, *cit, 2);
-    }
-    *oit = 0;
-    return ret;
-}
 
 namespace internal
 {
@@ -223,7 +201,12 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     return static_cast<int>(NL_STOP);
 };
 
-CallBack sendCallBack = [](struct nl_msg* msg, void*) {
+struct sendCallBackContext
+{
+    std::vector<unsigned char> msg;
+};
+
+CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
     struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
@@ -232,6 +215,14 @@ CallBack sendCallBack = [](struct nl_msg* msg, void*) {
         {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
         {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
     };
+
+    if (arg == nullptr)
+    {
+        lg2::error("Internal error: invalid send callback context");
+        return -1;
+    }
+
+    struct sendCallBackContext* ctx = (struct sendCallBackContext*)arg;
 
     auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
     if (ret)
@@ -250,10 +241,7 @@ CallBack sendCallBack = [](struct nl_msg* msg, void*) {
     unsigned char* data =
         (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
 
-    // Dump the response to stdout. Enhancement: option to save response data
-    auto str = toHexStr(std::span<const unsigned char>(data, data_len));
-    lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
-               "DATA", str);
+    ctx->msg.assign(data, data + data_len);
 
     return 0;
 };
@@ -409,23 +397,29 @@ std::string to_string(Interface& interface)
     return std::to_string(interface.ifindex);
 }
 
-int Interface::sendOemCommand(int package, int channel, int operation,
+std::optional<std::vector<unsigned char>>
+    Interface::sendOemCommand(int package, int channel, int operation,
                               std::span<const unsigned char> payload)
 {
     lg2::debug("Send OEM Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
                "INTERFACE: {INTERFACE}",
                "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
                "INTERFACE", this);
-    if (!payload.empty())
-    {
-        lg2::debug("Payload: {PAYLOAD}", "PAYLOAD", toHexStr(payload));
-    }
 
-    return internal::applyCmd(
+    internal::sendCallBackContext ctx{};
+
+    int rc = internal::applyCmd(
         *this,
         internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, operation,
                           payload),
-        package, channel, NONE, internal::sendCallBack);
+        package, channel, NONE, internal::sendCallBack, &ctx);
+
+    if (rc < 0)
+    {
+        return {};
+    }
+
+    return ctx.msg;
 }
 
 int Interface::setChannel(int package, int channel)
