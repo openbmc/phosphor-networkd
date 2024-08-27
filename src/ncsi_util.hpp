@@ -42,6 +42,8 @@ struct InterfaceInfo
 
 struct Interface
 {
+    using ncsiMessage = std::span<const unsigned char>;
+
     /* @brief  This function will ask underlying NCSI driver
      *         to send an OEM command (command type 0x50) with
      *         the specified payload as the OEM data.
@@ -51,10 +53,10 @@ struct Interface
      * @param[in] channel - Channel number with in the package.
      * @param[in] opcode  - NCSI Send Command sub-operation
      * @param[in] payload - OEM data to send.
-     * @returns 0 on success and negative value for failure.
+     * @returns the NCSI response message to this command, or no value on error.
      */
-    int sendOemCommand(int package, int channel, int opcode,
-                       std::span<const unsigned char> payload);
+    std::optional<std::vector<unsigned char>> sendOemCommand(
+        int package, int channel, int opcode, ncsiMessage payload);
 
     /* @brief  This function will ask underlying NCSI driver
      *         to set a specific  package or package/channel
