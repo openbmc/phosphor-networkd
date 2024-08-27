@@ -17,6 +17,8 @@
 #include "ncsi_util.hpp"
 
 #include <phosphor-logging/lg2.hpp>
+#include <stdplus/numeric/str.hpp>
+#include <stdplus/str/buf.hpp>
 
 #include <string>
 #include <vector>
@@ -70,6 +72,26 @@ static void printInfo(phosphor::network::ncsi::InterfaceInfo& info)
             }
         }
     }
+}
+
+static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
+{
+    stdplus::StrBuf ret;
+    if (c.empty())
+    {
+        return ret;
+    }
+    stdplus::IntToStr<16, uint8_t> its;
+    auto oit = ret.append(c.size() * 3);
+    auto cit = c.begin();
+    oit = its(oit, *cit++, 2);
+    for (; cit != c.end(); ++cit)
+    {
+        *oit++ = ' ';
+        oit = its(oit, *cit, 2);
+    }
+    *oit = 0;
+    return ret;
 }
 
 int main(int argc, char** argv)
@@ -182,9 +204,21 @@ int main(int argc, char** argv)
             exitWithError("Package not specified.", argv);
         }
 
-        return interface.sendOemCommand(
-            packageInt, channelInt, operationInt,
-            std::span<const unsigned char>(payload.begin(), payload.end()));
+        if (!payload.empty())
+        {
+            lg2::debug("Payload: {PAYLOAD}", "PAYLOAD", toHexStr(payload));
+        }
+
+        auto cmd =
+            std::span<const unsigned char>(payload.begin(), payload.end());
+        auto resp =
+            interface.sendOemCommand(packageInt, channelInt, operationInt, cmd);
+        if (!resp)
+        {
+            return EXIT_FAILURE;
+        }
+        lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN",
+                   resp->size(), "DATA", toHexStr(*resp));
     }
     else if ((options)["set"] == "true")
     {
