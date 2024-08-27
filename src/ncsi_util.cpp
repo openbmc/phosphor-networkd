@@ -43,18 +43,6 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 namespace internal
 {
 
-struct NCSIPacketHeader
-{
-    uint8_t MCID;
-    uint8_t revision;
-    uint8_t reserved;
-    uint8_t id;
-    uint8_t type;
-    uint8_t channel;
-    uint16_t length;
-    uint32_t rsvd[2];
-};
-
 class Command
 {
   public:
@@ -77,6 +65,39 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+static void printNCSIPassthroughStats(const passthroughStatsResponse* passthroughResp)
+{
+  setlocale(LC_ALL, "");
+  std::cout
+  << "Packet Response Status "
+  << "\nNC-SI Response Code: "
+  << passthroughResp->passStatsCodes.completionCodeResponse
+  << "\nNC-SI Reason Code: "
+  << passthroughResp->passStatsCodes.completionCodeReason
+  << "\nNIC NC-SI Pass-through statistics"
+  << "\nPass-through TX Packets Received: "
+  << passthroughResp->txPacketsRcvdOnNcsi
+  << "\nPass-through TX Packets Dropped: "
+  << passthroughResp->txPacketsDropped
+  << "\nPass-through TX Packet Channel State Errors: "
+  << passthroughResp->txChannelStateErr
+  << "\nPass-through TX Packet Undersize Errors: "
+  << passthroughResp->txUndersizeErr
+  << "\nPass-through TX Packets Oversize Packets: "
+  << passthroughResp->txOversizeErr
+  << "\nPass-through RX Packets Received on LAN: "
+  << passthroughResp->rxPacketsRcvdOnLan
+  << "\nTotal Pass-through RX Packets Dropped: "
+  << passthroughResp->totalRxPacketsDropped
+  << "\nPass-through RX Packet Channel State Errors: "
+  << passthroughResp->rxChannelStateErr
+  << "\nPass-through RX Packet Undersize Errors: "
+  << passthroughResp->rxUndersizeErr
+  << "\nPass-through RX Packets Oversize Packets: "
+  << passthroughResp->rxOversizeErr
+  << "\n";
+}
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -261,6 +282,75 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
+
+    return 0;
+};
+
+CallBack NCSIPassthroughStatsCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    auto* passthroughResp =
+        static_cast<passthroughStatsResponse*>(nla_data(tb[NCSI_ATTR_DATA]));
+
+    lg2::debug("NCSI Response packet type : {RESPONSE_PKT_TYPE}",
+               "RESPONSE_PKT_TYPE", lg2::hex, passthroughResp->passStatsRespHdr.type);
+
+    auto respHdrLen = htons(passthroughResp->passStatsRespHdr.length);
+    lg2::debug("NCSI Response length : {RESPONSE_LEN}", "RESPONSE_LEN",
+               lg2::hex, respHdrLen);
+
+    // Convert packet status response to Host Endianess
+    passthroughResp->passStatsCodes.completionCodeResponse =
+        ntohl(passthroughResp->passStatsCodes.completionCodeResponse);
+    passthroughResp->passStatsCodes.completionCodeReason =
+        ntohl(passthroughResp->passStatsCodes.completionCodeReason);
+
+    // Convert payload to Host Endianess
+    passthroughResp->txPacketsRcvdOnNcsi =
+    ntohl(passthroughResp->txPacketsRcvdOnNcsi);
+    passthroughResp->txPacketsDropped =
+    ntohl(passthroughResp->txPacketsDropped);
+    passthroughResp->txChannelStateErr =
+    ntohl(passthroughResp->txChannelStateErr);
+    passthroughResp->txUndersizeErr =
+    ntohl(passthroughResp->txUndersizeErr);
+    passthroughResp->txOversizeErr =
+    ntohl(passthroughResp->txOversizeErr);
+    passthroughResp->rxPacketsRcvdOnLan =
+    ntohl(passthroughResp->rxPacketsRcvdOnLan);
+    passthroughResp->totalRxPacketsDropped =
+    ntohl(passthroughResp->totalRxPacketsDropped);
+    passthroughResp->rxChannelStateErr =
+    ntohl(passthroughResp->rxChannelStateErr);
+    passthroughResp->rxUndersizeErr =
+    ntohl(passthroughResp->rxUndersizeErr);
+    passthroughResp->rxOversizeErr =
+    ntohl(passthroughResp->rxOversizeErr);
+
+    printNCSIPassthroughStats(static_cast<const passthroughStatsResponse*>(passthroughResp));
 
     return 0;
 };
@@ -505,6 +595,19 @@ int setChannelMask(int ifindex, int package, unsigned int mask)
                           payload),
         package);
     return 0;
+}
+
+int getNCSIPassthroughStats(int ifindex, int package, int channel)
+{
+    lg2::debug("Send NCSI Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
+               "INTERFACE_INDEX: {INTERFACE_INDEX}",
+               "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
+               "INTERFACE_INDEX", lg2::hex, ifindex);
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                         ncsiCmdGetNcsiPassThroughStatistics),
+        package, NONE, NONE, internal::NCSIPassthroughStatsCallBack);
 }
 
 } // namespace ncsi
