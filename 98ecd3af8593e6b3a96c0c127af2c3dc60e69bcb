@@ -16,6 +16,24 @@
       "message": "Similar to my comment on the AEN patch: have you considered how the interacts with the kernel\u0027s own NCSI state?\n\nIn this case, the GLS link data is already queried by the kernel, and available through the netlink API. Do we actually need to perform our own GLS command here?",
       "revId": "98ecd3af8593e6b3a96c0c127af2c3dc60e69bcb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c6768a2_788e4b9a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 31
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-27T13:57:24Z",
+      "side": 1,
+      "message": "Hi Jeremy,\nWe followed command and response approach to extract reason/response codes, link status and other fields like auto negotiations  as per DSP0222 NCSI Spec 8.4.24.\n\nWe are justing using NL APIs(nla_put) for parsing command operation 0x0a \nand receiving the response through NL API via nla_data.\n\nIf we just use already query data with out sending command,\nWe cannot extract response/reason code and fields other than link status.\n\nCommand:\n    return internal::applyCmd(\n        ifindex,\n        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,\n                          ncsiCmdGetLinkStatus),\n        package, channel, NONE, internal::linkStatusCallBack);\n        \nResponse:\nauto* linkResp \u003d\n        static_cast\u003cgetLinkStatusResponse*\u003e(nla_data(tb[NCSI_ATTR_DATA]));\n        \nPlease provide your comments on this.\n\nRegards,\nSurendra A.",
+      "parentUuid": "292dddb2_b4d6609a",
+      "revId": "98ecd3af8593e6b3a96c0c127af2c3dc60e69bcb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
