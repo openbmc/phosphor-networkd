@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a245d39_bbee3d80",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-27T18:22:27Z",
+      "side": 1,
+      "message": "Correcting mistaken advice.",
+      "revId": "bbf09562fefb680cc35bde8e1df41c0fa7f270b2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db9be346_2a8bd5f7",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-27T18:22:27Z",
+      "side": 1,
+      "message": "I did not know my advice to you was incorrect.\nI learned this in one of the other ncsi-netlink reviews in progress.\nThe incoming `tb` needs to be unpacked in a serial fashion.\nSomething like:\n`getVersionIDResponse resp(unpack(tb));`\n\nIn `unpack(tb)` assign structure values in turn:\n`getVersionIDResponse unpack(const char * tb)\nchar *ptr \u003d tb;\nstruct.elem1 \u003d ntohl(*ptr);\n// increment ptr\nstruct.elem2 \u003d ntoxyz(*ptr);\n...\nreturn struct;\n`",
+      "revId": "bbf09562fefb680cc35bde8e1df41c0fa7f270b2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3f4dcdb_7cc95d79",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-08-27T18:22:27Z",
+      "side": 1,
+      "message": "If you use the `unpack()` suggestion above you don\u0027t have to dribble `ntoxyz()` functions in the code. The data structure will already be in host endian format.",
+      "revId": "bbf09562fefb680cc35bde8e1df41c0fa7f270b2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
