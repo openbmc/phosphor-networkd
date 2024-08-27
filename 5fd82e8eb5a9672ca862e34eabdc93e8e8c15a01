@@ -58,6 +58,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ba4536a_abfac422",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-27T05:25:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa38b9c5_958d0bd2",
+      "range": {
+        "startLine": 161,
+        "startChar": 0,
+        "endLine": 169,
+        "endChar": 1
+      },
+      "revId": "5fd82e8eb5a9672ca862e34eabdc93e8e8c15a01",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "435fe5ba_ffc07692",
@@ -71,6 +95,30 @@
       "writtenOn": "2024-08-27T01:50:15Z",
       "side": 1,
       "message": "```\nswitch (getField(linkRcv-\u003elinkStatus, modulationSchemeMask)) {\n...\n}\n```",
+      "range": {
+        "startLine": 235,
+        "startChar": 3,
+        "endLine": 246,
+        "endChar": 5
+      },
+      "revId": "5fd82e8eb5a9672ca862e34eabdc93e8e8c15a01",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7ce9787_5d157b85",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-27T05:25:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "435fe5ba_ffc07692",
       "range": {
         "startLine": 235,
         "startChar": 3,
@@ -104,6 +152,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d30e9de7_366733f0",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-27T05:25:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc208984_cdad6078",
+      "range": {
+        "startLine": 253,
+        "startChar": 52,
+        "endLine": 253,
+        "endChar": 62
+      },
+      "revId": "5fd82e8eb5a9672ca862e34eabdc93e8e8c15a01",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0cb32cdd_364003c2",
@@ -117,6 +189,30 @@
       "writtenOn": "2024-08-27T01:50:15Z",
       "side": 1,
       "message": "```\nswitch (getField(linkRcv-\u003elinkStatus, linkPartnerFlowControlMask)) {\n...\n}\n```",
+      "range": {
+        "startLine": 288,
+        "startChar": 0,
+        "endLine": 305,
+        "endChar": 9
+      },
+      "revId": "5fd82e8eb5a9672ca862e34eabdc93e8e8c15a01",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d091810_6bc1df12",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1002149
+      },
+      "writtenOn": "2024-08-27T05:25:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0cb32cdd_364003c2",
       "range": {
         "startLine": 288,
         "startChar": 0,
