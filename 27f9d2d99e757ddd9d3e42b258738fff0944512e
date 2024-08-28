@@ -181,6 +181,30 @@
       },
       "revId": "27f9d2d99e757ddd9d3e42b258738fff0944512e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f9764a4_924b4d13",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 505,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-08-28T14:28:31Z",
+      "side": 1,
+      "message": "https://stackoverflow.com/questions/56761591/how-do-i-organize-members-in-a-struct-to-waste-the-least-space-on-alignment\nHi Andrew, This link has some good suggestion to follow with respect to padding and alignment. Inline to this guideline, I have structure aligned on 32bit boundary, but last three parameter to 16bit. I have not seen any issues so far testing with target. I am using \"reinterpret_cast\" cast from nla void* to NCSIgetCapabilitiesResponse structure.",
+      "parentUuid": "1da3bbf8_04688ea7",
+      "range": {
+        "startLine": 504,
+        "startChar": 0,
+        "endLine": 505,
+        "endChar": 67
+      },
+      "revId": "27f9d2d99e757ddd9d3e42b258738fff0944512e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
