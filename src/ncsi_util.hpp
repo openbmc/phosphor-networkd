@@ -58,6 +58,19 @@ int clearInterface(int ifindex);
  */
 int getInfo(int ifindex, int package);
 
+/* @brief  This function will ask underlying NCSI driver
+ *         to send NCSI command to set NCSI Flow Control
+ *         with FCE value as payload data.
+ *         This function talks with the NCSI driver over
+ *         netlink messages.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+  * @param[in] payload - FCE data to send.
+ * @returns 0 on success and negative value for failure.
+ */
+int setNCSIFLowControl(int ifindex, int package, int channel,
+                       std::span<const unsigned char> payload);
+
 } // namespace ncsi
 } // namespace network
 } // namespace phosphor

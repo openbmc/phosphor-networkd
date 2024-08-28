@@ -21,6 +21,13 @@
 #include <string>
 #include <vector>
 
+// Set NCSI Flow Control
+struct setNCSIFlowControlCmdPkt
+{
+    uint8_t reserved[3];
+    uint8_t fce;
+};
+
 static void exitWithError(const char* err, char** argv)
 {
     phosphor::network::ncsi::ArgumentParser::usage(argv);
@@ -156,6 +163,42 @@ int main(int argc, char** argv)
     else if ((options)["clear"] == "true")
     {
         return ncsi::clearInterface(indexInt);
+    }
+    else if (!(options)["flow-control"].empty())
+    {
+        auto fcePayloadStr = (options)["flow-control"];
+        setNCSIFlowControlCmdPkt cmdPkt;
+        int fceInt{};
+        try
+        {
+            fceInt = stoi(fcePayloadStr, nullptr, 16);
+        }
+        catch (const std::exception& e)
+        {
+            exitWithError("Payload invalid.", argv);
+        }
+
+        if (fceInt < 0 || fceInt > 3)
+        {
+            exitWithError("Payload invalid: FCE Value should be (0-3).",
+                          argv);
+        }
+        else
+        {
+            cmdPkt.fce = fceInt;
+        }
+
+        std::span<unsigned char> payload(
+            reinterpret_cast<unsigned char*>(&cmdPkt), sizeof(cmdPkt));
+
+        if (packageInt == DEFAULT_VALUE)
+        {
+            exitWithError("Package not specified.", argv);
+        }
+
+        return ncsi::setNCSIFLowControl(
+            indexInt, packageInt, channelInt,
+            std::span<const unsigned char> (payload.begin(), payload.end()));
     }
     else
     {
