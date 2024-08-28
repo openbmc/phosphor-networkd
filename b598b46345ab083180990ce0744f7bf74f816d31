@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15fb9f5b_5558e9ad",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-28T01:37:15Z",
+      "side": 1,
+      "message": "What is this?",
+      "revId": "b598b46345ab083180990ce0744f7bf74f816d31",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c07b0a18_621fd0da",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-28T01:37:15Z",
+      "side": 1,
+      "message": "Unsafe reinterpret_cast.",
+      "revId": "b598b46345ab083180990ce0744f7bf74f816d31",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "706d38f9_58e60580",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-28T01:37:15Z",
+      "side": 1,
+      "message": "See safeness below.",
+      "revId": "b598b46345ab083180990ce0744f7bf74f816d31",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25394eec_76576dfc",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-28T01:37:15Z",
+      "side": 1,
+      "message": "I would suggest putting this structure into another file and to include an override for `operator\u003c\u003c()`:\n\nhttps://learn.microsoft.com/en-us/cpp/standard-library/overloading-the-output-operator-for-your-own-classes?view\u003dmsvc-170",
+      "revId": "b598b46345ab083180990ce0744f7bf74f816d31",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a403a69_554e8edd",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-28T01:37:15Z",
+      "side": 1,
+      "message": "packed struct + reinterpret_cast is unsafe, architecture/compiler-specific and won\u0027t be accepted.",
+      "revId": "b598b46345ab083180990ce0744f7bf74f816d31",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
