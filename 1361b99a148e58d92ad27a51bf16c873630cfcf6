@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46a8d221_efbe0f3e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-28T14:39:26Z",
+      "side": 1,
+      "message": "Please fix your git-config to match a name in the CLA.",
+      "revId": "1361b99a148e58d92ad27a51bf16c873630cfcf6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ca0b1f2_57121ac2",
+        "filename": "src/argument.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-28T14:39:26Z",
+      "side": 1,
+      "message": "Aren\u0027t you missing the \"command\"?",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 52
+      },
+      "revId": "1361b99a148e58d92ad27a51bf16c873630cfcf6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea6668e7_8cd87ff1",
+        "filename": "src/argument.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-08-28T14:39:26Z",
+      "side": 1,
+      "message": "No acronyms like this.  Nobody is going to know what \"dgmf\" means.",
+      "revId": "1361b99a148e58d92ad27a51bf16c873630cfcf6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
