@@ -57,6 +57,27 @@ int clearInterface(int ifindex);
  * @returns 0 on success and negative value for failure.
  */
 int getInfo(int ifindex, int package);
+/* @brief  This function will request underlying NCSI driver
+ *         to disable broadcast filtering for the channel.
+ *         This function communicate with the NCSI driver over
+ *         netlink messages.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] channel - Channel number with in the package.
+ * @returns 0 on success and negative value for failure.
+ */
+int disableBroadcastFilter(int ifindex, int package, int channel);
+
+/* @brief  This function will ask underlying NCSI driver
+ *         to disable broadcast filtering for the channel.
+ *         This function talks with the NCSI driver over
+ *         netlink messages.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] channel - Channel number with in the package.
+ * @returns 0 on success and negative value for failure.
+ */
+int disablebroadcastFilter(int ifindex, int package, int channel);
 
 /* @brief  This function assigns a mask controlling responses to AEN from a
  * package.

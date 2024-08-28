@@ -153,9 +153,17 @@ int main(int argc, char** argv)
     {
         return ncsi::getInfo(indexInt, packageInt);
     }
+    else if ((options)["disable-broadcast"] == "true")
+    {
+        return ncsi::disableBroadcastFilter(indexInt, packageInt, channelInt);
+    }
     else if ((options)["clear"] == "true")
     {
         return ncsi::clearInterface(indexInt);
+    }
+    else if ((options)["dbcf"] == "true")
+    {
+        return ncsi::disablebroadcastFilter(indexInt, packageInt, channelInt);
     }
     else if (!(options)["pmask"].empty())
     {
