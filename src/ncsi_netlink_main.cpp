@@ -157,6 +157,10 @@ int main(int argc, char** argv)
     {
         return ncsi::clearInterface(indexInt);
     }
+    else if ((options)["dbcf"] == "true")
+    {
+        return ncsi::disablebroadcastFilter(indexInt, packageInt, channelInt);
+    }
     else if (!(options)["pmask"].empty())
     {
         unsigned int mask{};
