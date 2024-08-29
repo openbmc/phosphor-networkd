@@ -197,6 +197,18 @@ int main(int argc, char** argv)
         }
         return ncsi::setChannelMask(indexInt, packageInt, mask);
     }
+    else if ((options)["get"] != ArgumentParser::emptyString)
+    {
+        const std::string& getArg{(options)["get"]};
+        if (getArg == "param")
+        {
+            return ncsi::getParam(indexInt, packageInt, channelInt);
+        }
+        else
+        {
+            exitWithError("Invalid get operator specified", argv);
+        }
+    }
     else
     {
         exitWithError("No Command specified", argv);
