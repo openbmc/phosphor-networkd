@@ -18,6 +18,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "64ac7375_b2e4ebf0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-29T16:55:27Z",
+      "side": 1,
+      "message": "Please see below",
+      "revId": "1361b99a148e58d92ad27a51bf16c873630cfcf6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2ca0b1f2_57121ac2",
@@ -71,6 +88,24 @@
       "writtenOn": "2024-08-29T16:52:17Z",
       "side": 1,
       "message": "I believe that J. Mantey wants us to \u0027unpack\u0027 the response fields serially.\n\"The incoming tb needs to be unpacked in a serial fashion.\nSomething like:\ngetVersionIDResponse resp(unpack(tb));\n\nIn unpack(tb) assign structure values in turn:\ngetVersionIDResponse unpack(const char tb)\nchar ptr \u003d tb;\nstruct.elem1 \u003d ntohl(ptr);\n// increment ptr\nstruct.elem2 \u003d ntoxyz(ptr);\"",
+      "revId": "1361b99a148e58d92ad27a51bf16c873630cfcf6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28fe6d2a_7e7a5d45",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-08-29T16:55:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "98fee3cd_6a081fb5",
       "revId": "1361b99a148e58d92ad27a51bf16c873630cfcf6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
