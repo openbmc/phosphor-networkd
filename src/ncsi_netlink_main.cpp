@@ -32,12 +32,12 @@ int main(int argc, char** argv)
 {
     using namespace phosphor::network;
     using namespace phosphor::network::ncsi;
+    lg2::info("Hello, World");
     // Read arguments.
     auto options = ArgumentParser(argc, argv);
     int packageInt{};
     int channelInt{};
     int indexInt{};
-    int operationInt{DEFAULT_VALUE};
 
     // Parse out interface argument.
     auto ifIndex = (options)["index"];
@@ -98,11 +98,7 @@ int main(int argc, char** argv)
             exitWithError("Payload invalid: specify two hex digits per byte.",
                           argv);
 
-        // Parse the payload string (e.g. "50000001572100") to byte data
-        // The first two characters (i.e. "50") represent the Send Cmd Operation
-        // All remaining pairs, interpreted in hex radix, represent the command
-        // payload
-        int sendCmdSelect{};
+        // Parse the payload string (e.g. "000001572100") to byte data
         for (unsigned int i = 1; i < payloadStr.size(); i += 2)
         {
             byte[0] = payloadStr[i - 1];
@@ -110,23 +106,15 @@ int main(int argc, char** argv)
 
             try
             {
-                sendCmdSelect = stoi(byte, nullptr, 16);
+                payload.push_back(stoi(byte, nullptr, 16));
             }
             catch (const std::exception& e)
             {
                 exitWithError("Payload invalid.", argv);
             }
-            if (i == 1)
-            {
-                operationInt = sendCmdSelect;
-            }
-            else
-            {
-                payload.push_back(sendCmdSelect);
-            }
         }
 
-        if (operationInt == DEFAULT_VALUE)
+        if (payload.empty())
         {
             exitWithError("No payload specified.", argv);
         }
@@ -137,7 +125,7 @@ int main(int argc, char** argv)
         }
 
         return ncsi::sendOemCommand(
-            indexInt, packageInt, channelInt, operationInt,
+            indexInt, packageInt, channelInt,
             std::span<const unsigned char>(payload.begin(), payload.end()));
     }
     else if ((options)["set"] == "true")
