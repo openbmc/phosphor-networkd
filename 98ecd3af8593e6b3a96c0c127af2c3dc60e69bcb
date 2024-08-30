@@ -34,6 +34,24 @@
       "parentUuid": "292dddb2_b4d6609a",
       "revId": "98ecd3af8593e6b3a96c0c127af2c3dc60e69bcb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ccd4c09_133624bc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 31
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-08-30T00:48:26Z",
+      "side": 1,
+      "message": "Are the Response and Reason codes at all useful to you though?\n\nI understand that the other fields in the GLS data could be handy, so makes sense to have a mechanism to access those. However, the kernel *is* performing regular GLS queries anyway, as it needs to monitor link state internally.\n\nSo: would it make more sense for the kernel to expose the extended link state fields in the netlink data instead?\n\nAnd are you typically querying the active channel, or other, inactive ones?\n\nBTW: I don\u0027t have an issue with the current implementation, just trying to find the best approach in general 😊",
+      "parentUuid": "1c6768a2_788e4b9a",
+      "revId": "98ecd3af8593e6b3a96c0c127af2c3dc60e69bcb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
