@@ -34,6 +34,24 @@
       "parentUuid": "d62b93c7_98c81e4d",
       "revId": "674fdf6578b4428734ff73145a57d0c5d9cabbb2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f1a5536_421dbc42",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-08-30T01:34:15Z",
+      "side": 1,
+      "message": "The kernel doesn\u0027t have a facility to forward incoming AENs to userspace though. You may be able to send the Enable command, but you\u0027ll have no facility to receive the subsequent AENs.\n\n[The kernel has no way to determine whether an incoming AEN is destined for the kernel management stack, or the userspace process. Also, note that the kernel has probably already enabled AENs for the links that it is interested in]\n\nIf you have kernel changes in mind here, might be good to check those out first.",
+      "parentUuid": "1573a1b7_94e2cac8",
+      "revId": "674fdf6578b4428734ff73145a57d0c5d9cabbb2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
