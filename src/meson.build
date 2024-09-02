@@ -7,6 +7,7 @@ executable(
   'argument.cpp',
   'ncsi_netlink_main.cpp',
   'ncsi_util.cpp',
+  'ncsi_get_cap.cpp',
   implicit_include_directories: false,
   include_directories: src_includes,
   dependencies: [
