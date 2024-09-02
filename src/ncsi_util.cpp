@@ -1,5 +1,3 @@
-#include "ncsi_util.hpp"
-
 #include <linux/ncsi.h>
 #include <netlink/genl/ctrl.h>
 #include <netlink/genl/genl.h>
@@ -10,6 +8,10 @@
 #include <stdplus/str/buf.hpp>
 
 #include <vector>
+#include <map>
+#include <memory>
+
+#include "ncsi_callback_registry.hpp"
 
 namespace phosphor
 {
@@ -42,18 +44,6 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 
 namespace internal
 {
-
-struct NCSIPacketHeader
-{
-    uint8_t MCID;
-    uint8_t revision;
-    uint8_t reserved;
-    uint8_t id;
-    uint8_t type;
-    uint8_t channel;
-    uint16_t length;
-    uint32_t rsvd[2];
-};
 
 class Command
 {
@@ -253,9 +243,9 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
         return -1;
     }
 
-    auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
+    auto data_len = nla_len(tb[NCSI_ATTR_DATA]);
     unsigned char* data =
-        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
+        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]);
 
     // Dump the response to stdout. Enhancement: option to save response data
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
@@ -435,7 +425,8 @@ int sendOemCommand(int ifindex, int package, int channel, int operation,
         ifindex,
         internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, operation,
                           payload),
-        package, channel, NONE, internal::sendCallBack);
+        package, channel, NONE,
+        NcsiCallbackRegistry::getInstance().getCallbacks()[operation]);
 }
 
 int setChannel(int ifindex, int package, int channel)
