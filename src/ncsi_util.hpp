@@ -12,6 +12,21 @@ namespace ncsi
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
 
+namespace internal
+{
+    struct NCSIPacketHeader
+    {
+        uint8_t MCID;
+        uint8_t revision;
+        uint8_t reserved;
+        uint8_t id;
+        uint8_t type;
+        uint8_t channel;
+        uint16_t length;
+        uint32_t rsvd[2];
+    };
+}
+
 /* @brief  This function will ask underlying NCSI driver
  *         to send an OEM command (command type 0x50) with
  *         the specified payload as the OEM data.

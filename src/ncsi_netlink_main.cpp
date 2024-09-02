@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "argument.hpp"
-#include "ncsi_util.hpp"
 
 #include <phosphor-logging/lg2.hpp>
 
 #include <string>
 #include <vector>
+
+#include "argument.hpp"
+#include "ncsi_util.hpp"
 
 static void exitWithError(const char* err, char** argv)
 {
