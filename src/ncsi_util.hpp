@@ -12,6 +12,15 @@ namespace ncsi
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
 
+namespace internal
+{
+    enum class NCSICommand
+    {
+        SEND_OEM_COMMAND = 0x50,
+        DISABLE_VLAN = 0x0D,
+    };
+}
+
 /* @brief  This function will ask underlying NCSI driver
  *         to send an OEM command (command type 0x50) with
  *         the specified payload as the OEM data.

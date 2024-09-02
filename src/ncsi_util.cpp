@@ -1,4 +1,6 @@
 #include "ncsi_util.hpp"
+#include "ncsi_oem_cmd_callback.hpp"
+#include "ncsi_disable_vlan_callback.hpp"
 
 #include <linux/ncsi.h>
 #include <netlink/genl/ctrl.h>
@@ -10,6 +12,8 @@
 #include <stdplus/str/buf.hpp>
 
 #include <vector>
+#include <map>
+#include <unique_ptr>
 
 namespace phosphor
 {
@@ -77,6 +81,10 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+std::map<NCSICommand, std::unique_ptr<NcsiCommandCallback>> callbacks;
+callbacks[NCSICommand::SEND_OEM_COMMAND] = std::make_unique<OemCallback>();
+callbacks[NCSICommand::DISABLE_VLAN] = std::make_unique<DisableVlanCallback>();
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -253,14 +261,16 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
         return -1;
     }
 
-    auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
+    auto data_len = nla_len(tb[NCSI_ATTR_DATA]);
     unsigned char* data =
-        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
+        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]);
 
     // Dump the response to stdout. Enhancement: option to save response data
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
+
+    processNcsiCommandResponse(data);
 
     return 0;
 };
@@ -431,11 +441,13 @@ int sendOemCommand(int ifindex, int package, int channel, int operation,
         lg2::debug("Payload: {PAYLOAD}", "PAYLOAD", toHexStr(payload));
     }
 
+    NcsiCommandCallback* callback = callbacks[operation].get();
+
     return internal::applyCmd(
         ifindex,
         internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, operation,
                           payload),
-        package, channel, NONE, internal::sendCallBack);
+        package, channel, NONE, callback);
 }
 
 int setChannel(int ifindex, int package, int channel)
