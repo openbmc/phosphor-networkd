@@ -76,6 +76,7 @@ void ArgumentParser::usage(char** argv)
            "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n"
            "    --pmask=<mask> | -j <mask> Bitmask to enable/disable packages\n"
            "    --cmask=<mask> | -k <mask> Bitmask to enable/disable channels\n"
+           "    --capabilities | -C   Show the NCSI capabilities.\n"
            "\n"
            "Example commands:\n"
            "    1) Retrieve topology information:\n"
@@ -96,6 +97,7 @@ void ArgumentParser::usage(char** argv)
 }
 
 const option ArgumentParser::options[] = {
+    {"capabilities", no_argument, NULL, 'C'},
     {"info", no_argument, NULL, 'i'},
     {"set", no_argument, NULL, 's'},
     {"clear", no_argument, NULL, 'r'},
@@ -109,7 +111,7 @@ const option ArgumentParser::options[] = {
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsj:k:x:o:p:c:h?";
+const char* ArgumentParser::optionStr = "Cirsj:k:x:o:p:c:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
