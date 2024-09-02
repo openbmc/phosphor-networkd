@@ -5,11 +5,23 @@
 #include <netlink/genl/genl.h>
 #include <netlink/netlink.h>
 
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/vector.hpp>
+#include <sstream>
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
 
+#include <cstdint>
+#include <iomanip>
+#include <iostream>
+#include <bit>
+#include <map>
 #include <vector>
+#include <cstring>
+#include <string_view>
+#include <utility>  // For std::to_underlying (C++23)
+#include <type_traits>
 
 namespace phosphor
 {
@@ -40,9 +52,124 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
     return ret;
 }
 
+// Get Capabilities Command (0x16)
+// DSP0222 NCSI Spec 8.4.45
+
+// Define an enum class for NCSI commands
+enum class NCSICommand : int {
+    GET_CAPABILITIES = 0x16,  // Assigning a specific value (hexadecimal 0x16)
+    // Other command constants can go here
+};
+
 namespace internal
 {
 
+const int OPER_TYPE_MASK = 0x7f;
+
+// Initialize a std::map to associate enum values with strings
+const std::map<NCSICommand, std::string_view> commandMap = {
+    { NCSICommand::GET_CAPABILITIES, "GET CAPABILITIES" }
+};
+
+// Function to get the string corresponding to an enum value
+std::string_view NCSICommandToString(NCSICommand cmd) {
+    auto it = commandMap.find(cmd);
+    if (it != commandMap.end()) {
+        return it->second;
+    }
+    return "Unknown NCSI cmd";  // Default for invalid values
+}
+
+/* -------Reason Code handler---------------- */
+
+enum class NCSIReason : int {
+    NO_ERROR = 0x0000,
+    INTF_INIT_REQD = 0x0001,
+    PARAM_INVALID = 0x0002,
+    CHANNEL_NOT_RDY = 0x0003,
+    PKG_NOT_RDY = 0x0004,
+    INVALID_PAYLOAD_LEN = 0x0005,
+    INFO_NOT_AVAIL = 0x0006,
+    UNKNOWN_CMD_TYPE = 0x7FFF,
+};
+
+// Initialize a std::map to associate enum values with strings
+const std::map<NCSIReason, std::string_view> reasonMap = {
+    { NCSIReason::NO_ERROR, "NO ERROR" },
+    { NCSIReason::INTF_INIT_REQD, "INTF INIT REQD" },
+    { NCSIReason::PARAM_INVALID, "PARAM INVALID" },
+    { NCSIReason::CHANNEL_NOT_RDY, "CHANNEL NOT RDY" },
+    { NCSIReason::PKG_NOT_RDY, "PKG NOT RDY" },
+    { NCSIReason::INVALID_PAYLOAD_LEN, "INVALID PAYLOAD LEN" },
+    { NCSIReason::INFO_NOT_AVAIL, "INFO NOT AVAIL" },
+    { NCSIReason::UNKNOWN_CMD_TYPE, "UNKNOWN CMD TYPE" }
+};
+
+// Function to get the string corresponding to an enum value
+std::string_view NCSIReasonToString(NCSIReason reas) {
+    auto it = reasonMap.find(reas);
+    if (it != reasonMap.end()) {
+        return it->second;
+    }
+    return "Unknown Reason";  // Default for invalid values
+}
+
+/* ---------Response code handler-------------- */
+
+enum class NCSIResponse : int {
+    COMMAND_COMPLETED = 0,
+    COMMAND_FAILED,
+    COMMAND_UNAVAILABLE,
+    COMMAND_UNSUPPORTED,
+};
+
+// Initialize a std::map to associate NCSI response code enum values with strings
+const std::map<NCSIResponse, std::string_view> responseMap = {
+    { NCSIResponse::COMMAND_COMPLETED, "COMMAND_COMPLETED" },
+    { NCSIResponse::COMMAND_FAILED, "COMMAND_FAILED" },
+    { NCSIResponse::COMMAND_UNAVAILABLE, "COMMAND_UNAVAILABLE" },
+    { NCSIResponse::COMMAND_UNSUPPORTED, "COMMAND_UNSUPPORTED" }
+};
+
+// Function to get the response string in C++23 style
+std::string_view NCSIResponseToString(NCSIResponse resp) {
+    auto it = responseMap.find(resp);
+    if (it != responseMap.end()) {
+        return it->second;
+    }
+    return "Unknown Response";  // Default for invalid values
+}
+
+/* ----------------------- */
+
+// Get Capabilities Response Structure
+// DSP0222 NCSI Spec 8.4.46
+
+struct NCSIGetCapabilitiesInfo
+{
+    uint32_t capabilitiesFlags;
+    uint32_t broadcastPacketFilterCapabilities;
+    uint32_t multicastPacketFilterCapabilities;
+    uint32_t bufferingCapabilities;
+    uint32_t aenControlSupport;
+    uint8_t  vlanFilterCnt;
+    uint8_t  mixedFilterCnt;
+    uint8_t  multicastFilterCnt;
+    uint8_t  unicastFilterCnt;
+    uint16_t reserved;
+    uint8_t  vlanModeSupport;
+    uint8_t  channelCnt;
+
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(capabilitiesFlags, broadcastPacketFilterCapabilities, multicastPacketFilterCapabilities,
+           bufferingCapabilities, aenControlSupport, vlanFilterCnt, mixedFilterCnt, multicastFilterCnt,
+           unicastFilterCnt, reserved, vlanModeSupport, channelCnt);
+    }
+};
+
+// defined in DSP0222 Table 9
 struct NCSIPacketHeader
 {
     uint8_t MCID;
@@ -53,7 +180,27 @@ struct NCSIPacketHeader
     uint8_t channel;
     uint16_t length;
     uint32_t rsvd[2];
+
+    template <class Archive>
+    void serialize(Archive& arp)
+    {
+        arp(MCID, revision, reserved, id, type, channel, length, rsvd[0],
+           rsvd[1]);
+    }
 };
+
+struct NCSIResponseCC
+{
+    uint16_t response;
+    uint16_t reason;
+
+    template <class Archive>
+    void serialize(Archive& arr)
+    {
+       arr(response, reason);
+    }
+};
+
 
 class Command
 {
@@ -77,6 +224,32 @@ class Command
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
+
+void printNCSICapabilities(const NCSIGetCapabilitiesInfo& capInfo)
+{
+    setlocale(LC_ALL, "");
+
+    lg2::debug("Get Capabilities response:");
+    std::cout
+        << "  capabilities_flags = " << "0x" << std::hex
+        << ntohl(capInfo.capabilitiesFlags) << std::endl
+        << "  broadcast_packet_filter_capabilities = " << "0x" << std::hex
+        << ntohl(capInfo.broadcastPacketFilterCapabilities)
+        << std::endl
+        << "  multicast_packet_filter_capabilities = " << "0x" << std::hex
+        << ntohl(capInfo.multicastPacketFilterCapabilities)
+        << std::endl
+        << "  buffering_capabilities = " << "0x" << std::hex
+        << ntohl(capInfo.bufferingCapabilities) << std::endl
+        << "  aen_control_support = " << "0x" << std::hex
+        << ntohl(capInfo.aenControlSupport) << std::endl
+        << "  unicast_filter_cnt = " << static_cast<int>(capInfo.unicastFilterCnt) << std::endl
+        << "  multicast_filter_cnt = " << static_cast<int>(capInfo.multicastFilterCnt) << std::endl
+        << "  mixed_filter_cnt = " << static_cast<int>(capInfo.mixedFilterCnt) << std::endl
+        << "  vlan_filter_cnt = " << static_cast<int>(capInfo.vlanFilterCnt) << std::endl
+        << "  channel_cnt = " << static_cast<int>(capInfo.channelCnt) << std::endl
+        << "  vlan_mode_support = " << static_cast<int>(capInfo.vlanModeSupport) << std::endl;
+}
 
 CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
@@ -253,14 +426,167 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
         return -1;
     }
 
-    auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
+    auto dataLen = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
     unsigned char* data =
         (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
 
     // Dump the response to stdout. Enhancement: option to save response data
-    auto str = toHexStr(std::span<const unsigned char>(data, data_len));
-    lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
+    auto str = toHexStr(std::span<const unsigned char>(data, dataLen));
+    lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", dataLen,
                "DATA", str);
+
+    return 0;
+};
+
+static void decodePayloadtoNCSIPktHdr(std::span<const uint8_t> payload, NCSIPacketHeader& ncsiPktHdr) noexcept
+{
+   if (payload.empty())
+    {
+        return ;
+    }
+
+    std::vector<uint8_t> payloadVec(payload.begin(), payload.end());
+    std::istringstream iss(
+         std::string(payloadVec.begin(), payloadVec.end()));
+    cereal::BinaryInputArchive arp(iss);
+    arp(ncsiPktHdr);
+}
+
+static void decodePayLoadtoNCSICapInfo(std::span<const uint8_t> payload, NCSIGetCapabilitiesInfo& capInfo) noexcept
+{
+    if (payload.empty())
+    {
+        return ;
+    }
+
+    std::vector<uint8_t> payloadVec(payload.begin(), payload.end());
+    std::istringstream iss(
+         std::string(payloadVec.begin(), payloadVec.end()));
+    cereal::BinaryInputArchive ar(iss);
+    ar(capInfo);
+}
+
+static void parseResponseMsg(std::span<const uint8_t> payload) noexcept
+{
+
+    // Use std::bit_cast to convert the first part of the span to NCSIpacketheader
+
+    if (payload.size() < sizeof(NCSIPacketHeader)) {
+	      std::cerr << "Not enough data to bitcast to NCSIPacketHeader\n";
+        return ;  // Not enough data
+    }
+
+    NCSIPacketHeader ncsiPktHdr;
+
+    decodePayloadtoNCSIPktHdr(std::span<const uint8_t>(&payload[0],sizeof(NCSIPacketHeader)),ncsiPktHdr);
+
+    uint8_t cmdSent = ((ncsiPktHdr.type) &
+                         OPER_TYPE_MASK); // clear MSB and keep lower 7 bits
+                                          // to know command sent.
+
+    NCSICommand cmdNSent = static_cast<NCSICommand>(static_cast<int>(cmdSent));
+
+    std::cout << "cmd: " << NCSICommandToString(cmdNSent) << "("
+              << "0x" << std::hex << static_cast<int>(cmdNSent) << ")"
+              << std::endl;
+
+    lg2::debug("NCSI Response packet type : {RESPONSE_PKT_TYPE}",
+               "RESPONSE_PKT_TYPE", lg2::hex, ncsiPktHdr.type);
+
+    auto respHdrLen = htons(ncsiPktHdr.length);
+
+    lg2::debug("NCSI Response length : {RESPONSE_LEN}", "RESPONSE_LEN",
+               lg2::hex, respHdrLen);
+
+    // Use std::bit_cast to convert the second part of the span to NCSICompletionCodes
+    NCSIResponseCC ncsiRCC;
+    std::size_t indexCC = sizeof(NCSIPacketHeader);
+
+    if (indexCC+sizeof(NCSIResponseCC) > payload.size()) {
+	      std::cerr << "Not enough data to bitcast to NCSICompletionCodes\n";
+        return ;  // Not enough data
+    }
+
+    std::span<const uint8_t> subsp = payload.subspan(indexCC,4);
+    std::vector<uint8_t> payloadVec(subsp.begin(), subsp.end());
+    std::istringstream iss(
+         std::string(payloadVec.begin(), payloadVec.end()));
+    cereal::BinaryInputArchive arr(iss);
+    arr(ncsiRCC);
+
+    // Convert capabilities status response to Host Endianess
+    uint16_t responseCode = ntohl(ncsiRCC.response);
+    uint16_t reasonCode = ntohl(ncsiRCC.reason);
+
+    lg2::debug("NC-SI Command Response:");
+    NCSIResponse rspCode = static_cast<NCSIResponse>(static_cast<int>(responseCode));
+    NCSIReason resCode = static_cast<NCSIReason>(static_cast<int>(reasonCode));
+    std::cout << "Response: " << NCSIResponseToString(rspCode) << " (" << "0x"
+              << std::hex << static_cast<int>(rspCode) << ")" << std::endl;
+    std::cout << "Reason: " << NCSIReasonToString(resCode) << " (" << "0x"
+              << std::hex << static_cast<int>(resCode) << ")" << std::endl;
+
+    if(rspCode != NCSIResponse::COMMAND_COMPLETED)
+    {
+       return;
+    }
+
+    if (cmdNSent != NCSICommand::GET_CAPABILITIES)
+    {
+        std::cout << "Payload length = " << respHdrLen << std::endl;
+        auto str = toHexStr(std::span<const unsigned char>(&payload[indexCC], respHdrLen));
+        lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", respHdrLen,
+                   "DATA", str);
+        return;
+    }
+
+    // Use std::bit_cast to convert the third part of the span to NCSIgetCapabilitiesInfo
+
+    std::size_t indexCapInfo = indexCC + sizeof(uint32_t) ;
+
+    if (indexCapInfo+(sizeof(NCSIGetCapabilitiesInfo)) > payload.size()) {
+	      std::cerr << "Not enough data to bitcast to NCSIGetCapabilities\n";
+        return ;  // Not enough data
+    }
+
+    NCSIGetCapabilitiesInfo capInfo ;
+    decodePayLoadtoNCSICapInfo(std::span<const uint8_t>(&payload[indexCapInfo],sizeof(NCSIGetCapabilitiesInfo)),capInfo);
+    printNCSICapabilities(capInfo);
+
+}
+
+CallBack getCapabilitiesCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    auto dataLen = nla_len(tb[NCSI_ATTR_DATA]);
+    unsigned char* data =
+        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]);
+    auto payload = std::span<const unsigned char>(data,dataLen);
+
+    parseResponseMsg(std::span<const uint8_t>(&payload[0],dataLen));
 
     return 0;
 };
@@ -505,6 +831,19 @@ int setChannelMask(int ifindex, int package, unsigned int mask)
                           payload),
         package);
     return 0;
+}
+
+int getCapabilities(int ifindex, int package, int channel)
+{
+    lg2::debug("Send NCSI Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
+               "INTERFACE_INDEX: {INTERFACE_INDEX}",
+               "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
+               "INTERFACE_INDEX", lg2::hex, ifindex);
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                          std::to_underlying(NCSICommand::GET_CAPABILITIES)),
+        package, channel, NONE, internal::getCapabilitiesCallBack);
 }
 
 } // namespace ncsi
