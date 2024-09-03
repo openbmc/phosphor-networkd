@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61a7b6f6_e4397c19",
+        "filename": "src/argument.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-09-03T21:43:29Z",
+      "side": 1,
+      "message": "Input parameter is missing \"--filter\u003d\u003cflag\u003e | -F \u003cflag\u003e\"",
+      "revId": "3bc740e127c2cc0f47640471abd5c31848f90940",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da445269_c7fbac82",
+        "filename": "src/argument.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-09-03T21:43:29Z",
+      "side": 1,
+      "message": "-M \"- is missing\"",
+      "revId": "3bc740e127c2cc0f47640471abd5c31848f90940",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d25aeae_6e50e550",
+        "filename": "src/argument.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-09-03T21:43:29Z",
+      "side": 1,
+      "message": "Please maintain the same index of \"-x 3\" like other examples to avoid confusion.\nDo we really all 3 examples?\nIs this command work without \"-F\" filter option?",
+      "revId": "3bc740e127c2cc0f47640471abd5c31848f90940",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c84df9b_1259af2f",
+        "filename": "src/argument.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-09-03T21:43:29Z",
+      "side": 1,
+      "message": "Can the option \"F\" go alone or it\u0027s valid for \"set_mac\" alone.?",
+      "revId": "3bc740e127c2cc0f47640471abd5c31848f90940",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd36020e_f39c9828",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-09-03T21:43:29Z",
+      "side": 1,
+      "message": "Input param is an Integer. Please follow the same approach which was followed for integer params.\ntry\n    {\n        filterInt \u003d stoi(filterStr, nullptr);\n    }\n    catch (const std::exception\u0026 e)\n    {\n        filterInt \u003d DEFAULT_VALUE;\n    }\n\n    if (filterInt \u003c 0)\n    {\n        filterInt \u003d DEFAULT_VALUE;\n    }",
+      "revId": "3bc740e127c2cc0f47640471abd5c31848f90940",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fdb3fb02_78dbcb98",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-09-03T21:43:29Z",
+      "side": 1,
+      "message": "there is no need of casting here.",
+      "revId": "3bc740e127c2cc0f47640471abd5c31848f90940",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "814a626c_27daee08",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-09-03T21:43:29Z",
+      "side": 1,
+      "message": "There is need of casting filterInt and mflags",
+      "revId": "3bc740e127c2cc0f47640471abd5c31848f90940",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
