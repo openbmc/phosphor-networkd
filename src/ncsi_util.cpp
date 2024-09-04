@@ -1,3 +1,5 @@
+
+
 #include "ncsi_util.hpp"
 
 #include <linux/ncsi.h>
@@ -9,6 +11,7 @@
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
 
+#include <sstream>
 #include <vector>
 
 namespace phosphor
@@ -17,8 +20,6 @@ namespace network
 {
 namespace ncsi
 {
-
-using CallBack = int (*)(struct nl_msg* msg, void* arg);
 
 static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 {
@@ -42,38 +43,6 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 
 namespace internal
 {
-
-struct NCSIPacketHeader
-{
-    uint8_t MCID;
-    uint8_t revision;
-    uint8_t reserved;
-    uint8_t id;
-    uint8_t type;
-    uint8_t channel;
-    uint16_t length;
-    uint32_t rsvd[2];
-};
-
-class Command
-{
-  public:
-    Command() = delete;
-    ~Command() = default;
-    Command(const Command&) = delete;
-    Command& operator=(const Command&) = delete;
-    Command(Command&&) = default;
-    Command& operator=(Command&&) = default;
-    Command(
-        int ncsiCmd, int operation = DEFAULT_VALUE,
-        std::span<const unsigned char> p = std::span<const unsigned char>()) :
-        ncsi_cmd(ncsiCmd), operation(operation), payload(p)
-    {}
-
-    int ncsi_cmd;
-    int operation;
-    std::span<const unsigned char> payload;
-};
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
@@ -228,7 +197,9 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     return (int)NL_SKIP;
 };
 
-CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
+int getNcsiCommandPayload(struct nl_msg* msg, void* arg,
+                          std::span<const unsigned char>& payload)
+{
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
     struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
@@ -253,21 +224,32 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
         return -1;
     }
 
-    auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
-    unsigned char* data =
-        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
+    auto data_len = nla_len(tb[NCSI_ATTR_DATA]);
+    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]);
 
-    // Dump the response to stdout. Enhancement: option to save response data
-    auto str = toHexStr(std::span<const unsigned char>(data, data_len));
-    lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
-               "DATA", str);
+    payload = std::span<const unsigned char>(data, data_len);
 
     return 0;
+}
+
+CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
+    std::span<const unsigned char> payload;
+    auto ret = getNcsiCommandPayload(msg, arg, payload);
+
+    if (!ret)
+    {
+        // Dump the response to stdout. Enhancement: option to save response
+        // data
+        auto str = toHexStr(payload);
+        lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN",
+                   payload.size(), "DATA", str);
+    }
+
+    return ret;
 };
 
-int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
-             int channel = DEFAULT_VALUE, int flags = NONE,
-             CallBack function = nullptr)
+int applyCmd(int ifindex, const Command& cmd, int package, int channel,
+             int flags, CallBack function)
 {
     int cb_ret = 0;
     nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
