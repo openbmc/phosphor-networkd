@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb2e0881_eb758687",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-09-04T21:30:20Z",
+      "side": 1,
+      "message": "Approved..",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d3998e9_4922ac79",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1002145
+      },
+      "writtenOn": "2024-09-04T21:30:20Z",
+      "side": 1,
+      "message": "Remove these extra two spaces",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
