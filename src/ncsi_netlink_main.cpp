@@ -197,6 +197,18 @@ int main(int argc, char** argv)
         }
         return ncsi::setChannelMask(indexInt, packageInt, mask);
     }
+    else if (!(options)["disable"].empty())
+    {
+        const std::string& disable = (options)["disable"];
+        if(disable == "vlan")
+        {
+            return ncsi::disableVlan(indexInt, packageInt, channelInt);
+        }
+        else
+        {
+            exitWithError("Invalid disable option", argv);
+        }
+    }
     else
     {
         exitWithError("No Command specified", argv);
