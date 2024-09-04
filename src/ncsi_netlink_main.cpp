@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "argument.hpp"
-#include "ncsi_util.hpp"
+
 
 #include <phosphor-logging/lg2.hpp>
 
 #include <string>
 #include <vector>
+
+#include "argument.hpp"
+#include "ncsi_disable_vlan.hpp"
+#include "ncsi_util.hpp"
 
 static void exitWithError(const char* err, char** argv)
 {
@@ -196,6 +199,18 @@ int main(int argc, char** argv)
             exitWithError("Channel mask value is not valid", argv);
         }
         return ncsi::setChannelMask(indexInt, packageInt, mask);
+    }
+    else if (!(options)["disable"].empty())
+    {
+        const std::string& disable = (options)["disable"];
+        if (disable == "vlan")
+        {
+            return ncsi::disableVlan(indexInt, packageInt, channelInt);
+        }
+        else
+        {
+            exitWithError("Invalid disable option", argv);
+        }
     }
     else
     {
