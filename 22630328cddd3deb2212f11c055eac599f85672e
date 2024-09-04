@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "410e72e9_3ff7a4b1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-09-04T21:15:36Z",
+      "side": 1,
+      "message": "Hi All,\n\nPlease find the changes to implement Disable VLAN NC-SI command for your review.\nKindly do let me know your valuable feedback.\n\nThanks\nBest Regards\nAhsan",
+      "revId": "22630328cddd3deb2212f11c055eac599f85672e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
