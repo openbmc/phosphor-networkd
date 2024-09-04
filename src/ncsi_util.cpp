@@ -8,8 +8,12 @@
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/vector.hpp>
 
 #include <vector>
+#include <iostream>
+#include <sstream>
 
 namespace phosphor
 {
@@ -53,6 +57,31 @@ struct NCSIPacketHeader
     uint8_t channel;
     uint16_t length;
     uint32_t rsvd[2];
+
+    template <class Archive>
+    void serialize(Archive &ar)
+    {
+        ar(MCID, revision, reserved, id, type, channel, length, rsvd[0],
+          rsvd[1]);
+    }
+};
+
+struct DisableVlanResponsePacket
+{
+    NCSIPacketHeader header;
+    uint16_t response;
+    uint16_t reason;
+    uint32_t checksum;
+    uint32_t pad[22];
+
+    template <class Archive>
+    void serialize(Archive &ar)
+    {
+        ar(header, response, reason, checksum, pad[0], pad[1], pad[2], pad[3], 
+           pad[4], pad[5], pad[6], pad[7], pad[8], pad[9], pad[10], 
+           pad[11], pad[12], pad[13], pad[14], pad[15], pad[16], 
+           pad[17], pad[18], pad[19], pad[20], pad[21]);
+    }
 };
 
 class Command
@@ -228,7 +257,9 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     return (int)NL_SKIP;
 };
 
-CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
+int getNcsiCommandPayload(struct nl_msg* msg,
+     void* arg, std::span<const unsigned char>& payload)
+{
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
     struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
@@ -253,16 +284,55 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
         return -1;
     }
 
-    auto data_len = nla_len(tb[NCSI_ATTR_DATA]) - sizeof(NCSIPacketHeader);
+    auto data_len = nla_len(tb[NCSI_ATTR_DATA]);
     unsigned char* data =
-        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
+        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]);
 
-    // Dump the response to stdout. Enhancement: option to save response data
-    auto str = toHexStr(std::span<const unsigned char>(data, data_len));
-    lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
-               "DATA", str);
+    payload = std::span<const unsigned char>(data, data_len);
 
     return 0;
+}
+
+CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
+    std::cout << "Calling getPayload now" << "\n";
+
+    std::span<const unsigned char> payload;
+    auto ret = getNcsiCommandPayload(msg, arg, payload);
+
+    if ( !ret )
+    {
+        // Dump the response to stdout. Enhancement: option to save response data
+        auto str = toHexStr(payload);
+        lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN",
+                    payload.size(), "DATA", str);
+    }
+
+    return ret;
+};
+
+CallBack disableVlanCallBack = [](struct nl_msg* msg, void* arg) {
+    std::cout << "Calling disableVlanCallBack\n";
+
+    std::span<const unsigned char> payload;
+    auto ret = getNcsiCommandPayload(msg, arg, payload);
+    std::cout << payload.size() << "\n";
+
+    if( !ret )
+    {
+        std::vector<unsigned char> payloadVec(payload.begin(), payload.end());
+        std::cout << payloadVec.size() << "\n";
+        std::istringstream iss(std::string(payloadVec.begin(),
+                                           payloadVec.end()));
+        std::cout << iss.str() << "\n";
+
+        cereal::BinaryInputArchive ar(iss);
+        std::cout << ar.size() << "\n";
+        DisableVlanResponsePacket packet;
+        std::cout << sizeof(packet) << "\n";
+        ar(packet);
+    }
+
+    return ret;
 };
 
 int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
@@ -436,6 +506,23 @@ int sendOemCommand(int ifindex, int package, int channel, int operation,
         internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, operation,
                           payload),
         package, channel, NONE, internal::sendCallBack);
+}
+
+int disableVlan(int ifindex, int package, int channel)
+{
+    constexpr auto ncsiCmdDisableVlan = 0x0D;
+
+    lg2::debug("Send NCSI Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
+               "INTERFACE_INDEX: {INTERFACE_INDEX}, NCSI_CMD : {NCSI_CMD}",
+               "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
+               "INTERFACE_INDEX", lg2::hex, ifindex, "NCSI_CMD", lg2::hex,
+                ncsiCmdDisableVlan);
+                
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                          ncsiCmdDisableVlan),
+        package, channel, NONE, internal::disableVlanCallBack);
 }
 
 int setChannel(int ifindex, int package, int channel)
