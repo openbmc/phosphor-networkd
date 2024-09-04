@@ -74,6 +74,9 @@ void ArgumentParser::usage(char** argv)
            "    --set   | -s      Set a specific package/channel.\n"
            "    --clear | -r      Clear all the settings on the interface.\n"
            "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n"
+           "    --disable | -d <option> \n"
+           "                   <option> can be one of the following:\n"
+           "                   'vlan' - disable vlan\n"
            "    --pmask=<mask> | -j <mask> Bitmask to enable/disable packages\n"
            "    --cmask=<mask> | -k <mask> Bitmask to enable/disable channels\n"
            "\n"
@@ -92,6 +95,8 @@ void ArgumentParser::usage(char** argv)
            "         ncsi-netlink -x 3 -j 1\n"
            "    7) Set Channel Mask\n"
            "         ncsi-netlink -x 3 -p 0 -k 1\n"
+           "    8) Disable VLAN\n"
+           "         ncsi-netlink -x 2 -p 0 -c 0 -d vlan\n"
            "\n";
 }
 
@@ -106,10 +111,11 @@ const option ArgumentParser::options[] = {
     {"help", no_argument, NULL, 'h'},
     {"pmask", required_argument, NULL, 'j'},
     {"cmask", required_argument, NULL, 'k'},
+    {"disable", required_argument, NULL, 'd'},
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsj:k:x:o:p:c:h?";
+const char* ArgumentParser::optionStr = "irsj:k:x:o:p:c:d:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
