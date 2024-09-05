@@ -3,6 +3,108 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "41f536cb_d76404fb",
+        "filename": "src/argument.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T09:34:31Z",
+      "side": 1,
+      "message": "provide meaning full name to the option\nand also do proper allignment",
+      "revId": "51df80868b1f5f3e1931db1342c27c52fedd0ed0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20a121e1_2d00da17",
+        "filename": "src/argument.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T09:34:31Z",
+      "side": 1,
+      "message": "give meaning full name",
+      "revId": "51df80868b1f5f3e1931db1342c27c52fedd0ed0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "884e66cd_f14d5446",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T09:34:31Z",
+      "side": 1,
+      "message": "give meaning full name",
+      "revId": "51df80868b1f5f3e1931db1342c27c52fedd0ed0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "834ee38c_201a3db7",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T09:34:31Z",
+      "side": 1,
+      "message": "use std::array",
+      "revId": "51df80868b1f5f3e1931db1342c27c52fedd0ed0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b91a058_732c5faf",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T09:34:31Z",
+      "side": 1,
+      "message": "use constexp",
+      "revId": "51df80868b1f5f3e1931db1342c27c52fedd0ed0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9f6e719_111afa83",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T09:34:31Z",
+      "side": 1,
+      "message": "remove interpret cast and use bit_cast",
+      "revId": "51df80868b1f5f3e1931db1342c27c52fedd0ed0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bd2e1da3_424f67ae",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 2
@@ -14,6 +116,57 @@
       "writtenOn": "2024-08-29T16:33:50Z",
       "side": 1,
       "message": "I believe that J. Mantey wants us to \u0027unpack\u0027 the response fields serially.\n\"The incoming tb needs to be unpacked in a serial fashion.\nSomething like:\ngetVersionIDResponse resp(unpack(tb));\n\nIn unpack(tb) assign structure values in turn:\ngetVersionIDResponse unpack(const char * tb)\nchar *ptr \u003d tb;\nstruct.elem1 \u003d ntohl(*ptr);\n// increment ptr\nstruct.elem2 \u003d ntoxyz(*ptr);\"",
+      "revId": "51df80868b1f5f3e1931db1342c27c52fedd0ed0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23d82cc2_d88b1cac",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T09:34:31Z",
+      "side": 1,
+      "message": "change htons to ntohs",
+      "revId": "51df80868b1f5f3e1931db1342c27c52fedd0ed0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd1041be_e33491cd",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T09:34:31Z",
+      "side": 1,
+      "message": "remove ask and change to reguest",
+      "revId": "51df80868b1f5f3e1931db1342c27c52fedd0ed0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ed7c4d3_bdf4d4a4",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T09:34:31Z",
+      "side": 1,
+      "message": "change talk to commiunicate",
       "revId": "51df80868b1f5f3e1931db1342c27c52fedd0ed0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
