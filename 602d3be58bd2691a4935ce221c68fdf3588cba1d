@@ -35,6 +35,40 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "510be30d_8a46d8aa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T07:20:35Z",
+      "side": 1,
+      "message": "added few comments and clarifications on the implementation",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14718a9d_5c995820",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T07:20:35Z",
+      "side": 1,
+      "message": "Is it required to create 2 files for each command ? i;e  one .cpp and  one .hpp files",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e43d2094_96040b57",
@@ -54,6 +88,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7e516b4e_0c1fa706",
+        "filename": "src/ncsi_disable_vlan.hpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T07:20:35Z",
+      "side": 1,
+      "message": "Here size of pad has taken as 22 hard coded value",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6d3998e9_4922ac79",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 12
@@ -65,6 +116,74 @@
       "writtenOn": "2024-09-04T21:30:20Z",
       "side": 1,
       "message": "Remove these extra two spaces",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "293d3883_837af395",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T07:20:35Z",
+      "side": 1,
+      "message": "I have received comment from you to declare struct nlattr* as std::array",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ebcb19e_1395f81b",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T07:20:35Z",
+      "side": 1,
+      "message": "need to use the constexpr",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6ac53b2_b5b9c034",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T07:20:35Z",
+      "side": 1,
+      "message": "Need to remove the c-style type casting",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8b28c37_8004fe0e",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T07:20:35Z",
+      "side": 1,
+      "message": "is the extra memory created by payload is needed ? Shall we have the reason we used, is it applicable to all commands to follow ?",
       "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
