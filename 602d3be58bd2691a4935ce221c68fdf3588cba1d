@@ -88,6 +88,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e808d700_1fe9f102",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-05T08:50:40Z",
+      "side": 1,
+      "message": "payload.begin(), payload.end()\npayload.cbegin(), payload.cend()\nwe can use cbegin and cend, as these are c++23 standard\nreference\nhttps://en.cppreference.com/w/cpp/container/span",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7e516b4e_0c1fa706",
         "filename": "src/ncsi_disable_vlan.hpp",
         "patchSetId": 12
