@@ -41,6 +41,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0406a34_7558529c",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-09-05T07:24:02Z",
+      "side": 1,
+      "message": "resolved with constexpr auto",
+      "parentUuid": "33eb7626_5d255d6d",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 0
+      },
+      "revId": "21d9c1aa69dc303b8b85f75d9720178be469b6fe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "45b47a42_f18f89fa",
@@ -54,6 +78,30 @@
       "writtenOn": "2024-09-04T21:26:38Z",
       "side": 1,
       "message": "no #defines to be used",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 34
+      },
+      "revId": "21d9c1aa69dc303b8b85f75d9720178be469b6fe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22b28078_23565429",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1002153
+      },
+      "writtenOn": "2024-09-05T07:24:02Z",
+      "side": 1,
+      "message": "replaced with constexpr auto",
+      "parentUuid": "45b47a42_f18f89fa",
       "range": {
         "startLine": 71,
         "startChar": 0,
