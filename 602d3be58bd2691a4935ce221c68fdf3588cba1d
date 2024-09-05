@@ -71,6 +71,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b5983b1c_1ca5355d",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-09-05T09:08:29Z",
+      "side": 1,
+      "message": "yes",
+      "parentUuid": "14718a9d_5c995820",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e43d2094_96040b57",
         "filename": "src/ncsi_disable_vlan.cpp",
         "patchSetId": 12
@@ -82,6 +100,24 @@
       "writtenOn": "2024-09-05T07:18:37Z",
       "side": 1,
       "message": "Hi Ahsan,\nIn past we have data non-allignment/padding issue.Want to know how it tackles?",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26eeee7e_1cf0c064",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-09-05T09:08:29Z",
+      "side": 1,
+      "message": "We don\u0027t have those issues now.can you point to the existing issue?",
+      "parentUuid": "e43d2094_96040b57",
       "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -105,6 +141,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "48c28013_2efc5475",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-09-05T09:08:29Z",
+      "side": 1,
+      "message": "cbegin and cend return a const_iterator. It is equivalent for us. Not an issue.",
+      "parentUuid": "e808d700_1fe9f102",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7e516b4e_0c1fa706",
         "filename": "src/ncsi_disable_vlan.hpp",
         "patchSetId": 12
@@ -122,6 +176,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c7452912_c4be2810",
+        "filename": "src/ncsi_disable_vlan.hpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-09-05T09:08:29Z",
+      "side": 1,
+      "message": "correct. you can refer 8.4.29 Disable VLAN command (0x0D) of the DMTF spec We\u0027re not using pad anywhere, so should be okay.",
+      "parentUuid": "7e516b4e_0c1fa706",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4910f4ba_5c450ade",
         "filename": "src/ncsi_disable_vlan.hpp",
         "patchSetId": 12
@@ -133,6 +205,24 @@
       "writtenOn": "2024-09-05T07:25:14Z",
       "side": 1,
       "message": "is this padding applicable for all ncsi commands",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50a91353_18514f71",
+        "filename": "src/ncsi_disable_vlan.hpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-09-05T09:08:29Z",
+      "side": 1,
+      "message": "every command needs to define its own structure.the approach is applicable to all",
+      "parentUuid": "4910f4ba_5c450ade",
       "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -173,6 +263,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3a98d03a_d6c3cde7",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-09-05T09:08:29Z",
+      "side": 1,
+      "message": "there is no code change here. in your case, you\u0027ve added the new code that has the nlattr*\n\nnot applicable to code that is already present and being used.",
+      "parentUuid": "293d3883_837af395",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0ebcb19e_1395f81b",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 12
@@ -184,6 +292,24 @@
       "writtenOn": "2024-09-05T07:20:35Z",
       "side": 1,
       "message": "need to use the constexpr",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba7d8d91_1651a7b7",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-09-05T09:08:29Z",
+      "side": 1,
+      "message": "not required as this is existing code. not new code.",
+      "parentUuid": "0ebcb19e_1395f81b",
       "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -207,6 +333,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "42a60985_e9c1d5a0",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-09-05T09:08:29Z",
+      "side": 1,
+      "message": "again, this is existing code. No change required. In your case, we have copied the whole function which is new code.",
+      "parentUuid": "e6ac53b2_b5b9c034",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c8b28c37_8004fe0e",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 12
@@ -218,6 +362,24 @@
       "writtenOn": "2024-09-05T07:20:35Z",
       "side": 1,
       "message": "is the extra memory created by payload is needed ? Shall we have the reason we used, is it applicable to all commands to follow ?",
+      "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "881fb181_d09f905a",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-09-05T09:08:29Z",
+      "side": 1,
+      "message": "no extra memory is used. yes it is applicable to all commands.",
+      "parentUuid": "c8b28c37_8004fe0e",
       "revId": "602d3be58bd2691a4935ce221c68fdf3588cba1d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
