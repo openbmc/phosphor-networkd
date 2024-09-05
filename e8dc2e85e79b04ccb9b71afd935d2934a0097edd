@@ -33,6 +33,29 @@
       "message": "I am glad that we are leveraging the --get command line option.",
       "revId": "e8dc2e85e79b04ccb9b71afd935d2934a0097edd",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb27a8e1_5bc41106",
+        "filename": "src/argument.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-09-05T04:03:33Z",
+      "side": 1,
+      "message": "align",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 79,
+        "endChar": 30
+      },
+      "revId": "e8dc2e85e79b04ccb9b71afd935d2934a0097edd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
