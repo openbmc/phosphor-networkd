@@ -67,8 +67,9 @@ void ArgumentParser::usage(char** argv)
            "    --info    | -i      Retrieve info about NCSI topology.\n"
            "    --get     | -g      <option> \n"
            "          <option> is one of ...\n"
-           "          vid: Get NC-SI Version ID\n"
-           "          ncsi: Get NC-SI statistics\n"
+           "          vid:  NC-SI Version ID\n"
+           "          ncsi: NC-SI statistics\n"
+           "          mac-addr: MAC address\n"
            "          ....: . . .\n"
            "    --set     | -s      Set a specific package/channel.\n"
            "    --clear   | -r      Clear all the settings on the interface.\n"
@@ -109,6 +110,7 @@ const option ArgumentParser::options[] = {
     {"cmask", required_argument, NULL, 'k'},
     {0, 0, 0, 0},
 };
+
 const char* ArgumentParser::optionStr = "irsj:k:x:g:o:p:c:h?";
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";

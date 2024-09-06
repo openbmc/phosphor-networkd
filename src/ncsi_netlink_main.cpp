@@ -186,9 +186,9 @@ int main(int argc, char** argv)
     else if ((options)["get"] != ArgumentParser::emptyString)
     {
         const std::string& getArg{(options)["get"]};
-        if (getArg == "vid")
+        if (getArg == "mac-addr")
         {
-            return ncsi::getVersionID(indexInt, packageInt, channelInt);
+            return ncsi::getChnlMacAddrs(indexInt, packageInt, channelInt);
         }
         else
         {
@@ -199,5 +199,6 @@ int main(int argc, char** argv)
     {
         exitWithError("No Command specified", argv);
     }
+
     return 0;
 }
