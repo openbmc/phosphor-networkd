@@ -89,6 +89,57 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "334fdb49_5d41db57",
+        "filename": "src/argument.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-06T06:12:04Z",
+      "side": 1,
+      "message": "give meaningfull name to dbcf\nalso use camel format.",
+      "revId": "11004caa6b601637ccbfcaa94361e7bcc3b5d01f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3f53647_52d036de",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-06T06:12:04Z",
+      "side": 1,
+      "message": "std::array",
+      "revId": "11004caa6b601637ccbfcaa94361e7bcc3b5d01f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c49d2cdc_70f6d2ed",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-06T06:12:04Z",
+      "side": 1,
+      "message": "remove static",
+      "revId": "11004caa6b601637ccbfcaa94361e7bcc3b5d01f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c1805f7a_fd13bc9d",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 1
@@ -118,6 +169,91 @@
       "side": 1,
       "message": "Per J. Mantey\n\"The incoming tb needs to be unpacked in a serial fashion.\nSomething like:\ngetVersionIDResponse resp(unpack(tb));\n\nIn unpack(tb) assign structure values in turn:\ngetVersionIDResponse unpack(const char * tb)\nchar *ptr \u003d tb;\nstruct.elem1 \u003d ntohl(*ptr);\n// increment ptr\nstruct.elem2 \u003d ntoxyz(*ptr);\"",
       "parentUuid": "c1805f7a_fd13bc9d",
+      "revId": "11004caa6b601637ccbfcaa94361e7bcc3b5d01f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be40dcf8_1a6e5f2b",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-06T06:12:04Z",
+      "side": 1,
+      "message": "remove interpret_cast and use bit_cast",
+      "revId": "11004caa6b601637ccbfcaa94361e7bcc3b5d01f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da74653d_637856c6",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-06T06:12:04Z",
+      "side": 1,
+      "message": "@hemanth you can below code snippet as reference to unpack the data\n    unsigned char* data \u003d\n        (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);\n    // Extract the completion code and print the response\n    getParamResponse paramResp;\n    paramResp.paramStatCode.completionCodeResponse \u003d\n        ntohs(*std::bit_cast\u003cuint16_t*\u003e(data));\n    data +\u003d sizeof(uint16_t);",
+      "revId": "11004caa6b601637ccbfcaa94361e7bcc3b5d01f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f0d7e59_dcc9eb37",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-06T06:12:04Z",
+      "side": 1,
+      "message": "chage to htons to ntohs",
+      "revId": "11004caa6b601637ccbfcaa94361e7bcc3b5d01f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be35132f_423f68a7",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-06T06:12:04Z",
+      "side": 1,
+      "message": "change ask to request",
+      "revId": "11004caa6b601637ccbfcaa94361e7bcc3b5d01f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7b98585_af2128c0",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1002159
+      },
+      "writtenOn": "2024-09-06T06:12:04Z",
+      "side": 1,
+      "message": "change talk to communicate",
       "revId": "11004caa6b601637ccbfcaa94361e7bcc3b5d01f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
