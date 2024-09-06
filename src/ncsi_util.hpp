@@ -74,7 +74,16 @@ int setPackageMask(int ifindex, unsigned int mask);
  * @returns 0 on success and negative value for failure.
  */
 int setChannelMask(int ifindex, int package, unsigned int mask);
-
+/* @brief  This function will request underlying NCSI driver
+ *         to disable broadcast filtering for the channel.
+ *         This function communicate with the NCSI driver over
+ *         netlink messages.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] channel - Channel number with in the package.
+ * @returns 0 on success and negative value for failure.
+ */
+int disableBroadcastFilter(int ifindex, int package, int channel);
 } // namespace ncsi
 } // namespace network
 } // namespace phosphor
