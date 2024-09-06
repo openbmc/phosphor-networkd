@@ -75,6 +75,15 @@ int setPackageMask(int ifindex, unsigned int mask);
  */
 int setChannelMask(int ifindex, int package, unsigned int mask);
 
+/* @brief This function is used to retrieve the mac address
+ * for the package:channel.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] channel - Channel number with in the package.
+ * @returns 0 on success and negative value for failure.
+ */
+int getChnlMacAddrs(int ifindex, int package, int channel);
+
 } // namespace ncsi
 } // namespace network
 } // namespace phosphor

@@ -55,6 +55,26 @@ struct NCSIPacketHeader
     uint32_t rsvd[2];
 };
 
+struct ncsiCompletionCodes
+{
+    uint16_t completionCodeResponse;
+    uint16_t completionCodeReason;
+};
+
+struct macAddress
+{
+  uint8_t Bytes[6];
+};
+
+struct getMacAddressesResponse
+{
+    NCSIPacketHeader linkRespHdr;
+    ncsiCompletionCodes linkStatCodes;
+    uint8_t numMacAddrs;
+    uint8_t Reserved[3];
+    struct macAddress macAddresses[10];
+};
+
 class Command
 {
   public:
@@ -228,6 +248,41 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
     return (int)NL_SKIP;
 };
 
+int getNcsiResponsePayload(struct nl_msg* msg, void* arg,
+                           std::span<const unsigned char>& payload)
+{
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    auto data_len = nla_len(tb[NCSI_ATTR_DATA]);
+    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]);
+    payload = std::span<const unsigned char>(data, data_len);
+
+    return 0;
+}
+
+
 CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     using namespace phosphor::network::ncsi;
     auto nlh = nlmsg_hdr(msg);
@@ -261,6 +316,72 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
+
+    return 0;
+};
+
+void printMacAddress(struct macAddress* macAddr)
+{
+    uint8_t byte = 0;
+    uint8_t nibble = 0;
+    std::string printMac{};
+
+    for (auto i = 0; i <= 5; i++)
+    {
+        byte = macAddr->Bytes[i];
+        nibble = (byte >> 4);
+        if (nibble < 10)
+        {
+            printMac.push_back(static_cast<char>(nibble + 0x30));
+        }
+        else
+        {
+            printMac.push_back(static_cast<char>((nibble-9) + 0x40));
+        }
+
+        nibble = (byte & 0x0F);
+        if (nibble < 10)
+        {
+            printMac.push_back(static_cast<char>(nibble + 0x30));
+        }
+        else
+        {
+            printMac.push_back(static_cast<char>((nibble-9) + 0x40));
+        }
+
+        printMac.push_back(':');
+    }
+
+    // Erase the trailing colon ...
+    printMac.back() = ' ';
+
+   lg2::debug("MAC_ADDRESS: {MAC_ADDRESS}", "MAC_ADDRESS", printMac);
+}
+
+CallBack getChnlMacAddrsCallBack = [](struct nl_msg* msg, void* arg) {
+    std::span<const unsigned char> payload;
+    auto ret = getNcsiResponsePayload(msg, arg, payload);
+
+    if (ret != 0)
+    {
+        return ret;
+    }
+
+    std::vector<unsigned char> payloadVec(payload.begin(), payload.end());
+
+    auto data_dx = sizeof(struct NCSIPacketHeader) +
+                   sizeof(struct ncsiCompletionCodes);
+
+    uint8_t numAddrs = payloadVec[data_dx];
+    lg2::debug("NUM_ADDRESSES: {NUM_ADDRESSES}", "NUM_ADDRESSES", numAddrs);
+
+    data_dx += 4;
+    for (auto i=0; i < numAddrs; i++)
+    {
+        printMacAddress(reinterpret_cast<struct macAddress*>(
+              &payloadVec[data_dx]));
+        data_dx += sizeof(struct macAddress);
+    }
 
     return 0;
 };
@@ -505,6 +626,21 @@ int setChannelMask(int ifindex, int package, unsigned int mask)
                           payload),
         package);
     return 0;
+}
+
+int getChnlMacAddrs(int ifindex, int package, int channel)
+{
+   constexpr auto ncsi_cmd = 0x58; //DMTF DSP0222 2023-08-25
+
+   lg2::debug(
+       "Get Channel Mac Addresses , INTERFACE_INDEX: {INTERFACE_INDEX} PACKAGE: {PACKAGE} CHANNEL: {CHANNEL}",
+       "INTERFACE_INDEX", lg2::hex, ifindex, "PACKAGE", lg2::hex, package,
+       "CHANNEL", lg2::hex, channel);
+
+    return internal::applyCmd(
+        ifindex,
+        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, ncsi_cmd),
+        package, channel, NONE, internal::getChnlMacAddrsCallBack);
 }
 
 } // namespace ncsi
