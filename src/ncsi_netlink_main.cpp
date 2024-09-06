@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include "argument.hpp"
+#include "ncsi_disable_broadcast.hpp"
 #include "ncsi_util.hpp"
 
 #include <phosphor-logging/lg2.hpp>
@@ -152,6 +153,10 @@ int main(int argc, char** argv)
     else if ((options)["info"] == "true")
     {
         return ncsi::getInfo(indexInt, packageInt);
+    }
+    else if ((options)["disable-broadcast"] == "true")
+    {
+        return ncsi::disableBroadcastFilter(indexInt, packageInt, channelInt);
     }
     else if ((options)["clear"] == "true")
     {
