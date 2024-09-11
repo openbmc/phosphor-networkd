@@ -18,6 +18,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4882787_4abf5375",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-09-11T17:12:51Z",
+      "side": 1,
+      "message": "quick response.",
+      "revId": "af3a83e744d7802035d7e3c08eea55105e44b32c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee2c9817_27b45691",
@@ -49,6 +66,24 @@
       "side": 1,
       "message": "I\u0027ve used `NULL` here as we\u0027re calling a C function, but `nullptr` would also be reasonable on the grounds that we\u0027re calling from C++. I\u0027m fine either way.",
       "parentUuid": "ee2c9817_27b45691",
+      "revId": "af3a83e744d7802035d7e3c08eea55105e44b32c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08b508f9_0ac69ee9",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-09-11T17:12:51Z",
+      "side": 1,
+      "message": "IMO, it\u0027s more important to use nullptr than it is to have the c++ cast suggested below. It may be passe to think of C++ as \u0027C increment\u0027. This is one increment to C that adds value.",
+      "parentUuid": "b50f01be_6201db61",
       "revId": "af3a83e744d7802035d7e3c08eea55105e44b32c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
