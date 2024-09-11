@@ -231,9 +231,17 @@ void registerSignals(sdbusplus::bus_t& bus)
                         {
                             if (property.first == "MACAddress")
                             {
-                                setFirstBootMACOnInterface(
-                                    pattern.key(),
-                                    std::get<std::string>(property.second));
+                                // Only set mac address on interface once the
+                                // firstboot file does not exist or it is being
+                                // FORCE_SYNC_MAC_FROM_INVENTORY
+                                if (FORCE_SYNC_MAC_FROM_INVENTORY ||
+                                    !std::filesystem::exists(
+                                        firstBootPath + pattern.key()))
+                                {
+                                    setFirstBootMACOnInterface(
+                                        pattern.key(),
+                                        std::get<std::string>(property.second));
+                                }
                                 break;
                             }
                         }
