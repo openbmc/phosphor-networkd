@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b50f01be_6201db61",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-09-11T03:20:51Z",
+      "side": 1,
+      "message": "I\u0027ve used `NULL` here as we\u0027re calling a C function, but `nullptr` would also be reasonable on the grounds that we\u0027re calling from C++. I\u0027m fine either way.",
+      "parentUuid": "ee2c9817_27b45691",
+      "revId": "af3a83e744d7802035d7e3c08eea55105e44b32c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5793c048_468df5fe",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 3
@@ -48,6 +66,24 @@
       "writtenOn": "2024-09-03T21:08:07Z",
       "side": 1,
       "message": "C++ style cast?",
+      "revId": "af3a83e744d7802035d7e3c08eea55105e44b32c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5177645_00e7488b",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-09-11T03:20:51Z",
+      "side": 1,
+      "message": "Ack, will replace.",
+      "parentUuid": "5793c048_468df5fe",
       "revId": "af3a83e744d7802035d7e3c08eea55105e44b32c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
