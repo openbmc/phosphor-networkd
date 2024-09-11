@@ -16,6 +16,29 @@
       "message": "Hi All,\n\nPlease find the changes to implement Disable VLAN NC-SI command for your review.\nKindly do let me know your valuable feedback.\n\nThanks\nBest Regards\nAhsan",
       "revId": "22630328cddd3deb2212f11c055eac599f85672e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6c8864c_4cc7113e",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000009
+      },
+      "writtenOn": "2024-09-11T00:47:43Z",
+      "side": 1,
+      "message": "This is a bit much. See:\n\nhttps://github.com/openbmc/docs/blob/master/anti-patterns.md#ill-defined-data-structuring-in-lg2-message-strings\n\nThis could be:\n\n```\nlg2.debug(\"Sending NCSI command {COMMAND} to package {PACKAGE} on channel {CHANNEL}\", \"COMMAND\", lg2::hex, ncsiCmdDisableVlan, \"PACKAGE\", lg2::hex, package, \"CHANNEL\", lg2::hex, channel, \"IFINDEX\", lg2::hex, ifindex);\n```",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 65,
+        "endChar": 35
+      },
+      "revId": "22630328cddd3deb2212f11c055eac599f85672e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
