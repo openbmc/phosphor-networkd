@@ -33,16 +33,16 @@ struct NCSIPacketHeader
     uint32_t rsvd[2];
 };
 
-class Command
+class NetlinkCommand
 {
   public:
-    Command() = delete;
-    ~Command() = default;
-    Command(const Command&) = delete;
-    Command& operator=(const Command&) = delete;
-    Command(Command&&) = default;
-    Command& operator=(Command&&) = default;
-    Command(
+    NetlinkCommand() = delete;
+    ~NetlinkCommand() = default;
+    NetlinkCommand(const NetlinkCommand&) = delete;
+    NetlinkCommand& operator=(const NetlinkCommand&) = delete;
+    NetlinkCommand(NetlinkCommand&&) = default;
+    NetlinkCommand& operator=(NetlinkCommand&&) = default;
+    NetlinkCommand(
         int ncsiCmd, int operation = DEFAULT_VALUE,
         std::span<const unsigned char> p = std::span<const unsigned char>()) :
         ncsi_cmd(ncsiCmd), operation(operation), payload(p)
@@ -246,7 +246,7 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return static_cast<int>(NL_STOP);
 };
 
-int applyCmd(Interface& interface, const Command& cmd,
+int applyCmd(Interface& interface, const NetlinkCommand& cmd,
              int package = DEFAULT_VALUE, int channel = DEFAULT_VALUE,
              int flags = NONE, CallBack function = nullptr, void* arg = nullptr)
 {
@@ -410,11 +410,11 @@ std::optional<std::vector<unsigned char>>
 
     internal::sendCallBackContext ctx{};
 
-    int rc = internal::applyCmd(
-        *this,
-        internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD, operation,
-                          payload),
-        package, channel, NONE, internal::sendCallBack, &ctx);
+    internal::NetlinkCommand cmd(ncsi_nl_commands::NCSI_CMD_SEND_CMD, operation,
+                                 payload);
+
+    int rc = internal::applyCmd(*this, cmd, package, channel, NONE,
+                                internal::sendCallBack, &ctx);
 
     if (rc < 0)
     {
@@ -430,16 +430,18 @@ int Interface::setChannel(int package, int channel)
                "{INTERFACE}",
                "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
                "INTERFACE", this);
-    return internal::applyCmd(
-        *this, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_INTERFACE),
-        package, channel);
+
+    internal::NetlinkCommand cmd(ncsi_nl_commands::NCSI_CMD_SET_INTERFACE);
+
+    return internal::applyCmd(*this, cmd, package, channel);
 }
 
 int Interface::clearInterface()
 {
     lg2::debug("ClearInterface , INTERFACE : {INTERFACE}", "INTERFACE", this);
-    return internal::applyCmd(
-        *this, internal::Command(ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE));
+
+    internal::NetlinkCommand cmd(ncsi_nl_commands::NCSI_CMD_CLEAR_INTERFACE);
+    return internal::applyCmd(*this, cmd);
 }
 
 std::optional<InterfaceInfo> Interface::getInfo(int package)
@@ -454,9 +456,10 @@ std::optional<InterfaceInfo> Interface::getInfo(int package)
         .info = &info,
     };
 
-    rc = internal::applyCmd(
-        *this, internal::Command(ncsi_nl_commands::NCSI_CMD_PKG_INFO), package,
-        DEFAULT_VALUE, flags, internal::infoCallBack, &ctx);
+    internal::NetlinkCommand cmd(ncsi_nl_commands::NCSI_CMD_PKG_INFO);
+
+    rc = internal::applyCmd(*this, cmd, package, DEFAULT_VALUE, flags,
+                            internal::infoCallBack, &ctx);
 
     if (rc < 0)
     {
@@ -473,9 +476,10 @@ int Interface::setPackageMask(unsigned int mask)
     auto payload = std::span<const unsigned char>(
         reinterpret_cast<const unsigned char*>(&mask),
         reinterpret_cast<const unsigned char*>(&mask) + sizeof(decltype(mask)));
-    return internal::applyCmd(
-        *this, internal::Command(ncsi_nl_commands::NCSI_CMD_SET_PACKAGE_MASK, 0,
-                                 payload));
+
+    internal::NetlinkCommand cmd(ncsi_nl_commands::NCSI_CMD_SET_PACKAGE_MASK, 0,
+                                 payload);
+    return internal::applyCmd(*this, cmd);
 }
 
 int Interface::setChannelMask(int package, unsigned int mask)
@@ -487,12 +491,10 @@ int Interface::setChannelMask(int package, unsigned int mask)
     auto payload = std::span<const unsigned char>(
         reinterpret_cast<const unsigned char*>(&mask),
         reinterpret_cast<const unsigned char*>(&mask) + sizeof(decltype(mask)));
-    return internal::applyCmd(
-        *this,
-        internal::Command(ncsi_nl_commands::NCSI_CMD_SET_CHANNEL_MASK, 0,
-                          payload),
-        package);
-    return 0;
+
+    internal::NetlinkCommand cmd(ncsi_nl_commands::NCSI_CMD_SET_CHANNEL_MASK, 0,
+                                 payload);
+    return internal::applyCmd(*this, cmd);
 }
 
 } // namespace ncsi
