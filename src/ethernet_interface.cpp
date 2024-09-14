@@ -827,6 +827,7 @@ void EthernetInterface::writeConfigurationFile()
                 dnss.emplace_back(dns);
             }
         }
+        uint8_t prefixLength = 0;
         {
             auto& address = network["Address"];
             for (const auto& addr : addrs)
@@ -834,19 +835,43 @@ void EthernetInterface::writeConfigurationFile()
                 if (addr.second->origin() == IP::AddressOrigin::Static)
                 {
                     address.emplace_back(stdplus::toStr(addr.first));
+                    if (addr.second->type() == IP::Protocol::IPv4)
+                    {
+                        prefixLength = addr.second->prefixLength();
+                    }
                 }
             }
         }
         {
             if (!dhcp4())
             {
+                auto& gateways = network["Gateway"];
                 auto gateway4 = EthernetInterfaceIntf::defaultGateway();
-                if (!gateway4.empty())
+                if (!gateway4.empty() && prefixLength)
                 {
+                    gateways.emplace_back(gateway4);
                     auto& gateway4route = config.map["Route"].emplace_back();
                     gateway4route["Gateway"].emplace_back(gateway4);
                     gateway4route["GatewayOnLink"].emplace_back("true");
-                }
+
+                    std::string routingTableId = std::to_string(generateRouteTableID(interfaceName()));
+                    gateway4route["Table"].emplace_back(routingTableId);
+                    std::string routeAddressPrefix = generateNetworkRoute(gateway4,prefixLength);
+
+                    auto& routingPolicyTo =
+                        config.map["RoutingPolicyRule"].emplace_back();
+                    routingPolicyTo["Table"].emplace_back(routingTableId);
+                    routingPolicyTo["To"].emplace_back(routeAddressPrefix);
+                    auto& routingPolicyFrom =
+                        config.map["RoutingPolicyRule"].emplace_back();
+                    routingPolicyFrom["Table"].emplace_back(routingTableId);
+                    routingPolicyFrom["From"].emplace_back(routeAddressPrefix);
+                    auto& routingPolicyDestination =
+                        config.map["Route"].emplace_back();
+                    routingPolicyDestination["Table"].emplace_back(routingTableId);
+                    routingPolicyDestination["Destination"].emplace_back(routeAddressPrefix);
+
+		}
             }
 
             if (!ipv6AcceptRA())
