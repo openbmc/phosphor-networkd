@@ -5,6 +5,7 @@
 #include "config_parser.hpp"
 #include "types.hpp"
 
+#include <arpa/inet.h>
 #include <sys/wait.h>
 
 #include <phosphor-logging/elog-errors.hpp>
@@ -263,6 +264,37 @@ std::map<std::string, bool> parseLLDPConf()
     }
     lldpdConfig.close();
     return portStatus;
+}
+
+uint32_t generateRouteTableID(const std::string& iface)
+{
+    size_t hash = std::hash<std::string>{}(iface);
+    uint32_t id = static_cast<uint32_t>(hash & 0xFFFFFFFF);
+
+    return (id == 0) ? 1 : id;
+}
+
+std::string generateNetworkRoute(const std::string& ip, int prefixLength)
+{
+    in_addr addr{};
+    if ((inet_pton(AF_INET, ip.c_str(), &addr) != 1) || (prefixLength < 0) ||
+        (prefixLength > 32))
+    {
+        return {};
+    }
+
+    uint32_t ipInt = ntohl(addr.s_addr);
+    uint32_t mask = (prefixLength == 0) ? 0 : (~0U << (32 - prefixLength));
+    uint32_t networkInt = ipInt & mask;
+
+    in_addr networkAddr{};
+    networkAddr.s_addr = htonl(networkInt);
+
+    std::array<char, INET_ADDRSTRLEN> buf{};
+    if (!inet_ntop(AF_INET, &networkAddr, buf.data(), buf.size()))
+        return {};
+
+    return std::string(buf.data()) + "/" + std::to_string(prefixLength);
 }
 
 } // namespace network
