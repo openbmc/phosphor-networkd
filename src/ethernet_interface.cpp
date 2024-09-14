@@ -724,6 +724,7 @@ void EthernetInterface::writeConfigurationFile()
                 dnss.emplace_back(dns);
             }
         }
+        uint8_t prefixLength = 0;
         {
             auto& address = network["Address"];
             for (const auto& addr : addrs)
@@ -731,18 +732,50 @@ void EthernetInterface::writeConfigurationFile()
                 if (addr.second->origin() == IP::AddressOrigin::Static)
                 {
                     address.emplace_back(stdplus::toStr(addr.first));
+                    if (addr.second->type() == IP::Protocol::IPv4)
+                    {
+                        prefixLength = addr.second->prefixLength();
+                    }
                 }
             }
         }
         {
             if (!dhcp4())
             {
+                auto& gateways = network["Gateway"];
                 auto gateway4 = EthernetInterfaceIntf::defaultGateway();
-                if (!gateway4.empty())
+                if (!gateway4.empty() && prefixLength)
                 {
+                    gateways.emplace_back(gateway4);
                     auto& gateway4route = config.map["Route"].emplace_back();
                     gateway4route["Gateway"].emplace_back(gateway4);
                     gateway4route["GatewayOnLink"].emplace_back("true");
+                    // Creating different routing tables for each ethernet
+                    // interface to solve eth0 and eth1 route entry order issues
+                    // Routing table id of "eth0" interface is 10
+                    // Routing table id of "eth1" interface is 20
+                    std::string routingTableId;
+                    if (interfaceName() == "eth0")
+                    {
+                        routingTableId = "10";
+                    }
+                    else if (interfaceName() == "eth1")
+                    {
+                        routingTableId = "20";
+                    }
+                    gateway4route["Table"].emplace_back(routingTableId);
+                    std::string routeAddressPrefix =
+                        setIPv4AddressLastOctetToZero(gateway4);
+                    routeAddressPrefix =
+                        routeAddressPrefix + "/" + std::to_string(prefixLength);
+                    auto& routingPolicyTo =
+                        config.map["RoutingPolicyRule"].emplace_back();
+                    routingPolicyTo["Table"].emplace_back(routingTableId);
+                    routingPolicyTo["To"].emplace_back(routeAddressPrefix);
+                    auto& routingPolicyFrom =
+                        config.map["RoutingPolicyRule"].emplace_back();
+                    routingPolicyFrom["Table"].emplace_back(routingTableId);
+                    routingPolicyFrom["From"].emplace_back(routeAddressPrefix);
                 }
             }
 
