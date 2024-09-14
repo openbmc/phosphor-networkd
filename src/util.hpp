@@ -72,6 +72,11 @@ DHCPVal getDHCPValue(const config::Parser& config);
 bool getDHCPProp(const config::Parser& config, DHCPType dhcpType,
                  std::string_view key);
 
+/** @brief Set IPv4 address last octet to zero
+ *  @param[in] ip - IPv4 address
+ */
+std::string setIPv4AddressLastOctetToZero(const std::string& ip);
+
 namespace internal
 {
 
