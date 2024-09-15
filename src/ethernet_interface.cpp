@@ -474,9 +474,19 @@ ServerList EthernetInterface::staticNameServers(ServerList value)
 
 void EthernetInterface::loadNTPServers(const config::Parser& config)
 {
-    EthernetInterfaceIntf::ntpServers(getNTPServerFromTimeSyncd());
-    EthernetInterfaceIntf::staticNTPServers(
-        config.map.getValueStrings("Network", "NTP"));
+    ServerList ntpServers = getNTPServerFromTimeSyncd();
+    ServerList staticNTPServers = config.map.getValueStrings("Network", "NTP");
+
+    std::unordered_set<std::string> staticNTPServersSet(staticNTPServers.begin(), staticNTPServers.end());
+    ServerList networkSuppliedServers;
+
+    std::copy_if(ntpServers.begin(), ntpServers.end(), std::back_inserter(networkSuppliedServers),
+                 [&staticNTPServersSet](const std::string& server) {
+                     return staticNTPServersSet.find(server) == staticNTPServersSet.end();
+                 });
+
+    EthernetInterfaceIntf::ntpServers(networkSuppliedServers);
+    EthernetInterfaceIntf::staticNTPServers(staticNTPServers);
 }
 
 void EthernetInterface::loadNameServers(const config::Parser& config)
