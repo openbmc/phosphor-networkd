@@ -77,7 +77,26 @@ struct Interface
      * @param[in] payload - OEM data to send.
      * @returns the NCSI response message to this command, or no value on error.
      */
+    virtual std::optional<NCSIResponse> sendCommand(NCSICommand& cmd) = 0;
+
+    /**
+     * @brief Create a string representation of this interface
+     *
+     * @returns a string containing an interface identifier, for logging
+     */
+    virtual std::string toString() = 0;
+
+    /* virtual destructor for vtable */
+    virtual ~Interface() {};
+};
+
+std::string to_string(Interface& interface);
+
+struct NetlinkInterface : Interface
+{
+    /* implementations for Interface */
     std::optional<NCSIResponse> sendCommand(NCSICommand& cmd);
+    std::string toString();
 
     /* @brief  This function will ask underlying NCSI driver
      *         to set a specific  package or package/channel
@@ -123,10 +142,10 @@ struct Interface
      */
     int setChannelMask(int package, unsigned int mask);
 
+    NetlinkInterface(int ifindex);
+
     int ifindex;
 };
-
-std::string to_string(Interface& interface);
 
 } // namespace ncsi
 } // namespace network
