@@ -7,6 +7,8 @@
 
 #include <phosphor-logging/lg2.hpp>
 
+#include <optional>
+#include <span>
 #include <vector>
 
 namespace phosphor
@@ -15,6 +17,19 @@ namespace network
 {
 namespace ncsi
 {
+
+NCSICommand::NCSICommand(uint8_t opcode, uint8_t package,
+                         std::optional<uint8_t> channel,
+                         std::span<unsigned char> payload) :
+    opcode(opcode), package(package), channel(channel)
+{
+    this->payload.assign(payload.begin(), payload.end());
+}
+
+uint8_t NCSICommand::getChannel()
+{
+    return channel.value_or(CHANNEL_ID_NONE);
+}
 
 using CallBack = int (*)(struct nl_msg* msg, void* arg);
 
@@ -203,7 +218,7 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
 
 struct sendCallBackContext
 {
-    std::vector<unsigned char> msg;
+    NCSIResponse resp;
 };
 
 CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
@@ -241,7 +256,8 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     unsigned char* data =
         (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]) + sizeof(NCSIPacketHeader);
 
-    ctx->msg.assign(data, data + data_len);
+    /* todo: remaining members */
+    ctx->resp.full_payload.assign(data, data + data_len);
 
     return 0;
 };
@@ -397,29 +413,27 @@ std::string to_string(Interface& interface)
     return std::to_string(interface.ifindex);
 }
 
-std::optional<std::vector<unsigned char>>
-    Interface::sendOemCommand(int package, int channel, int operation,
-                              std::span<const unsigned char> payload)
+std::optional<NCSIResponse> Interface::sendCommand(NCSICommand& cmd)
 {
-    lg2::debug("Send OEM Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
+    lg2::debug("Send Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
                "INTERFACE: {INTERFACE}",
-               "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
-               "INTERFACE", this);
+               "CHANNEL", lg2::hex, cmd.getChannel(), "PACKAGE", lg2::hex,
+               cmd.package, "INTERFACE", this);
 
     internal::sendCallBackContext ctx{};
 
-    internal::NetlinkCommand cmd(ncsi_nl_commands::NCSI_CMD_SEND_CMD, operation,
-                                 payload);
+    internal::NetlinkCommand nl_cmd(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                                    cmd.opcode, cmd.payload);
 
-    int rc = internal::applyCmd(*this, cmd, package, channel, NONE,
-                                internal::sendCallBack, &ctx);
+    int rc = internal::applyCmd(*this, nl_cmd, cmd.package, cmd.getChannel(),
+                                NONE, internal::sendCallBack, &ctx);
 
     if (rc < 0)
     {
         return {};
     }
 
-    return ctx.msg;
+    return ctx.resp;
 }
 
 int Interface::setChannel(int package, int channel)
