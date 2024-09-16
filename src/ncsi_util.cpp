@@ -262,7 +262,7 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return 0;
 };
 
-int applyCmd(Interface& interface, const NetlinkCommand& cmd,
+int applyCmd(NetlinkInterface& interface, const NetlinkCommand& cmd,
              int package = DEFAULT_VALUE, int channel = DEFAULT_VALUE,
              int flags = NONE, CallBack function = nullptr, void* arg = nullptr)
 {
@@ -410,10 +410,17 @@ int applyCmd(Interface& interface, const NetlinkCommand& cmd,
 
 std::string to_string(Interface& interface)
 {
-    return std::to_string(interface.ifindex);
+    return interface.toString();
 }
 
-std::optional<NCSIResponse> Interface::sendCommand(NCSICommand& cmd)
+NetlinkInterface::NetlinkInterface(int ifindex) : ifindex(ifindex) {}
+
+std::string NetlinkInterface::toString()
+{
+    return std::to_string(ifindex);
+}
+
+std::optional<NCSIResponse> NetlinkInterface::sendCommand(NCSICommand& cmd)
 {
     lg2::debug("Send Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
                "INTERFACE: {INTERFACE}",
@@ -436,7 +443,7 @@ std::optional<NCSIResponse> Interface::sendCommand(NCSICommand& cmd)
     return ctx.resp;
 }
 
-int Interface::setChannel(int package, int channel)
+int NetlinkInterface::setChannel(int package, int channel)
 {
     lg2::debug("Set CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, INTERFACE : "
                "{INTERFACE}",
@@ -448,7 +455,7 @@ int Interface::setChannel(int package, int channel)
     return internal::applyCmd(*this, cmd, package, channel);
 }
 
-int Interface::clearInterface()
+int NetlinkInterface::clearInterface()
 {
     lg2::debug("ClearInterface , INTERFACE : {INTERFACE}", "INTERFACE", this);
 
@@ -456,7 +463,7 @@ int Interface::clearInterface()
     return internal::applyCmd(*this, cmd);
 }
 
-std::optional<InterfaceInfo> Interface::getInfo(int package)
+std::optional<InterfaceInfo> NetlinkInterface::getInfo(int package)
 {
     int rc, flags = package == DEFAULT_VALUE ? NLM_F_DUMP : NONE;
     InterfaceInfo info;
@@ -481,7 +488,7 @@ std::optional<InterfaceInfo> Interface::getInfo(int package)
     return info;
 }
 
-int Interface::setPackageMask(unsigned int mask)
+int NetlinkInterface::setPackageMask(unsigned int mask)
 {
     lg2::debug("Set Package Mask , INTERFACE: {INTERFACE} MASK: {MASK}",
                "INTERFACE", this, "MASK", lg2::hex, mask);
@@ -494,7 +501,7 @@ int Interface::setPackageMask(unsigned int mask)
     return internal::applyCmd(*this, cmd);
 }
 
-int Interface::setChannelMask(int package, unsigned int mask)
+int NetlinkInterface::setChannelMask(int package, unsigned int mask)
 {
     lg2::debug(
         "Set Channel Mask , INTERFACE: {INTERFACE}, PACKAGE : {PACKAGE} MASK: {MASK}",
