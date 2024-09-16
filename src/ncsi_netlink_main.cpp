@@ -16,6 +16,8 @@
 #include "argument.hpp"
 #include "ncsi_util.hpp"
 
+#include <linux/mctp.h>
+
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
@@ -94,6 +96,43 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
     return ret;
 }
 
+struct MCTPAddress
+{
+    int network;
+    uint8_t eid;
+};
+
+/* Parse a MCTP address string into network and EID components.
+ *
+ * A single int parses to just an EID, with MCTP_NET_ANY (which the
+ * kernel will resolve to the default network).
+ *
+ * A comma-separated set of two ints will parse to a specific network
+ * and EID.
+ */
+static MCTPAddress parseMCTPAddress(const std::string& str)
+{
+    std::string::size_type sep = str.find(',');
+    std::string eid_str;
+    MCTPAddress addr;
+
+    if (sep == std::string::npos)
+    {
+        addr.network = MCTP_NET_ANY;
+        eid_str = str;
+    }
+    else
+    {
+        std::string net_str = str.substr(0, sep);
+        addr.network = stoi(net_str);
+        eid_str = str.substr(sep + 1);
+    }
+
+    addr.eid = stoi(eid_str);
+
+    return addr;
+}
+
 int main(int argc, char** argv)
 {
     using namespace phosphor::network;
@@ -104,25 +143,51 @@ int main(int argc, char** argv)
     int channelInt{};
     int indexInt{};
     int operationInt{DEFAULT_VALUE};
+    NetlinkInterface* nl = nullptr;
+    Interface* interface;
 
     // Parse out interface argument.
     auto ifIndex = (options)["index"];
-    try
+    auto mctpAddrStr = (options)["mctp"];
+    if (ifIndex != options.emptyString)
     {
-        indexInt = stoi(ifIndex, nullptr);
-    }
-    catch (const std::exception& e)
-    {
-        exitWithError("Interface not specified.", argv);
-    }
+        try
+        {
+            indexInt = stoi(ifIndex, nullptr);
+        }
+        catch (const std::exception& e)
+        {
+            exitWithError("Invalid interface specified.", argv);
+        }
 
-    if (indexInt < 0)
+        if (indexInt < 0)
+        {
+            exitWithError("Interface value should be greater than equal to 0",
+                          argv);
+        }
+
+        nl = new NetlinkInterface(indexInt);
+        interface = nl;
+    }
+    else if (mctpAddrStr != options.emptyString)
     {
-        exitWithError("Interface value should be greater than equal to 0",
+        MCTPAddress addr;
+        try
+        {
+            addr = parseMCTPAddress(mctpAddrStr);
+        }
+        catch (const std::exception& e)
+        {
+            exitWithError("Invalid MCTP address specified.", argv);
+        }
+
+        interface = new MCTPInterface(addr.network, addr.eid);
+    }
+    else
+    {
+        exitWithError("An interface type (--index or --mctp) is required",
                       argv);
     }
-
-    NetlinkInterface interface(indexInt);
 
     // Parse out package argument.
     auto package = (options)["package"];
@@ -214,7 +279,7 @@ int main(int argc, char** argv)
                                           : std::nullopt;
         NCSICommand cmd(operationInt, packageInt, chan, payload);
 
-        auto resp = interface.sendCommand(cmd);
+        auto resp = interface->sendCommand(cmd);
         if (!resp)
         {
             return EXIT_FAILURE;
@@ -225,16 +290,25 @@ int main(int argc, char** argv)
     }
     else if ((options)["set"] == "true")
     {
+        if (!nl)
+        {
+            exitWithError("Interface does not support set operation", argv);
+        }
         // Can not perform set operation without package.
         if (packageInt == DEFAULT_VALUE)
         {
             exitWithError("Package not specified.", argv);
         }
-        return interface.setChannel(packageInt, channelInt);
+        return nl->setChannel(packageInt, channelInt);
     }
     else if ((options)["info"] == "true")
     {
-        auto info = interface.getInfo(packageInt);
+        if (!nl)
+        {
+            exitWithError("Interface does not support info operation", argv);
+        }
+
+        auto info = nl->getInfo(packageInt);
         if (!info)
         {
             return EXIT_FAILURE;
@@ -243,7 +317,11 @@ int main(int argc, char** argv)
     }
     else if ((options)["clear"] == "true")
     {
-        return interface.clearInterface();
+        if (!nl)
+        {
+            exitWithError("Interface does not support clear operation", argv);
+        }
+        return nl->clearInterface();
     }
     else if (!(options)["pmask"].empty())
     {
@@ -261,10 +339,15 @@ int main(int argc, char** argv)
         {
             exitWithError("Package mask value is not valid", argv);
         }
-        return interface.setPackageMask(mask);
+        return nl->setPackageMask(mask);
     }
     else if (!(options)["cmask"].empty())
     {
+        if (!nl)
+        {
+            exitWithError("Interface does not support channel mask operation",
+                          argv);
+        }
         if (packageInt == DEFAULT_VALUE)
         {
             exitWithError("Package is not specified", argv);
@@ -283,11 +366,14 @@ int main(int argc, char** argv)
         {
             exitWithError("Channel mask value is not valid", argv);
         }
-        return interface.setChannelMask(packageInt, mask);
+        return nl->setChannelMask(packageInt, mask);
     }
     else
     {
         exitWithError("No Command specified", argv);
     }
+
+    delete interface;
+
     return 0;
 }

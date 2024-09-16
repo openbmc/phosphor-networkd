@@ -68,6 +68,7 @@ void ArgumentParser::usage(char** argv)
         << "Options:\n"
            "    --help | -h       Print this menu.\n"
            "    --index=<device index> | -x <device index> Specify device ifindex.\n"
+           "    --mctp=<[net,]eid> | -m <[net,]eid> Specify MCTP device address.\n"
            "    --package=<package> | -p <package> Specify a package.\n"
            "    --channel=<channel> | -c <channel> Specify a channel.\n"
            "    --info  | -i      Retrieve info about NCSI topology.\n"
@@ -103,13 +104,14 @@ const option ArgumentParser::options[] = {
     {"package", required_argument, NULL, 'p'},
     {"channel", required_argument, NULL, 'c'},
     {"index", required_argument, NULL, 'x'},
+    {"mctp", required_argument, NULL, 'm'},
     {"help", no_argument, NULL, 'h'},
     {"pmask", required_argument, NULL, 'j'},
     {"cmask", required_argument, NULL, 'k'},
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsj:k:x:o:p:c:h?";
+const char* ArgumentParser::optionStr = "irsj:k:x:m:o:p:c:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
