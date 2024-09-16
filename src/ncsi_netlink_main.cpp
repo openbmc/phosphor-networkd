@@ -122,7 +122,7 @@ int main(int argc, char** argv)
                       argv);
     }
 
-    Interface interface{indexInt};
+    NetlinkInterface interface(indexInt);
 
     // Parse out package argument.
     auto package = (options)["package"];
