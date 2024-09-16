@@ -209,16 +209,19 @@ int main(int argc, char** argv)
             lg2::debug("Payload: {PAYLOAD}", "PAYLOAD", toHexStr(payload));
         }
 
-        auto cmd =
-            std::span<const unsigned char>(payload.begin(), payload.end());
-        auto resp =
-            interface.sendOemCommand(packageInt, channelInt, operationInt, cmd);
+        std::optional<uint8_t> chan = channelInt != DEFAULT_VALUE
+                                          ? std::make_optional(channelInt)
+                                          : std::nullopt;
+        NCSICommand cmd(operationInt, packageInt, chan, payload);
+
+        auto resp = interface.sendCommand(cmd);
         if (!resp)
         {
             return EXIT_FAILURE;
         }
         lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN",
-                   resp->size(), "DATA", toHexStr(*resp));
+                   resp->full_payload.size(), "DATA",
+                   toHexStr(resp->full_payload));
     }
     else if ((options)["set"] == "true")
     {
