@@ -1,5 +1,6 @@
 #include "ncsi_util.hpp"
 
+#include <linux/mctp.h>
 #include <linux/ncsi.h>
 #include <netlink/genl/ctrl.h>
 #include <netlink/genl/genl.h>
@@ -9,6 +10,7 @@
 
 #include <optional>
 #include <span>
+#include <system_error>
 #include <vector>
 
 namespace phosphor
@@ -514,6 +516,192 @@ int NetlinkInterface::setChannelMask(int package, unsigned int mask)
     internal::NetlinkCommand cmd(ncsi_nl_commands::NCSI_CMD_SET_CHANNEL_MASK, 0,
                                  payload);
     return internal::applyCmd(*this, cmd);
+}
+
+static const uint8_t MCTP_TYPE_NCSI = 2;
+
+struct NCSIResponsePayload
+{
+    uint16_t response;
+    uint16_t reason;
+};
+
+std::optional<NCSIResponse> MCTPInterface::sendCommand(NCSICommand& cmd)
+{
+    static const uint8_t iid = 0;  /* we only have one cmd outstanding */
+    static const uint8_t mcid = 0; /* no need to distinguish controllers */
+    const size_t maxRespLen = 16384;
+    size_t payloadLen, padLen;
+    ssize_t wlen, rlen;
+
+    payloadLen = cmd.payload.size();
+
+    internal::NCSIPacketHeader cmdHeader{};
+    cmdHeader.MCID = mcid;
+    cmdHeader.revision = 1;
+    cmdHeader.id = iid;
+    cmdHeader.type = cmd.opcode;
+    cmdHeader.channel = (uint8_t)(cmd.package << 5 | cmd.getChannel());
+    cmdHeader.length = htons(payloadLen);
+
+    struct iovec iov[3];
+    iov[0].iov_base = &cmdHeader;
+    iov[0].iov_len = sizeof(cmdHeader);
+    iov[1].iov_base = cmd.payload.data();
+    iov[1].iov_len = payloadLen;
+
+    /* the checksum must appear on a 4-byte boundary */
+    padLen = 4 - (payloadLen & 0x3);
+    if (padLen == 4)
+    {
+        padLen = 0;
+    }
+    uint8_t crc32buf[8] = {};
+    /* todo: set csum; zeros currently indicate no checksum present */
+    uint32_t crc32 = 0;
+
+    memcpy(crc32buf + padLen, &crc32, sizeof(crc32));
+    padLen += sizeof(crc32);
+
+    iov[2].iov_base = crc32buf;
+    iov[2].iov_len = padLen;
+
+    struct sockaddr_mctp addr = {};
+    addr.smctp_family = AF_MCTP;
+    addr.smctp_network = net;
+    addr.smctp_addr.s_addr = eid;
+    addr.smctp_tag = MCTP_TAG_OWNER;
+    addr.smctp_type = MCTP_TYPE_NCSI;
+
+    struct msghdr msg = {};
+    msg.msg_name = &addr;
+    msg.msg_namelen = sizeof(addr);
+    msg.msg_iov = iov;
+    msg.msg_iovlen = 3;
+
+    wlen = sendmsg(sd, &msg, 0);
+    if (wlen < 0)
+    {
+        lg2::error("Failed to send MCTP message, ERRNO: {ERRNO}", "ERRNO",
+                   -wlen);
+        return {};
+    }
+    else if ((size_t)wlen != sizeof(cmdHeader) + payloadLen + padLen)
+    {
+        lg2::error("Short write sending MCTP message, LEN: {LEN}", "LEN", wlen);
+        return {};
+    }
+
+    internal::NCSIPacketHeader* respHeader;
+    NCSIResponsePayload* respPayload;
+    NCSIResponse resp{};
+
+    resp.full_payload.resize(maxRespLen);
+    iov[0].iov_len = resp.full_payload.size();
+    iov[0].iov_base = resp.full_payload.data();
+
+    msg.msg_name = &addr;
+    msg.msg_namelen = sizeof(addr);
+    msg.msg_iov = iov;
+    msg.msg_iovlen = 1;
+
+    /* we have set SO_RCVTIMEO, so this won't block forever... */
+    rlen = recvmsg(sd, &msg, MSG_TRUNC);
+    if (rlen < 0)
+    {
+        lg2::error("Failed to read MCTP response, ERRNO: {ERRNO}", "ERRNO",
+                   -rlen);
+        return {};
+    }
+    else if ((size_t)rlen < sizeof(*respHeader) + sizeof(*respPayload))
+    {
+        lg2::error("Short read receiving MCTP message, LEN: {LEN}", "LEN",
+                   rlen);
+        return {};
+    }
+    else if ((size_t)rlen > maxRespLen)
+    {
+        lg2::error("MCTP response is too large, LEN: {LEN}", "LEN", rlen);
+        return {};
+    }
+
+    resp.full_payload.resize(rlen);
+
+    respHeader =
+        reinterpret_cast<decltype(respHeader)>(resp.full_payload.data());
+
+    /* header validation */
+    if (respHeader->MCID != mcid)
+    {
+        lg2::error("Invalid MCID {MCID} in response", "MCID", lg2::hex,
+                   respHeader->MCID);
+        return {};
+    }
+
+    if (respHeader->id != iid)
+    {
+        lg2::error("Invalid IID {IID} in response", "IID", lg2::hex,
+                   respHeader->id);
+        return {};
+    }
+
+    if (respHeader->type != (cmd.opcode | 0x80))
+    {
+        lg2::error("Invalid opcode {OPCODE} in response", "OPCODE", lg2::hex,
+                   respHeader->type);
+        return {};
+    }
+
+    payloadLen = ntohs(respHeader->length) & 0x3f;
+    /* we have determined that the payload size is larger than *respHeader,
+     * so cannot underflow here */
+    if (payloadLen > resp.full_payload.size() - sizeof(*respHeader))
+    {
+        lg2::error("Invalid header length {HDRLEN} (vs {LEN}) in response",
+                   "HDRLEN", payloadLen, "LEN",
+                   resp.full_payload.size() - sizeof(*respHeader));
+        return {};
+    }
+
+    resp.opcode = respHeader->type;
+    resp.payload =
+        std::span(resp.full_payload.begin() + sizeof(*respHeader), payloadLen);
+
+    respPayload = reinterpret_cast<decltype(respPayload)>(resp.payload.data());
+    resp.response = ntohs(respPayload->response);
+    resp.reason = ntohs(respPayload->reason);
+
+    return resp;
+}
+
+std::string MCTPInterface::toString()
+{
+    return std::to_string(net) + "," + std::to_string(eid);
+}
+
+MCTPInterface::MCTPInterface(int net, uint8_t eid) : net(net), eid(eid)
+{
+    static const struct timeval receiveTimeout = {
+        .tv_sec = 1,
+        .tv_usec = 0,
+    };
+
+    int _sd = socket(AF_MCTP, SOCK_DGRAM, 0);
+    if (_sd < 0)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Can't create MCTP socket");
+    }
+
+    int rc = setsockopt(_sd, SOL_SOCKET, SO_RCVTIMEO, &receiveTimeout,
+                        sizeof(receiveTimeout));
+    if (rc != 0)
+    {
+        throw std::system_error(errno, std::system_category(),
+                                "Can't set socket receive timemout");
+    }
+
+    sd = _sd;
 }
 
 } // namespace ncsi
