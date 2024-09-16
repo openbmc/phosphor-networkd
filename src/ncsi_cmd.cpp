@@ -17,6 +17,7 @@
 #include "ncsi_util.hpp"
 
 #include <getopt.h>
+#include <linux/mctp.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -40,10 +41,17 @@ struct GlobalOptions
     std::optional<unsigned int> channel;
 };
 
+struct MCTPAddress
+{
+    int network;
+    uint8_t eid;
+};
+
 const struct option options[] = {
     {"package", required_argument, NULL, 'p'},
     {"channel", required_argument, NULL, 'c'},
     {"interface", required_argument, NULL, 'i'},
+    {"mctp", required_argument, NULL, 'm'},
     {"help", no_argument, NULL, 'h'},
     {0, 0, 0, 0},
 };
@@ -58,10 +66,12 @@ static void print_usage(const char* progname)
         "\n"
         "Global options:\n"
         "    --interface IFACE, -i  Specify net device by ifindex.\n"
+        "    --mctp [NET,]EID, -m   Specify MCTP network device.\n"
         "    --package PACKAGE, -p  Specify a package.\n"
         "    --channel CHANNEL, -c  Specify a channel.\n"
         "\n"
-        "Both --interface/-i and --package/-p are required.\n"
+        "A --package/-p argument is required, as well as interface type "
+        "(--interface/-i or --mctp/-m)\n"
         "\n"
         "Subcommands:\n"
         "\n"
@@ -88,6 +98,43 @@ static std::optional<unsigned int>
         std::cerr << "Invalid " << label << " argument '" << str << "'\n";
         return {};
     }
+}
+
+static std::optional<MCTPAddress> parseMCTPAddress(const std::string& str)
+{
+    std::string::size_type sep = str.find(',');
+    std::string eid_str;
+    MCTPAddress addr;
+
+    if (sep == std::string::npos)
+    {
+        addr.network = MCTP_NET_ANY;
+        eid_str = str;
+    }
+    else
+    {
+        std::string net_str = str.substr(0, sep);
+        try
+        {
+            addr.network = stoi(net_str);
+        }
+        catch (const std::exception& e)
+        {
+            return {};
+        }
+        eid_str = str.substr(sep + 1);
+    }
+
+    try
+    {
+        addr.eid = stoi(eid_str);
+    }
+    catch (const std::exception& e)
+    {
+        return {};
+    }
+
+    return addr;
 }
 
 static std::optional<std::vector<unsigned char>>
@@ -126,6 +173,7 @@ static std::optional<std::tuple<GlobalOptions, int>>
     parseGlobalOptions(int argc, char* const* argv)
 {
     std::optional<unsigned int> chan, package, interface;
+    std::optional<MCTPAddress> mctp;
     const char* progname = argv[0];
     GlobalOptions opts{};
 
@@ -155,6 +203,14 @@ static std::optional<std::tuple<GlobalOptions, int>>
                 }
                 break;
 
+            case 'm':
+                mctp = parseMCTPAddress(optarg);
+                if (!mctp.has_value())
+                {
+                    return {};
+                }
+                break;
+
             case 'c':
                 chan = parseUnsigned(optarg, "channel");
                 if (!chan.has_value())
@@ -171,9 +227,24 @@ static std::optional<std::tuple<GlobalOptions, int>>
         }
     }
 
-    if (!interface.has_value())
+    if (interface.has_value() && mctp.has_value())
     {
-        std::cerr << "Missing interface, add an --interface argument\n";
+        std::cerr << "Only one of --interface or --mctp can be provided\n";
+        return {};
+    }
+    else if (interface.has_value())
+    {
+        opts.interface = std::make_unique<NetlinkInterface>(*interface);
+    }
+    else if (mctp.has_value())
+    {
+        MCTPAddress m = *mctp;
+        opts.interface = std::make_unique<MCTPInterface>(m.network, m.eid);
+    }
+    else
+    {
+        std::cerr << "Missing interface description, "
+                     "add a --mctp or --interface argument\n";
         return {};
     }
 
@@ -183,7 +254,6 @@ static std::optional<std::tuple<GlobalOptions, int>>
         return {};
     }
 
-    opts.interface = std::make_unique<NetlinkInterface>(*interface);
     opts.package = *package;
 
     return std::make_tuple(opts, optind);
