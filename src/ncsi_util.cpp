@@ -55,6 +55,230 @@ struct NCSIPacketHeader
     uint32_t rsvd[2];
 };
 
+struct NcsiNcDataResponsePacket
+{
+    NCSIPacketHeader header;
+    uint16_t response;
+    uint16_t reason;
+    uint8_t reserved[3];
+    uint8_t opcode;
+    unsigned char data[1500];
+};
+
+constexpr uint32_t NCSI_CORE_DUMP_HANDLE = 0xFFFF0000;
+constexpr uint32_t NCSI_CRASH_DUMP_HANDLE = 0xFFFF0001;
+
+class NcsiDumpTransfer
+{
+  public:
+    NcsiDumpTransfer(const std::string& fileName) : 
+        totalDataSize(0), abort(false)
+    {
+        outFile.open(fileName, std::ios::binary);
+        if (!outFile.is_open())
+        {
+            throw std::runtime_error("Failed to open file: " + fileName);
+        }
+    }
+
+    ~NcsiDumpTransfer()
+    {
+        if (outFile.is_open())
+        {
+            outFile.close();
+        }
+    }
+
+    int callback(struct nl_msg* msg)
+    {
+        auto nlh = nlmsg_hdr(msg);
+        struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+        static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+            {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+            {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+            {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+        };
+
+        auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+        if (ret)
+        {
+            lg2::error("Failed to parse response packet");
+            return ret;
+        }
+
+        if (tb[NCSI_ATTR_DATA] == nullptr)
+        {
+            lg2::error("Response: No data");
+            return -1;
+        }
+
+        struct NcsiNcDataResponsePacket* packet =
+            (struct NcsiNcDataResponsePacket*)nla_data(tb[NCSI_ATTR_DATA]);
+
+        uint16_t length = ntohs(packet->header.length);
+        uint16_t response = ntohs(packet->response);
+        uint16_t reason = ntohs(packet->reason);
+        opcode = packet->opcode;
+
+        std::string responseDesc;
+        switch (response)
+        {
+            case 0x0000:
+                responseDesc = "Command Completed";
+                break;
+            case 0x0001:
+                responseDesc = "Command Failed";
+                break;
+            case 0x0002:
+                responseDesc = "Command Unavailable";
+                break;
+            case 0x0003:
+                responseDesc = "Command Unsupported";
+                break;
+            case 0x0004:
+                responseDesc = "Delayed Response";
+                break;
+            default:
+                responseDesc = "Unknown response code.";
+                break;
+        }
+
+        lg2::debug(
+            "NcsiNcDataResponsePacket Info length: {LENGTH}, response: {RESPONSE} ({RESPONSE_DESC}), "
+            "reason: {REASON}, opcode: {OPCODE}",
+            "LENGTH", length, "RESPONSE", lg2::hex, response, "RESPONSE_DESC",
+            responseDesc, "REASON", lg2::hex, reason, "OPCODE", lg2::hex,
+            opcode);
+
+        if (response != 0) // Check response code for errors
+        {
+            std::string reasonDesc;
+            switch (reason)
+            {
+                case 0x0001:
+                    reasonDesc = "Interface Initialization Required";
+                    break;
+                case 0x0002:
+                    reasonDesc =
+                        "Parameter Is Invalid, Unsupported, or Out-of-Range";
+                    break;
+                case 0x0003:
+                    reasonDesc = "Channel Not Ready";
+                    break;
+                case 0x0004:
+                    reasonDesc = "Package Not Ready";
+                    break;
+                case 0x0005:
+                    reasonDesc = "Invalid Payload Length";
+                    break;
+                case 0x0006:
+                    reasonDesc = "Information Not Available";
+                    break;
+                case 0x0007:
+                    reasonDesc = "Intervention Required";
+                    break;
+                case 0x0008:
+                    reasonDesc = "Link Command Failed - Hardware Access Error";
+                    break;
+                case 0x0009:
+                    reasonDesc = "Command Timeout";
+                    break;
+                case 0x000A:
+                    reasonDesc = "Secondary Device Not Powered";
+                    break;
+                case 0x7FFF:
+                    reasonDesc = "Unknown/Unsupported Command Type";
+                    break;
+                case 0x4D01:
+                    reasonDesc =
+                        "Abort Transfer: NC cannot proceed with transfer.";
+                    break;
+                case 0x4D02:
+                    reasonDesc = "Invalid Handle Value: Data Handle is invalid or not supported.";
+                    break;
+                case 0x4D03:
+                    reasonDesc =
+                        "Sequence Count Error: Chunk Number requested is not consecutive with the previous number transmitted.";
+                    break;
+                default:
+                    if ((reason >= 0x8000) && (reason <= 0xFFFF))
+                    {
+                        reasonDesc = "OEM Reason Code";
+                    }
+                    else
+                    {
+                        reasonDesc = "Unknown reason code.";
+                    }
+                    break;
+            }
+            lg2::error(
+                "Response error detected, response code: {RESPONSE} ({RESPONSE_DESC}), reason code: {REASON} ({REASON_DESC})",
+                "RESPONSE", lg2::hex, response, "RESPONSE_DESC", responseDesc,
+                "REASON", lg2::hex, reason, "REASON_DESC", reasonDesc);
+            return -1;
+        }
+
+        if (length > 8)
+        {
+            // Ensure length is 4-byte aligned
+            if (length % 4 != 0)
+            {
+                lg2::error("Packet length is not 4-byte aligned: {LENGTH}",
+                           "LENGTH", length);
+                return -1;
+            }
+
+            auto dataSize = length - 8;
+            totalDataSize += dataSize;
+
+            lg2::debug("Response {DATA_LEN} bytes", "DATA_LEN", dataSize);
+            lg2::debug("Total Data Size So Far: {TOTAL_DATA_SIZE} bytes",
+                       "TOTAL_DATA_SIZE", totalDataSize);
+
+            if (outFile.is_open())
+            {
+                outFile.write(reinterpret_cast<const char*>(packet->data),
+                              dataSize);
+            }
+            else
+            {
+                lg2::error("Failed to write to file. File is not open.");
+                return -1;
+            }
+        }
+        else
+        {
+            lg2::error(
+                "Received response with insufficient data length: {LENGTH}. Expected more than 8 bytes.",
+                "LENGTH", length);
+            return -1;
+        }
+
+        return 0;
+    }
+
+    uint8_t getOpcode() const
+    {
+        return opcode;
+    }
+
+    void setAbort(bool value)
+    {
+        abort = value;
+    }
+
+    bool isAbort() const
+    {
+        return abort;
+    }
+
+  private:
+    uint8_t opcode;
+    uint32_t totalDataSize;
+    std::ofstream outFile;
+    bool abort;
+};
+
 class Command
 {
   public:
@@ -263,6 +487,19 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
                "DATA", str);
 
     return 0;
+};
+
+// Global variable to hold the current NcsiDumpTransfer instance
+NcsiDumpTransfer* currentTransfer = nullptr;
+
+CallBack NcsiDumpCallBack = [](struct nl_msg* msg, void* arg) {
+    *(int*)arg = 0;
+    if (currentTransfer == nullptr)
+    {
+        lg2::error("No active transfer instance");
+        return -1;
+    }
+    return currentTransfer->callback(msg);
 };
 
 int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
@@ -504,6 +741,162 @@ int setChannelMask(int ifindex, int package, unsigned int mask)
         internal::Command(ncsi_nl_commands::NCSI_CMD_SET_CHANNEL_MASK, 0,
                           payload),
         package);
+    return 0;
+}
+
+int fileDump(int ifindex, int package, int channel, const std::string& fileName,
+             const std::string& dataHandleStr)
+{
+    constexpr auto ncsiCmdCoreDump = 0x4D;
+    size_t processedLength = 0;
+    uint32_t dataHandle;
+
+    try
+    {
+        dataHandle = std::stoul(dataHandleStr, &processedLength, 16);
+        if (processedLength != dataHandleStr.length())
+        {
+            lg2::error("Invalid data handle string: {DATA_HANDLE_STR}",
+                       "DATA_HANDLE_STR", dataHandleStr);
+            return -1;
+        }
+        if (dataHandle > std::numeric_limits<uint32_t>::max())
+        {
+            lg2::error("Data handle out of range for uint32_t: {DATA_HANDLE}",
+                       "DATA_HANDLE", dataHandle);
+            return -1;
+        }
+        // Check if the data handle matches known valid values
+        if (dataHandle != internal::NCSI_CORE_DUMP_HANDLE &&
+            dataHandle != internal::NCSI_CRASH_DUMP_HANDLE)
+        {
+            lg2::error(
+                "Invalid data handle value. Expected NCSI_CORE_DUMP_HANDLE (0xFFFF0000) or NCSI_CRASH_DUMP_HANDLE (0xFFFF0001), got: {DATA_HANDLE}",
+                "DATA_HANDLE", lg2::hex, dataHandle);
+            return -1;
+        }
+    }
+    catch (const std::invalid_argument& e)
+    {
+        lg2::error(
+            "Invalid argument for data handle conversion: {DATA_HANDLE_STR}",
+            "DATA_HANDLE_STR", dataHandleStr);
+        return -1;
+    }
+    catch (const std::out_of_range& e)
+    {
+        lg2::error("Data handle out of range: {DATA_HANDLE_STR}",
+                   "DATA_HANDLE_STR", dataHandleStr);
+        return -1;
+    }
+
+
+    uint32_t chunkNum = 1;
+    bool isTransferComplete = false;
+
+    internal::NcsiDumpTransfer transfer(fileName);
+    internal::currentTransfer = &transfer;
+
+    while (!isTransferComplete)
+    {
+        std::array<unsigned char, 12> payload = {0x00};
+
+        if (chunkNum == 1)
+        {
+            // First chunk: Data Handle for core dump is 0xFFFF0000
+            payload[3] = 0; // Opcode for the first chunk
+            payload[8] = (dataHandle >> 24) & 0xFF;
+            payload[9] = (dataHandle >> 16) & 0xFF;
+            payload[10] = (dataHandle >> 8) & 0xFF;
+            payload[11] = dataHandle;
+        }
+        else
+        {
+            if (transfer.isAbort())
+            {
+                // For subsequent chunks after abort: Use opcode for abort
+                // message
+                payload[3] = 3; // Opcode for abort chunk
+                payload[8] = (chunkNum >> 24) & 0xFF;
+                payload[9] = (chunkNum >> 16) & 0xFF;
+                payload[10] = (chunkNum >> 8) & 0xFF;
+                payload[11] = chunkNum & 0xFF;
+            }
+            else
+            {
+                // For subsequent chunks: Use chunk number instead of data
+                // handle
+                payload[3] = 2; // Opcode for next chunk
+                payload[8] = (chunkNum >> 24) & 0xFF;
+                payload[9] = (chunkNum >> 16) & 0xFF;
+                payload[10] = (chunkNum >> 8) & 0xFF;
+                payload[11] = chunkNum & 0xFF;
+            }
+        }
+
+        lg2::debug(
+            "Send NCSI Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
+            "INTERFACE_INDEX: {INTERFACE_INDEX}, NCSI_CMD : {NCSI_CMD}, Chunk Number: {CHUNK_NUM}",
+            "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
+            "INTERFACE_INDEX", lg2::hex, ifindex, "NCSI_CMD", lg2::hex,
+            ncsiCmdCoreDump, "CHUNK_NUM", chunkNum);
+        lg2::debug("Payload: {PAYLOAD}", "PAYLOAD", toHexStr(payload));
+
+        int result = internal::applyCmd(
+            ifindex,
+            internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                              ncsiCmdCoreDump, payload),
+            package, channel, NONE, internal::NcsiDumpCallBack);
+
+        if (result < 0)
+        {
+            lg2::error(
+                "Error sending command for chunk number {CHUNK_NUM}, stopping",
+                "CHUNK_NUM", chunkNum);
+            break;
+        }
+
+        // Debug the opcode before deciding the next action
+        lg2::debug("Received Opcode: {OPCODE}", "OPCODE", lg2::hex,
+                   transfer.getOpcode());
+
+        // Check the opcode to determine the next action
+        switch (transfer.getOpcode())
+        {
+            case 0x1: // Initial chunk
+                if (chunkNum != 1)
+                {
+                    lg2::error("Unexpected chunk number for initial chunk: {CHUNK_NUM}", "CHUNK_NUM", chunkNum);
+                    return -1;
+                }
+                chunkNum++; // Proceed to the next chunk
+                break;
+            case 0x2:       // Middle chunk
+                if (chunkNum <= 1)
+                {
+                    lg2::error(
+                        "Invalid chunk number for middle chunk: {CHUNK_NUM}",
+                        "CHUNK_NUM", chunkNum);
+                    return -1;
+                }
+                chunkNum++;                // Proceed to the next chunk
+                break;
+            case 0x4:                      // Final chunk
+            case 0x5:                      // Initial and final chunk
+                isTransferComplete = true; // Transfer complete
+                break;
+            case 0x8:                      // Abort transfer
+                lg2::error("Transfer aborted by NIC");
+                transfer.setAbort(true);
+                isTransferComplete = true; // Stop fetching more chunks
+                break;
+            default:
+                lg2::error("Unexpected opcode: {OPCODE}", "OPCODE",
+                           transfer.getOpcode());
+                transfer.setAbort(true);
+        }
+    }
+
     return 0;
 }
 
