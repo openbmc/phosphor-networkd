@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1283155_e6900d16",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2024-09-20T22:35:36Z",
+      "side": 1,
+      "message": "If length \u003c\u003d 8, does it mean no dump content? Can you please add proper message handling in that case?",
+      "revId": "74386a9b51c3de9523f439322cc2c239f84de9d3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "456d89a8_5d54a8d0",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2024-09-20T22:35:36Z",
+      "side": 1,
+      "message": "As per spec -\n0xFFFF0000 Core dump Data Handle used to retrieve core dump\n0xFFFF0001 Crash dump Data Handle used to retrieve crash dump\n\nShouldn\u0027t we expose these 2 options in the ncsi-netlink command args rather than hardcoding? How would you handle crashdump otherwise?",
+      "revId": "74386a9b51c3de9523f439322cc2c239f84de9d3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18e133d6_9931ee29",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2024-09-20T22:35:36Z",
+      "side": 1,
+      "message": "Is this a success case and full crash file?",
+      "revId": "74386a9b51c3de9523f439322cc2c239f84de9d3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
