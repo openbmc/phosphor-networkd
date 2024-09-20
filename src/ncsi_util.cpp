@@ -55,6 +55,16 @@ struct NCSIPacketHeader
     uint32_t rsvd[2];
 };
 
+struct NcsiCoreDumpResponsePacket
+{
+    NCSIPacketHeader header;
+    uint16_t response;
+    uint16_t reason;
+    uint8_t reserved[3];
+    uint8_t opcode;
+    unsigned char data[];
+};
+
 class Command
 {
   public:
@@ -261,6 +271,85 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     auto str = toHexStr(std::span<const unsigned char>(data, data_len));
     lg2::debug("Response {DATA_LEN} bytes: {DATA}", "DATA_LEN", data_len,
                "DATA", str);
+
+    return 0;
+};
+
+static uint8_t opcode = 0;
+static uint32_t totalDataSize = 0;
+static std::ofstream outFile;
+
+CallBack NcsiCoreDumpCallBack = [](struct nl_msg* msg, void* arg) {
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+	lg2::error("Failed to parse response packet");
+	return ret;
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return -1;
+    }
+
+    struct NcsiCoreDumpResponsePacket* packet =
+        (struct NcsiCoreDumpResponsePacket*)nla_data(tb[NCSI_ATTR_DATA]);
+
+    uint16_t length = ntohs(packet->header.length);
+    uint16_t response = ntohs(packet->response);
+    uint16_t reason = ntohs(packet->reason);
+    opcode = packet->opcode;
+
+    lg2::debug(
+        "NcsiCoreDumpResponsePacket Info length: {LENGTH}, response: {RESPONSE}, "
+        "reason: {REASON}, opcode: {OPCODE}",
+        "LENGTH", length, "RESPONSE", lg2::hex, response,"REASON", lg2::hex, 
+        reason, "OPCODE", lg2::hex, opcode);
+
+    if (response != 0) // Check response code for errors
+    {
+        lg2::error("Response error detected, reason code: {REASON}", "REASON", 
+                   lg2::hex, reason);
+        return -1;
+    }
+
+    if (length > 8)
+    {
+        auto dataSize = length - 8;
+        totalDataSize += dataSize;
+
+        lg2::debug("Response {DATA_LEN} bytes", "DATA_LEN", dataSize);
+        lg2::debug("Total Data Size So Far: {TOTAL_DATA_SIZE} bytes", "TOTAL_DATA_SIZE", totalDataSize);
+
+        if (outFile.is_open())
+        {
+            outFile.write(reinterpret_cast<const char*>(packet->data), dataSize);
+        }
+        else
+        {
+            lg2::error("Failed to write to file. File is not open.");
+            return -1;
+        }
+    }
+    else
+    {
+        lg2::error(
+            "Received response with insufficient data length: {LENGTH}. Expected more than 8 bytes.", 
+            "LENGTH", length);
+        return -1;
+    }
 
     return 0;
 };
@@ -504,6 +593,97 @@ int setChannelMask(int ifindex, int package, unsigned int mask)
         internal::Command(ncsi_nl_commands::NCSI_CMD_SET_CHANNEL_MASK, 0,
                           payload),
         package);
+    return 0;
+}
+
+int fileDump(int ifindex, int package, int channel, const std::string& fileName, 
+             const std::string& dumpType)
+{
+    constexpr auto ncsiCmdCoreDump = 0x4D;
+    uint32_t dataHandle = (dumpType == "core") ? 0xffff0000 : 0xffff0001;
+    uint32_t chunkNum = 1;
+    bool isTransferComplete = false;
+
+    internal::outFile.open(fileName, std::ios::binary);
+    if (!internal::outFile.is_open())
+    {
+        lg2::error("Failed to open file: {FILENAME}", "FILENAME", fileName);
+        return -1;
+    }
+
+    while (!isTransferComplete)
+    {
+        std::array<unsigned char, 12> payload = {0x00};
+
+        if (chunkNum == 1)
+        {
+            // First chunk: Data Handle is 0xFFFF0000
+            payload[3] = 0; // Opcode for the first chunk
+            payload[8] = dataHandle >> 24;
+            payload[9] = dataHandle >> 16;
+            payload[10] = dataHandle >> 8;
+            payload[11] = dataHandle;
+        }
+        else
+        {
+            // For subsequent chunks: Use chunk number instead of data handle
+            payload[3] = 2;  // Opcode for next chunk
+            payload[8] = (chunkNum >> 24) & 0xFF;
+            payload[9] = (chunkNum >> 16) & 0xFF;
+            payload[10] = (chunkNum >> 8) & 0xFF;
+            payload[11] = chunkNum & 0xFF;
+        }
+
+        lg2::debug(
+            "Send NCSI Command, CHANNEL : {CHANNEL} , PACKAGE : {PACKAGE}, "
+            "INTERFACE_INDEX: {INTERFACE_INDEX}, NCSI_CMD : {NCSI_CMD}, Chunk Number: {CHUNK_NUM}",
+            "CHANNEL", lg2::hex, channel, "PACKAGE", lg2::hex, package,
+            "INTERFACE_INDEX", lg2::hex, ifindex, "NCSI_CMD", lg2::hex, 
+            ncsiCmdCoreDump, "CHUNK_NUM", chunkNum);
+        lg2::debug("Payload: {PAYLOAD}", "PAYLOAD", toHexStr(payload));
+
+        int result = internal::applyCmd(
+            ifindex, 
+            internal::Command(ncsi_nl_commands::NCSI_CMD_SEND_CMD,
+                              ncsiCmdCoreDump, payload),
+            package, channel, NONE, internal::NcsiCoreDumpCallBack);
+
+        if (result < 0)
+        {
+            lg2::error(
+                "Error sending command for chunk number {CHUNK_NUM}, stopping", 
+                "CHUNK_NUM", chunkNum);
+            break;
+        }
+
+        // Debug the opcode before deciding the next action
+        lg2::debug("Received Opcode: {OPCODE}", "OPCODE", lg2::hex, 
+                   internal::opcode);
+
+        // Check the opcode to determine the next action
+        switch (internal::opcode)
+        {
+            case 0x1:       // Initial chunk, continue to the next chunk
+            case 0x2:       // Middle chunk, continue to the next chunk
+                chunkNum++; // Proceed to the next chunk
+                break;
+            case 0x4:       // Final chunk
+            case 0x5:       // Initial and final chunk
+                isTransferComplete = true; // Transfer complete
+                break;
+            case 0x8:                      // Abort transfer
+                lg2::debug("Transfer aborted by NIC");
+                isTransferComplete = true; // Stop fetching more chunks
+                break;
+            default:
+                lg2::error("Unexpected opcode: {OPCODE}", "OPCODE", 
+                           internal::opcode);
+                return -1; // Invalid opcode, stop
+        }
+    }
+
+    internal::outFile.close();
+
     return 0;
 }
 
