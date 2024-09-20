@@ -197,6 +197,11 @@ int main(int argc, char** argv)
         }
         return ncsi::setChannelMask(indexInt, packageInt, mask);
     }
+    else if (!(options)["file-dump"].empty())
+    {
+	const std::string& fileName = (options)["file-dump"];
+	return ncsi::fileDump(indexInt, packageInt, channelInt, fileName);
+    }
     else
     {
         exitWithError("No Command specified", argv);

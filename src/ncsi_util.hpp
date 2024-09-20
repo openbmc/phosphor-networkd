@@ -1,6 +1,8 @@
 #pragma once
 
 #include <span>
+#include <string>
+#include <fstream>
 
 namespace phosphor
 {
@@ -74,6 +76,15 @@ int setPackageMask(int ifindex, unsigned int mask);
  * @returns 0 on success and negative value for failure.
  */
 int setChannelMask(int ifindex, int package, unsigned int mask);
+
+/* @brief  This function is used to dump ncis-coredump data.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @param[in] channel - Channel number with in the package.
+ * @param[in] fileName - Dump file name.
+ * @returns 0 on success and negative value for failure.
+ */
+int fileDump(int ifindex, int package, int channel, const std::string& fileName);
 
 } // namespace ncsi
 } // namespace network
