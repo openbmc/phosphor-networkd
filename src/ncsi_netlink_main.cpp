@@ -197,6 +197,21 @@ int main(int argc, char** argv)
         }
         return ncsi::setChannelMask(indexInt, packageInt, mask);
     }
+    else if (!(options)["dump-file"].empty() && !(options)["dump-type"].empty())
+    {
+        const std::string& fileName = options["dump-file"];
+        const std::string& dumpType = options["dump-type"];
+
+        if (dumpType == "core" || dumpType == "crash")
+        {
+            return ncsi::fileDump(indexInt, packageInt, channelInt, fileName,
+                                  dumpType);
+        }
+        else
+        {
+            exitWithError("DumpType value is not valid", argv);
+        }
+    }
     else
     {
         exitWithError("No Command specified", argv);
