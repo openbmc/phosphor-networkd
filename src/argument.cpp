@@ -76,6 +76,8 @@ void ArgumentParser::usage(char** argv)
            "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n"
            "    --pmask=<mask> | -j <mask> Bitmask to enable/disable packages\n"
            "    --cmask=<mask> | -k <mask> Bitmask to enable/disable channels\n"
+           "    --dump-file=<file> | -f <file> Specify dump file name.\n"
+           "    --dump-type=<type> | -d <type> Specify dump type (core or crash).\n"
            "\n"
            "Example commands:\n"
            "    1) Retrieve topology information:\n"
@@ -92,6 +94,10 @@ void ArgumentParser::usage(char** argv)
            "         ncsi-netlink -x 3 -j 1\n"
            "    7) Set Channel Mask\n"
            "         ncsi-netlink -x 3 -p 0 -k 1\n"
+           "    8} NCSI core dump\n"
+           "         ncsi-netlink -x 2 -p 0 -c 31 -f core.log -d core\n"
+           "    9} NCSI crash dump\n"
+           "         ncsi-netlink -x 2 -p 0 -c 31 -f crash.log -d crash\n"
            "\n";
 }
 
@@ -106,10 +112,12 @@ const option ArgumentParser::options[] = {
     {"help", no_argument, NULL, 'h'},
     {"pmask", required_argument, NULL, 'j'},
     {"cmask", required_argument, NULL, 'k'},
+    {"file-dump", required_argument, NULL, 'f'},
+    {"dump-type", required_argument, NULL, 'd'},
     {0, 0, 0, 0},
 };
 
-const char* ArgumentParser::optionStr = "irsj:k:x:o:p:c:h?";
+const char* ArgumentParser::optionStr = "irsf:d:j:k:x:o:p:c:h?";
 
 const std::string ArgumentParser::trueString = "true";
 const std::string ArgumentParser::emptyString = "";
