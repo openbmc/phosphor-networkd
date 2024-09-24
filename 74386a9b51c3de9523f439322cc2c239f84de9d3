@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce8551c7_2ff2df27",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-09-24T08:43:16Z",
+      "side": 1,
+      "message": "In the case of \u0027length \u003c\u003d 8\u0027, it indicates that the NC returned a non-zero response code, and an error will have already been returned in the callback function during the previous check. I will add message handling for this case.",
+      "parentUuid": "a1283155_e6900d16",
+      "revId": "74386a9b51c3de9523f439322cc2c239f84de9d3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "456d89a8_5d54a8d0",
@@ -35,6 +53,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b961427_73ef0b8b",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-09-24T08:43:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "456d89a8_5d54a8d0",
+      "revId": "74386a9b51c3de9523f439322cc2c239f84de9d3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "18e133d6_9931ee29",
@@ -48,6 +84,24 @@
       "writtenOn": "2024-09-20T22:35:36Z",
       "side": 1,
       "message": "Is this a success case and full crash file?",
+      "revId": "74386a9b51c3de9523f439322cc2c239f84de9d3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "31e68b43_164a56b1",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-09-24T08:43:16Z",
+      "side": 1,
+      "message": "It only means that the NC wants to \u0027terminate the transfer,\u0027 and the NCSI specification doesn\u0027t define this part. I believe it depends on the NIC vendor.",
+      "parentUuid": "18e133d6_9931ee29",
       "revId": "74386a9b51c3de9523f439322cc2c239f84de9d3",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
