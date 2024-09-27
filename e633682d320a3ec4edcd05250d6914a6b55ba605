@@ -16,6 +16,23 @@
       "message": "LGTM",
       "revId": "e633682d320a3ec4edcd05250d6914a6b55ba605",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27e975d9_0b1df268",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000994
+      },
+      "writtenOn": "2024-09-27T02:30:13Z",
+      "side": 1,
+      "message": "Hi all, please help me review and raise your comments! Thank you very much !\n\nThank @Johnathan and @Thang for your review with +1 scores.",
+      "revId": "e633682d320a3ec4edcd05250d6914a6b55ba605",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
