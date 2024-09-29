@@ -33,6 +33,23 @@
       "message": "Hi all, please help me review and raise your comments! Thank you very much !\n\nThank @Johnathan and @Thang for your review with +1 scores.",
       "revId": "e633682d320a3ec4edcd05250d6914a6b55ba605",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1240e252_42c147f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001049
+      },
+      "writtenOn": "2024-09-29T05:39:32Z",
+      "side": 1,
+      "message": "Looks good to me.",
+      "revId": "e633682d320a3ec4edcd05250d6914a6b55ba605",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
