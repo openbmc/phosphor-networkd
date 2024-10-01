@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98c1a281_32fd6266",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002144
+      },
+      "writtenOn": "2024-10-01T20:36:24Z",
+      "side": 1,
+      "message": "There is no  Jenkins build",
+      "revId": "eae08a288e03fb7af7a03efeb7e4925df0304b57",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
