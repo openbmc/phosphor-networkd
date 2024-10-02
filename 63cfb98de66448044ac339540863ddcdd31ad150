@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "65ce3826_ce174dd8",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-02T21:39:58Z",
+      "side": 1,
+      "message": "Sure. Removed extra debug logs.",
+      "parentUuid": "b67f83d2_17cbf874",
+      "revId": "63cfb98de66448044ac339540863ddcdd31ad150",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf8f9d79_2abfbb86",
@@ -48,6 +66,30 @@
       "writtenOn": "2024-10-01T02:50:43Z",
       "side": 1,
       "message": "nit: If you use `PHOSPHOR_LOG2_USING_WITH_FLAGS;` you don\u0027t have to prefix debug/hex with `lg2`.",
+      "range": {
+        "startLine": 38,
+        "startChar": 8,
+        "endLine": 38,
+        "endChar": 13
+      },
+      "revId": "63cfb98de66448044ac339540863ddcdd31ad150",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "423dd83a_2889c7e8",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-02T21:39:58Z",
+      "side": 1,
+      "message": "Thanks!. Using PHOSPHOR_LOG2_USING_WITH_FLAGS now",
+      "parentUuid": "cf8f9d79_2abfbb86",
       "range": {
         "startLine": 38,
         "startChar": 8,
@@ -81,6 +123,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9831a70_bd73b20f",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-02T21:39:58Z",
+      "side": 1,
+      "message": "Removed the inconsistent usage.",
+      "parentUuid": "5aa31a03_8a1ca839",
+      "range": {
+        "startLine": 41,
+        "startChar": 28,
+        "endLine": 41,
+        "endChar": 56
+      },
+      "revId": "63cfb98de66448044ac339540863ddcdd31ad150",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "96c36568_cfde1199",
@@ -104,6 +170,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba03b322_37a56cad",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-02T21:39:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96c36568_cfde1199",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 43
+      },
+      "revId": "63cfb98de66448044ac339540863ddcdd31ad150",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b64cce8d_1cfea2e3",
@@ -117,6 +207,30 @@
       "writtenOn": "2024-10-01T02:50:43Z",
       "side": 1,
       "message": "`int` doesn\u0027t seem appropriate for these parameters.  `size_t`?",
+      "range": {
+        "startLine": 57,
+        "startChar": 16,
+        "endLine": 57,
+        "endChar": 53
+      },
+      "revId": "63cfb98de66448044ac339540863ddcdd31ad150",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "274d4b65_a2c894d3",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-02T21:39:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b64cce8d_1cfea2e3",
       "range": {
         "startLine": 57,
         "startChar": 16,
@@ -173,6 +287,54 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a09521ee_c1c11af8",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-02T21:39:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "508988a1_5773977e",
+      "range": {
+        "startLine": 64,
+        "startChar": 59,
+        "endLine": 64,
+        "endChar": 66
+      },
+      "revId": "63cfb98de66448044ac339540863ddcdd31ad150",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e5f345e_fd362ca3",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-02T21:39:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66d8f5bc_35cbc5c9",
+      "range": {
+        "startLine": 64,
+        "startChar": 38,
+        "endLine": 64,
+        "endChar": 48
+      },
+      "revId": "63cfb98de66448044ac339540863ddcdd31ad150",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "608e2d13_99f0340a",
@@ -186,6 +348,30 @@
       "writtenOn": "2024-10-01T02:50:43Z",
       "side": 1,
       "message": "This seems very strange.  Why are we using Cereal for going in and out of a buffer for netlink?  Maybe we\u0027re getting lucky that Cereal does what we happen to want, but I don\u0027t trust it.  I\u0027d be surprised if the maintainers here were happy about it.",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 5
+      },
+      "revId": "63cfb98de66448044ac339540863ddcdd31ad150",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12df9672_d8138707",
+        "filename": "src/ncsi_disable_vlan.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-02T21:39:58Z",
+      "side": 1,
+      "message": "Sure Patrick. Made the changes to not use Cereal now.",
+      "parentUuid": "608e2d13_99f0340a",
       "range": {
         "startLine": 22,
         "startChar": 0,
@@ -219,6 +405,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f810192_a35c221e",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-02T21:39:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b0a2d45_a9371035",
+      "range": {
+        "startLine": 200,
+        "startChar": 0,
+        "endLine": 200,
+        "endChar": 3
+      },
+      "revId": "63cfb98de66448044ac339540863ddcdd31ad150",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f57d6e6e_41b5775b",
@@ -232,6 +442,30 @@
       "writtenOn": "2024-10-01T02:50:43Z",
       "side": 1,
       "message": "Move this into the `if`?",
+      "range": {
+        "startLine": 238,
+        "startChar": 0,
+        "endLine": 239,
+        "endChar": 50
+      },
+      "revId": "63cfb98de66448044ac339540863ddcdd31ad150",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eaa47904_860257a6",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-02T21:39:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f57d6e6e_41b5775b",
       "range": {
         "startLine": 238,
         "startChar": 0,
