@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96cde2de_aab4ddc6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000994
+      },
+      "writtenOn": "2024-10-07T11:18:45Z",
+      "side": 1,
+      "message": "Thank @Arun and @Smriti-Ayushi with your +1 scores!",
+      "revId": "ba6dd021eb33ab9773fd2cf80991123fb91057c6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
