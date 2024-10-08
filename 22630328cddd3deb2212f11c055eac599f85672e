@@ -63,6 +63,30 @@
       },
       "revId": "22630328cddd3deb2212f11c055eac599f85672e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02ad2448_22eeb40e",
+        "filename": "src/ncsi_disable_vlan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-08T08:51:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "61cdba6a_d9b50b12",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 65,
+        "endChar": 35
+      },
+      "revId": "22630328cddd3deb2212f11c055eac599f85672e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
