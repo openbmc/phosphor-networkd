@@ -1,5 +1,7 @@
 #include "ncsi_util.hpp"
 
+#include "ncsi_stats.hpp"
+
 #include <linux/ncsi.h>
 #include <netlink/genl/ctrl.h>
 #include <netlink/genl/genl.h>
@@ -9,6 +11,7 @@
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
 
+#include <iostream>
 #include <vector>
 
 namespace phosphor
@@ -17,8 +20,6 @@ namespace network
 {
 namespace ncsi
 {
-
-using CallBack = int (*)(struct nl_msg* msg, void* arg);
 
 static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 {
@@ -42,38 +43,6 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 
 namespace internal
 {
-
-struct NCSIPacketHeader
-{
-    uint8_t MCID;
-    uint8_t revision;
-    uint8_t reserved;
-    uint8_t id;
-    uint8_t type;
-    uint8_t channel;
-    uint16_t length;
-    uint32_t rsvd[2];
-};
-
-class Command
-{
-  public:
-    Command() = delete;
-    ~Command() = default;
-    Command(const Command&) = delete;
-    Command& operator=(const Command&) = delete;
-    Command(Command&&) = default;
-    Command& operator=(Command&&) = default;
-    Command(
-        int ncsiCmd, int operation = DEFAULT_VALUE,
-        std::span<const unsigned char> p = std::span<const unsigned char>()) :
-        ncsi_cmd(ncsiCmd), operation(operation), payload(p)
-    {}
-
-    int ncsi_cmd;
-    int operation;
-    std::span<const unsigned char> payload;
-};
 
 using nlMsgPtr = std::unique_ptr<nl_msg, decltype(&::nlmsg_free)>;
 using nlSocketPtr = std::unique_ptr<nl_sock, decltype(&::nl_socket_free)>;
@@ -265,9 +234,53 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return 0;
 };
 
-int applyCmd(int ifindex, const Command& cmd, int package = DEFAULT_VALUE,
-             int channel = DEFAULT_VALUE, int flags = NONE,
-             CallBack function = nullptr)
+std::span<const unsigned char>
+    getNcsiCommandPayload(struct nl_msg* msg, void* arg)
+{
+    using namespace phosphor::network::ncsi;
+    auto nlh = nlmsg_hdr(msg);
+    struct nlattr* tb[NCSI_ATTR_MAX + 1] = {nullptr};
+    static struct nla_policy ncsiPolicy[NCSI_ATTR_MAX + 1] = {
+        {NLA_UNSPEC, 0, 0}, {NLA_U32, 0, 0}, {NLA_NESTED, 0, 0},
+        {NLA_U32, 0, 0},    {NLA_U32, 0, 0}, {NLA_BINARY, 0, 0},
+        {NLA_FLAG, 0, 0},   {NLA_U32, 0, 0}, {NLA_U32, 0, 0},
+    };
+
+    *(int*)arg = 0;
+
+    auto ret = genlmsg_parse(nlh, 0, tb, NCSI_ATTR_MAX, ncsiPolicy);
+    if (ret)
+    {
+        lg2::error("Failed to parse package");
+        return std::span<const unsigned char>();
+    }
+
+    if (tb[NCSI_ATTR_DATA] == nullptr)
+    {
+        lg2::error("Response: No data");
+        return std::span<const unsigned char>();
+    }
+
+    auto data_len = nla_len(tb[NCSI_ATTR_DATA]);
+    unsigned char* data = (unsigned char*)nla_data(tb[NCSI_ATTR_DATA]);
+
+    return std::span<const unsigned char>(data, data_len);
+}
+
+/*CallBack statsCallback = [](struct nl_msg* msg, void* arg) {
+    auto payload = getNcsiCommandPayload(msg, arg);
+
+    if (!payload.empty())
+    {
+      auto statsResponse =  statsResponseData(payload);
+      std::cout << statsResponse;
+    }
+
+    return 0;
+};*/
+
+int applyCmd(int ifindex, const Command& cmd, int package, int channel,
+             int flags, CallBack function)
 {
     int cb_ret = 0;
     nlSocketPtr socket(nl_socket_alloc(), &::nl_socket_free);
