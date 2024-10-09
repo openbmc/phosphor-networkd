@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <span>
 
 namespace phosphor
@@ -9,8 +10,26 @@ namespace network
 namespace ncsi
 {
 
+// NCSI PACKET TYPE
+// Control packet type for Get statistics
+static constexpr auto ncsiCmdGetStatistics = 0x18;
 constexpr auto DEFAULT_VALUE = -1;
 constexpr auto NONE = 0;
+
+namespace internal
+{
+struct NCSIPacketHeader
+{
+    uint8_t MCID;
+    uint8_t revision;
+    uint8_t reserved;
+    uint8_t id;
+    uint8_t type;
+    uint8_t channel;
+    uint16_t length;
+    uint32_t rsvd[2];
+};
+} // namespace internal
 
 /* @brief  This function will ask underlying NCSI driver
  *         to send an OEM command (command type 0x50) with
@@ -74,6 +93,13 @@ int setPackageMask(int ifindex, unsigned int mask);
  * @returns 0 on success and negative value for failure.
  */
 int setChannelMask(int ifindex, int package, unsigned int mask);
+/* @brief  This function is used to get NCSI controller
+           packet stats.
+ * @param[in] ifindex - Interface Index.
+ * @param[in] package - NCSI Package.
+ * @returns 0 on success and negative value for failure.
+ */
+int getStats(int ifindex, int package);
 
 } // namespace ncsi
 } // namespace network
