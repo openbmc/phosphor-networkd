@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 #include "argument.hpp"
+#include "ncsi_stats.hpp"
 #include "ncsi_util.hpp"
 
 #include <phosphor-logging/lg2.hpp>
@@ -196,6 +197,10 @@ int main(int argc, char** argv)
             exitWithError("Channel mask value is not valid", argv);
         }
         return ncsi::setChannelMask(indexInt, packageInt, mask);
+    }
+    else if ((options)["stats"] == "true")
+    {
+        return ncsi::getStats(indexInt, packageInt);
     }
     else
     {
