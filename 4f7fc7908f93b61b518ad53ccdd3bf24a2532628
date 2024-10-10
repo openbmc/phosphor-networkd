@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6cb1e855_f61db4bd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-10T09:53:50Z",
+      "side": 1,
+      "message": "Hi Sharan, Please go through https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/74288 and make it similar except for Cereal related functionality",
+      "revId": "4f7fc7908f93b61b518ad53ccdd3bf24a2532628",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
