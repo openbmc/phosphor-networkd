@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a021f85_29d179b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-10-11T15:09:25Z",
+      "side": 1,
+      "message": "Just a few questions, overall this looks good.",
+      "revId": "b4a2bef1a52a25cbbfeb5e432d6b9175cd5b267e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "319e3c99_f305721b",
+        "filename": "src/argument.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-10-11T15:09:25Z",
+      "side": 1,
+      "message": "How does [net,]eid map to \u003cdevice index\u003e?\nIs this \u003cdevice index\u003e different than that used for --index?\nAre you planning on providing an example invocation?",
+      "revId": "b4a2bef1a52a25cbbfeb5e432d6b9175cd5b267e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "acf9eff7_0eb38afa",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-10-11T15:09:25Z",
+      "side": 1,
+      "message": "Is there a reason these need to be shared_ptr?\nThese appear to be unique_ptr in nature from what I can tell.",
+      "revId": "b4a2bef1a52a25cbbfeb5e432d6b9175cd5b267e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb7ba0c9_60d711db",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-10-11T15:09:25Z",
+      "side": 1,
+      "message": "Is there any benefit gained by changing the preceding three lines to constexpr?\nThese are invariant, and known at compile time.\nDo you have a purpose in this form of definition?",
+      "revId": "b4a2bef1a52a25cbbfeb5e432d6b9175cd5b267e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
