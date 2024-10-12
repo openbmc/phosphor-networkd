@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "761fd19e_e2db372b",
+        "filename": "src/argument.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-10-12T01:56:23Z",
+      "side": 1,
+      "message": "When we\u0027re using a NCSI-over-MCTP connection, there is likely no corresponding network device. So, we would only specify either `--index` (for a \"local\" Linux network device) or `--mctp` (for a device that is reachable over MCTP).\n\nGood idea on adding an example invocation, I\u0027ll update the help text to add one.",
+      "parentUuid": "319e3c99_f305721b",
+      "revId": "b4a2bef1a52a25cbbfeb5e432d6b9175cd5b267e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "acf9eff7_0eb38afa",
         "filename": "src/ncsi_netlink_main.cpp",
         "patchSetId": 4
@@ -54,6 +72,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3a05668a_90b3761a",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-10-12T01:56:23Z",
+      "side": 1,
+      "message": "The `interface` pointer may be copied into the `nl` pointer (but only in the case of a netlink-based connection, as there are facilities that are only available over netlink). So, we need the `shared_ptr` refcounting to determine when we\u0027re safe to delete the underlying interface.\n\nCurrently, those two vars do have the same scope, so this is mostly academic, but I\u0027d say that using a `shared_ptr` is likely safer against future changes.",
+      "parentUuid": "acf9eff7_0eb38afa",
+      "revId": "b4a2bef1a52a25cbbfeb5e432d6b9175cd5b267e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cb7ba0c9_60d711db",
         "filename": "src/ncsi_util.cpp",
         "patchSetId": 4
@@ -65,6 +101,24 @@
       "writtenOn": "2024-10-11T15:09:25Z",
       "side": 1,
       "message": "Is there any benefit gained by changing the preceding three lines to constexpr?\nThese are invariant, and known at compile time.\nDo you have a purpose in this form of definition?",
+      "revId": "b4a2bef1a52a25cbbfeb5e432d6b9175cd5b267e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02bc4cf2_241bf10b",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-10-12T01:56:23Z",
+      "side": 1,
+      "message": "No particular puropose for `const` over `constexpr`, it\u0027s just my C background showing :) I\u0027ll change to `constexpr`.",
+      "parentUuid": "cb7ba0c9_60d711db",
       "revId": "b4a2bef1a52a25cbbfeb5e432d6b9175cd5b267e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
