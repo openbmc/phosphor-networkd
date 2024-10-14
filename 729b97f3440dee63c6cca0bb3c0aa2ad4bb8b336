@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3348b11e_8fe0ad5b",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2024-10-14T13:14:18Z",
+      "side": 1,
+      "message": "why we are not returning the ret here?",
+      "range": {
+        "startLine": 408,
+        "startChar": 11,
+        "endLine": 408,
+        "endChar": 36
+      },
+      "revId": "729b97f3440dee63c6cca0bb3c0aa2ad4bb8b336",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
