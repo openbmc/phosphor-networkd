@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccdcc7f0_627074d5",
+        "filename": "gen/meson.build",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-10-14T18:19:10Z",
+      "side": 1,
+      "message": "The header indicates this is generated.\nIs this the correct spot to fix this?",
+      "revId": "99b9785e1bc99b9de3abb5ad5c5de1a07fcd69db",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
