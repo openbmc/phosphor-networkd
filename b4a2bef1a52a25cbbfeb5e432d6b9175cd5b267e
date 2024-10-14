@@ -53,6 +53,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "51590e6a_a86dd649",
+        "filename": "src/argument.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-10-14T01:50:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "761fd19e_e2db372b",
+      "revId": "b4a2bef1a52a25cbbfeb5e432d6b9175cd5b267e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "acf9eff7_0eb38afa",
@@ -119,6 +137,24 @@
       "side": 1,
       "message": "No particular puropose for `const` over `constexpr`, it\u0027s just my C background showing :) I\u0027ll change to `constexpr`.",
       "parentUuid": "cb7ba0c9_60d711db",
+      "revId": "b4a2bef1a52a25cbbfeb5e432d6b9175cd5b267e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "acc79dbb_734d0ad5",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-10-14T01:50:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02bc4cf2_241bf10b",
       "revId": "b4a2bef1a52a25cbbfeb5e432d6b9175cd5b267e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
