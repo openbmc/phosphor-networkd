@@ -16,6 +16,24 @@
       "message": "why not define this function inside Interface class itself?",
       "revId": "8bf6eda2181211b1a49e82ecbf6adb7b12aac470",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "870e5d3d_4c3b386b",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-10-15T02:55:55Z",
+      "side": 1,
+      "message": "Because that doesn\u0027t satisfy `lg2`\u0027s `has_to_string` concept:\n\n```\ntemplate \u003ctypename T\u003e\nconcept has_to_string \u003d requires(T\u0026\u0026 t) { to_string(t); };\n```\n\nWe need a to_string() function separately (with an `Interface\u0026` argument) for that.",
+      "parentUuid": "958935d9_0d150f43",
+      "revId": "8bf6eda2181211b1a49e82ecbf6adb7b12aac470",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
