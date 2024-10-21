@@ -46,6 +46,30 @@
       },
       "revId": "729b97f3440dee63c6cca0bb3c0aa2ad4bb8b336",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5116c584_b00ec2f0",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2024-10-21T13:41:50Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "729c8cbd_e0dd62cb",
+      "range": {
+        "startLine": 408,
+        "startChar": 11,
+        "endLine": 408,
+        "endChar": 36
+      },
+      "revId": "729b97f3440dee63c6cca0bb3c0aa2ad4bb8b336",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
