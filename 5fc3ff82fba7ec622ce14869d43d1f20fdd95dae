@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c429bafb_cc60b764",
+        "filename": "src/ncsi_get_cap.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1002111
+      },
+      "writtenOn": "2024-10-21T05:45:14Z",
+      "side": 1,
+      "message": "dont use memcpy\n\ninstead\n\nrefer for e.g\n\nstruct DisableVlanResponsePacket\n{\n    NCSIPacketHeader header;\n    uint16_t response;\n    uint16_t reason;\n    uint32_t checksum;\n    uint8_t pad[22];\n\n    DisableVlanResponsePacket(std::span\u003cconst uint8_t\u003e data);\n};\n\nDisableVlanResponsePacket::DisableVlanResponsePacket(\n    std::span\u003cconst unsigned char\u003e buffer)\n{\n    header.type \u003d buffer[4];\n    header.length \u003d ((buffer[6] \u003c\u003c 8) | buffer[7]);\n    response \u003d ((buffer[16] \u003c\u003c 8) | buffer[17]);\n    reason \u003d ((buffer[18] \u003c\u003c 8) | buffer[19]);\n}",
+      "revId": "5fc3ff82fba7ec622ce14869d43d1f20fdd95dae",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
