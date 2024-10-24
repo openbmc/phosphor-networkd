@@ -34,6 +34,24 @@
       "parentUuid": "70afacfb_99aa5575",
       "revId": "c32e6af2df2f00b26e5e715a12c7ba58d38d8578",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "53dab447_a3008ebd",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-10-24T13:56:09Z",
+      "side": 1,
+      "message": "this has the life time of the interface class anyway. So need not held in unique_ptr.",
+      "parentUuid": "da3e6d8b_0a1e55c1",
+      "revId": "c32e6af2df2f00b26e5e715a12c7ba58d38d8578",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }

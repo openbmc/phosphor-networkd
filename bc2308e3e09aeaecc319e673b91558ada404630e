@@ -125,6 +125,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "249f22ea_0f3182fd",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1015,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-10-24T13:56:09Z",
+      "side": 1,
+      "message": "Then why cant we have single match as William suggested in manager level?",
+      "parentUuid": "cf2f3d00_8ab4aa78",
+      "revId": "bc2308e3e09aeaecc319e673b91558ada404630e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "33751fe2_ee965424",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 2
