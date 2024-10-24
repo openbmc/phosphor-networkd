@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70afacfb_99aa5575",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-10-24T06:46:40Z",
+      "side": 1,
+      "message": "do we need this to be pointer?",
+      "revId": "c32e6af2df2f00b26e5e715a12c7ba58d38d8578",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}

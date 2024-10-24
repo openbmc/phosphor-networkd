@@ -89,6 +89,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cd480121_ec49c30a",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1015,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-10-24T06:46:40Z",
+      "side": 1,
+      "message": "how are you making sure that the change notification is for this interface only ?",
+      "parentUuid": "c77b429c_16aa8958",
+      "revId": "bc2308e3e09aeaecc319e673b91558ada404630e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "33751fe2_ee965424",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 2
