@@ -120,6 +120,26 @@ EthernetInterface::EthernetInterface(
     {
         EthernetInterface::defaultGateway6(stdplus::toStr(*info.defgw6), true);
     }
+
+    std::vector<std::string> configGateways =
+        config.map.getValueStrings("Route", "Gateway");
+
+    for (auto& gw : configGateways)
+    {
+        if (gw.empty())
+        {
+            continue;
+        }
+        if (std::count(gw.begin(), gw.end(), ':') > 1)
+        {
+            configDefaultGateway6 = gw;
+        }
+        else
+        {
+            configDefaultGateway = gw;
+        }
+    }
+
     emit_object_added();
 
     if (info.intf.vlan_id)
@@ -536,6 +556,16 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
 
     if (old4 != new4 || old6 != new6 || oldra != newra)
     {
+        if (new4)
+        {
+            configDefaultGateway.clear();
+        }
+
+        if (new6)
+        {
+            configDefaultGateway6.clear();
+        }
+
         writeConfigurationFile();
         manager.get().reloadConfigs();
     }
@@ -893,7 +923,7 @@ void EthernetInterface::writeConfigurationFile()
         {
             if (!dhcp4())
             {
-                auto gateway4 = EthernetInterfaceIntf::defaultGateway();
+                auto gateway4 = configDefaultGateway;
                 if (!gateway4.empty())
                 {
                     auto& gateway4route = config.map["Route"].emplace_back();
@@ -904,7 +934,7 @@ void EthernetInterface::writeConfigurationFile()
 
             if (!ipv6AcceptRA())
             {
-                auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
+                auto gateway6 = configDefaultGateway6;
                 if (!gateway6.empty())
                 {
                     auto& gateway6route = config.map["Route"].emplace_back();
@@ -1083,6 +1113,7 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
     if (gateway != defaultGateway())
     {
         gateway = EthernetInterfaceIntf::defaultGateway(std::move(gateway));
+        configDefaultGateway = gateway;
         writeConfigurationFile();
         manager.get().reloadConfigs();
     }
@@ -1095,6 +1126,7 @@ std::string EthernetInterface::defaultGateway6(std::string gateway)
     if (gateway != defaultGateway6())
     {
         gateway = EthernetInterfaceIntf::defaultGateway6(std::move(gateway));
+        configDefaultGateway6 = gateway;
         writeConfigurationFile();
         manager.get().reloadConfigs();
     }
