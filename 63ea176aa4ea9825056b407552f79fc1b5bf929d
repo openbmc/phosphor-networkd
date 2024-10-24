@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2dc49b4_0dcf7d59",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1028,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-10-24T15:17:58Z",
+      "side": 1,
+      "message": "Looks like these signal gets generated during every systemd-networkd restart as well and  phosphor-networkd reloads systemd-networkd after every network configuration changes.  \nplease test couple of network configurations changes in a loop while system has NTP servers configured to make sure it does not impact NTP server configuration.",
+      "revId": "63ea176aa4ea9825056b407552f79fc1b5bf929d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
