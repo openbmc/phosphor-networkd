@@ -237,6 +237,10 @@ class EthernetInterface : public Ifaces
     /** @brief Interface index */
     unsigned ifIdx;
 
+    /** @brief Gateway Config values */
+    std::string configDefaultGateway;
+    std::string configDefaultGateway6;
+
     struct VlanProperties : VlanIfaces
     {
         VlanProperties(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
