@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95d1a302_e5db8326",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2024-10-25T08:08:44Z",
+      "side": 1,
+      "message": "Changes look OK - once the CI is fixed.",
+      "revId": "235cb9660528976d186d1bc4cbcd0607f9e19bdc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
