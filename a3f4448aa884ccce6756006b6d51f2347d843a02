@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "007a110c_d71feff0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-10-28T05:01:17Z",
+      "side": 1,
+      "message": "I don\u0027t see why we should limit to the crash and core dump handlers even if they are the only ones in the 1.2.0 specfication, especially when there are 0xffefffff ids reserved for OEM identified streams.\n\nI think raw netlink packets is the wrong abstraction for NC data block transfers.",
+      "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0755f063_24bbf004",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-10-28T05:01:17Z",
+      "side": 1,
+      "message": "else if either specified an error?\n\nWhy do we have to speify dump-type?   are there future plans?   what purpose is it?",
+      "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "705e7192_775b5c06",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-10-28T05:01:17Z",
+      "side": 1,
+      "message": "There is nothing in the spec aboutthis being a CoreDump packet\n\nIts a NC Data reply packet.",
+      "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17f0a878_3ca5aac7",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-10-28T05:01:17Z",
+      "side": 1,
+      "message": "We should be able to transfer any chunk esp any oem by passing the number here (eg atoi()\n\nverify dump type recognized here?  or pass data handle instead of dumpType",
+      "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfc834dc_d3c74e3a",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-10-28T05:01:17Z",
+      "side": 1,
+      "message": "DSP0222 1.2.0 (3688) any multiple of 32 bits (3631) that is RBT frame size.  The total frame \n\nWe core and crash dump we should be saving the last transfer AEN with the handle and total bytes.\n\nAs we will  easily wrap the command instance id if we just passed through packets.  If we are already handling them, and there can only be one stream transferred at a time, why not handle the data sequence numbers in the kernel in the NC-SI layer just passing the data stream to across netlink?",
+      "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92786306_47356082",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 624,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-10-28T05:01:17Z",
+      "side": 1,
+      "message": "why don\u0027t we need the \u0026 0xFF like chunkNum below?",
+      "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
