@@ -36,6 +36,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6046f7f5_450ce327",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-10-28T15:15:21Z",
+      "side": 1,
+      "message": "Thank you for your feedback. Currently, the design structure follows the OpenBMC NC-SI core dump design guide (https://gerrit.openbmc.org/plugins/gitiles/openbmc/docs/+/refs/changes/66/74866/4/designs/ncsi-coredump.md). The use of raw netlink packets was chosen based on this design. The NC-SI kernel driver provides the \"NCSI_CMD_SEND_CMD\" interface, which allows a userspace tool to send specific commands.",
+      "parentUuid": "431c31a7_82699217",
+      "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0755f063_24bbf004",
