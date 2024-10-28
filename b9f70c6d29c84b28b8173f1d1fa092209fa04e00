@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d6d36f22_009014dc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-10-28T05:29:49Z",
+      "side": 1,
+      "message": "\u003e I disagree with the direction of this whole series, and the premise that just because we chose the name ncsi_util it should combine the independent requirements for forming ncsi packets to inject into an AF_MCTP socket with its prior function of administrating the kernel NC-SI stack via netlink.\n\nThe utility is _already_ used for more than just administering the kernel NC-SI stack, given the usage for OEM command interactions with the NIC.\n\n\u003e The kernel currently only allows injection of OEM commands from userspace\n\nThat\u0027s not correct - any command can be sent from userspace via the netlink channel.\n\n\u003e and with good reason to avoid confusing the kernel NC-SI implementation.\n\nThere is absolutely no conflict between a MCTP channel and the in-kernel NCSI stack, so no chance of this \"confusion\".\n\nThis series provides a *new* transport for the NCSI messages, in which case the kernel has zero interaction with the NCSI state on those devices (because it is performing zero communication with those NICs; there is no RMII connection, otherwise we would be using it for the transport!)\n\n\u003e There are strict rules about sending one outstanding NC-SI packet per package and an 8-bit sequence number for replay detection that will cause collisions with multiple collisions.\n\nSure, but we\u0027re not conflicting here. The kernel is not performing any NCSI control with the devices we\u0027re targeting over MCTP.",
+      "parentUuid": "e0c9a21f_3fe06141",
+      "revId": "b9f70c6d29c84b28b8173f1d1fa092209fa04e00",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8756c443_230ace8b",
         "filename": "src/ncsi_netlink_main.cpp",
         "patchSetId": 12
@@ -37,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a4369310_be76e667",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-10-28T05:29:49Z",
+      "side": 1,
+      "message": "That\u0027s already present in the code. I can rework to \"index\", but that would be a separate change.",
+      "parentUuid": "8756c443_230ace8b",
+      "revId": "b9f70c6d29c84b28b8173f1d1fa092209fa04e00",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "969969b0_8007275e",
         "filename": "src/ncsi_netlink_main.cpp",
         "patchSetId": 12
@@ -48,6 +84,24 @@
       "writtenOn": "2024-10-28T05:01:13Z",
       "side": 1,
       "message": "mctp should not be ignored when ifIndex is specified\n\nInstead check that only one is specified\nAnd one or the other is required so adjust the usage",
+      "revId": "b9f70c6d29c84b28b8173f1d1fa092209fa04e00",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04581020_d9d5c1dc",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-10-28T05:29:49Z",
+      "side": 1,
+      "message": "Sure, I\u0027ll add a check to ensure that only one is specified.",
+      "parentUuid": "969969b0_8007275e",
       "revId": "b9f70c6d29c84b28b8173f1d1fa092209fa04e00",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
