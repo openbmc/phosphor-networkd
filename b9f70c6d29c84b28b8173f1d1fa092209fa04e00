@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0c9a21f_3fe06141",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-10-28T05:01:13Z",
+      "side": 1,
+      "message": "I disagree with the direction of this whole series, and the premise that just because we chose the name ncsi_util it should combine the independent requirements for forming ncsi packets to inject into an AF_MCTP socket with its prior function of administrating the kernel NC-SI stack via netlink.   \n\nThis series is adding untreated-to-netlink to ncsi_netlink_main.cpp and not providing proper exclusion of mutually conflicting options.\n\nThe kernel currently only allows injection of OEM commands from userspace and with good reason to avoid confusing the kernel NC-SI implementation.  There are strict rules about sending one outstanding NC-SI packet per package and an 8-bit sequence number for replay detection that will cause collisions with multiple collisions.  \n\nI propose we add a NL message that provides start transfer and additional data blocks and let the kernel form the data packets.  In addition it should store the AEN frame advertising availability of the dump for retrevial (section 8.5.8).",
+      "revId": "b9f70c6d29c84b28b8173f1d1fa092209fa04e00",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8756c443_230ace8b",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-10-28T05:01:13Z",
+      "side": 1,
+      "message": "Interface Index",
+      "revId": "b9f70c6d29c84b28b8173f1d1fa092209fa04e00",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "969969b0_8007275e",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-10-28T05:01:13Z",
+      "side": 1,
+      "message": "mctp should not be ignored when ifIndex is specified\n\nInstead check that only one is specified\nAnd one or the other is required so adjust the usage",
+      "revId": "b9f70c6d29c84b28b8173f1d1fa092209fa04e00",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
