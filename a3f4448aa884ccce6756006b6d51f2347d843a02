@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e70141c_689e470d",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-10-28T14:30:31Z",
+      "side": 1,
+      "message": "The original design follows DSP0222_1.2.0.pdf Table 228 Data Handle Values. Currently, we only support \u0027core dump\u0027 and \u0027crash dump\u0027. I will use \u0027datahandle\u0027 as the input argument instead of \u0027dumptype\u0027. This makes the feature more flexible, and I believe it aligns with your expectations.",
+      "parentUuid": "0755f063_24bbf004",
+      "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "705e7192_775b5c06",
@@ -48,6 +66,24 @@
       "writtenOn": "2024-10-28T05:01:17Z",
       "side": 1,
       "message": "There is nothing in the spec aboutthis being a CoreDump packet\n\nIts a NC Data reply packet.",
+      "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e44607f_3df95815",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-10-28T14:30:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "705e7192_775b5c06",
       "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -69,6 +105,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "883fcd3e_39ca0180",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-10-28T14:30:31Z",
+      "side": 1,
+      "message": "I will use \u0027datahandle\u0027 as the input argument instead of \u0027dumptype\u0027. This makes the feature more flexible, and I believe it aligns with your expectations.",
+      "parentUuid": "17f0a878_3ca5aac7",
+      "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bfc834dc_d3c74e3a",
@@ -86,6 +140,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2714df87_8e729803",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-10-28T14:30:31Z",
+      "side": 1,
+      "message": "Thank you for the input. Here’s how we’re approaching it:\n\n1.32-Bit Padding Compliance: Our implementation ensures that the NC-SI kernel driver automatically pads each packet to align with 32-bit boundaries, per the DSP0222 specification.\n\n2.To clarify, we are specifically implementing the \"Receive Data from NC\" command (0x4D), which doesn’t directly relate to AEN handling, as AENs are unsolicited notifications rather than data responses to commands. However, we’ll ensure the integrity of received data frames for command 0x4D, as per DSP0222 specifications, while keeping the focus on handling responses in line with this command.\n\n3. Data Sequence Number Management: The \"data sequence number\" is determined by the \"opcode value\" in the response packet. Since the packet control encode/decode handler is already located in the ncsi-netlink tool, handling sequence numbers here is both practical and efficient. This approach aligns with the OpenBMC NC-SI core dump design guide (https://gerrit.openbmc.org/plugins/gitiles/openbmc/docs/+/refs/changes/66/74866/4/designs/ncsi-coredump.md) and minimizes complexity within the kernel.\n\n4. Streamlining Data Handling in ncsi-netlink: Managing sequence numbers at the ncsi-netlink layer allows for streamlined packet handling and control, consolidating the encoding/decoding responsibilities efficiently within a single layer.",
+      "parentUuid": "bfc834dc_d3c74e3a",
+      "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "92786306_47356082",
@@ -99,6 +171,24 @@
       "writtenOn": "2024-10-28T05:01:17Z",
       "side": 1,
       "message": "why don\u0027t we need the \u0026 0xFF like chunkNum below?",
+      "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0baca062_f933ba2d",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 624,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-10-28T14:30:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "92786306_47356082",
       "revId": "a3f4448aa884ccce6756006b6d51f2347d843a02",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
