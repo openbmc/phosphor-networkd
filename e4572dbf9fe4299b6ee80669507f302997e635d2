@@ -33,6 +33,24 @@
       "message": "There\u0027s a lot of work to make DEFAULT_VALUE optional only to pass it specially to cmd",
       "revId": "e4572dbf9fe4299b6ee80669507f302997e635d2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a82fba8b_ce83f668",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-10-29T00:39:08Z",
+      "side": 1,
+      "message": "Is that a problem though? The NSCICommand constructor\u0027s channel argument is a std::option, which I\u0027d argue that is a more obvious API than having a special no-channel value.",
+      "parentUuid": "216cfa21_a2f37858",
+      "revId": "e4572dbf9fe4299b6ee80669507f302997e635d2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
