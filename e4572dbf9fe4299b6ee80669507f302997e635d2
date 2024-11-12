@@ -51,6 +51,24 @@
       "parentUuid": "216cfa21_a2f37858",
       "revId": "e4572dbf9fe4299b6ee80669507f302997e635d2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8670f08e_9f11ae79",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-11-12T05:57:34Z",
+      "side": 1,
+      "message": "as mentioned in discord, I\u0027d prefer the packet building be pasted the channel to place in the command payload.  if an optional builder is still useful it should wrap the specified value.  it\u0027s not optional in the packet just to the user.\n\nhttps://discord.com/channels/775381525260664832/778790638563885086/1305765603428007998",
+      "parentUuid": "a82fba8b_ce83f668",
+      "revId": "e4572dbf9fe4299b6ee80669507f302997e635d2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
