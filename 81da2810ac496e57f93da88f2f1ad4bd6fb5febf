@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c6e6b64_362eff36",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-11-14T07:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "302617ec_0b98ec60",
+      "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cd03cb99_5e9cc0ca",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-11-12T23:26:49Z",
       "side": 1,
       "message": "can you decode and log the specific documented causes \neg sequence error, unknown,",
+      "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b76447e2_ae6beb42",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-11-14T07:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd03cb99_5e9cc0ca",
       "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -52,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dae36ec7_6b9ff1fa",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-11-14T07:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34a52748_9bc8acc4",
+      "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2b930a58_c7129e6b",
@@ -65,6 +119,24 @@
       "writtenOn": "2024-11-12T23:26:49Z",
       "side": 1,
       "message": "consider a wrapped callback in a transfer class \n\nthe decode can be in internal get back data and opcode \nthe state variables (outfile opcode total written) would be in the transfer class.  this would also be more collected",
+      "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bfb437f0_fcc876c5",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-11-14T07:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b930a58_c7129e6b",
       "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -86,6 +158,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c744b332_d17b594d",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-11-14T07:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "323ab751_07d4755a",
+      "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8713a40c_5af36bc5",
@@ -99,6 +189,24 @@
       "writtenOn": "2024-11-12T23:26:49Z",
       "side": 1,
       "message": "what is internal object?\nrandom class internal?\nno it\u0027s supposed to be private interfaces not private static variables",
+      "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95cb5a45_e26a9806",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-11-14T07:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8713a40c_5af36bc5",
       "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -120,6 +228,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b0089a7_605efba6",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-11-14T07:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "becec175_9deac99a",
+      "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e6d1af0b_f04e08cc",
@@ -133,6 +259,24 @@
       "writtenOn": "2024-11-12T23:26:49Z",
       "side": 1,
       "message": "it\u0027s an error to get a opcode 1 after after the initial transfer or a opcode two in response to the the initial transfer",
+      "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbd17bc1_70c19eb4",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-11-14T07:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6d1af0b_f04e08cc",
       "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -154,6 +298,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0dc19d54_b259bd15",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-11-14T07:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "738b8ceb_12e5118e",
+      "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c5cc2251_d8514ca4",
@@ -167,6 +329,24 @@
       "writtenOn": "2024-11-12T23:51:06Z",
       "side": 1,
       "message": "sending an abort here.  we are abandoning the transfer\n\nthis will avoid a sequence error on retry \n\nwe could also allow the data processing callback to initiate the abort (eg disk full, file not open)",
+      "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "03035e79_2d522999",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 683,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-11-14T07:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5cc2251_d8514ca4",
       "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -188,6 +368,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7005e10_f2915f1d",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-11-14T07:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c2e673b_dea05619",
+      "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "47660135_3edc855d",
@@ -201,6 +399,24 @@
       "writtenOn": "2024-11-12T23:26:49Z",
       "side": 1,
       "message": "typo ncis",
+      "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a81a6ecd_d32b78e5",
+        "filename": "src/ncsi_util.hpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2024-11-14T07:24:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47660135_3edc855d",
       "revId": "81da2810ac496e57f93da88f2f1ad4bd6fb5febf",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
