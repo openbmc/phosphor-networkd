@@ -34,6 +34,24 @@
       "parentUuid": "a63cf001_6bf059a4",
       "revId": "7614171d6c4fe834a686b953198e349db42d27a6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20b11f87_10a0f80b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-11-19T19:45:05Z",
+      "side": 1,
+      "message": "I seriously doubt a 172.x addr matters.\nI did notice that the phos-net SHA you provided didn\u0027t write the configuration back to /etc/systemd/network/ network.config file.\nA newer version of phos-net does perform that action.\nIt both stores the new config, and then reloads the config.\nPerhaps you aren\u0027t on a new enough version?",
+      "parentUuid": "35aea116_37287886",
+      "revId": "7614171d6c4fe834a686b953198e349db42d27a6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
