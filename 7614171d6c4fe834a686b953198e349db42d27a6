@@ -16,6 +16,24 @@
       "message": "Ed,\nWill you please expound upon the problem you\u0027re seeing?\nWhat is your network config?\nI assume you have two NICs, one of which is USB?\nWhat stops working?\n\nI have my SUT with the dedicated BMC NIC at eth0, and an NCSI NIC at eth1.\nSubmitting this to the BMC, after disabling DHCP to eth1:\nPATCH :url/redfish/v1/Managers/bmc/EthernetInterfaces/eth1\n     \"IPv4StaticAddresses\": [\n     {\n             \"Address\": \"192.168.20.3\",\n             \"SubnetMask\": \"255.255.255.0\",\n             \"Gateway\": \"192.168.20.1\"\n     }\n     ]\nResults in:\ndefault via 192.168.20.1 dev eth1 onlink\nlink/ether bc:6e:e2:00:0a:a0 brd ff:ff:ff:ff:ff:ff\ndefault via 10.243.48.1 dev eth0  src 10.243.48.31  metric 1024\n\nAnd traffic still passes to both networks.",
       "revId": "7614171d6c4fe834a686b953198e349db42d27a6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35aea116_37287886",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-11-19T19:21:32Z",
+      "side": 1,
+      "message": "That\u0027s not the behavior I\u0027m seeing.  If I do almost an identical command to what you have, the default gateway you show above doesn\u0027t exist, only the local links.\n\ni\u0027m using a 172.x.x.x address.... not sure if that could be different?\n\nlet me play around some more.",
+      "parentUuid": "a63cf001_6bf059a4",
+      "revId": "7614171d6c4fe834a686b953198e349db42d27a6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
