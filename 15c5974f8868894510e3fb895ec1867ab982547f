@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "058bc8a8_1d1cccc7",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2024-11-20T18:52:08Z",
+      "side": 1,
+      "message": "This function is really long. Would it be possible to refactor this switch case into a separate function, lets say, getDescForResponse or similar.",
+      "revId": "15c5974f8868894510e3fb895ec1867ab982547f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5d898a7_4d8a2a6e",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2024-11-20T18:52:08Z",
+      "side": 1,
+      "message": "This function is really long. Would it be possible to refactor this switch case into a separate function, lets say, getDescForReason or similar.",
+      "revId": "15c5974f8868894510e3fb895ec1867ab982547f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3a877f1_6ee68e18",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2024-11-20T18:52:08Z",
+      "side": 1,
+      "message": "This function is really long. Probably break the payload generation into a separate function (such as generateDumpCmdPayload)?",
+      "revId": "15c5974f8868894510e3fb895ec1867ab982547f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
