@@ -73,7 +73,6 @@ void ArgumentParser::usage(char** argv)
            "    --info  | -i      Retrieve info about NCSI topology.\n"
            "    --set   | -s      Set a specific package/channel.\n"
            "    --clear | -r      Clear all the settings on the interface.\n"
-           "    --oem-payload=<hex data...> | -o <hex data...> Send an OEM command with payload.\n"
            "    --pmask=<mask> | -j <mask> Bitmask to enable/disable packages\n"
            "    --cmask=<mask> | -k <mask> Bitmask to enable/disable channels\n"
            "\n"
@@ -86,11 +85,9 @@ void ArgumentParser::usage(char** argv)
            "         ncsi-netlink -x 3 -p 0 -c 1 -s\n"
            "    4) Clear preferred channel\n"
            "         ncsi-netlink -x 3 -p 0 -r\n"
-           "    5) Send NCSI Command\n"
-           "         ncsi-netlink -x 3 -p 0 -c 0 -o 50000001572100\n"
-           "    6) Set Package Mask\n"
+           "    5) Set Package Mask\n"
            "         ncsi-netlink -x 3 -j 1\n"
-           "    7) Set Channel Mask\n"
+           "    6) Set Channel Mask\n"
            "         ncsi-netlink -x 3 -p 0 -k 1\n"
            "\n";
 }
