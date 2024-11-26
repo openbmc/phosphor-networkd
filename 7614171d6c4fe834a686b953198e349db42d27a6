@@ -52,6 +52,24 @@
       "parentUuid": "35aea116_37287886",
       "revId": "7614171d6c4fe834a686b953198e349db42d27a6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f239d371_584a5cb6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2024-11-26T00:10:01Z",
+      "side": 1,
+      "message": "I pulled, and am still seeing the same behavior.  At dbus level, if I set up a static up with a gatewway, the default route stays the same:\n\nbusctl call xyz.openbmc_project.Network /xyz/openbmc_project/network/eth0 xyz.openbmc_project.Network.IP.Create IP ssys xyz.openbmc_project.Network.IP.Protocol.IPv4 192.168.7.2 24 192.168.7.1\n\nbusctl set-property xyz.openbmc_project.Network /xyz/openbmc_project/network/eth0 xyz.openbmc_project.Network.EthernetInterface DefaultGateway s 192.168.7.1\n\n\nNow, at Johnathans guess, I tried changing the DHCP:\nbusctl set-property xyz.openbmc_project.Network /xyz/openbmc_project/network/eth0 xyz.openbmc_project.Network.EthernetInterface DHCP4 b false\n\nand that does trigger the route to be created.  What I don\u0027t understand is why the second call doesn\u0027t fail?  If we\u0027re in DHCP and the gateway fully intends to not be written why does the property set succeed?",
+      "parentUuid": "20b11f87_10a0f80b",
+      "revId": "7614171d6c4fe834a686b953198e349db42d27a6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
