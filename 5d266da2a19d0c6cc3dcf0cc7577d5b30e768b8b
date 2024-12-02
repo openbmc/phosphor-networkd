@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e562a996_f05008f6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-12-02T18:45:15Z",
+      "side": 1,
+      "message": "Nit... just a suggestion.",
+      "revId": "5d266da2a19d0c6cc3dcf0cc7577d5b30e768b8b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7683d5d_4aa6b468",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-12-02T18:45:15Z",
+      "side": 1,
+      "message": "Change to `return ret` ?\nIt appears nl_recvmsgs_default never return a positive value, only 0 or negative.",
+      "revId": "5d266da2a19d0c6cc3dcf0cc7577d5b30e768b8b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
