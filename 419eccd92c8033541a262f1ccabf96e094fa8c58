@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73ce5e29_c2b0d66c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-12-03T17:04:01Z",
+      "side": 1,
+      "message": "A fair bit of personal opinion enclosed.",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a850b320_24dba05b",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-12-03T17:04:01Z",
+      "side": 1,
+      "message": "Is there a reason to force base-16 on the UI?",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0fe4418a_5323c60d",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-12-03T17:04:01Z",
+      "side": 1,
+      "message": "I would prefer the payload be represented on the command line as space delimited octets instead of a concatenated string of base-16 pairs that are hard to read and confirm correct.\n\nIs there a compelling reason to maintain the, IMO.... impolite, model of ncsi_netlink? Can this wart be hidden from the user?\n\nIf there is a desire to keep the packed string, perhaps add a command line switch that reads octets?",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97053b6f_d252194e",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-12-03T17:04:01Z",
+      "side": 1,
+      "message": "Why are you filling a std::shared with a std::unique?",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e4da40b_6fae7aed",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-12-03T17:04:01Z",
+      "side": 1,
+      "message": "why does OEM use `auto payload` and this pre-defines `payload`?",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fa01b56_fb185de0",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-12-03T17:04:01Z",
+      "side": 1,
+      "message": "follow OEM model?\n`auto payload \u003d ...`",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33894931_d8217358",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-12-03T17:04:01Z",
+      "side": 1,
+      "message": "Not following the logic here.\nIt would be nice if there were a comment indicating the theory...",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57ccfd42_7d37b935",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-12-03T17:04:01Z",
+      "side": 1,
+      "message": "Did I misread the change?\nIsn\u0027t this sent as -oem (i.e. 0x50) and the rest is just the packed string?",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e798c90c_98ba8178",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1000278
+      },
+      "writtenOn": "2024-12-03T17:04:01Z",
+      "side": 1,
+      "message": "Suggestion: summarily remove -o from ncsi-netlink, and print a \"use ncsi-cmd\" message.\nThe following code is kludgy...",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
