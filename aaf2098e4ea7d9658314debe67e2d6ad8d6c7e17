@@ -33,6 +33,24 @@
       "message": "Do the dynamic NTP servers get inserted into the\n`RuntimeNTPServers` or the `SystemNTPServers`?\nIs there really no way to get dynamically assigned servers from systemd/D-Bus?",
       "revId": "aaf2098e4ea7d9658314debe67e2d6ad8d6c7e17",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e3c982c_25cc72b2",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2024-12-04T07:45:26Z",
+      "side": 1,
+      "message": "No other property has the NTP servers now other than LinkNTPServers.",
+      "parentUuid": "424e75ef_3b892d83",
+      "revId": "aaf2098e4ea7d9658314debe67e2d6ad8d6c7e17",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
