@@ -1,10 +1,13 @@
 #include "ncsi_util.hpp"
 
+#include <errno.h>
+#include <fcntl.h>
 #include <linux/mctp.h>
 #include <linux/ncsi.h>
 #include <netlink/genl/ctrl.h>
 #include <netlink/genl/genl.h>
 #include <netlink/netlink.h>
+#include <unistd.h>
 
 #include <phosphor-logging/lg2.hpp>
 
@@ -19,6 +22,8 @@ namespace network
 {
 namespace ncsi
 {
+
+static const char* mctp_iid_path = "/run/ncsi-mctp-iids";
 
 NCSICommand::NCSICommand(uint8_t opcode, uint8_t package,
                          std::optional<uint8_t> channel,
@@ -575,13 +580,19 @@ struct NCSIResponsePayload
 
 std::optional<NCSIResponse> MCTPInterface::sendCommand(NCSICommand& cmd)
 {
-    static constexpr uint8_t iid = 0;  /* we only have one cmd outstanding */
     static constexpr uint8_t mcid = 0; /* no need to distinguish controllers */
     static constexpr size_t maxRespLen = 16384;
     size_t payloadLen, padLen;
     ssize_t wlen, rlen;
 
     payloadLen = cmd.payload.size();
+
+    auto tmp = allocateIID();
+    if (!tmp.has_value())
+    {
+        return {};
+    }
+    uint8_t iid = *tmp;
 
     internal::NCSIPacketHeader cmdHeader{};
     cmdHeader.MCID = mcid;
@@ -736,6 +747,73 @@ MCTPInterface::MCTPInterface(int net, uint8_t eid) : net(net), eid(eid)
     }
 
     sd = _sd;
+}
+
+std::optional<uint8_t> MCTPInterface::allocateIID()
+{
+    int fd = open(mctp_iid_path, O_RDWR | O_CREAT, 0600);
+    if (fd < 0)
+    {
+        lg2::warning("Error opening IID database {FILE}: {ERROR}", "FILE",
+                     mctp_iid_path, "ERROR", strerror(errno));
+        return {};
+    }
+
+    /* lock while we read/modity/write; the lock will be short-lived, so
+     * we keep it simple and lock the entire file range
+     */
+    struct flock flock = {
+        .l_type = F_WRLCK,
+        .l_whence = SEEK_SET,
+        .l_start = 0,
+        .l_len = 0,
+        .l_pid = 0,
+    };
+
+    int rc = fcntl(fd, F_OFD_SETLKW, &flock);
+    if (rc)
+    {
+        lg2::warning("Error locking IID database {FILE}: {ERROR}", "FILE",
+                     mctp_iid_path, "ERROR", strerror(errno));
+        close(fd);
+        return {};
+    }
+
+    /* An EOF (rc == 0) would indicate that we don't yet have an entry for that
+     * eid, which we handle as iid = 0.
+     */
+    uint8_t iid = 0;
+    rc = pread(fd, &iid, sizeof(iid), eid);
+    if (rc < 0)
+    {
+        lg2::warning("Error reading IID database {FILE}: {ERROR}", "FILE",
+                     mctp_iid_path, "ERROR", strerror(errno));
+        close(fd);
+        return {};
+    }
+
+    /* DSP0222 defines valid IIDs in the range [1, 0xff], so manually wrap */
+    if (iid == 0xff)
+    {
+        iid = 1;
+    }
+    else
+    {
+        iid++;
+    }
+
+    rc = pwrite(fd, &iid, sizeof(iid), eid);
+    if (rc != sizeof(iid))
+    {
+        lg2::warning("Error writing IID database {FILE}: {ERROR}", "FILE",
+                     mctp_iid_path, "ERROR", strerror(errno));
+        close(fd);
+        return {};
+    }
+
+    close(fd);
+
+    return iid;
 }
 
 } // namespace ncsi
