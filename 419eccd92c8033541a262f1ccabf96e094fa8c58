@@ -36,6 +36,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef9f7346_49f22b96",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T07:54:00Z",
+      "side": 1,
+      "message": "I have pushed a new change here; I have marked some of the comments as done, but others just had responses from me. Feel free to either mark as resolved as you see fit, or follow up on the discussion.",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a850b320_24dba05b",
@@ -106,6 +123,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c076a048_483fc94c",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T07:54:00Z",
+      "side": 1,
+      "message": "OK, new change pushed that allows either format.",
+      "parentUuid": "5e5629b3_2448a077",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "97053b6f_d252194e",
@@ -137,6 +172,24 @@
       "side": 1,
       "message": "Excellent question. I\u0027ll see if we still need the shared_ptr at all.",
       "parentUuid": "97053b6f_d252194e",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71fd7537_4a5bface",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T07:54:00Z",
+      "side": 1,
+      "message": "We can do this with just the unique_ptr, and prevent a couple of copies too.",
+      "parentUuid": "f9579683_18ab99d0",
       "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -242,6 +295,24 @@
       "side": 1,
       "message": "OK, shall do!",
       "parentUuid": "33894931_d8217358",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56f05ce7_72cd0b62",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T07:54:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3eb5f8ba_72203d11",
       "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
