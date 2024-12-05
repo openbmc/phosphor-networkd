@@ -164,6 +164,8 @@ struct MCTPInterface : Interface
     int sd;
     int net;
     uint8_t eid;
+
+    std::optional<uint8_t> allocateIID();
 };
 
 } // namespace ncsi
