@@ -33,6 +33,24 @@
       "message": "Change to `return ret` ?\nIt appears nl_recvmsgs_default never return a positive value, only 0 or negative.",
       "revId": "5d266da2a19d0c6cc3dcf0cc7577d5b30e768b8b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ba49a5f_d8e20513",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T03:55:16Z",
+      "side": 1,
+      "message": "That\u0027s true, but why require the reader to know that, when we can just `return 0` explicitly?",
+      "parentUuid": "e7683d5d_4aa6b468",
+      "revId": "5d266da2a19d0c6cc3dcf0cc7577d5b30e768b8b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
