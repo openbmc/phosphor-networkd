@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c9faf31_c85562dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T04:15:40Z",
+      "side": 1,
+      "message": "Thanks for the review - I do appreciate the input, including the personal opinion!",
+      "parentUuid": "73ce5e29_c2b0d66c",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a850b320_24dba05b",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-12-03T17:04:01Z",
       "side": 1,
       "message": "Is there a reason to force base-16 on the UI?",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f588ae4a_692f916d",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T04:15:40Z",
+      "side": 1,
+      "message": "More convention than anything else. The NCSI docs, as well as existing commands, all use hex for the opcode values, so this avoids requiring the user to add 0x all over the place.",
+      "parentUuid": "a850b320_24dba05b",
       "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -54,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5e5629b3_2448a077",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T04:15:40Z",
+      "side": 1,
+      "message": "Yeah, I\u0027d agree that the payload format in `ncsi-netlink` is a bit awkward.\n\nI could just autodetect a packed string vs. separate octets, would that suit? Would prefer to avoid an explicit argument (to define the format) if we can detect reliably.",
+      "parentUuid": "0fe4418a_5323c60d",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "97053b6f_d252194e",
         "filename": "src/ncsi_cmd.cpp",
         "patchSetId": 4
@@ -65,6 +119,24 @@
       "writtenOn": "2024-12-03T17:04:01Z",
       "side": 1,
       "message": "Why are you filling a std::shared with a std::unique?",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9579683_18ab99d0",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T04:15:40Z",
+      "side": 1,
+      "message": "Excellent question. I\u0027ll see if we still need the shared_ptr at all.",
+      "parentUuid": "97053b6f_d252194e",
       "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -88,6 +160,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f2e7c021_d99a608c",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T04:15:40Z",
+      "side": 1,
+      "message": "Because raw allows an empty payload, so we construct an empty one here, in case no payload argument was provided.",
+      "parentUuid": "7e4da40b_6fae7aed",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4fa01b56_fb185de0",
         "filename": "src/ncsi_cmd.cpp",
         "patchSetId": 4
@@ -99,6 +189,24 @@
       "writtenOn": "2024-12-03T17:04:01Z",
       "side": 1,
       "message": "follow OEM model?\n`auto payload \u003d ...`",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "787f6176_89b5d51c",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T04:15:40Z",
+      "side": 1,
+      "message": "We need to check the std::optional before assigning to `payload`, and (as above) fall back to the default (empty) payload if none was provided.",
+      "parentUuid": "4fa01b56_fb185de0",
       "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -122,6 +230,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3eb5f8ba_72203d11",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T04:15:40Z",
+      "side": 1,
+      "message": "OK, shall do!",
+      "parentUuid": "33894931_d8217358",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "57ccfd42_7d37b935",
         "filename": "src/ncsi_netlink_main.cpp",
         "patchSetId": 4
@@ -139,6 +265,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8d666d41_6a3135dd",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T04:15:40Z",
+      "side": 1,
+      "message": "Not sure I 100% understand the question, but the first byte on the packed string argument is interpreted the opcode field (both before and after this change).\n\nIt has always been possible to use `-o` to send non-OEM commands, by specifying a value other than `50` as the first byte in the string.\n\nI\u0027ve tried to make this more explicit in the new `ncsi-cmd`, through the `oem` vs `raw` subcommands.",
+      "parentUuid": "57ccfd42_7d37b935",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e798c90c_98ba8178",
         "filename": "src/ncsi_netlink_main.cpp",
         "patchSetId": 4
@@ -150,6 +294,24 @@
       "writtenOn": "2024-12-03T17:04:01Z",
       "side": 1,
       "message": "Suggestion: summarily remove -o from ncsi-netlink, and print a \"use ncsi-cmd\" message.\nThe following code is kludgy...",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b63e6b2a_8343a233",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-05T04:15:40Z",
+      "side": 1,
+      "message": "It\u0027s kludgy, but temporary.\n\nWe need this so that we don\u0027t break things in the transition to `ncsi-cmd`. Once this change is merged, we can update the in-tree usage of `ncsi-netlink -o` to use `ncsi-cmd` directly, then remove the compatibility later.\n\nThat should be a fairly quick process, there are only a small number of instances where `ncsi-netlink -o` is used.",
+      "parentUuid": "e798c90c_98ba8178",
       "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
