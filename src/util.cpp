@@ -15,6 +15,7 @@
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <cctype>
+#include <fstream>
 #include <string>
 #include <string_view>
 
@@ -224,6 +225,43 @@ bool getDHCPProp(const config::Parser& config, DHCPType dhcpType,
 
     return systemdParseLast(config, type, key, config::parseBool)
         .value_or(true);
+}
+
+std::map<std::string, bool> parseLLDPConf()
+{
+    std::string lldpFilePath = "/etc/lldpd.conf";
+    std::ifstream lldpdConfig(lldpFilePath);
+    std::map<std::string, bool> portStatus;
+
+    if (!lldpdConfig.is_open())
+    {
+        return portStatus;
+    }
+
+    std::string line;
+    while (std::getline(lldpdConfig, line))
+    {
+        std::string configurePortsStr = "configure ports ";
+        std::string lldpStatusStr = "lldp status ";
+        size_t portStart = line.find(configurePortsStr);
+        if (portStart != std::string::npos)
+        {
+            portStart += configurePortsStr.size();
+            size_t portEnd = line.find(' ', portStart);
+            if (portEnd == std::string::npos)
+            {
+                portEnd = line.length();
+            }
+            std::string portName = line.substr(portStart, portEnd - portStart);
+            size_t pos = line.find(lldpStatusStr);
+            if (pos != std::string::npos) {
+                std::string statusStr = line.substr(pos + lldpStatusStr.size());
+                portStatus[portName] = (statusStr == "disabled") ? false : true;
+            }
+        }
+    }
+    lldpdConfig.close();
+    return portStatus;
 }
 
 } // namespace network
