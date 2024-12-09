@@ -55,6 +55,10 @@ class Manager : public ManagerIface
      */
     void writeToConfigurationFile();
 
+    /** @brief write the lldp conf file
+     */
+    void writeLLDPDConfigurationFile();
+
     /** @brief Adds a single interface to the interface map */
     void addInterface(const InterfaceInfo& info);
     void removeInterface(const InterfaceInfo& info);
@@ -101,6 +105,10 @@ class Manager : public ManagerIface
     {
         reload.get().schedule();
     }
+
+    /** Reload LLDP configuration
+     */
+    void reloadLLDPService();
 
     /** @brief Persistent map of EthernetInterface dbus objects and their names
      */
