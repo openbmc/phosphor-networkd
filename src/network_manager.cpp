@@ -22,6 +22,7 @@
 
 #include <filesystem>
 #include <format>
+#include <fstream>
 
 namespace phosphor
 {
@@ -32,6 +33,12 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
 using std::literals::string_view_literals::operator""sv;
+
+constexpr auto systemdBusname = "org.freedesktop.systemd1";
+constexpr auto systemdObjPath = "/org/freedesktop/systemd1";
+constexpr auto systemdInterface = "org.freedesktop.systemd1.Manager";
+constexpr auto lldpFilePath = "/etc/lldpd.conf";
+constexpr auto lldpService = "lldpd.service";
 
 static constexpr const char enabledMatch[] =
     "type='signal',sender='org.freedesktop.network1',path_namespace='/org/"
@@ -200,6 +207,7 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
     auto ptr = intf.get();
     interfaces.insert_or_assign(*info.intf.name, std::move(intf));
     interfacesByIdx.insert_or_assign(info.intf.idx, ptr);
+    loadDefaultLLDPConfig();
 }
 
 void Manager::addInterface(const InterfaceInfo& info)
@@ -512,6 +520,59 @@ void Manager::handleAdminState(std::string_view state, unsigned ifidx)
         {
             createInterface(it->second, managed);
         }
+    }
+}
+
+void Manager::loadDefaultLLDPConfig()
+{
+    std::ofstream lldpdConfig(lldpFilePath);
+
+    lldpdConfig << "configure system description BMC" << std::endl;
+
+    for (const auto& intf : interfaces)
+    {
+        lldpdConfig << "configure ports " << intf.second->interfaceName()
+                    << " lldp status disabled" << std::endl;
+    }
+
+    lldpdConfig.close();
+}
+
+void Manager::writeLLDPDConfigurationFile()
+{
+    std::ofstream lldpdConfig(lldpFilePath);
+
+    for (const auto& intf : interfaces)
+    {
+        bool emitlldp = intf.second->emitLLDP();
+        if (emitlldp)
+        {
+            lldpdConfig << "configure ports " << intf.second->interfaceName()
+                        << " lldp status tx-only" << std::endl;
+        }
+        else
+        {
+            lldpdConfig << "configure ports " << intf.second->interfaceName()
+                        << " lldp status disabled" << std::endl;
+        }
+    }
+
+    lldpdConfig.close();
+}
+
+void Manager::reloadLLDPService()
+{
+    try
+    {
+        auto method = bus.get().new_method_call(
+            systemdBusname, systemdObjPath, systemdInterface, "RestartUnit");
+        method.append(lldpService, "replace");
+        bus.get().call_noreply(method);
+    }
+    catch (const sdbusplus::exception_t& ex)
+    {
+        lg2::error("Failed to restart service {SERVICE}: {ERR}", "SERVICE",
+                   lldpService, "ERR", ex);
     }
 }
 
