@@ -102,6 +102,8 @@ EthernetInterface::EthernetInterface(
     EthernetInterfaceIntf::dhcp6(dhcpVal.v6, true);
     EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRA(config), true);
     EthernetInterfaceIntf::nicEnabled(enabled, true);
+    auto lldpVal = parseLLDPConf();
+    EthernetInterfaceIntf::emitLLDP(lldpVal[interfaceName()], true);
 
     EthernetInterfaceIntf::ntpServers(
         config.map.getValueStrings("Network", "NTP"), true);
@@ -1067,6 +1069,16 @@ void EthernetInterface::VlanProperties::delete_()
     }
 
     eth.get().manager.get().reloadConfigs();
+}
+
+bool EthernetInterface::emitLLDP(bool value)
+{
+    if (emitLLDP() != EthernetInterfaceIntf::emitLLDP(value))
+    {
+        manager.get().writeLLDPDConfigurationFile();
+       manager.get().reloadLLDPService();
+    }
+    return value;
 }
 
 void EthernetInterface::reloadConfigs()

@@ -8,6 +8,7 @@
 #include <string>
 #include <string_view>
 #include <unordered_set>
+#include <map>
 
 namespace phosphor
 {
@@ -71,6 +72,10 @@ DHCPVal getDHCPValue(const config::Parser& config);
  */
 bool getDHCPProp(const config::Parser& config, DHCPType dhcpType,
                  std::string_view key);
+
+/** @brief Read LLDP configuration from lldpd conf file
+ */
+std::map<std::string, bool> parseLLDPConf();
 
 namespace internal
 {
