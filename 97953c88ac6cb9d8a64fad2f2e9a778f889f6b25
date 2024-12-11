@@ -16,6 +16,24 @@
       "message": "I am not sure the consensus with the maintainers here is, but it would be a lot more easier to read if we used a CLI parser library like CLI11 (https://github.com/CLIUtils/CLI11). I know other openbmc repos use this. Reason I proposed this is because we have a lot of \"sub-command\" parsing in this source file which would be easily covered by a library.",
       "revId": "97953c88ac6cb9d8a64fad2f2e9a778f889f6b25",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "397be9fe_f64bebbf",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2024-12-11T05:50:40Z",
+      "side": 1,
+      "message": "I had definitely thought so when doing this change, but I\u0027m just keeping consistent with the existing getopt() usage that already exists for the ncsi-netlink utility.\n\nI\u0027m happy to look at other options for parsing the command-line, especially as we grow support for new commands, but would rather do that as a separate series after merge.",
+      "parentUuid": "e7c283a1_13742e77",
+      "revId": "97953c88ac6cb9d8a64fad2f2e9a778f889f6b25",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
