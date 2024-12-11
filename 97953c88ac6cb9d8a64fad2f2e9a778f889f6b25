@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7c283a1_13742e77",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000212
+      },
+      "writtenOn": "2024-12-11T05:24:25Z",
+      "side": 1,
+      "message": "I am not sure the consensus with the maintainers here is, but it would be a lot more easier to read if we used a CLI parser library like CLI11 (https://github.com/CLIUtils/CLI11). I know other openbmc repos use this. Reason I proposed this is because we have a lot of \"sub-command\" parsing in this source file which would be easily covered by a library.",
+      "revId": "97953c88ac6cb9d8a64fad2f2e9a778f889f6b25",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
