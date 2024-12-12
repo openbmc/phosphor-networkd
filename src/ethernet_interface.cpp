@@ -895,12 +895,19 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
     {
         newMAC = stdplus::fromStr<stdplus::EtherAddr>(value);
     }
-    catch (const std::invalid_argument&)
+    catch (const std::exception& e)
     {
-        lg2::error("MAC Address {NET_MAC} is not valid", "NET_MAC", value);
-        elog<InvalidArgument>(Argument::ARGUMENT_NAME("MACAddress"),
+        lg2::error("Invalid Ip address {NET_MAC}: {ERROR}", "NET_MAC", value,
+                   "ERROR", e);
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("netmac"),
                               Argument::ARGUMENT_VALUE(value.c_str()));
     }
+    catch (...)
+    {
+        lg2::error("Failed to set MacAddress due to internal failure");
+        elog<InternalFailure>();
+    }
+
     if (!newMAC.isUnicast())
     {
         lg2::error("MAC Address {NET_MAC} is not valid", "NET_MAC", value);
