@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e164b095_9ca1ec52",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-12T09:32:42Z",
+      "side": 1,
+      "message": "I see all other properties followed the same and I see D-bus signal generated for this property \n\nsignal time\u003d1733994026.037823 sender\u003d:1.33 -\u003e destination\u003d(null destination) serial\u003d194 path\u003d/xyz/openbmc_pro\n   string \"xyz.openbmc_project.Network.EthernetInterface\"                                                    \n   array [                                                                                                   \n      dict entry(                                                                                            \n         string \"EmitLLDP\"                                                                                   \n         variant             boolean true                                                                    \n      )                                                                                                      \n   ]                                                                                                         \n   array [                                                                                                   \n   ]",
+      "parentUuid": "424839ce_8c22e5c5",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c7368eba_ad1211de",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 4
@@ -31,6 +49,24 @@
       "writtenOn": "2024-12-12T06:54:20Z",
       "side": 1,
       "message": "don\u0027t you want to return what EthernetInterfaceIntf::emitLLDP(value) ?",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "443edd2e_fefa0e15",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-12T09:32:42Z",
+      "side": 1,
+      "message": "did not get you, there is a return statement right?",
+      "parentUuid": "c7368eba_ad1211de",
       "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -88,6 +124,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "11dde7d8_f08b403f",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-12T09:32:42Z",
+      "side": 1,
+      "message": "LLDPD service daemon creates this file and configuration changes in this file consumed by lldpd",
+      "parentUuid": "a7ce1ac6_ad9eef2e",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e712d90c_7e42d253",
         "filename": "src/util.cpp",
         "patchSetId": 4
@@ -99,6 +153,24 @@
       "writtenOn": "2024-12-12T06:54:20Z",
       "side": 1,
       "message": "why not json format?",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97ddc0be_c7d2c440",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-12T09:32:42Z",
+      "side": 1,
+      "message": "we can\u0027t change format of this file since lldpd.conf configuration file of LLDPD service",
+      "parentUuid": "e712d90c_7e42d253",
       "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -133,6 +205,42 @@
       "writtenOn": "2024-12-12T06:54:20Z",
       "side": 1,
       "message": "is there any purticular standard you following here? Else a json serialisation would be much better",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4612615_48d02779",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-12T09:32:42Z",
+      "side": 1,
+      "message": "yes this can be generic",
+      "parentUuid": "bb7ded5b_e5710773",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4eefd46b_7239bbce",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-12T09:32:42Z",
+      "side": 1,
+      "message": "yeah actually I was also thinking the same, but networkd does not have D-bus persistency logic. anyways this lldp.conf file needed for lldp configuration so using same file for parsing",
+      "parentUuid": "3e173dd0_d34abb1e",
       "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
