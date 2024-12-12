@@ -85,11 +85,14 @@ EthInfo getEthInfo(stdplus::zstring_view ifname)
 {
     ethtool_cmd edata = {};
     edata.cmd = ETHTOOL_GSET;
+    static constexpr decltype(edata.speed) speedUnknown = SPEED_UNKNOWN;
+
     return optionalIFReq(
                ifname, SIOCETHTOOL, "ETHTOOL"sv,
                [&](const ifreq&) {
-                   return EthInfo{.autoneg = edata.autoneg != 0,
-                                  .speed = edata.speed};
+                   return EthInfo{
+                       .autoneg = edata.autoneg != 0,
+                       .speed = edata.speed == speedUnknown ? 0 : edata.speed};
                },
                &edata)
         .value_or(EthInfo{});
