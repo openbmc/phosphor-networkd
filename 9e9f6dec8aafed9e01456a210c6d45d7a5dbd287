@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "424839ce_8c22e5c5",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-12-12T06:54:20Z",
+      "side": 1,
+      "message": "aren\u0027t you supposed to implement the signal emission version of the API?emitLLDP(bool,bool)?",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7368eba_ad1211de",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-12-12T06:54:20Z",
+      "side": 1,
+      "message": "don\u0027t you want to return what EthernetInterfaceIntf::emitLLDP(value) ?",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee756fbd_2fa86e99",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-12-12T06:54:20Z",
+      "side": 1,
+      "message": "dont we have no throw version of this call?",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc84f314_c65c64d7",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-12-12T06:54:20Z",
+      "side": 1,
+      "message": "this is not an interface method right? Possibility of uncaught elog\u003c\u003e exeption will bring the service down right?",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7ce1ac6_ad9eef2e",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-12-12T06:54:20Z",
+      "side": 1,
+      "message": "why not use the path defined globally?",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e712d90c_7e42d253",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-12-12T06:54:20Z",
+      "side": 1,
+      "message": "why not json format?",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb7ded5b_e5710773",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-12-12T06:54:20Z",
+      "side": 1,
+      "message": "why hardcoding the eth0 ,eth1 ? can\u0027t you make this generic?",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e173dd0_d34abb1e",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2024-12-12T06:54:20Z",
+      "side": 1,
+      "message": "is there any purticular standard you following here? Else a json serialisation would be much better",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
