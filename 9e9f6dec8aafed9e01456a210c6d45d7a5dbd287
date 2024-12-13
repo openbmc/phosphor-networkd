@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "206335f2_8c1be69e",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-13T12:28:43Z",
+      "side": 1,
+      "message": "No we don\u0027t have.",
+      "parentUuid": "ee756fbd_2fa86e99",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dc84f314_c65c64d7",
         "filename": "src/network_manager.cpp",
         "patchSetId": 4
@@ -101,6 +119,24 @@
       "writtenOn": "2024-12-12T06:54:20Z",
       "side": 1,
       "message": "this is not an interface method right? Possibility of uncaught elog\u003c\u003e exeption will bring the service down right?",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25e03203_732f3d1d",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-13T12:28:43Z",
+      "side": 1,
+      "message": "can\u0027t return internal error for here.\nremoved",
+      "parentUuid": "dc84f314_c65c64d7",
       "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -136,6 +172,24 @@
       "side": 1,
       "message": "LLDPD service daemon creates this file and configuration changes in this file consumed by lldpd",
       "parentUuid": "a7ce1ac6_ad9eef2e",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef982df8_cd41ea8e",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-13T12:28:43Z",
+      "side": 1,
+      "message": "got it, done",
+      "parentUuid": "11dde7d8_f08b403f",
       "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -241,6 +295,42 @@
       "side": 1,
       "message": "yeah actually I was also thinking the same, but networkd does not have D-bus persistency logic. anyways this lldp.conf file needed for lldp configuration so using same file for parsing",
       "parentUuid": "3e173dd0_d34abb1e",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ccc0cc04_1522d5ce",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-13T12:28:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4612615_48d02779",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee3742d8_7801c917",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-13T12:28:43Z",
+      "side": 1,
+      "message": "LLDP configuration already stored in lldp config file in this format and its persists, so trying to use same format here to parse from lldp config file.",
+      "parentUuid": "4eefd46b_7239bbce",
       "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
