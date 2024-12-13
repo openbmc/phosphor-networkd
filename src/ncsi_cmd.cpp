@@ -28,6 +28,7 @@
 #include <stdplus/str/buf.hpp>
 #include <stdplus/str/conv.hpp>
 
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <optional>
@@ -35,6 +36,9 @@
 #include <vector>
 
 using namespace phosphor::network::ncsi;
+
+const uint32_t NCSI_CORE_DUMP_HANDLE = 0xFFFF0000;
+const uint32_t NCSI_CRASH_DUMP_HANDLE = 0xFFFF0001;
 
 struct GlobalOptions
 {
@@ -84,7 +88,12 @@ static void print_usage(const char* progname)
         "\n"
         "oem PAYLOAD\n"
         "    Send a single OEM command (type 0x50).\n"
-        "        PAYLOAD            Command payload bytes, as hex\n";
+        "        PAYLOAD            Command payload bytes, as hex\n"
+        "\n"
+        "dump HANDLE FILE\n"
+        "     Perform NCSI core/crash dump and save log to FILE.\n"
+        "        HANDLE             Use 'ffff0000' for core dump or 'ffff0001' for crash dump.\n"
+        "        FILE               The file to save the core/crash dump log.\n";
     // clang-format on
 }
 
@@ -98,6 +107,19 @@ static std::optional<unsigned int>
     catch (const std::exception& e)
     {
         std::cerr << "Invalid " << label << " argument '" << str << "'\n";
+        return {};
+    }
+}
+
+static std::optional<uint32_t> parseHexHandle(const std::string& handle)
+{
+    try
+    {
+        return static_cast<uint32_t>(std::stoul(handle, nullptr, 16));
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Invalid data handle argument: " << handle << "\n";
         return {};
     }
 }
@@ -407,6 +429,249 @@ static int ncsiCommandOEM(GlobalOptions& options, int argc,
     return ncsiCommand(options, oemType, *payload);
 }
 
+static std::array<unsigned char, 12>
+    generateDumpCmdPayload(uint32_t chunkNum, uint32_t dataHandle, bool isAbort)
+{
+    std::array<unsigned char, 12> payload = {0x00};
+
+    if (chunkNum == 1)
+    {
+        // First chunk: Data Handle for core dump
+        payload[3] = 0; // Opcode for the first chunk
+        payload[8] = (dataHandle >> 24) & 0xFF;
+        payload[9] = (dataHandle >> 16) & 0xFF;
+        payload[10] = (dataHandle >> 8) & 0xFF;
+        payload[11] = dataHandle;
+    }
+    else
+    {
+        if (isAbort)
+        {
+            // For subsequent chunks after abort: Use opcode for abort message
+            payload[3] = 3; // Opcode for abort chunk
+            payload[8] = (chunkNum >> 24) & 0xFF;
+            payload[9] = (chunkNum >> 16) & 0xFF;
+            payload[10] = (chunkNum >> 8) & 0xFF;
+            payload[11] = chunkNum & 0xFF;
+        }
+        else
+        {
+            // For subsequent chunks: Use chunk number instead of data handle
+            payload[3] = 2; // Opcode for next chunk
+            payload[8] = (chunkNum >> 24) & 0xFF;
+            payload[9] = (chunkNum >> 16) & 0xFF;
+            payload[10] = (chunkNum >> 8) & 0xFF;
+            payload[11] = chunkNum & 0xFF;
+        }
+    }
+
+    return payload;
+}
+
+std::string getDescForResponse(uint16_t response)
+{
+    switch (response)
+    {
+        case 0x0000:
+            return "Command Completed";
+        case 0x0001:
+            return "Command Failed";
+        case 0x0002:
+            return "Command Unavailable";
+        case 0x0003:
+            return "Command Unsupported";
+        case 0x0004:
+            return "Delayed Response";
+        default:
+            return "Unknown response code.";
+    }
+}
+
+std::string getDescForReason(uint16_t reason)
+{
+    switch (reason)
+    {
+        case 0x0001:
+            return "Interface Initialization Required";
+        case 0x0002:
+            return "Parameter Is Invalid, Unsupported, or Out-of-Range";
+        case 0x0003:
+            return "Channel Not Ready";
+        case 0x0004:
+            return "Package Not Ready";
+        case 0x0005:
+            return "Invalid Payload Length";
+        case 0x0006:
+            return "Information Not Available";
+        case 0x0007:
+            return "Intervention Required";
+        case 0x0008:
+            return "Link Command Failed - Hardware Access Error";
+        case 0x0009:
+            return "Command Timeout";
+        case 0x000A:
+            return "Secondary Device Not Powered";
+        case 0x7FFF:
+            return "Unknown/Unsupported Command Type";
+        case 0x4D01:
+            return "Abort Transfer: NC cannot proceed with transfer.";
+        case 0x4D02:
+            return "Invalid Handle Value: Data Handle is invalid or not supported.";
+        case 0x4D03:
+            return "Sequence Count Error: Chunk Number requested is not consecutive with the previous number transmitted.";
+        default:
+            if (reason >= 0x8000)
+            {
+                return "OEM Reason Code";
+            }
+            else
+            {
+                return "Unknown reason code.";
+            }
+    }
+}
+
+static int ncsiDump(GlobalOptions& options, uint32_t handle,
+                    const std::string& fileName)
+{
+    constexpr auto ncsiCmdCoreDump = 0x4D;
+    uint32_t chunkNum = 1;
+    bool isTransferComplete = false;
+    bool isAbort = false;
+    uint8_t opcode = 0;
+    uint32_t totalDataSize = 0;
+    std::ofstream outFile(fileName, std::ios::binary);
+
+    // Validate handle
+    if (handle != NCSI_CORE_DUMP_HANDLE && handle != NCSI_CRASH_DUMP_HANDLE)
+    {
+        std::cerr
+            << "Invalid data handle value. Expected NCSI_CORE_DUMP_HANDLE (0xFFFF0000) or NCSI_CRASH_DUMP_HANDLE (0xFFFF0001), got: "
+            << std::hex << handle << "\n";
+        return -1;
+    }
+
+    if (!outFile.is_open())
+    {
+        std::cerr << "Failed to open file: " << fileName << "\n";
+        return -1;
+    }
+
+    while (!isTransferComplete)
+    {
+        auto payloadArray = generateDumpCmdPayload(chunkNum, handle, isAbort);
+        std::vector<unsigned char> payload(payloadArray.begin(),
+                                           payloadArray.end());
+
+        NCSICommand cmd(ncsiCmdCoreDump, options.package, options.channel,
+                        payload);
+        auto resp = options.interface->sendCommand(cmd);
+        if (!resp)
+        {
+            std::cerr << "Failed to send NCSI command for chunk number "
+                      << chunkNum << "\n";
+            return -1;
+        }
+
+        auto response = resp->response;
+        auto reason = resp->reason;
+        auto length = resp->payload.size();
+
+        if (response != 0)
+        {
+            std::string responseDesc = getDescForResponse(response);
+            std::string reasonDesc = getDescForReason(reason);
+            std::cerr << "Error  response code: " << response
+                      << ", reason code: " << reason << "\n";
+            std::cerr << "Response Description: " << responseDesc << "\n";
+            std::cerr << "Reason   Description: " << reasonDesc << "\n";
+            return -1;
+        }
+
+        if (length <= 8 && isAbort)
+        {
+            isTransferComplete = true;
+            break;
+        }
+        else if (length > 8)
+        {
+            // Ensure length is 4-byte aligned
+            if (length % 4 != 0)
+            {
+                std::cerr << "Packet length is not 4-byte aligned: " << length
+                          << "\n";
+                return -1;
+            }
+
+            auto dataSize = length - 8;
+            totalDataSize += dataSize;
+            opcode = resp->payload[7];
+            std::cerr << "Response dataSize " << dataSize << " bytes\n";
+            std::cerr << "totalDataSize " << totalDataSize << " bytes\n";
+            std::cerr << "opcode " << static_cast<int>(opcode) << "\n";
+
+            if (outFile.is_open())
+            {
+                outFile.write(
+                    reinterpret_cast<const char*>(resp->payload.data() + 8),
+                    dataSize);
+            }
+            else
+            {
+                std::cerr << "Failed to write to file. File is not open.\n";
+            }
+        }
+        else
+        {
+            std::cerr << "Received response with insufficient payload length: "
+                      << length << " Expected more than 8 bytes.\n";
+        }
+
+        switch (opcode)
+        {
+            case 0x1: // Initial chunk, continue to next
+                if (chunkNum != 1)
+                {
+                    std::cerr << "Unexpected initial chunk number: " << chunkNum
+                              << "\n";
+                    return -1;
+                }
+                chunkNum++;
+                break;
+            case 0x2: // Middle chunk, continue to next
+                if (chunkNum <= 1)
+                {
+                    std::cerr << "Unexpected middle chunk number: " << chunkNum
+                              << "\n";
+                    return -1;
+                }
+                chunkNum++;
+                break;
+            case 0x4: // Final chunk
+            case 0x5: // Initial and final chunk
+                isTransferComplete = true;
+                break;
+            case 0x8: // Abort transfer
+                std::cerr << "Transfer aborted by NIC\n";
+                isAbort = true;
+                break;
+            default:
+                std::cerr << "Unexpected opcode: " << static_cast<int>(opcode)
+                          << "\n";
+                isAbort = true;
+                return -1;
+        }
+
+        if (resp->payload.size() == 8 && isAbort)
+        {
+            isTransferComplete = true;
+        }
+    }
+
+    outFile.close();
+    return 0;
+}
+
 /* A note on log output:
  * For output that relates to command-line usage, we just output directly to
  * stderr. Once we have a properly parsed command line invocation, we use lg2
@@ -448,6 +713,23 @@ int main(int argc, char** argv)
     else if (subcommand == "oem")
     {
         ret = ncsiCommandOEM(globalOptions, argc, argv);
+    }
+    else if (subcommand == "dump")
+    {
+        if (argc != 3)
+        {
+            std::cerr << "Invalid arguments for 'dump' subcommand\n";
+            print_usage(progname);
+            return -1;
+        }
+
+        auto handleOpt = parseHexHandle(argv[1]);
+        if (!handleOpt.has_value())
+        {
+            return -1;
+        }
+
+        return ncsiDump(globalOptions, *handleOpt, argv[2]);
     }
     else
     {
