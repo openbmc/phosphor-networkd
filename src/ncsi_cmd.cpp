@@ -29,7 +29,9 @@
 #include <stdplus/str/conv.hpp>
 
 #include <climits>
+#include <fstream>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <optional>
 #include <string_view>
@@ -37,10 +39,13 @@
 
 using namespace phosphor::network::ncsi;
 
+const uint32_t NCSI_CORE_DUMP_HANDLE = 0xFFFF0000;
+const uint32_t NCSI_CRASH_DUMP_HANDLE = 0xFFFF0001;
+
 struct GlobalOptions
 {
     std::unique_ptr<Interface> interface;
-    unsigned int package;
+    std::optional<unsigned int> package;
     std::optional<unsigned int> channel;
 };
 
@@ -74,7 +79,8 @@ static void print_usage(const char* progname)
         "Global options:\n"
         "    --interface IFACE, -i  Specify net device by ifindex.\n"
         "    --mctp [NET,]EID, -m   Specify MCTP network device.\n"
-        "    --package PACKAGE, -p  Specify a package.\n"
+        "    --package PACKAGE, -p  For non-discovery commands this is required; for discovery it is optional and\n"
+        "                           restricts the discovery to a specific package index.\n"
         "    --channel CHANNEL, -c  Specify a channel.\n"
         "\n"
         "A --package/-p argument is required, as well as interface type "
@@ -89,7 +95,13 @@ static void print_usage(const char* progname)
         "\n"
         "oem PAYLOAD\n"
         "    Send a single OEM command (type 0x50).\n"
-        "        PAYLOAD            Command payload bytes, as hex\n";
+        "        PAYLOAD            Command payload bytes, as hex\n"
+        "\n"
+        "core-dump FILE\n"
+        "    Perform NCSI core dump and save log to FILE.\n"
+        "\n"
+        "crash-dump FILE\n"
+        "    Perform NCSI crash dump and save log to FILE.\n";
     // clang-format on
 }
 
@@ -421,6 +433,241 @@ static int ncsiCommandOEM(GlobalOptions& options, int argc,
     return ncsiCommand(options, oemType, *payload);
 }
 
+static int ncsiCommandReceiveDump(GlobalOptions& options,
+                                  const std::string& subcommand, int argc,
+                                  const char* const* argv)
+{
+    if (argc != 2)
+    {
+        std::cerr << "Invalid arguments for '" << subcommand
+                  << "' subcommand\n";
+        print_usage(argv[0]); 
+        return -1;
+    }
+    uint32_t handle = (subcommand == "core-dump") ? NCSI_CORE_DUMP_HANDLE :
+                                                    NCSI_CRASH_DUMP_HANDLE;
+    return ncsiDump(options, handle, argv[1]);
+}
+
+static std::array<unsigned char, 12>
+    generateDumpCmdPayload(uint32_t chunkNum, uint32_t dataHandle, bool isAbort)
+{
+    std::array<unsigned char, 12> payload = {};
+    uint8_t opcode;
+
+    if (isAbort)
+    {
+        opcode = 3;
+    }
+    else if (chunkNum == 1)
+    {
+        // For the first chunk the chunk number field carries the data handle.
+        opcode = 0;
+        chunkNum = dataHandle;
+    }
+    else
+    {
+        opcode = 2;
+    }
+    payload[3] = opcode;
+    payload[8] = (chunkNum >> 24) & 0xFF;
+    payload[9] = (chunkNum >> 16) & 0xFF;
+    payload[10] = (chunkNum >> 8) & 0xFF;
+    payload[11] = chunkNum & 0xFF;
+
+    return payload;
+}
+
+std::string getDescForResponse(uint16_t response)
+{
+    static const std::map<uint16_t, std::string> descMap = {
+        {0x0000, "Command Completed"},
+        {0x0001, "Command Failed"},
+        {0x0002, "Command Unavailable"},
+        {0x0003, "Command Unsupported"},
+        {0x0004, "Delayed Response"}};
+
+    try
+    {
+        return descMap.at(response);
+    }
+    catch (std::exception&)
+    {
+        return "Unknown response code: " + std::to_string(response);
+    }
+}
+
+std::string getDescForReason(uint16_t reason)
+{
+    static const std::map<uint16_t, std::string> reasonMap = {
+        {0x0001, "Interface Initialization Required"},
+        {0x0002, "Parameter Is Invalid, Unsupported, or Out-of-Range"},
+        {0x0003, "Channel Not Ready"},
+        {0x0004, "Package Not Ready"},
+        {0x0005, "Invalid Payload Length"},
+        {0x0006, "Information Not Available"},
+        {0x0007, "Intervention Required"},
+        {0x0008, "Link Command Failed - Hardware Access Error"},
+        {0x0009, "Command Timeout"},
+        {0x000A, "Secondary Device Not Powered"},
+        {0x7FFF, "Unknown/Unsupported Command Type"},
+        {0x4D01, "Abort Transfer: NC cannot proceed with transfer."},
+        {0x4D02,
+         "Invalid Handle Value: Data Handle is invalid or not supported."},
+        {0x4D03,
+         "Sequence Count Error: Chunk Number requested is not consecutive with the previous number transmitted."}};
+
+    if (reason >= 0x8000)
+    {
+        return "OEM Reason Code" + std::to_string(reason);
+    }
+
+    try
+    {
+        return reasonMap.at(reason);
+    }
+    catch (std::exception&)
+    {
+        return "Unknown reason code: " + std::to_string(reason);
+    }
+}
+
+static int ncsiDump(GlobalOptions& options, uint32_t handle,
+                    const std::string& fileName)
+{
+    constexpr auto ncsiCmdDump = 0x4D;
+    uint32_t chunkNum = 1;
+    bool isTransferComplete = false;
+    bool isAbort = false;
+    uint8_t opcode = 0;
+    uint32_t totalDataSize = 0;
+    std::ofstream outFile(fileName, std::ios::binary);
+
+    // Validate handle
+    if (handle != NCSI_CORE_DUMP_HANDLE && handle != NCSI_CRASH_DUMP_HANDLE)
+    {
+        std::cerr
+            << "Invalid data handle value. Expected NCSI_CORE_DUMP_HANDLE (0xFFFF0000) or NCSI_CRASH_DUMP_HANDLE (0xFFFF0001), got: "
+            << std::hex << handle << "\n";
+        if (outFile.is_open())
+            outFile.close();
+        return -1;
+    }
+
+    if (!outFile.is_open())
+    {
+        std::cerr << "Failed to open file: " << fileName << "\n";
+        return -1;
+    }
+
+    while (!isTransferComplete && !isAbort)
+    {
+        auto payloadArray = generateDumpCmdPayload(chunkNum, handle, false);
+        std::span<const unsigned char> payload(payloadArray.data(),
+                                               payloadArray.size());
+
+        NCSICommand cmd(ncsiCmdDump, options.package, options.channel, payload);
+        auto resp = options.interface->sendCommand(cmd);
+        if (!resp)
+        {
+            std::cerr << "Failed to send NCSI command for chunk number "
+                      << chunkNum << "\n";
+            outFile.close();
+            return -1;
+        }
+
+        auto response = resp->response;
+        auto reason = resp->reason;
+        auto length = resp->payload.size();
+
+        if (response != 0)
+        {
+            std::cerr << "Error encountered on chunk " << chunkNum << ":\n"
+                      << "Response Description: "
+                      << getDescForResponse(response) << "\n"
+                      << "Reason Description: " << getDescForReason(reason)
+                      << "\n";
+            outFile.close();
+            return -1;
+        }
+
+        if (length > 8)
+        {
+            auto dataSize = length - 8;
+            totalDataSize += dataSize;
+            opcode = resp->payload[7];
+            if (outFile.is_open())
+            {
+                outFile.write(
+                    reinterpret_cast<const char*>(resp->payload.data() + 8),
+                    dataSize);
+            }
+            else
+            {
+                std::cerr << "Failed to write to file. File is not open.\n";
+                isAbort = true;
+            }
+        }
+        else
+        {
+            std::cerr << "Received response with insufficient payload length: "
+                      << length << " Expected more than 8 bytes.  Chunk: "
+                      << chunkNum << "\n";
+            isAbort = true;
+        }
+
+        switch (opcode)
+        {
+            case 0x1: // Initial chunk, continue to next
+            case 0x2: // Middle chunk, continue to next
+                chunkNum++;
+                break;
+            case 0x4: // Final chunk
+            case 0x5: // Initial and final chunk
+                isTransferComplete = true;
+                break;
+            case 0x8: // Abort transfer
+                std::cerr << "Transfer aborted by NIC\n";
+                isTransferComplete = true;
+                break;
+            default:
+                std::cerr << "Unexpected opcode: " << static_cast<int>(opcode)
+                          << " at chunk " << chunkNum << "\n";
+                isAbort = true;
+                break;
+        }
+    }
+
+    // Handle abort explicitly if an unexpected opcode was encountered.
+    if (isAbort)
+    {
+        std::cerr << "Issuing explicit abort command...\n";
+        auto abortPayloadArray = generateDumpCmdPayload(chunkNum, handle, true);
+        std::span<const unsigned char> abortPayload(abortPayloadArray.data(),
+                                                    abortPayloadArray.size());
+        NCSICommand abortCmd(ncsiCmdDump, options.package, options.channel,
+                             abortPayload);
+        auto abortResp = options.interface->sendCommand(abortCmd);
+        if (!abortResp)
+        {
+            std::cerr << "Failed to send abort command for chunk number "
+                      << chunkNum << "\n";
+        }
+        else
+        {
+            std::cerr << "Abort command issued.\n";
+        }
+    }
+    else
+    {
+        std::cout << "Dump transfer complete. Total data size: "
+                  << totalDataSize << " bytes\n";
+    }
+
+    outFile.close();
+    return 0;
+}
+
 /* A note on log output:
  * For output that relates to command-line usage, we just output directly to
  * stderr. Once we have a properly parsed command line invocation, we use lg2
@@ -462,6 +709,10 @@ int main(int argc, char** argv)
     else if (subcommand == "oem")
     {
         ret = ncsiCommandOEM(globalOptions, argc, argv);
+    }
+    else if (subcommand == "core-dump" || subcommand == "crash-dump")
+    {
+        ret = ncsiCommandReceiveDump(globalOptions, subcommand, argc, argv);
     }
     else
     {
