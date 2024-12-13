@@ -16,6 +16,24 @@
       "message": "You can drop this, it contractually has to return an exception type.",
       "revId": "1d797aba5e89c472d07c8b5440f3f3c44ce9c6fb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fd85359_666aaa9b",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 905,
+      "author": {
+        "id": 1002242
+      },
+      "writtenOn": "2024-12-13T09:30:40Z",
+      "side": 1,
+      "message": "Added catch all to handle other exceptions than standard exception . But went through the implementation and could see only standard exceptions .Hence removing this block",
+      "parentUuid": "579b194f_175d77de",
+      "revId": "1d797aba5e89c472d07c8b5440f3f3c44ce9c6fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
