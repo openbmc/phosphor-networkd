@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad86e062_f19257b1",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2024-12-17T11:35:21Z",
+      "side": 1,
+      "message": "nit: `static constexpr decltype(edata.speed) speedUnknown...`",
+      "revId": "22d346117fe76f2eaaec52a74a3b6794f3f19683",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
