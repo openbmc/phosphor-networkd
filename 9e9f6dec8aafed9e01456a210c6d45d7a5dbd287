@@ -36,6 +36,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab92cedb_d2d53714",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-17T17:40:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e164b095_9ca1ec52",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7368eba_ad1211de",
@@ -71,6 +89,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddcbe091_d7f0a9f2",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-17T17:40:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "443edd2e_fefa0e15",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee756fbd_2fa86e99",
@@ -102,6 +138,24 @@
       "side": 1,
       "message": "No we don\u0027t have.",
       "parentUuid": "ee756fbd_2fa86e99",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "66a90ca3_57e5aefe",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-17T17:40:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "206335f2_8c1be69e",
       "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -229,6 +283,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "17c1b786_59006083",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-17T17:40:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97ddc0be_c7d2c440",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bb7ded5b_e5710773",
@@ -331,6 +403,24 @@
       "side": 1,
       "message": "LLDP configuration already stored in lldp config file in this format and its persists, so trying to use same format here to parse from lldp config file.",
       "parentUuid": "4eefd46b_7239bbce",
+      "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecab7850_cbb94ddc",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2024-12-17T17:40:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee3742d8_7801c917",
       "revId": "9e9f6dec8aafed9e01456a210c6d45d7a5dbd287",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
