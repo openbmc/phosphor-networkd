@@ -16,6 +16,24 @@
       "message": "nit: `static constexpr decltype(edata.speed) speedUnknown...`",
       "revId": "22d346117fe76f2eaaec52a74a3b6794f3f19683",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5cbe2384_e239bd97",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000994
+      },
+      "writtenOn": "2024-12-18T08:01:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad86e062_f19257b1",
+      "revId": "22d346117fe76f2eaaec52a74a3b6794f3f19683",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
