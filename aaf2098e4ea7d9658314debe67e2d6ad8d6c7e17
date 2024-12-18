@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "4592bbaf_163c07b1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2024-12-18T22:52:11Z",
+      "side": 1,
+      "message": "Yeah, this doesn\u0027t make sense to me either. We have the field to show the static servers, but this field is not \"dynamic NTP servers\", it\u0027s just \"NTP servers\". I wouldn\u0027t expect filtering to be applied here as a user of this interface.",
+      "parentUuid": "38c560ac_c900abea",
+      "revId": "aaf2098e4ea7d9658314debe67e2d6ad8d6c7e17",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "b15a9e5d_fa51716d",
