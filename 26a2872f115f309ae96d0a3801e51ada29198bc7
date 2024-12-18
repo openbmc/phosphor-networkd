@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6055380f_834e5e7b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-12-18T12:41:42Z",
+      "side": 1,
+      "message": "my c++ is still copy examples level.",
+      "revId": "26a2872f115f309ae96d0a3801e51ada29198bc7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dcdcb94a_37a956f9",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-12-18T12:41:42Z",
+      "side": 1,
+      "message": "why does 0 need a type cast?",
+      "revId": "26a2872f115f309ae96d0a3801e51ada29198bc7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d49313a_ca01fc9b",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2024-12-18T12:41:42Z",
+      "side": 1,
+      "message": "since the code is only replacing a field in the returned path does c++ allow the input to not be const and each field be reconstructed?",
+      "revId": "26a2872f115f309ae96d0a3801e51ada29198bc7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
