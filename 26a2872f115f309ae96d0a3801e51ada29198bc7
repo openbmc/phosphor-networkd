@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7f8be92_f76f82be",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1000994
+      },
+      "writtenOn": "2024-12-19T03:51:20Z",
+      "side": 1,
+      "message": "Thank @Milton for your comments.\n\nEthInfo.speed is a uint16_t type ( https://github.com/openbmc/phosphor-networkd/blob/master/src/system_queries.hpp#L14 )\n0 is int type.\nIt is \"error: narrowing conversion from ‘int’ to ‘uint16_t’\". The unit-test-docker script show this error.\n\nSo we need a type cast for 0.",
+      "parentUuid": "dcdcb94a_37a956f9",
+      "revId": "26a2872f115f309ae96d0a3801e51ada29198bc7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3d49313a_ca01fc9b",
@@ -48,6 +66,24 @@
       "writtenOn": "2024-12-18T12:41:42Z",
       "side": 1,
       "message": "since the code is only replacing a field in the returned path does c++ allow the input to not be const and each field be reconstructed?",
+      "revId": "26a2872f115f309ae96d0a3801e51ada29198bc7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2572c6e5_02e5fa77",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1000994
+      },
+      "writtenOn": "2024-12-19T03:51:20Z",
+      "side": 1,
+      "message": "Yes @Milton, the syntax is correct now, I tried to run unit test at https://github.com/openbmc/openbmc-build-scripts/blob/master/run-unit-test-docker.sh , and my patch passed unit-test completely.",
+      "parentUuid": "3d49313a_ca01fc9b",
       "revId": "26a2872f115f309ae96d0a3801e51ada29198bc7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
