@@ -393,7 +393,17 @@ ObjectPath EthernetInterface::staticGateway(std::string gateway,
     std::string route;
     try
     {
-        addr.emplace(stdplus::fromStr<stdplus::InAnyAddr>(gateway));
+        switch (protocolType)
+        {
+            case IP::Protocol::IPv4:
+                addr.emplace(stdplus::fromStr<stdplus::In4Addr>(gateway));
+                break;
+            case IP::Protocol::IPv6:
+                addr.emplace(stdplus::fromStr<stdplus::In6Addr>(gateway));
+                break;
+            default:
+                throw std::logic_error("Exhausted protocols");
+        }
         route = gateway;
     }
     catch (const std::exception& e)
