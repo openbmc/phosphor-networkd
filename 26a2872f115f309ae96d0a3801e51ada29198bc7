@@ -18,6 +18,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0809f67_ae8165a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000994
+      },
+      "writtenOn": "2025-01-07T03:36:23Z",
+      "side": 1,
+      "message": "Hi all, I\u0027m looking forward to seeing your comments on my patchset.",
+      "revId": "26a2872f115f309ae96d0a3801e51ada29198bc7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dcdcb94a_37a956f9",
@@ -84,6 +101,24 @@
       "side": 1,
       "message": "Yes @Milton, the syntax is correct now, I tried to run unit test at https://github.com/openbmc/openbmc-build-scripts/blob/master/run-unit-test-docker.sh , and my patch passed unit-test completely.",
       "parentUuid": "3d49313a_ca01fc9b",
+      "revId": "26a2872f115f309ae96d0a3801e51ada29198bc7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2fc2f2d_0f0a7433",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1000994
+      },
+      "writtenOn": "2025-01-07T03:36:23Z",
+      "side": 1,
+      "message": "Resolved this discussion.",
+      "parentUuid": "2572c6e5_02e5fa77",
       "revId": "26a2872f115f309ae96d0a3801e51ada29198bc7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
