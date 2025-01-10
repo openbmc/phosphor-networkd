@@ -31,11 +31,11 @@ if sdbusplus_dep.type_name() == 'internal'
   sdbusplusplus_depfiles = subproject('sdbusplus').get_variable('sdbusplusplus_depfiles')
 endif
 
-generated_sources = []
-generated_others = []
-yaml_sources = []
+yaml_selected_subdirs = [ 'xyz' ]
+should_generate_cpp = true
+should_generate_markdown = false
+should_generate_registry = false
 subdir('gen')
-subdir('gen/xyz')
 networkd_dbus_includes = include_directories('gen')
 
 phosphor_dbus_interfaces_dep = dependency('phosphor-dbus-interfaces')
