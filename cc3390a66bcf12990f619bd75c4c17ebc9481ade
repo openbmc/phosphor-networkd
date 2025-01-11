@@ -16,6 +16,24 @@
       "message": "nit: Just use SPEED_UNKNOWN inline",
       "revId": "cc3390a66bcf12990f619bd75c4c17ebc9481ade",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39ee3731_85729640",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1000994
+      },
+      "writtenOn": "2025-01-11T04:42:06Z",
+      "side": 1,
+      "message": "Hi @wak@google.com, Do you mean I should use decltype to cast type as below?\n\n.speed \u003d edata.speed \u003d\u003d static_cast\u003cdecltype(edata.speed)\u003e(SPEED_UNKNOWN) ? (uint16_t)0 : edata.speed};",
+      "parentUuid": "5deb529e_af536ad7",
+      "revId": "cc3390a66bcf12990f619bd75c4c17ebc9481ade",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
