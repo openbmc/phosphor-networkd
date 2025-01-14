@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "623c8bc6_fba9c6e7",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-01-14T06:11:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ee4cc85_6f93d813",
+      "revId": "9f2ebde06aff33a1bb49a4b6553cb16a2592dce7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0fb41338_f885a558",
@@ -66,6 +84,24 @@
       "writtenOn": "2025-01-14T00:48:36Z",
       "side": 1,
       "message": "From this flow, it looks like when NC responds with a abort, we need to send an abort from the MC side as well. I dont see that from the spec.",
+      "revId": "9f2ebde06aff33a1bb49a4b6553cb16a2592dce7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01ac9f61_c7d46be3",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-01-14T06:11:05Z",
+      "side": 1,
+      "message": "Thanks for reminding.",
+      "parentUuid": "f1418b9b_59420b8e",
       "revId": "9f2ebde06aff33a1bb49a4b6553cb16a2592dce7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
