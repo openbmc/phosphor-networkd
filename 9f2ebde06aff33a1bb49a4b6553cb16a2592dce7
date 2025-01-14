@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9ee4cc85_6f93d813",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1000212
+      },
+      "writtenOn": "2025-01-14T00:48:36Z",
+      "side": 1,
+      "message": "You can really cut the duplication here:\n```\nuint8_t opcode;\nif (chunkNum \u003d\u003d 1) {\n  opcode \u003d 0;\n  chunkNum \u003d dataHandle;\n} else {\n  opcode \u003d isAbort ? 3 : 2;\n}\npayload[3] \u003d opcode;\npayload[8] \u003d (chunkNum \u003e\u003e 24) \u0026 0xFF;\npayload[9] \u003d (chunkNum \u003e\u003e 16) \u0026 0xFF;\npayload[10] \u003d (chunkNum \u003e\u003e 8) \u0026 0xFF;\npayload[11] \u003d chunkNum \u0026 0xFF;\n```",
+      "revId": "9f2ebde06aff33a1bb49a4b6553cb16a2592dce7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0fb41338_f885a558",
         "filename": "src/ncsi_cmd.cpp",
         "patchSetId": 39
@@ -14,6 +31,41 @@
       "writtenOn": "2025-01-14T00:39:02Z",
       "side": 1,
       "message": "Where did you get the opcode translation?\nhttps://www.dmtf.org/sites/default/files/standards/documents/DSP0222_1.2.0.pdf\nhas only the following defined:\n0x0 - Initial Chunk\n0x2 - Next Chunk\n0x3 - Abort transfer.",
+      "revId": "9f2ebde06aff33a1bb49a4b6553cb16a2592dce7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4411cbfd_8154682a",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1000212
+      },
+      "writtenOn": "2025-01-14T00:48:36Z",
+      "side": 1,
+      "message": "Never mind. I see it `Receive Data from NC response (0xCD)`",
+      "parentUuid": "0fb41338_f885a558",
+      "revId": "9f2ebde06aff33a1bb49a4b6553cb16a2592dce7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1418b9b_59420b8e",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1000212
+      },
+      "writtenOn": "2025-01-14T00:48:36Z",
+      "side": 1,
+      "message": "From this flow, it looks like when NC responds with a abort, we need to send an abort from the MC side as well. I dont see that from the spec.",
       "revId": "9f2ebde06aff33a1bb49a4b6553cb16a2592dce7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
