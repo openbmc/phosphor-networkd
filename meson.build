@@ -96,6 +96,6 @@ configure_file(
   install: true,
   install_dir: get_option('datadir') / 'dbus-1' / 'system.d')
 
-if not get_option('tests').disabled()
+if get_option('tests').allowed()
   subdir('test')
 endif
