@@ -5,14 +5,21 @@ sdbusplus_current_path = 'xyz/openbmc_project/Network/VLAN'
 
 generated_markdown += custom_target(
     'xyz/openbmc_project/Network/VLAN/Create__markdown'.underscorify(),
-    input: [ '../../../../../yaml/xyz/openbmc_project/Network/VLAN/Create.interface.yaml',  ],
-    output: [ 'Create.md' ],
+    input: [
+        '../../../../../yaml/xyz/openbmc_project/Network/VLAN/Create.interface.yaml',
+    ],
+    output: ['Create.md'],
     depend_files: sdbusplusplus_depfiles,
     command: [
-        sdbuspp_gen_meson_prog, '--command', 'markdown',
-        '--output', meson.current_build_dir(),
-        '--tool', sdbusplusplus_prog,
-        '--directory', meson.current_source_dir() / '../../../../../yaml',
+        sdbuspp_gen_meson_prog,
+        '--command',
+        'markdown',
+        '--output',
+        meson.current_build_dir(),
+        '--tool',
+        sdbusplusplus_prog,
+        '--directory',
+        meson.current_source_dir() / '../../../../../yaml',
         'xyz/openbmc_project/Network/VLAN/Create',
     ],
     install: should_generate_markdown,
