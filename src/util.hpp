@@ -85,8 +85,8 @@ void executeCommandinChildProcess(stdplus::zstring_view path, char** args);
 std::string_view getIgnoredInterfacesEnv();
 
 /** @brief Parse the comma separated interface names */
-std::unordered_set<std::string_view>
-    parseInterfaces(std::string_view interfaces);
+std::unordered_set<std::string_view> parseInterfaces(
+    std::string_view interfaces);
 
 /** @brief Get the ignored interfaces */
 const std::unordered_set<std::string_view>& getIgnoredInterfaces();
