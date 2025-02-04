@@ -54,6 +54,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "34e477b8_5c393a96",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-04T03:51:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "558a9741_22da2043",
+      "revId": "b9f70c6d29c84b28b8173f1d1fa092209fa04e00",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8756c443_230ace8b",
@@ -85,6 +103,24 @@
       "side": 1,
       "message": "That\u0027s already present in the code. I can rework to \"index\", but that would be a separate change.",
       "parentUuid": "8756c443_230ace8b",
+      "revId": "b9f70c6d29c84b28b8173f1d1fa092209fa04e00",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5a261b6_7dbe525e",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-04T03:51:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4369310_be76e667",
       "revId": "b9f70c6d29c84b28b8173f1d1fa092209fa04e00",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
