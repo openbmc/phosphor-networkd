@@ -54,6 +54,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7c9d32f3_661b4705",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2025-02-04T23:30:40Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "42bc8ac6_a203ff31",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7fc9ef78_dcff441a",
         "filename": "src/ncsi_cmd.cpp",
         "patchSetId": 45
@@ -65,6 +83,40 @@
       "writtenOn": "2025-02-04T18:52:54Z",
       "side": 1,
       "message": "just do `\u003c\u003c getDescForResponse(response) \u003c\u003c \u0027\\n\u0027`. no reason for a temporary if we dont intend on using it.",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a996fc9_7111167e",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2025-02-04T23:30:40Z",
+      "side": 1,
+      "message": "Is this actually an error path? You are writing to std err, is this expected?",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e790f1a6_50d4c702",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2025-02-04T23:30:40Z",
+      "side": 1,
+      "message": "As Amithash suggested add chunkNum here as well and at other relevant error messages in the loop.",
       "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -99,6 +151,24 @@
       "writtenOn": "2025-02-04T18:52:54Z",
       "side": 1,
       "message": "Can you just use parseUnsigned()? IMHO unsigned int is what we are expecting here right?",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb02574a_dd5405c1",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2025-02-04T23:30:40Z",
+      "side": 1,
+      "message": "I couldn\u0027t find parseUnsigned() API? From search i see few solutions and std::stoul is one of them.\nOr \nAre you suggesting the API name as parseUnsigned() rather than parseHexHandle()?",
+      "parentUuid": "1ea06fa8_d8587ce6",
       "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
