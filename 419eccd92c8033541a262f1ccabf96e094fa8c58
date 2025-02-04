@@ -88,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "36237c66_6cf68d29",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-04T03:50:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f588ae4a_692f916d",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0fe4418a_5323c60d",
@@ -229,6 +247,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d419499_50365b11",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-04T03:50:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2e7c021_d99a608c",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4fa01b56_fb185de0",
@@ -260,6 +296,24 @@
       "side": 1,
       "message": "We need to check the std::optional before assigning to `payload`, and (as above) fall back to the default (empty) payload if none was provided.",
       "parentUuid": "4fa01b56_fb185de0",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d4d5184_78ddb420",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-04T03:50:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "787f6176_89b5d51c",
       "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -352,6 +406,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d46a6202_9b42e017",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-04T03:50:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d666d41_6a3135dd",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e798c90c_98ba8178",
@@ -383,6 +455,24 @@
       "side": 1,
       "message": "It\u0027s kludgy, but temporary.\n\nWe need this so that we don\u0027t break things in the transition to `ncsi-cmd`. Once this change is merged, we can update the in-tree usage of `ncsi-netlink -o` to use `ncsi-cmd` directly, then remove the compatibility later.\n\nThat should be a fairly quick process, there are only a small number of instances where `ncsi-netlink -o` is used.",
       "parentUuid": "e798c90c_98ba8178",
+      "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e91b2261_e09c0f8a",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-04T03:50:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b63e6b2a_8343a233",
       "revId": "419eccd92c8033541a262f1ccabf96e094fa8c58",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
