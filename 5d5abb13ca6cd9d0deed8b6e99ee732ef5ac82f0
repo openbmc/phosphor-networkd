@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39bc59ca_fd520234",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1000212
+      },
+      "writtenOn": "2025-02-04T18:52:54Z",
+      "side": 1,
+      "message": "This is more a nit, but this would be a bit cleaner to read if we had it as\n```\nstatic const std::map\u003cuint16_t, std::string\u003e descMap \u003d {\n  {0x0000, \"Command Completed\"},\n  {0x0001, \"Command Failed\"},\n  ...\n}\ntry {\n    return descMap.at(response);\n} catch (std::exception\u0026) {\n    return std::string(\"Unknown response code:\"+std::to_string(+response);\n}\n```",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f09e364_8c61bada",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1000212
+      },
+      "writtenOn": "2025-02-04T18:52:54Z",
+      "side": 1,
+      "message": "Same as above, might be easier to read as a map.",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42bc8ac6_a203ff31",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1000212
+      },
+      "writtenOn": "2025-02-04T18:52:54Z",
+      "side": 1,
+      "message": "I would throw in chunkNum here. Would be easier to debug which chunk we got the error. This would be consistent to all error logs in this loop.",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fc9ef78_dcff441a",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1000212
+      },
+      "writtenOn": "2025-02-04T18:52:54Z",
+      "side": 1,
+      "message": "just do `\u003c\u003c getDescForResponse(response) \u003c\u003c \u0027\\n\u0027`. no reason for a temporary if we dont intend on using it.",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0142b12d_54931853",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1000212
+      },
+      "writtenOn": "2025-02-04T18:52:54Z",
+      "side": 1,
+      "message": "Throw chunkNum here as well.",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ea06fa8_d8587ce6",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1000212
+      },
+      "writtenOn": "2025-02-04T18:52:54Z",
+      "side": 1,
+      "message": "Can you just use parseUnsigned()? IMHO unsigned int is what we are expecting here right?",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
