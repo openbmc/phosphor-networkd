@@ -16,6 +16,23 @@
       "message": "Hi all, I\u0027m looking forward to seeing your comments on my patchset. Thank you!",
       "revId": "8c78bdbde392624ffcf9e4b44347e97c8afd7fd8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4dc68fa9_2b6e9912",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2025-02-04T16:26:54Z",
+      "side": 1,
+      "message": "how does \u003e make sense in n this comparison?\n\nif it\u0027s equal to unknown the desired result is 0\n\nif it\u0027s out of range then it should be 0 but it\u0027s being cast before the check\nwhy the check before assignment.?",
+      "revId": "8c78bdbde392624ffcf9e4b44347e97c8afd7fd8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
