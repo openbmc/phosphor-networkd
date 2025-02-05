@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e61bcdab_bbc25f47",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 459,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-05T12:39:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39bc59ca_fd520234",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5f09e364_8c61bada",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-02-04T18:52:54Z",
       "side": 1,
       "message": "Same as above, might be easier to read as a map.",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1edd88c2_77e098f1",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-05T12:39:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f09e364_8c61bada",
       "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -70,6 +106,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "97b9da5e_1394b807",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-05T12:39:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c9d32f3_661b4705",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7fc9ef78_dcff441a",
@@ -83,6 +137,24 @@
       "writtenOn": "2025-02-04T18:52:54Z",
       "side": 1,
       "message": "just do `\u003c\u003c getDescForResponse(response) \u003c\u003c \u0027\\n\u0027`. no reason for a temporary if we dont intend on using it.",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c9bc7e9_37f017fe",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-05T12:39:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7fc9ef78_dcff441a",
       "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -104,6 +176,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5934d0ee_3b0053a8",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-05T12:39:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a996fc9_7111167e",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e790f1a6_50d4c702",
@@ -121,6 +211,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "de3ff9fc_71ca2916",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-05T12:39:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e790f1a6_50d4c702",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0142b12d_54931853",
@@ -134,6 +242,24 @@
       "writtenOn": "2025-02-04T18:52:54Z",
       "side": 1,
       "message": "Throw chunkNum here as well.",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11d3e066_cedc6923",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-05T12:39:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0142b12d_54931853",
       "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -169,6 +295,24 @@
       "side": 1,
       "message": "I couldn\u0027t find parseUnsigned() API? From search i see few solutions and std::stoul is one of them.\nOr \nAre you suggesting the API name as parseUnsigned() rather than parseHexHandle()?",
       "parentUuid": "1ea06fa8_d8587ce6",
+      "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5acc8f7_c2824733",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 45
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-05T12:39:25Z",
+      "side": 1,
+      "message": "The function parseUnsigned() uses std::stoi(), which returns an int, a 32-bit signed integer. However, the handle value 0xFFFF0000 (4,294,901,760 in decimal) exceeds the range of a signed 32-bit integer (INT_MAX \u003d 2,147,483,647).",
+      "parentUuid": "eb02574a_dd5405c1",
       "revId": "5d5abb13ca6cd9d0deed8b6e99ee732ef5ac82f0",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
