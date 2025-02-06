@@ -16,6 +16,24 @@
       "message": "(nit) can we use std::stoul instead since we technically need the unsigned int?",
       "revId": "aa613da00a7a64b7e06c4f76b28b001d57db361b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a454b0b_7cb0cffe",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-06T01:20:51Z",
+      "side": 1,
+      "message": "good catch, and we should probably use an unsigned (plus a range check) for the EID parsing added later. Updated change coming shortly.",
+      "parentUuid": "42019891_ac6c84af",
+      "revId": "aa613da00a7a64b7e06c4f76b28b001d57db361b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
