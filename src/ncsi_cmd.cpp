@@ -45,7 +45,7 @@ const uint32_t NCSI_CRASH_DUMP_HANDLE = 0xFFFF0001;
 struct GlobalOptions
 {
     std::unique_ptr<Interface> interface;
-    unsigned int package;
+    std::optional<unsigned int> package;
     std::optional<unsigned int> channel;
 };
 
@@ -79,13 +79,17 @@ static void print_usage(const char* progname)
         "Global options:\n"
         "    --interface IFACE, -i  Specify net device by ifindex.\n"
         "    --mctp [NET,]EID, -m   Specify MCTP network device.\n"
-        "    --package PACKAGE, -p  Specify a package.\n"
+        "    --package PACKAGE, -p  For non-discovery commands this is required; for discovery it is optional and\n"
+        "                           restricts the discovery to a specific package index.\n"
         "    --channel CHANNEL, -c  Specify a channel.\n"
         "\n"
         "A --package/-p argument is required, as well as interface type "
         "(--interface/-i or --mctp/-m)\n"
         "\n"
         "Subcommands:\n"
+        "\n"
+	"discover\n"
+        "    Scan for available NC-SI packages and channels via MCTP.\n"
         "\n"
         "raw TYPE [PAYLOAD...]\n"
         "    Send a single command using raw type/payload data.\n"
@@ -318,13 +322,24 @@ static std::optional<std::tuple<GlobalOptions, int>>
         return {};
     }
 
+    // For non-discovery commands, package is required.
+    // If the subcommand is "discover", leave opts.package as nullopt.
     if (!package.has_value())
     {
-        std::cerr << "Missing package, add a --package argument\n";
-        return {};
+        if (optind < argc && std::string(argv[optind]) == "discover")
+        {
+            // Do nothing; package remains nullopt for discovery.
+        }
+        else
+        {
+            std::cerr << "Missing package, add a --package argument\n";
+            return {};
+        }
     }
-
-    opts.package = *package;
+    else
+    {
+        opts.package = *package;
+    }
 
     return std::make_tuple(std::move(opts), optind);
 }
@@ -650,6 +665,77 @@ static int ncsiDump(GlobalOptions& options, uint32_t handle,
     return 0;
 }
 
+static int ncsiDiscover(GlobalOptions& options)
+{
+    // Use Clear Initial State (0x00) before Get Capabilities.
+    constexpr uint8_t ncsiClearInitialState = 0x00;
+    constexpr uint8_t ncsiGetCapabilities = 0x16;
+    constexpr unsigned int maxPackageIndex = 7; // Valid package indices: 0–7
+
+    std::cout << "Starting NC-SI Package and Channel Discovery...\n";
+
+    unsigned int startPackage = 0, endPackage = maxPackageIndex;
+    if (options.package.has_value())
+    {
+        startPackage = *options.package;
+        endPackage = *options.package;
+        std::cout << "Restricting discovery to Package " << *options.package << ".\n";
+    }
+
+    for (unsigned int packageIndex = startPackage; packageIndex <= endPackage; ++packageIndex)
+    {
+        std::cout << "Checking Package " << packageIndex << "...\n";
+
+        // Send Clear Initial State command first.
+        {
+            std::vector<unsigned char> clearPayload; // No payload needed.
+            NCSICommand clearCmd(ncsiClearInitialState, packageIndex, 0, clearPayload);
+            auto clearResp = options.interface->sendCommand(clearCmd);
+            if (!clearResp || clearResp->response != 0x0000)
+            {
+                std::cout << "  Clear Initial State failed for Package " << packageIndex << ". Skipping.\n";
+                continue;
+            }
+        }
+
+        // Issue Get Capabilities on Channel 0.
+        std::vector<unsigned char> payload; // No payload needed.
+        NCSICommand getCapCmd(ncsiGetCapabilities, packageIndex, 0, payload);
+        auto resp = options.interface->sendCommand(getCapCmd);
+        if (resp && resp->response == 0x0000 && resp->full_payload.size() >= 52)
+        {
+            uint8_t channelCount = resp->full_payload[47]; // Extract channel count.
+            std::cout << "  Package " << packageIndex << " supports " 
+                      << static_cast<int>(channelCount) << " channels.\n";
+            std::cout << "  Found available Package " << packageIndex << ", Channel 0. Stopping discovery.\n";
+            return 0;
+        }
+        else
+        {
+            std::cout << "  Channel 0 not available for Package " << packageIndex << ". Trying other channels...\n";
+            const unsigned int defaultChannelCount = 8;
+            for (unsigned int channelIndex = 1; channelIndex < defaultChannelCount; ++channelIndex)
+            {
+                std::cout << "Checking Package " << packageIndex << ", Channel " << channelIndex << "...\n";
+                NCSICommand channelCmd(ncsiGetCapabilities, packageIndex, channelIndex, payload);
+                auto channelResp = options.interface->sendCommand(channelCmd);
+                if (channelResp && channelResp->response == 0x0000)
+                {
+                    std::cout << "  Found available Package " << packageIndex << ", Channel " << channelIndex << ". Stopping discovery.\n";
+                    return 0;
+                }
+                else
+                {
+                    std::cout << "  No valid response from Package " << packageIndex << ", Channel " << channelIndex << ".\n";
+                }
+            }
+        }
+    }
+
+    std::cout << "No available NC-SI packages or channels found. Discovery complete.\n";
+    return -1;
+}
+
 /* A note on log output:
  * For output that relates to command-line usage, we just output directly to
  * stderr. Once we have a properly parsed command line invocation, we use lg2
@@ -682,6 +768,14 @@ int main(int argc, char** argv)
     argv += consumed;
 
     std::string subcommand = argv[0];
+
+    // For non-discovery commands, package must be provided.
+    if (subcommand != "discover" && !globalOptions.package.has_value())
+    {
+        std::cerr << "Missing package, add a --package argument\n";
+        return EXIT_FAILURE;
+    }
+
     int ret = -1;
 
     if (subcommand == "raw")
@@ -717,6 +811,10 @@ int main(int argc, char** argv)
         {
             ret = ncsiDump(globalOptions, NCSI_CRASH_DUMP_HANDLE, argv[1]);
         }
+    }
+    else if (subcommand == "discover")
+    {
+        return ncsiDiscover(globalOptions);
     }
     else
     {
