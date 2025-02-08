@@ -45,13 +45,14 @@ struct NCSICommand
 {
     /* constructs a message; the payload span is copied into the internal
      * command vector */
-    NCSICommand(uint8_t opcode, uint8_t package, std::optional<uint8_t> channel,
+    NCSICommand(uint8_t opcode, std::optional<uint8_t> package,
+                std::optional<uint8_t> channel,
                 std::span<unsigned char> payload);
 
     uint8_t getChannel();
 
     uint8_t opcode;
-    uint8_t package;
+    std::optional<uint8_t> package;
     std::optional<uint8_t> channel;
     std::vector<unsigned char> payload;
 };
