@@ -87,6 +87,9 @@ static void print_usage(const char* progname)
         "\n"
         "Subcommands:\n"
         "\n"
+	"discover\n"
+        "    Scan for available NC-SI packages and channels via MCTP.\n"
+        "\n"
         "raw TYPE [PAYLOAD...]\n"
         "    Send a single command using raw type/payload data.\n"
         "        TYPE               NC-SI command type, in hex\n"
@@ -317,7 +320,8 @@ static std::optional<std::tuple<GlobalOptions, int>>
         return {};
     }
 
-    if (!package.has_value())
+    if (!package.has_value() &&
+        !(optind < argc && std::string(argv[optind]) == "discover"))
     {
         std::cerr << "Missing package, add a --package argument\n";
         return {};
@@ -644,6 +648,83 @@ static int ncsiDump(GlobalOptions& options, uint32_t handle,
     return 0;
 }
 
+static int ncsiDiscover(GlobalOptions& options)
+{
+    constexpr uint8_t ncsiGetCapabilities = 0x16;
+    unsigned int pkg_idx = 0;
+
+    std::cout << "Starting NC-SI Package and Channel Discovery...\n";
+
+    while (pkg_idx <= 10) // Arbitrary package limit to prevent infinite loops
+    {
+        unsigned int channel_idx = 0;
+
+        while (true)
+        {
+            std::cout << "Checking Package " << pkg_idx << ", Channel "
+                      << channel_idx << "...\n";
+
+            // Create the NC-SI Get Capabilities command
+            std::vector<unsigned char> payload; // No payload needed
+            NCSICommand cmd(ncsiGetCapabilities, pkg_idx, channel_idx, payload);
+
+            // Send command and receive response
+            auto resp = options.interface->sendCommand(cmd);
+            if (!resp)
+            {
+                std::cout << "  No response from Package " << pkg_idx
+                          << ", Channel " << channel_idx << ".\n";
+                break; // No more channels in this package
+            }
+
+            // Validate response (should be successful)
+            if (resp->response != 0x0000)
+            {
+                std::cout << "  Invalid response from Package " << pkg_idx
+                          << ", Channel " << channel_idx << ".\n";
+                break;
+            }
+
+            if (resp->full_payload.size() < 52)
+            {
+                std::cerr
+                    << "Invalid payload size in Get Capabilities response.\n";
+                return -1;
+            }
+
+            uint8_t channelCount =
+                resp->payload[47]; // Channel count in byte 47
+
+            // Log channel count for the package
+            if (channel_idx == 0)
+            {
+                std::cout << "  Package " << pkg_idx << " supports "
+                          << static_cast<int>(channelCount) << " channels.\n";
+            }
+
+            // Found a valid package and channel, stop discovery
+            std::cout << "  Found available Package " << pkg_idx << ", Channel "
+                      << channel_idx << ". Stopping discovery.\n";
+            return 0;
+
+            // Move to the next channel
+            channel_idx++;
+
+            // Stop iterating channels if we've reached the limit
+            if (channel_idx >= channelCount)
+            {
+                break;
+            }
+        }
+
+        // Move to the next package
+        pkg_idx++;
+    }
+
+    std::cout << "No available NC-SI packages or channels found. Discovery complete.\n";
+    return -1;
+}
+
 /* A note on log output:
  * For output that relates to command-line usage, we just output directly to
  * stderr. Once we have a properly parsed command line invocation, we use lg2
@@ -702,6 +783,10 @@ int main(int argc, char** argv)
         }
 
         return ncsiDump(globalOptions, *handleOpt, argv[2]);
+    }
+    else if (subcommand == "discover")
+    {
+        return ncsiDiscover(globalOptions);
     }
     else
     {
