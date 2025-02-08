@@ -88,6 +88,9 @@ static void print_usage(const char* progname)
         "\n"
         "Subcommands:\n"
         "\n"
+        "discover\n"
+        "    Scan for available NC-SI packages and channels via MCTP.\n"
+        "\n"
         "raw TYPE [PAYLOAD...]\n"
         "    Send a single command using raw type/payload data.\n"
         "        TYPE               NC-SI command type, in hex\n"
@@ -319,13 +322,24 @@ static std::optional<std::tuple<GlobalOptions, int>>
         return {};
     }
 
+    // For non-discovery commands, package is required.
+    // If the subcommand is "discover", leave opts.package as nullopt.
     if (!package.has_value())
     {
-        std::cerr << "Missing package, add a --package argument\n";
-        return {};
+        if (optind < argc && std::string(argv[optind]) == "discover")
+        {
+            // Do nothing; package remains nullopt for discovery.
+        }
+        else
+        {
+            std::cerr << "Missing package, add a --package argument\n";
+            return {};
+        }
     }
-
-    opts.package = *package;
+    else
+    {
+        opts.package = *package;
+    }
 
     return std::make_tuple(std::move(opts), optind);
 }
@@ -358,10 +372,15 @@ static stdplus::StrBuf toHexStr(std::span<const uint8_t> c) noexcept
 static int ncsiCommand(GlobalOptions& options, uint8_t type,
                        std::vector<unsigned char> payload)
 {
-    NCSICommand cmd(type, static_cast<uint8_t>(*options.package),
-                    options.channel,
-                    std::span<unsigned char>(payload.data(), payload.size()));
+    uint8_t pkg = static_cast<uint8_t>(options.package.value_or(0));
+    std::optional<uint8_t> ch;
 
+    if (options.channel.has_value())
+    {
+        ch = static_cast<uint8_t>(options.channel.value());
+    }
+
+    NCSICommand cmd(type, pkg, ch, std::span<unsigned char>(payload.data(), payload.size()));
     lg2::debug("Command: type {TYPE}, payload {PAYLOAD_LEN} bytes: {PAYLOAD}",
                "TYPE", lg2::hex, type, "PAYLOAD_LEN", payload.size(), "PAYLOAD",
                toHexStr(payload));
@@ -551,9 +570,15 @@ static int ncsiDump(GlobalOptions& options, uint32_t handle,
         auto payloadArray = generateDumpCmdPayload(chunkNum, handle, false);
         std::span<unsigned char> payload(payloadArray.data(),
                                          payloadArray.size());
+        uint8_t pkg = static_cast<uint8_t>(options.package.value_or(0));
+        std::optional<uint8_t> ch;
 
-        NCSICommand cmd(ncsiCmdDump, static_cast<uint8_t>(*options.package),
-                        options.channel, payload);
+        if (options.channel.has_value())
+        {
+            ch = static_cast<uint8_t>(options.channel.value());
+        }
+
+        NCSICommand cmd(ncsiCmdDump, pkg, ch, payload);
         auto resp = options.interface->sendCommand(cmd);
         if (!resp)
         {
@@ -632,9 +657,15 @@ static int ncsiDump(GlobalOptions& options, uint32_t handle,
         auto abortPayloadArray = generateDumpCmdPayload(chunkNum, handle, true);
         std::span<unsigned char> abortPayload(abortPayloadArray.data(),
                                               abortPayloadArray.size());
-        NCSICommand abortCmd(ncsiCmdDump,
-                             static_cast<uint8_t>(*options.package),
-                             options.channel, abortPayload);
+        uint8_t pkg = static_cast<uint8_t>(options.package.value_or(0));
+        std::optional<uint8_t> ch;
+
+        if (options.channel.has_value())
+        {
+            ch = static_cast<uint8_t>(options.channel.value());
+        }
+
+        NCSICommand abortCmd(ncsiCmdDump, pkg, ch, abortPayload);
         auto abortResp = options.interface->sendCommand(abortCmd);
         if (!abortResp)
         {
@@ -672,6 +703,92 @@ static int ncsiCommandReceiveDump(GlobalOptions& options,
     return ncsiDump(options, handle, argv[1]);
 }
 
+static int ncsiDiscover(GlobalOptions& options)
+{
+    // Use Clear Initial State (0x00) before Get Capabilities.
+    constexpr uint8_t ncsiClearInitialState = 0x00;
+    constexpr uint8_t ncsiGetCapabilities = 0x16;
+    constexpr unsigned int maxPackageIndex = 7; // Valid package indices: 0–7
+
+    std::cout << "Starting NC-SI Package and Channel Discovery...\n";
+
+    unsigned int startPackage = 0, endPackage = maxPackageIndex;
+    if (options.package.has_value())
+    {
+        startPackage = *options.package;
+        endPackage = *options.package;
+        std::cout << "Restricting discovery to Package " << *options.package
+                  << ".\n";
+    }
+
+    for (unsigned int packageIndex = startPackage; packageIndex <= endPackage;
+         ++packageIndex)
+    {
+        std::cout << "Checking Package " << packageIndex << "...\n";
+
+        // Send Clear Initial State command first.
+        {
+            std::vector<unsigned char> clearPayload; // No payload needed.
+            NCSICommand clearCmd(ncsiClearInitialState, packageIndex, 0,
+                                 clearPayload);
+            auto clearResp = options.interface->sendCommand(clearCmd);
+            if (!clearResp || clearResp->response != 0x0000)
+            {
+                std::cout << "  Clear Initial State failed for Package "
+                          << packageIndex << ". Skipping.\n";
+                continue;
+            }
+        }
+
+        // Issue Get Capabilities on Channel 0.
+        std::vector<unsigned char> payload; // No payload needed.
+        NCSICommand getCapCmd(ncsiGetCapabilities, packageIndex, 0, payload);
+        auto resp = options.interface->sendCommand(getCapCmd);
+        if (resp && resp->response == 0x0000 && resp->full_payload.size() >= 52)
+        {
+            uint8_t channelCount =
+                resp->full_payload[47]; // Extract channel count.
+            std::cout << "  Package " << packageIndex << " supports "
+                      << static_cast<int>(channelCount) << " channels.\n";
+            std::cout << "  Found available Package " << packageIndex
+                      << ", Channel 0. Stopping discovery.\n";
+            return 0;
+        }
+        else
+        {
+            std::cout << "  Channel 0 not available for Package "
+                      << packageIndex << ". Trying other channels...\n";
+            const unsigned int defaultChannelCount = 8;
+            for (unsigned int channelIndex = 1;
+                 channelIndex < defaultChannelCount; ++channelIndex)
+            {
+                std::cout << "Checking Package " << packageIndex << ", Channel "
+                          << channelIndex << "...\n";
+                NCSICommand channelCmd(ncsiGetCapabilities, packageIndex,
+                                       channelIndex, payload);
+                auto channelResp = options.interface->sendCommand(channelCmd);
+                if (channelResp && channelResp->response == 0x0000)
+                {
+                    std::cout << "  Found available Package " << packageIndex
+                              << ", Channel " << channelIndex
+                              << ". Stopping discovery.\n";
+                    return 0;
+                }
+                else
+                {
+                    std::cout
+                        << "  No valid response from Package " << packageIndex
+                        << ", Channel " << channelIndex << ".\n";
+                }
+            }
+        }
+    }
+
+    std::cout
+        << "No available NC-SI packages or channels found. Discovery complete.\n";
+    return -1;
+}
+
 /* A note on log output:
  * For output that relates to command-line usage, we just output directly to
  * stderr. Once we have a properly parsed command line invocation, we use lg2
@@ -704,6 +821,14 @@ int main(int argc, char** argv)
     argv += consumed;
 
     std::string subcommand = argv[0];
+
+    // For non-discovery commands, package must be provided.
+    if (subcommand != "discover" && !globalOptions.package.has_value())
+    {
+        std::cerr << "Missing package, add a --package argument\n";
+        return EXIT_FAILURE;
+    }
+
     int ret = -1;
 
     if (subcommand == "raw")
@@ -717,6 +842,10 @@ int main(int argc, char** argv)
     else if (subcommand == "core-dump" || subcommand == "crash-dump")
     {
         ret = ncsiCommandReceiveDump(globalOptions, subcommand, argc, argv);
+    }
+    else if (subcommand == "discover")
+    {
+        return ncsiDiscover(globalOptions);
     }
     else
     {
