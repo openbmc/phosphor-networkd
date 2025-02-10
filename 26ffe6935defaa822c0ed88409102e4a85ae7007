@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3034835_b47b2ec1",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2025-02-10T19:48:37Z",
+      "side": 1,
+      "message": "Better to define this as a const such as maxPackageIndex \u003d 10.",
+      "revId": "26ffe6935defaa822c0ed88409102e4a85ae7007",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01af37bf_9fdfe734",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2025-02-10T19:48:37Z",
+      "side": 1,
+      "message": "Variables names are suppose to be lowerCamelCase as per guidelines https://github.com/openbmc/docs/blob/master/cpp-style-and-conventions.md#variables. I see you are using snake_case at few places. Can you please fix that.",
+      "revId": "26ffe6935defaa822c0ed88409102e4a85ae7007",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea85d3c4_bd4bed4e",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2025-02-10T19:48:37Z",
+      "side": 1,
+      "message": "better to have (channel_idx \u003e\u003d channelCount) as condition.",
+      "revId": "26ffe6935defaa822c0ed88409102e4a85ae7007",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1d927fa_401558be",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2025-02-10T19:48:37Z",
+      "side": 1,
+      "message": "I am confused why do you have return 0 here and then you are incrementing channel_idx in next line, that would be a no-op code. You need to continue searching until you find a valid channel bounded by channelCount. Please check this logic.",
+      "revId": "26ffe6935defaa822c0ed88409102e4a85ae7007",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff12d39e_d7848977",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1001758
+      },
+      "writtenOn": "2025-02-10T19:48:37Z",
+      "side": 1,
+      "message": "Better to have this as while condition rather than true as it will serve the better purpose.",
+      "revId": "26ffe6935defaa822c0ed88409102e4a85ae7007",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
