@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a171e27_cc39bd18",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-11T02:24:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3034835_b47b2ec1",
+      "revId": "26ffe6935defaa822c0ed88409102e4a85ae7007",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "01af37bf_9fdfe734",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-02-10T19:48:37Z",
       "side": 1,
       "message": "Variables names are suppose to be lowerCamelCase as per guidelines https://github.com/openbmc/docs/blob/master/cpp-style-and-conventions.md#variables. I see you are using snake_case at few places. Can you please fix that.",
+      "revId": "26ffe6935defaa822c0ed88409102e4a85ae7007",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08acaf86_d5936468",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-11T02:24:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01af37bf_9fdfe734",
       "revId": "26ffe6935defaa822c0ed88409102e4a85ae7007",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -52,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "56ab675f_e5413c43",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-11T02:24:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea85d3c4_bd4bed4e",
+      "revId": "26ffe6935defaa822c0ed88409102e4a85ae7007",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c1d927fa_401558be",
@@ -69,6 +123,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "74560216_bc447298",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-11T02:24:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c1d927fa_401558be",
+      "revId": "26ffe6935defaa822c0ed88409102e4a85ae7007",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ff12d39e_d7848977",
@@ -82,6 +154,24 @@
       "writtenOn": "2025-02-10T19:48:37Z",
       "side": 1,
       "message": "Better to have this as while condition rather than true as it will serve the better purpose.",
+      "revId": "26ffe6935defaa822c0ed88409102e4a85ae7007",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19ed39e9_3188a2f8",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-11T02:24:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff12d39e_d7848977",
       "revId": "26ffe6935defaa822c0ed88409102e4a85ae7007",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
