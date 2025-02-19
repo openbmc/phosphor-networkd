@@ -16,6 +16,24 @@
       "message": "have you tested this code?\nhow does this code run after this return line?",
       "revId": "10894253fa2e68dd61187606017626854a3942df",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a66703dc_d0389b9c",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-02-19T18:37:53Z",
+      "side": 1,
+      "message": "already tested.\nreturn output:\n./ncsi-cmd -m 91 discover\nStarting NC-SI Package and Channel Discovery...\nChecking Package 0...\n  Package 0 supports 2 channels.\n  Found available Package 0, Channel 0. Stopping discovery.",
+      "parentUuid": "14290ff3_47cd8333",
+      "revId": "10894253fa2e68dd61187606017626854a3942df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
