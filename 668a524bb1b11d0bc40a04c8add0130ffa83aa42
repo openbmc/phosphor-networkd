@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8a6791f_ce88ca07",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-02-19T16:57:30Z",
+      "side": 1,
+      "message": "Hi Wak/ratan\ncan you please review this commit?",
+      "revId": "668a524bb1b11d0bc40a04c8add0130ffa83aa42",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
