@@ -22,6 +22,30 @@
       },
       "revId": "3f663a3bc66ce73172dd7c587e4c950920221ce9",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbe00bd3_e5c9d224",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 23
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-25T13:19:20Z",
+      "side": 1,
+      "message": "I have added an example of the `raw` interface, but have left out an OEM example at this stage (as it\u0027ll be device specific). I can search around to find a suitable (and non-confidential) OEM example if you like, but the syntax is essentially the same.",
+      "parentUuid": "a19b6441_ffa79350",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 6
+      },
+      "revId": "3f663a3bc66ce73172dd7c587e4c950920221ce9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
