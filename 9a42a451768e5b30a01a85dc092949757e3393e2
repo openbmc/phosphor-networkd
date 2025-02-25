@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "55028ca3_21c284de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-25T12:57:13Z",
+      "side": 1,
+      "message": "Thanks for the review. I\u0027ll upload a next version with the return value fixed. Let me know if you want further changes on the ncsi-netlink backwards-compat args handling.",
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9d835242_b10ea4dc",
@@ -14,6 +31,24 @@
       "writtenOn": "2025-02-25T09:16:05Z",
       "side": 1,
       "message": "Do we need to check for the max size of the payload?",
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3f24a28_99db122f",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-25T12:57:13Z",
+      "side": 1,
+      "message": "We should have a sensible limit already imposed based on maximum arg sizes; we don\u0027t have a specific limit here as the NCSI commands may be arbitrarily large.\n\nWe could add a limit here, but it would be fairly arbitrary.",
+      "parentUuid": "9d835242_b10ea4dc",
       "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -37,6 +72,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "09e82913_465534d3",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-25T12:57:13Z",
+      "side": 1,
+      "message": "Yes, definitely - this should be returning `EXIT_FAILURE`.",
+      "parentUuid": "a81cc1a9_df165330",
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b8fcc285_40c07691",
         "filename": "src/ncsi_netlink_main.cpp",
         "patchSetId": 10
@@ -48,6 +101,24 @@
       "writtenOn": "2025-02-25T09:16:05Z",
       "side": 1,
       "message": "Should we use the RAII?",
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0703c424_f7b11d7b",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-25T12:57:13Z",
+      "side": 1,
+      "message": "Not sure what we\u0027d need to initialise on acquisition here; the argv setup needs to be somewhat manual.\n\nHowever, this should be fairly temporary code - we\u0027ll only need this until we have converted existing `ncsi-netlink` invocations to use `ncsi-cmd` instead, and there are only a couple of those. I will send those as a follow-up.",
+      "parentUuid": "b8fcc285_40c07691",
       "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -88,6 +159,54 @@
       "writtenOn": "2025-02-25T09:16:05Z",
       "side": 1,
       "message": "In the case of success we are not freeing the resources as it will be take care by the program tremination?",
+      "range": {
+        "startLine": 189,
+        "startChar": 8,
+        "endLine": 189,
+        "endChar": 14
+      },
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "220af280_4256c6a9",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-25T12:57:13Z",
+      "side": 1,
+      "message": "We should be fine; this path (intentionally) doesn\u0027t have any specific knowledge of the valid args here, and so should just pass directly to the execed process.",
+      "parentUuid": "2690de1f_60e4c8d6",
+      "range": {
+        "startLine": 189,
+        "startChar": 24,
+        "endLine": 189,
+        "endChar": 28
+      },
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34b9483d_a0b97467",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-25T12:57:13Z",
+      "side": 1,
+      "message": "Sort of - the entire process\u0027 memory will be replaced on exec.\n\nBut more to the point: there is no way to run *any* code on a successful exec, as we\u0027re no longer running 😊",
+      "parentUuid": "81d8abbc_dfa52a43",
       "range": {
         "startLine": 189,
         "startChar": 8,
