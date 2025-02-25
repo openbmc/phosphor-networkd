@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d835242_b10ea4dc",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-02-25T09:16:05Z",
+      "side": 1,
+      "message": "Do we need to check for the max size of the payload?",
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a81cc1a9_df165330",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-02-25T09:16:05Z",
+      "side": 1,
+      "message": "Can we explicitly return the error code here?",
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8fcc285_40c07691",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-02-25T09:16:05Z",
+      "side": 1,
+      "message": "Should we use the RAII?",
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2690de1f_60e4c8d6",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-02-25T09:16:05Z",
+      "side": 1,
+      "message": "Do we need to put any validation check around argv?",
+      "range": {
+        "startLine": 189,
+        "startChar": 24,
+        "endLine": 189,
+        "endChar": 28
+      },
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81d8abbc_dfa52a43",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-02-25T09:16:05Z",
+      "side": 1,
+      "message": "In the case of success we are not freeing the resources as it will be take care by the program tremination?",
+      "range": {
+        "startLine": 189,
+        "startChar": 8,
+        "endLine": 189,
+        "endChar": 14
+      },
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
