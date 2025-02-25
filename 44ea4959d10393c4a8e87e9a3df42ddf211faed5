@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "543fbe2c_cda34b20",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 55
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1002157
+      },
+      "writtenOn": "2025-02-25T21:39:49Z",
+      "side": 1,
+      "message": "Per DSP0222, v1.2.0, 8.2.1.7 Payload length:\n\n\u003e This 12-bit field contains the length, in bytes, of any payload data present in the command or response frame following the NC-SI packet header. This value does not include the length of the NC-SI Control Packet Header, the checksum value, or any padding that might be present.\n\nFrom my interpretation, this means that the length as it is present in the NCSI header may not necessarily be 4-byte aligned, but the payload will be 4-byte aligned.\n\nSo, I\u0027m not sure this if statement is correct for this command. Do you agree?",
+      "revId": "44ea4959d10393c4a8e87e9a3df42ddf211faed5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
