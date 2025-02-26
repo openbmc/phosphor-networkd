@@ -141,6 +141,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9dc3ad5f_1b360e4a",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-26T00:22:54Z",
+      "side": 1,
+      "message": "Makring as resolved, as I don\u0027t *think* this needs to be changed, but feel free to unresolve if you have a better implementation in mind.",
+      "parentUuid": "0703c424_f7b11d7b",
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2690de1f_60e4c8d6",
