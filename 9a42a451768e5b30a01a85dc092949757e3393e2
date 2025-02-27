@@ -159,6 +159,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "70c9bab5_382a8361",
+        "filename": "src/ncsi_netlink_main.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-02-27T13:25:04Z",
+      "side": 1,
+      "message": "I was expecting something like below, But as you mentioned that it is kind of temporary code.You can decide whether you want to take it or not.\n\nclass ArgvManager {\npublic:\n    ArgvManager (std::vector\u003cstd::string\u003e\u0026 args) {\n        argv_ \u003d new char*[args.size() + 1];\n        for (auto i \u003d 0; i \u003c args.size(); i++) {\n            argv_[i] \u003d strdup(args[i].c_str());\n        }\n        argv_[args.size()] \u003d nullptr;\n    }\n    \n    ~ArgvManager() {\n        if (argv_) {\n            for (auto i \u003d 0; argv_[i]; i++) {\n                free(argv_[i]);\n            }\n            delete[] argv_;\n        }\n    }\n    \n    char** get() { return argv_; }\n    \nprivate:\n    char** argv_ \u003d nullptr;\n};\n\nArgvManager argvMgr(args);\nexecvp(argvMgr.get()[0], argvMgr.get());",
+      "parentUuid": "9dc3ad5f_1b360e4a",
+      "revId": "9a42a451768e5b30a01a85dc092949757e3393e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2690de1f_60e4c8d6",
