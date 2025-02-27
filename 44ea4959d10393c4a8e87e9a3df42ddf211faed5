@@ -34,6 +34,24 @@
       "parentUuid": "543fbe2c_cda34b20",
       "revId": "44ea4959d10393c4a8e87e9a3df42ddf211faed5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64b9a94a_42ec2445",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 55
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1000212
+      },
+      "writtenOn": "2025-02-27T19:31:01Z",
+      "side": 1,
+      "message": "http://github.com/openbmc/phosphor-networkd/blob/master/src/ncsi_util.cpp#L555 -- here resp-\u003epayload.size() is set as the length as mentioned in the header (not the actual size of payload with the padding bytes). From my reading, the header contains the actual expected size while the payload itself may have padding bytes to make it word aligned.\n\nWhat this check is doing is putting a constraint on the crash/coredump size to be of word aligned size which is not what the spec mentions.",
+      "parentUuid": "2b13c40c_13cca03c",
+      "revId": "44ea4959d10393c4a8e87e9a3df42ddf211faed5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
