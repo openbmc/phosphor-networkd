@@ -16,6 +16,24 @@
       "message": "Do you need a destructor to release this?",
       "revId": "f400251e32959c5369e9e9bf4de76d4cb6e680fd",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "865deec9_561a6c97",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-02-27T13:32:53Z",
+      "side": 1,
+      "message": "Yes, good catch. I\u0027ll update with a cleanup path for the socket.",
+      "parentUuid": "d10756b4_be6c77ea",
+      "revId": "f400251e32959c5369e9e9bf4de76d4cb6e680fd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
