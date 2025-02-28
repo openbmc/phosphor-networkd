@@ -22,6 +22,30 @@
       },
       "revId": "1f3caedc18c5dcb8fb503f6f5806157bde6d96b7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af283112_ca2de901",
+        "filename": "gen/xyz/openbmc_project/Network/IP/Create/meson.build",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-02-28T12:10:04Z",
+      "side": 0,
+      "message": "Take it up with meson?\n\nI’ve enabled meson format in CI now. Commits that have change after linting with meson format will now not pass CI.\n\nThis is the same as clang-format. We’re not going to be 100% happy with every format it does, but it is at least consistent.",
+      "parentUuid": "7b33455a_67a3d2b1",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 77
+      },
+      "revId": "1f3caedc18c5dcb8fb503f6f5806157bde6d96b7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
