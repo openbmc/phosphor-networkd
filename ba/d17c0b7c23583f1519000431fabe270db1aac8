@@ -1,0 +1,8 @@
+Code-Review+2: Ratan Gupta <ratankgupta31@gmail.com>
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Submitted-by: Jeremy Kerr <jk@ozlabs.org>
+Submitted-at: Tue, 04 Mar 2025 02:59:01 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/76128
+Comments-Total: 50
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
