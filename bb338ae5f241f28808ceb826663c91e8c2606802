@@ -16,6 +16,24 @@
       "message": "Hi Ratan/Wak\n\ncan you please merge this commit??",
       "revId": "bb338ae5f241f28808ceb826663c91e8c2606802",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8069880d_9ea93bdf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-03-05T14:28:38Z",
+      "side": 1,
+      "message": "With the current implemenation you have the info:\nNTPservers \u003d network provided ntp server + static\nStaticNtpServer \u003d Static NTP server\n\nNtPservers in the phosphor-networkd meant to have both the servers.\nhttps://github.com/openbmc/phosphor-dbus-interfaces/blob/master/yaml/xyz/openbmc_project/Network/EthernetInterface.interface.yaml#L67",
+      "parentUuid": "00e94c19_357a96a5",
+      "revId": "bb338ae5f241f28808ceb826663c91e8c2606802",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
