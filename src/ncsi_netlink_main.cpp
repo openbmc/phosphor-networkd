@@ -163,7 +163,6 @@ int main(int argc, char** argv)
             std::to_string(indexInt),
             "-p",
             std::to_string(packageInt),
-            "raw",
         };
 
         if (channelInt != DEFAULT_VALUE)
@@ -172,6 +171,7 @@ int main(int argc, char** argv)
             args.push_back(std::to_string(channelInt));
         }
 
+        args.push_back("raw");
         args.push_back(typeStr);
         args.push_back(dataStr);
 
