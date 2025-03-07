@@ -16,6 +16,24 @@
       "message": "Jere",
       "revId": "297a63b46b2eae315e91b2c69239e23dbf52c22e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1520e4d_50ef95b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-03-07T13:25:31Z",
+      "side": 1,
+      "message": "@jk@ozlabs.org: Hope this fixes the CI issue.",
+      "parentUuid": "7a759f55_92247684",
+      "revId": "297a63b46b2eae315e91b2c69239e23dbf52c22e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
