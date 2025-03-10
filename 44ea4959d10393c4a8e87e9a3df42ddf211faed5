@@ -52,6 +52,24 @@
       "parentUuid": "2b13c40c_13cca03c",
       "revId": "44ea4959d10393c4a8e87e9a3df42ddf211faed5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78e5beff_5fa4f61c",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 55
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-10T12:20:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64b9a94a_42ec2445",
+      "revId": "44ea4959d10393c4a8e87e9a3df42ddf211faed5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
