@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a61ebbe_3861ac71",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1001371
+      },
+      "writtenOn": "2025-03-17T06:21:49Z",
+      "side": 1,
+      "message": "`ncsiGetCapabilities` is a channel-based command, need clear init state first, maybe use `seletc package` is better.",
+      "range": {
+        "startLine": 665,
+        "startChar": 24,
+        "endLine": 665,
+        "endChar": 43
+      },
+      "revId": "64ce7fb25e1dd986d6b1ce9cbe6674634cc027fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "694ed5e2_b57e7824",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 675,
+      "author": {
+        "id": 1001371
+      },
+      "writtenOn": "2025-03-17T06:21:49Z",
+      "side": 1,
+      "message": "see: https://www.dmtf.org/sites/default/files/standards/documents/DSP0222_1.0.0.pdf\n\n```\nDiscover and Get Capabilities for Each Channel in the Package The Management Controller can now discover how many channels are supported in the  Network Controller package and their capabilities. To do this, the Management Controller issues the Clear Initial State command starting from the lowest Internal Channel ID\n```\n\nThe standard flow should send the `Clear Initial State` command to get the channel count. As mentioned in the comment above, the `Get Capabilities` command is channel-based and requires `Clear Initial State` to be sent first.",
+      "range": {
+        "startLine": 675,
+        "startChar": 6,
+        "endLine": 675,
+        "endChar": 79
+      },
+      "revId": "64ce7fb25e1dd986d6b1ce9cbe6674634cc027fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
