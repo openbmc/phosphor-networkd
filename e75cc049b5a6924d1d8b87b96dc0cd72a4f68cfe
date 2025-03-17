@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "451c912e_5ff7ae0d",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-17T06:06:27Z",
+      "side": 1,
+      "message": "This seems a bit odd to require magic numbers in the user interface here. I can imagine a couple of other options:\n\n* Add two commands: `core-dump` and `crash-dump`, both of which take just the `FILE` argument\n* Add a couple of aliases for the HANDLE argument: either `core` or `crash`, or the raw number value.",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1cd1cd9f_e8dda8d9",
         "filename": "src/ncsi_cmd.cpp",
         "patchSetId": 59
@@ -14,6 +31,29 @@
       "writtenOn": "2025-03-17T05:49:50Z",
       "side": 1,
       "message": "Looks like you need to intialize as below\nstd::array\u003cunsigned char, 12\u003e payload \u003d {}; The one which you mentions initializes the first element to 0, not the entire array.",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "707241a8_c3b4a367",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-17T06:06:27Z",
+      "side": 1,
+      "message": "You\u0027re splitting the opcode logic over the if-statement and the ternary operator here. Would be good to explain the usage of the chunknum field too. How about:\n\n\n```suggestion\n    if (isAbort)\n    {\n        opcode \u003d 3;\n    }\n    else if (chunkNum \u003d\u003d 1)\n    {\n        // First chunk: the chunk number field is used to\n        // pass the data type, by handle\n        opcode \u003d 0;\n        chunkNum \u003d dataHandle;\n    }\n    else\n    {\n        opcode \u003d 2;\n    }\n```",
+      "range": {
+        "startLine": 440,
+        "startChar": 0,
+        "endLine": 449,
+        "endChar": 5
+      },
       "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -37,6 +77,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ae2e1c11_970ca3ee",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-17T06:06:27Z",
+      "side": 1,
+      "message": "Maybe include the actual value here too",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a613417_cfbb4b7f",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-17T06:06:27Z",
+      "side": 1,
+      "message": "I would suggest doing the abort handling outside of this loop; it\u0027s a bit odd having to perform one extra loop iteration to issue the abort.",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "09c3a2a9_34036337",
         "filename": "src/ncsi_cmd.cpp",
         "patchSetId": 59
@@ -48,6 +122,46 @@
       "writtenOn": "2025-03-17T05:49:50Z",
       "side": 1,
       "message": "Do you need to close the file?",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08187f91_687e3118",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 580,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-17T06:06:27Z",
+      "side": 1,
+      "message": "Do you really want to print this on every transfer completion? I\u0027d suggest just once the transfer is complete.",
+      "range": {
+        "startLine": 577,
+        "startChar": 0,
+        "endLine": 580,
+        "endChar": 1
+      },
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4c2293d_61ab1bd1",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-17T06:06:27Z",
+      "side": 1,
+      "message": "You should abort the transfer here",
       "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -71,6 +185,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "96fad519_03935239",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-17T06:06:27Z",
+      "side": 1,
+      "message": "I would suggest relaxing this check, and just incrementing chunkNum here. You could then use the same path for opcodes 0x1 and 0x2.",
+      "range": {
+        "startLine": 602,
+        "startChar": 1,
+        "endLine": 607,
+        "endChar": 17
+      },
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2a76a305_f24d10c2",
         "filename": "src/ncsi_cmd.cpp",
         "patchSetId": 59
@@ -82,6 +219,40 @@
       "writtenOn": "2025-03-17T05:49:50Z",
       "side": 1,
       "message": "close file.",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efdf69da_bf6f14c3",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-17T06:06:27Z",
+      "side": 1,
+      "message": "This is the only path that causes an abort. How about the other error cases above?",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ef36d01_079cc11a",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-17T06:06:27Z",
+      "side": 1,
+      "message": "Just set `ret` in this path, don\u0027t return early. I would suggest refactoring to use the same pattern as the other subcommand handlers above.",
       "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
