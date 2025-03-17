@@ -3,6 +3,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4fc00cf2_df88f821",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-17T06:26:19Z",
+      "side": 1,
+      "message": "This comment is incorrect, the discovery command does not use the package value (even as a default), and the check for the command is a bit hacky. I would suggest allowing the `--package` argument, which would restrict the discovery to a specific package index.\n\nShould we make opts.package a std::optional?\n\nWe would also need to reflect this usage in the general help.",
+      "revId": "64ce7fb25e1dd986d6b1ce9cbe6674634cc027fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76bff8be_c8c7a84d",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-17T06:26:19Z",
+      "side": 1,
+      "message": "Why 10? there are only 8 possible package values.",
+      "revId": "64ce7fb25e1dd986d6b1ce9cbe6674634cc027fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6a61ebbe_3861ac71",
         "filename": "src/ncsi_cmd.cpp",
         "patchSetId": 15
@@ -43,6 +77,23 @@
         "endLine": 675,
         "endChar": 79
       },
+      "revId": "64ce7fb25e1dd986d6b1ce9cbe6674634cc027fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06c94f02_2c8e8570",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-17T06:26:19Z",
+      "side": 1,
+      "message": "All the code below this point is unreachable, so you\u0027ll never perform the channel-based discovery.",
       "revId": "64ce7fb25e1dd986d6b1ce9cbe6674634cc027fb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
