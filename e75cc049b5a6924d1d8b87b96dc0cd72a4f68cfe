@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1cd1cd9f_e8dda8d9",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-03-17T05:49:50Z",
+      "side": 1,
+      "message": "Looks like you need to intialize as below\nstd::array\u003cunsigned char, 12\u003e payload \u003d {}; The one which you mentions initializes the first element to 0, not the entire array.",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d015361b_e4618459",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-03-17T05:49:50Z",
+      "side": 1,
+      "message": "payload 0,1,2,4,5,6,7 byte will always be intialised with 0?",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09c3a2a9_34036337",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-03-17T05:49:50Z",
+      "side": 1,
+      "message": "Do you need to close the file?",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "615eb42c_0aca4731",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-03-17T05:49:50Z",
+      "side": 1,
+      "message": "close file.",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a76a305_f24d10c2",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-03-17T05:49:50Z",
+      "side": 1,
+      "message": "close file.",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
