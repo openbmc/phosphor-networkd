@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "93c0d3c2_6986f905",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "451c912e_5ff7ae0d",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1cd1cd9f_e8dda8d9",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-03-17T05:49:50Z",
       "side": 1,
       "message": "Looks like you need to intialize as below\nstd::array\u003cunsigned char, 12\u003e payload \u003d {}; The one which you mentions initializes the first element to 0, not the entire array.",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ec6d289_de5fce69",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 437,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1cd1cd9f_e8dda8d9",
       "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -58,6 +94,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "657d1e67_7dabe8f5",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "707241a8_c3b4a367",
+      "range": {
+        "startLine": 440,
+        "startChar": 0,
+        "endLine": 449,
+        "endChar": 5
+      },
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d015361b_e4618459",
@@ -71,6 +131,24 @@
       "writtenOn": "2025-03-17T05:49:50Z",
       "side": 1,
       "message": "payload 0,1,2,4,5,6,7 byte will always be intialised with 0?",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d140f4f6_a7552731",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "true, reference Table 226 – Receive Data from NC command packet format\nhttps://www.dmtf.org/sites/default/files/standards/documents/DSP0222_1.2.0.pdf",
+      "parentUuid": "d015361b_e4618459",
       "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -92,6 +170,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0eecb4a_ca102488",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae2e1c11_970ca3ee",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3a613417_cfbb4b7f",
@@ -109,6 +205,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ec2697e_61b1b70d",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a613417_cfbb4b7f",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "09c3a2a9_34036337",
@@ -122,6 +236,24 @@
       "writtenOn": "2025-03-17T05:49:50Z",
       "side": 1,
       "message": "Do you need to close the file?",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf9e8b7d_9cb41668",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09c3a2a9_34036337",
       "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -149,6 +281,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "11c1ad7a_3776e129",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 580,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08187f91_687e3118",
+      "range": {
+        "startLine": 577,
+        "startChar": 0,
+        "endLine": 580,
+        "endChar": 1
+      },
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4c2293d_61ab1bd1",
@@ -166,6 +322,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6dafb87_e31162b9",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4c2293d_61ab1bd1",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "615eb42c_0aca4731",
@@ -179,6 +353,24 @@
       "writtenOn": "2025-03-17T05:49:50Z",
       "side": 1,
       "message": "close file.",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e51c061_3304f294",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "615eb42c_0aca4731",
       "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -206,6 +398,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ad536ef_5e592d0f",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96fad519_03935239",
+      "range": {
+        "startLine": 602,
+        "startChar": 1,
+        "endLine": 607,
+        "endChar": 17
+      },
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2a76a305_f24d10c2",
@@ -219,6 +435,24 @@
       "writtenOn": "2025-03-17T05:49:50Z",
       "side": 1,
       "message": "close file.",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e19aa60_9afb11b0",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a76a305_f24d10c2",
       "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -240,6 +474,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "50995c80_49cb4e83",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "efdf69da_bf6f14c3",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8ef36d01_079cc11a",
@@ -253,6 +505,24 @@
       "writtenOn": "2025-03-17T06:06:27Z",
       "side": 1,
       "message": "Just set `ret` in this path, don\u0027t return early. I would suggest refactoring to use the same pattern as the other subcommand handlers above.",
+      "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f2fc4e7_f749d456",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 59
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T03:44:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ef36d01_079cc11a",
       "revId": "e75cc049b5a6924d1d8b87b96dc0cd72a4f68cfe",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
