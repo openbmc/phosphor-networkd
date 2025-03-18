@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e156fe1_0a55f4f8",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T07:47:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4fc00cf2_df88f821",
+      "revId": "64ce7fb25e1dd986d6b1ce9cbe6674634cc027fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "76bff8be_c8c7a84d",
@@ -35,6 +53,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "00d18bd5_630a9095",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T07:47:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76bff8be_c8c7a84d",
+      "revId": "64ce7fb25e1dd986d6b1ce9cbe6674634cc027fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6a61ebbe_3861ac71",
@@ -48,6 +84,30 @@
       "writtenOn": "2025-03-17T06:21:49Z",
       "side": 1,
       "message": "`ncsiGetCapabilities` is a channel-based command, need clear init state first, maybe use `seletc package` is better.",
+      "range": {
+        "startLine": 665,
+        "startChar": 24,
+        "endLine": 665,
+        "endChar": 43
+      },
+      "revId": "64ce7fb25e1dd986d6b1ce9cbe6674634cc027fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bbb588b_34800200",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T07:47:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a61ebbe_3861ac71",
       "range": {
         "startLine": 665,
         "startChar": 24,
@@ -81,6 +141,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad91339c_c95423d6",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 675,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T07:47:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "694ed5e2_b57e7824",
+      "range": {
+        "startLine": 675,
+        "startChar": 6,
+        "endLine": 675,
+        "endChar": 79
+      },
+      "revId": "64ce7fb25e1dd986d6b1ce9cbe6674634cc027fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "06c94f02_2c8e8570",
@@ -94,6 +178,24 @@
       "writtenOn": "2025-03-17T06:26:19Z",
       "side": 1,
       "message": "All the code below this point is unreachable, so you\u0027ll never perform the channel-based discovery.",
+      "revId": "64ce7fb25e1dd986d6b1ce9cbe6674634cc027fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "728ac7ca_4767cd2f",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T07:47:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "06c94f02_2c8e8570",
       "revId": "64ce7fb25e1dd986d6b1ce9cbe6674634cc027fb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }

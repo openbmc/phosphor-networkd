@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d48d823_693e4fe7",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T07:47:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e74563f9_d9d779ad",
+      "revId": "031b8840f438b3cc5d8c4c092f4c0e07856a38bb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8de8320e_dcf6d6d9",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-03-18T04:11:19Z",
       "side": 1,
       "message": "I\u0027d leave this as-is, and note the optional behaviour on line 86 instead.",
+      "revId": "031b8840f438b3cc5d8c4c092f4c0e07856a38bb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7971f5bb_e45d4859",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T07:47:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8de8320e_dcf6d6d9",
       "revId": "031b8840f438b3cc5d8c4c092f4c0e07856a38bb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -58,6 +94,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6098850e_70e0dd5d",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 581,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T07:47:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6bdfdb58_98489c84",
+      "range": {
+        "startLine": 577,
+        "startChar": 0,
+        "endLine": 581,
+        "endChar": 1
+      },
+      "revId": "031b8840f438b3cc5d8c4c092f4c0e07856a38bb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6bcef1da_e69728f3",
@@ -71,6 +131,24 @@
       "writtenOn": "2025-03-18T04:11:19Z",
       "side": 1,
       "message": "nice!",
+      "revId": "031b8840f438b3cc5d8c4c092f4c0e07856a38bb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf47ec59_b56062cb",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T07:47:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6bcef1da_e69728f3",
       "revId": "031b8840f438b3cc5d8c4c092f4c0e07856a38bb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
