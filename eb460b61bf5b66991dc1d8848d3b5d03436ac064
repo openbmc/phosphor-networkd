@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "08cc9f3f_6b051aac",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 67
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T06:34:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3b9ccb4_62b34dae",
+      "revId": "eb460b61bf5b66991dc1d8848d3b5d03436ac064",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "62914d67_bd5f9ab5",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-03-18T04:04:24Z",
       "side": 1,
       "message": "No need for `else` here, the previous condition had returned.",
+      "revId": "eb460b61bf5b66991dc1d8848d3b5d03436ac064",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5723862c_f7d9e41f",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 67
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T06:34:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62914d67_bd5f9ab5",
       "revId": "eb460b61bf5b66991dc1d8848d3b5d03436ac064",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -52,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d3a4684_d9e55f1c",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 67
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T06:34:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0f80b4d_1077fe04",
+      "revId": "eb460b61bf5b66991dc1d8848d3b5d03436ac064",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "923fe198_7021f4d0",
@@ -69,6 +123,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8771794_b30d28df",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 67
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T06:34:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "923fe198_7021f4d0",
+      "revId": "eb460b61bf5b66991dc1d8848d3b5d03436ac064",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "db09862e_59441a96",
@@ -82,6 +154,30 @@
       "writtenOn": "2025-03-18T04:04:24Z",
       "side": 1,
       "message": "This is still almost identical to the `crash-dump` subcommand. You could do a little helper, and call as:\n\n\n```suggestion\n    else if (subcommand \u003d\u003d \"core-dump\" || subcommand \u003d\u003d \"crash-dump\")\n    {\n        ret \u003d ncsiCommandReceiveDump(globalOptions, subcommand, argc, argv);\n    }\n```\n\nthen do the common argument parsing in that helper. This would then be somewhat consistent with the other command handlers.",
+      "range": {
+        "startLine": 696,
+        "startChar": 1,
+        "endLine": 706,
+        "endChar": 9
+      },
+      "revId": "eb460b61bf5b66991dc1d8848d3b5d03436ac064",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "acd8bd64_e20e81db",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 67
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T06:34:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db09862e_59441a96",
       "range": {
         "startLine": 696,
         "startChar": 1,
