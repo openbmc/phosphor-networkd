@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "59c212e3_9e2803eb",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T10:37:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b16cd35c_d13e951c",
+      "revId": "98d18c8e4577ca0cd9a8c45cc89396215ec6a9ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f9c8d72e_b0adc3be",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-03-18T08:26:19Z",
       "side": 1,
       "message": "I think this is fine without the (Note) section; without it, this still reads as the restriction is only applied if `-p` is present.",
+      "revId": "98d18c8e4577ca0cd9a8c45cc89396215ec6a9ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "482bcf98_6562665a",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T10:37:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9c8d72e_b0adc3be",
       "revId": "98d18c8e4577ca0cd9a8c45cc89396215ec6a9ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -52,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0bd7e9f2_0685e457",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T10:37:52Z",
+      "side": 1,
+      "message": "netlink works",
+      "parentUuid": "d280ea5e_3a3cc62f",
+      "revId": "98d18c8e4577ca0cd9a8c45cc89396215ec6a9ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "44f16f2a_df032e74",
@@ -65,6 +119,30 @@
       "writtenOn": "2025-03-18T08:26:19Z",
       "side": 1,
       "message": "Same `transform` as above?",
+      "range": {
+        "startLine": 575,
+        "startChar": 0,
+        "endLine": 582,
+        "endChar": 1
+      },
+      "revId": "98d18c8e4577ca0cd9a8c45cc89396215ec6a9ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee1d9da7_47b5c059",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T10:37:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44f16f2a_df032e74",
       "range": {
         "startLine": 575,
         "startChar": 0,
@@ -98,6 +176,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "81d2c65e_39156839",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 669,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T10:37:52Z",
+      "side": 1,
+      "message": "perfer 1.",
+      "parentUuid": "fad3bb80_5a161b99",
+      "range": {
+        "startLine": 662,
+        "startChar": 0,
+        "endLine": 669,
+        "endChar": 1
+      },
+      "revId": "98d18c8e4577ca0cd9a8c45cc89396215ec6a9ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a4a1a929_fa84b618",
@@ -111,6 +213,24 @@
       "writtenOn": "2025-03-18T08:26:19Z",
       "side": 1,
       "message": "There can be 0x1f channels; why 8 here?",
+      "revId": "98d18c8e4577ca0cd9a8c45cc89396215ec6a9ee",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9abb419_2c923373",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 1002188
+      },
+      "writtenOn": "2025-03-18T10:37:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4a1a929_fa84b618",
       "revId": "98d18c8e4577ca0cd9a8c45cc89396215ec6a9ee",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
