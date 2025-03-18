@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3b9ccb4_62b34dae",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 67
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-18T04:04:24Z",
+      "side": 1,
+      "message": "The NCSICommand constructor takes a `std::span` for the payload command. Is it possible to create this directly from the `std::array` result of generateDumpCmdPayload, rather than creating a new `std::vector` as an intermediate?",
+      "revId": "eb460b61bf5b66991dc1d8848d3b5d03436ac064",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62914d67_bd5f9ab5",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 67
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-18T04:04:24Z",
+      "side": 1,
+      "message": "No need for `else` here, the previous condition had returned.",
+      "revId": "eb460b61bf5b66991dc1d8848d3b5d03436ac064",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0f80b4d_1077fe04",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 67
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-18T04:04:24Z",
+      "side": 1,
+      "message": "Do we need to fail here? or keep processing?",
+      "revId": "eb460b61bf5b66991dc1d8848d3b5d03436ac064",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "923fe198_7021f4d0",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 67
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-18T04:04:24Z",
+      "side": 1,
+      "message": "Same as the std::span handling above.",
+      "revId": "eb460b61bf5b66991dc1d8848d3b5d03436ac064",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db09862e_59441a96",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 67
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-18T04:04:24Z",
+      "side": 1,
+      "message": "This is still almost identical to the `crash-dump` subcommand. You could do a little helper, and call as:\n\n\n```suggestion\n    else if (subcommand \u003d\u003d \"core-dump\" || subcommand \u003d\u003d \"crash-dump\")\n    {\n        ret \u003d ncsiCommandReceiveDump(globalOptions, subcommand, argc, argv);\n    }\n```\n\nthen do the common argument parsing in that helper. This would then be somewhat consistent with the other command handlers.",
+      "range": {
+        "startLine": 696,
+        "startChar": 1,
+        "endLine": 706,
+        "endChar": 9
+      },
+      "revId": "eb460b61bf5b66991dc1d8848d3b5d03436ac064",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
