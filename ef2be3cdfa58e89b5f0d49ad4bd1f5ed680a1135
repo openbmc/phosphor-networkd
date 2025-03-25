@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c02b5d8_75212df8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 79
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000016
+      },
+      "writtenOn": "2025-03-25T01:19:41Z",
+      "side": 1,
+      "message": "Looks good, thanks!\n\nJust a note for future patches: I would suggest splitting this out a little; the change from `package` to a `std::optional` would be a contender for doing as a small (atomic) change, and means you have would have a separate change adding *just* the core/crash dump functionality.\n\nNo need to change for this one though, even if it ends up getting revised.",
+      "revId": "ef2be3cdfa58e89b5f0d49ad4bd1f5ed680a1135",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
