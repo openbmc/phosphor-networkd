@@ -28,7 +28,12 @@ namespace phosphor
 {
 namespace network
 {
+namespace config
+{
 
+std::filesystem::path findDHCPConfigFile();
+
+} // namespace config
 using Ifaces = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface,
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress,
