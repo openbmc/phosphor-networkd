@@ -35,4 +35,9 @@ option(
     type: 'boolean',
     description: 'Force sync mac address no matter is first boot or not',
 )
-
+option(
+    'dhcp-configuration-update',
+    type: 'feature',
+    value: 'enabled',
+    description: 'Enable/disable dhcp configuration support.',
+)
