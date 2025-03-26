@@ -455,6 +455,10 @@ bool EthernetInterface::dhcp6(bool value)
 
 EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
 {
+#ifndef DHCP_CONFIGURATION_UPDATE
+    elog<NotAllowed>(
+        NotAllowedArgument::REASON("DHCP configuration update is not allowed"));
+#endif
     auto old4 = EthernetInterfaceIntf::dhcp4();
     auto new4 = EthernetInterfaceIntf::dhcp4(
         value == DHCPConf::v4 || value == DHCPConf::v4v6stateless ||
