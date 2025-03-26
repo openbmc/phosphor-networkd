@@ -9,6 +9,9 @@
 #include <string_view>
 #include <unordered_set>
 
+#include <filesystem>
+#include <nlohmann/json.hpp>
+
 namespace phosphor
 {
 namespace network
@@ -16,6 +19,10 @@ namespace network
 namespace config
 {
 class Parser;
+
+using json = nlohmann::json;
+// Parse the JSON config file
+json parseConfigFile(const std::filesystem::path& configFile);
 }
 
 /* @brief converts a sockaddr for the specified address family into
