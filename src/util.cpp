@@ -25,6 +25,7 @@ namespace network
 {
 
 using std::literals::string_view_literals::operator""sv;
+using json = nlohmann::json;
 using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 static constexpr std::string_view lldpdConfigFilePath = "/etc/lldpd.conf";
@@ -264,6 +265,33 @@ std::map<std::string, bool> parseLLDPConf()
     lldpdConfig.close();
     return portStatus;
 }
+
+namespace config
+{
+// Parse the JSON config file
+json parseConfigFile(const std::filesystem::path& configFile)
+{
+    std::ifstream jsonFile(configFile);
+    if (!jsonFile.is_open())
+    {
+        lg2::info("config JSON file not found: {PATH}", "PATH", configFile);
+        return {};
+    }
+
+    try
+    {
+        return json::parse(jsonFile, nullptr, true);
+    }
+    catch (const json::parse_error& e)
+    {
+        lg2::error("Failed to parse JSON config file {PATH}: {ERROR}", "PATH",
+              configFile, "ERROR", e);
+    }
+
+    return {};
+}
+
+} // namespace config
 
 } // namespace network
 } // namespace phosphor
