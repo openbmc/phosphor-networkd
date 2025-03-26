@@ -1,9 +1,10 @@
 #pragma once
 #include "types.hpp"
-
+#include <nlohmann/json.hpp>
 #include <stdplus/raw.hpp>
 #include <stdplus/zstring_view.hpp>
 
+#include <filesystem>
 #include <map>
 #include <optional>
 #include <string>
@@ -17,7 +18,11 @@ namespace network
 namespace config
 {
 class Parser;
-}
+
+using json = nlohmann::json;
+// Parse the JSON config file
+json parseConfigFile(const std::filesystem::path& configFile);
+} // namespace config
 
 /* @brief converts a sockaddr for the specified address family into
  *        a type_safe InAddrAny.
