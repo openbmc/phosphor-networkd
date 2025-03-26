@@ -14,6 +14,7 @@
 #include <net/if_arp.h>
 #include <sys/stat.h>
 
+#include <nlohmann/json.hpp>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/fd/create.hpp>
@@ -25,6 +26,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <format>
+#include <fstream>
 #include <string>
 #include <unordered_map>
 #include <variant>
@@ -40,6 +42,7 @@ using NotAllowed = sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
 using NotAllowedArgument = xyz::openbmc_project::Common::NotAllowed;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
 using std::literals::string_view_literals::operator""sv;
+using json = nlohmann::json;
 constexpr auto RESOLVED_SERVICE = "org.freedesktop.resolve1";
 constexpr auto RESOLVED_INTERFACE = "org.freedesktop.resolve1.Link";
 constexpr auto PROPERTY_INTERFACE = "org.freedesktop.DBus.Properties";
@@ -48,8 +51,31 @@ constexpr auto RESOLVED_SERVICE_PATH = "/org/freedesktop/resolve1/link/";
 constexpr auto TIMESYNCD_SERVICE = "org.freedesktop.timesync1";
 constexpr auto TIMESYNCD_INTERFACE = "org.freedesktop.timesync1.Manager";
 constexpr auto TIMESYNCD_SERVICE_PATH = "/org/freedesktop/timesync1";
-
 constexpr auto METHOD_GET = "Get";
+
+namespace config
+{
+
+std::filesystem::path findDHCPConfigFile()
+{
+    static constexpr auto name = "dhcp_configuration.json";
+
+    for (auto pathSeg : {std::filesystem::current_path(),
+                         std::filesystem::path{"/var/lib/phosphor-networkd"},
+                         std::filesystem::path{"/usr/share/phosphor-networkd"}})
+    {
+        auto file = pathSeg / name;
+        if (std::filesystem::exists(file))
+        {
+            return file;
+        }
+    }
+
+    // return blank path
+    return std::filesystem::path();
+}
+
+} // namespace config
 
 template <typename Func>
 inline decltype(std::declval<Func>()()) ignoreError(
@@ -469,6 +495,19 @@ bool EthernetInterface::dhcp6(bool value)
 
 EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
 {
+    auto configPath = config::findDHCPConfigFile();
+    if (!configPath.empty() && std::filesystem::exists(configPath))
+    {
+        auto config = config::parseConfigFile(configPath);
+        if (!config.empty() && config.contains("dhcp") &&
+            !config["dhcp"]["allowConfiguration"].get<bool>())
+        {
+            lg2::error("DHCP configuration update is not allowed");
+            elog<NotAllowed>(NotAllowedArgument::REASON(
+                "DHCP configuration update is disabled"));
+        }
+        lg2::debug("DHCP configuration update is allowed");
+    }
     auto old4 = EthernetInterfaceIntf::dhcp4();
     auto new4 = EthernetInterfaceIntf::dhcp4(
         value == DHCPConf::v4 || value == DHCPConf::v4v6stateless ||
