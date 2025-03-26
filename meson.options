@@ -30,4 +30,3 @@ option(
     type: 'boolean',
     description: 'Force sync mac address no matter is first boot or not',
 )
-
