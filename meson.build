@@ -19,7 +19,11 @@ conf_data.set('ENABLE_IPV6_ACCEPT_RA', get_option('default-ipv6-accept-ra'))
 conf_data.set('SYNC_MAC_FROM_INVENTORY', get_option('sync-mac'))
 conf_data.set('PERSIST_MAC', get_option('persist-mac'))
 conf_data.set10('FORCE_SYNC_MAC_FROM_INVENTORY', get_option('force-sync-mac'))
-
+if not get_option('dhcp-configuration-update').disabled()
+  conf_data.set('DHCP_CONFIGURATION_UPDATE', 1)  # Define as 1
+else
+  conf_data.set('DHCP_CONFIGURATION_UPDATE', 0)  # Define as 0
+endif
 sdbusplus_dep = dependency('sdbusplus')
 sdbusplusplus_prog = find_program('sdbus++', native: true)
 sdbuspp_gen_meson_prog = find_program('sdbus++-gen-meson', native: true)
