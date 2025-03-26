@@ -28,7 +28,14 @@ namespace phosphor
 {
 namespace network
 {
+namespace config
+{
 
+// DHCP configuration file path
+constexpr std::string_view DHCP_CONFIG_FILE =
+    "/etc/phosphor-network/dhcp_configuration.json";
+
+} // namespace config
 using Ifaces = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::server::EthernetInterface,
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress,
