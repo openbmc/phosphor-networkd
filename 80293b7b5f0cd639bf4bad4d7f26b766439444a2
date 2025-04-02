@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53904ef1_46b9c76f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-04-02T14:54:47Z",
+      "side": 1,
+      "message": "Should we really have a meson option for a single line of code?  Why not supply this as part of the phosphor-networkd config?\n\nAs is, we have a single line of code that doesn\u0027t even compile and can never be tested in CI.  This isn\u0027t a great situation.",
+      "revId": "80293b7b5f0cd639bf4bad4d7f26b766439444a2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
