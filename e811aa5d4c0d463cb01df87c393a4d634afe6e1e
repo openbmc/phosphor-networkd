@@ -563,6 +563,24 @@
       "message": "Have we made the corresponding changes in bmcweb/host -ipmid too?",
       "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b95cd99f_cce60a96",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-04-06T14:11:38Z",
+      "side": 1,
+      "message": "BMCWEB changes already done, IPMI does not need to support ipv6",
+      "parentUuid": "d761d16e_72954971",
+      "revId": "e811aa5d4c0d463cb01df87c393a4d634afe6e1e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
