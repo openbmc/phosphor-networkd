@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "314e9011_e81bd519",
         "filename": "src/ethernet_interface.cpp",
@@ -14,10 +15,10 @@
       "side": 1,
       "message": "Do we get notifications from somewhere when this information changes? Does it remain consistent / update even when leases come in relatively late?",
       "revId": "0f86eed5506fa4d1044e260f17f0c762f797bcf1",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "48fc7280_19833820",
         "filename": "src/ethernet_interface.cpp",
@@ -31,10 +32,10 @@
       "side": 1,
       "message": "Not returning here will crash if the message is invalid and it reaches the get_if + dereference.",
       "revId": "0f86eed5506fa4d1044e260f17f0c762f797bcf1",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "835eb1dd_c6351116",
         "filename": "src/ethernet_interface.cpp",
@@ -48,10 +49,10 @@
       "side": 1,
       "message": "nit: Range based for loop.",
       "revId": "0f86eed5506fa4d1044e260f17f0c762f797bcf1",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "e497b7af_9390b4be",
         "filename": "src/ethernet_interface.cpp",
@@ -65,10 +66,10 @@
       "side": 1,
       "message": "Just do this inline with push_back to avoid the unnecessary copy.",
       "revId": "0f86eed5506fa4d1044e260f17f0c762f797bcf1",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "0710b587_bdaef602",
         "filename": "src/ethernet_interface.hpp",
@@ -88,10 +89,10 @@
         "endChar": 44
       },
       "revId": "0f86eed5506fa4d1044e260f17f0c762f797bcf1",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "e4144dd7_0d6c8bef",
         "filename": "src/ethernet_interface.hpp",
@@ -111,8 +112,8 @@
         "endChar": 7
       },
       "revId": "0f86eed5506fa4d1044e260f17f0c762f797bcf1",
-      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4",
-      "unresolved": true
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
-  ]
+  ],
+  "submitRequirementResults": []
 }
