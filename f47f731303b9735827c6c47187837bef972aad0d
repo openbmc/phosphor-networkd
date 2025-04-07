@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c89bb13d_c3e0ef77",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-04-07T08:01:09Z",
+      "side": 1,
+      "message": "Recent changes related to NCSI have been merged. Could you please review this change again and confirm if it’s still required?",
+      "revId": "f47f731303b9735827c6c47187837bef972aad0d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
