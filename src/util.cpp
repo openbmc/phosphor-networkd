@@ -86,8 +86,8 @@ std::string_view getIgnoredInterfacesEnv()
 }
 
 /** @brief Parse the comma separated interface names */
-std::unordered_set<std::string_view>
-    parseInterfaces(std::string_view interfaces)
+std::unordered_set<std::string_view> parseInterfaces(
+    std::string_view interfaces)
 {
     std::unordered_set<std::string_view> result;
     while (true)
