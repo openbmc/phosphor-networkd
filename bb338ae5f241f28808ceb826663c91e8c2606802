@@ -105,6 +105,24 @@
       "message": "Wak/Ratan \n\ncan you please merge this commit?",
       "revId": "bb338ae5f241f28808ceb826663c91e8c2606802",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe0af1a3_53acb023",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-04-10T13:57:30Z",
+      "side": 1,
+      "message": "Hi Wak\n\nyes systemd-networkd does not have a way to differentiate.\nI think we can go ahead with this commit since NetworkSuppliedServers D-bus property is going to have DHCP provided NTP servers",
+      "parentUuid": "989fe78e_addeb58c",
+      "revId": "bb338ae5f241f28808ceb826663c91e8c2606802",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
