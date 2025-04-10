@@ -88,8 +88,8 @@ InterfaceInfo intfFromRtm(std::string_view msg)
 }
 
 template <typename Addr>
-static std::optional<std::tuple<unsigned, stdplus::InAnyAddr>>
-    parse(std::string_view msg)
+static std::optional<std::tuple<unsigned, stdplus::InAnyAddr>> parse(
+    std::string_view msg)
 {
     std::optional<unsigned> ifIdx;
     std::optional<stdplus::InAnyAddr> gw;
@@ -113,8 +113,8 @@ static std::optional<std::tuple<unsigned, stdplus::InAnyAddr>>
     return std::nullopt;
 }
 
-std::optional<std::tuple<unsigned, stdplus::InAnyAddr>>
-    gatewayFromRtm(std::string_view msg)
+std::optional<std::tuple<unsigned, stdplus::InAnyAddr>> gatewayFromRtm(
+    std::string_view msg)
 {
     const auto& rtm = extractRtData<rtmsg>(msg);
     if (rtm.rtm_table != RT_TABLE_MAIN || rtm.rtm_dst_len != 0)
