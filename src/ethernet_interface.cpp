@@ -907,7 +907,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
     }
     catch (const std::exception& e)
     {
-        lg2::error("Invalid Ip address {NET_MAC}: {ERROR}", "NET_MAC", value,
+        lg2::error("Invalid MAC address {NET_MAC}: {ERROR}", "NET_MAC", value,
                    "ERROR", e);
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("netmac"),
                               Argument::ARGUMENT_VALUE(value.c_str()));
