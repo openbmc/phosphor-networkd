@@ -52,9 +52,9 @@ constexpr auto TIMESYNCD_SERVICE_PATH = "/org/freedesktop/timesync1";
 constexpr auto METHOD_GET = "Get";
 
 template <typename Func>
-inline decltype(std::declval<Func>()())
-    ignoreError(std::string_view msg, stdplus::zstring_view intf,
-                decltype(std::declval<Func>()()) fallback, Func&& func) noexcept
+inline decltype(std::declval<Func>()()) ignoreError(
+    std::string_view msg, stdplus::zstring_view intf,
+    decltype(std::declval<Func>()()) fallback, Func&& func) noexcept
 {
     try
     {
