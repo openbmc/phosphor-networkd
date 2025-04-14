@@ -88,6 +88,24 @@
       "parentUuid": "19e1db82_f060d367",
       "revId": "80293b7b5f0cd639bf4bad4d7f26b766439444a2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20dc2dae_8b6957ef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-04-14T18:32:05Z",
+      "side": 1,
+      "message": "We have lots of applications that have a \"per platform config file\".  In your case it sounds like all platforms need the _same_ config file, so you can supply it as a single bitbake bbappend triggered off a feature that all your systems share.\n\nIsn\u0027t it worse to have code in the repository that doesn\u0027t even build and isn\u0027t even going to be checked in the entire openbmc organization because you\u0027re only using this feature downstream?  At least with a config file we can ensure the code compiles and add a unit test for it.\n\n\u003e I have seen some apllication failed to start if some config file missing\n\nI don\u0027t know what your point is.  An application that fails to start due to a config file missing, if that isn\u0027t the desired design, is buggy and needs to be fixed.  At least it is complaining loudly by not starting though.\n\n\u003e because version is missmatch\n\nWe usually use JSON.  We\u0027re just talking about adding a JSON keyword.  This isn\u0027t a difficult problem.",
+      "parentUuid": "8007ec3d_a7b9e51d",
+      "revId": "80293b7b5f0cd639bf4bad4d7f26b766439444a2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
