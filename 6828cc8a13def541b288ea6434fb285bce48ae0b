@@ -36,6 +36,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b3ea9a3_29543742",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 758,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-04-26T17:03:05Z",
+      "side": 1,
+      "message": "addressed this comment in latest patch by generating unique table id for each interface.",
+      "parentUuid": "4e169d5e_722a25d3",
+      "revId": "6828cc8a13def541b288ea6434fb285bce48ae0b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aca17a01_6f6a1e6d",
