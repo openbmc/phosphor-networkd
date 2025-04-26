@@ -147,6 +147,30 @@
       },
       "revId": "6828cc8a13def541b288ea6434fb285bce48ae0b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4505c08b_a80bea77",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 768,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-04-26T17:10:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e798c370_ad0ae9c1",
+      "range": {
+        "startLine": 768,
+        "startChar": 24,
+        "endLine": 768,
+        "endChar": 53
+      },
+      "revId": "6828cc8a13def541b288ea6434fb285bce48ae0b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
