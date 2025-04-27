@@ -111,8 +111,8 @@ static void print_usage(const char* progname)
     // clang-format on
 }
 
-static std::optional<unsigned int>
-    parseUnsigned(const char* str, const char* label)
+static std::optional<unsigned int> parseUnsigned(const char* str,
+                                                 const char* label)
 {
     try
     {
@@ -171,8 +171,8 @@ static std::optional<MCTPAddress> parseMCTPAddress(const std::string& str)
     return addr;
 }
 
-static std::optional<std::vector<unsigned char>>
-    parsePayload(int argc, const char* const argv[])
+static std::optional<std::vector<unsigned char>> parsePayload(
+    int argc, const char* const argv[])
 {
     /* we have already checked that there are sufficient args in callers */
     assert(argc >= 1);
@@ -243,8 +243,8 @@ static std::optional<std::vector<unsigned char>>
     return payload;
 }
 
-static std::optional<std::tuple<GlobalOptions, int>>
-    parseGlobalOptions(int argc, char* const* argv)
+static std::optional<std::tuple<GlobalOptions, int>> parseGlobalOptions(
+    int argc, char* const* argv)
 {
     std::optional<unsigned int> chan, package, interface;
     std::optional<MCTPAddress> mctp;
@@ -453,8 +453,8 @@ static int ncsiCommandOEM(GlobalOptions& options, int argc,
     return ncsiCommand(options, oemType, *payload);
 }
 
-static std::array<unsigned char, 12>
-    generateDumpCmdPayload(uint32_t chunkNum, uint32_t dataHandle, bool isAbort)
+static std::array<unsigned char, 12> generateDumpCmdPayload(
+    uint32_t chunkNum, uint32_t dataHandle, bool isAbort)
 {
     std::array<unsigned char, 12> payload = {};
     uint8_t opcode;
