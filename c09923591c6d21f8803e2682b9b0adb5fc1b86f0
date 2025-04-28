@@ -49,6 +49,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e02a25d0_4506edb3",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2025-04-28T20:01:52Z",
+      "side": 1,
+      "message": "I don\u0027t think you need to actually apply the netmask, networkd / kernel will do it for you.",
+      "revId": "c09923591c6d21f8803e2682b9b0adb5fc1b86f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30668200_812da383",
+        "filename": "src/util.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1000188
+      },
+      "writtenOn": "2025-04-28T20:01:52Z",
+      "side": 1,
+      "message": "stdplus handles most of this logic for you already\n```\nreturn stdplus::Subnet(stdplus::Subnet(stdplus::fromStr\u003cInAnyAddr\u003e(ip), prefixLength).network(). prefixLength);\n```",
+      "revId": "c09923591c6d21f8803e2682b9b0adb5fc1b86f0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dffcfbef_7723ef0c",
         "filename": "src/util.cpp",
         "patchSetId": 12
