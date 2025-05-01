@@ -1,0 +1,233 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae902878_6d1e5230",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 25
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-01T00:21:10Z",
+      "side": 1,
+      "message": "I hope noone puts their BMC directly on the internet.  Did you mean \"network\"?",
+      "range": {
+        "startLine": 10,
+        "startChar": 7,
+        "endLine": 10,
+        "endChar": 15
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "911b54c7_99501ec9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 25
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-01T00:21:10Z",
+      "side": 1,
+      "message": "Can you fix this sentence?",
+      "range": {
+        "startLine": 17,
+        "startChar": 30,
+        "endLine": 18,
+        "endChar": 48
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5312ea15_10162ee3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 25
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-01T00:21:10Z",
+      "side": 1,
+      "message": "\"MR\"?\n\nI don\u0027t think there is a solid reason to reference a later config where you install-if-available.  That isn\u0027t relevant to the code here.",
+      "range": {
+        "startLine": 20,
+        "startChar": 22,
+        "endLine": 20,
+        "endChar": 24
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c98a587_6aff26eb",
+        "filename": "meson.build",
+        "patchSetId": 25
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-01T00:21:10Z",
+      "side": 1,
+      "message": "Why would this be under systemd?\n\nCan we put this into a header file instead of it being meson-coded-C-generation?  There is no reason for anyone to ever change this path as part of meson.",
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35052f77_bdb604f9",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-01T00:21:10Z",
+      "side": 1,
+      "message": "The error is \"NotAllowed\" so your REASON isn\u0027t actually giving me more information.",
+      "range": {
+        "startLine": 480,
+        "startChar": 39,
+        "endLine": 480,
+        "endChar": 53
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69833f17_6c81f9cc",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-01T00:21:10Z",
+      "side": 1,
+      "message": "This is not an error and does not need to be logged.",
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd7c1441_2b808049",
+        "filename": "src/util.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-01T00:21:10Z",
+      "side": 1,
+      "message": "This is typical behavior, not an error.  Don\u0027t use \"error\" for things that are not an error.",
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5dec335a_faac07ca",
+        "filename": "test/test_dhcp_configuration.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-01T00:21:10Z",
+      "side": 1,
+      "message": "Should we clean the file in the destructor?  Or does `CaseTmpDir` handle that for us?",
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81040d9a_8efc87d7",
+        "filename": "test/test_dhcp_configuration.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-01T00:21:10Z",
+      "side": 1,
+      "message": "Why is this code duplicated from the constructor?",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 17
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95ea2da9_3b862a02",
+        "filename": "test/test_dhcp_configuration.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-01T00:21:10Z",
+      "side": 1,
+      "message": "Can you make a function for this pattern?  Call it from the constructor.  Call it from here.",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 17
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44d72895_a5d45fdd",
+        "filename": "test/test_dhcp_configuration.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-01T00:21:10Z",
+      "side": 1,
+      "message": "Why?  Who is going to clean this up?",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 17
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
