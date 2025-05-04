@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "382d746b_9ec64765",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 25
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-04T19:21:27Z",
+      "side": 1,
+      "message": "Yes",
+      "parentUuid": "ae902878_6d1e5230",
+      "range": {
+        "startLine": 10,
+        "startChar": 7,
+        "endLine": 10,
+        "endChar": 15
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "911b54c7_99501ec9",
@@ -37,6 +61,30 @@
       "writtenOn": "2025-05-01T00:21:10Z",
       "side": 1,
       "message": "Can you fix this sentence?",
+      "range": {
+        "startLine": 17,
+        "startChar": 30,
+        "endLine": 18,
+        "endChar": 48
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc2c7904_9bd5425d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 25
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-04T19:21:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "911b54c7_99501ec9",
       "range": {
         "startLine": 17,
         "startChar": 30,
@@ -70,6 +118,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "32ee4818_61f974cd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 25
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-04T19:21:27Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "5312ea15_10162ee3",
+      "range": {
+        "startLine": 20,
+        "startChar": 22,
+        "endLine": 20,
+        "endChar": 24
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2c98a587_6aff26eb",
@@ -83,6 +155,24 @@
       "writtenOn": "2025-05-01T00:21:10Z",
       "side": 1,
       "message": "Why would this be under systemd?\n\nCan we put this into a header file instead of it being meson-coded-C-generation?  There is no reason for anyone to ever change this path as part of meson.",
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bd8941b_813fba81",
+        "filename": "meson.build",
+        "patchSetId": 25
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-04T19:21:27Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "2c98a587_6aff26eb",
       "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -110,6 +200,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2d61544_fc777792",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-04T19:21:27Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "35052f77_bdb604f9",
+      "range": {
+        "startLine": 480,
+        "startChar": 39,
+        "endLine": 480,
+        "endChar": 53
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "69833f17_6c81f9cc",
@@ -123,6 +237,24 @@
       "writtenOn": "2025-05-01T00:21:10Z",
       "side": 1,
       "message": "This is not an error and does not need to be logged.",
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79201586_adf3211c",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-04T19:21:27Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "69833f17_6c81f9cc",
       "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -144,6 +276,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "684f99f6_909528ef",
+        "filename": "src/util.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-04T19:21:27Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "cd7c1441_2b808049",
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5dec335a_faac07ca",
@@ -161,6 +311,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b9fb51e_31b3a72c",
+        "filename": "test/test_dhcp_configuration.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-04T19:21:27Z",
+      "side": 1,
+      "message": "Added destructor to cleanup",
+      "parentUuid": "5dec335a_faac07ca",
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "81040d9a_8efc87d7",
@@ -174,6 +342,30 @@
       "writtenOn": "2025-05-01T00:21:10Z",
       "side": 1,
       "message": "Why is this code duplicated from the constructor?",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 17
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0386ddd8_0c716113",
+        "filename": "test/test_dhcp_configuration.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-04T19:21:27Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "81040d9a_8efc87d7",
       "range": {
         "startLine": 48,
         "startChar": 0,
@@ -207,6 +399,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9320ed7_480c3277",
+        "filename": "test/test_dhcp_configuration.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-04T19:21:27Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "95ea2da9_3b862a02",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 17
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "44d72895_a5d45fdd",
@@ -220,6 +436,30 @@
       "writtenOn": "2025-05-01T00:21:10Z",
       "side": 1,
       "message": "Why?  Who is going to clean this up?",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 17
+      },
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09477e8f_44a5d203",
+        "filename": "test/test_dhcp_configuration.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-04T19:21:27Z",
+      "side": 1,
+      "message": "Will add destructor to cleanup",
+      "parentUuid": "44d72895_a5d45fdd",
       "range": {
         "startLine": 103,
         "startChar": 0,
