@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7d2377f_2611bbbe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 31
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-08T20:01:18Z",
+      "side": 1,
+      "message": "nit: capitalization",
+      "range": {
+        "startLine": 17,
+        "startChar": 30,
+        "endLine": 17,
+        "endChar": 32
+      },
+      "revId": "45d5225078c388649f44b43b824a12b958ba17b0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f8a581a_b76af328",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-08T20:01:18Z",
+      "side": 1,
+      "message": "Do you think that this is often going to be static for a device / image type, or is this something that people will actively need to modify?  Based on your commit message it sounds static.\n\nWhat we do in phosphor-pid-control is look in `pwd`, followed by `/var/lib/swampd` followed by `/usr/share/swampd`.  The expectation is that someone building a system with this static config would install a file into /usr/share first, but then /var/lib (or /etc) are available to be modified by a user or dynamically if you also want to support that.\n\nhttps://github.com/openbmc/phosphor-pid-control/blob/a4270075f7cbdb2dee38f444a59e25b96d8128f4/main.cpp#L94",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 52
+      },
+      "revId": "45d5225078c388649f44b43b824a12b958ba17b0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}

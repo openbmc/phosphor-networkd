@@ -296,6 +296,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dd31ef0e_59699b8d",
+        "filename": "src/util.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2025-05-08T20:01:18Z",
+      "side": 1,
+      "message": "You acknowledged this but didn\u0027t fix it.",
+      "parentUuid": "684f99f6_909528ef",
+      "revId": "605e00c72ea47b0bc1b835ecd2b6dbc8ca937951",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5dec335a_faac07ca",
         "filename": "test/test_dhcp_configuration.cpp",
         "patchSetId": 25
