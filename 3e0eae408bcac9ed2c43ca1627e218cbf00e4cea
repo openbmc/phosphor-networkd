@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "189559b1_93dac856",
+        "filename": "meson.options",
+        "patchSetId": 35
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-12T05:14:30Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "ab7844aa_4c121bbb",
+      "revId": "3e0eae408bcac9ed2c43ca1627e218cbf00e4cea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3741260d_4c51710f",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-05-12T03:41:49Z",
       "side": 1,
       "message": "what happens if file does not existing? still need to return file name if does not exist?",
+      "revId": "3e0eae408bcac9ed2c43ca1627e218cbf00e4cea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c838bce5_6e0f77e8",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-12T05:14:30Z",
+      "side": 1,
+      "message": "funtion needs to return the type \"std::filesystem::path \" therefore I am returning the file name if file not exist. The function caller will handle the return values by checking whether file path exist.",
+      "parentUuid": "3741260d_4c51710f",
       "revId": "3e0eae408bcac9ed2c43ca1627e218cbf00e4cea",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
