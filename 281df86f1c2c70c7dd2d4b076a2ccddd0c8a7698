@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "927b782e_6a2fdade",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-05-12T04:31:18Z",
+      "side": 1,
+      "message": "Hi Jishnu\n\nany update on this commit? can you please check if systemd-networkd has fixed this issue in latest systems-networkd?",
+      "revId": "281df86f1c2c70c7dd2d4b076a2ccddd0c8a7698",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
