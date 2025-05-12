@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab7844aa_4c121bbb",
+        "filename": "meson.options",
+        "patchSetId": 35
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-05-12T03:41:49Z",
+      "side": 1,
+      "message": "looks like there is no change needed in this file.",
+      "revId": "3e0eae408bcac9ed2c43ca1627e218cbf00e4cea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3741260d_4c51710f",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-05-12T03:41:49Z",
+      "side": 1,
+      "message": "what happens if file does not existing? still need to return file name if does not exist?",
+      "revId": "3e0eae408bcac9ed2c43ca1627e218cbf00e4cea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
