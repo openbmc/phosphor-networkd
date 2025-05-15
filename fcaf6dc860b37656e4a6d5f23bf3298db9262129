@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9006438f_e8e4f924",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-15T14:49:23Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "9b136224_06a7f65e",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 71
+      },
+      "revId": "fcaf6dc860b37656e4a6d5f23bf3298db9262129",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8fbfc718_0d325640",
@@ -41,6 +65,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "15479912_e00f9000",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-15T14:49:23Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "8fbfc718_0d325640",
+      "revId": "fcaf6dc860b37656e4a6d5f23bf3298db9262129",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "33fffb56_e93ae938",
@@ -54,6 +96,24 @@
       "writtenOn": "2025-05-14T17:32:40Z",
       "side": 1,
       "message": "Should check for non-empty path.  `findDHCPConfigFile` seems to already be doing exist check.",
+      "revId": "fcaf6dc860b37656e4a6d5f23bf3298db9262129",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15b15150_26e54f16",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 37
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-15T14:49:23Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "33fffb56_e93ae938",
       "revId": "fcaf6dc860b37656e4a6d5f23bf3298db9262129",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
