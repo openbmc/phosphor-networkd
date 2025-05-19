@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93e367bd_0c91f617",
+        "filename": "src/util.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-19T05:43:19Z",
+      "side": 1,
+      "message": "Add comment why 0 is avoided",
+      "revId": "ca5518fa8497705070df1c0268dc33af7b9b4531",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f42904e7_195d7537",
+        "filename": "src/util.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-19T05:43:19Z",
+      "side": 1,
+      "message": "Avoid magic constant ~0U Use UINT32_MAX from \u003ccstdint\u003e or \u003climits\u003e for clarity",
+      "revId": "ca5518fa8497705070df1c0268dc33af7b9b4531",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7da598f6_cc99e2d3",
+        "filename": "src/util.hpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-19T05:43:19Z",
+      "side": 1,
+      "message": "Add return TAG",
+      "revId": "ca5518fa8497705070df1c0268dc33af7b9b4531",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7ca1515_d4a0dbd6",
+        "filename": "src/util.hpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-05-19T05:43:19Z",
+      "side": 1,
+      "message": "Add return Tag",
+      "revId": "ca5518fa8497705070df1c0268dc33af7b9b4531",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
