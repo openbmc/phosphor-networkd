@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3ed6205_204aa7ac",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 39
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-05-25T16:55:14Z",
+      "side": 1,
+      "message": "can you please add tested by and test cases verified?",
+      "revId": "e830cdddbbb79a7029d35c218bbcaa4880ca5304",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2db79148_97c46988",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-05-25T16:55:14Z",
+      "side": 1,
+      "message": "need this header file?",
+      "revId": "e830cdddbbb79a7029d35c218bbcaa4880ca5304",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b06b4ac_f402dd73",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-05-25T16:55:14Z",
+      "side": 1,
+      "message": "filePath?",
+      "revId": "e830cdddbbb79a7029d35c218bbcaa4880ca5304",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0139a52c_6871e24c",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-05-25T16:55:14Z",
+      "side": 1,
+      "message": "have you tested this case and noticed NotAllowed error?",
+      "revId": "e830cdddbbb79a7029d35c218bbcaa4880ca5304",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f33f3939_ceb8c872",
+        "filename": "test/test_dhcp_configuration.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-05-25T16:55:14Z",
+      "side": 1,
+      "message": "safe to add \"if (!file)\" check before dump?",
+      "revId": "e830cdddbbb79a7029d35c218bbcaa4880ca5304",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
