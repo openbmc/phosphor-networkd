@@ -1,2 +1,4 @@
-Checks: 'clang-analyzer-*'
-WarningsAsErrors: 'clang-analyzer-*'
+Checks: '-*
+    '
+
+WarningsAsErrors: clang-analyzer-*
