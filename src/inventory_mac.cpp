@@ -124,8 +124,12 @@ stdplus::EtherAddr getfromInventory(sdbusplus::bus_t& bus,
         {
             lg2::info("Get info on interface {NET_INTF}, object {OBJ}",
                       "NET_INTF", interfaceName, "OBJ", object.first);
-
-            if (std::string::npos != object.first.find(interfaceName.c_str()))
+            const auto& path = object.first;
+            auto lastSlash = path.find_last_of('/');
+            std::string baseName = (lastSlash != std::string::npos)
+                                       ? path.substr(lastSlash + 1)
+                                       : path;
+            if (baseName == interfaceName)
             {
                 objPath = object.first;
                 service = object.second.begin()->first;
@@ -221,7 +225,13 @@ void registerSignals(sdbusplus::bus_t& bus)
 
         for (const auto& pattern : configJson.items())
         {
-            if (objPath.str.find(pattern.value()) != std::string::npos)
+            const auto& path = objPath.str;
+            auto lastSlash = path.find_last_of('/');
+            std::string baseName = (lastSlash != std::string::npos)
+                                       ? path.substr(lastSlash + 1)
+                                       : path;
+            std::string patternStr = pattern.value().get<std::string>();
+            if (baseName == patternStr)
             {
                 for (auto& interface : interfacesProperties)
                 {
