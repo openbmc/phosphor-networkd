@@ -8,7 +8,7 @@ configure_file(
         'HYP_DEFAULT_NETWORK_BUSNAME': hyp_default_busname,
     },
     install: true,
-    install_dir: dependency('systemd').get_variable('systemdsystemunitdir'),
+    install_dir: dependency('systemd').get_variable('systemd_system_unit_dir'),
 )
 
 hyp_src_includes = include_directories('.')
