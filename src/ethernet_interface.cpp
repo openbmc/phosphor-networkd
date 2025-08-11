@@ -725,6 +725,56 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
 
 ServerList EthernetInterface::staticNTPServers(ServerList value)
 {
+    for (const auto& ntpServer : value)
+    {
+        // Check for empty or whitespace-only strings
+        if (ntpServer.empty() ||
+            std::all_of(ntpServer.begin(), ntpServer.end(), ::isspace))
+        {
+            lg2::error(
+                "NTP server is empty or contains only whitespace: {NTP_SERVER}",
+                "NTP_SERVER", ntpServer);
+            elog<InvalidArgument>(Argument::ARGUMENT_NAME("StaticNTPServers"),
+                                  Argument::ARGUMENT_VALUE(ntpServer.c_str()));
+        }
+        // Check for characters that could break configuration file parsing
+        // or cause security issues
+        for (char c : ntpServer)
+        {
+            // Allow alphanumeric characters, dots, hyphens, colons, square
+            // brackets, and spaces
+            if (!std::isalnum(c) && c != '.' && c != '-' && c != ':' &&
+                c != '[' && c != ']' && !std::isspace(c))
+            {
+                lg2::error(
+                    "NTP server contains invalid character '{CHAR}' in: {NTP_SERVER}",
+                    "CHAR", std::string(1, c), "NTP_SERVER", ntpServer);
+                elog<InvalidArgument>(
+                    Argument::ARGUMENT_NAME("StaticNTPServers"),
+                    Argument::ARGUMENT_VALUE(ntpServer.c_str()));
+            }
+        }
+        // Additional security check: prevent potential injection attacks
+        // by checking for common problematic patterns
+        if (ntpServer.find("..") != std::string::npos || // Directory traversal
+            ntpServer.find("//") != std::string::npos || // URL injection
+            ntpServer.find("\\") != std::string::npos)   // Path injection
+        {
+            lg2::error(
+                "NTP server contains potentially dangerous pattern: {NTP_SERVER}",
+                "NTP_SERVER", ntpServer);
+            elog<InvalidArgument>(Argument::ARGUMENT_NAME("StaticNTPServers"),
+                                  Argument::ARGUMENT_VALUE(ntpServer.c_str()));
+        }
+        // Check for reasonable length limits
+        if (ntpServer.length() > 253) // RFC 1035 domain name limit
+        {
+            lg2::error("NTP server name too long: {NTP_SERVER}", "NTP_SERVER",
+                       ntpServer);
+            elog<InvalidArgument>(Argument::ARGUMENT_NAME("StaticNTPServers"),
+                                  Argument::ARGUMENT_VALUE(ntpServer.c_str()));
+        }
+    }
     value = EthernetInterfaceIntf::staticNTPServers(std::move(value));
 
     writeConfigurationFile();
