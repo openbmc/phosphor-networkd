@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <format>
+#include <regex>
 #include <string>
 #include <unordered_map>
 #include <variant>
@@ -723,8 +724,57 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     return ret;
 }
 
+static bool isValidNTPServer(const std::string& ntpServer)
+{
+    // Check for empty or whitespace-only strings
+    if (ntpServer.empty() ||
+        std::all_of(ntpServer.begin(), ntpServer.end(), ::isspace))
+    {
+        return false;
+    }
+
+    // Check for reasonable length limits (RFC 1035 domain name limit)
+    if (ntpServer.length() > 253)
+    {
+        return false;
+    }
+
+    // Try parsing as IPv4 or IPv6 address first
+    try
+    {
+        stdplus::fromStr<stdplus::InAnyAddr>(ntpServer);
+        return true;
+    }
+    catch (const std::exception&)
+    {
+        // Not an IP address, try domain name validation
+        lg2::debug("Invalid NTP server: {NTP_SERVER}", "NTP_SERVER", ntpServer);
+    }
+
+    // Domain name validation: ([-a-zA-Z0-9]+[.]?)+
+    // This regex matches one or more segments of alphanumeric characters and
+    // hyphens, optionally followed by a dot, repeated one or more times
+    static const std::regex domainRegex(R"(^([-a-zA-Z0-9]+\.?)+$)");
+    if (!std::regex_match(ntpServer, domainRegex))
+    {
+        return false;
+    }
+    // Valid domain name
+    return true;
+}
+
 ServerList EthernetInterface::staticNTPServers(ServerList value)
 {
+    for (const auto& ntpServer : value)
+    {
+        if (!isValidNTPServer(ntpServer))
+        {
+            lg2::error("Invalid NTP server: {NTP_SERVER}", "NTP_SERVER",
+                       ntpServer);
+            elog<InvalidArgument>(Argument::ARGUMENT_NAME("StaticNTPServers"),
+                                  Argument::ARGUMENT_VALUE(ntpServer.c_str()));
+        }
+    }
     value = EthernetInterfaceIntf::staticNTPServers(std::move(value));
 
     writeConfigurationFile();
