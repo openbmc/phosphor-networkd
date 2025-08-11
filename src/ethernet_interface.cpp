@@ -725,6 +725,20 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
 
 ServerList EthernetInterface::staticNTPServers(ServerList value)
 {
+    for (const auto& ntpServer : value)
+    {
+        try
+        {
+            (void)stdplus::fromStr<stdplus::net::HostOrAddr>(ntpServer);
+        }
+        catch (const std::exception& e)
+        {
+            lg2::error("Invalid NTP server: {NTP_SERVER}: {ERROR}",
+                       "NTP_SERVER", ntpServer, "ERROR", e);
+            elog<InvalidArgument>(Argument::ARGUMENT_NAME("StaticNTPServers"),
+                                  Argument::ARGUMENT_VALUE(ntpServer.c_str()));
+        }
+    }
     value = EthernetInterfaceIntf::staticNTPServers(std::move(value));
 
     writeConfigurationFile();
