@@ -16,6 +16,24 @@
       "message": "It would be better to just parse the valid cases instead of trying to invalidate based on specific characters\n\nYou can try parsing as an IPv4 / IPv6 / Domain. stdplus has ip address parsing routines and Domains are just `([-a-zA-Z0-9]+[.]?)+`",
       "revId": "6eb65f54866583c0ecf0b27c44b9239811647694",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38a12a09_1b10c52a",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1001673
+      },
+      "writtenOn": "2025-08-13T08:34:46Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "7af17cc7_8b276860",
+      "revId": "6eb65f54866583c0ecf0b27c44b9239811647694",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
