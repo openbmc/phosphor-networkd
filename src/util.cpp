@@ -5,6 +5,7 @@
 #include "config_parser.hpp"
 #include "types.hpp"
 
+#include <lldpctl.h>
 #include <sys/wait.h>
 
 #include <phosphor-logging/elog-errors.hpp>
@@ -263,6 +264,66 @@ std::map<std::string, bool> parseLLDPConf()
     }
     lldpdConfig.close();
     return portStatus;
+}
+
+bool lldpGetNeighborIP(const std::string& interface, std::string& lldpIP, std::string& lldpMAC) {
+    auto* conn = lldpctl_new_name(lldpctl_get_default_transport(), NULL, NULL, NULL);
+    if (!conn) {
+        lg2::error("Could not connect to lldpd daemon");
+        return false;
+    }
+
+    lldpctl_atom_t* interfaces = lldpctl_get_interfaces(conn);
+    if (interfaces) {
+        lldpctl_atom_t* iface;
+        lldpctl_atom_foreach(interfaces, iface) {
+            lldpctl_atom_t* port = lldpctl_get_port(iface);
+            if (!port)
+                continue;
+
+            const char* ifname = lldpctl_atom_get_str(port, lldpctl_k_port_name);
+            lg2::notice("Interface: {INTF} and given interface is {IF}", "INTF", ifname ? ifname : "N/A", "IF", interface);
+            if (!ifname || interface != ifname) {
+                lldpctl_atom_dec_ref(port);
+                continue;
+            }
+
+            lldpctl_atom_t* neighbors = lldpctl_atom_get(port, lldpctl_k_port_neighbors);
+            if (neighbors) {
+                lldpctl_atom_t* neigh;
+                lldpctl_atom_foreach(neighbors, neigh) {
+                    const char* sys_name = lldpctl_atom_get_str(neigh, lldpctl_k_chassis_name);
+                    const char* port_id = lldpctl_atom_get_str(neigh, lldpctl_k_port_id);
+                    lg2::info("Neighbor System Name: {SYSNAME}", "SYSNAME", sys_name ? sys_name : "N/A");
+                    lg2::info("Neighbor Port ID: {PORTID}", "PORTID", port_id ? port_id : "N/A");
+                    lldpMAC = std::string(port_id);
+                    lldpctl_atom_t* mgmts = lldpctl_atom_get(neigh, lldpctl_k_chassis_mgmt);
+                    if (mgmts) {
+                        lldpctl_atom_t* mgmt;
+                        lldpctl_atom_foreach(mgmts, mgmt) {
+                            const char* ip = lldpctl_atom_get_str(mgmt, lldpctl_k_mgmt_ip);
+                            if (ip) {
+                                lg2::info("Neighbor Mgmt IP: {IP}", "IP", ip);
+                                lldpctl_atom_dec_ref(mgmts);
+                                lldpctl_atom_dec_ref(neighbors);
+                                lldpctl_atom_dec_ref(port);
+                                lldpctl_release(conn);
+                                lldpIP = std::string(ip);
+                                return true;
+                            }
+                        }
+                        lldpctl_atom_dec_ref(mgmts);
+                    }
+                }
+                lldpctl_atom_dec_ref(neighbors);
+            }
+            lldpctl_atom_dec_ref(port);
+        }
+        lldpctl_atom_dec_ref(interfaces);
+    }
+
+    lldpctl_release(conn);
+    return false;
 }
 
 } // namespace network

@@ -42,12 +42,15 @@ if get_option('sync-mac')
     main_deps += [dependency('nlohmann_json', include_type: 'system')]
 endif
 
+lldpctl_dep = dependency('lldpctl', required: true)
+
 networkd_deps = [
     phosphor_dbus_interfaces_dep,
     dependency('phosphor-logging'),
     networkd_dbus_dep,
     sdbusplus_dep,
     stdplus_dep,
+    lldpctl_dep,
 ]
 
 conf_header = configure_file(output: 'config.h', configuration: conf_data)
