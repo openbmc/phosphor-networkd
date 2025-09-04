@@ -46,6 +46,30 @@
       },
       "revId": "3b1ecc8d88a16ca57bb558f4755a85b94b282690",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c73c971_324297d0",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 747,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-09-04T18:30:44Z",
+      "side": 1,
+      "message": "agree, better to have checks inside stdplus",
+      "parentUuid": "f35b196c_fbd68f4d",
+      "range": {
+        "startLine": 730,
+        "startChar": 2,
+        "endLine": 747,
+        "endChar": 5
+      },
+      "revId": "3b1ecc8d88a16ca57bb558f4755a85b94b282690",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
