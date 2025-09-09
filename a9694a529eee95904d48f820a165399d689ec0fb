@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5264ebc8_196f6020",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000382
+      },
+      "writtenOn": "2025-09-09T13:19:32Z",
+      "side": 1,
+      "message": "I have moved my role from the networkd developer. I approve Asmitha to replace me as a reviewer.",
+      "revId": "a9694a529eee95904d48f820a165399d689ec0fb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
