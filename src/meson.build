@@ -95,3 +95,7 @@ executable(
 if (get_option('hyp-nw-config') == true)
     subdir('ibm')
 endif
+
+if (get_option('lldp') == true)
+  subdir('lldp')
+endif
