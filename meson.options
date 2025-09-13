@@ -16,6 +16,11 @@ option(
     description: 'Sync mac address with phosphor-inventory-manager',
 )
 option(
+    'lldp',
+    type: 'boolean',
+    description: 'Enable LLDP neighbor discovery',
+)
+option(
     'hyp-nw-config',
     type: 'boolean',
     description: 'ibm-oem: Enable the hypervisor network manager',
@@ -30,4 +35,4 @@ option(
     type: 'boolean',
     description: 'Force sync mac address no matter is first boot or not',
 )
-
+option('lldp', type: 'boolean', description: 'Enable LLDP neighbor discovery')
