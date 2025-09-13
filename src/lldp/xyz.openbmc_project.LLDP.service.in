@@ -1,0 +1,15 @@
+[Unit]
+Description=LLDP for Neighbor Discovery
+After=lldpd.service
+After=network.target
+After=xyz.openbmc_project.Network.service
+Requires=xyz.openbmc_project.Network.service
+
+[Service]
+ExecStart=/usr/bin/phosphor-lldpd
+Restart=always
+Type=dbus
+BusName=@LLDP_DEFAULT_BUSNAME@
+
+[Install]
+WantedBy=multi-user.target
