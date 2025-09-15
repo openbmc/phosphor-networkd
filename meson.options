@@ -30,4 +30,4 @@ option(
     type: 'boolean',
     description: 'Force sync mac address no matter is first boot or not',
 )
-option('lldp', type: 'boolean', description: 'Enable LLDP neighbor discovery')
+option('lldp', type: 'boolean', value: true, description: 'Enable LLDP neighbor discovery')

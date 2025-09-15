@@ -1,6 +1,11 @@
 #pragma once
+
+#include "lldp_neighbor.hpp"
+
 #include <sdbusplus/bus.hpp>
 #include <sdeventplus/event.hpp>
+
+#include <map>
 
 namespace phosphor
 {
@@ -16,9 +21,12 @@ class Manager
             const std::string& objPath);
 
   private:
+    std::vector<std::string> getInterfaces();
+
     sdbusplus::bus_t& bus;
     sdeventplus::Event& event;
     std::string objPath;
+    std::unordered_map<std::string, std::unique_ptr<Neighbor>> neighbors;
 };
 
 } // namespace lldp
