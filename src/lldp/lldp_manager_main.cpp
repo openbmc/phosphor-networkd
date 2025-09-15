@@ -8,7 +8,7 @@
 
 int main()
 {
-    stdplus::Pinned bus = sdbusplus::bus::new_default();
+    auto bus = sdbusplus::bus::new_default();
     auto event = sdeventplus::Event::get_default();
 
     std::string lldpObjPath = "/xyz/openbmc_project/network/lldp";

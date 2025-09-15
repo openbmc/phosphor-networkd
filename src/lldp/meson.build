@@ -15,6 +15,7 @@ lldp_src_includes = include_directories('.')
 lldp_lib = static_library(
     'lldp-lib',
     'lldp_manager.cpp',
+    'lldp_neighbor.cpp',
     implicit_include_directories: false,
     include_directories: [src_includes, lldp_src_includes],
     dependencies: networkd_deps,
