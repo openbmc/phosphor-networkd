@@ -47,15 +47,16 @@ openbmc:
 - name: Adriana Kobylak
   email: anoo@us.ibm.com
   discord: anoo
+- name: Asmitha Karunanithi
+  email: asmitk01@in.ibm.com
+  discord: asmitha
 - name: Ratan Gupta
   email: ratankgupta31@gmail.com
   discord: rgupta
-- name: William Kennington
-  email: wak@google.com
-  discord: wak
-- name: Sunitha Harish
-  email: sunithaharish04@gmail.com
-  discord: Sunitha Harish
 - name: Ravi Teja
   email: raviteja28031990@gmail.com
   discord: raviteja
+- name: William Kennington
+  email: wak@google.com
+  discord: wak
+
