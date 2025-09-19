@@ -290,8 +290,6 @@ int applyCmd(NetlinkInterface& interface, const NetlinkCommand& cmd,
         return -ENOMEM;
     }
 
-    nl_socket_disable_auto_ack(socket.get());
-
     auto ret = genl_connect(socket.get());
     if (ret < 0)
     {
@@ -401,6 +399,7 @@ int applyCmd(NetlinkInterface& interface, const NetlinkCommand& cmd,
             return ret;
         }
 
+        nl_socket_disable_auto_ack(socket.get());
         nl_socket_disable_seq_check(socket.get());
     }
 
