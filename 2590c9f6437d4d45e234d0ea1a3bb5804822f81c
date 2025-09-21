@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8299f266_b6a87a1d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2025-09-21T22:35:32Z",
+      "side": 1,
+      "message": "hmmm.  this seems to be userspace coding, adjustinf it\u0027s request to avoid kernel hang.  that sounds backwards \n\n\nI think we should look at the kernel handling this automatically.\n\n\nI don\u0027t remember the history of this auto ack disable.   \n\nI do remember that the ability to send arbitrary messages was not the intent.  \n\nI haven\u0027t yet taken the time to read the full context of this patch but decided to look at bot  code review notice",
+      "revId": "2590c9f6437d4d45e234d0ea1a3bb5804822f81c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
