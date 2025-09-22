@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "66aeafb9_da434cc8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001371
+      },
+      "writtenOn": "2025-09-22T03:05:24Z",
+      "side": 1,
+      "message": "the old code, if without function callback, don\u0027t recvmsgs.\n\n\n```\n    if (function)\n    {\n        cb_ret \u003d 1;\n\n        // Add a callback function to the socket\n        nl_socket_modify_cb(socket.get(), NL_CB_VALID, NL_CB_CUSTOM, function,\n                            \u0026cb_ret);\n    }\n\n    do\n    {\n        ret \u003d nl_recvmsgs_default(socket.get());\n        if (ret \u003c 0)\n        {\n            lg2::error(\"Failed to receive the message , RC : {RC}\", \"RC\", ret);\n            break;\n        }\n    } while (cb_ret);\n```",
+      "parentUuid": "43099510_2f0a8cca",
+      "revId": "2590c9f6437d4d45e234d0ea1a3bb5804822f81c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8299f266_b6a87a1d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
