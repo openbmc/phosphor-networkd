@@ -831,9 +831,15 @@ void EthernetInterface::writeConfigurationFile()
             auto& address = network["Address"];
             for (const auto& addr : addrs)
             {
-                if (addr.second->origin() == IP::AddressOrigin::Static)
+                if ((addr.second->type() == IP::Protocol::IPv6 &&
+                     !EthernetInterfaceIntf::dhcp6()) ||
+                    (addr.second->type() == IP::Protocol::IPv4 &&
+                     !EthernetInterfaceIntf::dhcp4()))
                 {
-                    address.emplace_back(stdplus::toStr(addr.first));
+                    if (addr.second->origin() == IP::AddressOrigin::Static)
+                    {
+                        address.emplace_back(stdplus::toStr(addr.first));
+                    }
                 }
             }
         }
