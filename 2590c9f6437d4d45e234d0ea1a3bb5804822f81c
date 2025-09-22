@@ -35,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "54f97fd5_eafc5788",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1001371
+      },
+      "writtenOn": "2025-09-22T03:00:30Z",
+      "side": 1,
+      "message": "\u003e  adjustinf it\u0027s request to avoid kernel hang\nThe kernel isn’t actually hung. With auto-ack disabled, the kernel doesn’t send any message back, so the application-layer stack gets stuck here.",
+      "parentUuid": "8299f266_b6a87a1d",
+      "revId": "2590c9f6437d4d45e234d0ea1a3bb5804822f81c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "f92295e7_56c3f16a",
