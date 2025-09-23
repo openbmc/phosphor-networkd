@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "faa4e94f_1e4e61ba",
+        "filename": "src/lldp/meson.build",
+        "patchSetId": 8
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-09-23T05:25:16Z",
+      "side": 1,
+      "message": "are we not using this template name in service.in file?",
+      "revId": "f1c2f995da28080e44d960a24d905969a92fd834",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "863cf493_a5ca9e00",
+        "filename": "src/lldp/meson.build",
+        "patchSetId": 8
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-09-23T05:25:16Z",
+      "side": 1,
+      "message": "what is HYP_DEFAULT_NETWORK_BUSNAME",
+      "revId": "f1c2f995da28080e44d960a24d905969a92fd834",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aba3ade4_6afddcf4",
+        "filename": "src/lldp/meson.build",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-09-23T05:25:16Z",
+      "side": 1,
+      "message": "why this lib is needed?",
+      "revId": "f1c2f995da28080e44d960a24d905969a92fd834",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
