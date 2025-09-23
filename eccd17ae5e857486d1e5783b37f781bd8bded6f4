@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffeed127_a472ad80",
+        "filename": "src/lldp/lldp_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-09-23T05:04:20Z",
+      "side": 1,
+      "message": "does the number of interface change runtime? If not why don\u0027t you cache the interfaces on first time fetch?",
+      "revId": "eccd17ae5e857486d1e5783b37f781bd8bded6f4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf13a232_31b94645",
+        "filename": "src/lldp/lldp_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-09-23T05:04:20Z",
+      "side": 1,
+      "message": "what does this mean? The neighbour is added by default without detecting any? What does neighbour mean here?",
+      "revId": "eccd17ae5e857486d1e5783b37f781bd8bded6f4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71168ddc_029c5a68",
+        "filename": "src/lldp/lldp_neighbor.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-09-23T05:04:20Z",
+      "side": 1,
+      "message": "making the property as readonly in yaml does not fix this?",
+      "revId": "eccd17ae5e857486d1e5783b37f781bd8bded6f4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
