@@ -1035,6 +1035,28 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
     normalizeGateway<stdplus::In4Addr>(gateway);
     if (gateway != defaultGateway())
     {
+        for (auto& addr : addrs)
+        {
+            if (addr.second->type() == IP::Protocol::IPv4 &&
+                addr.second->origin() != IP::AddressOrigin::LinkLocal)
+            {
+                try
+                {
+                    ip_address::isSameSeries(addr.second->address(), gateway,
+                                             addr.second->prefixLength());
+                }
+                catch (const std::exception& e)
+                {
+                    lg2::error("Invalid Gateway {NET_GATEWAY}: {ERROR}",
+                               "NET_GATEWAY", gateway, "ERROR", e);
+                    elog<InvalidArgument>(
+                        Argument::ARGUMENT_NAME("gateway"),
+                        Argument::ARGUMENT_VALUE(gateway.c_str()));
+                }
+                break;
+            }
+        }
+
         gateway = EthernetInterfaceIntf::defaultGateway(std::move(gateway));
         writeConfigurationFile();
         manager.get().reloadConfigs();
