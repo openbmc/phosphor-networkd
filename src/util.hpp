@@ -112,6 +112,14 @@ void execute(stdplus::zstring_view path, ArgTypes&&... tArgs)
     internal::executeCommandinChildProcess(path, args);
 }
 
+/** @brief Check if the IPv4 address and default gateway are in the same subnet
+ *  @param[in] ipAddr - The IPv4 address
+ *  @param[in] gateway - The IPv4 default gateway address
+ *  @param[in] prefixLength - The prefix length of IPv4
+ */
+void isSameSubnet(std::string ipAddr, std::string gateway,
+                  uint8_t prefixLength);
+
 } // namespace network
 
 } // namespace phosphor
