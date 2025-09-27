@@ -265,5 +265,18 @@ std::map<std::string, bool> parseLLDPConf()
     return portStatus;
 }
 
+void isSameSeries(std::string ipStr, std::string gwStr, uint8_t prefixLength)
+{
+    auto ip = (stdplus::fromStr<stdplus::In4Addr>(ipStr)).a.s_addr;
+    auto gw = (stdplus::fromStr<stdplus::In4Addr>(gwStr)).a.s_addr;
+    auto netmask = htobe32(~UINT32_C(0) << (32 - prefixLength));
+
+    if ((ip & netmask) != (gw & netmask))
+    {
+        throw std::logic_error(
+            "Gateway address and IP address aren't in the same subnet.");
+    } // if
+}
+
 } // namespace network
 } // namespace phosphor
