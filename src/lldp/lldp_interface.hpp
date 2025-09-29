@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sdbusplus/server/object.hpp>
+#include <xyz/openbmc_project/Network/LLDP/Settings/server.hpp>
 
 #include <string>
 
@@ -13,7 +14,10 @@ namespace lldp
 
 class Manager;
 
-class Interface
+using SettingsIface = sdbusplus::server::object_t<
+    sdbusplus::xyz::openbmc_project::Network::LLDP::server::Settings>;
+
+class Interface : public SettingsIface
 {
   public:
     Interface() = delete;
@@ -25,11 +29,18 @@ class Interface
 
     ~Interface() = default;
 
+    bool enableLLDP(bool value) override;
+    using SettingsIface::enableLLDP;
+
   private:
     Manager& manager;
-    sdbusplus::bus_t& busRef;
+    sdbusplus::bus_t& bus;
     std::string objPath;
     std::string ifname;
+
+    std::string buildLLDPStatusCommand(bool enable) const;
+    void updateInterfaceLLDPConfig(bool enable);
+    void reloadLLDPService();
 };
 } // namespace lldp
 } // namespace network
