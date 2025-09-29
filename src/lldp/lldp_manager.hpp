@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lldp_interface.hpp"
+#include "lldp_utils.hpp"
 
 #include <sdbusplus/bus.hpp>
 #include <sdeventplus/event.hpp>
@@ -30,6 +31,10 @@ class LLDPManager
         "/xyz/openbmc_project/network/lldp";
 
     std::vector<std::string> getInterfaces();
+    void reloadLLDPService();
+    void loadInterfaceConfigs(const std::string& dirPath);
+    bool isLLDPEnabledForInterface(const std::string& ifname) const;
+    void handleLLDPEnableChange(const std::string& iface, bool enable);
 
   protected:
     void createIntfDbusObjects();
@@ -39,6 +44,7 @@ class LLDPManager
     std::unique_ptr<TimerType> createIntfTimer;
 
     std::unordered_map<std::string, std::unique_ptr<Interface>> ifaces;
+    phosphor::lldp_utils::ConfigList configs;
 };
 
 } // namespace lldp
