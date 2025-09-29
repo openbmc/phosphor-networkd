@@ -26,6 +26,12 @@ using DBusProp = std::variant<std::string, bool, uint8_t, int16_t, int32_t,
                               int64_t, uint16_t, uint32_t, uint64_t, double,
                               std::vector<std::string>>;
 
+constexpr auto systemdBusname = "org.freedesktop.systemd1";
+constexpr auto systemdObjPath = "/org/freedesktop/systemd1";
+constexpr auto systemdInterface = "org.freedesktop.systemd1.Manager";
+constexpr auto lldpFilePath = "/etc/lldpd.conf";
+constexpr auto lldpService = "lldpd.service";
+
 Manager::Manager(sdbusplus::bus_t& bus, sdeventplus::Event& event,
                  const std::string& objPath) :
     bus(bus), event(event), objPath(objPath)
@@ -75,6 +81,24 @@ std::vector<std::string> Manager::getInterfaces()
     }
 
     return ifnames;
+}
+
+void Manager::reloadLLDPService()
+{
+    try
+    {
+        auto method = bus.new_method_call(systemdBusname, systemdObjPath,
+                                          systemdInterface, "RestartUnit");
+        method.append(lldpService, "replace");
+        bus.call_noreply(method);
+
+        lg2::info("Requested restart of {SERVICE}", "SERVICE", lldpService);
+    }
+    catch (const sdbusplus::exception_t& ex)
+    {
+        lg2::error("Failed to restart service {SERVICE}: {ERR}", "SERVICE",
+                   lldpService, "ERR", ex);
+    }
 }
 
 } // namespace lldp

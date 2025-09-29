@@ -24,6 +24,7 @@ class Manager
             const std::string& objPath);
 
     std::vector<std::string> getInterfaces();
+    void reloadLLDPService();
 
   protected:
     sdbusplus::bus_t& bus;
