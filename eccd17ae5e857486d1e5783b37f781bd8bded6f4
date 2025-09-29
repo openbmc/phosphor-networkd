@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c4536403_42151eb7",
+        "filename": "src/lldp/lldp_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-09-29T07:54:09Z",
+      "side": 1,
+      "message": "But getInterfaces() is called only once during Manager object creation at service startup. So i believe caching is not needed because there’s only a single call anyway.\nAny thoughts?",
+      "parentUuid": "ffeed127_a472ad80",
+      "revId": "eccd17ae5e857486d1e5783b37f781bd8bded6f4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf13a232_31b94645",
         "filename": "src/lldp/lldp_manager.cpp",
         "patchSetId": 4
@@ -37,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5e858044_41bf4167",
+        "filename": "src/lldp/lldp_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-09-29T07:54:09Z",
+      "side": 1,
+      "message": "I have changed the name to interfaces and yes, once the active interfaces are fetched by getInterfaces(), the dbus object will be created for each interface.",
+      "parentUuid": "cf13a232_31b94645",
+      "revId": "eccd17ae5e857486d1e5783b37f781bd8bded6f4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "71168ddc_029c5a68",
         "filename": "src/lldp/lldp_neighbor.cpp",
         "patchSetId": 4
@@ -48,6 +84,24 @@
       "writtenOn": "2025-09-23T05:04:20Z",
       "side": 1,
       "message": "making the property as readonly in yaml does not fix this?",
+      "revId": "eccd17ae5e857486d1e5783b37f781bd8bded6f4",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61d12e61_d3c059f8",
+        "filename": "src/lldp/lldp_neighbor.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-09-29T07:54:09Z",
+      "side": 1,
+      "message": "The properties under the \"receive\" object are meant to be readonly, as they represent information received from neighbors and are updated automatically by the lldp service. Users cannot modify these.\n\nBut the properties under the transmit object are writable/configurable at runtime, since they define what this device advertises to neighbors.\n\nSo probably making it read-only or writable cannot be possible, as long as we provide explicit methods to write tlvs for transmit object I guess. (I will discuss this in the dbus interfaces commit review).\n\nFor now, this commit chain will focus on the receive objects only. Runtime LLDP configuration of the transmit object can be a future work item.",
+      "parentUuid": "71168ddc_029c5a68",
       "revId": "eccd17ae5e857486d1e5783b37f781bd8bded6f4",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
