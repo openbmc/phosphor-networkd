@@ -26,6 +26,11 @@ class Manager
     std::vector<std::string> getInterfaces();
     void reloadLLDPService();
 
+    sdeventplus::Event& getEventLoop()
+    {
+        return event;
+    }
+
   protected:
     sdbusplus::bus_t& bus;
     sdeventplus::Event& event;
