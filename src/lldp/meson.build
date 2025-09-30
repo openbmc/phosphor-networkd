@@ -27,6 +27,7 @@ executable(
         'lldp_manager.cpp',
         'lldp_interface.cpp',
         'lldp_utils.cpp',
+        'lldp_tlvs.cpp',
         'lldp_manager_main.cpp',
     ],
     implicit_include_directories: false,

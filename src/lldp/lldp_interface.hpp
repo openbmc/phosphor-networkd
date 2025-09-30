@@ -1,5 +1,7 @@
 #pragma once
 
+#include "lldp_tlvs.hpp"
+
 #include <sdbusplus/server/object.hpp>
 #include <xyz/openbmc_project/Network/LLDP/Settings/server.hpp>
 
@@ -37,6 +39,15 @@ class Interface : public SettingsIface
     sdbusplus::bus_t& bus;
     std::string objPath;
     std::string ifname;
+
+    // Pointers to transmit and receive objects
+    std::unique_ptr<TLVs> transmit;
+    std::unique_ptr<TLVs> receive;
+
+    std::string buildLLDPStatusCommand(bool enable) const;
+    void updateInterfaceLLDPConfig(bool enable);
+
+    void updateTransmitObjProperties();
 };
 } // namespace lldp
 } // namespace network
