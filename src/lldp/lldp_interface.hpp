@@ -3,8 +3,10 @@
 #include "lldp_tlvs.hpp"
 
 #include <sdbusplus/server/object.hpp>
+#include <sdeventplus/utility/timer.hpp>
 #include <xyz/openbmc_project/Network/LLDP/Settings/server.hpp>
 
+#include <memory>
 #include <string>
 
 namespace phosphor
@@ -43,6 +45,10 @@ class Interface : public SettingsIface
     // Pointers to transmit and receive objects
     std::unique_ptr<TLVs> transmit;
     std::unique_ptr<TLVs> receive;
+
+    using TimerType =
+        sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
+    std::unique_ptr<TimerType> refreshTimer;
 
     std::string buildLLDPStatusCommand(bool enable) const;
     void updateInterfaceLLDPConfig(bool enable);
