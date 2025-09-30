@@ -22,7 +22,12 @@ lldpctl_dep = dependency('lldpctl', required: true)
 
 executable(
     'phosphor-lldpd',
-    ['lldp_manager.cpp', 'lldp_interface.cpp', 'lldp_manager_main.cpp'],
+    [
+        'lldp_manager.cpp',
+        'lldp_interface.cpp',
+        'lldp_tlvs.cpp',
+        'lldp_manager_main.cpp',
+    ],
     implicit_include_directories: false,
     include_directories: [src_includes, lldp_src_includes],
     dependencies: [
