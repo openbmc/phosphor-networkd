@@ -20,6 +20,7 @@ namespace lldp
 {
 
 using namespace phosphor::logging;
+using TimerType = sdeventplus::utility::Timer<sdeventplus::ClockId::Monotonic>;
 
 constexpr auto lldpFilePath = "/etc/lldpd.conf";
 
@@ -75,6 +76,14 @@ Interface::Interface(sdbusplus::bus_t& bus, Manager& manager,
         transmit->setExchangeType(TLVsIface::LLDPExchangeType::Transmit);
         refreshInterface();
     }
+
+    // Setup periodic refresh timer (every 60 seconds)
+    refreshTimer = std::make_unique<TimerType>(
+        manager.getEventLoop(),
+        [this](TimerType&) { this->refreshInterface(); },
+        std::chrono::seconds(60));
+
+    refreshTimer->setEnabled(true);
     this->emit_object_added();
 }
 
@@ -93,21 +102,23 @@ bool Interface::enableLLDP(bool value)
 
     if (!value)
     {
-        // Delete the transmit object, as LLDP is disabled
+        // Delete the transmit and receive object, as LLDP is disabled
         if (transmit)
         {
             lg2::info("Removing \"transmit\" object on {IF}", "IF", ifname);
             transmit.reset();
         }
+        if (receive)
+        {
+            lg2::info("Removing \"receive\" object on {IF}", "IF", ifname);
+            receive.reset();
+        }
     }
     updateInterfaceLLDPConfig(value);
 
-    if (value)
+    if (!value)
     {
-        refreshInterface();
-    }
-    else
-    {
+        // Disable receive object if LLDP is disabled
         if (receive)
         {
             lg2::info("Removing \"receive\" object on {IF}", "IF", ifname);
@@ -212,6 +223,7 @@ void Interface::refreshInterface()
     }
 
     lldpctl_atom_t* port = nullptr;
+    bool neighborFound = false;
     lldpctl_atom_foreach(ports, port)
     {
         lldpctl_atom_t* p = lldpctl_get_port(port);
@@ -236,6 +248,7 @@ void Interface::refreshInterface()
         lldpctl_atom_t* neigh = nullptr;
         lldpctl_atom_foreach(neighbors, neigh)
         {
+            neighborFound = true;
             const char* chassis =
                 lldpctl_atom_get_str(neigh, lldpctl_k_chassis_id);
             const char* portid = lldpctl_atom_get_str(neigh, lldpctl_k_port_id);
@@ -322,6 +335,16 @@ void Interface::refreshInterface()
         break;
     }
 
+    // If no neighbors found, remove receive object
+    if (!neighborFound)
+    {
+        if (receive)
+        {
+            lg2::info("No neighbors found, removing \"receive\" object on {IF}",
+                      "IF", ifname);
+            receive.reset();
+        }
+    }
     lldpctl_atom_dec_ref(ports);
     lldpctl_release(conn);
 }
