@@ -87,6 +87,12 @@ Interface::Interface(sdbusplus::bus_t& bus, Manager& manager,
 {
     bool enabled = parseLLDPEnabledFromConfig(ifname);
     SettingsIface::enableLLDP(enabled);
+    if (enabled)
+    {
+        // create transmit dbus object once
+        transmit = std::make_unique<TLVs>(bus, objPath + "/transmit");
+        transmit->setExchangeType(TLVsIface::LLDPExchangeType::Transmit);
+    }
     this->emit_object_added();
 }
 
@@ -157,6 +163,12 @@ void Interface::updateInterfaceLLDPConfig(bool enable)
     lg2::info("Updated LLDP config for interface {IF}: {STATE}", "IF", ifname,
               "STATE", (enable ? "tx-and-rx" : "disabled"));
     reloadLLDPService();
+}
+
+void Interface::updateTransmitObjProperties()
+{
+    // TODO: Read the transmit properties using lldpctl APIs
+    // and set it to the transmit obj properties
 }
 
 } // namespace lldp
