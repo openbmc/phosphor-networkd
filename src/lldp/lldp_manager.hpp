@@ -25,6 +25,11 @@ class Manager
 
     std::vector<std::string> getInterfaces();
 
+    sdeventplus::Event& getEventLoop()
+    {
+        return event;
+    }
+
   protected:
     sdbusplus::bus_t& bus;
     sdeventplus::Event& event;
