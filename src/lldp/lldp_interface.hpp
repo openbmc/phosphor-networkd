@@ -49,6 +49,16 @@ class Interface : public SettingsIface
     void reloadLLDPService();
 
     void updateTransmitObjProperties();
+
+    // Check for incoming lldp packets and create/update
+    // "receive" dbus object
+    void refreshInterface();
+
+    void updateOrCreateReceiveObj(
+        const std::string& chassisId, const std::string& portId,
+        const std::string& sysName, const std::string& sysDesc,
+        const std::string& mgmtIPv4, const std::string& mgmtIPv6,
+        const std::string& mgmtMac);
 };
 } // namespace lldp
 } // namespace network
