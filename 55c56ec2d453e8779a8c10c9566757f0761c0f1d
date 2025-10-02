@@ -91,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a8d4ee0c_5c57c959",
+        "filename": "src/util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2025-10-02T13:28:27Z",
+      "side": 1,
+      "message": "PS please go to Gerrit settings\nand provide your full name (first and last).\nAmong other places, not having it set causes the email notifications to be from `Name if user not set (Gerrit code Review)` instead of filling your name.  (both use the sendgrid email address).\n\nthanks.",
+      "parentUuid": "e2282b79_bf3a72d0",
+      "revId": "55c56ec2d453e8779a8c10c9566757f0761c0f1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0713c41b_01c3819c",
         "filename": "src/util.hpp",
         "patchSetId": 3
