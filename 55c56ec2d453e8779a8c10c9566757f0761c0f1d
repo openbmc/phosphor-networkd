@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3ee8c757_5033b3a2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002625
+      },
+      "writtenOn": "2025-10-02T09:22:09Z",
+      "side": 1,
+      "message": "I have changed it from series to subnet. Thanks.",
+      "parentUuid": "cf6b36fa_409c16fa",
+      "revId": "55c56ec2d453e8779a8c10c9566757f0761c0f1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e433f4f9_fa0e51ea",
         "filename": "src/util.cpp",
         "patchSetId": 3
@@ -37,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b707f68b_afda471e",
+        "filename": "src/util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1002625
+      },
+      "writtenOn": "2025-10-02T09:22:09Z",
+      "side": 1,
+      "message": "Sorry. I meant the same subnet. Thanks.",
+      "parentUuid": "e433f4f9_fa0e51ea",
+      "revId": "55c56ec2d453e8779a8c10c9566757f0761c0f1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0713c41b_01c3819c",
         "filename": "src/util.hpp",
         "patchSetId": 3
@@ -48,6 +84,24 @@
       "writtenOn": "2025-10-02T02:47:54Z",
       "side": 1,
       "message": "hmm. this is only ipv4 so far.  what about ipv6?",
+      "revId": "55c56ec2d453e8779a8c10c9566757f0761c0f1d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c9d4e47_406c0084",
+        "filename": "src/util.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1002625
+      },
+      "writtenOn": "2025-10-02T09:22:09Z",
+      "side": 1,
+      "message": "For IPv6, the link-local address can sometimes be used for default gateway and the prefix of link-local address is FE80, so I think it\u0027s enough to check IPv4. Thanks.",
+      "parentUuid": "0713c41b_01c3819c",
       "revId": "55c56ec2d453e8779a8c10c9566757f0761c0f1d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
