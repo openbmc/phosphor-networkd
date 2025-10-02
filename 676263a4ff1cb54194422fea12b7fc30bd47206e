@@ -16,6 +16,23 @@
       "message": "Jiaqing, Can you rebase the changes?",
       "revId": "676263a4ff1cb54194422fea12b7fc30bd47206e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4a520e5_21a966bc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2025-10-02T03:09:09Z",
+      "side": 1,
+      "message": "why not use the additional information?   does redfish not expose these parameters?",
+      "revId": "676263a4ff1cb54194422fea12b7fc30bd47206e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
