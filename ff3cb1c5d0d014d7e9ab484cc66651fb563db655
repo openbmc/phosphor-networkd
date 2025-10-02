@@ -16,6 +16,24 @@
       "message": "Continuously? AFAIK it only happens when the interface is created. Do we really want to clear the list of servers if manual mode is set? Shouldn\u0027t this just reflect whatever timesyncd is configured to do and not read a separate value?",
       "revId": "ff3cb1c5d0d014d7e9ab484cc66651fb563db655",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0cab205_1b1d2329",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2025-10-02T03:16:38Z",
+      "side": 1,
+      "message": "agreed. what\u0027s the undesired result of reading this?\n\nis it worth the additional round trip delay reading this?\n\nis this at all related to sometimes using another time sync daemon?   can common interface be provided?  or a distro feature selected configuration?",
+      "parentUuid": "d53d7ce9_e9ccc3e4",
+      "revId": "ff3cb1c5d0d014d7e9ab484cc66651fb563db655",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
