@@ -3,6 +3,74 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a619984a_8f4982a0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-03T15:24:39Z",
+      "side": 1,
+      "message": "please add tested by section with all test cases you have verified",
+      "revId": "ba2aecc5528e7e2fa9e214f7233e73ec2fc2d1e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66427054_4ef24d26",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-03T15:24:39Z",
+      "side": 1,
+      "message": "I really did not understand why do we need to have this additional check\n\ncan you please add more details to commit message on why its needed",
+      "revId": "ba2aecc5528e7e2fa9e214f7233e73ec2fc2d1e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8c25a81_ec9eabbb",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-03T15:24:39Z",
+      "side": 1,
+      "message": "IP addresses can configured without valid gateway on interface\nhave you verified this test case, where multiple different subnet IPs configured on interface already and then configure gateway? \ngateway configuration keeps failing with this patch and user never know why gateway configuration fails.",
+      "revId": "ba2aecc5528e7e2fa9e214f7233e73ec2fc2d1e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb3f0f9a_e9d3104c",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-03T15:24:39Z",
+      "side": 1,
+      "message": "if user provides invalid gateway which does not match to ip address then IP address won\u0027t be reachable and considered as configuration error.",
+      "revId": "ba2aecc5528e7e2fa9e214f7233e73ec2fc2d1e2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "faa7fd87_036a5281",
         "filename": "src/util.hpp",
         "patchSetId": 4
