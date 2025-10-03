@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fac7df25_9e2c877a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-03T15:38:11Z",
+      "side": 1,
+      "message": "can you please add Tested by section in commit message with all testcases you have verified with this commit",
+      "revId": "af0bc50515f8d7d8e787faa6f2dea38f6b3a5e46",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ea3929a_7ed15876",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-03T15:38:11Z",
+      "side": 1,
+      "message": "can you please add more details of why \u0026 what does this commit do",
+      "revId": "af0bc50515f8d7d8e787faa6f2dea38f6b3a5e46",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad682809_654c5be1",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-03T15:38:11Z",
+      "side": 1,
+      "message": "IPv6 supports multiple addresses per interface by default and DHCPv6 \u0026 static v6 addresses can coexist on interface.\nwhat\u0027s the issue noticed with ipv6 dhcp \u0026 static address co-existence?",
+      "revId": "af0bc50515f8d7d8e787faa6f2dea38f6b3a5e46",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5426c91d_c1ffe8fa",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 836,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-03T15:38:11Z",
+      "side": 1,
+      "message": "this check just avoids writing static IP systemd networkd configuration file, but this IP still show up in D-bus objects right?",
+      "revId": "af0bc50515f8d7d8e787faa6f2dea38f6b3a5e46",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
