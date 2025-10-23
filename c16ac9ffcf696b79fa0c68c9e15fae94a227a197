@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24286155_80368142",
+        "filename": "src/lldp/lldp_manager.hpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-23T04:06:28Z",
+      "side": 1,
+      "message": "does object path change in runtime?  if not can we make it static constexpr auto ?",
+      "revId": "c16ac9ffcf696b79fa0c68c9e15fae94a227a197",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
