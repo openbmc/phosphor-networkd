@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78eb6c94_859bf7fd",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-23T14:24:50Z",
+      "side": 1,
+      "message": "can you merge the using declaration for TimerType to single place",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2de0260_1c9ba2c9",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-23T14:24:50Z",
+      "side": 1,
+      "message": "why uniqueptr? cant it be simple member object?",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f5d09ff_f5819543",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-23T14:24:50Z",
+      "side": 1,
+      "message": "does this inteval matches with lldp packet frequency? Can we use same value?",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "edc137e0_70b5294c",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-23T14:24:50Z",
+      "side": 1,
+      "message": "can we move this code to manager and do it for all interfaces using single call?",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8abf6dee_ce2ff8f4",
+        "filename": "src/lldp/lldp_interface.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-23T14:24:50Z",
+      "side": 1,
+      "message": "can we use single polling for all interface in manager object ? Now we have as many timers as interfaces.",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
