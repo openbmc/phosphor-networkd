@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b07b723_a6389654",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-23T04:45:24Z",
+      "side": 1,
+      "message": "looks like the configuration files are space separated words. Is this true for all network related configurations? If so can we write a reusable API for reading and writing from/to the conf file? This way we can reduce the spread of manual loop as below.",
+      "revId": "8760ce8895823b3654f55b57057161f926892088",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7a5957d_a32ed989",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-23T04:45:24Z",
+      "side": 1,
+      "message": "try to make this code generic by taking the path string such as /configure/ports/eth1/lldp/status . This way same function can be reused for all properties",
+      "revId": "8760ce8895823b3654f55b57057161f926892088",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37130d36_fdb18f9a",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-23T04:45:24Z",
+      "side": 1,
+      "message": "can the configurations be modified by other services? if not why can\u0027t we load it once in constructor and saves it whenever value is updated(serialisation). we can simplify the parsing login to serialisation of vector of vectors then",
+      "revId": "8760ce8895823b3654f55b57057161f926892088",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
