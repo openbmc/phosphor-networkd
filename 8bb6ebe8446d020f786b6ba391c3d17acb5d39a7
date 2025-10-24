@@ -71,6 +71,108 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1a5b32e5_9a794b9a",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-24T04:09:23Z",
+      "side": 1,
+      "message": "can we split the function in to smaller pieces?",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e02c595f_a6b15067",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-24T04:09:23Z",
+      "side": 1,
+      "message": "should be freed?",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d4d90b9_e100033c",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-24T04:09:23Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ddfd53b_fead9bb9",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-24T04:09:23Z",
+      "side": 1,
+      "message": "should be freed?",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "513318d7_e544ddd8",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-24T04:09:23Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6bd0aa5e_7e9cd66c",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-24T04:09:23Z",
+      "side": 1,
+      "message": "should we free this?",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8abf6dee_ce2ff8f4",
         "filename": "src/lldp/lldp_interface.hpp",
         "patchSetId": 3
