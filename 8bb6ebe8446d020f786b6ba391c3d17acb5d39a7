@@ -88,6 +88,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1ea6c057_d7c85a54",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-26T13:23:59Z",
+      "side": 1,
+      "message": "Have we considered using lldpctl -f json? Pulling structured JSON directly would make our parsing code more memory-safe and less prone to errors.",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e02c595f_a6b15067",
         "filename": "src/lldp/lldp_interface.cpp",
         "patchSetId": 3
