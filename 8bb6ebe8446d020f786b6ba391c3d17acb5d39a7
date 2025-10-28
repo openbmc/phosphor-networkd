@@ -192,6 +192,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4b867959_18a48479",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1001762
+      },
+      "writtenOn": "2025-10-28T13:36:44Z",
+      "side": 1,
+      "message": "I mean system(lldpctl -f json) or as below if you use boost\n```\n        bp::ipstream output_pipe;\n        bp::child child_process(\"/usr/sbin/lldpctl\", bp::args({\"-f\", \"json\"}),\n                                bp::std_out \u003e output_pipe);\n\n        std::string line;\n        std::string json_output;\n\n        // Read all output from the child process\u0027s stdout\n        while (std::getline(output_pipe, line))\n        {\n            json_output +\u003d line;\n        }\n        std::cout \u003c\u003c json_output \u003c\u003c std::endl;\n        ```",
+      "parentUuid": "77c0ad83_367704fb",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e02c595f_a6b15067",
         "filename": "src/lldp/lldp_interface.cpp",
         "patchSetId": 3
