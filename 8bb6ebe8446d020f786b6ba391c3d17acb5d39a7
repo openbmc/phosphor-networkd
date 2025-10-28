@@ -20,6 +20,41 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d0c19f2c_1b67c199",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-28T11:18:55Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "78eb6c94_859bf7fd",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ecee50a_ce400491",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-28T11:18:55Z",
+      "side": 1,
+      "message": "enabled check is not needed?",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a2de0260_1c9ba2c9",
         "filename": "src/lldp/lldp_interface.cpp",
         "patchSetId": 3
@@ -48,6 +83,40 @@
       "writtenOn": "2025-10-23T14:24:50Z",
       "side": 1,
       "message": "does this inteval matches with lldp packet frequency? Can we use same value?",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "028f7c8b_b2bc1fb5",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-28T11:18:55Z",
+      "side": 1,
+      "message": "can we add const variable for polling timeout.",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7dfb82d8_aa142d76",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-28T11:18:55Z",
+      "side": 1,
+      "message": "may need to disable transmit object when LLDP is disabled, you can address this transmit object commit.",
       "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -99,6 +168,24 @@
       "writtenOn": "2025-10-26T13:23:59Z",
       "side": 1,
       "message": "Have we considered using lldpctl -f json? Pulling structured JSON directly would make our parsing code more memory-safe and less prone to errors.",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77c0ad83_367704fb",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-28T11:18:55Z",
+      "side": 1,
+      "message": "there is no lldpctl API call which can return data in json format",
+      "parentUuid": "1ea6c057_d7c85a54",
       "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -184,6 +271,24 @@
       "writtenOn": "2025-10-24T04:09:23Z",
       "side": 1,
       "message": "should we free this?",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab28d81d_85612b45",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-28T11:18:55Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "6bd0aa5e_7e9cd66c",
       "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
