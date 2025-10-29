@@ -71,6 +71,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "63fe0cf6_2b87d950",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1002625
+      },
+      "writtenOn": "2025-10-29T10:23:45Z",
+      "side": 1,
+      "message": "The first step I want is to avoid confuseing the users when getting LAN configuration via IPMI commands. Although multiple IPs can be set under one interface, if possible, I\u0027d like to put checks avoid the second IP under one interface. Thanks.",
+      "parentUuid": "f6275b26_c8ed4ca9",
+      "revId": "af0bc50515f8d7d8e787faa6f2dea38f6b3a5e46",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "6342b8bf_37e78734",
@@ -137,6 +155,24 @@
       "side": 1,
       "message": "yeah you can\u0027t have same ip address on multiple devices.\nplease try configuring unique ip which is not configured on other devices",
       "parentUuid": "0a3fd242_6a332e69",
+      "revId": "af0bc50515f8d7d8e787faa6f2dea38f6b3a5e46",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "668370c4_3c986843",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 1002625
+      },
+      "writtenOn": "2025-10-29T10:23:45Z",
+      "side": 1,
+      "message": "I will remove the checks for IPv6. Thanks.",
+      "parentUuid": "a0bf39ad_82f9a543",
       "revId": "af0bc50515f8d7d8e787faa6f2dea38f6b3a5e46",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
