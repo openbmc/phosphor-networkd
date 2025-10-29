@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f7fbafcd_84ec2911",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-29T04:44:36Z",
+      "side": 1,
+      "message": "to simplify this parsing, we can segregate configuration into two separate configuration files, one config file for system configuration and one for port level configurations",
+      "parentUuid": "1b07b723_a6389654",
+      "revId": "8760ce8895823b3654f55b57057161f926892088",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e7a5957d_a32ed989",
         "filename": "src/lldp/lldp_interface.cpp",
         "patchSetId": 7
@@ -48,6 +66,24 @@
       "writtenOn": "2025-10-23T04:45:24Z",
       "side": 1,
       "message": "can the configurations be modified by other services? if not why can\u0027t we load it once in constructor and saves it whenever value is updated(serialisation). we can simplify the parsing login to serialisation of vector of vectors then",
+      "revId": "8760ce8895823b3654f55b57057161f926892088",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "460ac64b_722c21c4",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-29T04:44:36Z",
+      "side": 1,
+      "message": "configuration file changes only during enable/disable LLDP operation which will be done by this LLDP app, other apps does not modify configuration.\nbut LLDP enable/disable can be dynamically changed at any time.",
+      "parentUuid": "37130d36_fdb18f9a",
       "revId": "8760ce8895823b3654f55b57057161f926892088",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
