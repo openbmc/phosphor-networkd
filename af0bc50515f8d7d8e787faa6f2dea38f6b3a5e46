@@ -53,6 +53,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6275b26_c8ed4ca9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-29T08:57:51Z",
+      "side": 1,
+      "message": "I understand the problem but this fix does not fix this issue completely.\nto avoid this issue, networkd need to put checks to avoid allowing multiple IP configuration.",
+      "parentUuid": "31dec07a_ce77c91f",
+      "revId": "af0bc50515f8d7d8e787faa6f2dea38f6b3a5e46",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "6342b8bf_37e78734",
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "We noticed it couldn\u0027t establich connection if other device had already applied the same IPv6 address.",
       "parentUuid": "ad682809_654c5be1",
+      "revId": "af0bc50515f8d7d8e787faa6f2dea38f6b3a5e46",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0bf39ad_82f9a543",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 834,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-10-29T08:57:51Z",
+      "side": 1,
+      "message": "yeah you can\u0027t have same ip address on multiple devices.\nplease try configuring unique ip which is not configured on other devices",
+      "parentUuid": "0a3fd242_6a332e69",
       "revId": "af0bc50515f8d7d8e787faa6f2dea38f6b3a5e46",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
