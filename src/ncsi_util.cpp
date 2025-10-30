@@ -175,7 +175,7 @@ CallBack infoCallBack = [](struct nl_msg* msg, void* arg) {
                 continue;
             }
 
-            ChannelInfo chan;
+            ChannelInfo chan{};
 
             if (channeltb[NCSI_CHANNEL_ATTR_ID])
             {
