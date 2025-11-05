@@ -75,12 +75,7 @@ void HypSysConfig::setHostNameInBios(const std::string& name)
                                           BIOS_MGR_INTF, "SetAttribute");
     properties.append("vmi_hostname");
     properties.append(std::variant<std::string>(name));
-    auto result = bus.call(properties);
-
-    if (result.is_method_error())
-    {
-        throw std::runtime_error("Set attribute api failed");
-    }
+    bus.call(properties);
 }
 
 } // namespace network

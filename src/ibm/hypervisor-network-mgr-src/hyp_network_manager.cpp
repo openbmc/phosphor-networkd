@@ -33,13 +33,7 @@ auto HypNetworkMgr::getDBusProp(const std::string& objectName,
         "org.freedesktop.DBus.Properties", "Get");
     properties.append(interface);
     properties.append(kw);
-    auto result = bus.call(properties);
-
-    if (result.is_method_error())
-    {
-        throw std::runtime_error("Get api failed");
-    }
-    return result;
+    return bus.call(properties);
 }
 
 void HypNetworkMgr::setBIOSTableAttr(
@@ -109,12 +103,17 @@ void HypNetworkMgr::setBIOSTableAttrs()
 
         mapperCall.append(biosMgrObj, depth, interfaces);
 
-        auto mapperReply = bus.call(mapperCall);
-        if (mapperReply.is_method_error())
-        {
-            lg2::error("Error in mapper call");
-            elog<InternalFailure>();
-        }
+        auto mapperReply = [&]() {
+            try
+            {
+                return bus.call(mapperCall);
+            }
+            catch (const sdbusplus::exception::SdBusError& e)
+            {
+                lg2::error("Error in mapper call");
+                elog<InternalFailure>();
+            }
+        }();
 
         ObjectTree objectTree;
         mapperReply.read(objectTree);
