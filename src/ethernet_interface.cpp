@@ -601,8 +601,8 @@ ServerList EthernetInterface::getNTPServerFromTimeSyncd()
     try
     {
         auto reply = bus.get().call(method);
-        std::variant<ServerList> response;
-        reply.read(response);
+        auto response = reply.unpack<std::variant<ServerList>>();
+
         servers = std::get<ServerList>(response);
     }
     catch (const sdbusplus::exception::SdBusError& e)

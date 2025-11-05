@@ -115,8 +115,7 @@ void HypNetworkMgr::setBIOSTableAttrs()
             }
         }();
 
-        ObjectTree objectTree;
-        mapperReply.read(objectTree);
+        auto objectTree = mapperReply.unpack<ObjectTree>();
 
         if (objectTree.empty())
         {
@@ -157,8 +156,8 @@ void HypNetworkMgr::setBIOSTableAttrs()
             }
         }
 
-        std::variant<BiosBaseTableType> response;
-        getDBusProp(objPath, biosMgrIntf, "BaseBIOSTable").read(response);
+        auto response = getDBusProp(objPath, biosMgrIntf, "BaseBIOSTable")
+                            .unpack<std::variant<BiosBaseTableType>>();
 
         const BiosBaseTableType* baseBiosTable =
             std::get_if<BiosBaseTableType>(&response);

@@ -154,8 +154,8 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                                       "org.freedesktop.DBus.Properties", "Get");
         req.append("org.freedesktop.network1.Link", "AdministrativeState");
         auto rsp = req.call();
-        std::variant<std::string> val;
-        rsp.read(val);
+        auto val = rsp.unpack<std::variant<std::string>>();
+
         handleAdminState(std::get<std::string>(val), ifidx);
     }
 

@@ -103,8 +103,7 @@ stdplus::EtherAddr getfromInventory(sdbusplus::bus_t& bus,
         }
     }();
 
-    ObjectTree objectTree;
-    mapperReply.read(objectTree);
+    auto objectTree = mapperReply.unpack<ObjectTree>();
 
     if (objectTree.empty())
     {
@@ -164,8 +163,8 @@ stdplus::EtherAddr getfromInventory(sdbusplus::bus_t& bus,
         }
     }();
 
-    std::variant<std::string> value;
-    reply.read(value);
+    auto value = reply.unpack<std::variant<std::string>>();
+
     return stdplus::fromStr<stdplus::EtherAddr>(std::get<std::string>(value));
 }
 
