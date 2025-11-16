@@ -641,7 +641,7 @@ std::optional<NCSIResponse> MCTPInterface::sendCommand(NCSICommand& cmd)
     if (wlen < 0)
     {
         lg2::error("Failed to send MCTP message, ERRNO: {ERRNO}", "ERRNO",
-                   -wlen);
+                   -errno);
         return {};
     }
     else if ((size_t)wlen != sizeof(cmdHeader) + payloadLen + padLen)
