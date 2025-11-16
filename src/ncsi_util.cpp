@@ -640,13 +640,16 @@ std::optional<NCSIResponse> MCTPInterface::sendCommand(NCSICommand& cmd)
     wlen = sendmsg(sd, &msg, 0);
     if (wlen < 0)
     {
-        lg2::error("Failed to send MCTP message, ERRNO: {ERRNO}", "ERRNO",
-                   -wlen);
+        std::stringstream ss;
+        std::cout << "Failed to send MCTP message, ERRNO: " << -errno
+                  << std::endl;
+
         return {};
     }
     else if ((size_t)wlen != sizeof(cmdHeader) + payloadLen + padLen)
     {
-        lg2::error("Short write sending MCTP message, LEN: {LEN}", "LEN", wlen);
+        std::cout << "Short write sending MCTP message, LEN: " << wlen
+                  << std::endl;
         return {};
     }
 
