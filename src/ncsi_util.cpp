@@ -384,7 +384,7 @@ int applyCmd(NetlinkInterface& interface, const NetlinkCommand& cmd,
     {
         std::vector<unsigned char> pl(
             sizeof(NCSIPacketHeader) + cmd.payload.size());
-        NCSIPacketHeader* hdr = (NCSIPacketHeader*)pl.data();
+        NCSIPacketHeader* hdr = reinterpret_cast<NCSIPacketHeader*>(pl.data());
 
         std::copy(cmd.payload.begin(), cmd.payload.end(),
                   pl.begin() + sizeof(NCSIPacketHeader));
@@ -651,7 +651,7 @@ std::optional<NCSIResponse> MCTPInterface::sendCommand(NCSICommand& cmd)
     }
 
     internal::NCSIPacketHeader* respHeader;
-    NCSIResponsePayload* respPayload;
+    NCSIResponsePayload* respPayload = nullptr;
     NCSIResponse resp{};
 
     resp.full_payload.resize(maxRespLen);

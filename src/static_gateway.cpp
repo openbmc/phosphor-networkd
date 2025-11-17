@@ -14,7 +14,7 @@ namespace phosphor
 namespace network
 {
 
-static auto makeObjPath(std::string_view root, std::string addr)
+static auto makeObjPath(std::string_view root, const std::string& addr)
 {
     auto ret = sdbusplus::message::object_path(std::string(root));
     ret /= addr;

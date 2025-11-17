@@ -49,7 +49,7 @@ const std::string& ArgumentParser::operator[](const std::string& opt)
     }
 }
 
-void ArgumentParser::usage(char** argv)
+void ArgumentParser::usage(char* const* argv)
 {
     std::cerr << "Usage: " << argv[0] << " [options]\n";
     std::cerr
