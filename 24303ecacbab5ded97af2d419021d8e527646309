@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e85fdd98_2d239a41",
+        "filename": "src/ncsi_cmd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-11-20T13:34:33Z",
+      "side": 1,
+      "message": "Replace with std::Cout under verbose option",
+      "revId": "24303ecacbab5ded97af2d419021d8e527646309",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7eafabc7_2e7987ef",
+        "filename": "src/ncsi_util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-11-20T13:34:33Z",
+      "side": 1,
+      "message": "Look at the instances of lg2 here too.",
+      "revId": "24303ecacbab5ded97af2d419021d8e527646309",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
