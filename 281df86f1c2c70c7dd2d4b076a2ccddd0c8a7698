@@ -16,6 +16,24 @@
       "message": "Hi Jishnu\n\nany update on this commit? can you please check if systemd-networkd has fixed this issue in latest systems-networkd?",
       "revId": "281df86f1c2c70c7dd2d4b076a2ccddd0c8a7698",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d2b02c2_a236b61f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-11-26T03:22:04Z",
+      "side": 1,
+      "message": "Hi Jishnu\n\ncan you please check if latest systemd-networkd has fixed this issue already?",
+      "parentUuid": "927b782e_6a2fdade",
+      "revId": "281df86f1c2c70c7dd2d4b076a2ccddd0c8a7698",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
