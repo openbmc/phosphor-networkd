@@ -189,6 +189,10 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
         auto it = interfaces.find(*info.intf.name);
         if (it != interfaces.end())
         {
+            if(info.intf.vlan_id)
+            {
+                interfacesByIdx.insert_or_assign(info.intf.idx, it->second.get());
+            }
             it->second->updateInfo(info.intf);
             return;
         }
