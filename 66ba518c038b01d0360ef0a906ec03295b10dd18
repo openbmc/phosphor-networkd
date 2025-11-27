@@ -16,6 +16,41 @@
       "message": "Thanks for this commit!\nTry to use your full name here.\nFrom https://github.com/openbmc/docs/blob/master/CONTRIBUTING.md#formatting-commit-messages\n\n\"All commit messages must include a \"Signed-off-by\" line, which indicates that you the contributor have agreed to the Developer Certificate of Origin (see below). This line must include the full name you commonly use, often a given name and a family name or surname. (ok: Sam Samuelsson, Robert A. Heinlein; not ok: xXthorXx, Sam, RAH)\"\n\nPlease fix your git-config and `git commit --amend --reset-author`. Thanks!",
       "revId": "66ba518c038b01d0360ef0a906ec03295b10dd18",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54202197_5bc32a0a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2025-11-27T10:09:52Z",
+      "side": 1,
+      "message": "Rashid is my name and MP is the initials.",
+      "parentUuid": "aa307003_cd5b1f92",
+      "revId": "66ba518c038b01d0360ef0a906ec03295b10dd18",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4d63022_52884f47",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2025-11-27T10:09:52Z",
+      "side": 1,
+      "message": "Replied review comment",
+      "revId": "66ba518c038b01d0360ef0a906ec03295b10dd18",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
