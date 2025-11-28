@@ -51,6 +51,23 @@
       "message": "Replied review comment",
       "revId": "66ba518c038b01d0360ef0a906ec03295b10dd18",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16bdd649_d49a5dce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-11-28T03:51:50Z",
+      "side": 1,
+      "message": "Looks good",
+      "revId": "66ba518c038b01d0360ef0a906ec03295b10dd18",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
