@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4a8291b2_c18c6396",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1002604
+      },
+      "writtenOn": "2025-12-04T12:51:45Z",
+      "side": 1,
+      "message": "move inside if (mgmts)",
+      "revId": "238a51c57fa3a0e960d22ab4df7f8ac17ab5fc04",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "28dd1023_28f7ea72",
         "filename": "src/lldp/lldp_interface.cpp",
         "patchSetId": 4
@@ -32,6 +49,24 @@
       "side": 1,
       "message": "\u003e if any one of these values change, LLDP receive object gets cleared \u0026 recreate new object updated values?\n\nYes\n\n\u003e other parameter changes can be updated directly.\n\nI agree for system name, system description, and system capabilities.",
       "parentUuid": "28dd1023_28f7ea72",
+      "revId": "238a51c57fa3a0e960d22ab4df7f8ac17ab5fc04",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cbc4d55_e54b4367",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1002604
+      },
+      "writtenOn": "2025-12-04T12:51:45Z",
+      "side": 1,
+      "message": "why not update existing object if it exists?",
+      "parentUuid": "0b6ccca8_ca99f908",
       "revId": "238a51c57fa3a0e960d22ab4df7f8ac17ab5fc04",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
