@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "721ece93_895a022e",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1002604
+      },
+      "writtenOn": "2025-12-04T09:15:20Z",
+      "side": 1,
+      "message": "In the design the path is /etc/lldpd.d/status.conf.\nThe reason is to have a logical separation between what configurations the service uses and all the other implementation specific configurations that can be in /etc/lldpd.conf",
+      "revId": "8760ce8895823b3654f55b57057161f926892088",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1b07b723_a6389654",
         "filename": "src/lldp/lldp_interface.cpp",
         "patchSetId": 7
