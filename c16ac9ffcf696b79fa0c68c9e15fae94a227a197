@@ -3,6 +3,40 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "231dc085_4b5521e8",
+        "filename": "meson.options",
+        "patchSetId": 19
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1002604
+      },
+      "writtenOn": "2025-12-04T08:39:48Z",
+      "side": 1,
+      "message": "option appears twice",
+      "revId": "c16ac9ffcf696b79fa0c68c9e15fae94a227a197",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a14a6712_9ed6c445",
+        "filename": "src/lldp/lldp_manager.hpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1002604
+      },
+      "writtenOn": "2025-12-04T08:39:48Z",
+      "side": 1,
+      "message": "Consider a more specific class name such as LLDPManager.",
+      "revId": "c16ac9ffcf696b79fa0c68c9e15fae94a227a197",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "24286155_80368142",
         "filename": "src/lldp/lldp_manager.hpp",
         "patchSetId": 19
