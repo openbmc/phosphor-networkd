@@ -34,6 +34,24 @@
       "parentUuid": "927b782e_6a2fdade",
       "revId": "281df86f1c2c70c7dd2d4b076a2ccddd0c8a7698",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "853216f0_84aa4bf7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001663
+      },
+      "writtenOn": "2025-12-09T04:31:53Z",
+      "side": 1,
+      "message": "Hi Ravi,\nthe issue we opened is still in open state",
+      "parentUuid": "1d2b02c2_a236b61f",
+      "revId": "281df86f1c2c70c7dd2d4b076a2ccddd0c8a7698",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
