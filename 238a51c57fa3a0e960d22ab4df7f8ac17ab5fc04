@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2fece26_d9835fff",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-11T08:15:53Z",
+      "side": 1,
+      "message": "`lldpctl_atom_dec_ref(mgmts);` is inside if (mgmts) only I believe. if (mgmts) ends at line 307",
+      "parentUuid": "4a8291b2_c18c6396",
+      "revId": "238a51c57fa3a0e960d22ab4df7f8ac17ab5fc04",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "28dd1023_28f7ea72",
@@ -71,6 +89,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f4242d9_9252aed2",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-11T08:15:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9cbc4d55_e54b4367",
+      "revId": "238a51c57fa3a0e960d22ab4df7f8ac17ab5fc04",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "32e575e9_24a11d2e",
@@ -84,6 +120,24 @@
       "writtenOn": "2025-10-28T15:44:32Z",
       "side": 1,
       "message": "I guess we should call emit_object_added here and remove it from constructor or pass entire value are constructor argument.",
+      "revId": "238a51c57fa3a0e960d22ab4df7f8ac17ab5fc04",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "57a541ea_b957e1b3",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-11T08:15:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32e575e9_24a11d2e",
       "revId": "238a51c57fa3a0e960d22ab4df7f8ac17ab5fc04",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
