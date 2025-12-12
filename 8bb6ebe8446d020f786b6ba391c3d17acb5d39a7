@@ -70,6 +70,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "24bee3c1_4f024d64",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-12T11:12:16Z",
+      "side": 1,
+      "message": "Its needed. Done",
+      "parentUuid": "5ecee50a_ce400491",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a2de0260_1c9ba2c9",
@@ -121,6 +139,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f27d897b_ccefded9",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-12T11:12:16Z",
+      "side": 1,
+      "message": "We need not necessarily match it with lldp transmit frequency.\nBecause, the neighboring device might have different transmitting frequency and the current receiving device will not know about it.\n\nSo we can configure any reasonable timer frequency here.",
+      "parentUuid": "5f5d09ff_f5819543",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7dfb82d8_aa142d76",
@@ -134,6 +170,24 @@
       "writtenOn": "2025-10-28T11:18:55Z",
       "side": 1,
       "message": "may need to disable transmit object when LLDP is disabled, you can address this transmit object commit.",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6179fd05_59d7d74d",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-12T11:12:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7dfb82d8_aa142d76",
       "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -242,6 +296,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a05e55bb_9c921119",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-12T11:12:16Z",
+      "side": 1,
+      "message": "These shouldnt be freed, because these are borrowed pointers from the parent in liblldpctl, and they point to the memory owned by the parent lldpctl_atom_t (neigh - in this case)\n\nSo, chassis_id, portid, sysname, sysdesc belongs to neigh. \nFinally neigh will be freed below: lldpctl_atom_dec_ref(neigh); and automatically frees these pointers.",
+      "parentUuid": "e02c595f_a6b15067",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6d4d90b9_e100033c",
@@ -255,6 +327,24 @@
       "writtenOn": "2025-10-24T04:09:23Z",
       "side": 1,
       "message": "same here",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21c47399_a6ffbd1a",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-12T11:12:16Z",
+      "side": 1,
+      "message": "Same as above",
+      "parentUuid": "6d4d90b9_e100033c",
       "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -276,6 +366,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "417e7fc4_8ac52314",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-12T11:12:16Z",
+      "side": 1,
+      "message": "Same as above",
+      "parentUuid": "9ddfd53b_fead9bb9",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "513318d7_e544ddd8",
@@ -289,6 +397,24 @@
       "writtenOn": "2025-10-24T04:09:23Z",
       "side": 1,
       "message": "same here",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96c1754a_24760dc9",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-12T11:12:16Z",
+      "side": 1,
+      "message": "Same as above",
+      "parentUuid": "513318d7_e544ddd8",
       "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -324,6 +450,24 @@
       "side": 1,
       "message": "+1",
       "parentUuid": "6bd0aa5e_7e9cd66c",
+      "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6da5bf17_d452e9de",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-12T11:12:16Z",
+      "side": 1,
+      "message": "Same as above. Will be freed by lldpctl_atom_dec_ref(mgmts); in line 311",
+      "parentUuid": "ab28d81d_85612b45",
       "revId": "8bb6ebe8446d020f786b6ba391c3d17acb5d39a7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
