@@ -1,0 +1,9 @@
+Code-Review+2: Ratan Gupta <ratankgupta31@gmail.com>
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Submitted-by: Adi Fogel <afogel@nvidia.com>
+Submitted-at: Mon, 15 Dec 2025 09:19:22 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/85299
+Comments-Total: 6
+Comments-Unresolved: 5
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
