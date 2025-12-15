@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dff28eb0_dc6f0b51",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1002604
+      },
+      "writtenOn": "2025-12-15T10:14:54Z",
+      "side": 1,
+      "message": "shouldn\u0027t it be inside enabled?",
+      "revId": "3ed4af5ea4917e2e7ec55c427f734a21097a654e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb75a1d1_e12e304f",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1002604
+      },
+      "writtenOn": "2025-12-15T10:14:54Z",
+      "side": 1,
+      "message": "opposite logic here, it is true if not the same neighbor",
+      "revId": "3ed4af5ea4917e2e7ec55c427f734a21097a654e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
