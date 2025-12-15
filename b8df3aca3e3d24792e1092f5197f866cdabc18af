@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33500256_1a066620",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1002604
+      },
+      "writtenOn": "2025-12-15T10:21:56Z",
+      "side": 1,
+      "message": "move emit to if (enabled)",
+      "revId": "b8df3aca3e3d24792e1092f5197f866cdabc18af",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
