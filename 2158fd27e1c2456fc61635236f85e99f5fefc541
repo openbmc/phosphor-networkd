@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b6accc0_7944cb4b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2025-12-15T09:01:08Z",
+      "side": 1,
+      "message": "Apart from the minor comment, Changes LGTM",
+      "revId": "2158fd27e1c2456fc61635236f85e99f5fefc541",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eb8c4486_75056050",
