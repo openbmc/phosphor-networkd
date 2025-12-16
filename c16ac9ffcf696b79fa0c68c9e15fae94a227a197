@@ -53,6 +53,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9e640ce_73716f7a",
+        "filename": "src/lldp/lldp_manager.hpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-16T09:27:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a14a6712_9ed6c445",
+      "revId": "c16ac9ffcf696b79fa0c68c9e15fae94a227a197",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "24286155_80368142",
@@ -70,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6313249_5a98c5a1",
+        "filename": "src/lldp/lldp_manager.hpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-16T09:27:10Z",
+      "side": 1,
+      "message": "The LLDP root object path is static and does not change at runtime.\n\nI’ll change it into a single constexpr const.",
+      "parentUuid": "24286155_80368142",
+      "revId": "c16ac9ffcf696b79fa0c68c9e15fae94a227a197",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cbe3eefd_0f9ea410",
@@ -83,6 +119,24 @@
       "writtenOn": "2025-10-28T09:13:52Z",
       "side": 1,
       "message": "define constexpr variable for object path?\nor configure it via meson config.",
+      "revId": "c16ac9ffcf696b79fa0c68c9e15fae94a227a197",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1095a1d1_adb8fb64",
+        "filename": "src/lldp/lldp_manager_main.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-16T09:27:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbe3eefd_0f9ea410",
       "revId": "c16ac9ffcf696b79fa0c68c9e15fae94a227a197",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
