@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc0778b9_1d8859d1",
+        "filename": "src/lldp/lldp_interface.hpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-16T17:51:49Z",
+      "side": 1,
+      "message": "The base object path is already defined as a static constexpr in LLDPManager, as it does not change at runtime.\n\nEach Interface object has a different object path (/xyz/openbmc_project/network/lldp/\u003cifname\u003e), so this member does change per instance. So it cannot be static, I believe.",
+      "parentUuid": "a9690ec1_544c50c6",
+      "revId": "2b3d2cb8b0f0c029719c2b931ab6da8876af032e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9d4bd370_e5a3c45a",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-10-23T04:29:15Z",
       "side": 1,
       "message": "Can we move this out of constructor and do the interface fetching asynchronies. This can improve the startup time of service.",
+      "revId": "2b3d2cb8b0f0c029719c2b931ab6da8876af032e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4b7631d_50d972e6",
+        "filename": "src/lldp/lldp_manager.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2025-12-16T17:51:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d4bd370_e5a3c45a",
       "revId": "2b3d2cb8b0f0c029719c2b931ab6da8876af032e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
