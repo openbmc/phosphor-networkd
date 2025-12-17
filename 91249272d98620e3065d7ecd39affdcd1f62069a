@@ -16,6 +16,24 @@
       "message": "If it\u0027s problem of systemd, why it should be fixed in phosphor-networkd? is it workaround?",
       "revId": "91249272d98620e3065d7ecd39affdcd1f62069a",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ded3bca_52eb2424",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2025-12-17T09:52:05Z",
+      "side": 1,
+      "message": "systemd did not address since longtime and this issue causing network routing issues on BMC. it will a workaround until systemd fixes this issue.",
+      "parentUuid": "e4b20ca5_ca4c6895",
+      "revId": "91249272d98620e3065d7ecd39affdcd1f62069a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
