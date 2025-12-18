@@ -107,6 +107,7 @@ class EthernetInterface : public Ifaces
     void addAddr(const AddressInfo& info);
     void addStaticNeigh(const NeighborInfo& info);
     void addStaticGateway(const StaticGatewayInfo& info);
+    void deleteStaticIPs(std::optional<IP::Protocol> family);
 
     /** @brief Updates the interface information based on new InterfaceInfo */
     void updateInfo(const InterfaceInfo& info, bool skipSignal = false);
