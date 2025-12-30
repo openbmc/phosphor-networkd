@@ -16,6 +16,41 @@
       "message": "have you verified adding/deleting multiple IP addresses through redfish?",
       "revId": "04578c09caee0b590f02abde88d094b468a7f350",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af7a886a_450a15e8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2025-12-30T06:41:40Z",
+      "side": 1,
+      "message": "Yes, I have verified adding/deleting multiple IP addresses through redfish.",
+      "parentUuid": "b60a59cf_5ea3cb9c",
+      "revId": "04578c09caee0b590f02abde88d094b468a7f350",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f54a58c_4f216668",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2025-12-30T06:41:40Z",
+      "side": 1,
+      "message": "Addressed comments.",
+      "revId": "04578c09caee0b590f02abde88d094b468a7f350",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
