@@ -706,6 +706,7 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
         bus, manager, info, objRoot, config::Parser(), nicEnabled());
     ObjectPath ret = vlanIntf->objPath;
 
+    vlanIntf->writeConfigurationFile();
     manager.get().interfaces.emplace(intfName, std::move(vlanIntf));
 
     // write the device file for the vlan interface.
