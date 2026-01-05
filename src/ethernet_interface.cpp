@@ -165,6 +165,7 @@ void EthernetInterface::updateInfo(const InterfaceInfo& info, bool skipSignal)
         });
         EthernetInterfaceIntf::autoNeg(ethInfo.autoneg, skipSignal);
         EthernetInterfaceIntf::speed(ethInfo.speed, skipSignal);
+        EthernetInterfaceIntf::fullDuplex(ethInfo.fullDuplex, skipSignal);
     }
 }
 
