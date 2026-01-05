@@ -33,6 +33,24 @@
       "message": "why not use the additional information?   does redfish not expose these parameters?",
       "revId": "676263a4ff1cb54194422fea12b7fc30bd47206e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34c05ac2_9460f9a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-01-05T04:13:27Z",
+      "side": 1,
+      "message": "I see these D-bus properties populated in redfish parameters.",
+      "parentUuid": "b4a520e5_21a966bc",
+      "revId": "676263a4ff1cb54194422fea12b7fc30bd47206e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
