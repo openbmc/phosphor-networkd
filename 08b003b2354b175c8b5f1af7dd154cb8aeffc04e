@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "955e5106_2dd409b8",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-01-05T10:54:38Z",
+      "side": 1,
+      "message": "Should the netlink socket be bound explicitly for correctness?\nBecause I can see that, it ensures proper ack routing, and also is a recommended way.",
+      "revId": "08b003b2354b175c8b5f1af7dd154cb8aeffc04e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f09f637_48c65b31",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-01-05T10:54:38Z",
+      "side": 1,
+      "message": "This delete method returns false for a few failures and also throws exceptions for a few.\nShould this just return the status instead of throwing?",
+      "revId": "08b003b2354b175c8b5f1af7dd154cb8aeffc04e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
