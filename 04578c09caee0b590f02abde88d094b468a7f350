@@ -36,6 +36,23 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "b664b749_1035eaed",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-01-05T06:04:40Z",
+      "side": 1,
+      "message": "have you notice DHCP gateway overrides existing static gateway after dhcp enabled?\nwhat about case where dhcp enabled and then static IP addresses configured?",
+      "revId": "04578c09caee0b590f02abde88d094b468a7f350",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "5f54a58c_4f216668",
