@@ -12,6 +12,7 @@ struct EthInfo
 {
     bool autoneg;
     uint16_t speed;
+    bool fullDuplex;
 };
 EthInfo getEthInfo(stdplus::zstring_view ifname);
 
