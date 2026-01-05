@@ -51,6 +51,24 @@
       "parentUuid": "b4a520e5_21a966bc",
       "revId": "676263a4ff1cb54194422fea12b7fc30bd47206e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fba9fe52_a167c76a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-01-05T06:19:14Z",
+      "side": 1,
+      "message": "but this commit just removing these properties from getInterfaceInfo.\nthese properties still be populated on D-bus.",
+      "parentUuid": "34c05ac2_9460f9a5",
+      "revId": "676263a4ff1cb54194422fea12b7fc30bd47206e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
