@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fb95022_fcedbb42",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-01-05T03:32:07Z",
+      "side": 1,
+      "message": "specific new .network file created for each VLAN?\n```suggestion\n2. Verified .network file is created for VLAN\n```",
+      "revId": "210bedb3ca4dddc45a25ce772c6b0a8a857a13b8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
