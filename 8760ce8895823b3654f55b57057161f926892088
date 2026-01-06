@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2eff5a45_b16afdd3",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-01-06T08:12:50Z",
+      "side": 1,
+      "message": "Updated the config to /etc/lldpd.d/status.conf instead of /etc/lldpd.conf,\nseparating the service-owned config \u0026 daemon implementation config as per the design.",
+      "parentUuid": "721ece93_895a022e",
+      "revId": "8760ce8895823b3654f55b57057161f926892088",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1b07b723_a6389654",
@@ -53,6 +71,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5373604_d7481974",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-01-06T08:12:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f7fbafcd_84ec2911",
+      "revId": "8760ce8895823b3654f55b57057161f926892088",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e7a5957d_a32ed989",
@@ -66,6 +102,24 @@
       "writtenOn": "2025-10-23T04:45:24Z",
       "side": 1,
       "message": "try to make this code generic by taking the path string such as /configure/ports/eth1/lldp/status . This way same function can be reused for all properties",
+      "revId": "8760ce8895823b3654f55b57057161f926892088",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "908f7c11_dc297ffa",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-01-06T08:12:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7a5957d_a32ed989",
       "revId": "8760ce8895823b3654f55b57057161f926892088",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
