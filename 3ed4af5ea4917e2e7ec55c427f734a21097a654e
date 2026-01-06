@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d6625b5_39c9197e",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-01-06T10:29:24Z",
+      "side": 1,
+      "message": "As replied in the previous commit in this chain:\n\"This should still be placed here to emit signal when ethernet objects are created irrespective of lldp enablement.\n\nOnce the TLV object (transmit/receive) is created, (in TLVs constructor), we do emit signal there\"",
+      "parentUuid": "dff28eb0_dc6f0b51",
+      "revId": "3ed4af5ea4917e2e7ec55c427f734a21097a654e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cb75a1d1_e12e304f",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-12-15T10:14:54Z",
       "side": 1,
       "message": "opposite logic here, it is true if not the same neighbor",
+      "revId": "3ed4af5ea4917e2e7ec55c427f734a21097a654e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "510c0887_30a2d08c",
+        "filename": "src/lldp/lldp_interface.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-01-06T10:29:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb75a1d1_e12e304f",
       "revId": "3ed4af5ea4917e2e7ec55c427f734a21097a654e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
