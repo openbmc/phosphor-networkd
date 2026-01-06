@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2965ac87_722d5d20",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-01-06T16:20:18Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "955e5106_2dd409b8",
+      "revId": "08b003b2354b175c8b5f1af7dd154cb8aeffc04e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9f09f637_48c65b31",
@@ -31,6 +49,24 @@
       "writtenOn": "2026-01-05T10:54:38Z",
       "side": 1,
       "message": "This delete method returns false for a few failures and also throws exceptions for a few.\nShould this just return the status instead of throwing?",
+      "revId": "08b003b2354b175c8b5f1af7dd154cb8aeffc04e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11059403_9688f6ac",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-01-06T16:20:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f09f637_48c65b31",
       "revId": "08b003b2354b175c8b5f1af7dd154cb8aeffc04e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
