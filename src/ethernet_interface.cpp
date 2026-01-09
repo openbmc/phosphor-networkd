@@ -446,6 +446,19 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
 ObjectPath EthernetInterface::staticGateway(std::string gateway,
                                             IP::Protocol protocolType)
 {
+    for (const auto& ip : addrs)
+    {
+        if (ip.second->type() != IP::Protocol::IPv6)
+        {
+            continue;
+        }
+        if (gateway == ip.second->address())
+        {
+            lg2::error("Static gateway must not match local interface IP");
+            elog<NotAllowed>(NotAllowedArgument::REASON(
+                "Static gateway must not match local interface IP"));
+        }
+    }
     std::optional<stdplus::InAnyAddr> addr;
     std::string route;
     try
