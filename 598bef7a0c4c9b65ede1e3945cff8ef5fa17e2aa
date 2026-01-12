@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5b701fa_60ef8142",
+        "filename": "src/ibm/hypervisor-network-mgr-src/hyp_ethernet_interface.hpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-01-12T06:35:41Z",
+      "side": 1,
+      "message": "Gateway should not be the same as the local IPv6 IP, right? can we add a validation check to ensure the gateway is a different address than any of the local IPs assigned to the interface?",
+      "range": {
+        "startLine": 137,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 11
+      },
+      "revId": "598bef7a0c4c9b65ede1e3945cff8ef5fa17e2aa",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
