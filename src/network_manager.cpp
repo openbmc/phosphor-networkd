@@ -1,6 +1,7 @@
 #include "network_manager.hpp"
 
 #include "config_parser.hpp"
+#include "hostname_manager.hpp"
 #include "ipaddress.hpp"
 #include "system_queries.hpp"
 #include "types.hpp"
@@ -162,6 +163,10 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     std::filesystem::create_directories(confDir);
     systemConf = std::make_unique<phosphor::network::SystemConfiguration>(
         bus, (this->objPath / "config").str);
+
+    // Initialize hostname manager to set unique hostname on first boot
+    hostnameManager = std::make_unique<HostnameManager>(bus, *this);
+    hostnameManager->initialize();
 }
 
 void Manager::createInterface(const AllIntfInfo& info, bool enabled)
