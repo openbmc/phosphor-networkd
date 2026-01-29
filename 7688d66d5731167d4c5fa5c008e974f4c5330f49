@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d73d0948_62c32e97",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-01-29T05:17:22Z",
+      "side": 1,
+      "message": "CI should pass once https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/87008 is merged.",
+      "revId": "7688d66d5731167d4c5fa5c008e974f4c5330f49",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
