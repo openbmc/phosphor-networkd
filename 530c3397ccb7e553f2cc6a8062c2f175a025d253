@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b997eb95_6da978c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-01-29T03:43:11Z",
+      "side": 1,
+      "message": "\n\nThere was a commit in openbmc/openbmc (https://gerrit.openbmc.org/c/openbmc/openbmc/+/67731\n) having this logic of first-boot-set-hostname using a shell script, and got a suggestion to move it to networkd.",
+      "revId": "530c3397ccb7e553f2cc6a8062c2f175a025d253",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
