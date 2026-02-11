@@ -185,7 +185,7 @@ busctl set-property xyz.openbmc_project.Network
 /xyz/openbmc_project/network/eth0 xyz.openbmc_project.Network.MACAddress
 MACAddress s "XX:XX:XX:XX:XX:XX"
 
-curl -c cjar -b cjar -k -H "Content-Type: application/jon" -X PUT -d '{"data":
+curl -c cjar -b cjar -k -H "Content-Type: application/json" -X PUT -d '{"data":
 "XX:XX:XX:XX:XX:XX" }'
 https://<hostname/ip>/xyz/openbmc_project/network/eth0/attr/MACAddress
 ```
