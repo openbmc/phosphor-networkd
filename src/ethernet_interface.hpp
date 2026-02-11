@@ -137,7 +137,7 @@ class EthernetInterface : public Ifaces
     /** @brief Function to create static route dbus object.
      *  @param[in] destination - Destination IP address.
      *  @param[in] gateway - Gateway
-     *  @parma[in] prefixLength - Number of network bits.
+     *  @param[in] prefixLength - Number of network bits.
      */
     ObjectPath staticGateway(std::string gateway,
                              IP::Protocol protocolType) override;
@@ -243,7 +243,7 @@ class EthernetInterface : public Ifaces
     using EthernetInterfaceIntf::emitLLDP;
 
   protected:
-    /** @brief get the NTP server list from the timsyncd dbus obj
+    /** @brief get the NTP server list from the timesyncd dbus obj
      *
      */
     virtual ServerList getNTPServerFromTimeSyncd();
