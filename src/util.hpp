@@ -40,7 +40,7 @@ constexpr stdplus::InAnyAddr addrFromBuf(int family, std::string_view buf)
  *         variable that would hold its ethernet address.
  *
  *  @param[in] intf - interface name
- *  @return The name of th environment key
+ *  @return The name of the environment key
  */
 std::optional<std::string> interfaceToUbootEthAddr(std::string_view intf);
 
@@ -81,7 +81,7 @@ namespace internal
 {
 
 /* @brief runs the given command in child process.
- * @param[in] path - path of the binary file which needs to be execeuted.
+ * @param[in] path - path of the binary file which needs to be executed.
  * @param[in] args - arguments of the command.
  */
 void executeCommandinChildProcess(stdplus::zstring_view path, char** args);
@@ -99,7 +99,7 @@ const std::unordered_set<std::string_view>& getIgnoredInterfaces();
 } // namespace internal
 
 /* @brief runs the given command in child process.
- * @param[in] path -path of the binary file which needs to be execeuted.
+ * @param[in] path -path of the binary file which needs to be executed.
  * @param[in] tArgs - arguments of the command.
  */
 template <typename... ArgTypes>

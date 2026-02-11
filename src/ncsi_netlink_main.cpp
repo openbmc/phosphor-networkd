@@ -55,7 +55,7 @@ static void printInfo(phosphor::network::ncsi::InterfaceInfo& info)
 
             if (!vlans.empty())
             {
-                lg2::debug("      Actve VLAN IDs:");
+                lg2::debug("      Active VLAN IDs:");
                 for (uint16_t vlan : vlans)
                 {
                     lg2::debug("        VID: {VLAN_ID}", "VLAN_ID", vlan);
