@@ -385,11 +385,8 @@ static int ncsiCommand(GlobalOptions& options, uint8_t type,
     {
         return -1;
     }
-    else if (options.verbose)
-    {
-        std::cout << "Response " << resp->full_payload.size() << " bytes: "
-                  << toHexStr(resp->full_payload).data() << std::endl;
-    }
+    std::cout << "Response " << resp->full_payload.size()
+              << " bytes: " << toHexStr(resp->full_payload).data() << std::endl;
 
     return 0;
 }
