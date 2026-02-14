@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f292ab21_9b97fe70",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-02-14T09:23:02Z",
+      "side": 1,
+      "message": "do you see any issue in network config if static\nIPv6 gateway address that is identical to an assigned local IPv6 IP?",
+      "revId": "5e24fe93af6a07acf53f9f7489c7576ef2502ea2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
