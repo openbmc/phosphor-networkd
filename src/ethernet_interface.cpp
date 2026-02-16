@@ -908,9 +908,24 @@ void EthernetInterface::writeConfigurationFile()
                 auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
                 if (!gateway6.empty())
                 {
-                    auto& gateway6route = config.map["Route"].emplace_back();
-                    gateway6route["Gateway"].emplace_back(gateway6);
-                    gateway6route["GatewayOnLink"].emplace_back("true");
+                    try
+                    {
+                        auto ip = stdplus::fromStr<stdplus::In6Addr>(gateway6);
+                        // Skip IPv6 link-local addresses as they cannot be
+                        // used as static default gateways
+                        if (!isIPv6LinkLocal(ip))
+                        {
+                            auto& gateway6route =
+                                config.map["Route"].emplace_back();
+                            gateway6route["Gateway"].emplace_back(gateway6);
+                            gateway6route["GatewayOnLink"].emplace_back("true");
+                        }
+                    }
+                    catch (const std::exception& e)
+                    {
+                        lg2::error("Invalid IPv6 gateway {NET_GW}: {ERROR}",
+                                   "NET_GW", gateway6, "ERROR", e);
+                    }
                 }
             }
         }
