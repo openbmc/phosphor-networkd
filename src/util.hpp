@@ -36,6 +36,16 @@ constexpr stdplus::InAnyAddr addrFromBuf(int family, std::string_view buf)
     throw std::invalid_argument("Unrecognized family");
 }
 
+/** @brief Check if an IPv6 address is link-local (fe80::/10)
+ *  @param[in] addr - IPv6 address to check
+ *  @return true if link-local, false otherwise
+ */
+constexpr bool isIPv6LinkLocal(const stdplus::In6Addr& addr) noexcept
+{
+    auto bytes = stdplus::raw::asView<const uint8_t>(addr);
+    return (bytes[0] == 0xfe) && ((bytes[1] & 0xc0) == 0x80);
+}
+
 /** @brief Converts the interface name into a u-boot environment
  *         variable that would hold its ethernet address.
  *

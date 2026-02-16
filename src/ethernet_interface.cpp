@@ -1121,6 +1121,13 @@ static void normalizeGateway(std::string& gw)
         {
             throw std::invalid_argument("Invalid unicast");
         }
+        if constexpr (std::is_same_v<Addr, stdplus::In6Addr>)
+        {
+            if (isIPv6LinkLocal(ip))
+            {
+                throw std::invalid_argument("Link-local address");
+            }
+        }
         gw = stdplus::toStr(ip);
     }
     catch (const std::exception& e)
