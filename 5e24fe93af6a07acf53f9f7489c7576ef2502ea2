@@ -16,6 +16,41 @@
       "message": "do you see any issue in network config if static\nIPv6 gateway address that is identical to an assigned local IPv6 IP?",
       "revId": "5e24fe93af6a07acf53f9f7489c7576ef2502ea2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3f6b1e5_7c949aab",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-02-16T07:11:27Z",
+      "side": 1,
+      "message": "Yes, I have observed an issue. When the static IPv6 gateway is configured to the same address as one of the local IPv6 addresses, systemd‑networkd refuses to apply the route. The journal logs the following error:\n\"Could not set static route: Gateway can not be a local address. Invalid argument.\"\nBecause of this failure, the existing IPv6 default gateway gets removed and no new default gateway is added.",
+      "parentUuid": "f292ab21_9b97fe70",
+      "revId": "5e24fe93af6a07acf53f9f7489c7576ef2502ea2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00bda788_79bfa2c7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-02-16T07:11:27Z",
+      "side": 1,
+      "message": "Addressed comments.",
+      "revId": "5e24fe93af6a07acf53f9f7489c7576ef2502ea2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
