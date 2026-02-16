@@ -383,7 +383,10 @@ void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                 {
                     static_assert(
                         std::is_same_v<stdplus::In6Addr, decltype(addr)>);
-                    it->second.defgw6.emplace(addr);
+                    if (!isIPv6LinkLocal(addr))
+                    {
+                        it->second.defgw6.emplace(addr);
+                    }
                 }
             },
             addr);
@@ -401,8 +404,11 @@ void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                     {
                         static_assert(
                             std::is_same_v<stdplus::In6Addr, decltype(addr)>);
-                        it->second->EthernetInterfaceIntf::defaultGateway6(
-                            stdplus::toStr(addr));
+                        if (!isIPv6LinkLocal(addr))
+                        {
+                            it->second->EthernetInterfaceIntf::defaultGateway6(
+                                stdplus::toStr(addr));
+                        }
                     }
                 },
                 addr);
