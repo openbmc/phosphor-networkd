@@ -504,6 +504,26 @@ bool EthernetInterface::dhcp4(bool value)
 {
     if (dhcp4() != EthernetInterfaceIntf::dhcp4(value))
     {
+        if (!value)
+        {
+            for (auto& [addr, ipObj] : addrs)
+            {
+                if (ipObj->origin() == IP::AddressOrigin::DHCP &&
+                    ipObj->type() == IP::Protocol::IPv4)
+                {
+                    try
+                    {
+                        ipObj->IPIfaces::origin(IP::AddressOrigin::Static);
+                    }
+                    catch (const std::exception& e)
+                    {
+                        lg2::error(
+                            "Failed persist DHCPv4 IP address on {NET_INTF}: {ERROR}",
+                            "NET_INTF", interfaceName(), "ERROR", e);
+                    }
+                }
+            }
+        }
         writeConfigurationFile();
         manager.get().reloadConfigs();
     }
@@ -536,6 +556,26 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
 
     if (old4 != new4 || old6 != new6 || oldra != newra)
     {
+        if (old4 && !new4)
+        {
+            for (auto& [addr, ipObj] : addrs)
+            {
+                if (ipObj->origin() == IP::AddressOrigin::DHCP &&
+                    ipObj->type() == IP::Protocol::IPv4)
+                {
+                    try
+                    {
+                        ipObj->IPIfaces::origin(IP::AddressOrigin::Static);
+                    }
+                    catch (const std::exception& e)
+                    {
+                        lg2::error(
+                            "Failed persist DHCPv4 IP address on {NET_INTF}: {ERROR}",
+                            "NET_INTF", interfaceName(), "ERROR", e);
+                    }
+                }
+            }
+        }
         writeConfigurationFile();
         manager.get().reloadConfigs();
     }
