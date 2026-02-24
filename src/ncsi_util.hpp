@@ -128,7 +128,7 @@ struct NetlinkInterface : Interface
      *         the package, or all packages if DEFAULT_VALUE
      *         is passed
      * @param[in] package - NCSI Package
-     * @returns an InterfaceInfo with package data the specified pacakge,
+     * @returns an InterfaceInfo with package data the specified package,
      *          or all packages if none is specified.
      */
     std::optional<InterfaceInfo> getInfo(int package);
