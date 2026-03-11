@@ -259,5 +259,231 @@ TEST_F(TestEthernetInterface, DHCPEnabled)
     set_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/true);
 }
 
+// ============================================================================
+// NTP Server Validation Tests - Invalid Inputs
+// ============================================================================
+
+TEST_F(TestEthernetInterface, addStaticNTPServers_InvalidIPv4)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
+    // Set valid servers first
+    ServerList validServers = {"10.1.1.1", "10.2.2.2"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(validServers);
+
+    // Try to set invalid IPv4 with negative octets
+    ServerList invalidServers = {"-8.-8.-8.-8"};
+    EXPECT_THROW(interface.staticNTPServers(invalidServers), InvalidArgument);
+
+    // Verify NTP servers were not modified - check config file
+    config::Parser parser((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser.map.getValueStrings("Network", "NTP"));
+}
+
+TEST_F(TestEthernetInterface, addStaticNTPServers_InvalidIPv4_OutOfRange)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
+    // Set valid servers first
+    ServerList validServers = {"8.8.8.8"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(validServers);
+
+    // Try to set invalid IPv4 out of range
+    ServerList invalidServers = {"256.256.256.256"};
+    EXPECT_THROW(interface.staticNTPServers(invalidServers), InvalidArgument);
+
+    // Verify NTP servers were not modified - check config file
+    config::Parser parser((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser.map.getValueStrings("Network", "NTP"));
+}
+
+TEST_F(TestEthernetInterface, addStaticNTPServers_InvalidSpecialChar)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
+    // Set valid servers first
+    ServerList validServers = {"pool.ntp.org"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(validServers);
+
+    // Test with @ symbol
+    ServerList servers1 = {"ntp@server.com"};
+    EXPECT_THROW(interface.staticNTPServers(servers1), InvalidArgument);
+    config::Parser parser1((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser1.map.getValueStrings("Network", "NTP"));
+
+    // Test with ! symbol
+    ServerList servers2 = {"ntp!server.com"};
+    EXPECT_THROW(interface.staticNTPServers(servers2), InvalidArgument);
+    config::Parser parser2((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser2.map.getValueStrings("Network", "NTP"));
+
+    // Test with underscore
+    ServerList servers3 = {"ntp_server.com"};
+    EXPECT_THROW(interface.staticNTPServers(servers3), InvalidArgument);
+    config::Parser parser3((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser3.map.getValueStrings("Network", "NTP"));
+}
+
+TEST_F(TestEthernetInterface, addStaticNTPServers_InvalidHyphens)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
+    // Set valid servers first
+    ServerList validServers = {"time.google.com"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(validServers);
+
+    // Leading hyphen
+    ServerList servers1 = {"-ntp.example.com"};
+    EXPECT_THROW(interface.staticNTPServers(servers1), InvalidArgument);
+    config::Parser parser1((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser1.map.getValueStrings("Network", "NTP"));
+
+    // Trailing hyphen
+    ServerList servers2 = {"ntp-.example.com"};
+    EXPECT_THROW(interface.staticNTPServers(servers2), InvalidArgument);
+    config::Parser parser2((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser2.map.getValueStrings("Network", "NTP"));
+}
+
+TEST_F(TestEthernetInterface, addStaticNTPServers_InvalidDots)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
+    // Set valid servers first
+    ServerList validServers = {"1.1.1.1"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(validServers);
+
+    // Leading dot
+    ServerList servers1 = {".ntp.example.com"};
+    EXPECT_THROW(interface.staticNTPServers(servers1), InvalidArgument);
+    config::Parser parser1((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser1.map.getValueStrings("Network", "NTP"));
+
+    // Trailing dot
+    ServerList servers2 = {"ntp.example.com."};
+    EXPECT_THROW(interface.staticNTPServers(servers2), InvalidArgument);
+    config::Parser parser2((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser2.map.getValueStrings("Network", "NTP"));
+
+    // Double dot
+    ServerList servers3 = {"ntp..example.com"};
+    EXPECT_THROW(interface.staticNTPServers(servers3), InvalidArgument);
+    config::Parser parser3((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser3.map.getValueStrings("Network", "NTP"));
+}
+
+TEST_F(TestEthernetInterface, addStaticNTPServers_MixedValidInvalid)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
+    // Set valid servers first
+    ServerList validServers = {"9.9.9.9"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(validServers);
+
+    // Mix of valid and invalid - should reject all
+    ServerList servers = {"pool.ntp.org", "invalid@server.com", "8.8.8.8"};
+    EXPECT_THROW(interface.staticNTPServers(servers), InvalidArgument);
+
+    // Verify NTP servers were not modified - check config file
+    config::Parser parser((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser.map.getValueStrings("Network", "NTP"));
+}
+
+TEST_F(TestEthernetInterface, addStaticNTPServers_ValidAfterInvalid)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
+    // Set initial valid servers
+    ServerList initialServers = {"1.2.3.4"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(initialServers);
+
+    // Try invalid
+    ServerList invalidServers = {"-8.-8.-8.-8"};
+    EXPECT_THROW(interface.staticNTPServers(invalidServers), InvalidArgument);
+
+    // Verify initial servers still in config
+    config::Parser parser1((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(initialServers, parser1.map.getValueStrings("Network", "NTP"));
+
+    // Then set valid servers - should succeed
+    ServerList validServers = {"pool.ntp.org", "8.8.8.8"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(validServers);
+
+    // Verify valid servers were set in config
+    config::Parser parser2((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser2.map.getValueStrings("Network", "NTP"));
+}
+
+TEST_F(TestEthernetInterface, addStaticNTPServers_EmptyString)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
+    // Set valid servers first
+    ServerList validServers = {"time.nist.gov"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(validServers);
+
+    ServerList servers = {""};
+    EXPECT_THROW(interface.staticNTPServers(servers), InvalidArgument);
+
+    // Verify NTP servers were not modified - check config file
+    config::Parser parser((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser.map.getValueStrings("Network", "NTP"));
+}
+
+TEST_F(TestEthernetInterface, addStaticNTPServers_TooLong)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+
+    // Set valid servers first
+    ServerList validServers = {"ntp.ubuntu.com"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(validServers);
+
+    // Create a string longer than 253 characters
+    std::string longServer(254, 'a');
+    longServer += ".com";
+    ServerList servers = {longServer};
+    EXPECT_THROW(interface.staticNTPServers(servers), InvalidArgument);
+
+    // Verify NTP servers were not modified - check config file
+    config::Parser parser((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(validServers, parser.map.getValueStrings("Network", "NTP"));
+}
+
+TEST_F(TestEthernetInterface, addStaticNTPServers_ValidEdgeCases)
+{
+    // 63 character label (maximum valid)
+    std::string validLabel(63, 'a');
+    validLabel += ".example.com";
+    ServerList servers1 = {validLabel};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(servers1);
+    config::Parser parser1((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(servers1, parser1.map.getValueStrings("Network", "NTP"));
+
+    // Mixed case
+    ServerList servers2 = {"NTP.Example.COM"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(servers2);
+    config::Parser parser2((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(servers2, parser2.map.getValueStrings("Network", "NTP"));
+
+    // Hyphen in middle
+    ServerList servers3 = {"ntp-server.example.com"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.staticNTPServers(servers3);
+    config::Parser parser3((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(servers3, parser3.map.getValueStrings("Network", "NTP"));
+}
+
 } // namespace network
 } // namespace phosphor

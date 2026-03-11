@@ -5,6 +5,8 @@
 #include "config_parser.hpp"
 #include "types.hpp"
 
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <sys/wait.h>
 
 #include <phosphor-logging/elog-errors.hpp>
@@ -14,10 +16,13 @@
 #include <stdplus/str/cat.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
+#include <algorithm>
 #include <cctype>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <string_view>
+#include <vector>
 
 namespace phosphor
 {
@@ -31,6 +36,87 @@ static constexpr std::string_view lldpdConfigFilePath = "/etc/lldpd.conf";
 
 namespace internal
 {
+
+bool isValidNtpServer(const std::string& server)
+{
+    if (server.empty() || server.length() > 253)
+    {
+        return false;
+    }
+
+    // Check if it looks like an IP address (contains only digits, dots, colons)
+    bool looksLikeIP = std::all_of(server.begin(), server.end(), [](char c) {
+        return std::isxdigit(c) || c == '.' || c == ':';
+    });
+
+    if (looksLikeIP)
+    {
+        // Use stdplus::fromStr for IP validation
+        try
+        {
+            // Try IPv4 first
+            stdplus::fromStr<stdplus::In4Addr>(server);
+            return true;
+        }
+        catch (const std::exception&)
+        {
+            // Not IPv4, try IPv6
+            try
+            {
+                stdplus::fromStr<stdplus::In6Addr>(server);
+                return true;
+            }
+            catch (const std::exception&)
+            {
+                // Looks like IP but invalid format
+                return false;
+            }
+        }
+    }
+
+    // Validate hostname/FQDN
+    if (server.front() == '.' || server.back() == '.')
+    {
+        return false;
+    }
+
+    std::vector<std::string> labels;
+    std::stringstream ss(server);
+    std::string label;
+
+    while (std::getline(ss, label, '.'))
+    {
+        labels.push_back(label);
+    }
+
+    if (std::find(labels.begin(), labels.end(), "") != labels.end())
+    {
+        return false;
+    }
+
+    for (const auto& lbl : labels)
+    {
+        if (lbl.empty() || lbl.length() > 63)
+        {
+            return false;
+        }
+
+        if (lbl.front() == '-' || lbl.back() == '-')
+        {
+            return false;
+        }
+
+        for (char c : lbl)
+        {
+            if (!std::isalnum(c) && c != '-')
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
 
 void executeCommandinChildProcess(stdplus::zstring_view path, char** args)
 {
