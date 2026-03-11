@@ -28,6 +28,7 @@
 #include <string>
 #include <unordered_map>
 #include <variant>
+#include <unordered_set>
 
 namespace phosphor
 {
@@ -779,7 +780,26 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
 
 ServerList EthernetInterface::staticNTPServers(ServerList value)
 {
-    value = EthernetInterfaceIntf::staticNTPServers(std::move(value));
+    // Validate and remove duplicates from NTP servers
+    std::unordered_set<std::string> seen;
+    std::vector<std::string> validatedServers;
+
+    for (const auto& server : value)
+    {
+        if (!internal::isValidNtpServer(server))
+        {
+            lg2::error("Invalid NTP server {NET_NTP}", "NET_NTP", server);
+            elog<InvalidArgument>(
+                Argument::ARGUMENT_NAME("StaticNTPServer"),
+                Argument::ARGUMENT_VALUE(server.c_str()));
+        }
+
+        if (seen.insert(server).second)
+        {
+            validatedServers.push_back(server);
+        }
+    }
+    value = EthernetInterfaceIntf::staticNTPServers(std::move(validatedServers));
 
     writeConfigurationFile();
     manager.get().reloadConfigs();

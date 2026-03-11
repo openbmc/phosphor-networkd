@@ -6,6 +6,7 @@
 #include "types.hpp"
 
 #include <sys/wait.h>
+#include <netinet/in.h>
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
@@ -31,6 +32,80 @@ static constexpr std::string_view lldpdConfigFilePath = "/etc/lldpd.conf";
 
 namespace internal
 {
+
+bool isValidNtpServer(const std::string& server)
+{
+    if (server.empty() || server.length() > 253)
+    {
+        return false;
+    }
+
+    // Check if it looks like an IP address (contains only digits, dots, colons)
+    bool looksLikeIP = std::all_of(server.begin(), server.end(),
+        [](char c) { return std::isdigit(c) || c == '.' || c == ':'; });
+
+    if (looksLikeIP)
+    {
+        // Must be valid IPv4 or IPv6
+        struct sockaddr_in sa;
+        if (inet_pton(AF_INET, server.c_str(), &(sa.sin_addr)) == 1)
+        {
+            return true;
+        }
+
+        struct sockaddr_in6 sa6;
+        if (inet_pton(AF_INET6, server.c_str(), &(sa6.sin6_addr)) == 1)
+        {
+            return true;
+        }
+
+        // Looks like IP but invalid format
+        return false;
+    }
+
+    // Validate hostname/FQDN (RFC 1123)
+    if (server.front() == '.' || server.back() == '.')
+    {
+        return false;
+    }
+
+    std::vector<std::string> labels;
+    std::stringstream ss(server);
+    std::string label;
+
+    while (std::getline(ss, label, '.'))
+    {
+        labels.push_back(label);
+    }
+
+    if (std::find(labels.begin(), labels.end(), "") != labels.end())
+    {
+        return false;
+    }
+
+    for (const auto& lbl : labels)
+    {
+        if (lbl.empty() || lbl.length() > 63)
+        {
+            return false;
+        }
+
+        if (lbl.front() == '-' || lbl.back() == '-')
+        {
+            return false;
+        }
+
+        for (char c : lbl)
+        {
+            if (!std::isalnum(c) && c != '-')
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
 
 void executeCommandinChildProcess(stdplus::zstring_view path, char** args)
 {
