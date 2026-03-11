@@ -80,6 +80,14 @@ std::map<std::string, bool> parseLLDPConf();
 namespace internal
 {
 
+/**
+ * @brief Validates if a string is a valid NTP server
+ * Accepts: IPv4, IPv6, FQDN, and hostnames
+ * @param[in] server - NTP server string
+ * @return true if valid, false otherwise
+ */
+bool isValidNtpServer(const std::string& server);
+
 /* @brief runs the given command in child process.
  * @param[in] path - path of the binary file which needs to be execeuted.
  * @param[in] args - arguments of the command.
