@@ -5,19 +5,26 @@
 #include "config_parser.hpp"
 #include "types.hpp"
 
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <sys/wait.h>
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
+#include <stdplus/net/addr/hostname.hpp>
+#include <stdplus/net/addr/ip.hpp>
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
 #include <stdplus/str/cat.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
+#include <algorithm>
 #include <cctype>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <string_view>
+#include <vector>
 
 namespace phosphor
 {
@@ -31,6 +38,31 @@ static constexpr std::string_view lldpdConfigFilePath = "/etc/lldpd.conf";
 
 namespace internal
 {
+
+bool isValidNtpServer(const std::string& server)
+{
+    // Try IP validation (IPv4 or IPv6)
+    try
+    {
+        stdplus::fromStr<stdplus::InAnyAddr>(server);
+        return true;
+    }
+    catch (...)
+    {
+        // Not an IP, try hostname
+    }
+
+    // Try hostname validation
+    try
+    {
+        stdplus::fromStr<stdplus::Hostname>(server);
+        return true;
+    }
+    catch (...)
+    {
+        return false;
+    }
+}
 
 void executeCommandinChildProcess(stdplus::zstring_view path, char** args)
 {
