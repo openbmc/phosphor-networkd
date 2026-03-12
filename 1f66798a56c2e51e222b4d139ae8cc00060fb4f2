@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "111f47be_20756fd8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-03-12T16:13:38Z",
+      "side": 1,
+      "message": "what\u0027s use of converting DHCP address as static Ipv4 address.\nwhat happens If you re-enable DHCP again, DHCP may try to assign same IP then what happens?",
+      "revId": "1f66798a56c2e51e222b4d139ae8cc00060fb4f2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
