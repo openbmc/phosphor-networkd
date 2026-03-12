@@ -71,6 +71,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "53c7b690_216d063d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-03-12T16:37:31Z",
+      "side": 1,
+      "message": "while DHCP is active and last assigned gateway overrides which means that static gateway overrides and dhcp ip does not work anyways \nso its better to disable dhcpv4 when static IP gets configured which would be cleaner",
+      "parentUuid": "70ab024a_bf44cf0c",
+      "revId": "04578c09caee0b590f02abde88d094b468a7f350",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "5f54a58c_4f216668",
