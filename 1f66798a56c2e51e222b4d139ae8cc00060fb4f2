@@ -16,6 +16,41 @@
       "message": "what\u0027s use of converting DHCP address as static Ipv4 address.\nwhat happens If you re-enable DHCP again, DHCP may try to assign same IP then what happens?",
       "revId": "1f66798a56c2e51e222b4d139ae8cc00060fb4f2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecd46999_00fe8767",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-03-16T08:56:47Z",
+      "side": 1,
+      "message": "To preserve network connectivity and prevent remote access lockout when a user disables DHCP on an interface that\u0027s currently using a DHCP-assigned IP address.\n\nThe situation when re-enabling DHCP is handled by PR https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/86111 , which clears static IPs before DHCP assigns new addresses.",
+      "parentUuid": "111f47be_20756fd8",
+      "revId": "1f66798a56c2e51e222b4d139ae8cc00060fb4f2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12a7fde7_82227661",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-03-16T08:56:47Z",
+      "side": 1,
+      "message": "Addressed Comments.",
+      "revId": "1f66798a56c2e51e222b4d139ae8cc00060fb4f2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
