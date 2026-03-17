@@ -54,6 +54,7 @@ tests = [
     'network_manager',
     'rtnetlink',
     'static_gateway',
+    'system_queries',
     'types',
     'util',
 ]
