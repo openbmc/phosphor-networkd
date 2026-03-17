@@ -321,7 +321,7 @@ void EthernetInterface::addStaticGateway(const StaticGatewayInfo& info)
 }
 
 ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
-                                 uint8_t prefixLength, std::string)
+                                 uint8_t prefixLength, std::string ipgateway)
 {
     std::optional<stdplus::InAnyAddr> addr;
     try
@@ -382,6 +382,21 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
             return it->second->getObjPath();
         }
         it->second->IPIfaces::origin(IP::AddressOrigin::Static);
+    }
+
+    if (!ipgateway.empty())
+    {
+        switch (protType)
+        {
+            case IP::Protocol::IPv4:
+                EthernetInterfaceIntf::defaultGateway(ipgateway);
+                break;
+            case IP::Protocol::IPv6:
+                EthernetInterfaceIntf::defaultGateway6(ipgateway);
+                break;
+            default:
+                break;
+        }
     }
 
     writeConfigurationFile();

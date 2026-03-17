@@ -126,7 +126,7 @@ class EthernetInterface : public Ifaces
      */
 
     ObjectPath ip(IP::Protocol addressType, std::string ipAddress,
-                  uint8_t prefixLength, std::string) override;
+                  uint8_t prefixLength, std::string ipgateway) override;
 
     /** @brief Function to create static neighbor dbus object.
      *  @param[in] ipAddress - IP address.
