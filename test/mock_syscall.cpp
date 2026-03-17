@@ -6,6 +6,7 @@
 #include <dlfcn.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
+#include <linux/sockios.h>
 #include <net/ethernet.h>
 #include <net/if.h>
 #include <netinet/in.h>
@@ -140,6 +141,44 @@ ssize_t sendmsg_link_dump(std::queue<std::string>& msgs, std::string_view in)
     return in.size();
 }
 
+ssize_t sendmsg_dellink(std::queue<std::string>& msgs, std::string_view in)
+{
+    const auto& hdrin = *reinterpret_cast<const nlmsghdr*>(in.data());
+    if (hdrin.nlmsg_type != RTM_DELLINK)
+    {
+        return 0;
+    }
+
+    const auto& ifinfo =
+        *reinterpret_cast<const ifinfomsg*>(in.data() + NLMSG_HDRLEN);
+    unsigned idx = ifinfo.ifi_index;
+
+    // Check if interface exists
+    bool found = false;
+    for (const auto& [name, i] : mock_if)
+    {
+        if (i.idx == idx)
+        {
+            found = true;
+            break;
+        }
+    }
+
+    nlmsgerr ack{};
+    if (!found)
+    {
+        ack.error = -ENODEV; // Interface not found
+    }
+
+    nlmsghdr hdr{};
+    hdr.nlmsg_len = NLMSG_LENGTH(sizeof(ack));
+    hdr.nlmsg_type = NLMSG_ERROR;
+    auto& out = msgs.emplace(hdr.nlmsg_len, '\0');
+    memcpy(out.data(), &hdr, sizeof(hdr));
+    memcpy(NLMSG_DATA(out.data()), &ack, sizeof(ack));
+    return in.size();
+}
+
 ssize_t sendmsg_ack(std::queue<std::string>& msgs, std::string_view in)
 {
     nlmsgerr ack{};
@@ -173,6 +212,17 @@ int ioctl(int fd, unsigned long int request, ...)
         req->ifr_flags = it->second.flags;
         return 0;
     }
+    else if (request == SIOCSIFFLAGS)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        it->second.flags = req->ifr_flags;
+        return 0;
+    }
     else if (request == SIOCGIFMTU)
     {
         auto it = mock_if.find(req->ifr_name);
@@ -187,6 +237,29 @@ int ioctl(int fd, unsigned long int request, ...)
             return -1;
         }
         req->ifr_mtu = *it->second.mtu;
+        return 0;
+    }
+    else if (request == SIOCSIFMTU)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        it->second.mtu = req->ifr_mtu;
+        return 0;
+    }
+    else if (request == SIOCETHTOOL)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        // Return default/zeroed ethtool data for mock interfaces
+        // This ensures tests get predictable values
         return 0;
     }
 
@@ -248,6 +321,12 @@ ssize_t sendmsg(int sockfd, const struct msghdr* msg, int flags)
                          msg->msg_iov[0].iov_len);
 
     ret = sendmsg_link_dump(msgs, iov);
+    if (ret != 0)
+    {
+        return ret;
+    }
+
+    ret = sendmsg_dellink(msgs, iov);
     if (ret != 0)
     {
         return ret;
