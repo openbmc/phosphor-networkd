@@ -367,6 +367,11 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
             Argument::ARGUMENT_VALUE(stdplus::toStr(prefixLength).c_str()));
     }
 
+    if (protType == IP::Protocol::IPv4 && dhcp4())
+    {
+        dhcp4(false);
+    }
+
     auto it = addrs.find(*ifaddr);
     if (it == addrs.end())
     {
