@@ -6,6 +6,7 @@
 #include <dlfcn.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
+#include <linux/sockios.h>
 #include <net/ethernet.h>
 #include <net/if.h>
 #include <netinet/in.h>
@@ -173,6 +174,17 @@ int ioctl(int fd, unsigned long int request, ...)
         req->ifr_flags = it->second.flags;
         return 0;
     }
+    else if (request == SIOCSIFFLAGS)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        it->second.flags = req->ifr_flags;
+        return 0;
+    }
     else if (request == SIOCGIFMTU)
     {
         auto it = mock_if.find(req->ifr_name);
@@ -187,6 +199,29 @@ int ioctl(int fd, unsigned long int request, ...)
             return -1;
         }
         req->ifr_mtu = *it->second.mtu;
+        return 0;
+    }
+    else if (request == SIOCSIFMTU)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        it->second.mtu = req->ifr_mtu;
+        return 0;
+    }
+    else if (request == SIOCETHTOOL)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        // Return default/zeroed ethtool data for mock interfaces
+        // This ensures tests get predictable values
         return 0;
     }
 
