@@ -76,8 +76,8 @@ void setFirstBootMACOnInterface(const std::string& intf, const std::string& mac)
     }
 }
 
-stdplus::EtherAddr getfromInventory(sdbusplus::bus_t& bus,
-                                    const std::string& intfName)
+auto getFromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
+    -> std::optional<stdplus::EtherAddr>
 {
     std::string interfaceName = configJson[intfName];
 
@@ -98,18 +98,25 @@ stdplus::EtherAddr getfromInventory(sdbusplus::bus_t& bus,
         }
         catch (const sdbusplus::exception::SdBusError& e)
         {
-            lg2::error("Error in mapper call");
-            elog<InternalFailure>();
+            // Mapper may give an exception when there are no results.  Turn
+            // it into an empty message.
+            lg2::warning("Error in mapper call");
+            return sdbusplus::message_t{};
         }
     }();
+
+    if (!mapperReply)
+    {
+        return std::nullopt;
+    }
 
     auto objectTree = mapperReply.unpack<ObjectTree>();
 
     if (objectTree.empty())
     {
-        lg2::error("No Object has implemented the interface {NET_INTF}",
-                   "NET_INTF", invNetworkIntf);
-        elog<InternalFailure>();
+        lg2::warning("No Object has implemented the interface {NET_INTF}",
+                     "NET_INTF", invNetworkIntf);
+        return std::nullopt;
     }
 
     DbusObjectPath objPath;
@@ -172,37 +179,33 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
 {
     try
     {
-        auto inventoryMAC = getfromInventory(bus, intfname);
-        if (inventoryMAC != stdplus::EtherAddr{})
-        {
-            auto macStr = stdplus::toStr(inventoryMAC);
-            lg2::info(
-                "Mac Address {NET_MAC} in Inventory on Interface {NET_INTF}",
-                "NET_MAC", macStr, "NET_INTF", intfname);
-            setFirstBootMACOnInterface(intfname, macStr);
-            first_boot_status.push_back(intfname);
-            bool status = true;
-            for (const auto& keys : configJson.items())
-            {
-                if (!(std::find(first_boot_status.begin(),
-                                first_boot_status.end(), keys.key()) !=
-                      first_boot_status.end()))
-                {
-                    lg2::info("Interface {NET_INTF} MAC is NOT set from VPD",
-                              "NET_INTF", keys.key());
-                    status = false;
-                }
-            }
-            if (status)
-            {
-                lg2::info("Removing the match for ethernet interfaces");
-                EthInterfaceMatch = nullptr;
-            }
-        }
-        else
+        auto inventoryMAC = getFromInventory(bus, intfname);
+        if (!inventoryMAC)
         {
             lg2::info("Nothing is present in Inventory");
             return false;
+        }
+
+        auto macStr = stdplus::toStr(*inventoryMAC);
+        lg2::info("Mac Address {NET_MAC} in Inventory on Interface {NET_INTF}",
+                  "NET_MAC", macStr, "NET_INTF", intfname);
+        setFirstBootMACOnInterface(intfname, macStr);
+        first_boot_status.push_back(intfname);
+        bool status = true;
+        for (const auto& keys : configJson.items())
+        {
+            if (!(std::find(first_boot_status.begin(), first_boot_status.end(),
+                            keys.key()) != first_boot_status.end()))
+            {
+                lg2::info("Interface {NET_INTF} MAC is NOT set from VPD",
+                          "NET_INTF", keys.key());
+                status = false;
+            }
+        }
+        if (status)
+        {
+            lg2::info("Removing the match for ethernet interfaces");
+            EthInterfaceMatch = nullptr;
         }
     }
     catch (const std::exception& e)
