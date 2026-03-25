@@ -57,6 +57,31 @@ TEST_F(TestSystemQueries, GetEthInfoMultipleInterfaces)
     EXPECT_FALSE(info1.autoneg);
 }
 
+TEST_F(TestSystemQueries, GetEthInfoMultipleInterfacesSpeed)
+{
+    mock_addIF(
+        InterfaceInfo{.type = 1, .idx = 1, .flags = IFF_UP, .name = "eth0"});
+    mock_addIF(
+        InterfaceInfo{.type = 1, .idx = 2, .flags = IFF_UP, .name = "eth1"});
+
+    auto ethInfo0 = getEthInfo("eth0");
+    auto ethInfo1 = getEthInfo("eth1");
+
+    EXPECT_EQ(0, ethInfo0.speed);
+    EXPECT_EQ(0, ethInfo1.speed);
+}
+
+TEST_F(TestSystemQueries, GetEthInfoNonExistentInterface)
+{
+    // Should throw when interface doesn't exist
+    EXPECT_THROW(getEthInfo("eth99"), std::system_error);
+}
+
+TEST_F(TestSystemQueries, GetEthInfoEmptyName)
+{
+    EXPECT_THROW(getEthInfo(""), std::system_error);
+}
+
 TEST_F(TestSystemQueries, SetMTUSuccess)
 {
     mock_addIF(InterfaceInfo{
