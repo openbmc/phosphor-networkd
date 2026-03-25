@@ -18,7 +18,7 @@ class HypEthInterface;
 
 using namespace phosphor::logging;
 
-using HypIPIfaces = sdbusplus::server::object::object<
+using HypIPIfaces = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::server::IP,
     sdbusplus::xyz::openbmc_project::Object::server::Delete,
     sdbusplus::xyz::openbmc_project::Object::server::Enable>;
@@ -54,8 +54,7 @@ class HypIPAddress : public HypIPIfaces
      *  @param[in] origin - origin of ipaddress(dhcp/static).
      *  @param[in] intf - interface id (if0/if1).
      */
-    HypIPAddress(sdbusplus::bus::bus& bus,
-                 sdbusplus::message::object_path objPath,
+    HypIPAddress(sdbusplus::bus_t& bus, sdbusplus::message::object_path objPath,
                  stdplus::PinnedRef<HypEthInterface> parent,
                  stdplus::SubnetAny addr, const std::string& gateway,
                  HypIP::AddressOrigin origin, const std::string& intf);

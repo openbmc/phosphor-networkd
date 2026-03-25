@@ -38,7 +38,7 @@ struct Proto<stdplus::In6Addr>
 };
 
 HypIPAddress::HypIPAddress(
-    sdbusplus::bus::bus& bus, sdbusplus::message::object_path objPath,
+    sdbusplus::bus_t& bus, sdbusplus::message::object_path objPath,
     stdplus::PinnedRef<HypEthInterface> parent, stdplus::SubnetAny addr,
     const std::string& gateway, HypIP::AddressOrigin origin,
     const std::string& intf) :
