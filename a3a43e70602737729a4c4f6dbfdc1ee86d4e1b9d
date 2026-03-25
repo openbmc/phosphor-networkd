@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "135485c0_6af921c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-03-25T06:44:51Z",
+      "side": 1,
+      "message": "a",
+      "revId": "a3a43e70602737729a4c4f6dbfdc1ee86d4e1b9d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db8e56cc_09eec941",
+        "filename": "test/test_system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-03-25T06:44:51Z",
+      "side": 1,
+      "message": "Should probably add the below to resolve CI\n```\nauto ethInfo0 \u003d getEthInfo(\"eth0\");\nauto ethInfo1 \u003d getEthInfo(\"eth1\");\n```",
+      "revId": "a3a43e70602737729a4c4f6dbfdc1ee86d4e1b9d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
