@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bacd3237_0a6dcea9",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-03-26T12:51:01Z",
+      "side": 1,
+      "message": "The memory can be pre-allocated using `validatedServers.reserve(value.size());`",
+      "revId": "ab4d6f522a27bc91929d0845b256e12d56d333cd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0b4a95d_93bba82e",
+        "filename": "src/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-03-26T12:51:01Z",
+      "side": 1,
+      "message": "I guess trailing dots are valid in FQDNs (indicates absolute dn)\nMy suggestion would be to allow trailing dot here, and then remove it for validation if its present.",
+      "range": {
+        "startLine": 78,
+        "startChar": 33,
+        "endLine": 78,
+        "endChar": 53
+      },
+      "revId": "ab4d6f522a27bc91929d0845b256e12d56d333cd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
