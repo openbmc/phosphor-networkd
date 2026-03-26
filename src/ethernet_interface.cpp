@@ -144,6 +144,14 @@ EthernetInterface::EthernetInterface(
     {
         addStaticGateway(staticGateway);
     }
+
+    auto confPath = config::pathForIntfConf(
+        manager.get().getConfDir(), interfaceName());
+
+    if (!std::filesystem::exists(confPath))
+    {
+        writeConfigurationFile();
+    }
 }
 
 void EthernetInterface::updateInfo(const InterfaceInfo& info, bool skipSignal)
