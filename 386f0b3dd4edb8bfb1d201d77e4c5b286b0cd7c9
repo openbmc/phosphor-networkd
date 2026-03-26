@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "94085514_4602171d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-03-26T08:12:30Z",
+      "side": 1,
+      "message": "@raviteja28031990@gmail.com, added unit testcase \n[ RUN      ] TestEthernetInterface.addStaticNTPServers_InvalidIPv4\n[       OK ] TestEthernetInterface.addStaticNTPServers_InvalidIPv4 (15 ms)\n[ RUN      ] TestEthernetInterface.addStaticNTPServers_InvalidIPv4_OutOfRange\n[       OK ] TestEthernetInterface.addStaticNTPServers_InvalidIPv4_OutOfRange (18 ms)\n[ RUN      ] TestEthernetInterface.addStaticNTPServers_InvalidSpecialChar\n[       OK ] TestEthernetInterface.addStaticNTPServers_InvalidSpecialChar (18 ms)\n[ RUN      ] TestEthernetInterface.addStaticNTPServers_InvalidHyphens\n[       OK ] TestEthernetInterface.addStaticNTPServers_InvalidHyphens (13 ms)\n[ RUN      ] TestEthernetInterface.addStaticNTPServers_InvalidDots\n[       OK ] TestEthernetInterface.addStaticNTPServers_InvalidDots (16 ms)\n[ RUN      ] TestEthernetInterface.addStaticNTPServers_MixedValidInvalid\n[       OK ] TestEthernetInterface.addStaticNTPServers_MixedValidInvalid (16 ms)\n[ RUN      ] TestEthernetInterface.addStaticNTPServers_ValidAfterInvalid\n[       OK ] TestEthernetInterface.addStaticNTPServers_ValidAfterInvalid (16 ms)\n[ RUN      ] TestEthernetInterface.addStaticNTPServers_EmptyString\n[       OK ] TestEthernetInterface.addStaticNTPServers_EmptyString (11 ms)\n[ RUN      ] TestEthernetInterface.addStaticNTPServers_TooLong\n[       OK ] TestEthernetInterface.addStaticNTPServers_TooLong (11 ms)\n[ RUN      ] TestEthernetInterface.addStaticNTPServers_ValidEdgeCases\n[       OK ] TestEthernetInterface.addStaticNTPServers_ValidEdgeCases (13 ms)",
+      "parentUuid": "9fe4a2ba_73e1ae37",
+      "revId": "386f0b3dd4edb8bfb1d201d77e4c5b286b0cd7c9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "22345af6_336dcaf2",
         "filename": "src/util.cpp",
         "patchSetId": 4
@@ -49,6 +67,24 @@
       "writtenOn": "2026-03-12T16:25:34Z",
       "side": 1,
       "message": "networkd code already does ip address validation in other places using\nstdplus::fromStr\u003cstdplus::In4Addr\u003e(ipaddress)\nstdplus::fromStr\u003cstdplus::In6Addr\u003e(ipaddress)\nI would suggest to follow same way",
+      "revId": "386f0b3dd4edb8bfb1d201d77e4c5b286b0cd7c9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f455b7b_b0b51300",
+        "filename": "src/util.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-03-26T08:12:30Z",
+      "side": 1,
+      "message": "@raviteja28031990@gmail.com\nUsed stdplus::fromStr for IP validation",
+      "parentUuid": "22345af6_336dcaf2",
       "revId": "386f0b3dd4edb8bfb1d201d77e4c5b286b0cd7c9",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
