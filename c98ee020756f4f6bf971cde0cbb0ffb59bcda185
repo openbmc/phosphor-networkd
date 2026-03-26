@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc994d0c_17dcebb4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-03-26T13:53:08Z",
+      "side": 1,
+      "message": "after factory reset, systemd-networkd starts with default network config.\nyou may not see config since default config was not overridden.\nonce you update any configurations then config files gets created.\nI did not see any issue with this behavior",
+      "revId": "c98ee020756f4f6bf971cde0cbb0ffb59bcda185",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
