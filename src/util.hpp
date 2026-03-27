@@ -8,6 +8,7 @@
 #include <optional>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 #include <unordered_set>
 
 namespace phosphor
@@ -73,6 +74,11 @@ DHCPVal getDHCPValue(const config::Parser& config);
 bool getDHCPProp(const config::Parser& config, DHCPType dhcpType,
                  std::string_view key);
 
+std::unordered_map<uint32_t, std::string> getDHCPVendorOption(
+    const config::Parser& config, DHCPType dhcpType);
+
+std::string getDHCPVendorClassIdentifier(const config::Parser& config);
+
 /** @brief Read LLDP configuration from lldpd conf file
  */
 std::map<std::string, bool> parseLLDPConf();
@@ -111,6 +117,13 @@ void execute(stdplus::zstring_view path, ArgTypes&&... tArgs)
 
     internal::executeCommandinChildProcess(path, args);
 }
+
+/* @Split string into serveral tokens by delimeter
+ * @param[in] line - line to be splitted
+ * @param[in] delimiter
+ * @returns list of tokens
+ */
+std::vector<std::string> splitStr(std::string line, std::string delimiter);
 
 } // namespace network
 
