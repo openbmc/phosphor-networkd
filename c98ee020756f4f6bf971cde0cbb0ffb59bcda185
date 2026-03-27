@@ -16,6 +16,24 @@
       "message": "after factory reset, systemd-networkd starts with default network config.\nyou may not see config since default config was not overridden.\nonce you update any configurations then config files gets created.\nI did not see any issue with this behavior",
       "revId": "c98ee020756f4f6bf971cde0cbb0ffb59bcda185",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdfec414_85643141",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1002064
+      },
+      "writtenOn": "2026-03-27T01:38:26Z",
+      "side": 1,
+      "message": "After a factory reset, systemd-networkd fall back to default behavior when no configuration file is present. However, on some non-NCSI platforms, we observed that after a factory reset followed by a reboot, or issuing a Redfish ResetAll command (which triggers a subsequent reboot), the expected network configuration is not reflected as a configuration file under /etc/systemd/network/ unless a property update is triggered.\nThis change ensures that the configuration file is generated during EthernetInterface initialization if it does not already exist, so that the configuration state is consistently represented after boot. This does not change the existing event driven behavior, but ensures the configuration file is present even when no update event occurs.",
+      "parentUuid": "cc994d0c_17dcebb4",
+      "revId": "c98ee020756f4f6bf971cde0cbb0ffb59bcda185",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
