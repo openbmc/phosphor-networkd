@@ -228,6 +228,58 @@ bool getDHCPProp(const config::Parser& config, DHCPType dhcpType,
         .value_or(true);
 }
 
+std::unordered_map<uint32_t, std::string> getDHCPVendorOption(
+    const config::Parser& config, DHCPType dhcpType)
+{
+    auto list = config.map.getValueStrings(
+        dhcpType == DHCPType::v4 ? "DHCPv4" : "DHCPv6", "SendVendorOption");
+    std::unordered_map<uint32_t, std::string> map;
+    for (const auto& v : list)
+    {
+        auto elements = splitStr(v, ":");
+        map.insert(std::pair<uint32_t, std::string>(std::stol(elements.at(0)),
+                                                    elements.at(2)));
+        // map[e.at(0).c_str()] = e.at(2);
+    }
+
+    return std::move(map);
+}
+
+std::string getDHCPVendorClassIdentifier(const config::Parser& config)
+{
+    if (auto str =
+            config.map.getLastValueString("DHCPv4", "VendorClassIdentifier");
+        str == nullptr)
+    {
+        return "";
+    }
+    else
+    {
+        return *str;
+    }
+}
+
+std::vector<std::string> splitStr(std::string line, std::string delimiter)
+{
+    std::vector<std::string> vec;
+    for (auto index = line.find(delimiter); index != std::string::npos;
+         index = line.find(delimiter))
+    {
+        if (index == 0)
+        {
+            continue;
+        } // if
+        else
+        {
+            vec.push_back(line.substr(0, index));
+        }
+        line = line.substr(index + 1, line.length());
+    }
+
+    vec.push_back(line);
+    return vec;
+}
+
 std::map<std::string, bool> parseLLDPConf()
 {
     std::ifstream lldpdConfig(lldpdConfigFilePath.data());
