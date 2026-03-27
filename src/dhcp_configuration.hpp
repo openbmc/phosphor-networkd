@@ -75,6 +75,41 @@ class Configuration : public Iface
      */
     bool sendHostNameEnabled(bool value) override;
 
+    /** Set value of VendorClassIdentifier */
+    std::string vendorClassIdentifier(std::string value) override;
+
+    /** @brief Implementation for SetVendorOption
+     *  Set vendor DHCP vendor option and value
+     *
+     *  @param[in] option -
+     *  @param[in] value -
+     *
+     *  @return result[int16_t] -
+     */
+    int16_t setVendorOption(uint32_t option, std::string value) override;
+
+    /** @brief Implementation for GetVendorOption
+     *  Get vendor DHCP vendor value by option
+     *
+     *  @param[in] option -
+     *
+     *  @return result[std::string] -
+     */
+    std::string getVendorOption(uint32_t option) override;
+
+    /** @brief Implementation for DelVendorOption
+     *  Delete vendor DHCP vendor value by option
+     *
+     *  @param[in] option -
+     *
+     *  @return result[int16_t] -
+     */
+    int16_t delVendorOption(uint32_t option) override;
+
+    std::unordered_map<uint32_t, std::string> vendorOptionList;
+
+    DHCPType type;
+
     /* @brief Ethernet Interface needed the below function to know the
      *        value of the properties (ntpEnabled,dnsEnabled,hostnameEnabled
               sendHostNameEnabled).
@@ -85,6 +120,7 @@ class Configuration : public Iface
     using ConfigIntf::hostNameEnabled;
     using ConfigIntf::ntpEnabled;
     using ConfigIntf::sendHostNameEnabled;
+    using ConfigIntf::vendorClassIdentifier;
 
   private:
     /** @brief Ethernet Interface object. */
