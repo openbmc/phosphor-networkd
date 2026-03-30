@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "36956ced_de37e557",
+        "filename": "src/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-03-30T18:29:23Z",
+      "side": 1,
+      "message": "@raviteja28031990@gmail.com\nstdplus::InAnyAddr is permissive, not strict\nSo invalid inputs:\n\"256.1.1.1\"\n\"192.168.1\"\nare being accepted as valid, hence HTTP 204 response is generated instead of rejection.\n\n\u003d\u003d\u003d Test 28: Invalid IPv4 - Out of range \u003d\u003d\u003d\nNTP Server: 256.1.1.1\nExpected: FAIL\nHTTP Status: 204\nCurrent NTP Config:\n{\n  \"NTPServers\": [\n    \"256.1.1.1\"\n  ],\n  \"NetworkSuppliedServers\": [],\n  \"ProtocolEnabled\": true\n}\n✗ FAILED - Expected rejection but got HTTP 204\nResponse: \n{\n  \"NTPServers\": [\n    \"256.1.1.1\"\n  ],\n  \"NetworkSuppliedServers\": [],\n  \"ProtocolEnabled\": true\n}\n\n\u003d\u003d\u003d Test 29: Invalid IPv4 - Incomplete \u003d\u003d\u003d\nNTP Server: 192.168.1\nExpected: FAIL\nHTTP Status: 204\nCurrent NTP Config:\n{\n  \"NTPServers\": [\n    \"192.168.1\"\n  ],\n  \"NetworkSuppliedServers\": [],\n  \"ProtocolEnabled\": true\n}\n✗ FAILED - Expected rejection but got HTTP 204\nResponse: \n{\n  \"NTPServers\": [\n    \"192.168.1\"\n  ],\n  \"NetworkSuppliedServers\": [],\n  \"ProtocolEnabled\": true\n}",
+      "parentUuid": "18727215_c2afc38e",
+      "revId": "ab4d6f522a27bc91929d0845b256e12d56d333cd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b0b4a95d_93bba82e",
         "filename": "src/util.cpp",
         "patchSetId": 5
