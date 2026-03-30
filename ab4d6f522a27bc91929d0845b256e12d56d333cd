@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a1af51b_53c6da65",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-03-30T19:26:35Z",
+      "side": 1,
+      "message": "Acknowledged\nninja: Entering directory `/home/priyair/gerritreviewphosphor/phosphor-networkd/build\u0027\n[48/48] Linking target test/dhcp_configuration\n 1/11 phosphor-networkd:netlink                     OK              0.05s\n 2/11 phosphor-networkd:rtnetlink                   OK              0.04s\n 3/11 phosphor-networkd:types                       OK              0.03s\n 4/11 phosphor-networkd:config_parser               OK              0.07s\n 5/11 phosphor-networkd:hyp_network_manager         OK              0.03s\n 6/11 phosphor-networkd:hyp_sys_config              OK              0.03s\n 7/11 phosphor-networkd:util                        OK              0.05s\n 8/11 phosphor-networkd:network_manager             OK              0.25s\n 9/11 phosphor-networkd:ethernet_interface          OK              0.49s\n10/11 phosphor-networkd:static_gateway              OK              0.48s\n11/11 phosphor-networkd:dhcp_configuration          OK              0.57s\n\nOk:                11  \nFail:              0",
+      "parentUuid": "bacd3237_0a6dcea9",
+      "revId": "ab4d6f522a27bc91929d0845b256e12d56d333cd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "18727215_c2afc38e",
@@ -66,6 +84,30 @@
       "writtenOn": "2026-03-26T12:51:01Z",
       "side": 1,
       "message": "I guess trailing dots are valid in FQDNs (indicates absolute dn)\nMy suggestion would be to allow trailing dot here, and then remove it for validation if its present.",
+      "range": {
+        "startLine": 78,
+        "startChar": 33,
+        "endLine": 78,
+        "endChar": 53
+      },
+      "revId": "ab4d6f522a27bc91929d0845b256e12d56d333cd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0fc9ec36_b10009a4",
+        "filename": "src/util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-03-30T19:26:35Z",
+      "side": 1,
+      "message": "Acknowledged\n\nninja: Entering directory `/home/priyair/gerritreviewphosphor/phosphor-networkd/build\u0027\n[48/48] Linking target test/dhcp_configuration\n 1/11 phosphor-networkd:netlink                     OK              0.05s\n 2/11 phosphor-networkd:rtnetlink                   OK              0.04s\n 3/11 phosphor-networkd:types                       OK              0.03s\n 4/11 phosphor-networkd:config_parser               OK              0.07s\n 5/11 phosphor-networkd:hyp_network_manager         OK              0.03s\n 6/11 phosphor-networkd:hyp_sys_config              OK              0.03s\n 7/11 phosphor-networkd:util                        OK              0.05s\n 8/11 phosphor-networkd:network_manager             OK              0.25s\n 9/11 phosphor-networkd:ethernet_interface          OK              0.49s\n10/11 phosphor-networkd:static_gateway              OK              0.48s\n11/11 phosphor-networkd:dhcp_configuration          OK              0.57s\n\nOk:                11  \nFail:              0   \n\n// Trailing dot\n    ServerList servers2 \u003d {\"ntp.example.com.\"};\n    ServerList servers_remove_trail_dot \u003d {\"ntp.example.com\"};\n    EXPECT_CALL(manager.mockReload, schedule());\n    interface.staticNTPServers(servers_remove_trail_dot);",
+      "parentUuid": "b0b4a95d_93bba82e",
       "range": {
         "startLine": 78,
         "startChar": 33,
