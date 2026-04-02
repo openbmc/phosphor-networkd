@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "237da487_9e254c69",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-04-02T02:32:10Z",
+      "side": 1,
+      "message": "have you verified this patch with dhcp v4/v6 setup as well?",
+      "revId": "b7451b14f7b85a31e815f9d6f80d5ad030eb1872",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
