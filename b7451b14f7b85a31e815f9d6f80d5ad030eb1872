@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f441eed0_7773b4be",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-04-02T02:52:46Z",
+      "side": 1,
+      "message": "we need to run network automation tests to see if there are any corner cases with this change.",
+      "revId": "b7451b14f7b85a31e815f9d6f80d5ad030eb1872",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "237da487_9e254c69",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 1
