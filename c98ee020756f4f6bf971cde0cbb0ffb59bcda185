@@ -70,6 +70,24 @@
       "parentUuid": "6c58edfa_7bfa5ff8",
       "revId": "c98ee020756f4f6bf971cde0cbb0ffb59bcda185",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c836524_2a0cc40a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1002064
+      },
+      "writtenOn": "2026-04-02T06:26:42Z",
+      "side": 1,
+      "message": "We would like to clarify the scenario we observed.\n\nWhen Redfish ResetAll is issued, it clears the existing configuration,\nincluding /etc/systemd/network/00-bmc-eth0.network, and is followed by\nan immediate reboot. After the reboot, the MAC address remain unchanged.\nSince the MAC match the previous value, no property update is triggered,\nand therefore the configuration file is not regenerated.\n\nThis behavior has been consistently observed on multiple non-NCSI\nplatforms, including Ventura, Bletchley, Bletchley1.5, Ventura2, and\nSanMiguel. On non-NCSI platforms, the absence of a configuration file may\nlead the interface to fall back to default behavior, which can result in\nthe network configuration (such as MAC or IP assignment) not being preserved\nas expected. In this scenario, the system may not restore the intended network\nconfiguration after ResetAll, which indicates a functional gap rather\nthan just a missing configuration file.\n\nTherefore, we believe this change helps ensure that the intended network\nconfiguration can be correctly applied after boot, even when no update\nevent is triggered.",
+      "parentUuid": "850e7081_23421b1c",
+      "revId": "c98ee020756f4f6bf971cde0cbb0ffb59bcda185",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
