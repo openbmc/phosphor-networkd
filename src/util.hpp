@@ -120,6 +120,20 @@ void execute(stdplus::zstring_view path, ArgTypes&&... tArgs)
     internal::executeCommandinChildProcess(path, args);
 }
 
+/* @Split string into serveral tokens by delimeter
+ * @param[in] line - line to be splitted
+ * @param[in] delimiter
+ * @returns list of tokens
+ */
+std::vector<std::string> splitStr(std::string line, std::string delimiter);
+
+/** @brief Use exec instead of system call to run command */
+int runSystemCommand(const char* cmd, const std::string& params);
+
+std::string runCommandAndStoreLog(const char* cmd);
+
+void executeCommandAndLog(const char* command, const char* logFilePath);
+
 } // namespace network
 
 } // namespace phosphor
