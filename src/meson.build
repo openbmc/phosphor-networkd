@@ -70,6 +70,7 @@ networkd_lib = static_library(
     'dhcp_configuration.cpp',
     'dns_updater.cpp',
     'hostname_manager.cpp',
+    'firewall_configuration.cpp',
     implicit_include_directories: false,
     include_directories: src_includes,
     dependencies: networkd_deps,
