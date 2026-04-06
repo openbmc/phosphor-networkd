@@ -39,6 +39,30 @@
       },
       "revId": "0ce7f7d68023dc2c80bf4ad0add566458eb595ea",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b50b0e3_4ce66ac2",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-04-06T09:29:42Z",
+      "side": 1,
+      "message": "Updated to \u0027InvalidArgument\u0027 error",
+      "parentUuid": "e8927293_96efc776",
+      "range": {
+        "startLine": 458,
+        "startChar": 17,
+        "endLine": 458,
+        "endChar": 27
+      },
+      "revId": "0ce7f7d68023dc2c80bf4ad0add566458eb595ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
