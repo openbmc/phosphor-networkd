@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include "network_manager.hpp"
 
 #include "config_parser.hpp"
@@ -163,6 +165,11 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     std::filesystem::create_directories(confDir);
     systemConf = std::make_unique<phosphor::network::SystemConfiguration>(
         bus, (this->objPath / "config").str);
+
+#ifdef FIREWALL_SUPPORT
+    firewallConf = std::make_unique<phosphor::network::firewall::Configuration>(
+        bus, (this->objPath / "firewall").str, *this);
+#endif
 
     // Initialize hostname manager to set unique hostname on first boot
     hostnameManager = std::make_unique<HostnameManager>(bus, *this);

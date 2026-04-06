@@ -17,6 +17,7 @@ conf_data.set(
 conf_data.set('ENABLE_IPV6_ACCEPT_RA', get_option('default-ipv6-accept-ra'))
 conf_data.set('SYNC_MAC_FROM_INVENTORY', get_option('sync-mac'))
 conf_data.set('PERSIST_MAC', get_option('persist-mac'))
+conf_data.set('FIREWALL_SUPPORT', get_option('firewall-support'))
 conf_data.set10('FORCE_SYNC_MAC_FROM_INVENTORY', get_option('force-sync-mac'))
 
 sdbusplus_dep = dependency('sdbusplus')

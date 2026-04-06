@@ -1,6 +1,7 @@
 #pragma once
 #include "dhcp_configuration.hpp"
 #include "ethernet_interface.hpp"
+#include "firewall_configuration.hpp"
 #include "hostname_manager.hpp"
 #include "system_configuration.hpp"
 #include "types.hpp"
@@ -151,6 +152,9 @@ class Manager : public ManagerIface
 
     /** @brief pointer to hostname mgr object. */
     std::unique_ptr<HostnameManager> hostnameManager = nullptr;
+
+    /** @brief pointer to firewall conf object. */
+    std::unique_ptr<firewall::Configuration> firewallConf = nullptr;
 
     /** @brief Network Configuration directory. */
     std::filesystem::path confDir;
