@@ -16,6 +16,7 @@
 
 #include <cctype>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <string_view>
 
@@ -263,6 +264,120 @@ std::map<std::string, bool> parseLLDPConf()
     }
     lldpdConfig.close();
     return portStatus;
+}
+
+int runSystemCommand(const char* cmd, const std::string& params)
+{
+    std::istringstream iss(params);
+    std::vector<std::string> paramList;
+    std::string param;
+
+    while (iss >> param)
+    {
+        paramList.push_back(param);
+    }
+
+    std::vector<const char*> args;
+    args.push_back(cmd);
+    for (const auto& p : paramList)
+    {
+        args.push_back(p.c_str());
+    }
+    args.push_back(nullptr);
+
+    pid_t pid = fork();
+    if (pid == 0)
+    {
+        execvp(cmd, const_cast<char* const*>(args.data()));
+
+        perror("execvp failed");
+        _exit(1);
+    }
+    else if (pid < 0)
+    {
+        perror("fork failed");
+        return -1;
+    }
+
+    int status;
+    waitpid(pid, &status, 0);
+    return status;
+}
+
+std::string runCommandAndStoreLog(const char* cmd)
+{
+    std::array<char, 128> buffer;
+    std::string result;
+
+    struct PipeDeleter
+    {
+        void operator()(FILE* fp) const
+        {
+            if (fp)
+            {
+                pclose(fp);
+            }
+        }
+    };
+
+    std::unique_ptr<FILE, PipeDeleter> pipe(popen(cmd, "r"));
+    if (!pipe)
+    {
+        throw std::runtime_error("popen() failed!");
+    }
+
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
+    {
+        result += buffer.data();
+    }
+
+    return result;
+}
+
+void executeCommandAndLog(const char* command, const char* logFilePath)
+{
+    try
+    {
+        std::string output = runCommandAndStoreLog(command);
+
+        FILE* logFile = fopen(logFilePath, "w");
+        if (logFile)
+        {
+            fputs(output.c_str(), logFile);
+            fclose(logFile);
+            std::cout << "Log written to " << logFilePath << std::endl;
+        }
+        else
+        {
+            std::cerr << "Failed to open log file: " << logFilePath
+                      << std::endl;
+        }
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+}
+
+std::vector<std::string> splitStr(std::string line, std::string delimiter)
+{
+    std::vector<std::string> vec;
+    for (auto index = line.find(delimiter); index != std::string::npos;
+         index = line.find(delimiter))
+    {
+        if (index == 0)
+        {
+            continue;
+        } // if
+        else
+        {
+            vec.push_back(line.substr(0, index));
+        }
+        line = line.substr(index + 1, line.length());
+    }
+
+    vec.push_back(line);
+    return vec;
 }
 
 } // namespace network
