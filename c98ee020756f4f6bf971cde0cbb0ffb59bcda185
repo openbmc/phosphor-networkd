@@ -88,6 +88,24 @@
       "parentUuid": "850e7081_23421b1c",
       "revId": "c98ee020756f4f6bf971cde0cbb0ffb59bcda185",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e122de92_3a4037d7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1002064
+      },
+      "writtenOn": "2026-04-07T07:06:22Z",
+      "side": 1,
+      "message": "Hi @raviteja28031990@gmail.com\nWe have added more details to clarify the scenario and the potential\nfunctional gap after ResetAll. Kindly help take another look when you\nhave a chance. Thank you.\n\nHi @patrick@stwcx.xyz, kindly help review this change when you have time.\nWe would appreciate your feedback. Thank you.",
+      "parentUuid": "4c836524_2a0cc40a",
+      "revId": "c98ee020756f4f6bf971cde0cbb0ffb59bcda185",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
