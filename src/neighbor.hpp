@@ -63,9 +63,9 @@ class Neighbor : public NeighborObj
     stdplus::PinnedRef<EthernetInterface> parent;
 
     /** @brief Dbus object path */
-    sdbusplus::message::object_path objPath;
+    sdbusplus::object_path objPath;
 
-    Neighbor(sdbusplus::bus_t& bus, sdbusplus::message::object_path objPath,
+    Neighbor(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
              stdplus::PinnedRef<EthernetInterface> parent,
              stdplus::InAnyAddr addr, stdplus::EtherAddr lladdr, State state);
 };

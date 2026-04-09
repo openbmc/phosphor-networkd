@@ -23,7 +23,7 @@ class TestHypSysConfig : public testing::Test
         bus(sdbusplus::bus::new_default()),
         manager(bus, "/xyz/openbmc_test/network/hypervisor"),
         sysConfigObj(bus,
-                     sdbusplus::message::object_path(
+                     sdbusplus::object_path(
                          "/xyz/openbmc_test/network/hypervisor/config"),
                      manager)
     {

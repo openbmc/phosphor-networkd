@@ -226,15 +226,13 @@ void HypNetworkMgr::createIfObjects()
     // create eth0 and eth1 objects
     lg2::info("Creating eth0 and eth1 objects");
     interfaces.emplace(
-        "eth0",
-        std::make_unique<HypEthInterface>(
-            bus, sdbusplus::message::object_path(objectPath.str + "/eth0"),
-            "eth0", *this));
+        "eth0", std::make_unique<HypEthInterface>(
+                    bus, sdbusplus::object_path(objectPath.str + "/eth0"),
+                    "eth0", *this));
     interfaces.emplace(
-        "eth1",
-        std::make_unique<HypEthInterface>(
-            bus, sdbusplus::message::object_path(objectPath.str + "/eth1"),
-            "eth1", *this));
+        "eth1", std::make_unique<HypEthInterface>(
+                    bus, sdbusplus::object_path(objectPath.str + "/eth1"),
+                    "eth1", *this));
 
     // Create ip address objects for each ethernet interface
     interfaces["eth0"]->createIPAddressObjects();
@@ -245,8 +243,7 @@ void HypNetworkMgr::createSysConfObj()
 {
     systemConf.reset(nullptr);
     this->systemConf = std::make_unique<HypSysConfig>(
-        bus, sdbusplus::message::object_path(objectPath.str + "/config"),
-        *this);
+        bus, sdbusplus::object_path(objectPath.str + "/config"), *this);
 }
 
 } // namespace network

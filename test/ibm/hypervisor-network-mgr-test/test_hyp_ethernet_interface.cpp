@@ -31,10 +31,10 @@ class TestHypEthernetInterface : public testing::Test
     static MockHypEthernetInterface makeInterface(
         stdplus::PinnedRef<sdbusplus::bus_t> bus, HypNetworkMgr& manager)
     {
-        return {bus,
-                sdbusplus::message::object_path(
-                    "/xyz/openbmc_test/network/hypervisor/eth0"),
-                "eth0", manager};
+        return {
+            bus,
+            sdbusplus::object_path("/xyz/openbmc_test/network/hypervisor/eth0"),
+            "eth0", manager};
     }
 
     bool isIPObjExist(const std::string& intf, const std::string& ipaddress)

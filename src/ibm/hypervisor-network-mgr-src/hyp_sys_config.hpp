@@ -41,7 +41,7 @@ class HypSysConfig : public Iface
      *  @param[in] parent - Parent object.
      */
     HypSysConfig(stdplus::PinnedRef<sdbusplus::bus_t> bus,
-                 sdbusplus::message::object_path objPath,
+                 sdbusplus::object_path objPath,
                  stdplus::PinnedRef<HypNetworkMgr> parent) :
         Iface(bus, objPath.str.c_str(), Iface::action::defer_emit), bus(bus),
         manager(parent) {};

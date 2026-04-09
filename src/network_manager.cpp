@@ -127,9 +127,7 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
         }
         self.get().reloadPostHooks.clear();
     });
-    std::vector<
-        std::tuple<int32_t, std::string, sdbusplus::message::object_path>>
-        links;
+    std::vector<std::tuple<int32_t, std::string, sdbusplus::object_path>> links;
     try
     {
         auto rsp = bus.get()

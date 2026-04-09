@@ -36,7 +36,7 @@ using HypEthernetIntf =
 
 using HypIP = sdbusplus::xyz::openbmc_project::Network::server::IP;
 
-using ObjectPath = sdbusplus::message::object_path;
+using ObjectPath = sdbusplus::object_path;
 
 using ipAddrMapType = stdplus::string_umap<std::unique_ptr<HypIPAddress>>;
 
@@ -62,8 +62,7 @@ class HypEthInterface : public CreateIface
      *  @param[in] parent - parent object.
      */
     HypEthInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
-                    sdbusplus::message::object_path path,
-                    std::string_view intfName,
+                    sdbusplus::object_path path, std::string_view intfName,
                     stdplus::PinnedRef<HypNetworkMgr> parent) :
         CreateIface(bus, path.str.c_str(), CreateIface::action::defer_emit),
         bus(bus), objectPath(std::move(path)), manager(parent)
@@ -143,7 +142,7 @@ class HypEthInterface : public CreateIface
     stdplus::PinnedRef<sdbusplus::bus_t> bus;
 
     /** @brief object path */
-    sdbusplus::message::object_path objectPath;
+    sdbusplus::object_path objectPath;
 
     /** @brief Parent of this object */
     stdplus::PinnedRef<HypNetworkMgr> manager;

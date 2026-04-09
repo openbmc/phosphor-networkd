@@ -69,9 +69,9 @@ class IPAddress : public IPIfaces
     stdplus::PinnedRef<EthernetInterface> parent;
 
     /** @brief Dbus object path */
-    sdbusplus::message::object_path objPath;
+    sdbusplus::object_path objPath;
 
-    IPAddress(sdbusplus::bus_t& bus, sdbusplus::message::object_path objPath,
+    IPAddress(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
               stdplus::PinnedRef<EthernetInterface> parent,
               stdplus::SubnetAny addr, IP::AddressOrigin origin);
 };

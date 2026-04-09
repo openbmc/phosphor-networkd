@@ -62,10 +62,9 @@ class StaticGateway : public StaticGatewayObj
     stdplus::PinnedRef<EthernetInterface> parent;
 
     /** @brief Dbus object path */
-    sdbusplus::message::object_path objPath;
+    sdbusplus::object_path objPath;
 
-    StaticGateway(sdbusplus::bus_t& bus,
-                  sdbusplus::message::object_path objPath,
+    StaticGateway(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
                   stdplus::PinnedRef<EthernetInterface> parent,
                   std::string gateway, IP::Protocol protocolType);
 };

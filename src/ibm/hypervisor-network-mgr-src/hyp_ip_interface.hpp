@@ -54,7 +54,7 @@ class HypIPAddress : public HypIPIfaces
      *  @param[in] origin - origin of ipaddress(dhcp/static).
      *  @param[in] intf - interface id (if0/if1).
      */
-    HypIPAddress(sdbusplus::bus_t& bus, sdbusplus::message::object_path objPath,
+    HypIPAddress(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
                  stdplus::PinnedRef<HypEthInterface> parent,
                  stdplus::SubnetAny addr, const std::string& gateway,
                  HypIP::AddressOrigin origin, const std::string& intf);
@@ -83,7 +83,7 @@ class HypIPAddress : public HypIPIfaces
     stdplus::PinnedRef<HypEthInterface> parent;
 
     /** @brief DBus object path. */
-    sdbusplus::message::object_path objectPath;
+    sdbusplus::object_path objectPath;
 };
 
 } // namespace network

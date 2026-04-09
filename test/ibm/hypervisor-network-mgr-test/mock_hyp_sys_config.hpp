@@ -16,7 +16,7 @@ class MockHypSysConfig : public phosphor::network::HypSysConfig
 {
   public:
     MockHypSysConfig(stdplus::PinnedRef<sdbusplus::bus_t> bus,
-                     sdbusplus::message::object_path objPath,
+                     sdbusplus::object_path objPath,
                      stdplus::PinnedRef<HypNetworkMgr> parent) :
         HypSysConfig(bus, objPath, parent)
     {}

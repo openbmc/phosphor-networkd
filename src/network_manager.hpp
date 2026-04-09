@@ -141,7 +141,7 @@ class Manager : public ManagerIface
     void reset() override;
 
     /** @brief Path of Object. */
-    sdbusplus::message::object_path objPath;
+    sdbusplus::object_path objPath;
 
     /** @brief pointer to system conf object. */
     std::unique_ptr<SystemConfiguration> systemConf = nullptr;

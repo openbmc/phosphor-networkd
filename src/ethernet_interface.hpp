@@ -53,7 +53,7 @@ using StaticGatewayIntf =
     sdbusplus::xyz::openbmc_project::Network::server::StaticGateway;
 
 using ServerList = std::vector<std::string>;
-using ObjectPath = sdbusplus::message::object_path;
+using ObjectPath = sdbusplus::object_path;
 
 class Manager;
 

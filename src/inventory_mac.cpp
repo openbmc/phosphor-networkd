@@ -227,7 +227,7 @@ void registerSignals(sdbusplus::bus_t& bus)
                  std::map<DbusInterface, std::variant<PropertyValue>>>
             interfacesProperties;
 
-        sdbusplus::message::object_path objPath;
+        sdbusplus::object_path objPath;
         m.read(objPath, interfacesProperties);
 
         for (const auto& pattern : configJson.items())
@@ -300,7 +300,7 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
                  std::map<DbusInterface, std::variant<PropertyValue>>>
             interfacesProperties;
 
-        sdbusplus::message::object_path objPath;
+        sdbusplus::object_path objPath;
         std::pair<std::string, std::string> ethPair;
         m.read(objPath, interfacesProperties);
 

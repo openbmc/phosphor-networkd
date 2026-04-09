@@ -16,7 +16,7 @@ namespace network
 
 static auto makeObjPath(std::string_view root, const std::string& addr)
 {
-    auto ret = sdbusplus::message::object_path(std::string(root));
+    auto ret = sdbusplus::object_path(std::string(root));
     ret /= addr;
     return ret;
 }
@@ -29,7 +29,7 @@ StaticGateway::StaticGateway(sdbusplus::bus_t& bus, std::string_view objRoot,
 {}
 
 StaticGateway::StaticGateway(sdbusplus::bus_t& bus,
-                             sdbusplus::message::object_path objPath,
+                             sdbusplus::object_path objPath,
                              stdplus::PinnedRef<EthernetInterface> parent,
                              std::string gateway, IP::Protocol protocolType) :
     StaticGatewayObj(bus, objPath.str.c_str(),

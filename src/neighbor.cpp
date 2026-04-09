@@ -16,7 +16,7 @@ namespace network
 
 static auto makeObjPath(std::string_view root, stdplus::InAnyAddr addr)
 {
-    auto ret = sdbusplus::message::object_path(std::string(root));
+    auto ret = sdbusplus::object_path(std::string(root));
     stdplus::ToStrHandle<stdplus::ToStr<stdplus::InAnyAddr>> tsh;
     ret /= tsh(addr);
     return ret;
@@ -29,8 +29,7 @@ Neighbor::Neighbor(sdbusplus::bus_t& bus, std::string_view objRoot,
     Neighbor(bus, makeObjPath(objRoot, addr), parent, addr, lladdr, state)
 {}
 
-Neighbor::Neighbor(sdbusplus::bus_t& bus,
-                   sdbusplus::message::object_path objPath,
+Neighbor::Neighbor(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
                    stdplus::PinnedRef<EthernetInterface> parent,
                    stdplus::InAnyAddr addr, stdplus::EtherAddr lladdr,
                    State state) :

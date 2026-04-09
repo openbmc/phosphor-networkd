@@ -24,7 +24,7 @@ using Reason = xyz::openbmc_project::Common::NotAllowed::REASON;
 
 static auto makeObjPath(std::string_view root, stdplus::SubnetAny addr)
 {
-    auto ret = sdbusplus::message::object_path(std::string(root));
+    auto ret = sdbusplus::object_path(std::string(root));
     stdplus::ToStrHandle<stdplus::ToStr<stdplus::SubnetAny>> tsh;
     ret /= tsh(addr);
     return ret;
@@ -52,8 +52,7 @@ IPAddress::IPAddress(sdbusplus::bus_t& bus, std::string_view objRoot,
     IPAddress(bus, makeObjPath(objRoot, addr), parent, addr, origin)
 {}
 
-IPAddress::IPAddress(sdbusplus::bus_t& bus,
-                     sdbusplus::message::object_path objPath,
+IPAddress::IPAddress(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
                      stdplus::PinnedRef<EthernetInterface> parent,
                      stdplus::SubnetAny addr, AddressOrigin origin) :
     IPIfaces(bus, objPath.str.c_str(), IPIfaces::action::defer_emit),
