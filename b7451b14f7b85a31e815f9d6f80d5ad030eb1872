@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ca29ae1_c34b40de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-04-09T05:36:02Z",
+      "side": 1,
+      "message": "Addressed comments.",
+      "revId": "b7451b14f7b85a31e815f9d6f80d5ad030eb1872",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f441eed0_7773b4be",
@@ -18,6 +35,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a0190ea_7afc7ee9",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-04-09T05:36:02Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "f441eed0_7773b4be",
+      "revId": "b7451b14f7b85a31e815f9d6f80d5ad030eb1872",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "237da487_9e254c69",
@@ -31,6 +66,24 @@
       "writtenOn": "2026-04-02T02:32:10Z",
       "side": 1,
       "message": "have you verified this patch with dhcp v4/v6 setup as well?",
+      "revId": "b7451b14f7b85a31e815f9d6f80d5ad030eb1872",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "389e560d_92fe9162",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-04-09T05:36:02Z",
+      "side": 1,
+      "message": "Yes, Verified this patch with dhcp v4/v6 setup as well",
+      "parentUuid": "237da487_9e254c69",
       "revId": "b7451b14f7b85a31e815f9d6f80d5ad030eb1872",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
