@@ -10,13 +10,23 @@ default_busname = 'xyz.openbmc_project.Network'
 
 conf_data = configuration_data()
 conf_data.set_quoted('DEFAULT_BUSNAME', default_busname)
-conf_data.set(
+conf_data.set10(
     'LINK_LOCAL_AUTOCONFIGURATION',
     get_option('default-link-local-autoconf'),
 )
-conf_data.set('ENABLE_IPV6_ACCEPT_RA', get_option('default-ipv6-accept-ra'))
-conf_data.set('SYNC_MAC_FROM_INVENTORY', get_option('sync-mac'))
-conf_data.set('PERSIST_MAC', get_option('persist-mac'))
+conf_data.set10('ENABLE_IPV6_ACCEPT_RA', get_option('default-ipv6-accept-ra'))
+if get_option('default-link-local-autoconf')
+    conf_data.set('LINK_LOCAL_AUTOCONFIGURATION_STR', 'yes')
+else
+    conf_data.set('LINK_LOCAL_AUTOCONFIGURATION_STR', 'no')
+endif
+if get_option('default-ipv6-accept-ra')
+    conf_data.set('ENABLE_IPV6_ACCEPT_RA_STR', 'yes')
+else
+    conf_data.set('ENABLE_IPV6_ACCEPT_RA_STR', 'no')
+endif
+conf_data.set10('SYNC_MAC_FROM_INVENTORY', get_option('sync-mac'))
+conf_data.set10('PERSIST_MAC', get_option('persist-mac'))
 conf_data.set10('FORCE_SYNC_MAC_FROM_INVENTORY', get_option('force-sync-mac'))
 
 sdbusplus_dep = dependency('sdbusplus')
