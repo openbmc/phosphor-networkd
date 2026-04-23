@@ -11,6 +11,8 @@
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
 
+#include <iostream>
+#include <iomanip>
 #include <string>
 #include <vector>
 
@@ -27,38 +29,40 @@ static void printInfo(phosphor::network::ncsi::InterfaceInfo& info)
 
     for (PackageInfo& pkg : info.packages)
     {
-        lg2::debug("Package id : {ID}", "ID", pkg.id);
+        std::cout << "Package id : " << pkg.id << std::endl;
         if (pkg.forced)
         {
-            lg2::debug("  package is forced");
+            std::cout << "  package is forced" << std::endl;
         }
         for (ChannelInfo& chan : pkg.channels)
         {
-            lg2::debug("    Channel id : {ID}", "ID", chan.id);
+            std::cout << "    Channel id : " << chan.id << std::endl;
             if (chan.forced)
             {
-                lg2::debug("    channel is forced");
+                std::cout << "    channel is forced" << std::endl;
             }
             if (chan.active)
             {
-                lg2::debug("    channel is active");
+                std::cout << "    channel is active" << std::endl;
             }
 
-            lg2::debug("      version {MAJOR}.{MINOR} ({STR})", "MAJOR",
-                       chan.version_major, "MINOR", chan.version_minor, "STR",
-                       chan.version);
+            std::cout << "      version "
+                      << chan.version_major << "."
+                      << chan.version_minor << " ("
+                      << chan.version << ")" << std::endl;
 
-            lg2::debug("      link state {LINK}", "LINK", lg2::hex,
-                       chan.link_state);
+            std::cout << "      link state 0x"
+                      << std::hex << chan.link_state
+                      << std::dec << std::endl;
 
             auto& vlans = chan.vlan_ids;
 
             if (!vlans.empty())
             {
-                lg2::debug("      Active VLAN IDs:");
+                std::cout << "      Active VLAN IDs:" << std::endl;
                 for (uint16_t vlan : vlans)
                 {
-                    lg2::debug("        VID: {VLAN_ID}", "VLAN_ID", vlan);
+                    std::cout << "        VID: " << vlan << std::endl;
                 }
             }
         }
