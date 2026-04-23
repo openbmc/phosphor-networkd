@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9509ad5_8141b6db",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-04-23T18:16:32Z",
+      "side": 1,
+      "message": "lg2 already goes to the stderr if there is a terminal or someone has explicitly set LG2_FORCE_STDERR.  I\u0027m not sure why you are not seeing that, but I don\u0027t think this change is necessary and it\u0027s not clear why you believe it is more helpful than what is already done.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 13
+      },
+      "revId": "e5fe0840c7e0396e46046acc6bed9e0c7dd0973e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
