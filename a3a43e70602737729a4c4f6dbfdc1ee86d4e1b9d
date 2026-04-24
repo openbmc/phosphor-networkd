@@ -33,6 +33,29 @@
       "message": "Should probably add the below to resolve CI\n```\nauto ethInfo0 \u003d getEthInfo(\"eth0\");\nauto ethInfo1 \u003d getEthInfo(\"eth1\");\n```",
       "revId": "a3a43e70602737729a4c4f6dbfdc1ee86d4e1b9d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cdccc0b0_2692d082",
+        "filename": "test/test_system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-04-24T10:06:03Z",
+      "side": 1,
+      "message": "Trying to set speed value on .ethInfo  but the \"InterfaceInfo\" structure doesn\u0027t have an ethInfo field.",
+      "range": {
+        "startLine": 66,
+        "startChar": 48,
+        "endLine": 66,
+        "endChar": 50
+      },
+      "revId": "a3a43e70602737729a4c4f6dbfdc1ee86d4e1b9d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
