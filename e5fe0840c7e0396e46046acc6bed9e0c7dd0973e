@@ -46,6 +46,47 @@
       },
       "revId": "e5fe0840c7e0396e46046acc6bed9e0c7dd0973e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b53b0579_6a09ab04",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-04-24T11:09:35Z",
+      "side": 1,
+      "message": "I don\u0027t know why ncsi_util.cpp never got converted to lg2.  We should probably make that consistent.\n\n\u003e Need LG2_FORCE_STDERR\u003d1 and 2\u003e\u00261 , and then I can grep version.\n\nI get how awkward that is and as written it is currently expected.\n\nMaybe we should add a method into phosphor-logging where an application can explicitly force stdout?  For a utility like ncsi-netlink, when we call with `--info` we can make that settings change.\n\nGenerally we want most of the code to be using lg2.  It does seem like `printInfo` is explicitly intended to be consumed by humans or scripts (and not a debug routine that is used by long running daemons) so maybe there isn\u0027t much harm in it always going to cout, other than the inconsistency.",
+      "parentUuid": "fc989fd4_0296120c",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 13
+      },
+      "revId": "e5fe0840c7e0396e46046acc6bed9e0c7dd0973e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51f87c8f_7846aecb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000000
+      },
+      "writtenOn": "2026-04-24T11:09:35Z",
+      "side": 1,
+      "message": "Please decide if you want to enhance phosphor-logging or want to go forward with this change.  If you want to go forward with this change I\u0027d like more clarity in the commit message.  We should probably leave comments in the printInfo function as well as to the rationale.  \n\nI don\u0027t want to see us just go back and forth changing this daemon as someone tries to make everything consistently use lg2.  If there are explicit reasons for some code to use std::cout, we need to make that clear in the commit message and the code.",
+      "revId": "e5fe0840c7e0396e46046acc6bed9e0c7dd0973e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
