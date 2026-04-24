@@ -22,6 +22,30 @@
       },
       "revId": "e5fe0840c7e0396e46046acc6bed9e0c7dd0973e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc989fd4_0296120c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1002711
+      },
+      "writtenOn": "2026-04-24T10:09:35Z",
+      "side": 1,
+      "message": "Hi Patrick,\n Thanks for share LG2_FORCE_STDERR information. It\u0027s helpful to me.\n\n My viewpoint: there are two method to output message when execute\n ncsi-netlink --info command. Using the same method maybe better. \n\n```\n    else if ((options)[\"info\"] \u003d\u003d \"true\")\n    {\n        auto info \u003d interface.getInfo(packageInt);\n        if (!info)\n        {\n            return EXIT_FAILURE;\n        }\n        printInfo(*info);\n    }\n\nroot@bmc:~# ncsi-netlink -x3 -p0 --info                                                                                                                                                                     \nGet Info , PACKAGE : 0 , INTERFACE: 0xaedf6a68\n\u003c7\u003e Package id : 0\n\u003c7\u003e     Channel id : 0\n\u003c7\u003e     channel is active\n\u003c7\u003e       version 1.2 (140.0.0.503)\n\u003c7\u003e       link state 0x930000\n\n```\n\n1. interface.getInfo:  use std:cout \n2. printInfo: use lg2::debug\n\nFrom tool using (script), it\u0027s strange.\nI can\u0027t get version info like following\n\n`ncsi-netlink -x3 -p0 --info | grep version`\n\nNeed `LG2_FORCE_STDERR\u003d1` and `2\u003e\u00261` , and then I can grep version.\n\n`LG2_FORCE_STDERR\u003d1 ncsi-netlink -x3 -p0 --info 2\u003e\u00261 | grep version`",
+      "parentUuid": "f9509ad5_8141b6db",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 13
+      },
+      "revId": "e5fe0840c7e0396e46046acc6bed9e0c7dd0973e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
