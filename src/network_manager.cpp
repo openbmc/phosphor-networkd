@@ -138,7 +138,7 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                        .call();
         rsp.read(links);
     }
-    catch (const sdbusplus::exception::SdBusError& e)
+    catch (const sdbusplus::exception::internal_exception& e)
     {
         // Any failures are systemd-network not being ready
     }

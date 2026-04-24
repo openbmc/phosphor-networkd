@@ -83,7 +83,7 @@ std::string SystemConfiguration::hostName(std::string name)
         method.call();
         return SystemConfigIntf::hostName(std::move(name));
     }
-    catch (const sdbusplus::exception::SdBusError& e)
+    catch (const sdbusplus::exception::internal_exception& e)
     {
         lg2::error("Failed to set hostname {HOSTNAME}: {ERROR} ", "HOSTNAME",
                    name, "ERROR", e);

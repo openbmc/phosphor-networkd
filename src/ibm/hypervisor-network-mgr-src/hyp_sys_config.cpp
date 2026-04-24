@@ -58,7 +58,7 @@ std::string HypSysConfig::getHostNameFromBios() const
         reply.read(type, currValue, defValue);
         return std::get<std::string>(currValue);
     }
-    catch (const sdbusplus::exception::SdBusError& ex)
+    catch (const sdbusplus::exception::internal_exception& ex)
     {
         lg2::error("Failed to get the hostname from bios table: {ERROR}",
                    "ERROR", ex);
