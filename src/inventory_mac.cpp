@@ -96,7 +96,7 @@ auto getFromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
         {
             return bus.call(mapperCall);
         }
-        catch (const sdbusplus::exception::SdBusError& e)
+        catch (const sdbusplus::exception::internal_exception& e)
         {
             // Mapper may give an exception when there are no results.  Turn
             // it into an empty message.
@@ -161,7 +161,7 @@ auto getFromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
         {
             return bus.call(method);
         }
-        catch (const sdbusplus::exception::SdBusError& e)
+        catch (const sdbusplus::exception::internal_exception& e)
         {
             lg2::error(
                 "Failed to get MACAddress for path {DBUS_PATH} interface {DBUS_INTF}",
