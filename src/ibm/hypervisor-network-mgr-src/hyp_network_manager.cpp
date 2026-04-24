@@ -9,8 +9,6 @@
 #include <sdbusplus/server/object.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
-using sdbusplus::exception::SdBusError;
-
 namespace phosphor
 {
 namespace network
@@ -203,7 +201,7 @@ void HypNetworkMgr::setBIOSTableAttrs()
             }
         }
     }
-    catch (const SdBusError& e)
+    catch (const sdbusplus::exception::internal_exception& e)
     {
         lg2::error("Error in making dbus call");
         throw std::runtime_error("DBus call failed");

@@ -83,14 +83,11 @@ std::string SystemConfiguration::hostName(std::string name)
         method.call();
         return SystemConfigIntf::hostName(std::move(name));
     }
-    catch (const sdbusplus::exception::SdBusError& e)
+    catch (const sdbusplus::exception::internal_exception& e)
     {
         lg2::error("Failed to set hostname {HOSTNAME}: {ERROR} ", "HOSTNAME",
                    name, "ERROR", e);
-        auto dbusError = e.get_error();
-        if ((dbusError != nullptr) &&
-            (strcmp(dbusError->name,
-                    "org.freedesktop.DBus.Error.InvalidArgs") == 0))
+        if (strcmp(e.name(), "org.freedesktop.DBus.Error.InvalidArgs") == 0)
         {
             elog<InvalidArgument>(Argument::ARGUMENT_NAME("Hostname"),
                                   Argument::ARGUMENT_VALUE(name.c_str()));
