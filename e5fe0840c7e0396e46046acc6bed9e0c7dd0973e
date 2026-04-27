@@ -87,6 +87,24 @@
       "message": "Please decide if you want to enhance phosphor-logging or want to go forward with this change.  If you want to go forward with this change I\u0027d like more clarity in the commit message.  We should probably leave comments in the printInfo function as well as to the rationale.  \n\nI don\u0027t want to see us just go back and forth changing this daemon as someone tries to make everything consistently use lg2.  If there are explicit reasons for some code to use std::cout, we need to make that clear in the commit message and the code.",
       "revId": "e5fe0840c7e0396e46046acc6bed9e0c7dd0973e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55674321_9ed6463d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002711
+      },
+      "writtenOn": "2026-04-27T05:29:03Z",
+      "side": 1,
+      "message": "Hi @patrick@stwcx.xyz,\n I would like to move forward with this change. I will add more information in patch.\n Currently, I can\u0027t push the code because gerrit ssh interface not working.\n I will update it when gerrit is working.",
+      "parentUuid": "51f87c8f_7846aecb",
+      "revId": "e5fe0840c7e0396e46046acc6bed9e0c7dd0973e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
