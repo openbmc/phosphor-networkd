@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d6504a3c_2ebdc20d",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-04-27T13:09:04Z",
+      "side": 1,
+      "message": "Setting a link-local gateway will succeed in D-Bus but is dropped when \nwriting to systemd-networkd config, right?\n\nCan we validate the gateway before setting the D-Bus value in defaultGateway6()?",
+      "range": {
+        "startLine": 914,
+        "startChar": 29,
+        "endLine": 914,
+        "endChar": 44
+      },
+      "revId": "3f56bbe312dccd16ab24a0364c510a2552e5efb3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c3ad436d_3356e27b",
         "filename": "src/ethernet_interface.cpp",
         "patchSetId": 2
