@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7921955_b85482b6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000022
+      },
+      "writtenOn": "2026-04-28T13:57:56Z",
+      "side": 1,
+      "message": "Going forward - don\u0027t use the SDBusError at all?",
+      "revId": "bc5f8ad57fc5bd0ee007a5fe6766fe1eedb55c9b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
