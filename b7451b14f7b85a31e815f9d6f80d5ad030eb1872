@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "756d2f48_d1c7f669",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-05-05T03:00:07Z",
+      "side": 1,
+      "message": "may need to do more network IP configuration testing\nhave you verified in DHCP setup?  DHCP IP address will be dropped after lease time",
+      "revId": "b7451b14f7b85a31e815f9d6f80d5ad030eb1872",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "8ca29ae1_c34b40de",
