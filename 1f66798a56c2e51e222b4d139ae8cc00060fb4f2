@@ -36,6 +36,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d44233d_35492bff",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-05-05T03:05:48Z",
+      "side": 1,
+      "message": "but dhcp ip address wont be dropped until lease time expires\nit should not enter into case where same IP configured as static/DHCP origin\nplease verify with dhcp setup where dhcp address is actually assigned to BMC",
+      "parentUuid": "ecd46999_00fe8767",
+      "revId": "1f66798a56c2e51e222b4d139ae8cc00060fb4f2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "12a7fde7_82227661",
