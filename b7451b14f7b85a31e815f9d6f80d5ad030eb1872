@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "153bf203_83c1f3af",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-05-08T05:39:17Z",
+      "side": 1,
+      "message": "Yes, I verified in DHCP setup. When a static IP is configured, the DHCP lease is immediately dropped, the DHCP-assigned IP is removed immediately from the interface.",
+      "parentUuid": "756d2f48_d1c7f669",
+      "revId": "b7451b14f7b85a31e815f9d6f80d5ad030eb1872",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "8ca29ae1_c34b40de",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
