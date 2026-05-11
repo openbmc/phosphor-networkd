@@ -198,7 +198,7 @@ inline auto systemdParseLast(const config::Parser& config,
 
 bool getIPv6AcceptRA(const config::Parser& config)
 {
-#ifdef ENABLE_IPV6_ACCEPT_RA
+#if ENABLE_IPV6_ACCEPT_RA
     constexpr bool def = true;
 #else
     constexpr bool def = false;

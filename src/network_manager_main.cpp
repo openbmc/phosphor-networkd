@@ -1,6 +1,6 @@
 #include "config.h"
 
-#ifdef SYNC_MAC_FROM_INVENTORY
+#if SYNC_MAC_FROM_INVENTORY
 #include "inventory_mac.hpp"
 #endif
 #include "network_manager.hpp"
@@ -71,7 +71,7 @@ int main()
                                      "/etc/systemd/network");
     netlink::Server svr(event, manager);
 
-#ifdef SYNC_MAC_FROM_INVENTORY
+#if SYNC_MAC_FROM_INVENTORY
     auto runtime = inventory::watch(bus, manager);
 #endif
 

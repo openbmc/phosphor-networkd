@@ -185,7 +185,7 @@ void EthernetInterface::addAddr(const AddressInfo& info)
         origin = IP::AddressOrigin::DHCP;
     }
 
-#ifdef LINK_LOCAL_AUTOCONFIGURATION
+#if LINK_LOCAL_AUTOCONFIGURATION
     if (info.scope == RT_SCOPE_LINK &&
         std::holds_alternative<stdplus::In6Addr>(info.ifaddr.getAddr()))
     {
@@ -867,7 +867,7 @@ void EthernetInterface::writeConfigurationFile()
     config.map["Match"].emplace_back()["Name"].emplace_back(interfaceName());
     {
         auto& link = config.map["Link"].emplace_back();
-#ifdef PERSIST_MAC
+#if PERSIST_MAC
         auto mac = MacAddressIntf::macAddress();
         if (!mac.empty())
         {
@@ -882,7 +882,7 @@ void EthernetInterface::writeConfigurationFile()
     {
         auto& network = config.map["Network"].emplace_back();
         auto& lla = network["LinkLocalAddressing"];
-#ifdef LINK_LOCAL_AUTOCONFIGURATION
+#if LINK_LOCAL_AUTOCONFIGURATION
         lla.emplace_back("yes");
 #else
         lla.emplace_back("no");
@@ -1003,7 +1003,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         lg2::error("Tried to set MAC address on VLAN");
         elog<InternalFailure>();
     }
-#ifdef PERSIST_MAC
+#if PERSIST_MAC
     stdplus::EtherAddr newMAC;
     try
     {
