@@ -37,16 +37,12 @@ owners:
 - raviteja28031990@gmail.com
 
 reviewers:
-- anoo@us.ibm.com
 - asmitk01@in.ibm.com
 - johnathanx.mantey@intel.com
 
 matchers:
 
 openbmc:
-- name: Adriana Kobylak
-  email: anoo@us.ibm.com
-  discord: anoo
 - name: Asmitha Karunanithi
   email: asmitk01@in.ibm.com
   discord: asmitha
