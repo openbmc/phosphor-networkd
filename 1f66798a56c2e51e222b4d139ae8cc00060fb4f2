@@ -87,6 +87,23 @@
       "message": "Addressed Comments.",
       "revId": "1f66798a56c2e51e222b4d139ae8cc00060fb4f2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da7fc1f7_2e4b68d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001886
+      },
+      "writtenOn": "2026-05-12T09:23:32Z",
+      "side": 1,
+      "message": "@rashidmp@ami.com there is merge conflict in this PR. Can you fix it?",
+      "revId": "1f66798a56c2e51e222b4d139ae8cc00060fb4f2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
