@@ -52,6 +52,24 @@
       "parentUuid": "f91a6331_cd9ac873",
       "revId": "3932b6317e4180da1b8aeaa24fed55bd2641d578",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50f7e166_ae648478",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 832,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-05-13T11:39:58Z",
+      "side": 1,
+      "message": "ok, for code simplicity and negligible memory overhead used vector/find \n\nupdated the patch!",
+      "parentUuid": "fb4d1cc9_add21bc6",
+      "revId": "3932b6317e4180da1b8aeaa24fed55bd2641d578",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
