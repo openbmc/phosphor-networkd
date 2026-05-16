@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc83e439_468907e4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-05-16T16:37:24Z",
+      "side": 1,
+      "message": "i would suggest to continue use lg2, see if lg2::info useful for your use-case",
+      "revId": "40df62ebf5aa7af3a2de767fa789ada75cbc1c98",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
