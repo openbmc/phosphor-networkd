@@ -72,6 +72,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "6fad1536_829b3777",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-05-16T16:32:57Z",
+      "side": 1,
+      "message": "it depends on dhcp server lease time configuration.\n@asmitk01@in.ibm.com do you want to verify this patch in your dhcp setup\nlets confirm if this behavior working as per RFCs",
+      "parentUuid": "bd008492_bc717c98",
+      "revId": "1f66798a56c2e51e222b4d139ae8cc00060fb4f2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "12a7fde7_82227661",
