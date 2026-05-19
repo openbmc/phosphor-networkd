@@ -170,6 +170,9 @@ class EthernetInterface : public Ifaces
     /** Set value of NICEnabled */
     bool nicEnabled(bool value) override;
 
+    /** Set value of NumofDestination */
+    uint8_t numofDestination(uint8_t value) override;
+
     /** @brief sets the MAC address.
      *  @param[in] value - MAC address which needs to be set on the system.
      *  @returns macAddress of the interface or throws an error.

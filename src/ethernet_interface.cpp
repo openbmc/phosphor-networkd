@@ -617,6 +617,17 @@ bool EthernetInterface::nicEnabled(bool value)
     return value;
 }
 
+uint8_t EthernetInterface::numofDestination(uint8_t value)
+{
+    if (value == EthernetInterfaceIntf::numofDestination())
+    {
+        return value;
+    }
+
+    EthernetInterfaceIntf::numofDestination(value);
+    return value;
+}
+
 ServerList EthernetInterface::staticNameServers(ServerList value)
 {
     std::vector<std::string> dnsUniqueValues;
