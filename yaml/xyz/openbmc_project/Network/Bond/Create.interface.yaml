@@ -1,0 +1,22 @@
+description: >
+methods:
+    - name: Bond
+      description: >
+          Create BondInterface Object.
+      parameters:
+          - name: ActiveSlave
+            type: string
+            description: >
+                Name of Active Slave Interface.
+          - name: MIIMonitor
+            type: byte
+            description: >
+                Specifies the frequency that Media Independent Interface link monitoring will occur.
+      returns:
+          - name: Path
+            type: object_path
+            description: >
+                The path for the created Bond object.
+      errors:
+          - xyz.openbmc_project.Common.Error.InvalidArgument
+          - xyz.openbmc_project.Common.Error.NotAllowed
