@@ -52,6 +52,11 @@ networkd_deps = [
 
 conf_header = configure_file(output: 'config.h', configuration: conf_data)
 
+bond_sources = []
+if get_option('enable-bond')
+    bond_sources += ['bond.cpp']
+endif
+
 networkd_lib = static_library(
     'networkd',
     conf_header,
@@ -70,6 +75,7 @@ networkd_lib = static_library(
     'dhcp_configuration.cpp',
     'dns_updater.cpp',
     'hostname_manager.cpp',
+    bond_sources,
     implicit_include_directories: false,
     include_directories: src_includes,
     dependencies: networkd_deps,

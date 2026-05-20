@@ -25,6 +25,11 @@
 #include <format>
 #include <fstream>
 
+if ENABLE_BOND_SUPPORT
+    constexpr char BONDING_CONF_BAK_DIR[] = "/etc/interface/bonding";
+#endif
+const std::string bondIfcName = "bond0";
+
 namespace phosphor
 {
 namespace network
@@ -165,6 +170,10 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
     // Initialize hostname manager to set unique hostname on first boot
     hostnameManager = std::make_unique<HostnameManager>(bus, *this);
     hostnameManager->initialize();
+
+#if ENABLE_BOND_SUPPORT
+    setBondConfDir();
+#endif
 }
 
 void Manager::createInterface(const AllIntfInfo& info, bool enabled)
@@ -197,6 +206,13 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
                 interfacesByIdx.insert_or_assign(info.intf.idx,
                                                  it->second.get());
             }
+#if ENABLE_BOND_SUPPORT
+            if (info.intf.bondInfo)
+            {
+                interfacesByIdx.insert_or_assign(info.intf.idx,
+                                                 it->second.get());
+            }
+#endif
             it->second->updateInfo(info.intf);
             return;
         }
@@ -208,6 +224,13 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
         return;
     }
     config::Parser config(config::pathForIntfConf(confDir, *info.intf.name));
+#if ENABLE_BOND_SUPPORT
+    if (std::filesystem::exists("/sys/class/net/bond0/bonding/active_slave") &&
+        info.intf.name.value() != "bond0")
+    {
+        config = config::pathForIntfConf(bondingConfBakDir, *info.intf.name);
+    }
+#endif
     auto intf = std::make_unique<EthernetInterface>(
         bus, *this, info, objPath.str, config, enabled);
     intf->loadNameServers(config);
@@ -569,6 +592,49 @@ void Manager::reloadLLDPService()
                    lldpService, "ERR", ex);
     }
 }
+
+#if ENABLE_BOND_SUPPORT
+ObjectPath Manager::bond(std::string activeSlave, uint8_t miiMonitor)
+{
+    if (miiMonitor == 0 || miiMonitor > 100)
+    {
+        elog<InvalidArgument>(
+            Argument::ARGUMENT_NAME("MIIMonitor"),
+            Argument::ARGUMENT_VALUE(stdplus::toStr(miiMonitor).c_str()));
+    }
+
+    auto it = interfaces.find(activeSlave);
+    if (it == interfaces.end())
+    {
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("ActiveSlave"),
+                              Argument::ARGUMENT_VALUE(activeSlave.c_str()));
+    }
+    else if ((activeSlave.compare("bond0") == 0) ||
+             (activeSlave.compare("hostusb0") == 0))
+    {
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("ActiveSlave"),
+                              Argument::ARGUMENT_VALUE(activeSlave.c_str()));
+    }
+    return it->second->createBond(activeSlave, miiMonitor);
+}
+#endif
+
+#if ENABLE_BOND_SUPPORT
+void Manager::setBondConfDir()
+{
+    std::filesystem::path bondingDir(BONDING_CONF_BAK_DIR);
+    bondingConfBakDir = bondingDir;
+    if (!std::filesystem::exists(bondingConfBakDir))
+    {
+        if (!std::filesystem::create_directories(bondingConfBakDir))
+        {
+            lg2::error("Unable to create the bonding conf bak dir: {DIR}",
+                       "DIR", bondingConfBakDir.c_str());
+            elog<InternalFailure>();
+        }
+    }
+}
+#endif
 
 } // namespace network
 } // namespace phosphor

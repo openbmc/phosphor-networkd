@@ -28,6 +28,7 @@ endif
 conf_data.set10('SYNC_MAC_FROM_INVENTORY', get_option('sync-mac'))
 conf_data.set10('PERSIST_MAC', get_option('persist-mac'))
 conf_data.set10('FORCE_SYNC_MAC_FROM_INVENTORY', get_option('force-sync-mac'))
+conf_data.set10('ENABLE_BOND_SUPPORT', get_option('enable-bond'))
 
 sdbusplus_dep = dependency('sdbusplus')
 sdbusplusplus_prog = find_program('sdbus++', native: true)
