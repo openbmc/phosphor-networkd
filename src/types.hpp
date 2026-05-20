@@ -1,4 +1,6 @@
 #pragma once
+#include "config.h"
+
 #include <function2/function2.hpp>
 #include <stdplus/net/addr/ether.hpp>
 #include <stdplus/net/addr/ip.hpp>
@@ -21,6 +23,24 @@ class DelayedExecutor
     virtual void setCallback(fu2::unique_function<void()>&& cb) = 0;
 };
 
+#if ENABLE_BOND_SUPPORT
+/** @struct BondInfo
+ *  @brief Information about bond interface
+ */
+struct BondInfo
+{
+    std::string activeSlave{};
+    uint8_t mode;
+    uint8_t miiMonitor;
+
+    constexpr bool operator==(const BondInfo& rhs) const noexcept
+    {
+        return activeSlave == rhs.activeSlave && mode == rhs.mode &&
+               miiMonitor == rhs.miiMonitor;
+    }
+};
+#endif
+
 /** @class InterfaceInfo
  *  @brief Information about interfaces from the kernel
  */
@@ -35,13 +55,23 @@ struct InterfaceInfo
     std::optional<unsigned> parent_idx = std::nullopt;
     std::optional<std::string> kind = std::nullopt;
     std::optional<uint16_t> vlan_id = std::nullopt;
+#if ENABLE_BOND_SUPPORT
+    std::optional<BondInfo> bondInfo = std::nullopt;
+#endif
 
     constexpr bool operator==(const InterfaceInfo& rhs) const noexcept
     {
+#if ENABLE_BOND_SUPPORT
+        return idx == rhs.idx && flags == rhs.flags && name == rhs.name &&
+               mac == rhs.mac && mtu == rhs.mtu &&
+               parent_idx == rhs.parent_idx && kind == rhs.kind &&
+               vlan_id == rhs.vlan_id && bondInfo == rhs.bondInfo;
+#else
         return idx == rhs.idx && flags == rhs.flags && name == rhs.name &&
                mac == rhs.mac && mtu == rhs.mtu &&
                parent_idx == rhs.parent_idx && kind == rhs.kind &&
                vlan_id == rhs.vlan_id;
+#endif
     }
 };
 
