@@ -4,6 +4,9 @@
 #include "hostname_manager.hpp"
 #include "system_configuration.hpp"
 #include "types.hpp"
+#if ENABLE_BOND_SUPPORT
+#include "xyz/openbmc_project/Network/Bond/Create/server.hpp"
+#endif
 #include "xyz/openbmc_project/Network/VLAN/Create/server.hpp"
 
 #include <function2/function2.hpp>
@@ -26,9 +29,16 @@ namespace phosphor
 namespace network
 {
 
+#if ENABLE_BOND_SUPPORT
+using ManagerIface = sdbusplus::server::object_t<
+    sdbusplus::xyz::openbmc_project::Network::VLAN::server::Create,
+    sdbusplus::xyz::openbmc_project::Common::server::FactoryReset,
+    sdbusplus::xyz::openbmc_project::Network::Bond::server::Create>;
+#else
 using ManagerIface = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::VLAN::server::Create,
     sdbusplus::xyz::openbmc_project::Common::server::FactoryReset>;
+#endif
 
 /** @class Manager
  *  @brief OpenBMC network manager implementation.
@@ -51,6 +61,10 @@ class Manager : public ManagerIface
             const std::filesystem::path& confDir);
 
     ObjectPath vlan(std::string interfaceName, uint32_t id) override;
+
+#if ENABLE_BOND_SUPPORT
+    ObjectPath bond(std::string activeSlave, uint8_t miiMonitor) override;
+#endif
 
     /** @brief write the network conf file with the in-memory objects.
      */
@@ -82,6 +96,15 @@ class Manager : public ManagerIface
     {
         return confDir;
     }
+
+#if ENABLE_BOND_SUPPORT
+    /** @brief gets the Bonding interface conf backup directory.
+     */
+    inline std::filesystem::path getBondingConfBakDir()
+    {
+        return bondingConfBakDir;
+    }
+#endif
 
     /** @brief gets the system conf object.
      *
@@ -130,6 +153,12 @@ class Manager : public ManagerIface
         reloadPostHooks.push_back(std::move(hook));
     }
 
+#if ENABLE_BOND_SUPPORT
+    /** @brief sets the bond conf directory.
+     */
+    void setBondConfDir();
+#endif
+
   protected:
     /** @brief Handle to the object used to trigger reloads of networkd. */
     stdplus::PinnedRef<DelayedExecutor> reload;
@@ -165,6 +194,11 @@ class Manager : public ManagerIface
     /** @brief List of hooks to execute during the next reload */
     std::vector<fu2::unique_function<void()>> reloadPreHooks;
     std::vector<fu2::unique_function<void()>> reloadPostHooks;
+
+#if ENABLE_BOND_SUPPORT
+    /** @brief Bonding Configuration backup directory. */
+    std::filesystem::path bondingConfBakDir;
+#endif
 
     /** @brief Handles the receipt of an administrative state string */
     void handleAdminState(std::string_view state, unsigned ifidx);

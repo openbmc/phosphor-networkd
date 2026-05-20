@@ -30,4 +30,9 @@ option(
     type: 'boolean',
     description: 'Force sync mac address no matter is first boot or not',
 )
+option(
+    'enable-bond',
+    type: 'boolean',
+    description: 'Enable Bond support or not',
+)
 
