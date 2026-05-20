@@ -3,7 +3,11 @@
 #include "netlink.hpp"
 #include "util.hpp"
 
+#include <fcntl.h>
 #include <linux/rtnetlink.h>
+#include <unistd.h>
+
+#include <cstring>
 
 namespace phosphor::network::netlink
 {
@@ -28,6 +32,74 @@ static void parseVlanInfo(InterfaceInfo& info, std::string_view msg)
     }
 }
 
+#if ENABLE_BOND_SUPPORT
+static void parseBondInfo(InterfaceInfo& info, std::string_view msg)
+{
+    bool activeSlaveFlag = true;
+
+    if (msg.data() == nullptr)
+    {
+        throw std::runtime_error("Missing Bond data");
+    }
+    while (!msg.empty())
+    {
+        auto [hdr, data] = netlink::extractRtAttr(msg);
+        switch (hdr.rta_type)
+        {
+            case IFLA_BOND_MIIMON:
+                if (!info.bondInfo)
+                {
+                    info.bondInfo.emplace();
+                }
+                info.bondInfo->miiMonitor = static_cast<uint8_t>(
+                    stdplus::raw::copyFrom<uint32_t>(data));
+                activeSlaveFlag = false;
+                break;
+        }
+    }
+
+    // Read active slave from sysfs
+    if (activeSlaveFlag)
+    {
+        char buf[16] = {0};
+        int fd = open("/sys/class/net/bond0/bonding/active_slave", O_RDONLY);
+        if (fd < 0)
+        {
+            throw std::runtime_error("Failed to open active_slave file");
+        }
+
+        ssize_t ret = read(fd, (char*)&buf, sizeof(buf));
+        close(fd);
+
+        if (ret <= 0)
+        {
+            if (!info.bondInfo)
+            {
+                info.bondInfo.emplace();
+            }
+            info.bondInfo->activeSlave = "";
+        }
+        else
+        {
+            if (buf[std::strlen(buf) - 1] == '\n')
+                buf[std::strlen(buf) - 1] =
+                    '\0'; // Remove the line-enter character
+
+            if (!info.bondInfo)
+            {
+                info.bondInfo.emplace();
+            }
+            info.bondInfo->activeSlave = buf;
+            info.bondInfo->mode = 1; // active-backup
+            if (info.bondInfo->miiMonitor == 0)
+            {
+                info.bondInfo->miiMonitor = 100; // default
+            }
+        }
+    }
+}
+#endif
+
 static void parseLinkInfo(InterfaceInfo& info, std::string_view msg)
 {
     std::string_view submsg;
@@ -49,6 +121,12 @@ static void parseLinkInfo(InterfaceInfo& info, std::string_view msg)
     {
         parseVlanInfo(info, submsg);
     }
+#if ENABLE_BOND_SUPPORT
+    if (info.kind == "bond"sv)
+    {
+        parseBondInfo(info, submsg);
+    }
+#endif
 }
 
 InterfaceInfo intfFromRtm(std::string_view msg)

@@ -1,4 +1,8 @@
 #pragma once
+#include "config.h"
+#if ENABLE_BOND_SUPPORT
+#include "bond.hpp"
+#endif
 #include "dhcp_configuration.hpp"
 #include "ipaddress.hpp"
 #include "neighbor.hpp"
@@ -13,6 +17,11 @@
 #include <stdplus/pinned.hpp>
 #include <stdplus/str/maps.hpp>
 #include <stdplus/zstring_view.hpp>
+
+#if ENABLE_BOND_SUPPORT
+#include <xyz/openbmc_project/Network/Bond/server.hpp>
+#endif
+
 #include <xyz/openbmc_project/Collection/DeleteAll/server.hpp>
 #include <xyz/openbmc_project/Network/EthernetInterface/server.hpp>
 #include <xyz/openbmc_project/Network/MACAddress/server.hpp>
@@ -206,6 +215,14 @@ class EthernetInterface : public Ifaces
      */
     ObjectPath createVLAN(uint16_t id);
 
+#if ENABLE_BOND_SUPPORT
+    /** @brief create Bond interface.
+     *  @param[in] activeSlave - active slave interface name.
+     *  @param[in] miiMonitor - MII monitor interval in milliseconds.
+     */
+    ObjectPath createBond(std::string activeSlave, uint8_t miiMonitor);
+#endif
+
     /** @brief write the network conf file with the in-memory objects.
      */
     void writeConfigurationFile();
@@ -273,6 +290,17 @@ class EthernetInterface : public Ifaces
         stdplus::PinnedRef<EthernetInterface> eth;
     };
     std::optional<VlanProperties> vlan;
+
+#if ENABLE_BOND_SUPPORT
+    std::optional<Bond> bonding = std::nullopt;
+
+    /** @brief Update the backup bond configuration file for slave MAC.
+     *  @param[in] newMAC - New MAC address.
+     *  @param[in] interface - Interface name.
+     */
+    void updateBondConfBackupForSlaveMAC(std::string newMAC,
+                                         std::string interface);
+#endif
 
     std::optional<dhcp::Configuration> dhcp4Conf, dhcp6Conf;
 

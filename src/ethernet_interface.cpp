@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <format>
+#include <fstream>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -51,6 +52,10 @@ constexpr auto TIMESYNCD_INTERFACE = "org.freedesktop.timesync1.Manager";
 constexpr auto TIMESYNCD_SERVICE_PATH = "/org/freedesktop/timesync1";
 
 constexpr auto METHOD_GET = "Get";
+
+#if ENABLE_BOND_SUPPORT
+const std::string bondIfcName = "bond0";
+#endif
 
 template <typename Func>
 inline decltype(std::declval<Func>()()) ignoreError(
@@ -99,6 +104,10 @@ EthernetInterface::EthernetInterface(
 {
     interfaceName(*info.intf.name, true);
     auto dhcpVal = getDHCPValue(config);
+#if ENABLE_BOND_SUPPORT
+    auto bondNetdevBackup =
+        config::pathForIntfDev(manager.get().getConfDir(), bondIfcName);
+#endif
     EthernetInterfaceIntf::dhcp4(dhcpVal.v4, true);
     EthernetInterfaceIntf::dhcp6(dhcpVal.v6, true);
     EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRA(config), true);
@@ -122,6 +131,22 @@ EthernetInterface::EthernetInterface(
         EthernetInterface::defaultGateway6(stdplus::toStr(*info.defgw6), true);
     }
     emit_object_added();
+#if ENABLE_BOND_SUPPORT
+    if (info.intf.bondInfo)
+    {
+        auto miiMonitorVal = info.intf.bondInfo->miiMonitor;
+        if (std::filesystem::exists(bondNetdevBackup))
+        {
+            config::Parser parser(bondNetdevBackup);
+            auto value = parser.map.getLastValueString("Bond", "MIIMonitorSec");
+            if (value)
+                miiMonitorVal = static_cast<uint8_t>(std::stoi(*value));
+        }
+        bonding.emplace(bus, this->objPath.c_str(), *this,
+                        info.intf.bondInfo->activeSlave, miiMonitorVal,
+                        Bond::Mode::ActiveBackup);
+    }
+#endif
 
     if (info.intf.vlan_id)
     {
@@ -167,6 +192,17 @@ void EthernetInterface::updateInfo(const InterfaceInfo& info, bool skipSignal)
     {
         EthernetInterfaceIntf::mtu(*info.mtu, skipSignal);
     }
+#if ENABLE_BOND_SUPPORT
+    if (info.bondInfo)
+    {
+        auto it = manager.get().interfaces.find(bondIfcName);
+        if (it != manager.get().interfaces.end())
+        {
+            it->second->bonding->activeSlave(info.bondInfo->activeSlave,
+                                             skipSignal);
+        }
+    }
+#endif
     if (ifIdx > 0)
     {
         auto ethInfo = ignoreError("GetEthInfo", *info.name, {}, [&] {
@@ -811,6 +847,139 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     return ret;
 }
 
+#if ENABLE_BOND_SUPPORT
+ObjectPath EthernetInterface::createBond(std::string activeSlave,
+                                         uint8_t miiMonitor)
+{
+    for (const auto& [_, intf] : manager.get().interfaces)
+    {
+        if (intf->interfaceName().find(".") != std::string::npos)
+        {
+            lg2::error("Bond cannot be enabled as VLAN is enabled");
+            elog<NotAllowed>(NotAllowedArgument::REASON(
+                "Bond cannot be enabled as VLAN is enabled"));
+        }
+
+        if (!intf->EthernetInterfaceIntf::nicEnabled())
+        {
+            lg2::error(
+                "Bond cannot be enabled as slave interface {INTF} is disabled",
+                "INTF", intf->interfaceName());
+            elog<NotAllowed>(NotAllowedArgument::REASON(
+                "Bond cannot be enabled as slave interface is disabled"));
+        }
+    }
+
+    auto intfName = bondIfcName;
+    std::string macStr{};
+    std::optional<stdplus::In4Addr> gw = std::nullopt;
+    std::optional<stdplus::In6Addr> gw6 = std::nullopt;
+
+    if (manager.get().interfaces.find(intfName) !=
+        manager.get().interfaces.end())
+    {
+        lg2::error("Bond already exists");
+        elog<NotAllowed>(NotAllowedArgument::REASON("Bond already exists"));
+    }
+
+    auto objRoot = std::string_view(objPath).substr(0, objPath.rfind('/'));
+
+    for (const auto& [_, intf] : manager.get().interfaces)
+    {
+        if (intf->interfaceName().compare(activeSlave.c_str()) == 0)
+        {
+            /*Get Information of Active Slave*/
+            macStr = intf->macAddress();
+            if (!intf->defaultGateway().empty())
+            {
+                gw = stdplus::fromStr<stdplus::In4Addr>(intf->defaultGateway());
+            }
+            if (!intf->defaultGateway6().empty())
+            {
+                gw6 =
+                    stdplus::fromStr<stdplus::In6Addr>(intf->defaultGateway6());
+            }
+        }
+    }
+
+    manager.get().writeToConfigurationFile();
+
+    std::optional<stdplus::EtherAddr> mac;
+    if (!macStr.empty())
+    {
+        mac.emplace(stdplus::fromStr<stdplus::EtherAddr>(macStr));
+    }
+
+    std::optional<BondInfo> bondinfo;
+    bondinfo.emplace(activeSlave, 1, miiMonitor); /*Mode - active-backup = 1*/
+
+    auto info = AllIntfInfo{InterfaceInfo{
+        .type = ARPHRD_ETHER,
+        .idx = 0, // TODO: Query the correct value after creation
+        .flags = 0,
+        .name = intfName,
+        .mac = std::move(mac),
+        .mtu = mtu(),
+        .parent_idx = ifIdx,
+        .bondInfo = std::move(bondinfo),
+    }};
+
+    if (gw.has_value())
+    {
+        info.defgw4 = gw;
+    }
+
+    if (gw6.has_value())
+    {
+        info.defgw6 = gw6;
+    }
+
+    // Pass the parents nicEnabled property, so that the child
+    // Bond interface can inherit.
+    auto bondIntf = std::make_unique<EthernetInterface>(
+        bus, manager, info, objRoot, config::Parser(), nicEnabled());
+
+    ObjectPath ret = bondIntf->objPath;
+
+    [[maybe_unused]] auto [it, inserted] =
+        manager.get().interfaces.emplace(intfName, std::move(bondIntf));
+
+    lg2::info("Bond created: name={INTF}, ifIdx={IFIDX}", "INTF", intfName,
+              "IFIDX", it->second->ifIdx);
+
+    // write the device file for the bond interface.
+    config::Parser config;
+    auto& netdev = config.map["NetDev"].emplace_back();
+    netdev["Name"].emplace_back(intfName);
+    netdev["Kind"].emplace_back("bond");
+    netdev["MACAddress"].emplace_back(macStr);
+    auto& bond = config.map["Bond"].emplace_back();
+    bond["Mode"].emplace_back("active-backup");
+    bond["MIIMonitorSec"].emplace_back(std::format("{}ms", miiMonitor));
+
+    config.writeFile(
+        config::pathForIntfDev(manager.get().getConfDir(), intfName));
+
+    manager.get().writeToConfigurationFile();
+
+    if (auto it = manager.get().interfaces.find(bondIfcName);
+        it != manager.get().interfaces.end())
+    {
+        it->second->bonding->writeBondConfiguration(true);
+    }
+    execute("/bin/systemctl", "systemctl", "restart",
+            "systemd-networkd.service");
+
+    manager.get().addReloadPostHook([&]() {
+        execute("/bin/systemctl", "systemctl", "restart",
+                "phosphor-ipmi-net@bond0.service");
+    });
+    manager.get().reloadConfigs();
+
+    return ret;
+}
+#endif
+
 ServerList EthernetInterface::staticNTPServers(ServerList value)
 {
     // Validate and remove duplicates from NTP servers
@@ -884,6 +1053,68 @@ static void writeUpdatedTime(const Manager& manager,
 void EthernetInterface::writeConfigurationFile()
 {
     config::Parser config;
+#if ENABLE_BOND_SUPPORT
+    // Check if bond0 exists - if so, enslave this interface to it
+    auto it = manager.get().interfaces.find(bondIfcName);
+    if ((it != manager.get().interfaces.end()) &&
+        (interfaceName().compare(bondIfcName) != 0))
+    {
+        std::error_code ec{};
+        auto currentConf = config::pathForIntfConf(manager.get().getConfDir(),
+                                                   interfaceName());
+        auto backupConf = config::pathForIntfConf(
+            manager.get().getBondingConfBakDir(), interfaceName());
+
+        if (std::filesystem::exists(currentConf, ec) &&
+            !std::filesystem::exists(backupConf, ec))
+        {
+            // Create backup directory on-demand (Onetree approach)
+            std::filesystem::create_directories(
+                manager.get().getBondingConfBakDir());
+
+            if (!std::filesystem::copy_file(
+                    currentConf, backupConf,
+                    std::filesystem::copy_options::overwrite_existing, ec))
+            {
+                lg2::info("interfaceName = {INTF}, error message = {ERROR}",
+                          "INTF", interfaceName(), "ERROR", ec.message());
+            }
+        }
+        else
+        {
+            lg2::info("interfaceName = {INTF}, error message = {ERROR}", "INTF",
+                      interfaceName(), "ERROR", ec.message());
+        }
+
+        config.map["Match"].emplace_back()["Name"].emplace_back(
+            interfaceName());
+        {
+            auto& link = config.map["Link"].emplace_back();
+            if (!EthernetInterfaceIntf::nicEnabled())
+            {
+                link["Unmanaged"].emplace_back("yes");
+            }
+        }
+        {
+            auto& network = config.map["Network"].emplace_back();
+            auto& bond = network["Bond"];
+            bond.emplace_back(bondIfcName);
+            if (it->second->bonding &&
+                interfaceName().compare(it->second->bonding->activeSlave()) ==
+                    0)
+            {
+                network["PrimarySlave"].emplace_back("true");
+            }
+        }
+        auto path = config::pathForIntfConf(manager.get().getConfDir(),
+                                            interfaceName());
+        config.writeFile(path);
+        lg2::info("Wrote enslaved interface config: {CFG_FILE}", "CFG_FILE",
+                  path);
+        return;
+    }
+#endif
+
     config.map["Match"].emplace_back()["Name"].emplace_back(interfaceName());
     {
         auto& link = config.map["Link"].emplace_back();
@@ -1052,6 +1283,9 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
         stdplus::fromStr<stdplus::EtherAddr>(MacAddressIntf::macAddress());
     if (newMAC != oldMAC)
     {
+        bool bondEnabled = false;
+        std::string activeSlaveInterface;
+
         // Update everything that depends on the MAC value
         for (const auto& [_, intf] : manager.get().interfaces)
         {
@@ -1059,7 +1293,58 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
             {
                 intf->MacAddressIntf::macAddress(validMAC);
             }
+#if ENABLE_BOND_SUPPORT
+            if (intf->interfaceName() == "bond0")
+            {
+                bondEnabled = true;
+                activeSlaveInterface = intf->bonding->activeSlave();
+            }
+#endif
         }
+#if ENABLE_BOND_SUPPORT
+        manager.get().addReloadPreHook([this, bondEnabled, validMAC,
+                                        activeSlaveInterface, interface,
+                                        manager = manager]() {
+            // handle bonding mac address update for slave and bond
+            if (bondEnabled)
+            {
+                std::string intf = (interface == "bond0") ? "eth0" : interface;
+                if (intf == activeSlaveInterface)
+                {
+                    for (const auto& [_, intf] : manager.get().interfaces)
+                    {
+                        if (intf->interfaceName() == "bond0")
+                        {
+                            intf->MacAddressIntf::macAddress(validMAC);
+                            intf->writeConfigurationFile();
+                            intf->bonding->updateMACAddress(validMAC);
+                            break;
+                        }
+                    }
+                }
+                else // update mac address for slave of bonding interface when
+                     // it is not active slave
+                {
+                    this->updateBondConfBackupForSlaveMAC(validMAC, intf);
+                }
+                std::this_thread::sleep_for(std::chrono::seconds(3));
+                execute("/sbin/reboot", "reboot", "-f");
+            }
+            else
+            {
+                this->MacAddressIntf::macAddress(validMAC);
+                this->writeConfigurationFile();
+                // The MAC and LLADDRs will only update if the NIC is already
+                // down
+                system::setNICUp(interface, false);
+            }
+
+            writeUpdatedTime(
+                manager,
+                config::pathForIntfConf(manager.get().getConfDir(), interface));
+        });
+#else
+
         MacAddressIntf::macAddress(validMAC);
 
         writeConfigurationFile();
@@ -1070,6 +1355,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
                 manager,
                 config::pathForIntfConf(manager.get().getConfDir(), interface));
         });
+#endif
         manager.get().reloadConfigs();
     }
 
@@ -1247,6 +1533,85 @@ void EthernetInterface::deleteStaticIPs(std::optional<IP::Protocol> family)
     }
     writeConfigurationFile();
 }
+
+#if ENABLE_BOND_SUPPORT
+void EthernetInterface::updateBondConfBackupForSlaveMAC(std::string newMAC,
+                                                        std::string interface)
+{
+    std::ofstream ofs;
+    std::ifstream ifs;
+
+    ifs.open(config::pathForIntfConf(manager.get().getBondingConfBakDir(),
+                                     interface));
+    if (!ifs.is_open())
+    {
+        lg2::info(
+            "updateBondConfBackupForSlaveMAC slave configuration file not opened");
+        return;
+    }
+
+    std::stringstream buffer;
+    buffer << ifs.rdbuf();
+    std::string fileContent = buffer.str();
+    ifs.close();
+
+    // Variables to help with parsing the sections
+    bool inLinkSection = false;
+    std::string searchString = "MACAddress=";
+    size_t pos = 0;
+
+    // Iterate through the content to modify only the MACAddress in the [Link]
+    // section
+    while ((pos = fileContent.find("[", pos)) != std::string::npos)
+    {
+        // Check if we are entering the [Link] section
+        size_t sectionEnd = fileContent.find("]", pos);
+        if (sectionEnd != std::string::npos)
+        {
+            std::string sectionName =
+                fileContent.substr(pos + 1, sectionEnd - pos - 1);
+
+            // Check if it's the [Link] section
+            if (sectionName == "Link")
+            {
+                inLinkSection = true;
+            }
+            else
+            {
+                inLinkSection = false;
+            }
+        }
+
+        // If we are in the [Link] section, find and replace the MAC address
+        if (inLinkSection)
+        {
+            size_t macPos = fileContent.find(searchString, pos);
+            if (macPos != std::string::npos)
+            {
+                size_t macEnd = fileContent.find("\n", macPos);
+                fileContent.replace(macPos + searchString.length(),
+                                    macEnd - macPos - searchString.length(),
+                                    newMAC);
+                break; // After replacing, exit as we only need to update the
+                       // first MAC address in [Link]
+            }
+        }
+        pos++; // Move to the next section
+    }
+
+    ofs.open(config::pathForIntfConf(manager.get().getBondingConfBakDir(),
+                                     interface));
+    if (!ofs.is_open())
+    {
+        lg2::info(
+            "updateBondConfBackupForSlaveMAC slave configuration file not opened");
+        return;
+    }
+
+    ofs << fileContent;
+    ofs.close();
+}
+#endif
 
 } // namespace network
 } // namespace phosphor
