@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23cce940_e1f356fd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-05-26T16:44:00Z",
+      "side": 1,
+      "message": "please push a design doc to explain use-case and proposed design (or update existing networkd design) since it has major impact on Networkd Design/implementation",
+      "revId": "14bd98dcba7d9a6929c2a46971e4a7cf502a186c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31629400_57a7d3ce",
+        "filename": "src/bond.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-05-26T16:44:00Z",
+      "side": 1,
+      "message": "Network Bond can be generic implementation but looks like this implementation tightly couples the network daemon to a specific IPMI provider layout",
+      "revId": "14bd98dcba7d9a6929c2a46971e4a7cf502a186c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8dd35a6_df885387",
+        "filename": "src/bond.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-05-26T16:44:00Z",
+      "side": 1,
+      "message": "use lg2 consistently",
+      "revId": "14bd98dcba7d9a6929c2a46971e4a7cf502a186c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
