@@ -12,6 +12,8 @@
 #include <stdplus/hash/tuple.hpp>
 #include <stdplus/util/cexec.hpp>
 
+#include <unistd.h>
+
 #include <algorithm>
 #include <format>
 #include <optional>
