@@ -6,6 +6,7 @@
 #include <linux/rtnetlink.h>
 #include <linux/sockios.h>
 #include <net/if.h>
+#include <unistd.h>
 
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/fd/create.hpp>
