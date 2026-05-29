@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-FileCopyrightText: Copyright 2018 IBM Corporation
 
-#include "argument.hpp"
 #include "ncsi_util.hpp"
 
 #include <string.h>
 #include <unistd.h>
 
+#include <CLI/CLI.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
@@ -14,10 +14,45 @@
 #include <string>
 #include <vector>
 
+static void usage(char** argv)
+{
+    CLI::App app;
+    app.name(argv[0]);
+    app.add_option("-x,--index", "Network interface index");
+    app.add_option("-p,--package", "Package ID");
+    app.add_option("-c,--channel", "Channel ID");
+    app.add_flag("-i,--info", "Retrieve topology information");
+    app.add_flag("-s,--set", "Set preferred package/channel");
+    app.add_flag("-r,--clear", "Clear interface settings");
+    app.add_option("-j,--pmask", "Package enable/disable bitmask");
+    app.add_option("-k,--cmask", "Channel enable/disable bitmask");
+    app.add_option("-o,--oem-payload", "OEM payload (hex string)");
+    app.formatter(std::make_shared<CLI::Formatter>());
+
+    std::cerr << app.help();
+    std::cerr << "\nExample commands:\n"
+                 "    1) Retrieve topology information:\n"
+                 "         ncsi-netlink -x 3 -p 0 -i\n"
+                 "    2) Set preferred package\n"
+                 "         ncsi-netlink -x 3 -p 0 -s\n"
+                 "    3) Set preferred channel\n"
+                 "         ncsi-netlink -x 3 -p 0 -c 1 -s\n"
+                 "    4) Clear preferred channel\n"
+                 "         ncsi-netlink -x 3 -p 0 -r\n"
+                 "    5) Set Package Mask\n"
+                 "         ncsi-netlink -x 3 -j 1\n"
+                 "    6) Set Channel Mask\n"
+                 "         ncsi-netlink -x 3 -p 0 -k 1\n"
+                 "\n";
+}
+
 static void exitWithError(const char* err, char** argv)
 {
-    phosphor::network::ncsi::ArgumentParser::usage(argv);
-    lg2::error("ERROR: {ERROR}", "ERROR", err);
+    usage(argv);
+    if (err)
+    {
+        lg2::error("ERROR: {ERROR}", "ERROR", err);
+    }
     exit(EXIT_FAILURE);
 }
 
@@ -65,21 +100,66 @@ static void printInfo(phosphor::network::ncsi::InterfaceInfo& info)
     }
 }
 
+struct Options
+{
+    std::string index;
+    std::string package;
+    std::string channel;
+    bool help = false;
+    bool info = false;
+    bool set = false;
+    bool clear = false;
+    std::string pmask;
+    std::string cmask;
+    std::string oemPayload;
+};
+
 int main(int argc, char** argv)
 {
     using namespace phosphor::network;
     using namespace phosphor::network::ncsi;
-    // Read arguments.
-    auto options = ArgumentParser(argc, argv);
+
+    CLI::App app{"ncsi-netlink"};
+    app.allow_windows_style_options(false);
+
+    Options opts;
+    app.set_help_flag("");
+    app.add_flag("-h,--help", opts.help, "Print help and exit");
+    app.add_option("-x,--index", opts.index, "Network interface index");
+    app.add_option("-p,--package", opts.package, "Package ID");
+    app.add_option("-c,--channel", opts.channel, "Channel ID");
+    app.add_flag("-i,--info", opts.info, "Retrieve topology information");
+    app.add_flag("-s,--set", opts.set, "Set preferred package/channel");
+    app.add_flag("-r,--clear", opts.clear, "Clear interface settings");
+    app.add_option("-j,--pmask", opts.pmask, "Package enable/disable bitmask");
+    app.add_option("-k,--cmask", opts.cmask, "Channel enable/disable bitmask");
+    app.add_option("-o,--oem-payload", opts.oemPayload,
+                   "OEM payload (hex string)");
+
+    try
+    {
+        app.parse(argc, argv);
+    }
+    catch (const CLI::ParseError& e)
+    {
+        usage(argv);
+        exit(app.exit(e));
+    }
+
+    if (opts.help)
+    {
+        usage(argv);
+        exit(EXIT_SUCCESS);
+    }
+
     int packageInt{};
     int channelInt{};
     int indexInt{};
 
     // Parse out interface argument.
-    auto ifIndex = (options)["index"];
     try
     {
-        indexInt = stoi(ifIndex, nullptr);
+        indexInt = stoi(opts.index, nullptr);
     }
     catch (const std::exception& e)
     {
@@ -95,10 +175,9 @@ int main(int argc, char** argv)
     NetlinkInterface interface(indexInt);
 
     // Parse out package argument.
-    auto package = (options)["package"];
     try
     {
-        packageInt = stoi(package, nullptr);
+        packageInt = stoi(opts.package, nullptr);
     }
     catch (const std::exception& e)
     {
@@ -111,10 +190,9 @@ int main(int argc, char** argv)
     }
 
     // Parse out channel argument.
-    auto channel = (options)["channel"];
     try
     {
-        channelInt = stoi(channel, nullptr);
+        channelInt = stoi(opts.channel, nullptr);
     }
     catch (const std::exception& e)
     {
@@ -126,17 +204,13 @@ int main(int argc, char** argv)
         channelInt = DEFAULT_VALUE;
     }
 
-    auto payloadStr = (options)["oem-payload"];
-    if (!payloadStr.empty())
+    if (!opts.oemPayload.empty())
     {
+        auto& payloadStr = opts.oemPayload;
         if (payloadStr.size() % 2 || payloadStr.size() < 2)
             exitWithError("Payload invalid: specify two hex digits per byte.",
                           argv);
 
-        // Payload string is in the format <type>[<payload>]
-        // (e.g. "50000001572100"), where the first two characters (i.e. "50")
-        // represent the command type, and the rest the payload. Split this
-        // up for the ncsi-cmd operation, which has these as separate arguments.
         std::string typeStr(payloadStr.substr(0, 2));
         std::string dataStr(payloadStr.substr(2));
 
@@ -163,9 +237,6 @@ int main(int argc, char** argv)
         args.push_back(typeStr);
         args.push_back(dataStr);
 
-        /* Convert to C argv array. execvp()'s argv argument is not const,
-         * whereas .c_str() is, so we need to strdup here.
-         */
         char** argv = new char*[args.size() + 1]();
         for (size_t i = 0; i < args.size(); i++)
         {
@@ -184,16 +255,15 @@ int main(int argc, char** argv)
         delete[] argv;
         return EXIT_FAILURE;
     }
-    else if ((options)["set"] == "true")
+    else if (opts.set)
     {
-        // Can not perform set operation without package.
         if (packageInt == DEFAULT_VALUE)
         {
             exitWithError("Package not specified.", argv);
         }
         return interface.setChannel(packageInt, channelInt);
     }
-    else if ((options)["info"] == "true")
+    else if (opts.info)
     {
         auto info = interface.getInfo(packageInt);
         if (!info)
@@ -202,18 +272,18 @@ int main(int argc, char** argv)
         }
         printInfo(*info);
     }
-    else if ((options)["clear"] == "true")
+    else if (opts.clear)
     {
         return interface.clearInterface();
     }
-    else if (!(options)["pmask"].empty())
+    else if (!opts.pmask.empty())
     {
         unsigned int mask{};
         try
         {
             size_t lastChar{};
-            mask = std::stoul((options)["pmask"], &lastChar, 0);
-            if (lastChar < (options["pmask"].size()))
+            mask = std::stoul(opts.pmask, &lastChar, 0);
+            if (lastChar < (opts.pmask.size()))
             {
                 exitWithError("Package mask value is not valid", argv);
             }
@@ -224,7 +294,7 @@ int main(int argc, char** argv)
         }
         return interface.setPackageMask(mask);
     }
-    else if (!(options)["cmask"].empty())
+    else if (!opts.cmask.empty())
     {
         if (packageInt == DEFAULT_VALUE)
         {
@@ -234,8 +304,8 @@ int main(int argc, char** argv)
         try
         {
             size_t lastChar{};
-            mask = stoul((options)["cmask"], &lastChar, 0);
-            if (lastChar < (options["cmask"].size()))
+            mask = stoul(opts.cmask, &lastChar, 0);
+            if (lastChar < (opts.cmask.size()))
             {
                 exitWithError("Channel mask value is not valid", argv);
             }

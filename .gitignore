@@ -1,5 +1,6 @@
 /build*/
 /subprojects/*
+!/subprojects/CLI11.wrap
 !/subprojects/googletest.wrap
 !/subprojects/nlohmann_json.wrap
 !/subprojects/phosphor-dbus-interfaces.wrap

@@ -4,12 +4,12 @@ stdplus_dep = dependency('stdplus')
 
 executable(
     'ncsi-netlink',
-    'argument.cpp',
     'ncsi_netlink_main.cpp',
     'ncsi_util.cpp',
     implicit_include_directories: false,
     include_directories: src_includes,
     dependencies: [
+        dependency('CLI11'),
         dependency('libnl-3.0'),
         dependency('libnl-genl-3.0'),
         dependency('phosphor-logging'),
