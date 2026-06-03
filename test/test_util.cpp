@@ -74,5 +74,63 @@ TEST(IgnoredInterfaces, NotEmpty)
 }
 
 } // namespace mac_address
+
+namespace internal
+{
+
+TEST(IsValidNtpServer, ValidIPv4)
+{
+    EXPECT_TRUE(isValidNtpServer("192.168.1.1"));
+    EXPECT_TRUE(isValidNtpServer("10.0.0.1"));
+    EXPECT_TRUE(isValidNtpServer("8.8.8.8"));
+}
+
+TEST(IsValidNtpServer, ValidIPv6)
+{
+    EXPECT_TRUE(isValidNtpServer("2001:db8::1"));
+    EXPECT_TRUE(isValidNtpServer("fe80::1"));
+    EXPECT_TRUE(isValidNtpServer("::1"));
+}
+
+TEST(IsValidNtpServer, ValidHostname)
+{
+    EXPECT_TRUE(isValidNtpServer("pool.ntp.org"));
+    EXPECT_TRUE(isValidNtpServer("time.google.com"));
+    EXPECT_TRUE(isValidNtpServer("ntp1.example.com"));
+}
+
+TEST(IsValidNtpServer, Invalid)
+{
+    EXPECT_FALSE(isValidNtpServer(""));
+    EXPECT_FALSE(isValidNtpServer("not a valid server!"));
+    EXPECT_FALSE(isValidNtpServer("192.168.1.256"));
+    EXPECT_FALSE(isValidNtpServer("-invalid.host"));
+}
+
+} // namespace internal
+
+TEST(IsIPv6LinkLocal, LinkLocalAddresses)
+{
+    EXPECT_TRUE(isIPv6LinkLocal(stdplus::fromStr<stdplus::In6Addr>("fe80::1")));
+    EXPECT_TRUE(isIPv6LinkLocal(stdplus::fromStr<stdplus::In6Addr>("fe80::")));
+    EXPECT_TRUE(isIPv6LinkLocal(
+        stdplus::fromStr<stdplus::In6Addr>("fe80::aabb:ccdd:eeff")));
+    EXPECT_TRUE(isIPv6LinkLocal(stdplus::fromStr<stdplus::In6Addr>("febf::1")));
+}
+
+TEST(IsIPv6LinkLocal, NonLinkLocalAddresses)
+{
+    EXPECT_FALSE(
+        isIPv6LinkLocal(stdplus::fromStr<stdplus::In6Addr>("2001:db8::1")));
+    EXPECT_FALSE(
+        isIPv6LinkLocal(stdplus::fromStr<stdplus::In6Addr>("fd00::1")));
+    EXPECT_FALSE(isIPv6LinkLocal(stdplus::fromStr<stdplus::In6Addr>("::1")));
+    EXPECT_FALSE(isIPv6LinkLocal(stdplus::fromStr<stdplus::In6Addr>("::")));
+    EXPECT_FALSE(
+        isIPv6LinkLocal(stdplus::fromStr<stdplus::In6Addr>("ff02::1")));
+    EXPECT_FALSE(
+        isIPv6LinkLocal(stdplus::fromStr<stdplus::In6Addr>("fec0::1")));
+}
+
 } // namespace network
 } // namespace phosphor
