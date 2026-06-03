@@ -692,7 +692,7 @@ ServerList EthernetInterface::getNTPServerFromTimeSyncd()
 
         servers = std::get<ServerList>(response);
     }
-    catch (const sdbusplus::exception::internal_exception& e)
+    catch (const sdbusplus::exception_t& e)
     {
         lg2::error("Failed to get NTP server information from "
                    "systemd-timesyncd: {ERROR}",
