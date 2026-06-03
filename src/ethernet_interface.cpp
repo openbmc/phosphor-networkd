@@ -305,6 +305,13 @@ void EthernetInterface::addStaticGateway(const StaticGatewayInfo& info)
         return;
     }
 
+    if (!info.protocol)
+    {
+        lg2::error("Missing protocol on {NET_INTF}", "NET_INTF",
+                   interfaceName());
+        return;
+    }
+
     IP::Protocol protocolType;
     if (*info.protocol == "IPv4")
     {
@@ -313,6 +320,12 @@ void EthernetInterface::addStaticGateway(const StaticGatewayInfo& info)
     else if (*info.protocol == "IPv6")
     {
         protocolType = IP::Protocol::IPv6;
+    }
+    else
+    {
+        lg2::error("Unknown protocol {NET_PROTO} on {NET_INTF}", "NET_PROTO",
+                   *info.protocol, "NET_INTF", interfaceName());
+        return;
     }
 
     if (auto it = staticGateways.find(*info.gateway);
