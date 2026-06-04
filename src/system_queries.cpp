@@ -205,6 +205,14 @@ bool deleteLinkLocalIPv4ViaNetlink(unsigned ifidx, const stdplus::SubnetAny& ip)
                 ssize_t len = recv(sock, resp.data(), resp.size(), 0);
                 close(sock);
 
+                if (len < 0)
+                {
+                    lg2::error(
+                        "recv failed on netlink socket for ifidx {NET_IFIDX}: {ERROR}",
+                        "NET_IFIDX", ifidx, "ERROR", strerror(errno));
+                    return;
+                }
+
                 if (len >= NLMSG_LENGTH(0))
                 {
                     const nlmsghdr* hdr =
@@ -215,10 +223,10 @@ bool deleteLinkLocalIPv4ViaNetlink(unsigned ifidx, const stdplus::SubnetAny& ip)
                             reinterpret_cast<nlmsgerr*>(NLMSG_DATA(hdr));
                         if (err->error != 0)
                         {
-                            std::ostringstream oss;
-                            oss << "Failed to delete link-local IP on ifidx "
-                                << ifidx << ": " << strerror(-err->error);
-                            success = false;
+                            lg2::error(
+                                "Failed to delete link-local IP on ifidx {NET_IFIDX}: {ERROR}",
+                                "NET_IFIDX", ifidx, "ERROR",
+                                strerror(-err->error));
                             return;
                         }
                     }
