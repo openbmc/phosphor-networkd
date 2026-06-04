@@ -2,23 +2,16 @@
 
 #include "network_manager.hpp"
 
-#include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
-#include <stdplus/pinned.hpp>
-#include <xyz/openbmc_project/Common/error.hpp>
 
 #include <filesystem>
 #include <fstream>
-#include <string>
 
 namespace phosphor
 {
 namespace network
 {
-
-using namespace phosphor::logging;
-using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 
 static constexpr const char* mapperBusName = "xyz.openbmc_project.ObjectMapper";
 static constexpr const char* mapperObjPath =

@@ -5,8 +5,6 @@
 #include "config_parser.hpp"
 #include "types.hpp"
 
-#include <arpa/inet.h>
-#include <netinet/in.h>
 #include <sys/wait.h>
 
 #include <phosphor-logging/elog-errors.hpp>
@@ -21,7 +19,6 @@
 #include <algorithm>
 #include <cctype>
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <string_view>
 #include <vector>

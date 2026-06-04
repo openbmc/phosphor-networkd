@@ -9,7 +9,6 @@
 
 #include <linux/if_addr.h>
 #include <linux/neighbour.h>
-#include <net/if.h>
 #include <net/if_arp.h>
 
 #include <phosphor-logging/elog-errors.hpp>

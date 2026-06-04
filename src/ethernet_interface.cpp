@@ -7,7 +7,6 @@
 #include "system_queries.hpp"
 #include "util.hpp"
 
-#include <arpa/inet.h>
 #include <fcntl.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
