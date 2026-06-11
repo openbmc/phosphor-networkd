@@ -341,9 +341,24 @@ void EthernetInterface::addStaticGateway(const StaticGatewayInfo& info)
     }
 }
 
+void EthernetInterface::throwIfBlocked() const
+{
+    const auto& name = interfaceName();
+    for (std::string_view entry :
+         std::initializer_list<std::string_view>{BLOCKED_INTERFACES_INIT})
+    {
+        if (!entry.empty() && name.find(entry) != std::string_view::npos)
+        {
+            elog<NotAllowed>(NotAllowedArgument::REASON(
+                "Interface is read-only (host-BMC reserved link)"));
+        }
+    }
+}
+
 ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
                                  uint8_t prefixLength, std::string)
 {
+    throwIfBlocked();
     std::optional<stdplus::InAnyAddr> addr;
     try
     {
@@ -419,6 +434,7 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
 ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                                        std::string macAddress)
 {
+    throwIfBlocked();
     std::optional<stdplus::InAnyAddr> addr;
     try
     {
@@ -472,6 +488,7 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
 ObjectPath EthernetInterface::staticGateway(std::string gateway,
                                             IP::Protocol protocolType)
 {
+    throwIfBlocked();
     for (const auto& ip : addrs)
     {
         if (ip.second->type() != protocolType)
@@ -816,6 +833,7 @@ ServerList EthernetInterface::getNameServerFromResolvd() const
 
 ObjectPath EthernetInterface::createVLAN(uint16_t id)
 {
+    throwIfBlocked();
     auto idStr = stdplus::toStr(id);
     auto intfName = stdplus::strCat(interfaceName(), "."sv, idStr);
     if (manager.get().interfaces.find(intfName) !=
@@ -1152,6 +1170,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
 
 void EthernetInterface::deleteAll()
 {
+    throwIfBlocked();
     // clear all the ip on the interface
     addrs.clear();
 

@@ -243,6 +243,14 @@ class EthernetInterface : public Ifaces
     using EthernetInterfaceIntf::defaultGateway6;
     using EthernetInterfaceIntf::emitLLDP;
 
+    /** @brief Throws NotAllowed when this interface matches the configured
+     *  blocked-interfaces list (host-BMC reserved links such as usb0,
+     *  hmcusb0, …).  Each entry from the meson `blocked-interfaces` array is
+     *  matched as a substring of the kernel interface name.  Modifying these
+     *  links corrupts the host-side bridge and can take down eth0.
+     */
+    void throwIfBlocked() const;
+
   protected:
     /** @brief get the NTP server list from the timesyncd dbus obj
      *

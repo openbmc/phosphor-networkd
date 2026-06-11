@@ -30,4 +30,10 @@ option(
     type: 'boolean',
     description: 'Force sync mac address no matter is first boot or not',
 )
+option(
+    'blocked-interfaces',
+    type: 'array',
+    value: [],
+    description: 'Interface name substrings or prefix whose IP/neighbor/VLAN configuration changes are forbidden (host-BMC reserved links)',
+)
 

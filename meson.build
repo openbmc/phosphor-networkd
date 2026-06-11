@@ -28,6 +28,14 @@ endif
 conf_data.set10('SYNC_MAC_FROM_INVENTORY', get_option('sync-mac'))
 conf_data.set10('PERSIST_MAC', get_option('persist-mac'))
 conf_data.set10('FORCE_SYNC_MAC_FROM_INVENTORY', get_option('force-sync-mac'))
+blocked_interfaces_init = []
+foreach entry : get_option('blocked-interfaces')
+    blocked_interfaces_init += '"' + entry + '"'
+endforeach
+conf_data.set(
+    'BLOCKED_INTERFACES_INIT',
+    ', '.join(blocked_interfaces_init),
+)
 
 sdbusplus_dep = dependency('sdbusplus')
 sdbusplusplus_prog = find_program('sdbus++', native: true)

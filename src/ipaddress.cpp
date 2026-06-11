@@ -88,6 +88,7 @@ IP::AddressOrigin IPAddress::origin(IP::AddressOrigin /*origin*/)
 }
 void IPAddress::delete_()
 {
+    parent.get().throwIfBlocked();
     if (origin() != IP::AddressOrigin::Static)
     {
         lg2::error("Tried to delete a non-static address {NET_IP} prefix "
