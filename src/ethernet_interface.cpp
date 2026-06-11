@@ -22,6 +22,7 @@
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <algorithm>
+#include <array>
 #include <filesystem>
 #include <format>
 #include <string>
@@ -345,9 +346,25 @@ void EthernetInterface::addStaticGateway(const StaticGatewayInfo& info)
     }
 }
 
+void EthernetInterface::throwIfConfigurationProtected() const
+{
+    constexpr std::array<std::string_view, PROTECTED_INTERFACES_COUNT>
+        protectedInterfaces{PROTECTED_INTERFACES_INIT};
+    const auto& name = interfaceName();
+    if (std::ranges::find(protectedInterfaces, name) !=
+        protectedInterfaces.end())
+    {
+        elog<NotAllowed>(NotAllowedArgument::REASON(
+            std::format("Configuration is not allowed on this interface - {}",
+                        name)
+                .c_str()));
+    }
+}
+
 ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
                                  uint8_t prefixLength, std::string)
 {
+    throwIfConfigurationProtected();
     std::optional<stdplus::InAnyAddr> addr;
     try
     {
@@ -417,6 +434,7 @@ ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
 ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                                        std::string macAddress)
 {
+    throwIfConfigurationProtected();
     std::optional<stdplus::InAnyAddr> addr;
     try
     {
@@ -470,6 +488,7 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
 ObjectPath EthernetInterface::staticGateway(std::string gateway,
                                             IP::Protocol protocolType)
 {
+    throwIfConfigurationProtected();
     for (const auto& ip : addrs)
     {
         if (ip.second->type() != protocolType)
@@ -774,6 +793,7 @@ ServerList EthernetInterface::getNameServerFromResolvd() const
 
 ObjectPath EthernetInterface::createVLAN(uint16_t id)
 {
+    throwIfConfigurationProtected();
     auto idStr = stdplus::toStr(id);
     auto intfName = stdplus::strCat(interfaceName(), "."sv, idStr);
     if (manager.get().interfaces.find(intfName) !=
@@ -1110,6 +1130,7 @@ std::string EthernetInterface::macAddress([[maybe_unused]] std::string value)
 
 void EthernetInterface::deleteAll()
 {
+    throwIfConfigurationProtected();
     // clear all the ip on the interface
     addrs.clear();
 

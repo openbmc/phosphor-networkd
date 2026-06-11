@@ -243,6 +243,11 @@ class EthernetInterface : public Ifaces
     using EthernetInterfaceIntf::defaultGateway6;
     using EthernetInterfaceIntf::emitLLDP;
 
+    /** @brief Throws NotAllowed when this interface matches the configured
+     *  protected-interfaces list
+     */
+    void throwIfConfigurationProtected() const;
+
   protected:
     /** @brief get the NTP server list from the timesyncd dbus obj
      *
