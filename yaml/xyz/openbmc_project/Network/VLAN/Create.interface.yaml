@@ -20,3 +20,4 @@ methods:
       errors:
           - xyz.openbmc_project.Common.Error.InvalidArgument
           - xyz.openbmc_project.Common.Error.ResourceNotFound
+          - xyz.openbmc_project.Common.Error.NotAllowed
