@@ -141,6 +141,24 @@ ssize_t sendmsg_link_dump(std::queue<std::string>& msgs, std::string_view in)
     return in.size();
 }
 
+// RTM_GETADDR dump: mock interfaces have no addresses — return NLMSG_DONE.
+ssize_t sendmsg_addr_dump(std::queue<std::string>& msgs, std::string_view in)
+{
+    const auto& hdrin = *reinterpret_cast<const nlmsghdr*>(in.data());
+    if (hdrin.nlmsg_type != RTM_GETADDR)
+    {
+        return 0;
+    }
+    // No addresses on mock interfaces — reply with NLMSG_DONE only.
+    std::string msgBuf(NLMSG_SPACE(0), '\0');
+    auto& hdr = *reinterpret_cast<nlmsghdr*>(msgBuf.data());
+    hdr.nlmsg_len = NLMSG_LENGTH(0);
+    hdr.nlmsg_type = NLMSG_DONE;
+    hdr.nlmsg_flags = NLM_F_MULTI;
+    msgs.emplace(std::move(msgBuf));
+    return in.size();
+}
+
 ssize_t sendmsg_ack(std::queue<std::string>& msgs, std::string_view in)
 {
     nlmsgerr ack{};
@@ -210,6 +228,36 @@ int ioctl(int fd, unsigned long int request, ...)
             return -1;
         }
         it->second.mtu = req->ifr_mtu;
+        return 0;
+    }
+    else if (request == SIOCSIFADDR)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        return 0;
+    }
+    else if (request == SIOCSIFNETMASK)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        return 0;
+    }
+    else if (request == SIOCSIFBRDADDR)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
         return 0;
     }
     else if (request == SIOCETHTOOL)
@@ -288,6 +336,12 @@ ssize_t sendmsg(int sockfd, const struct msghdr* msg, int flags)
         return ret;
     }
 
+    ret = sendmsg_addr_dump(msgs, iov);
+    if (ret != 0)
+    {
+        return ret;
+    }
+
     ret = sendmsg_ack(msgs, iov);
     if (ret != 0)
     {
@@ -338,6 +392,23 @@ ssize_t recvmsg(int sockfd, struct msghdr* msg, int flags)
         msgs.pop();
     }
     return ret;
+}
+
+unsigned int if_nametoindex(const char* ifname)
+{
+    if (ifname == nullptr)
+    {
+        return 0;
+    }
+    auto it = mock_if.find(std::string(ifname));
+    if (it != mock_if.end())
+    {
+        return static_cast<unsigned int>(it->second.idx);
+    }
+    // Fall back to real call for interfaces not in mock
+    static auto real_fn = reinterpret_cast<decltype(&if_nametoindex)>(
+        dlsym(RTLD_NEXT, "if_nametoindex"));
+    return real_fn(ifname);
 }
 
 } // extern "C"
