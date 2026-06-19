@@ -20,6 +20,15 @@ void setMTU(std::string_view ifname, unsigned mtu);
 
 void setNICUp(std::string_view ifname, bool up);
 
+/** @brief Sets the IP address of the interface
+ *  use for interfaces explicitly marked as ignored.
+ *  @param[in] ifname - Interface name
+ *  @param[in] ipAddress - IP address string
+ *  @param[in] prefixLength - Prefix length
+ */
+void setIPV4Address(std::string_view ifname, std::string_view ipAddress,
+                    uint8_t prefixLength);
+
 void deleteIntf(unsigned idx);
 
 bool deleteLinkLocalIPv4ViaNetlink(unsigned ifidx,

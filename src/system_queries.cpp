@@ -2,6 +2,7 @@
 
 #include "netlink.hpp"
 
+#include <arpa/inet.h>
 #include <linux/ethtool.h>
 #include <linux/rtnetlink.h>
 #include <linux/sockios.h>
@@ -94,6 +95,208 @@ EthInfo getEthInfo(stdplus::zstring_view ifname)
                },
                &edata)
         .value_or(EthInfo{});
+}
+
+/**
+ * @brief Check if a network interface exists
+ * @param ifname Interface name to check
+ * @return true if interface exists, false otherwise
+ */
+static bool interfaceExists(std::string_view ifname)
+{
+    auto ifr = makeIFReq(ifname);
+    try
+    {
+        getIFSock().ioctl(SIOCGIFFLAGS, &ifr);
+        return true;
+    }
+    catch (const std::system_error& e)
+    {
+        lg2::error("Interface does not exist: {INTERFACE}, error: {ERROR}",
+                   "INTERFACE", ifname, "ERROR", e.what());
+        return false;
+    }
+}
+
+/**
+ * @brief Validate IPv4 address string.
+ * @param ipAddress  IPv4 string e.g. "192.168.1.100"
+ * @return stdplus::In4Addr with operator in_addr() for ioctl use
+ * @throws std::invalid_argument if not a valid IPv4 address
+ */
+static struct in_addr validateIPv4Address(std::string_view ipAddress)
+{
+    try
+    {
+        return stdplus::fromStr<stdplus::In4Addr>(ipAddress);
+    }
+    catch (const std::exception& e)
+    {
+        throw std::invalid_argument(
+            std::string("Invalid IPv4 address: ") + std::string(ipAddress));
+    }
+}
+
+/**
+ * @brief Validate prefix length and compute the IPv4 netmask.
+ * @param addr         Validated In4Addr from validateIPv4Address()
+ * @param prefixLength CIDR prefix length — valid range is 1-31 for
+ *                     interface assignment (/0 and /32 are rejected)
+ * @return in_addr netmask ready for SIOCSIFNETMASK
+ * @throws std::invalid_argument if prefixLength is 0, >= 32, or > 32
+ */
+static struct in_addr calculateNetmask(stdplus::In4Addr addr,
+                                       uint8_t prefixLength)
+{
+    // Reject /0 (default route mask) and /32 (host-only) as they are
+    // not meaningful for interface address assignment. stdplus::Subnet4
+    // only rejects > 32, so we enforce the tighter 1-31 range here.
+    if (prefixLength == 0 || prefixLength >= 32)
+    {
+        throw std::invalid_argument(
+            std::string("Invalid prefix length: ") +
+            std::to_string(prefixLength) +
+            " — must be 1-31 for interface address assignment");
+    }
+
+    try
+    {
+        // stdplus::Subnet4 validates prefixLength <= 32
+        const stdplus::Subnet4 subnet(addr, prefixLength);
+
+        // pfxToMask<In4Addr> converts the prefix to the correct bitmask
+        return static_cast<in_addr>(
+            stdplus::pfxToMask<stdplus::In4Addr>(prefixLength));
+    }
+    catch (const std::exception& e)
+    {
+        // Propagate any unexpected errors
+        throw;
+    }
+}
+
+/**
+ * @brief Calculate broadcast address
+ * @param addr IP address
+ * @param netmask Network mask
+ * @return in_addr structure with the broadcast address
+ */
+static struct in_addr calculateBroadcast(struct in_addr addr,
+                                         struct in_addr netmask)
+{
+    struct in_addr bcast;
+    bcast.s_addr = (addr.s_addr & netmask.s_addr) | ~netmask.s_addr;
+    return bcast;
+}
+
+/**
+ * @brief Validate interface name
+ * @param ifname Interface name to validate
+ * @throws std::system_error if name is empty or exceeds IFNAMSIZ-1
+ */
+static void validateInterfaceName(std::string_view ifname)
+{
+    if (ifname.empty() || ifname.length() > IFNAMSIZ - 1)
+    {
+        throw std::system_error(
+            std::make_error_code(std::errc::invalid_argument),
+            std::format("Invalid interface name length: {}", ifname));
+    }
+}
+
+/**
+ * @brief Set sockaddr_in structure with IPv4 address
+ * @param sa Reference to sockaddr structure to populate
+ * @param addr IPv4 address to set
+ */
+static void setSockAddrIn(struct sockaddr& sa, const struct in_addr& addr)
+{
+    auto* sin = reinterpret_cast<struct sockaddr_in*>(&sa);
+    sin->sin_family = AF_INET;
+    sin->sin_addr = addr;
+}
+
+/**
+ * @brief Set IPV4 address on a network interface
+ * @param ifname Interface name (e.g., "eth0")
+ * @param ipAddress IPv4 address in dotted-decimal notation (e.g.,
+ * "192.168.1.100")
+ * @param prefixLength CIDR prefix length (1-31, rejects 0, 32, and >32)
+ * @throws std::system_error if interface doesn't exist or ioctl fails
+ * @throws std::invalid_argument if IP address format is invalid or prefix
+ * length is invalid
+ */
+void setIPV4Address(std::string_view ifname, std::string_view ipAddress,
+                    uint8_t prefixLength)
+{
+    try
+    {
+        // Validate interface name
+        validateInterfaceName(ifname);
+
+        if (!interfaceExists(ifname))
+        {
+            throw std::system_error(
+                std::make_error_code(std::errc::no_such_device),
+                std::format("Interface {} does not exist", ifname));
+        }
+
+        // Validate IP address and calculate network parameters
+        const stdplus::In4Addr addrTyped = validateIPv4Address(ipAddress);
+        struct in_addr addr = static_cast<in_addr>(addrTyped);
+        struct in_addr netmask = calculateNetmask(addrTyped, prefixLength);
+        struct in_addr bcast = calculateBroadcast(addr, netmask);
+
+        // Prepare ifreq structure
+        auto ifr = makeIFReq(ifname);
+
+        // Set IP address
+        setSockAddrIn(ifr.ifr_addr, addr);
+        lg2::info("Setting IP {NET_IP} on {NET_INTF}", "NET_IP", ipAddress,
+                  "NET_INTF", ifname);
+        getIFSock().ioctl(SIOCSIFADDR, &ifr);
+
+        // Set netmask
+        setSockAddrIn(ifr.ifr_netmask, netmask);
+        lg2::info("Setting netmask /{PREFIX} on {NET_INTF}", "PREFIX",
+                  prefixLength, "NET_INTF", ifname);
+        getIFSock().ioctl(SIOCSIFNETMASK, &ifr);
+
+        // Set broadcast address (non-critical)
+        setSockAddrIn(ifr.ifr_broadaddr, bcast);
+        try
+        {
+            getIFSock().ioctl(SIOCSIFBRDADDR, &ifr);
+        }
+        catch (const std::system_error& e)
+        {
+            lg2::warning("Failed to set broadcast on {INTF}: {ERROR}", "INTF",
+                         ifname, "ERROR", e.what());
+        }
+
+        lg2::info("Successfully configured IP address on {NET_INTF}",
+                  "NET_INTF", ifname);
+    }
+    catch (const std::invalid_argument& e)
+    {
+        lg2::error("Invalid IP configuration for {INTF}: {ERROR}", "INTF",
+                   ifname, "ERROR", e.what());
+        throw;
+    }
+    catch (const std::system_error& e)
+    {
+        lg2::error("Failed to configure IP on {INTF}: {ERROR}", "INTF", ifname,
+                   "ERROR", e.what());
+        throw std::system_error(
+            e.code(),
+            std::format("Failed to configure IP on {}: {}", ifname, e.what()));
+    }
+    catch (const std::exception& e)
+    {
+        lg2::error("Unexpected error configuring IP on {INTF}: {ERROR}", "INTF",
+                   ifname, "ERROR", e.what());
+        throw;
+    }
 }
 
 void setMTU(std::string_view ifname, unsigned mtu)
