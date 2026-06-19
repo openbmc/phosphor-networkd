@@ -85,7 +85,7 @@ std::string SystemConfiguration::hostName(std::string name)
     }
     catch (const sdbusplus::exception_t& e)
     {
-        lg2::error("Failed to set hostname {HOSTNAME}: {ERROR} ", "HOSTNAME",
+        lg2::error("Failed to set hostname {HOSTNAME}: {ERROR}", "HOSTNAME",
                    name, "ERROR", e);
         if (strcmp(e.name(), "org.freedesktop.DBus.Error.InvalidArgs") == 0)
         {
