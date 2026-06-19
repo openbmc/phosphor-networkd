@@ -2,10 +2,12 @@
 
 #include "netlink.hpp"
 
+#include <arpa/inet.h>
 #include <linux/ethtool.h>
 #include <linux/rtnetlink.h>
 #include <linux/sockios.h>
 #include <net/if.h>
+#include <net/if_arp.h>
 #include <unistd.h>
 
 #include <phosphor-logging/lg2.hpp>
@@ -111,6 +113,78 @@ void setNICUp(std::string_view ifname, bool up)
     lg2::info("Setting NIC {UPDOWN} on {NET_INTF}", "UPDOWN",
               up ? "up"sv : "down"sv, "NET_INTF", ifname);
     getIFSock().ioctl(SIOCSIFFLAGS, &ifr);
+}
+
+void setIPAddress(std::string_view ifname, std::string_view ipAddress,
+                  uint8_t prefixLength)
+{
+    struct in_addr addr;
+
+    // Convert to null-terminated string for inet_pton
+    std::string ipStr(ipAddress);
+    if (inet_pton(AF_INET, ipStr.c_str(), &addr) != 1)
+    {
+        throw std::invalid_argument(
+            std::format("Invalid IP address: {}", ipAddress));
+    }
+
+    // Validate prefix length
+    if (prefixLength > 32)
+    {
+        throw std::invalid_argument(
+            std::format("Invalid prefix length: {}", prefixLength));
+    }
+
+    // Calculate netmask - handle all cases explicitly
+    uint32_t mask;
+    if (prefixLength == 0)
+    {
+        mask = 0; // 0.0.0.0
+    }
+    else if (prefixLength >= 32)
+    {
+        mask = 0xFFFFFFFF; // 255.255.255.255
+    }
+    else
+    {
+        // For /1 to /31, calculate normally
+        mask = htonl(~((1U << (32 - prefixLength)) - 1));
+    }
+
+    struct in_addr netmask;
+    netmask.s_addr = mask;
+
+    // Set IP address
+    auto ifr = makeIFReq(ifname);
+    auto* addr_in = reinterpret_cast<struct sockaddr_in*>(&ifr.ifr_addr);
+    addr_in->sin_family = AF_INET;
+    addr_in->sin_addr = addr;
+
+    lg2::info("Setting IP {NET_IP} on {NET_INTF}", "NET_IP", ipAddress,
+              "NET_INTF", ifname);
+    getIFSock().ioctl(SIOCSIFADDR, &ifr);
+
+    // Set netmask
+    ifr = makeIFReq(ifname);
+    auto* mask_in = reinterpret_cast<struct sockaddr_in*>(&ifr.ifr_netmask);
+    mask_in->sin_family = AF_INET;
+    mask_in->sin_addr = netmask;
+
+    lg2::info("Setting netmask /{PREFIX} on {NET_INTF}", "PREFIX", prefixLength,
+              "NET_INTF", ifname);
+    getIFSock().ioctl(SIOCSIFNETMASK, &ifr);
+
+    // Calculate and set broadcast address
+    uint32_t broadcast = (addr.s_addr & mask) | ~mask;
+    struct in_addr bcast;
+    bcast.s_addr = broadcast;
+
+    ifr = makeIFReq(ifname);
+    auto* bcast_in = reinterpret_cast<struct sockaddr_in*>(&ifr.ifr_broadaddr);
+    bcast_in->sin_family = AF_INET;
+    bcast_in->sin_addr = bcast;
+
+    getIFSock().ioctl(SIOCSIFBRDADDR, &ifr);
 }
 
 void deleteIntf(unsigned idx)

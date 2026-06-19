@@ -212,6 +212,36 @@ int ioctl(int fd, unsigned long int request, ...)
         it->second.mtu = req->ifr_mtu;
         return 0;
     }
+    else if (request == SIOCSIFADDR)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        return 0;
+    }
+    else if (request == SIOCSIFNETMASK)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        return 0;
+    }
+    else if (request == SIOCSIFBRDADDR)
+    {
+        auto it = mock_if.find(req->ifr_name);
+        if (it == mock_if.end())
+        {
+            errno = ENXIO;
+            return -1;
+        }
+        return 0;
+    }
     else if (request == SIOCETHTOOL)
     {
         auto it = mock_if.find(req->ifr_name);

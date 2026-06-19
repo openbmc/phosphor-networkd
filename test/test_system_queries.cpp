@@ -267,6 +267,121 @@ TEST_F(TestSystemQueries, RapidStateChanges)
     }
 }
 
+TEST_F(TestSystemQueries, SetIPAddressSuccess)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    EXPECT_NO_THROW(setIPAddress("eth0", "192.168.1.100", 24));
+}
+
+TEST_F(TestSystemQueries, SetIPAddressInvalidIP)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    EXPECT_THROW(setIPAddress("eth0", "invalid_ip", 24), std::invalid_argument);
+    EXPECT_THROW(setIPAddress("eth0", "256.1.1.1", 24), std::invalid_argument);
+    EXPECT_THROW(setIPAddress("eth0", "192.168.1", 24), std::invalid_argument);
+    EXPECT_THROW(setIPAddress("eth0", "192.168.1.1.1", 24),
+                 std::invalid_argument);
+    EXPECT_THROW(setIPAddress("eth0", "192.168.1.a", 24),
+                 std::invalid_argument);
+}
+
+TEST_F(TestSystemQueries, SetIPAddressNonExistentInterface)
+{
+    EXPECT_THROW(setIPAddress("eth99", "192.168.1.100", 24), std::system_error);
+}
+
+TEST_F(TestSystemQueries, SetIPAddressEdgePrefixLengths)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    // /32 prefix (single host)
+    EXPECT_NO_THROW(setIPAddress("eth0", "10.0.0.1", 32));
+
+    // /0 prefix (default route netmask)
+    EXPECT_NO_THROW(setIPAddress("eth0", "10.0.0.1", 0));
+
+    // /1 prefix
+    EXPECT_NO_THROW(setIPAddress("eth0", "10.0.0.1", 1));
+
+    // /31 prefix (point-to-point)
+    EXPECT_NO_THROW(setIPAddress("eth0", "10.0.0.1", 31));
+}
+
+TEST_F(TestSystemQueries, SetIPAddressInvalidPrefix)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    EXPECT_THROW(setIPAddress("eth0", "192.168.1.100", 33),
+                 std::invalid_argument);
+    EXPECT_THROW(setIPAddress("eth0", "192.168.1.100", 50),
+                 std::invalid_argument);
+    EXPECT_THROW(setIPAddress("eth0", "192.168.1.100", 255),
+                 std::invalid_argument);
+}
+
+TEST_F(TestSystemQueries, SetIPAddressCommonPrefixes)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    // /8 (Class A)
+    EXPECT_NO_THROW(setIPAddress("eth0", "10.0.0.1", 8));
+
+    // /16 (Class B)
+    EXPECT_NO_THROW(setIPAddress("eth0", "172.16.0.1", 16));
+
+    // /24 (Class C)
+    EXPECT_NO_THROW(setIPAddress("eth0", "192.168.1.1", 24));
+}
+
+TEST_F(TestSystemQueries, SetIPAddressMultipleInterfaces)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 2, .flags = 0, .name = "eth1", .mtu = 1500});
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 3, .flags = 0, .name = "eth2", .mtu = 1500});
+
+    EXPECT_NO_THROW(setIPAddress("eth0", "192.168.1.100", 24));
+    EXPECT_NO_THROW(setIPAddress("eth1", "192.168.2.100", 24));
+    EXPECT_NO_THROW(setIPAddress("eth2", "192.168.3.100", 24));
+}
+
+TEST_F(TestSystemQueries, SetIPAddressAllValidPrefixes)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    // Test all valid prefix lengths (0-32)
+    for (uint8_t prefix = 0; prefix <= 32; ++prefix)
+    {
+        EXPECT_NO_THROW(setIPAddress("eth0", "192.168.1.100", prefix))
+            << "Failed for prefix /" << static_cast<int>(prefix);
+    }
+}
+
+TEST_F(TestSystemQueries, SetIPAddressEmptyInterface)
+{
+    EXPECT_THROW(setIPAddress("", "192.168.1.100", 24), std::system_error);
+}
+
+TEST_F(TestSystemQueries, SetIPAddressMultipleTimes)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    // Set IP multiple times (should overwrite)
+    EXPECT_NO_THROW(setIPAddress("eth0", "192.168.1.100", 24));
+    EXPECT_NO_THROW(setIPAddress("eth0", "192.168.1.101", 24));
+    EXPECT_NO_THROW(setIPAddress("eth0", "192.168.1.102", 24));
+}
 } // namespace system
 } // namespace network
 } // namespace phosphor
