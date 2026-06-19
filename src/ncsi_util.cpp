@@ -282,7 +282,7 @@ CallBack sendCallBack = [](struct nl_msg* msg, void* arg) {
     return static_cast<int>(NL_STOP);
 };
 
-int applyCmd(NetlinkInterface& interface, const NetlinkCommand& cmd,
+int applyCmd(const NetlinkInterface& interface, const NetlinkCommand& cmd,
              int package = DEFAULT_VALUE, int channel = DEFAULT_VALUE,
              int flags = NONE, CallBack function = nullptr, void* arg = nullptr)
 {
@@ -314,8 +314,8 @@ int applyCmd(NetlinkInterface& interface, const NetlinkCommand& cmd,
         return -ENOMEM;
     }
 
-    auto msgHdr = genlmsg_put(msg.get(), NL_AUTO_PORT, NL_AUTO_SEQ, driverID, 0,
-                              flags, cmd.ncsi_cmd, 0);
+    const auto* msgHdr = genlmsg_put(msg.get(), NL_AUTO_PORT, NL_AUTO_SEQ,
+                                     driverID, 0, flags, cmd.ncsi_cmd, 0);
     if (!msgHdr)
     {
         std::cerr << "Unable to add the netlink headers , COMMAND : "

@@ -86,7 +86,7 @@ static void printInfo(phosphor::network::ncsi::InterfaceInfo& info)
             lg2::debug("      link state {LINK}", "LINK", lg2::hex,
                        chan.link_state);
 
-            auto& vlans = chan.vlan_ids;
+            const auto& vlans = chan.vlan_ids;
 
             if (!vlans.empty())
             {
@@ -206,7 +206,7 @@ int main(int argc, char** argv)
 
     if (!opts.oemPayload.empty())
     {
-        auto& payloadStr = opts.oemPayload;
+        const auto& payloadStr = opts.oemPayload;
         if (payloadStr.size() % 2 || payloadStr.size() < 2)
             exitWithError("Payload invalid: specify two hex digits per byte.",
                           argv);
@@ -237,22 +237,22 @@ int main(int argc, char** argv)
         args.push_back(typeStr);
         args.push_back(dataStr);
 
-        char** argv = new char*[args.size() + 1]();
+        char** execArgv = new char*[args.size() + 1]();
         for (size_t i = 0; i < args.size(); i++)
         {
-            argv[i] = strdup(args[i].c_str());
+            execArgv[i] = strdup(args[i].c_str());
         }
-        argv[args.size()] = NULL;
+        execArgv[args.size()] = NULL;
 
         lg2::debug("ncsi-netlink [..] -o is deprecated by ncsi-cmd");
-        execvp(argv[0], argv);
+        execvp(execArgv[0], execArgv);
         lg2::error("exec failed; use ncsi-cmd directly");
 
         for (size_t i = 0; i < args.size(); i++)
         {
-            free(argv[i]);
+            free(execArgv[i]);
         }
-        delete[] argv;
+        delete[] execArgv;
         return EXIT_FAILURE;
     }
     else if (opts.set)

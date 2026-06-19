@@ -42,7 +42,7 @@ class StaticGateway : public StaticGatewayObj
      */
     StaticGateway(sdbusplus::bus_t& bus, std::string_view objRoot,
                   stdplus::PinnedRef<EthernetInterface> parent,
-                  std::string gateway, IP::Protocol protocolType);
+                  const std::string& gateway, IP::Protocol protocolType);
 
     /** @brief Delete this d-bus object.
      */
@@ -66,7 +66,7 @@ class StaticGateway : public StaticGatewayObj
 
     StaticGateway(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
                   stdplus::PinnedRef<EthernetInterface> parent,
-                  std::string gateway, IP::Protocol protocolType);
+                  const std::string& gateway, IP::Protocol protocolType);
 };
 
 } // namespace network
