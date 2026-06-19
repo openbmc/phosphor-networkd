@@ -160,7 +160,7 @@ class Manager : public ManagerIface
 
     /** @brief Map of enabled interfaces */
     std::unordered_map<unsigned, bool> systemdNetworkdEnabled;
-    sdbusplus::bus::match_t systemdNetworkdEnabledMatch;
+    sdbusplus::match systemdNetworkdEnabledMatch;
 
     /** @brief List of hooks to execute during the next reload */
     std::vector<fu2::unique_function<void()>> reloadPreHooks;

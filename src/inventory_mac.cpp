@@ -45,8 +45,8 @@ constexpr auto propIntf = "org.freedesktop.DBus.Properties";
 constexpr auto methodGet = "Get";
 
 Manager* manager = nullptr;
-std::unique_ptr<sdbusplus::bus::match_t> EthInterfaceMatch = nullptr;
-std::unique_ptr<sdbusplus::bus::match_t> MacAddressMatch = nullptr;
+std::unique_ptr<sdbusplus::match> EthInterfaceMatch = nullptr;
+std::unique_ptr<sdbusplus::match> MacAddressMatch = nullptr;
 std::vector<std::string> first_boot_status;
 nlohmann::json configJson;
 
@@ -263,7 +263,7 @@ void registerSignals(sdbusplus::bus_t& bus)
         }
     };
 
-    MacAddressMatch = std::make_unique<sdbusplus::bus::match_t>(
+    MacAddressMatch = std::make_unique<sdbusplus::match>(
         bus,
         "interface='org.freedesktop.DBus.ObjectManager',type='signal',"
         "member='InterfacesAdded',path='/xyz/openbmc_project/"
@@ -339,7 +339,7 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
                       (FORCE_SYNC_MAC_FROM_INVENTORY)
                           ? "Force sync enabled"
                           : "First boot file is not present");
-            EthInterfaceMatch = std::make_unique<sdbusplus::bus::match_t>(
+            EthInterfaceMatch = std::make_unique<sdbusplus::match>(
                 bus,
                 "interface='org.freedesktop.DBus.ObjectManager',type='signal',"
                 "member='InterfacesAdded',path='/xyz/openbmc_project/network'",
