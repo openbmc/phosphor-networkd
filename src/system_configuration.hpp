@@ -50,7 +50,7 @@ class SystemConfiguration : public Iface
     stdplus::PinnedRef<sdbusplus::bus_t> bus;
 
     /** @brief Monitor for hostname changes */
-    sdbusplus::bus::match_t hostnamePropMatch;
+    sdbusplus::match hostnamePropMatch;
 };
 
 } // namespace network
