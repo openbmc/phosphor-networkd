@@ -201,7 +201,7 @@ void HypNetworkMgr::setBIOSTableAttrs()
             }
         }
     }
-    catch (const sdbusplus::exception::internal_exception& e)
+    catch (const sdbusplus::exception_t& e)
     {
         lg2::error("Error in making dbus call");
         throw std::runtime_error("DBus call failed");
