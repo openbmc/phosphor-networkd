@@ -37,6 +37,11 @@ static constexpr std::string_view lldpdConfigFilePath = "/etc/lldpd.conf";
 namespace internal
 {
 
+static bool isSpace(char c) noexcept
+{
+    return std::isspace(static_cast<unsigned char>(c)) != 0;
+}
+
 bool isValidNtpServer(const std::string& server)
 {
     // Try IP validation (IPv4 or IPv6)
@@ -151,11 +156,11 @@ std::unordered_set<std::string_view> parseInterfaces(
     {
         auto sep = interfaces.find(',');
         auto interface = interfaces.substr(0, sep);
-        while (!interface.empty() && std::isspace(interface.front()))
+        while (!interface.empty() && isSpace(interface.front()))
         {
             interface.remove_prefix(1);
         }
-        while (!interface.empty() && std::isspace(interface.back()))
+        while (!interface.empty() && isSpace(interface.back()))
         {
             interface.remove_suffix(1);
         }

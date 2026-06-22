@@ -122,7 +122,7 @@ Parser::Parser(const fs::path& filename)
     setFile(filename);
 }
 
-constexpr bool isspace(char c) noexcept
+constexpr bool isHorizontalSpace(char c) noexcept
 {
     return c == ' ' || c == '\t';
 }
@@ -135,12 +135,12 @@ constexpr bool iscomment(char c) noexcept
 static void removePadding(std::string_view& str) noexcept
 {
     size_t idx = str.size();
-    for (; idx > 0 && isspace(str[idx - 1]); idx--)
+    for (; idx > 0 && isHorizontalSpace(str[idx - 1]); idx--)
         ;
     str.remove_suffix(str.size() - idx);
 
     idx = 0;
-    for (; idx < str.size() && isspace(str[idx]); idx++)
+    for (; idx < str.size() && isHorizontalSpace(str[idx]); idx++)
         ;
     str.remove_prefix(idx);
 }
@@ -169,7 +169,7 @@ struct Parse
         {
             for (auto c : line.substr(cpos + 1))
             {
-                if (!isspace(c))
+                if (!isHorizontalSpace(c))
                 {
                     warnings.emplace_back(
                         std::format("{}:{}: Characters outside section name",
@@ -238,7 +238,7 @@ struct Parse
             {
                 return pumpSection(line.substr(i + 1));
             }
-            else if (!isspace(c))
+            else if (!isHorizontalSpace(c))
             {
                 return pumpKV(line.substr(i));
             }
