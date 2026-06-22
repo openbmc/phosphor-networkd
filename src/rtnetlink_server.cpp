@@ -11,6 +11,8 @@
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/ops.hpp>
 
+#include <optional>
+
 namespace phosphor::network::netlink
 {
 
@@ -24,7 +26,8 @@ inline void rthandler(std::string_view data, auto&& cb)
     cb(std::get<unsigned>(*ret), std::get<stdplus::InAnyAddr>(*ret));
 }
 
-static unsigned getIfIdx(const nlmsghdr& hdr, std::string_view data)
+static std::optional<unsigned> getIfIdx(const nlmsghdr& hdr,
+                                        std::string_view data)
 {
     switch (hdr.nlmsg_type)
     {
@@ -37,8 +40,9 @@ static unsigned getIfIdx(const nlmsghdr& hdr, std::string_view data)
         case RTM_NEWNEIGH:
         case RTM_DELNEIGH:
             return extractRtData<ndmsg>(data).ndm_ifindex;
+        default:
+            return std::nullopt;
     }
-    throw std::runtime_error("Unknown nlmsg_type");
 }
 
 static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
@@ -75,21 +79,41 @@ static void handler(Manager& m, const nlmsghdr& hdr, std::string_view data)
             case RTM_DELNEIGH:
                 m.removeNeighbor(neighFromRtm(data));
                 break;
+            default:
+                lg2::debug("Ignoring unsupported netlink message type {TYPE}",
+                           "TYPE", hdr.nlmsg_type);
+                break;
         }
     }
     catch (const std::exception& e)
     {
         try
         {
-            if (m.ignoredIntf.contains(getIfIdx(hdr, data)))
+            auto ifIdx = getIfIdx(hdr, data);
+            if (ifIdx.has_value() && m.ignoredIntf.contains(*ifIdx))
             {
                 // We don't want to log errors for ignored interfaces
                 return;
             }
         }
+        catch (const std::exception& idxErr)
+        {
+            lg2::debug(
+                "Unable to determine interface index for netlink message type "
+                "{TYPE}: {ERROR}",
+                "TYPE", hdr.nlmsg_type, "ERROR", idxErr);
+        }
         catch (...)
-        {}
+        {
+            lg2::debug("Unable to determine interface index for netlink "
+                       "message type {TYPE}",
+                       "TYPE", hdr.nlmsg_type);
+        }
         lg2::error("Failed handling netlink event: {ERROR}", "ERROR", e);
+    }
+    catch (...)
+    {
+        lg2::error("Failed handling netlink event with unknown exception");
     }
 }
 
