@@ -3,6 +3,8 @@
 #include "mock_ethernet_interface.hpp"
 #include "test_network_manager.hpp"
 
+#include <linux/if_addr.h>
+#include <linux/rtnetlink.h>
 #include <net/if.h>
 #include <net/if_arp.h>
 
@@ -137,6 +139,54 @@ TEST_F(TestEthernetInterface, DeleteIPAddress)
     interface.addrs.at("10.10.10.10/16"_sub)->delete_();
     EXPECT_THAT(interface.addrs,
                 UnorderedElementsAre(Key("20.20.20.20/16"_sub)));
+}
+
+TEST_F(TestEthernetInterface, DeleteNonStaticIPv4AddressNotAllowed)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+    // flags=0 (no IFA_F_PERMANENT) → addAddr() falls through to
+    // dhcpIsEnabled(), which returns true because the test fixture uses an
+    // empty config::Parser.
+    interface.addAddr({.ifidx = 1,
+                       .ifaddr = "10.10.10.10/16"_sub,
+                       .scope = RT_SCOPE_UNIVERSE,
+                       .flags = 0});
+
+    auto& addr = interface.addrs.at("10.10.10.10/16"_sub);
+    EXPECT_EQ(IP::AddressOrigin::DHCP, addr->origin());
+    EXPECT_THROW(addr->delete_(), NotAllowed);
+
+    EXPECT_EQ(1u, interface.addrs.size());
+}
+
+TEST_F(TestEthernetInterface, DeleteNonStaticIPv6AddressNotAllowed)
+{
+    using namespace sdbusplus::xyz::openbmc_project::Common::Error;
+    // flags=0 (no IFA_F_PERMANENT) → addAddr() falls through to
+    // dhcpIsEnabled(), which returns true because the test fixture uses an
+    // empty config::Parser.
+    interface.addAddr({.ifidx = 1,
+                       .ifaddr = "2001:db8::1/64"_sub,
+                       .scope = RT_SCOPE_UNIVERSE,
+                       .flags = 0});
+
+    // IFA_F_NOPREFIXROUTE | IFA_F_MANAGETEMPADDR → addAddr() hits the explicit
+    // SLAAC branch, assigning AddressOrigin::SLAAC regardless of
+    // dhcpIsEnabled().
+    interface.addAddr({.ifidx = 1,
+                       .ifaddr = "2001:db8::2/64"_sub,
+                       .scope = RT_SCOPE_UNIVERSE,
+                       .flags = IFA_F_NOPREFIXROUTE | IFA_F_MANAGETEMPADDR});
+
+    auto& dhcpAddr = interface.addrs.at("2001:db8::1/64"_sub);
+    auto& slaacAddr = interface.addrs.at("2001:db8::2/64"_sub);
+
+    EXPECT_EQ(IP::AddressOrigin::DHCP, dhcpAddr->origin());
+    EXPECT_EQ(IP::AddressOrigin::SLAAC, slaacAddr->origin());
+    EXPECT_THROW(dhcpAddr->delete_(), NotAllowed);
+    EXPECT_THROW(slaacAddr->delete_(), NotAllowed);
+
+    EXPECT_EQ(2u, interface.addrs.size());
 }
 
 TEST_F(TestEthernetInterface, CheckObjectPath)
