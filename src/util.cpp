@@ -6,6 +6,7 @@
 #include "types.hpp"
 
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
@@ -63,45 +64,70 @@ bool isValidNtpServer(const std::string& server)
 
 void executeCommandinChildProcess(stdplus::zstring_view path, char** args)
 {
-    using namespace std::string_literals;
+    auto logCmdFailure = [&](std::string_view statusMsg) {
+        stdplus::StrBuf buf;
+        stdplus::strAppend(buf, "`"sv, path, "`"sv);
+        for (size_t i = 0; args[i] != nullptr; ++i)
+        {
+            stdplus::strAppend(buf, " `"sv, args[i], "`"sv);
+        }
+        buf.push_back('\0');
+        lg2::error("Unable to execute command {CMD}: {STATUS}", "CMD",
+                   buf.data(), "STATUS", statusMsg);
+    };
+
     pid_t pid = fork();
 
     if (pid == 0)
     {
         execv(path.c_str(), args);
-        exit(255);
+        _exit(127);
     }
-    else if (pid < 0)
+
+    if (pid < 0)
     {
         auto error = errno;
         lg2::error("Error occurred during fork: {ERRNO}", "ERRNO", error);
         elog<InternalFailure>();
     }
-    else if (pid > 0)
-    {
-        int status;
-        while (waitpid(pid, &status, 0) == -1)
-        {
-            if (errno != EINTR)
-            {
-                status = -1;
-                break;
-            }
-        }
 
-        if (status < 0)
+    int status = 0;
+    while (waitpid(pid, &status, 0) == -1)
+    {
+        if (errno != EINTR)
         {
-            stdplus::StrBuf buf;
-            stdplus::strAppend(buf, "`"sv, path, "`"sv);
-            for (size_t i = 0; args[i] != nullptr; ++i)
-            {
-                stdplus::strAppend(buf, " `"sv, args[i], "`"sv);
-            }
-            buf.push_back('\0');
-            lg2::error("Unable to execute the command {CMD}: {STATUS}", "CMD",
-                       buf.data(), "STATUS", status);
+            auto error = errno;
+            lg2::error("Error occurred during waitpid: {ERRNO}", "ERRNO",
+                       error);
             elog<InternalFailure>();
         }
+    }
+
+    if (WIFSIGNALED(status))
+    {
+        logCmdFailure(stdplus::strCat("terminated by signal "sv,
+                                      std::to_string(WTERMSIG(status))));
+        elog<InternalFailure>();
+    }
+
+    if (!WIFEXITED(status))
+    {
+        logCmdFailure("child terminated abnormally");
+        elog<InternalFailure>();
+    }
+
+    int rc = WEXITSTATUS(status);
+    if (rc != 0)
+    {
+        if (rc == 127)
+        {
+            logCmdFailure("execv failed (exit 127)");
+        }
+        else
+        {
+            logCmdFailure(stdplus::strCat("exit code "sv, std::to_string(rc)));
+        }
+        elog<InternalFailure>();
     }
 }
 
