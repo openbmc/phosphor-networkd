@@ -502,5 +502,26 @@ TEST_F(TestEthernetInterface, addStaticNTPServers_ValidEdgeCases)
     EXPECT_EQ(servers3, parser3.map.getValueStrings("Network", "NTP"));
 }
 
+TEST_F(TestEthernetInterface, VLANCreationWithoutParentShouldThrow)
+{
+    // Test that creating a VLAN without a parent interface throws an exception
+    AllIntfInfo info{InterfaceInfo{
+        .type = ARPHRD_ETHER,
+        .idx = 0,
+        .flags = 0,
+        .name = "test0.100",
+        .parent_idx = std::nullopt,  // Missing parent interface!
+        .vlan_id = 100
+    }};
+
+    // Should throw std::runtime_error with message "Missing parent link"
+    EXPECT_THROW(
+        MockEthernetInterface(bus, manager, info,
+                             "/xyz/openbmc_test/network"sv,
+                             config::Parser()),
+        std::runtime_error
+    );
+}
+
 } // namespace network
 } // namespace phosphor
