@@ -41,6 +41,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "38c1b909_b75c6443",
+        "filename": "src/rtnetlink_server.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-06-23T16:17:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e207bf9_86cd1e35",
+      "range": {
+        "startLine": 36,
+        "startChar": 19,
+        "endLine": 36,
+        "endChar": 37
+      },
+      "revId": "096296eec4ed83d98ffee9a7c202e51fff11364c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b62f39ef_39dc1af6",
@@ -54,6 +78,30 @@
       "writtenOn": "2026-06-23T14:06:29Z",
       "side": 1,
       "message": "Same here and below.",
+      "range": {
+        "startLine": 39,
+        "startChar": 19,
+        "endLine": 39,
+        "endChar": 37
+      },
+      "revId": "096296eec4ed83d98ffee9a7c202e51fff11364c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fdbf6ced_ff95201f",
+        "filename": "src/rtnetlink_server.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-06-23T16:17:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b62f39ef_39dc1af6",
       "range": {
         "startLine": 39,
         "startChar": 19,
@@ -87,6 +135,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f7e10f2_53bd1e35",
+        "filename": "src/rtnetlink_server.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-06-23T16:17:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "277e7cca_949ee4ea",
+      "range": {
+        "startLine": 93,
+        "startChar": 16,
+        "endLine": 93,
+        "endChar": 21
+      },
+      "revId": "096296eec4ed83d98ffee9a7c202e51fff11364c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "83b3dff3_f5328f47",
@@ -100,6 +172,30 @@
       "writtenOn": "2026-06-23T14:06:29Z",
       "side": 1,
       "message": "Catch(...), catches everything,  including non-standard throws not inheriting from std::exception.\nLooks like you need both.",
+      "range": {
+        "startLine": 99,
+        "startChar": 8,
+        "endLine": 99,
+        "endChar": 44
+      },
+      "revId": "096296eec4ed83d98ffee9a7c202e51fff11364c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3736192d_d75edb7f",
+        "filename": "src/rtnetlink_server.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-06-23T16:17:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83b3dff3_f5328f47",
       "range": {
         "startLine": 99,
         "startChar": 8,
