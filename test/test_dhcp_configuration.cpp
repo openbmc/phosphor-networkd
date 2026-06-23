@@ -45,7 +45,8 @@ class TestDHCPConfiguration : public stdplus::gtest::TestWithTmp
     {
         AllIntfInfo info{InterfaceInfo{
             .type = ARPHRD_ETHER, .idx = 1, .flags = 0, .name = "test0"}};
-        return {bus, manager, info, "/xyz/openbmc_test/network"sv,
+        return {bus, manager, info,
+                sdbusplus::object_path("/xyz/openbmc_test/network"),
                 config::Parser()};
     }
 

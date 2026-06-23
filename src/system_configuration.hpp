@@ -38,7 +38,7 @@ class SystemConfiguration : public Iface
      *  @param[in] parent - Parent object.
      */
     SystemConfiguration(stdplus::PinnedRef<sdbusplus::bus_t> bus,
-                        stdplus::const_zstring objPath);
+                        const sdbusplus::object_path& objPath);
 
     /** @brief set the hostname of the system.
      *  @param[in] name - host name of the system.

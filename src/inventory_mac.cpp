@@ -232,7 +232,8 @@ void registerSignals(sdbusplus::bus_t& bus)
 
         for (const auto& pattern : configJson.items())
         {
-            if (objPath.str.ends_with("/" + pattern.value().get<std::string>()))
+            if (objPath.string().ends_with(
+                    "/" + pattern.value().get<std::string>()))
             {
                 for (auto& interface : interfacesProperties)
                 {

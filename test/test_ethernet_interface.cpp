@@ -44,7 +44,8 @@ class TestEthernetInterface : public stdplus::gtest::TestWithTmp
     {
         AllIntfInfo info{InterfaceInfo{
             .type = ARPHRD_ETHER, .idx = 1, .flags = 0, .name = "test0"}};
-        return {bus, manager, info, "/xyz/openbmc_test/network"sv,
+        return {bus, manager, info,
+                sdbusplus::object_path("/xyz/openbmc_test/network"),
                 config::Parser()};
     }
 
@@ -88,8 +89,9 @@ TEST_F(TestEthernetInterface, Fields)
         .name = "test1",
         .mac = mac,
         .mtu = mtu}};
-    MockEthernetInterface intf(bus, manager, info,
-                               "/xyz/openbmc_test/network"sv, config::Parser());
+    MockEthernetInterface intf(
+        bus, manager, info, sdbusplus::object_path("/xyz/openbmc_test/network"),
+        config::Parser());
 
     EXPECT_EQ(mtu, intf.mtu());
     EXPECT_EQ(stdplus::toStr(mac), intf.macAddress());

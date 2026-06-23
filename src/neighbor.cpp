@@ -22,19 +22,20 @@ static auto makeObjPath(std::string_view root, stdplus::InAnyAddr addr)
     return ret;
 }
 
-Neighbor::Neighbor(sdbusplus::bus_t& bus, std::string_view objRoot,
+Neighbor::Neighbor(sdbusplus::bus_t& bus, const sdbusplus::object_path& objRoot,
                    stdplus::PinnedRef<EthernetInterface> parent,
                    stdplus::InAnyAddr addr, stdplus::EtherAddr lladdr,
                    State state) :
-    Neighbor(bus, makeObjPath(objRoot, addr), parent, addr, lladdr, state)
+    Neighbor(bus, makeObjPath(objRoot.string(), addr), parent, addr, lladdr,
+             state, std::monostate())
 {}
 
 Neighbor::Neighbor(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
                    stdplus::PinnedRef<EthernetInterface> parent,
                    stdplus::InAnyAddr addr, stdplus::EtherAddr lladdr,
-                   State state) :
-    NeighborObj(bus, objPath.str.c_str(), NeighborObj::action::defer_emit),
-    parent(parent), objPath(std::move(objPath))
+                   State state, std::monostate /*unused*/) :
+    NeighborObj(bus, objPath, NeighborObj::action::defer_emit), parent(parent),
+    objPath(objPath)
 {
     NeighborObj::ipAddress(stdplus::toStr(addr), true);
     NeighborObj::macAddress(stdplus::toStr(lladdr), true);

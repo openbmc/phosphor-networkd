@@ -43,7 +43,7 @@ class HypSysConfig : public Iface
     HypSysConfig(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                  sdbusplus::object_path objPath,
                  stdplus::PinnedRef<HypNetworkMgr> parent) :
-        Iface(bus, objPath.str.c_str(), Iface::action::defer_emit), bus(bus),
+        Iface(bus, objPath, Iface::action::defer_emit), bus(bus),
         manager(parent) {};
 
     /** @brief set the hostname of the system.

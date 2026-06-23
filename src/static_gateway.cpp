@@ -21,20 +21,19 @@ static auto makeObjPath(std::string_view root, const std::string& addr)
     return ret;
 }
 
-StaticGateway::StaticGateway(sdbusplus::bus_t& bus, std::string_view objRoot,
-                             stdplus::PinnedRef<EthernetInterface> parent,
-                             const std::string& gateway,
-                             IP::Protocol protocolType) :
-    StaticGateway(bus, makeObjPath(objRoot, gateway), parent, gateway,
-                  protocolType)
+StaticGateway::StaticGateway(
+    sdbusplus::bus_t& bus, const sdbusplus::object_path& objRoot,
+    stdplus::PinnedRef<EthernetInterface> parent, const std::string& gateway,
+    IP::Protocol protocolType) :
+    StaticGateway(bus, makeObjPath(objRoot.string(), gateway), parent, gateway,
+                  protocolType, std::monostate())
 {}
 
 StaticGateway::StaticGateway(
     sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
     stdplus::PinnedRef<EthernetInterface> parent, const std::string& gateway,
-    IP::Protocol protocolType) :
-    StaticGatewayObj(bus, objPath.str.c_str(),
-                     StaticGatewayObj::action::defer_emit),
+    IP::Protocol protocolType, std::monostate /*unused*/) :
+    StaticGatewayObj(bus, objPath, StaticGatewayObj::action::defer_emit),
     parent(parent), objPath(std::move(objPath))
 {
     StaticGatewayObj::gateway(gateway, true);

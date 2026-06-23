@@ -159,7 +159,7 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
 
     std::filesystem::create_directories(confDir);
     systemConf = std::make_unique<phosphor::network::SystemConfiguration>(
-        bus, (this->objPath / "config").str);
+        bus, this->objPath / "config");
 
     // Initialize hostname manager to set unique hostname on first boot
     hostnameManager = std::make_unique<HostnameManager>(bus, *this);
@@ -207,8 +207,8 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
         return;
     }
     config::Parser config(config::pathForIntfConf(confDir, *info.intf.name));
-    auto intf = std::make_unique<EthernetInterface>(
-        bus, *this, info, objPath.str, config, enabled);
+    auto intf = std::make_unique<EthernetInterface>(bus, *this, info, objPath,
+                                                    config, enabled);
     intf->loadNameServers(config);
     intf->loadNTPServers(config);
     auto ptr = intf.get();
