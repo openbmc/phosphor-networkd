@@ -36,7 +36,7 @@ class Configuration : public Iface
      *  @param[in] parent - Parent object.
      *  @param[in] type - Network type.
      */
-    Configuration(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
+    Configuration(sdbusplus::bus_t& bus, const sdbusplus::object_path& objPath,
                   stdplus::PinnedRef<EthernetInterface> parent, DHCPType type);
 
     /** @brief If true then DNS servers received from the DHCP server

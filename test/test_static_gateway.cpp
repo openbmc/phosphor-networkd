@@ -34,7 +34,8 @@ class TestStaticGateway : public stdplus::gtest::TestWithTmp
         bus(sdbusplus::bus::new_default()), confDir(CaseTmpDir()),
         manager(bus, "/xyz/openbmc_test/network", confDir),
         interface(bus, manager, makeInterfaceInfo(),
-                  "/xyz/openbmc_test/network"sv, config::Parser())
+                  sdbusplus::object_path("/xyz/openbmc_test/network"),
+                  config::Parser())
     {}
 
     static AllIntfInfo makeInterfaceInfo()
@@ -47,8 +48,8 @@ class TestStaticGateway : public stdplus::gtest::TestWithTmp
         std::string gateway, IP::Protocol protocolType)
     {
         return std::make_unique<StaticGateway>(
-            bus, "/xyz/openbmc_test/network/test0"sv, interface, gateway,
-            protocolType);
+            bus, sdbusplus::object_path("/xyz/openbmc_test/network/test0"),
+            interface, gateway, protocolType);
     }
 };
 

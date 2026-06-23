@@ -25,8 +25,9 @@ static constexpr char propMatch[] =
     "arg0='org.freedesktop.hostname1'";
 
 SystemConfiguration::SystemConfiguration(
-    stdplus::PinnedRef<sdbusplus::bus_t> bus, stdplus::const_zstring objPath) :
-    Iface(bus, objPath.c_str(), Iface::action::defer_emit), bus(bus),
+    stdplus::PinnedRef<sdbusplus::bus_t> bus,
+    const sdbusplus::object_path& objPath) :
+    Iface(bus, objPath, Iface::action::defer_emit), bus(bus),
     hostnamePropMatch(
         bus, propMatch,
         [sc = stdplus::PinnedRef(*this)](sdbusplus::message_t& m) {

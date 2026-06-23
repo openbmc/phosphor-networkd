@@ -42,7 +42,7 @@ HypIPAddress::HypIPAddress(
     stdplus::PinnedRef<HypEthInterface> parent, stdplus::SubnetAny addr,
     const std::string& gateway, HypIP::AddressOrigin origin,
     const std::string& intf) :
-    HypIPIfaces(bus, objPath.str.c_str(), HypIPIfaces::action::defer_emit),
+    HypIPIfaces(bus, objPath, HypIPIfaces::action::defer_emit),
     intf(std::move(intf)), parent(parent), objectPath(std::move(objPath))
 {
     HypIP::address(stdplus::toStr(addr.getAddr()), true);

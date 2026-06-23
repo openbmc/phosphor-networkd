@@ -38,7 +38,7 @@ class Neighbor : public NeighborObj
      *  @param[in] lladdr - Low level MAC address.
      *  @param[in] state - The state of the neighbor entry.
      */
-    Neighbor(sdbusplus::bus_t& bus, std::string_view objRoot,
+    Neighbor(sdbusplus::bus_t& bus, const sdbusplus::object_path& objRoot,
              stdplus::PinnedRef<EthernetInterface> parent,
              stdplus::InAnyAddr addr, stdplus::EtherAddr lladdr, State state);
 
@@ -53,7 +53,7 @@ class Neighbor : public NeighborObj
     using NeighborObj::state;
     State state(State) override;
 
-    inline const auto& getObjPath() const
+    inline const sdbusplus::object_path& getObjPath() const
     {
         return objPath;
     }
@@ -67,7 +67,8 @@ class Neighbor : public NeighborObj
 
     Neighbor(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
              stdplus::PinnedRef<EthernetInterface> parent,
-             stdplus::InAnyAddr addr, stdplus::EtherAddr lladdr, State state);
+             stdplus::InAnyAddr addr, stdplus::EtherAddr lladdr, State state,
+             std::monostate /*unused*/);
 };
 
 } // namespace network

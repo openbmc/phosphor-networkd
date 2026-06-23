@@ -39,7 +39,7 @@ class IPAddress : public IPIfaces
      *  @param[in] addr - The ip address and prefix.
      *  @param[in] origin - origin of ipaddress(dhcp/static/SLAAC/LinkLocal).
      */
-    IPAddress(sdbusplus::bus_t& bus, std::string_view objRoot,
+    IPAddress(sdbusplus::bus_t& bus, const sdbusplus::object_path& objRoot,
               stdplus::PinnedRef<EthernetInterface> parent,
               stdplus::SubnetAny addr, IP::AddressOrigin origin);
 
@@ -73,7 +73,8 @@ class IPAddress : public IPIfaces
 
     IPAddress(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
               stdplus::PinnedRef<EthernetInterface> parent,
-              stdplus::SubnetAny addr, IP::AddressOrigin origin);
+              stdplus::SubnetAny addr, IP::AddressOrigin origin,
+              std::monostate /*unused*/);
 };
 
 } // namespace network

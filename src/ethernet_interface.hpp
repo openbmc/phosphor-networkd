@@ -87,7 +87,8 @@ class EthernetInterface : public Ifaces
      */
     EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                       stdplus::PinnedRef<Manager> manager,
-                      const AllIntfInfo& info, std::string_view objRoot,
+                      const AllIntfInfo& info,
+                      const sdbusplus::object_path& objRoot,
                       const config::Parser& config, bool enabled);
 
     /** @brief Network Manager object. */
@@ -258,14 +259,15 @@ class EthernetInterface : public Ifaces
     stdplus::PinnedRef<sdbusplus::bus_t> bus;
 
     /** @brief Dbus object path */
-    std::string objPath;
+    sdbusplus::object_path objPath;
 
     /** @brief Interface index */
     unsigned ifIdx;
 
     struct VlanProperties : VlanIfaces
     {
-        VlanProperties(sdbusplus::bus_t& bus, stdplus::const_zstring objPath,
+        VlanProperties(sdbusplus::bus_t& bus,
+                       const sdbusplus::object_path& objPath,
                        const InterfaceInfo& info,
                        stdplus::PinnedRef<EthernetInterface> eth);
         void delete_() override;
@@ -280,10 +282,11 @@ class EthernetInterface : public Ifaces
     friend class TestNetworkManager;
 
   private:
-    EthernetInterface(stdplus::PinnedRef<sdbusplus::bus_t> bus,
-                      stdplus::PinnedRef<Manager> manager,
-                      const AllIntfInfo& info, std::string&& objPath,
-                      const config::Parser& config, bool enabled);
+    EthernetInterface(
+        stdplus::PinnedRef<sdbusplus::bus_t> bus,
+        stdplus::PinnedRef<Manager> manager, const AllIntfInfo& info,
+        const sdbusplus::object_path& objPath, const config::Parser& config,
+        bool enabled, std::monostate /*unused*/);
 };
 
 } // namespace network

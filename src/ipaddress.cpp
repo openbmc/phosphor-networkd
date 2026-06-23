@@ -46,17 +46,20 @@ struct Proto<stdplus::In6Addr>
     static inline constexpr auto value = IP::Protocol::IPv6;
 };
 
-IPAddress::IPAddress(sdbusplus::bus_t& bus, std::string_view objRoot,
+IPAddress::IPAddress(sdbusplus::bus_t& bus,
+                     const sdbusplus::object_path& objRoot,
                      stdplus::PinnedRef<EthernetInterface> parent,
                      stdplus::SubnetAny addr, AddressOrigin origin) :
-    IPAddress(bus, makeObjPath(objRoot, addr), parent, addr, origin)
+    IPAddress(bus, makeObjPath(objRoot.string(), addr), parent, addr, origin,
+              std::monostate())
 {}
 
 IPAddress::IPAddress(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
                      stdplus::PinnedRef<EthernetInterface> parent,
-                     stdplus::SubnetAny addr, AddressOrigin origin) :
-    IPIfaces(bus, objPath.str.c_str(), IPIfaces::action::defer_emit),
-    parent(parent), objPath(std::move(objPath))
+                     stdplus::SubnetAny addr, AddressOrigin origin,
+                     std::monostate /*unused*/) :
+    IPIfaces(bus, objPath, IPIfaces::action::defer_emit), parent(parent),
+    objPath(objPath)
 {
     IP::address(stdplus::toStr(addr.getAddr()), true);
     IP::prefixLength(addr.getPfx(), true);

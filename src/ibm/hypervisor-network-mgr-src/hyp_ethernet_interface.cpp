@@ -77,8 +77,7 @@ std::string HypEthInterface::getIntfLabel()
 {
     // This method returns if0/if1 based on the eth
     // interface label eth0/eth1 in the object path
-    const std::string ethIntfLabel =
-        objectPath.str.substr(objectPath.str.rfind("/") + 1);
+    const std::string ethIntfLabel = objectPath.filename();
     if (ethIntfLabel == "eth0")
     {
         return "if0";
@@ -120,24 +119,20 @@ void HypEthInterface::createIPAddressObjects()
             // set the default values for interface 0 in the local
             // copy of the bios table - biosTableAttrs
             manager.get().setDefaultBIOSTableAttrsOnIntf(intfLabel);
-            addrs.emplace(
-                "eth0",
-                std::make_unique<HypIPAddress>(
-                    bus, sdbusplus::object_path(objectPath.str + "/ipv4/addr0"),
-                    *this, *ifaddr, "0.0.0.0", HypIP::AddressOrigin::Static,
-                    intfLabel));
+            addrs.emplace("eth0", std::make_unique<HypIPAddress>(
+                                      bus, objectPath / "ipv4" / "addr0", *this,
+                                      *ifaddr, "0.0.0.0",
+                                      HypIP::AddressOrigin::Static, intfLabel));
         }
         else if (intfLabel == "if1")
         {
             // set the default values for interface 0 in the local
             // copy of the bios table - biosTableAttrs
             manager.get().setDefaultBIOSTableAttrsOnIntf(intfLabel);
-            addrs.emplace(
-                "eth1",
-                std::make_unique<HypIPAddress>(
-                    bus, sdbusplus::object_path(objectPath.str + "/ipv4/addr0"),
-                    *this, *ifaddr, "0.0.0.0", HypIP::AddressOrigin::Static,
-                    intfLabel));
+            addrs.emplace("eth1", std::make_unique<HypIPAddress>(
+                                      bus, objectPath / "ipv4" / "addr0", *this,
+                                      *ifaddr, "0.0.0.0",
+                                      HypIP::AddressOrigin::Static, intfLabel));
         }
         return;
     }
@@ -221,12 +216,9 @@ void HypEthInterface::createIPAddressObjects()
         ifaddr.emplace(*addr, ipPrefixLength);
         std::string ipObjId = "addr0";
 
-        addrs.emplace(ipAddr,
-                      std::make_unique<HypIPAddress>(
-                          bus,
-                          sdbusplus::object_path(
-                              objectPath.str + "/" + protocol + "/" + ipObjId),
-                          *this, *ifaddr, ipGateway, ipOrigin, intfLabel));
+        addrs.emplace(ipAddr, std::make_unique<HypIPAddress>(
+                                  bus, objectPath / protocol / ipObjId, *this,
+                                  *ifaddr, ipGateway, ipOrigin, intfLabel));
     }
 }
 
