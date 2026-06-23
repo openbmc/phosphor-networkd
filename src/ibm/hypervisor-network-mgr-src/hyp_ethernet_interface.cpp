@@ -15,10 +15,6 @@ using namespace phosphor::logging;
 using namespace sdbusplus::xyz::openbmc_project::Common::Error;
 using Argument = xyz::openbmc_project::Common::InvalidArgument;
 
-constexpr auto BIOS_SERVICE = "xyz.openbmc_project.BIOSConfigManager";
-constexpr auto BIOS_OBJPATH = "/xyz/openbmc_project/bios_config/manager";
-constexpr auto BIOS_MGR_INTF = "xyz.openbmc_project.BIOSConfig.Manager";
-
 // The total number of vmi attributes defined in biosTableAttrs
 // currently is 9:
 // 4 attributes of interface 0
