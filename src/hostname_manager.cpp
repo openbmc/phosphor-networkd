@@ -258,6 +258,7 @@ void HostnameManager::setUniqueHostname()
         std::string macAddress = getMacAddress();
         if (!macAddress.empty())
         {
+            std::erase(macAddress, ':');
             uniqueSuffix = macAddress;
             lg2::info("Using MAC Address for unique hostname");
         }
