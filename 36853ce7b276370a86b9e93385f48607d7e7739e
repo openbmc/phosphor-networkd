@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52cf0868_aea35cb0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002105
+      },
+      "writtenOn": "2026-06-26T14:16:33Z",
+      "side": 1,
+      "message": "@rashidmp@ami.com Could please share the standard why we need clear the IP addresses when enable DHCP?",
+      "revId": "36853ce7b276370a86b9e93385f48607d7e7739e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
