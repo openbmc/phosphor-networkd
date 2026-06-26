@@ -34,6 +34,24 @@
       "parentUuid": "f49fa55c_6493e471",
       "revId": "25211ba4358d6f2352f8f6ab0ce7571e17566905",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38eb37b6_20f82e45",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-06-26T11:13:59Z",
+      "side": 1,
+      "message": "When switching from DHCP to static via Redfish, bmcweb explicitly clears the gateway. Fixing the gateway persistence needs to be done in bmcweb. I am working on that separately.",
+      "parentUuid": "03846aa2_3fcb7704",
+      "revId": "25211ba4358d6f2352f8f6ab0ce7571e17566905",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
