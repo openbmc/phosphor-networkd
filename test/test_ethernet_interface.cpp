@@ -260,25 +260,6 @@ TEST_F(TestEthernetInterface, DHCPEnabled)
     set_test(DHCPConf::both, /*dhcp4=*/true, /*dhcp6=*/true, /*ra=*/true);
 }
 
-TEST_F(TestEthernetInterface, DeleteStaticIPv4OnEnableDHCPv4)
-{
-    EXPECT_CALL(manager.mockReload, schedule())
-        .WillRepeatedly(
-            testing::InvokeWithoutArgs([&]() { manager.reloadCb(); }));
-    EXPECT_FALSE(interface.dhcp4(false));
-
-    auto path1 = createIPObject(IP::Protocol::IPv4, "10.10.10.10", 16);
-    auto path2 = createIPObject(IP::Protocol::IPv4, "20.20.20.20", 16);
-    EXPECT_THAT(interface.addrs,
-                UnorderedElementsAre(Key("10.10.10.10/16"_sub),
-                                     Key("20.20.20.20/16"_sub)));
-    EXPECT_TRUE(interface.dhcp4(true));
-    for (const auto& [subnet, ip] : interface.addrs)
-    {
-        EXPECT_NE(ip->origin(), IP::AddressOrigin::Static);
-    }
-}
-
 TEST_F(TestEthernetInterface, addStaticNTPServers_InvalidIPv4)
 {
     using namespace sdbusplus::xyz::openbmc_project::Common::Error;

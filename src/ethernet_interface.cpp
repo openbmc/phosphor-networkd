@@ -543,13 +543,7 @@ bool EthernetInterface::dhcp4(bool value)
 {
     if (dhcp4() != EthernetInterfaceIntf::dhcp4(value))
     {
-        if (value)
-        {
-            manager.get().addReloadPreHook([self = this]() {
-                self->deleteStaticIPs(IP::Protocol::IPv4);
-            });
-        }
-        else if (!value)
+        if (!value)
         {
             for (auto& [addr, ipObj] : addrs)
             {
@@ -601,13 +595,7 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
 
     if (old4 != new4 || old6 != new6 || oldra != newra)
     {
-        if (new4 && !old4)
-        {
-            manager.get().addReloadPreHook([self = this]() {
-                self->deleteStaticIPs(IP::Protocol::IPv4);
-            });
-        }
-        else if (old4 && !new4)
+        if (old4 && !new4)
         {
             for (auto& [addr, ipObj] : addrs)
             {
@@ -1283,33 +1271,6 @@ bool EthernetInterface::emitLLDP(bool value)
 void EthernetInterface::reloadConfigs()
 {
     manager.get().reloadConfigs();
-}
-
-void EthernetInterface::deleteStaticIPs(std::optional<IP::Protocol> family)
-{
-    std::vector<stdplus::SubnetAny> toErase;
-    toErase.reserve(addrs.size());
-
-    for (const auto& [subnet, ip] : addrs)
-    {
-        if (ip->origin() == IP::AddressOrigin::Static &&
-            (!family.has_value() || ip->type() == *family))
-        {
-            toErase.emplace_back(subnet);
-        }
-    }
-
-    for (const auto& subnet : toErase)
-    {
-        auto it = addrs.find(subnet);
-        if (it == addrs.end())
-        {
-            continue;
-        }
-        std::unique_ptr<IPAddress> ptr = std::move(it->second);
-        addrs.erase(it);
-    }
-    writeConfigurationFile();
 }
 
 } // namespace network
