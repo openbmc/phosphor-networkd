@@ -16,6 +16,24 @@
       "message": "Handling unknown types with std::nullopt instead of exceptions makes sense here. Could you share a bit of context on what prompted this? Was there a specific scenario where the daemon crashed due to an unhandled message?",
       "revId": "d54e305d4b68c181721542c815bc8b2c776a9249",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43ac9a8e_bb79cbb2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-06-26T13:20:05Z",
+      "side": 1,
+      "message": "did not really hit any crash, i was doing this as part of error handling improvements",
+      "parentUuid": "1b44072a_924ee09c",
+      "revId": "d54e305d4b68c181721542c815bc8b2c776a9249",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
