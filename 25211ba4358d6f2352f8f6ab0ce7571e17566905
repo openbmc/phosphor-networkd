@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f49fa55c_6493e471",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002105
+      },
+      "writtenOn": "2026-06-26T07:10:41Z",
+      "side": 1,
+      "message": "@rashidmp@ami.com Did you verify if gateway of IPv4 kept after disable DHCPv4? The IP address was kept but the gateway was set to 0.0.0.0 after disabling DHCPv4.",
+      "revId": "25211ba4358d6f2352f8f6ab0ce7571e17566905",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
