@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f194128d_b50db2da",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002105
+      },
+      "writtenOn": "2026-06-29T01:48:55Z",
+      "side": 1,
+      "message": "@rashidmp@ami.com Should we also revert this commit?",
+      "revId": "51859be829121216826b2b2effffb2cd0abd5563",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
