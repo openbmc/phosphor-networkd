@@ -16,6 +16,24 @@
       "message": "@rashidmp@ami.com Should we also revert this commit?",
       "revId": "51859be829121216826b2b2effffb2cd0abd5563",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52cb28ac_b9be9736",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-06-29T07:24:58Z",
+      "side": 1,
+      "message": "Reverted: https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/91808",
+      "parentUuid": "f194128d_b50db2da",
+      "revId": "51859be829121216826b2b2effffb2cd0abd5563",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
