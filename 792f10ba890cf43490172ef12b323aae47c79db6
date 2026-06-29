@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "326dd039_93724de3",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-06-29T16:40:38Z",
+      "side": 1,
+      "message": "Please break this function as it seems to be lengthy.\n\nMay be `validateIPv4Address(...)` and `calculateNetmask(...)`",
+      "revId": "792f10ba890cf43490172ef12b323aae47c79db6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d83b9910_af6f7868",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-06-29T16:40:38Z",
+      "side": 1,
+      "message": "Should we throw invalid argument for /0, /32 as well? (you have done it for prefix length \u003e 32)",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 5
+      },
+      "revId": "792f10ba890cf43490172ef12b323aae47c79db6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "154b32fb_88f19f41",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-06-29T16:40:38Z",
+      "side": 1,
+      "message": "There is no validation for interface name, also we might need to check the interface existence before we proceed to configure IP on the interface.",
+      "range": {
+        "startLine": 158,
+        "startChar": 25,
+        "endLine": 158,
+        "endChar": 31
+      },
+      "revId": "792f10ba890cf43490172ef12b323aae47c79db6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7eaa89e8_1b2f190b",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-06-29T16:40:38Z",
+      "side": 1,
+      "message": "Can still reuse the ifr by just updating the netmask \u0026 broadcast field?",
+      "range": {
+        "startLine": 168,
+        "startChar": 1,
+        "endLine": 168,
+        "endChar": 28
+      },
+      "revId": "792f10ba890cf43490172ef12b323aae47c79db6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be869360_d0dd9147",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-06-29T16:40:38Z",
+      "side": 1,
+      "message": "Can these be taken into a separate helper method like below:\n```\n    void setSockAddrIn(struct sockaddr* sa, const struct in_addr\u0026 addr)\n    {\n        auto* sin \u003d reinterpret_cast\u003cstruct sockaddr_in*\u003e(sa);\n        sin-\u003esin_family \u003d AF_INET;\n        sin-\u003esin_addr \u003d addr;\n    }\n```\n\nAnd the helper method can be called like:\n```\nsetSockAddrIn(\u0026ifr.ifr_addr, addr);\n..\nsetSockAddrIn(\u0026ifr.ifr_netmask, netmask);\n..\nsetSockAddrIn(\u0026ifr.ifr_broadaddr, bcast);\n```",
+      "range": {
+        "startLine": 184,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 31
+      },
+      "revId": "792f10ba890cf43490172ef12b323aae47c79db6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af7b1b57_edbeadc1",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-06-29T16:40:38Z",
+      "side": 1,
+      "message": "I feel all these must go in a try-catch block, to handle exceptions gracefully.",
+      "range": {
+        "startLine": 165,
+        "startChar": 0,
+        "endLine": 187,
+        "endChar": 44
+      },
+      "revId": "792f10ba890cf43490172ef12b323aae47c79db6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}

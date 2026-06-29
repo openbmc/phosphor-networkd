@@ -98,6 +98,24 @@
       "parentUuid": "d0181ebf_7133e497",
       "revId": "c78a2516c1de252b8c79e86d81e3f748b9c3be85",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8272438_39dc74db",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-06-29T16:40:38Z",
+      "side": 1,
+      "message": "\u003e Despite being ignored for external management, these interfaces still require `runtime IP configuration` for reliable BMC communication. Since no DBus objects exist for ignored interfaces, we use direct ioctl ystem calls to configure them.\n\nPlease highlight \"runtime config\" in the commit message",
+      "parentUuid": "bc1715fa_6cdf996c",
+      "revId": "c78a2516c1de252b8c79e86d81e3f748b9c3be85",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
