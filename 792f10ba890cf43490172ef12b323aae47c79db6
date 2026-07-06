@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c855b77_401c720c",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-06T15:56:46Z",
+      "side": 1,
+      "message": "Done, updated the patch with functions",
+      "parentUuid": "326dd039_93724de3",
+      "revId": "792f10ba890cf43490172ef12b323aae47c79db6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d83b9910_af6f7868",
@@ -31,6 +49,30 @@
       "writtenOn": "2026-06-29T16:40:38Z",
       "side": 1,
       "message": "Should we throw invalid argument for /0, /32 as well? (you have done it for prefix length \u003e 32)",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 5
+      },
+      "revId": "792f10ba890cf43490172ef12b323aae47c79db6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "376287d7_bda6d15a",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-06T15:56:46Z",
+      "side": 1,
+      "message": "Added calculateNetmask() - Calculate netmask from prefix (1-31)",
+      "parentUuid": "d83b9910_af6f7868",
       "range": {
         "startLine": 140,
         "startChar": 0,
@@ -64,6 +106,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "284e5dcf_ff08a43c",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-06T15:56:46Z",
+      "side": 1,
+      "message": "Added interfaceExists() - Check if interface exists\nvalidateInterfaceName() -if name is empty or exceeds IFNAMSIZ-1",
+      "parentUuid": "154b32fb_88f19f41",
+      "range": {
+        "startLine": 158,
+        "startChar": 25,
+        "endLine": 158,
+        "endChar": 31
+      },
+      "revId": "792f10ba890cf43490172ef12b323aae47c79db6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7eaa89e8_1b2f190b",
@@ -77,6 +143,30 @@
       "writtenOn": "2026-06-29T16:40:38Z",
       "side": 1,
       "message": "Can still reuse the ifr by just updating the netmask \u0026 broadcast field?",
+      "range": {
+        "startLine": 168,
+        "startChar": 1,
+        "endLine": 168,
+        "endChar": 28
+      },
+      "revId": "792f10ba890cf43490172ef12b323aae47c79db6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ce9bd43_f92ff823",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-06T15:56:46Z",
+      "side": 1,
+      "message": "Added calculateNetmask() - Calculate netmask from prefix (1-31)\ncalculateBroadcast() - Calculate broadcast address",
+      "parentUuid": "7eaa89e8_1b2f190b",
       "range": {
         "startLine": 168,
         "startChar": 1,
@@ -110,6 +200,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "26f42f53_0ae21d7a",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-06T15:56:46Z",
+      "side": 1,
+      "message": "nterfaceExists() - Check if interface exists\nvalidateIPv4Address() - Validate and parse IPv4 address\ncalculateNetmask() - Calculate netmask from prefix (1-31)\ncalculateBroadcast() - Calculate broadcast address\nvalidateInterfaceName() - Validate interface name\nsetSockAddrIn() - Set sockaddr_in structure\nsetIPAddress() - Main function for runtime IP configuration",
+      "parentUuid": "be869360_d0dd9147",
+      "range": {
+        "startLine": 184,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 31
+      },
+      "revId": "792f10ba890cf43490172ef12b323aae47c79db6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "af7b1b57_edbeadc1",
@@ -123,6 +237,30 @@
       "writtenOn": "2026-06-29T16:40:38Z",
       "side": 1,
       "message": "I feel all these must go in a try-catch block, to handle exceptions gracefully.",
+      "range": {
+        "startLine": 165,
+        "startChar": 0,
+        "endLine": 187,
+        "endChar": 44
+      },
+      "revId": "792f10ba890cf43490172ef12b323aae47c79db6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1702bc19_beddaec5",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-06T15:56:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af7b1b57_edbeadc1",
       "range": {
         "startLine": 165,
         "startChar": 0,
