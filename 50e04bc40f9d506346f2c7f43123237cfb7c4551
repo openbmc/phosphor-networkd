@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "de87aae1_e8f10be6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-08T09:36:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "80c76555_de4082f9",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 14
+      },
+      "revId": "50e04bc40f9d506346f2c7f43123237cfb7c4551",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "09fe9437_671fafb5",
@@ -37,6 +61,24 @@
       "writtenOn": "2026-07-07T17:26:45Z",
       "side": 1,
       "message": "Please add logs wherever necessary",
+      "revId": "50e04bc40f9d506346f2c7f43123237cfb7c4551",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7523e75b_fdc7b1bf",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-08T09:36:57Z",
+      "side": 1,
+      "message": "added log",
+      "parentUuid": "09fe9437_671fafb5",
       "revId": "50e04bc40f9d506346f2c7f43123237cfb7c4551",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -64,6 +106,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb9af26e_e2d20d9a",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-08T09:36:57Z",
+      "side": 1,
+      "message": "Added below expression\n    uint32_t mask \u003d htonl(0xFFFFFFFFU \u003c\u003c (32 - prefixLength));",
+      "parentUuid": "f35bd371_2880c9fa",
+      "range": {
+        "startLine": 147,
+        "startChar": 4,
+        "endLine": 148,
+        "endChar": 78
+      },
+      "revId": "50e04bc40f9d506346f2c7f43123237cfb7c4551",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "653e1c14_b77f2e4e",
@@ -77,6 +143,30 @@
       "writtenOn": "2026-07-07T17:26:45Z",
       "side": 1,
       "message": "Can this be `struct sockaddr\u0026 sa` and called like the below (looks cleaner than passing `\u0026ifr.ifr_addr`:\n```setSockAddrIn(ifr.ifr_addr, addr);\nsetSockAddrIn(ifr.ifr_netmask, netmask);\nsetSockAddrIn(ifr.ifr_broadaddr, bcast);```",
+      "range": {
+        "startLine": 187,
+        "startChar": 26,
+        "endLine": 187,
+        "endChar": 45
+      },
+      "revId": "50e04bc40f9d506346f2c7f43123237cfb7c4551",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40fe4a8f_8da0a46a",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-08T09:36:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "653e1c14_b77f2e4e",
       "range": {
         "startLine": 187,
         "startChar": 26,
