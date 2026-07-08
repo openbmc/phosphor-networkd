@@ -129,7 +129,7 @@ EthernetInterface::EthernetInterface(
     {
         if (!info.intf.parent_idx)
         {
-            std::runtime_error("Missing parent link");
+            throw std::runtime_error("Missing parent link");
         }
         vlan.emplace(bus, this->objPath, info.intf, *this);
     }
