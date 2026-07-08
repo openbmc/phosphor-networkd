@@ -46,6 +46,30 @@
       },
       "revId": "dc904869cf2632a3d37dbfccaeb1e6ac5d7833b7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07ffb9ed_fc92e057",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003003
+      },
+      "writtenOn": "2026-07-08T07:07:54Z",
+      "side": 1,
+      "message": "Raised PR for cstring\n\n92142: system_queries: include cstring for std::memcpy | https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/92142",
+      "parentUuid": "0539710f_2f158a38",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 59
+      },
+      "revId": "dc904869cf2632a3d37dbfccaeb1e6ac5d7833b7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
