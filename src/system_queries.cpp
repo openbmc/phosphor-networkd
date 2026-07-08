@@ -13,6 +13,7 @@
 #include <stdplus/hash/tuple.hpp>
 
 #include <algorithm>
+#include <cstring>
 #include <format>
 #include <optional>
 #include <stdexcept>
