@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e693b3ca_5e7f334e",
+        "filename": "meson.options",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-07-13T05:17:01Z",
+      "side": 1,
+      "message": "ya, protected-interfaces looks better",
+      "parentUuid": "5d90bcd3_0f3aaf2f",
+      "revId": "16e8778a764c754c6eb32a1951709ead845ca868",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3a55f133_9cee66fb",
         "filename": "meson.options",
         "patchSetId": 1
