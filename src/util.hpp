@@ -98,6 +98,12 @@ namespace internal
  */
 bool isValidNtpServer(const std::string& server);
 
+/** @brief Validates if a string is a valid hostname per RFC 952/1123
+ *  @param[in] hostname - hostname string to validate
+ *  @return true if valid, false otherwise
+ */
+bool isHostnameValid(const std::string& hostname);
+
 /* @brief runs the given command in child process.
  * @param[in] path - path of the binary file which needs to be executed.
  * @param[in] args - arguments of the command.
