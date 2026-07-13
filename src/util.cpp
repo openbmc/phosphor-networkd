@@ -67,6 +67,19 @@ bool isValidNtpServer(const std::string& server)
     }
 }
 
+bool isHostnameValid(const std::string& hostname)
+{
+    try
+    {
+        stdplus::fromStr<stdplus::Hostname>(hostname);
+        return true;
+    }
+    catch (const std::invalid_argument&)
+    {
+        return false;
+    }
+}
+
 void executeCommandinChildProcess(stdplus::zstring_view path, char** args)
 {
     auto logCmdFailure = [&](std::string_view statusMsg) {
