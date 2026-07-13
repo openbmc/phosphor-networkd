@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "339b7a33_437b1132",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-07-13T09:50:11Z",
+      "side": 1,
+      "message": "\u003cnet/if_arp.h\u003e seems unused here. None of the new code uses ARPHRD_*, struct arpreq, or ARPOP_* from this header and struct sockaddr is already available via \u003cnet/if.h\u003e. Can we remove this include?",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 23
+      },
+      "revId": "c3c6f5fe3dd424410e60e262190d6ea80b1529a6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
