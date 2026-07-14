@@ -713,6 +713,13 @@ ServerList EthernetInterface::getNameServerFromResolvd() const
     ServerList servers;
     auto OBJ_PATH = std::format("{}{}", RESOLVED_SERVICE_PATH, ifIdx);
 
+    if (ifIdx == 0)
+    {
+        // Interface index is not yet available (ifIdx == 0).
+        // systemd-resolved has no corresponding object for link/0.
+        return servers;
+    }
+
     /*
       The DNS property under org.freedesktop.resolve1.Link interface contains
       an array containing all DNS servers currently used by resolved. It
