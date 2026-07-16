@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2718479f_cd11b160",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002630
+      },
+      "writtenOn": "2026-07-16T10:58:42Z",
+      "side": 1,
+      "message": "Fixes an active testcase/CI failure in phosphor-networkd",
+      "revId": "1ca81aeca7e896166398e2640d586b97a00b2752",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
