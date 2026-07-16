@@ -9,7 +9,11 @@ executable(
     implicit_include_directories: false,
     include_directories: src_includes,
     dependencies: [
-        dependency('CLI11'),
+        dependency(
+            'CLI11',
+            include_type: 'system',
+            default_options: ['tests=disabled'],
+        ),
         dependency('libnl-3.0'),
         dependency('libnl-genl-3.0'),
         dependency('phosphor-logging'),
