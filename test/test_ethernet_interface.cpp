@@ -20,7 +20,7 @@ namespace network
 {
 
 using sdbusplus::xyz::openbmc_project::Common::Error::InvalidArgument;
-using std::literals::string_view_literals::operator""sv;
+using std::literals::string_literals::operator""s;
 using testing::Key;
 using testing::UnorderedElementsAre;
 using stdplus::operator""_sub;
@@ -498,7 +498,7 @@ TEST_F(TestEthernetInterface, VLANCreationWithoutParentShouldThrow)
 
     // Should throw std::runtime_error with message "Missing parent link"
     EXPECT_THROW(
-        MockEthernetInterface(bus, manager, info, "/xyz/openbmc_test/network"sv,
+        MockEthernetInterface(bus, manager, info, "/xyz/openbmc_test/network"s,
                               config::Parser()),
         std::runtime_error);
 }
