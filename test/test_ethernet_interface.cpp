@@ -497,10 +497,11 @@ TEST_F(TestEthernetInterface, VLANCreationWithoutParentShouldThrow)
         .vlan_id = 100}};
 
     // Should throw std::runtime_error with message "Missing parent link"
-    EXPECT_THROW(
-        MockEthernetInterface(bus, manager, info, "/xyz/openbmc_test/network"sv,
-                              config::Parser()),
-        std::runtime_error);
+    EXPECT_THROW(MockEthernetInterface(
+                     bus, manager, info,
+                     sdbusplus::object_path("/xyz/openbmc_test/network"),
+                     config::Parser()),
+                 std::runtime_error);
 }
 
 } // namespace network
