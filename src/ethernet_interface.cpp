@@ -154,6 +154,7 @@ EthernetInterface::EthernetInterface(
     if (!std::filesystem::exists(confPath))
     {
         writeConfigurationFile();
+        manager.get().reloadConfigs();
     }
 }
 
