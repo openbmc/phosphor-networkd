@@ -33,6 +33,24 @@
       "message": "does this interface handle both ipv4 and ipv6 address configuration?",
       "revId": "00760c625d128e1e86ea3b575e71b12cf95c97d6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a9e8431_f7bea58d",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-17T02:47:15Z",
+      "side": 1,
+      "message": "@raviteja28031990@gmail.com, Thanks for pointing this out. At present, this interface handles IPv4 address configuration. Support for IPv6 will be added in the next patch.",
+      "parentUuid": "110b96b6_bd0e0ae5",
+      "revId": "00760c625d128e1e86ea3b575e71b12cf95c97d6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
