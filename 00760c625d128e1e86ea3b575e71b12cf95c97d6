@@ -51,6 +51,24 @@
       "parentUuid": "110b96b6_bd0e0ae5",
       "revId": "00760c625d128e1e86ea3b575e71b12cf95c97d6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83f556a8_a8f64da5",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-18T02:37:44Z",
+      "side": 1,
+      "message": "@raviteja28031990@gmail.com, This patch only supports IPv4 address setting via ioctl. IPv6 address configuration is intentionally excluded.\n\nioctl is simple and sufficient for single IPv4 address assignment.\nIPv6 requires multiple addresses, lifetimes, and scopes — features not well supported by ioctl.\nNetlink is the recommended API for IPv6, so it will be handled separately.",
+      "parentUuid": "8a9e8431_f7bea58d",
+      "revId": "00760c625d128e1e86ea3b575e71b12cf95c97d6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
