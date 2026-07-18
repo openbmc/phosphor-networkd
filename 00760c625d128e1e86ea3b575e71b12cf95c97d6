@@ -69,6 +69,24 @@
       "parentUuid": "8a9e8431_f7bea58d",
       "revId": "00760c625d128e1e86ea3b575e71b12cf95c97d6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6312a0c4_c0d8e027",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-07-18T07:42:01Z",
+      "side": 1,
+      "message": "updated stdplus::In4Addr\nstdplus::Subnet4 subnet still needs prefix length check for /0,",
+      "parentUuid": "05d8940a_09f3c0c9",
+      "revId": "00760c625d128e1e86ea3b575e71b12cf95c97d6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
