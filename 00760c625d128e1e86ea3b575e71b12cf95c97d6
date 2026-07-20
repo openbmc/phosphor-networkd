@@ -105,6 +105,24 @@
       "parentUuid": "6312a0c4_c0d8e027",
       "revId": "00760c625d128e1e86ea3b575e71b12cf95c97d6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5269d0b0_4a8cea8a",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-07-20T05:28:33Z",
+      "side": 1,
+      "message": "yes, need to use rtnetlink for ipv4 address configuration as well.\ndo you see any issue in using rtnetlink way for ipv4 configuration",
+      "parentUuid": "83f556a8_a8f64da5",
+      "revId": "00760c625d128e1e86ea3b575e71b12cf95c97d6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
