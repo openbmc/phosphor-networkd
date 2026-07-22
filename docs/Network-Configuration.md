@@ -39,19 +39,23 @@ Example: `/xyz/openbmc_project/network/eth0`
 There can be multiple IP address objects under an interface object. These
 objects can be deleted by the delete function.
 
-IPv4 objects will have the following D-Bus object path.
+IP address objects (both IPv4 and IPv6) reside directly under the interface
+object path, with the IP address and prefix length encoded using sdbusplus
+path escaping.
 
-Example: `/xyz/openbmc_project/network/eth0/ipv4/3fd41d13/`
+Example IPv4: `/xyz/openbmc_project/network/eth0/_3192_2e168_2e1_2e1_2f24`
+(for address `192.168.1.1/24`)
 
-IPv6 objects will have the following D-Bus object path.
+Example IPv6: `/xyz/openbmc_project/network/eth0/_32001_3adb8_3a1_3a_3a1_2f64`
+(for address `2001:db8:1::1/64`)
 
-Example: `/xyz/openbmc_project/network/eth0/ipv6/5dfghilp/`
+Use `busctl tree xyz.openbmc_project.Network` to list all current IP objects.
 
 ### Conf Object
 
 This object will have the system configuration related parameters.
 
-Example: `/xyz/openbmc_project/network/conf`
+Example: `/xyz/openbmc_project/network/config`
 
 ## UseCases
 
@@ -74,8 +78,8 @@ curl -c cjar -b cjar -k -H "Content-Type: application/json" -X POST -d
 
 ```sh
 busctl get-property xyz.openbmc_project.Network
-/xyz/openbmc_project/network/config
-xyz.openbmc_project.Network.SystemConfiguration DefaultGateway
+/xyz/openbmc_project/network/<interface>
+xyz.openbmc_project.Network.EthernetInterface DefaultGateway
 
 curl -c cjar -b cjar -k -H "Content-Type: application/json" -X GET
 https://<hostname/ip>/xyz/openbmc_project/network/config/attr/DefaultGateway
@@ -85,8 +89,8 @@ https://<hostname/ip>/xyz/openbmc_project/network/config/attr/DefaultGateway
 
 ```sh
 busctl set-property xyz.openbmc_project.Network
-/xyz/openbmc_project/network/config
-xyz.openbmc_project.Network.SystemConfiguration DefaultGateway s
+/xyz/openbmc_project/network/<interface>
+xyz.openbmc_project.Network.EthernetInterface DefaultGateway s
 "<DefaultGateway>"
 
 curl -c cjar -b cjar -k -H "Content-Type: application/json" -X PUT -d '{"data":
@@ -126,12 +130,13 @@ https://<hostname/ip>/xyz/openbmc_project/network/config/attr/HostName
 
 ```sh
 busctl call xyz.openbmc_project.Network
-/xyz/openbmc_project/network/<interface>/ipv4/<id>
+/xyz/openbmc_project/network/<interface>/<encoded-ip-prefix>
 xyz.openbmc_project.Object.Delete Delete
 ```
 
-NOTE: How to get the ipv4/id: After creating the IP address object enumerate the
-network interface object.
+NOTE: The path component encodes the IP address and prefix length (e.g.
+`192.168.1.1/24` -> `_3192_2e168_2e1_2e1_2f24`). Use `busctl tree
+xyz.openbmc_project.Network` to list the exact object paths.
 
 ```sh
 curl -c cjar -b cjar -k -H "Content-Type: application/json" -X DELETE
@@ -144,7 +149,7 @@ https://<hostname/ip>/xyz/openbmc_project/network/eth0/ipv4/fbfc29b
 
 ```sh
 busctl get-property xyz.openbmc_project.Network
-/xyz/openbmc_project/network/eth0 xyz.openbmc_project.Network.EthernetInterface
+/xyz/openbmc_project/network/<interface> xyz.openbmc_project.Network.EthernetInterface
 DHCPEnabled
 
 curl -c cjar -b cjar -k -H "Content-Type: application/json" -X GET
@@ -155,8 +160,8 @@ https://<hostname/ip>/xyz/openbmc_project/network/eth0/attr/DHCPEnabled
 
 ```sh
 busctl set-property xyz.openbmc_project.Network
-/xyz/openbmc_project/network/eth0 xyz.openbmc_project.Network.EthernetInterface
-DHCPEnabled b 1
+/xyz/openbmc_project/network/<interface> xyz.openbmc_project.Network.EthernetInterface
+DHCPEnabled s "<DHCP State>"
 
 curl -c cjar -b cjar -k -H "Content-Type: application/json" -X PUT -d '{"data":
 1}' https://<hostname/ip>/xyz/openbmc_project/network/eth0/attr/DHCPEnabled
