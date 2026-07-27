@@ -33,6 +33,24 @@
       "message": "this commit already addressed the same issue\nhttps://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/91644\nplease abandon this commit",
       "revId": "45f8aaac9ba79665696ac94eae5200fafc5895c6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3362d37f_1d716e05",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003003
+      },
+      "writtenOn": "2026-07-27T11:14:44Z",
+      "side": 1,
+      "message": "acknowledged",
+      "parentUuid": "7e1d4dec_300feca9",
+      "revId": "45f8aaac9ba79665696ac94eae5200fafc5895c6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ],
   "submitRequirementResults": []
