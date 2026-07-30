@@ -39,6 +39,7 @@ owners:
 reviewers:
 - asmitk01@in.ibm.com
 - johnathanx.mantey@intel.com
+- rashidmp@ami.com
 
 matchers:
 
@@ -55,4 +56,7 @@ openbmc:
 - name: William Kennington
   email: wak@google.com
   discord: wak
+- name: Rashid MP
+  email: rashidmp@ami.com
+  discord: rashidmp2002
 
