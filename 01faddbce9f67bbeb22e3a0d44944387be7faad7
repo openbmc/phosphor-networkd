@@ -33,6 +33,24 @@
       "message": "sorry, I find this change a bit strange. IPv6 link-local addresses are a very common and valid design, especially as next hops for default routes learned through Router Advertisements (RA).\n\nStatic IPv6 addressing does not imply that the default gateway must be a global address. A static IPv6 address can legitimately use the router\u0027s link-local address as its default next hop. \n\nSorry, I don\u0027t quite understand what problem this commit is trying to solve. Could you please elaborate?",
       "revId": "01faddbce9f67bbeb22e3a0d44944387be7faad7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2f363af_7b12ae55",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-08-15T05:52:09Z",
+      "side": 1,
+      "message": "ya ipv6 linklocal address very common and linklocal address gets assigned automatically by systemd. This commit just disallows configuration of ipv6 link local addresses like fe80::1 as default gateway, since systemd-networkd shows undefined behavior if we configure fe80::1  as default gateway.",
+      "parentUuid": "b1e17006_7dc2823e",
+      "revId": "01faddbce9f67bbeb22e3a0d44944387be7faad7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ],
   "submitRequirementResults": []
