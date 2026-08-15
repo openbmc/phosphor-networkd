@@ -753,8 +753,14 @@ ServerList EthernetInterface::getNameServerFromResolvd() const
         lg2::error(
             "Failed to get DNS information from systemd-resolved: {ERROR}",
             "ERROR", e);
+        return servers;
     }
     auto tupleVector = std::get_if<type>(&name);
+    if (tupleVector == nullptr)
+    {
+        lg2::error("Failed to parse DNS information from systemd-resolved");
+        return servers;
+    }
     for (auto i = tupleVector->begin(); i != tupleVector->end(); ++i)
     {
         int addressFamily = std::get<0>(*i);
