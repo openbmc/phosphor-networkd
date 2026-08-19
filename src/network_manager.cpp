@@ -401,6 +401,17 @@ void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                     {
                         it->second->EthernetInterfaceIntf::defaultGateway(
                             stdplus::toStr(addr));
+                        auto mac =
+                            it->second->getDwMacAddrByIP(stdplus::toStr(addr));
+                        if (mac.has_value())
+                        {
+                            addNeighbor(NeighborInfo{
+                                .ifidx = ifidx,
+                                .state = NUD_PERMANENT,
+                                .addr = addr,
+                                .mac = stdplus::fromStr<stdplus::EtherAddr>(
+                                    *mac)});
+                        }
                     }
                     else
                     {
@@ -457,6 +468,9 @@ void Manager::removeDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                             tsh;
                         if (it->second->defaultGateway() == tsh(addr))
                         {
+                            removeNeighbor(NeighborInfo{.ifidx = ifidx,
+                                                        .state = NUD_PERMANENT,
+                                                        .addr = addr});
                             it->second->EthernetInterfaceIntf::defaultGateway(
                                 "");
                         }
