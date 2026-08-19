@@ -334,8 +334,20 @@ void Manager::removeAddress(const AddressInfo& info)
 
 void Manager::addNeighbor(const NeighborInfo& info)
 {
-    if (!(info.state & NUD_PERMANENT) || !info.addr)
+    if (!info.addr)
     {
+        return;
+    }
+    if (!(info.state & NUD_PERMANENT))
+    {
+        if (info.mac)
+        {
+            if (auto it = interfacesByIdx.find(info.ifidx);
+                it != interfacesByIdx.end())
+            {
+                it->second->updateGatewayNeighbor(info);
+            }
+        }
         return;
     }
     if (auto it = intfInfo.find(info.ifidx); it != intfInfo.end())
@@ -366,6 +378,7 @@ void Manager::removeNeighbor(const NeighborInfo& info)
         if (auto it = interfacesByIdx.find(info.ifidx);
             it != interfacesByIdx.end())
         {
+            it->second->gatewayNeighbors.erase(*info.addr);
             it->second->staticNeighbors.erase(*info.addr);
         }
     }
@@ -400,6 +413,8 @@ void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                                                  decltype(addr)>)
                     {
                         it->second->EthernetInterfaceIntf::defaultGateway(
+                            stdplus::toStr(addr));
+                        it->second->requestGatewayMacResolution(
                             stdplus::toStr(addr));
                     }
                     else
@@ -457,6 +472,7 @@ void Manager::removeDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                             tsh;
                         if (it->second->defaultGateway() == tsh(addr))
                         {
+                            it->second->removeGatewayNeighbor(addr);
                             it->second->EthernetInterfaceIntf::defaultGateway(
                                 "");
                         }
