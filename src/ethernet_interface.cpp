@@ -7,11 +7,15 @@
 #include "system_queries.hpp"
 #include "util.hpp"
 
+#include <arpa/inet.h>
 #include <fcntl.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
 #include <net/if_arp.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
@@ -22,6 +26,7 @@
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <algorithm>
+#include <cstring>
 #include <filesystem>
 #include <format>
 #include <string>
@@ -285,6 +290,7 @@ void EthernetInterface::addStaticNeigh(const NeighborInfo& info)
         return;
     }
 
+    gatewayNeighbors.erase(*info.addr);
     if (auto it = staticNeighbors.find(*info.addr); it != staticNeighbors.end())
     {
         it->second->NeighborObj::macAddress(stdplus::toStr(*info.mac));
@@ -442,6 +448,7 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                               Argument::ARGUMENT_VALUE(macAddress.c_str()));
     }
 
+    gatewayNeighbors.erase(*addr);
     auto it = staticNeighbors.find(*addr);
     if (it == staticNeighbors.end())
     {
@@ -539,6 +546,11 @@ bool EthernetInterface::dhcp4(bool value)
 {
     if (dhcp4() != EthernetInterfaceIntf::dhcp4(value))
     {
+        if (value && !EthernetInterfaceIntf::defaultGateway().empty())
+        {
+            removeGatewayNeighbor(stdplus::fromStr<stdplus::In4Addr>(
+                EthernetInterfaceIntf::defaultGateway()));
+        }
         writeConfigurationFile();
         manager.get().reloadConfigs();
     }
@@ -571,6 +583,11 @@ EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
 
     if (old4 != new4 || old6 != new6 || oldra != newra)
     {
+        if (!old4 && new4 && !EthernetInterfaceIntf::defaultGateway().empty())
+        {
+            removeGatewayNeighbor(stdplus::fromStr<stdplus::In4Addr>(
+                EthernetInterfaceIntf::defaultGateway()));
+        }
         writeConfigurationFile();
         manager.get().reloadConfigs();
     }
@@ -1157,7 +1174,13 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
     normalizeGateway<stdplus::In4Addr>(gateway);
     if (gateway != defaultGateway())
     {
+        if (!EthernetInterfaceIntf::defaultGateway().empty())
+        {
+            removeGatewayNeighbor(stdplus::fromStr<stdplus::In4Addr>(
+                EthernetInterfaceIntf::defaultGateway()));
+        }
         gateway = EthernetInterfaceIntf::defaultGateway(std::move(gateway));
+        requestGatewayMacResolution(gateway);
         writeConfigurationFile();
         manager.get().reloadConfigs();
     }
@@ -1240,6 +1263,58 @@ bool EthernetInterface::emitLLDP(bool value)
 void EthernetInterface::reloadConfigs()
 {
     manager.get().reloadConfigs();
+}
+
+void EthernetInterface::requestGatewayMacResolution(
+    const std::string& gateway) const
+{
+    int fd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (fd < 0)
+    {
+        return;
+    }
+
+    ifreq ifr = {};
+    std::strncpy(ifr.ifr_name, interfaceName().c_str(),
+                 sizeof(ifr.ifr_name) - 1);
+    setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, &ifr, sizeof(ifr));
+
+    sockaddr_in destination = {};
+    destination.sin_family = AF_INET;
+    destination.sin_port = htons(9);
+    if (inet_pton(AF_INET, gateway.c_str(), &destination.sin_addr) == 1)
+    {
+        sendto(fd, "", 0, 0, reinterpret_cast<sockaddr*>(&destination),
+               sizeof(destination));
+    }
+    close(fd);
+}
+
+void EthernetInterface::updateGatewayNeighbor(const NeighborInfo& info)
+{
+    if (!info.addr || !info.mac ||
+        defaultGateway() != stdplus::toStr(*info.addr) ||
+        staticNeighbors.contains(*info.addr))
+    {
+        return;
+    }
+
+    if (auto it = gatewayNeighbors.find(*info.addr);
+        it != gatewayNeighbors.end())
+    {
+        it->second->NeighborObj::macAddress(stdplus::toStr(*info.mac));
+        return;
+    }
+
+    gatewayNeighbors.emplace(
+        *info.addr,
+        std::make_unique<Neighbor>(bus, objPath, *this, *info.addr, *info.mac,
+                                   Neighbor::State::Permanent));
+}
+
+void EthernetInterface::removeGatewayNeighbor(stdplus::In4Addr gateway)
+{
+    gatewayNeighbors.erase(gateway);
 }
 
 } // namespace network
