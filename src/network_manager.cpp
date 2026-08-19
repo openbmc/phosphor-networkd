@@ -334,8 +334,20 @@ void Manager::removeAddress(const AddressInfo& info)
 
 void Manager::addNeighbor(const NeighborInfo& info)
 {
-    if (!(info.state & NUD_PERMANENT) || !info.addr)
+    if (!info.addr)
     {
+        return;
+    }
+    if (!(info.state & NUD_PERMANENT))
+    {
+        if (info.mac)
+        {
+            if (auto it = interfacesByIdx.find(info.ifidx);
+                it != interfacesByIdx.end())
+            {
+                it->second->updateGatewayNeighbor(info);
+            }
+        }
         return;
     }
     if (auto it = intfInfo.find(info.ifidx); it != intfInfo.end())
@@ -366,6 +378,7 @@ void Manager::removeNeighbor(const NeighborInfo& info)
         if (auto it = interfacesByIdx.find(info.ifidx);
             it != interfacesByIdx.end())
         {
+            it->second->gatewayNeighbors.erase(*info.addr);
             it->second->staticNeighbors.erase(*info.addr);
         }
     }
@@ -375,6 +388,34 @@ void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
 {
     if (auto it = intfInfo.find(ifidx); it != intfInfo.end())
     {
+        // Clean up old gateway's neighbor before changing to new gateway
+        if (auto intfIt = interfacesByIdx.find(ifidx);
+            intfIt != interfacesByIdx.end())
+        {
+            std::visit(
+                [&](auto oldAddr) {
+                    if constexpr (std::is_same_v<stdplus::In4Addr,
+                                                 decltype(oldAddr)>)
+                    {
+                        if (it->second.defgw4)
+                        {
+                            intfIt->second->removeGatewayNeighbor(
+                                *it->second.defgw4);
+                        }
+                    }
+                    else
+                    {
+                        static_assert(std::is_same_v<stdplus::In6Addr,
+                                                     decltype(oldAddr)>);
+                        if (it->second.defgw6)
+                        {
+                            intfIt->second->gatewayNeighbors.erase(
+                                *it->second.defgw6);
+                        }
+                    }
+                },
+                addr);
+        }
         std::visit(
             [&](auto addr) {
                 if constexpr (std::is_same_v<stdplus::In4Addr, decltype(addr)>)
@@ -400,6 +441,8 @@ void Manager::addDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                                                  decltype(addr)>)
                     {
                         it->second->EthernetInterfaceIntf::defaultGateway(
+                            stdplus::toStr(addr));
+                        it->second->requestGatewayMacResolution(
                             stdplus::toStr(addr));
                     }
                     else
@@ -457,6 +500,7 @@ void Manager::removeDefGw(unsigned ifidx, stdplus::InAnyAddr addr)
                             tsh;
                         if (it->second->defaultGateway() == tsh(addr))
                         {
+                            it->second->removeGatewayNeighbor(addr);
                             it->second->EthernetInterfaceIntf::defaultGateway(
                                 "");
                         }

@@ -8,6 +8,7 @@
 #include <xyz/openbmc_project/Common/error.hpp>
 
 #include <string>
+#include <utility>
 
 namespace phosphor
 {
@@ -45,20 +46,29 @@ Neighbor::Neighbor(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
 
 void Neighbor::delete_()
 {
-    auto& neighbors = parent.get().staticNeighbors;
-    std::unique_ptr<Neighbor> ptr;
-    for (auto it = neighbors.begin(); it != neighbors.end(); ++it)
+    auto& staticNeighbors = parent.get().staticNeighbors;
+    for (auto it = staticNeighbors.begin(); it != staticNeighbors.end(); ++it)
     {
         if (it->second.get() == this)
         {
-            ptr = std::move(it->second);
-            neighbors.erase(it);
-            break;
+            // Keep this object alive while updating its parent's configuration.
+            auto keepAlive = std::move(it->second);
+            staticNeighbors.erase(it);
+            parent.get().writeConfigurationFile();
+            parent.get().manager.get().reloadConfigs();
+            return;
         }
     }
 
-    parent.get().writeConfigurationFile();
-    parent.get().manager.get().reloadConfigs();
+    auto& gatewayNeighbors = parent.get().gatewayNeighbors;
+    for (auto it = gatewayNeighbors.begin(); it != gatewayNeighbors.end(); ++it)
+    {
+        if (it->second.get() == this)
+        {
+            gatewayNeighbors.erase(it);
+            return;
+        }
+    }
 }
 
 using sdbusplus::xyz::openbmc_project::Common::Error::NotAllowed;
