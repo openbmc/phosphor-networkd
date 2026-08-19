@@ -101,6 +101,11 @@ class EthernetInterface : public Ifaces
     std::unordered_map<stdplus::InAnyAddr, std::unique_ptr<Neighbor>>
         staticNeighbors;
 
+    /** @brief Runtime gateway neighbor objects, not written to configuration.
+     */
+    std::unordered_map<stdplus::InAnyAddr, std::unique_ptr<Neighbor>>
+        gatewayNeighbors;
+
     /** @brief Persistent map of static route dbus objects and their names */
     std::unordered_map<std::string, std::unique_ptr<StaticGateway>>
         staticGateways;
@@ -134,6 +139,10 @@ class EthernetInterface : public Ifaces
      *  @param[in] macAddress - Low level MAC address.
      */
     ObjectPath neighbor(std::string ipAddress, std::string macAddress) override;
+
+    void requestGatewayMacResolution(const std::string& gateway) const;
+    void updateGatewayNeighbor(const NeighborInfo& info);
+    void removeGatewayNeighbor(stdplus::In4Addr gateway);
 
     /** @brief Function to create static route dbus object.
      *  @param[in] destination - Destination IP address.
