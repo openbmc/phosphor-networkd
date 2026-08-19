@@ -135,6 +135,9 @@ class EthernetInterface : public Ifaces
      */
     ObjectPath neighbor(std::string ipAddress, std::string macAddress) override;
 
+    /** @brief Resolve gateway MAC by IP from ARP table. */
+    std::optional<std::string> getDwMacAddrByIP(const std::string& gateway) const;
+
     /** @brief Function to create static route dbus object.
      *  @param[in] destination - Destination IP address.
      *  @param[in] gateway - Gateway

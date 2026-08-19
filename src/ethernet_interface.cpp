@@ -12,6 +12,10 @@
 #include <net/if.h>
 #include <net/if_arp.h>
 #include <sys/stat.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
@@ -24,6 +28,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <format>
+#include <fstream>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -539,6 +544,14 @@ bool EthernetInterface::dhcp4(bool value)
 {
     if (dhcp4() != EthernetInterfaceIntf::dhcp4(value))
     {
+        if (value && !EthernetInterfaceIntf::defaultGateway().empty())
+        {
+            manager.get().removeNeighbor(
+                NeighborInfo{.ifidx = ifIdx,
+                             .state = NUD_PERMANENT,
+                             .addr = stdplus::fromStr<stdplus::In4Addr>(
+                                 EthernetInterfaceIntf::defaultGateway())});
+        }
         writeConfigurationFile();
         manager.get().reloadConfigs();
     }
@@ -1157,7 +1170,24 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
     normalizeGateway<stdplus::In4Addr>(gateway);
     if (gateway != defaultGateway())
     {
+        if (!EthernetInterfaceIntf::defaultGateway().empty())
+        {
+            manager.get().removeNeighbor(
+                NeighborInfo{.ifidx = ifIdx,
+                             .state = NUD_PERMANENT,
+                             .addr = stdplus::fromStr<stdplus::In4Addr>(
+                                 EthernetInterfaceIntf::defaultGateway())});
+        }
         gateway = EthernetInterfaceIntf::defaultGateway(std::move(gateway));
+        auto mac = getDwMacAddrByIP(gateway);
+        if (mac.has_value())
+        {
+            manager.get().addNeighbor(
+                NeighborInfo{.ifidx = ifIdx,
+                             .state = NUD_PERMANENT,
+                             .addr = stdplus::fromStr<stdplus::In4Addr>(gateway),
+                             .mac = stdplus::fromStr<stdplus::EtherAddr>(*mac)});
+        }
         writeConfigurationFile();
         manager.get().reloadConfigs();
     }
@@ -1240,6 +1270,71 @@ bool EthernetInterface::emitLLDP(bool value)
 void EthernetInterface::reloadConfigs()
 {
     manager.get().reloadConfigs();
+}
+
+std::optional<std::string>
+    EthernetInterface::getDwMacAddrByIP(const std::string& gateway) const
+{
+    std::ifstream ifs("/proc/net/arp");
+    if (!ifs)
+    {
+        lg2::info("Cannot open /proc/net/arp");
+        return std::nullopt;
+    }
+
+    std::string line, mac;
+    while (!ifs.eof())
+    {
+        ifs >> line;
+        if (line == gateway)
+        {
+            ifs >> line >> line >> mac >> line >> line;
+            if (line == interfaceName() && !mac.empty() &&
+                mac != "00:00:00:00:00:00")
+            {
+                return mac;
+            }
+        }
+    }
+
+    // Trigger ARP resolution via UDP and retry
+    int fd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (fd >= 0)
+    {
+        struct ifreq ifr = {};
+        strncpy(ifr.ifr_name, interfaceName().c_str(),
+                sizeof(ifr.ifr_name) - 1);
+        setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, &ifr, sizeof(ifr));
+
+        struct sockaddr_in dst = {};
+        dst.sin_family = AF_INET;
+        dst.sin_port = htons(9);
+        inet_pton(AF_INET, gateway.c_str(), &dst.sin_addr);
+        sendto(fd, "", 0, 0, reinterpret_cast<struct sockaddr*>(&dst),
+               sizeof(dst));
+        close(fd);
+
+        usleep(200000);
+
+        std::ifstream ifs2("/proc/net/arp");
+        if (ifs2)
+        {
+            while (!ifs2.eof())
+            {
+                ifs2 >> line;
+                if (line == gateway)
+                {
+                    ifs2 >> line >> line >> mac >> line >> line;
+                    if (line == interfaceName() && !mac.empty() &&
+                        mac != "00:00:00:00:00:00")
+                    {
+                        return mac;
+                    }
+                }
+            }
+        }
+    }
+    return std::nullopt;
 }
 
 } // namespace network
