@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <format>
+#include <fstream>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -114,6 +115,8 @@ EthernetInterface::EthernetInterface(
         config.map.getValueStrings("Network", "NTP"), true);
 
     updateInfo(info.intf, true);
+
+    getChannelPrivilege(*info.intf.name);
 
     if (info.defgw4)
     {
@@ -1241,6 +1244,102 @@ bool EthernetInterface::emitLLDP(bool value)
 void EthernetInterface::reloadConfigs()
 {
     manager.get().reloadConfigs();
+}
+
+static constexpr const char* networkChannelCfgFile =
+    "/var/channel_intf_data.json";
+static constexpr const char* defaultChannelPriv = "priv-admin";
+
+nlohmann::json EthernetInterface::readJsonFile(const std::string& configFile)
+{
+    std::ifstream jsonFile(configFile);
+    if (!jsonFile.good())
+    {
+        return nullptr;
+    }
+
+    nlohmann::json data = nullptr;
+    try
+    {
+        data = nlohmann::json::parse(jsonFile, nullptr, false);
+    }
+    catch (const nlohmann::json::parse_error& e)
+    {
+        lg2::debug("Corrupted channel config: {MSG}", "MSG", e.what());
+        throw std::runtime_error("Corrupted channel config file");
+    }
+
+    return data;
+}
+
+int EthernetInterface::writeJsonFile(const std::string& configFile,
+                                     const nlohmann::json& jsonData)
+{
+    std::ofstream jsonFile(configFile);
+    if (!jsonFile.good())
+    {
+        lg2::error("JSON file open failed: {FILE}", "FILE", configFile);
+        return -1;
+    }
+
+    jsonFile << jsonData;
+    jsonFile.flush();
+    return 0;
+}
+
+std::string EthernetInterface::getChannelPrivilege(
+    const std::string& interfaceName)
+{
+    std::string priv(defaultChannelPriv);
+    std::string retPriv;
+
+    nlohmann::json jsonData = readJsonFile(networkChannelCfgFile);
+    if (jsonData != nullptr)
+    {
+        try
+        {
+            priv = jsonData[interfaceName].get<std::string>();
+            retPriv = ChannelAccessIntf::maxPrivilege(std::move(priv));
+            return retPriv;
+        }
+        catch (const nlohmann::json::exception& e)
+        {
+            jsonData[interfaceName] = priv;
+        }
+    }
+    else
+    {
+        jsonData[interfaceName] = priv;
+    }
+
+    if (writeJsonFile(networkChannelCfgFile, jsonData) != 0)
+    {
+        lg2::error("Error writing channel config file");
+    }
+
+    retPriv = ChannelAccessIntf::maxPrivilege(std::move(priv));
+    return retPriv;
+}
+
+std::string EthernetInterface::maxPrivilege(std::string priv)
+{
+    std::string intfName = interfaceName();
+
+    if (ChannelAccessIntf::maxPrivilege() == priv)
+    {
+        return priv;
+    }
+
+    nlohmann::json jsonData = readJsonFile(networkChannelCfgFile);
+    jsonData[intfName] = priv;
+
+    if (writeJsonFile(networkChannelCfgFile, jsonData) != 0)
+    {
+        lg2::error("Error writing channel config file");
+        elog<InternalFailure>();
+    }
+
+    return ChannelAccessIntf::maxPrivilege(std::move(priv));
 }
 
 } // namespace network
