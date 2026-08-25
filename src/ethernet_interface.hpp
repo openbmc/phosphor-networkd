@@ -4,10 +4,12 @@
 #include "neighbor.hpp"
 #include "static_gateway.hpp"
 #include "types.hpp"
+#include "xyz/openbmc_project/Channel/ChannelAccess/server.hpp"
 #include "xyz/openbmc_project/Network/IP/Create/server.hpp"
 #include "xyz/openbmc_project/Network/Neighbor/CreateStatic/server.hpp"
 #include "xyz/openbmc_project/Network/StaticGateway/Create/server.hpp"
 
+#include <nlohmann/json.hpp>
 #include <sdbusplus/bus.hpp>
 #include <sdbusplus/server/object.hpp>
 #include <stdplus/pinned.hpp>
@@ -35,7 +37,8 @@ using Ifaces = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Network::IP::server::Create,
     sdbusplus::xyz::openbmc_project::Network::Neighbor::server::CreateStatic,
     sdbusplus::xyz::openbmc_project::Network::StaticGateway::server::Create,
-    sdbusplus::xyz::openbmc_project::Collection::server::DeleteAll>;
+    sdbusplus::xyz::openbmc_project::Collection::server::DeleteAll,
+    sdbusplus::xyz::openbmc_project::Channel::server::ChannelAccess>;
 
 using VlanIfaces = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Object::server::Delete,
@@ -51,6 +54,8 @@ using MacAddressIntf =
     sdbusplus::xyz::openbmc_project::Network::server::MACAddress;
 using StaticGatewayIntf =
     sdbusplus::xyz::openbmc_project::Network::server::StaticGateway;
+using ChannelAccessIntf =
+    sdbusplus::xyz::openbmc_project::Channel::server::ChannelAccess;
 
 using ServerList = std::vector<std::string>;
 using ObjectPath = sdbusplus::object_path;
@@ -243,6 +248,9 @@ class EthernetInterface : public Ifaces
     using EthernetInterfaceIntf::defaultGateway6;
     using EthernetInterfaceIntf::emitLLDP;
 
+    std::string maxPrivilege(std::string value) override;
+    using ChannelAccessIntf::maxPrivilege;
+
   protected:
     /** @brief get the NTP server list from the timesyncd dbus obj
      *
@@ -279,6 +287,11 @@ class EthernetInterface : public Ifaces
 
     friend class TestEthernetInterface;
     friend class TestNetworkManager;
+
+    std::string getChannelPrivilege(const std::string& interfaceName);
+    nlohmann::json readJsonFile(const std::string& configFile);
+    int writeJsonFile(const std::string& configFile,
+                      const nlohmann::json& jsonData);
 
   private:
     EthernetInterface(
