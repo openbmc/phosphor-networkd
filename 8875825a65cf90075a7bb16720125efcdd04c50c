@@ -16,6 +16,92 @@
       "message": "Gentle reminder for the review.",
       "revId": "8875825a65cf90075a7bb16720125efcdd04c50c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eca9cd7d_a308a6dc",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-08-27T09:20:02Z",
+      "side": 1,
+      "message": "Why is there no cleanup in dhcpEnabled()?",
+      "range": {
+        "startLine": 547,
+        "startChar": 22,
+        "endLine": 547,
+        "endChar": 43
+      },
+      "revId": "8875825a65cf90075a7bb16720125efcdd04c50c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88d10673_3e916da0",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1319,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-08-27T09:20:02Z",
+      "side": 1,
+      "message": "usleep(200000) is called inside the event loop (defaultGateway() setter / addDefGw()). This blocks all D-Bus and rtnetlink event processing for 200ms on every gateway change.",
+      "revId": "8875825a65cf90075a7bb16720125efcdd04c50c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c51e1c5_35b0f7ea",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-08-27T09:20:02Z",
+      "side": 1,
+      "message": "addDefGw() inserts the gateway MAC into staticNeighbors but never calls writeConfigurationFile(). However, the next unrelated config write  will iterate all staticNeighbors and persist this as a [Neighbor] section in the .network file. After that, the stale gateway MAC survives lease expiry, gateway changes, and reboots as a permanent static ARP entry — even though it was never user-configured.",
+      "range": {
+        "startLine": 408,
+        "startChar": 0,
+        "endLine": 408,
+        "endChar": 28
+      },
+      "revId": "8875825a65cf90075a7bb16720125efcdd04c50c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d611cdef_a031872d",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-08-27T09:20:02Z",
+      "side": 1,
+      "message": "Creating a NUD_PERMANENT entry for it freezes that MAC forever: the kernel will never refresh it. If the gateway MAC changes , traffic silently goes to the wrong MAC until the entry is manually cleared.",
+      "range": {
+        "startLine": 410,
+        "startChar": 41,
+        "endLine": 410,
+        "endChar": 54
+      },
+      "revId": "8875825a65cf90075a7bb16720125efcdd04c50c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
