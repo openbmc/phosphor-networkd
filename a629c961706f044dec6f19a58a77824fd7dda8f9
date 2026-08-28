@@ -48,6 +48,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "faf3647e_20a3a303",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1002762
+      },
+      "writtenOn": "2026-08-28T15:37:59Z",
+      "side": 1,
+      "message": "Thank you for the review. I agree that IPMI channel access control is separate from network interface management.\n\nHowever, host-ipmid already updates ChannelAccess.MaxPrivilege through xyz.openbmc_project.Network on /xyz/openbmc_project/network/\u003cinterface\u003e. This is defined in user_channel/channel_mgmt.cpp; the property update is performed in ChannelConfig::setChannelAccessPersistData().\n\nOn the current image, the Ethernet object does not expose xyz.openbmc_project.Channel.ChannelAccess, confirmed by:\n\nroot@evb-ast2600:~# busctl get-property xyz.openbmc_project.Network \\\n\u003e   /xyz/openbmc_project/network/eth0 \\\n\u003e   xyz.openbmc_project.Channel.ChannelAccess \\\n\u003e   MaxPrivilege\nFailed to get property MaxPrivilege on interface xyz.openbmc_project.Channel.ChannelAccess: Unknown interface xyz.openbmc_project.Channel.ChannelAccess or property MaxPrivilege.\nroot@evb-ast2600:~#\n\nThis change implements the missing interface on the existing Ethernet object. After deployment, MaxPrivilege was successfully read and updated through busctl.\n\nroot@evb-ast2600:~# busctl get-property xyz.openbmc_project.Network \\\n\u003e   /xyz/openbmc_project/network/eth0 \\\n\u003e   xyz.openbmc_project.Channel.ChannelAccess \\\n\u003e   MaxPrivilege\ns \"priv-admin\"\nroot@evb-ast2600:~#\n\nCould you please advise the preferred D-Bus service, object path, and owning component if phosphor-network is not the intended location for this interface?",
+      "parentUuid": "d7aeef86_f7dc9ad8",
+      "range": {
+        "startLine": 10,
+        "startChar": 40,
+        "endLine": 10,
+        "endChar": 67
+      },
+      "revId": "a629c961706f044dec6f19a58a77824fd7dda8f9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "2a97ff82_4520682f",
