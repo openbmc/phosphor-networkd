@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d7aeef86_f7dc9ad8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1002762
+      },
+      "writtenOn": "2026-08-28T12:02:14Z",
+      "side": 1,
+      "message": "Thanks for the review. I agree the ownership should stay in the IPMI host path, not in networkd. The actual issue was a self-owned D-Bus write in host-ipmid, so I’m keeping the fix at the IPMI side and not moving channel access policy into networkd.",
+      "parentUuid": "f7a291d9_3b6af1b8",
+      "range": {
+        "startLine": 10,
+        "startChar": 40,
+        "endLine": 10,
+        "endChar": 67
+      },
+      "revId": "a629c961706f044dec6f19a58a77824fd7dda8f9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "2a97ff82_4520682f",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
