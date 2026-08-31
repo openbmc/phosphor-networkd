@@ -4,19 +4,19 @@
 
 #include "ncsi_util.hpp"
 
-#include <assert.h>
 #include <getopt.h>
 #include <linux/mctp.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
 #include <stdplus/str/conv.hpp>
 
+#include <cassert>
 #include <climits>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <map>
