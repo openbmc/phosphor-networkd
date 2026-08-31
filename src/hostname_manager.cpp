@@ -5,9 +5,9 @@
 
 #include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
+#include <stdplus/fd/create.hpp>
 
 #include <filesystem>
-#include <fstream>
 
 namespace phosphor
 {
@@ -60,17 +60,26 @@ void HostnameManager::markHostnameSet()
         // Create parent directories if they don't exist
         std::filesystem::path firstBootFilePath(firstBootFile);
         std::filesystem::create_directories(firstBootFilePath.parent_path());
-
-        std::ofstream file(firstBootFile);
-        if (!file)
-        {
-            lg2::error("Failed to create firstBoot file: {PATH}", "PATH",
-                       firstBootFile);
-        }
     }
     catch (const std::exception& e)
     {
-        lg2::error("Exception creating firstBoot file: {ERROR}", "ERROR", e);
+        lg2::error("Exception creating firstBoot dir: {ERROR}", "ERROR", e);
+        return;
+    }
+
+    try
+    {
+        stdplus::fd::open(
+            firstBootFile,
+            stdplus::fd::OpenFlags(stdplus::fd::OpenAccess::WriteOnly)
+                .set(stdplus::fd::OpenFlag::Create)
+                .set(stdplus::fd::OpenFlag::Truncate),
+            0644);
+    }
+    catch (const std::exception& e)
+    {
+        lg2::error("Failed to create firstBoot file {PATH}: {ERROR}",
+                   "PATH", firstBootFile, "ERROR", e);
     }
 }
 
