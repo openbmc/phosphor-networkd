@@ -283,10 +283,10 @@ static void writeFileInt(const SectionMap& map, const fs::path& filename)
     stdplus::fd::FormatBuffer out(writer);
     for (const auto& [section, maps] : map)
     {
-        for (const auto& map : maps)
+        for (const auto& keymap : maps)
         {
             out.appends("["sv, section.get(), "]\n"sv);
-            for (const auto& [key, vals] : map)
+            for (const auto& [key, vals] : keymap)
             {
                 for (const auto& val : vals)
                 {

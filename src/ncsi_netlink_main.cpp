@@ -3,7 +3,6 @@
 
 #include "ncsi_util.hpp"
 
-#include <string.h>
 #include <unistd.h>
 
 #include <CLI/CLI.hpp>
@@ -11,6 +10,7 @@
 #include <stdplus/numeric/str.hpp>
 #include <stdplus/str/buf.hpp>
 
+#include <cstring>
 #include <string>
 #include <vector>
 

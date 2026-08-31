@@ -72,22 +72,27 @@ IPAddress::IPAddress(sdbusplus::bus_t& bus, sdbusplus::object_path objPath,
 std::string IPAddress::address(std::string /*ipAddress*/)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
+    return {}; // unreachable; elog always throws
 }
 uint8_t IPAddress::prefixLength(uint8_t /*value*/)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
+    return {}; // unreachable; elog always throws
 }
 std::string IPAddress::gateway(std::string /*gateway*/)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
+    return {}; // unreachable; elog always throws
 }
 IP::Protocol IPAddress::type(IP::Protocol /*type*/)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
+    return {}; // unreachable; elog always throws
 }
 IP::AddressOrigin IPAddress::origin(IP::AddressOrigin /*origin*/)
 {
     elog<NotAllowed>(Reason("Property update is not allowed"));
+    return {}; // unreachable; elog always throws
 }
 void IPAddress::delete_()
 {

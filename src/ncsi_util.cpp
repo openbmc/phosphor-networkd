@@ -1,6 +1,5 @@
 #include "ncsi_util.hpp"
 
-#include <errno.h>
 #include <fcntl.h>
 #include <linux/mctp.h>
 #include <linux/ncsi.h>
@@ -9,6 +8,7 @@
 #include <netlink/netlink.h>
 #include <unistd.h>
 
+#include <cerrno>
 #include <iostream>
 #include <memory>
 #include <optional>
