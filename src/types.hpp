@@ -26,9 +26,9 @@ class DelayedExecutor
  */
 struct InterfaceInfo
 {
-    unsigned short type;
-    unsigned idx;
-    unsigned flags;
+    unsigned short type = 0;
+    unsigned idx = 0;
+    unsigned flags = 0;
     std::optional<std::string> name = std::nullopt;
     std::optional<stdplus::EtherAddr> mac = std::nullopt;
     std::optional<unsigned> mtu = std::nullopt;
@@ -67,8 +67,8 @@ struct AddressInfo
  */
 struct NeighborInfo
 {
-    unsigned ifidx;
-    uint16_t state;
+    unsigned ifidx = 0;
+    uint16_t state = 0;
     std::optional<stdplus::InAnyAddr> addr;
     std::optional<stdplus::EtherAddr> mac;
 

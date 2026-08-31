@@ -4,12 +4,12 @@
 
 #include "ncsi_util.hpp"
 
-#include <assert.h>
+#include <cassert>
 #include <getopt.h>
 #include <linux/mctp.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
 
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/numeric/str.hpp>

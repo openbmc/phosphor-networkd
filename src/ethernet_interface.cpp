@@ -858,6 +858,7 @@ ServerList EthernetInterface::staticNTPServers(ServerList value)
 ServerList EthernetInterface::ntpServers(ServerList /*servers*/)
 {
     elog<NotAllowed>(NotAllowedArgument::REASON("ReadOnly Property"));
+    return {}; // unreachable; elog always throws
 }
 
 static constexpr std::string_view tfStr(bool value)
