@@ -158,10 +158,7 @@ bool deleteLinkLocalIPv4ViaNetlink(unsigned ifidx, const stdplus::SubnetAny& ip)
                 }
 
                 sockaddr_nl nladdr{};
-                memset(&nladdr, 0, sizeof(nladdr));
                 nladdr.nl_family = AF_NETLINK;
-                nladdr.nl_pid = 0;
-                nladdr.nl_groups = 0;
 
                 if (bind(sock, reinterpret_cast<sockaddr*>(&nladdr),
                          sizeof(nladdr)) < 0)
@@ -213,14 +210,14 @@ bool deleteLinkLocalIPv4ViaNetlink(unsigned ifidx, const stdplus::SubnetAny& ip)
                     return;
                 }
 
-                if (len >= NLMSG_LENGTH(0))
+                if (static_cast<size_t>(len) >= NLMSG_HDRLEN + sizeof(nlmsgerr))
                 {
                     const nlmsghdr* hdr =
-                        reinterpret_cast<nlmsghdr*>(resp.data());
+                        reinterpret_cast<const nlmsghdr*>(resp.data());
                     if (hdr->nlmsg_type == NLMSG_ERROR)
                     {
                         const nlmsgerr* err =
-                            reinterpret_cast<nlmsgerr*>(NLMSG_DATA(hdr));
+                            reinterpret_cast<const nlmsgerr*>(NLMSG_DATA(hdr));
                         if (err->error != 0)
                         {
                             lg2::error(
