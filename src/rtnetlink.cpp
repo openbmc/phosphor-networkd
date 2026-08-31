@@ -127,8 +127,9 @@ std::optional<std::tuple<unsigned, stdplus::InAnyAddr>> gatewayFromRtm(
             return parse<stdplus::In4Addr>(msg);
         case AF_INET6:
             return parse<stdplus::In6Addr>(msg);
+        default:
+            return std::nullopt;
     }
-    return std::nullopt;
 }
 
 AddressInfo addrFromRtm(std::string_view msg)
