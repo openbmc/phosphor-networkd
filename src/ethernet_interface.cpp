@@ -793,7 +793,8 @@ ObjectPath EthernetInterface::createVLAN(uint16_t id)
     }
     auto info = AllIntfInfo{InterfaceInfo{
         .type = ARPHRD_ETHER,
-        .idx = 0, // TODO: Query the correct value after creation
+        .idx = 0, // ifIdx populated on first RTM_NEWLINK; getEthInfo skipped
+                  // until then
         .flags = 0,
         .name = intfName,
         .mac = std::move(mac),

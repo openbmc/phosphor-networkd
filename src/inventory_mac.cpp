@@ -52,6 +52,12 @@ nlohmann::json configJson;
 
 void setFirstBootMACOnInterface(const std::string& intf, const std::string& mac)
 {
+    if (manager == nullptr)
+    {
+        lg2::error(
+            "setFirstBootMACOnInterface called before watch() set manager");
+        return;
+    }
     for (const auto& interface : manager->interfaces)
     {
         if (interface.first == intf)
@@ -340,6 +346,11 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
                       (FORCE_SYNC_MAC_FROM_INVENTORY)
                           ? "Force sync enabled"
                           : "First boot file is not present");
+            if (manager == nullptr)
+            {
+                lg2::error("watchEthernetInterface: manager not initialised");
+                return;
+            }
             EthInterfaceMatch = std::make_unique<sdbusplus::match>(
                 bus,
                 "interface='org.freedesktop.DBus.ObjectManager',type='signal',"
