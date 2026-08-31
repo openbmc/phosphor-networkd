@@ -32,8 +32,9 @@ constexpr stdplus::InAnyAddr addrFromBuf(int family, std::string_view buf)
             return stdplus::raw::copyFromStrict<stdplus::In4Addr>(buf);
         case AF_INET6:
             return stdplus::raw::copyFromStrict<stdplus::In6Addr>(buf);
+        default:
+            throw std::invalid_argument("Unrecognized family");
     }
-    throw std::invalid_argument("Unrecognized family");
 }
 
 /** @brief Check if an IPv6 address is link-local (fe80::/10)

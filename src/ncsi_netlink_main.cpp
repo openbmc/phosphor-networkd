@@ -3,7 +3,7 @@
 
 #include "ncsi_util.hpp"
 
-#include <string.h>
+#include <cstring>
 #include <unistd.h>
 
 #include <CLI/CLI.hpp>

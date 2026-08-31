@@ -1,6 +1,6 @@
 #include "ncsi_util.hpp"
 
-#include <errno.h>
+#include <cerrno>
 #include <fcntl.h>
 #include <linux/mctp.h>
 #include <linux/ncsi.h>
