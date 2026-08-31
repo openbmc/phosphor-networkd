@@ -153,7 +153,8 @@ bool deleteLinkLocalIPv4ViaNetlink(unsigned ifidx, const stdplus::SubnetAny& ip)
                 int sock = socket(AF_NETLINK, SOCK_RAW, NETLINK_ROUTE);
                 if (sock < 0)
                 {
-                    lg2::error("Failed to open the NETLINK_ROUTE socket");
+                    lg2::error("Failed to open NETLINK_ROUTE socket: {ERRNO}",
+                               "ERRNO", errno);
                     return;
                 }
 
@@ -166,7 +167,8 @@ bool deleteLinkLocalIPv4ViaNetlink(unsigned ifidx, const stdplus::SubnetAny& ip)
                 if (bind(sock, reinterpret_cast<sockaddr*>(&nladdr),
                          sizeof(nladdr)) < 0)
                 {
-                    lg2::error("Failed to bind the NETLINK_ROUTE socket");
+                    lg2::error("Failed to bind NETLINK_ROUTE socket: {ERRNO}",
+                               "ERRNO", errno);
                     close(sock);
                     return;
                 }
@@ -193,10 +195,19 @@ bool deleteLinkLocalIPv4ViaNetlink(unsigned ifidx, const stdplus::SubnetAny& ip)
                 req.nlh.nlmsg_len += rta->rta_len;
 
                 const ssize_t sent = send(sock, &req, req.nlh.nlmsg_len, 0);
-                if (sent != static_cast<ssize_t>(req.nlh.nlmsg_len))
+                if (sent < 0)
                 {
                     lg2::error(
-                        "Failed to send netlink message for RTM_DELADDR");
+                        "Failed to send RTM_DELADDR netlink message: {ERRNO}",
+                        "ERRNO", errno);
+                    close(sock);
+                    return;
+                }
+                else if (sent != static_cast<ssize_t>(req.nlh.nlmsg_len))
+                {
+                    lg2::error(
+                        "Short write on RTM_DELADDR: sent {SENT} of {TOTAL}",
+                        "SENT", sent, "TOTAL", req.nlh.nlmsg_len);
                     close(sock);
                     return;
                 }
