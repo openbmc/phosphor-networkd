@@ -213,14 +213,14 @@ bool deleteLinkLocalIPv4ViaNetlink(unsigned ifidx, const stdplus::SubnetAny& ip)
                     return;
                 }
 
-                if (len >= NLMSG_LENGTH(0))
+                if (static_cast<size_t>(len) >= NLMSG_HDRLEN + sizeof(nlmsgerr))
                 {
                     const nlmsghdr* hdr =
-                        reinterpret_cast<nlmsghdr*>(resp.data());
+                        reinterpret_cast<const nlmsghdr*>(resp.data());
                     if (hdr->nlmsg_type == NLMSG_ERROR)
                     {
                         const nlmsgerr* err =
-                            reinterpret_cast<nlmsgerr*>(NLMSG_DATA(hdr));
+                            reinterpret_cast<const nlmsgerr*>(NLMSG_DATA(hdr));
                         if (err->error != 0)
                         {
                             lg2::error(
