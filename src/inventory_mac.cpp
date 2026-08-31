@@ -100,7 +100,7 @@ auto getFromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
         {
             // Mapper may give an exception when there are no results.  Turn
             // it into an empty message.
-            lg2::warning("Error in mapper call");
+            lg2::warning("Mapper call failed: {ERROR}", "ERROR", e);
             return sdbusplus::message_t{};
         }
     }();
@@ -210,8 +210,7 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
     }
     catch (const std::exception& e)
     {
-        lg2::error("Exception occurred during getting of MAC "
-                   "address from Inventory");
+        lg2::error("Exception getting MAC from Inventory: {ERROR}", "ERROR", e);
         return false;
     }
     return true;
