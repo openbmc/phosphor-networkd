@@ -3,11 +3,13 @@
 #include "network_manager.hpp"
 #include "util.hpp"
 
+#include <fcntl.h>
+#include <unistd.h>
+
 #include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
 
 #include <filesystem>
-#include <fstream>
 
 namespace phosphor
 {
@@ -60,18 +62,22 @@ void HostnameManager::markHostnameSet()
         // Create parent directories if they don't exist
         std::filesystem::path firstBootFilePath(firstBootFile);
         std::filesystem::create_directories(firstBootFilePath.parent_path());
-
-        std::ofstream file(firstBootFile);
-        if (!file)
-        {
-            lg2::error("Failed to create firstBoot file: {PATH}", "PATH",
-                       firstBootFile);
-        }
     }
     catch (const std::exception& e)
     {
-        lg2::error("Exception creating firstBoot file: {ERROR}", "ERROR", e);
+        lg2::error("Exception creating firstBoot dir: {ERROR}", "ERROR", e);
+        return;
     }
+
+    // Use open() so errno is reliable on failure
+    int fd = open(firstBootFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (fd < 0)
+    {
+        lg2::error("Failed to create firstBoot file {PATH}: {ERRNO}", "PATH",
+                   firstBootFile, "ERRNO", errno);
+        return;
+    }
+    close(fd);
 }
 
 std::string HostnameManager::getBmcSerialNumber()
