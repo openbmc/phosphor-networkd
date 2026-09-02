@@ -182,6 +182,9 @@ class EthernetInterface : public Ifaces
     bool ipv6AcceptRA(bool value) override;
     using EthernetInterfaceIntf::ipv6AcceptRA;
 
+    bool ipv6Enable(bool value) override;
+    using EthernetInterfaceIntf::ipv6Enable;
+
     /** @brief sets the NTP servers.
      *  @param[in] value - vector of NTP servers.
      */

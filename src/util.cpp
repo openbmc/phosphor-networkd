@@ -280,6 +280,13 @@ bool getIPv6AcceptRA(const config::Parser& config)
         .value_or(def);
 }
 
+bool getIPv6Enable(const config::Parser& config)
+{
+    return systemdParseLast(config, "Network", "X-IPv6Enable",
+                            config::parseBool)
+        .value_or(true);
+}
+
 DHCPVal getDHCPValue(const config::Parser& config)
 {
     return systemdParseLast(config, "Network", "DHCP", systemdParseDHCP)

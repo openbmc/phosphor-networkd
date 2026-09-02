@@ -104,6 +104,7 @@ EthernetInterface::EthernetInterface(
     EthernetInterfaceIntf::dhcp4(dhcpVal.v4, true);
     EthernetInterfaceIntf::dhcp6(dhcpVal.v6, true);
     EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRA(config), true);
+    EthernetInterfaceIntf::ipv6Enable(getIPv6Enable(config), true);
     EthernetInterfaceIntf::nicEnabled(enabled, true);
     auto lldpVal = parseLLDPConf();
     if (!lldpVal.empty())
@@ -348,6 +349,11 @@ void EthernetInterface::addStaticGateway(const StaticGatewayInfo& info)
 ObjectPath EthernetInterface::ip(IP::Protocol protType, std::string ipaddress,
                                  uint8_t prefixLength, std::string)
 {
+    if (protType == IP::Protocol::IPv6 && !ipv6Enable())
+    {
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("protType"),
+                              Argument::ARGUMENT_VALUE("IPv6 is disabled"));
+    }
     std::optional<stdplus::InAnyAddr> addr;
     try
     {
@@ -430,6 +436,12 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
                               Argument::ARGUMENT_VALUE(ipAddress.c_str()));
     }
 
+    if (std::holds_alternative<stdplus::In6Addr>(*addr) && !ipv6Enable())
+    {
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("ipAddress"),
+                              Argument::ARGUMENT_VALUE("IPv6 is disabled"));
+    }
+
     std::optional<stdplus::EtherAddr> lladdr;
     try
     {
@@ -470,6 +482,11 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
 ObjectPath EthernetInterface::staticGateway(std::string gateway,
                                             IP::Protocol protocolType)
 {
+    if (protocolType == IP::Protocol::IPv6 && !ipv6Enable())
+    {
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("protocolType"),
+                              Argument::ARGUMENT_VALUE("IPv6 is disabled"));
+    }
     for (const auto& ip : addrs)
     {
         if (ip.second->type() != protocolType)
@@ -536,6 +553,64 @@ bool EthernetInterface::ipv6AcceptRA(bool value)
     return value;
 }
 
+bool EthernetInterface::ipv6Enable(bool value)
+{
+    const bool oldValue = EthernetInterfaceIntf::ipv6Enable();
+    if (oldValue == value)
+    {
+        return value;
+    }
+
+    EthernetInterfaceIntf::ipv6Enable(value);
+
+    writeConfigurationFile();
+
+    if (!value)
+    {
+        manager.get().addReloadPostHook([this]() {
+            for (auto it = addrs.begin(); it != addrs.end();)
+            {
+                if (std::holds_alternative<stdplus::In6Addr>(
+                        it->first.getAddr()) &&
+                    it->second->origin() == IP::AddressOrigin::Static)
+                {
+                    it = addrs.erase(it);
+                }
+                else
+                {
+                    ++it;
+                }
+            }
+            for (auto it = staticNeighbors.begin();
+                 it != staticNeighbors.end();)
+            {
+                if (std::holds_alternative<stdplus::In6Addr>(it->first))
+                {
+                    it = staticNeighbors.erase(it);
+                }
+                else
+                {
+                    ++it;
+                }
+            }
+            for (auto it = staticGateways.begin(); it != staticGateways.end();)
+            {
+                if (it->second->protocolType() == IP::Protocol::IPv6)
+                {
+                    it = staticGateways.erase(it);
+                }
+                else
+                {
+                    ++it;
+                }
+            }
+        });
+    }
+
+    manager.get().reloadConfigs();
+    return value;
+}
+
 bool EthernetInterface::dhcp4(bool value)
 {
     if (dhcp4() != EthernetInterfaceIntf::dhcp4(value))
@@ -548,6 +623,13 @@ bool EthernetInterface::dhcp4(bool value)
 
 bool EthernetInterface::dhcp6(bool value)
 {
+    if (value && !ipv6Enable())
+    {
+        lg2::error("Cannot enable DHCPv6 when IPv6 is disabled on {NET_INTF}",
+                   "NET_INTF", interfaceName());
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("DHCP6"),
+                              Argument::ARGUMENT_VALUE("IPv6 is disabled"));
+    }
     if (dhcp6() != EthernetInterfaceIntf::dhcp6(value))
     {
         writeConfigurationFile();
@@ -558,6 +640,14 @@ bool EthernetInterface::dhcp6(bool value)
 
 EthernetInterface::DHCPConf EthernetInterface::dhcpEnabled(DHCPConf value)
 {
+    if (!ipv6Enable() && (value == DHCPConf::v6 || value == DHCPConf::both))
+    {
+        lg2::error("Cannot enable DHCPv6 when IPv6 is disabled on {NET_INTF}",
+                   "NET_INTF", interfaceName());
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("DHCPEnabled"),
+                              Argument::ARGUMENT_VALUE("IPv6 is disabled"));
+    }
+
     auto old4 = EthernetInterfaceIntf::dhcp4();
     auto new4 = EthernetInterfaceIntf::dhcp4(
         value == DHCPConf::v4 || value == DHCPConf::v4v6stateless ||
@@ -916,15 +1006,32 @@ void EthernetInterface::writeConfigurationFile()
     }
     {
         auto& network = config.map["Network"].emplace_back();
+        network["X-IPv6Enable"].emplace_back(tfStr(ipv6Enable()));
         auto& lla = network["LinkLocalAddressing"];
+        if (!ipv6Enable())
+        {
 #if LINK_LOCAL_AUTOCONFIGURATION
-        lla.emplace_back("yes");
+            lla.emplace_back("ipv4");
 #else
-        lla.emplace_back("no");
+            lla.emplace_back("no");
 #endif
-        network["IPv6AcceptRA"].emplace_back(ipv6AcceptRA() ? "true" : "false");
-        network["DHCP"].emplace_back(dhcp4() ? (dhcp6() ? "true" : "ipv4")
-                                             : (dhcp6() ? "ipv6" : "false"));
+        }
+        else
+        {
+#if LINK_LOCAL_AUTOCONFIGURATION
+            lla.emplace_back("yes");
+#else
+            lla.emplace_back("no");
+#endif
+        }
+
+        network["IPv6AcceptRA"].emplace_back(
+            ipv6Enable() && ipv6AcceptRA() ? "true" : "false");
+        // Gate DHCPv6 on ipv6Enable to avoid DHCP=true when IPv6 is disabled
+        const bool dhcp6Active = ipv6Enable() && dhcp6();
+        network["DHCP"].emplace_back(
+            dhcp4() ? (dhcp6Active ? "true" : "ipv4")
+                    : (dhcp6Active ? "ipv6" : "false"));
         {
             auto& vlans = network["VLAN"];
             for (const auto& [_, intf] : manager.get().interfaces)
@@ -953,7 +1060,10 @@ void EthernetInterface::writeConfigurationFile()
             auto& address = network["Address"];
             for (const auto& addr : addrs)
             {
-                if (addr.second->origin() == IP::AddressOrigin::Static)
+                bool isIPv6 = std::holds_alternative<stdplus::In6Addr>(
+                    addr.first.getAddr());
+                if (addr.second->origin() == IP::AddressOrigin::Static &&
+                    (!isIPv6 || ipv6Enable()))
                 {
                     address.emplace_back(stdplus::toStr(addr.first));
                 }
@@ -971,7 +1081,7 @@ void EthernetInterface::writeConfigurationFile()
                 }
             }
 
-            if (!ipv6AcceptRA())
+            if (ipv6Enable() && !ipv6AcceptRA())
             {
                 auto gateway6 = EthernetInterfaceIntf::defaultGateway6();
                 if (!gateway6.empty())
@@ -984,11 +1094,16 @@ void EthernetInterface::writeConfigurationFile()
         }
     }
     config.map["IPv6AcceptRA"].emplace_back()["DHCPv6Client"].emplace_back(
-        dhcp6() ? "true" : "false");
+        ipv6Enable() && dhcp6() ? "true" : "false");
     {
         auto& neighbors = config.map["Neighbor"];
         for (const auto& sneighbor : staticNeighbors)
         {
+            if (!ipv6Enable() &&
+                std::holds_alternative<stdplus::In6Addr>(sneighbor.first))
+            {
+                continue;
+            }
             auto& neighbor = neighbors.emplace_back();
             neighbor["Address"].emplace_back(sneighbor.second->ipAddress());
             neighbor["MACAddress"].emplace_back(sneighbor.second->macAddress());
@@ -1018,6 +1133,11 @@ void EthernetInterface::writeConfigurationFile()
         auto& sroutes = config.map["Route"];
         for (const auto& temp : staticGateways)
         {
+            if (!ipv6Enable() &&
+                temp.second->protocolType() == IP::Protocol::IPv6)
+            {
+                continue;
+            }
             auto& staticGateway = sroutes.emplace_back();
             staticGateway["Gateway"].emplace_back(temp.second->gateway());
             staticGateway["GatewayOnLink"].emplace_back("true");
@@ -1167,6 +1287,13 @@ std::string EthernetInterface::defaultGateway(std::string gateway)
 
 std::string EthernetInterface::defaultGateway6(std::string gateway)
 {
+    if (!ipv6Enable())
+    {
+        lg2::error(
+            "Cannot set IPv6 gateway when IPv6 is disabled on {NET_INTF}",
+            "NET_INTF", interfaceName());
+        return EthernetInterfaceIntf::defaultGateway6();
+    }
     normalizeGateway<stdplus::In6Addr>(gateway);
     if (gateway != defaultGateway6())
     {
