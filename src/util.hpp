@@ -59,6 +59,11 @@ std::optional<std::string> interfaceToUbootEthAddr(std::string_view intf);
  */
 bool getIPv6AcceptRA(const config::Parser& config);
 
+/** @brief read the IPv6Enable value from the configuration file
+ *  @param[in] config - The parsed configuration.
+ */
+bool getIPv6Enable(const config::Parser& config);
+
 /** @brief read the DHCP value from the configuration file
  *  @param[in] config - The parsed configuration.
  */
