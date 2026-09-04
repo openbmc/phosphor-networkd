@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8af86810_4d687d9a",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-09-04T11:05:11Z",
+      "side": 1,
+      "message": "Since this is a separate container from staticNeighbors, does calling Delete() on an object stored here actually remove it? Neighbor::delete_() in neighbor.cpp only searches staticNeighbors.",
+      "revId": "d941fe55e11d5a1a93520dc1f928f21707e2a7dc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f2ecd0d_4e0c674d",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-09-04T11:05:11Z",
+      "side": 1,
+      "message": "When the kernel deletes this neighbor entry (e.g. NUD_FAILED) while the default gateway/route itself is unchanged, this only erases staticNeighbors. Does gatewayNeighbors need to be cleared here too, otherwise won\u0027t it keep reporting the last-known MAC even though the kernel no longer has it resolved?",
+      "range": {
+        "startLine": 381,
+        "startChar": 12,
+        "endLine": 381,
+        "endChar": 58
+      },
+      "revId": "d941fe55e11d5a1a93520dc1f928f21707e2a7dc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
