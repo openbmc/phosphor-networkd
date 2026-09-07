@@ -71,6 +71,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b24eb05_608b750b",
+        "filename": "meson.options",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1002977
+      },
+      "writtenOn": "2026-09-07T05:43:37Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "e693b3ca_5e7f334e",
+      "revId": "16e8778a764c754c6eb32a1951709ead845ca868",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3a55f133_9cee66fb",
@@ -88,6 +106,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4d56aec_16f09636",
+        "filename": "meson.options",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1002977
+      },
+      "writtenOn": "2026-09-07T05:43:37Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "3a55f133_9cee66fb",
+      "revId": "16e8778a764c754c6eb32a1951709ead845ca868",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "33bab33b_7b4ec77e",
@@ -101,6 +137,30 @@
       "writtenOn": "2026-07-10T11:26:13Z",
       "side": 1,
       "message": "throwIfConfigurationProtected()",
+      "range": {
+        "startLine": 344,
+        "startChar": 24,
+        "endLine": 344,
+        "endChar": 38
+      },
+      "revId": "16e8778a764c754c6eb32a1951709ead845ca868",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c7debac_416d233e",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1002977
+      },
+      "writtenOn": "2026-09-07T05:43:37Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "33bab33b_7b4ec77e",
       "range": {
         "startLine": 344,
         "startChar": 24,
@@ -134,6 +194,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f445e1c_5ca004ba",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1002977
+      },
+      "writtenOn": "2026-09-07T05:43:37Z",
+      "side": 1,
+      "message": "Done. The list is now a constexpr std::array, so it is built once at\ncompile time instead of on every call. I used std::array instead of a\nplain array because the list can be empty when no interfaces are\nconfigured, and a plain array cannot have zero size.",
+      "parentUuid": "5bf44181_b07e38fe",
+      "range": {
+        "startLine": 347,
+        "startChar": 2,
+        "endLine": 348,
+        "endChar": 74
+      },
+      "revId": "16e8778a764c754c6eb32a1951709ead845ca868",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7f3a2d4_54de3ca6",
@@ -147,6 +231,30 @@
       "writtenOn": "2026-07-10T11:26:13Z",
       "side": 1,
       "message": "what is your expecttaion here?\nExact match or matches anywhere in the interface name? I think it should be former.",
+      "range": {
+        "startLine": 350,
+        "startChar": 30,
+        "endLine": 350,
+        "endChar": 46
+      },
+      "revId": "16e8778a764c754c6eb32a1951709ead845ca868",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2031b4d9_43d7b648",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1002977
+      },
+      "writtenOn": "2026-09-07T05:43:37Z",
+      "side": 1,
+      "message": "changed the check to std::ranges::find, which compares\nthe full interface name against each entry. So \"usb0\" in the list\nblocks only usb0, not usb01 or hmcusb0. Each interface to protect\nmust be listed by its full name.",
+      "parentUuid": "c7f3a2d4_54de3ca6",
       "range": {
         "startLine": 350,
         "startChar": 30,
@@ -180,6 +288,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eec05d7c_d621c09a",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1002977
+      },
+      "writtenOn": "2026-09-07T05:43:37Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "0c1c5517_7cd1bc76",
+      "range": {
+        "startLine": 353,
+        "startChar": 17,
+        "endLine": 353,
+        "endChar": 39
+      },
+      "revId": "16e8778a764c754c6eb32a1951709ead845ca868",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4e9a6fe6_5b3072c4",
@@ -193,6 +325,30 @@
       "writtenOn": "2026-07-10T11:26:13Z",
       "side": 1,
       "message": "Only first two lines are enough\n\nThrows NotAllowed when this interface matches the configured\nblocked-interfaces list",
+      "range": {
+        "startLine": 246,
+        "startChar": 15,
+        "endLine": 247,
+        "endChar": 31
+      },
+      "revId": "16e8778a764c754c6eb32a1951709ead845ca868",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e887df08_dd01db33",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1002977
+      },
+      "writtenOn": "2026-09-07T05:43:37Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "4e9a6fe6_5b3072c4",
       "range": {
         "startLine": 246,
         "startChar": 15,
