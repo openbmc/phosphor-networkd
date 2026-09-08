@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b527efcd_3ed10b1b",
+        "filename": "src/ethernet_interface.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1002762
+      },
+      "writtenOn": "2026-09-08T06:19:02Z",
+      "side": 1,
+      "message": "Addressed, Please Check",
+      "parentUuid": "8af86810_4d687d9a",
+      "revId": "d941fe55e11d5a1a93520dc1f928f21707e2a7dc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0f2ecd0d_4e0c674d",
@@ -31,6 +49,30 @@
       "writtenOn": "2026-09-04T11:05:11Z",
       "side": 1,
       "message": "When the kernel deletes this neighbor entry (e.g. NUD_FAILED) while the default gateway/route itself is unchanged, this only erases staticNeighbors. Does gatewayNeighbors need to be cleared here too, otherwise won\u0027t it keep reporting the last-known MAC even though the kernel no longer has it resolved?",
+      "range": {
+        "startLine": 381,
+        "startChar": 12,
+        "endLine": 381,
+        "endChar": 58
+      },
+      "revId": "d941fe55e11d5a1a93520dc1f928f21707e2a7dc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ede49ea_885f4882",
+        "filename": "src/network_manager.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1002762
+      },
+      "writtenOn": "2026-09-08T06:19:02Z",
+      "side": 1,
+      "message": "Addressed, Please Check",
+      "parentUuid": "0f2ecd0d_4e0c674d",
       "range": {
         "startLine": 381,
         "startChar": 12,
