@@ -215,6 +215,26 @@ TEST_F(TestEthernetInterface, getDynamicNameServers)
     EXPECT_EQ(interface.getNameServerFromResolvd(), servers);
 }
 
+TEST_F(TestEthernetInterface, setDomainName)
+{
+    ServerList domains = {"example.com"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.domainName(domains);
+    config::Parser parser((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(domains, parser.map.getValueStrings("Network", "Domains"));
+}
+
+TEST_F(TestEthernetInterface, loadDomainName)
+{
+    ServerList domains = {"example.com", "example.org"};
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.domainName(domains);
+    config::Parser parser((confDir / "00-bmc-test0.network").native());
+    interface.EthernetInterfaceIntf::domainName(ServerList{});
+    interface.loadDomainName(parser);
+    EXPECT_EQ(domains, interface.domainName());
+}
+
 TEST_F(TestEthernetInterface, addStaticNTPServers)
 {
     ServerList servers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};
