@@ -211,6 +211,7 @@ void Manager::createInterface(const AllIntfInfo& info, bool enabled)
                                                     config, enabled);
     intf->loadNameServers(config);
     intf->loadNTPServers(config);
+    intf->loadDomainName(config);
     auto ptr = intf.get();
     interfaces.insert_or_assign(*info.intf.name, std::move(intf));
     interfacesByIdx.insert_or_assign(info.intf.idx, ptr);

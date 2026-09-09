@@ -120,6 +120,10 @@ class EthernetInterface : public Ifaces
      */
     void loadNameServers(const config::Parser& config);
 
+    /** @brief Function used to load the domain name.
+     */
+    void loadDomainName(const config::Parser& config);
+
     /** @brief Function to create ipAddress dbus object.
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipAddress- IP address.
@@ -201,6 +205,11 @@ class EthernetInterface : public Ifaces
 
     ServerList staticNameServers(ServerList value) override;
 
+    /** @brief sets the domain name and persists it to the network conf file.
+     *  @param[in] value - vector of domain names.
+     */
+    ServerList domainName(ServerList value) override;
+
     /** @brief create Vlan interface.
      *  @param[in] id- VLAN identifier.
      */
@@ -241,6 +250,7 @@ class EthernetInterface : public Ifaces
 
     using EthernetInterfaceIntf::defaultGateway;
     using EthernetInterfaceIntf::defaultGateway6;
+    using EthernetInterfaceIntf::domainName;
     using EthernetInterfaceIntf::emitLLDP;
 
   protected:

@@ -678,6 +678,27 @@ void EthernetInterface::loadNameServers(const config::Parser& config)
         config.map.getValueStrings("Network", "DNS"));
 }
 
+void EthernetInterface::loadDomainName(const config::Parser& config)
+{
+    EthernetInterfaceIntf::domainName(
+        config.map.getValueStrings("Network", "Domains"));
+}
+
+ServerList EthernetInterface::domainName(ServerList value)
+{
+    if (value == EthernetInterfaceIntf::domainName())
+    {
+        return value;
+    }
+
+    value = EthernetInterfaceIntf::domainName(std::move(value));
+
+    writeConfigurationFile();
+    manager.get().reloadConfigs();
+
+    return value;
+}
+
 ServerList EthernetInterface::getNTPServerFromTimeSyncd()
 {
     ServerList servers; // Variable to capture the NTP Server IPs
@@ -940,6 +961,13 @@ void EthernetInterface::writeConfigurationFile()
             for (const auto& ntp : EthernetInterfaceIntf::staticNTPServers())
             {
                 ntps.emplace_back(ntp);
+            }
+        }
+        {
+            auto& domains = network["Domains"];
+            for (const auto& domain : EthernetInterfaceIntf::domainName())
+            {
+                domains.emplace_back(domain);
             }
         }
         {
