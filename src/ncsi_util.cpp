@@ -458,7 +458,7 @@ std::optional<NCSIResponse> NetlinkInterface::sendCommand(NCSICommand& cmd)
         return {};
     }
 
-    return ctx.resp;
+    return std::move(ctx.resp);
 }
 
 int NetlinkInterface::setChannel(int package, int channel)

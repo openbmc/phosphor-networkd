@@ -63,6 +63,18 @@ struct NCSIResponse
     std::span<unsigned char> payload;
     std::vector<unsigned char> full_payload;
 
+    // payload is a non-owning span into full_payload. Copying the object
+    // would copy full_payload to a new buffer while leaving payload pointing
+    // to the original buffer, resulting in an invalid span relationship.
+    NCSIResponse() = default;
+    NCSIResponse(const NCSIResponse&) = delete;
+    NCSIResponse& operator=(const NCSIResponse&) = delete;
+
+    // Moving transfers full_payload ownership while preserving payload as
+    // a view into the same underlying buffer.
+    NCSIResponse(NCSIResponse&&) = default;
+    NCSIResponse& operator=(NCSIResponse&&) = default;
+
     /* Given an incoming response with full_payload set, check that we have
      * enough data for a correct response, and populate the rest of the struct
      * to suit
