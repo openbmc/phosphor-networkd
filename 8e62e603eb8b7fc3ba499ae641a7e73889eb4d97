@@ -16,6 +16,24 @@
       "message": "Can you test more scenarios?",
       "revId": "8e62e603eb8b7fc3ba499ae641a7e73889eb4d97",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "921eb378_ae4f3c5d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1002762
+      },
+      "writtenOn": "2026-09-24T08:10:41Z",
+      "side": 1,
+      "message": "Hi @rashidmp@ami.com,\n\nI have Tested with Multiple Reboots and Checked the MAC and it is working as expected,\n\nCould you please suggest more scenarios?",
+      "parentUuid": "f41ed628_4407798b",
+      "revId": "8e62e603eb8b7fc3ba499ae641a7e73889eb4d97",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
