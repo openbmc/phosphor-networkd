@@ -334,23 +334,37 @@ void Manager::removeAddress(const AddressInfo& info)
 
 void Manager::addNeighbor(const NeighborInfo& info)
 {
-    if (!(info.state & NUD_PERMANENT) || !info.addr)
+    if (!info.addr)
     {
         return;
     }
-    if (auto it = intfInfo.find(info.ifidx); it != intfInfo.end())
+
+    auto it = intfInfo.find(info.ifidx);
+    if (it == intfInfo.end())
     {
-        it->second.staticNeighs.insert_or_assign(*info.addr, info);
-        if (auto it = interfacesByIdx.find(info.ifidx);
-            it != interfacesByIdx.end())
+        if ((info.state & NUD_PERMANENT) && !ignoredIntf.contains(info.ifidx))
         {
-            it->second->addStaticNeigh(info);
+            throw std::runtime_error(
+                std::format("Interface `{}` not found for neigh", info.ifidx));
         }
+        return;
     }
-    else if (!ignoredIntf.contains(info.ifidx))
+
+    bool isDefGw =
+        info.mac &&
+        ((it->second.defgw4 &&
+          stdplus::InAnyAddr{*it->second.defgw4} == *info.addr) ||
+         (it->second.defgw6 &&
+          stdplus::InAnyAddr{*it->second.defgw6} == *info.addr));
+    if (!(info.state & NUD_PERMANENT) && !isDefGw)
     {
-        throw std::runtime_error(
-            std::format("Interface `{}` not found for neigh", info.ifidx));
+        return;
+    }
+    it->second.staticNeighs.insert_or_assign(*info.addr, info);
+    if (auto it2 = interfacesByIdx.find(info.ifidx);
+        it2 != interfacesByIdx.end())
+    {
+        it2->second->addStaticNeigh(info);
     }
 }
 
