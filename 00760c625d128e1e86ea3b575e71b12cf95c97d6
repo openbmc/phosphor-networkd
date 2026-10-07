@@ -123,6 +123,24 @@
       "parentUuid": "83f556a8_a8f64da5",
       "revId": "00760c625d128e1e86ea3b575e71b12cf95c97d6",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a559b8b5_ab6ac01a",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-10-07T05:14:57Z",
+      "side": 1,
+      "message": "@raviteja28031990@gmail.com\n\nAdded the rtnetlink for both ipv4 and ipv6 along with the deleteIPv4 and deleteIPv6",
+      "parentUuid": "5269d0b0_4a8cea8a",
+      "revId": "00760c625d128e1e86ea3b575e71b12cf95c97d6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
