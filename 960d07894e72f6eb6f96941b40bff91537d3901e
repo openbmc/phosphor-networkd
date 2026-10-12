@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f0b50c2_49bbd7a7",
+        "filename": "meson.options",
+        "patchSetId": 7
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-10-12T18:23:56Z",
+      "side": 1,
+      "message": "Please check the latest comments on dbus-interfaces PR.\n\nHaving a platform-specific config file parsed during the networkd startup (for example: in /usr/share/network/) will keep the compiled networkd binary identical across all builds.",
+      "revId": "960d07894e72f6eb6f96941b40bff91537d3901e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33a6d169_7551f33a",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-10-12T18:23:56Z",
+      "side": 1,
+      "message": "If moving to config file-based approach, then, this logic can be moved up to Manager class (which is responsible for handling config files on interfaces).\n\nManager can determine whether an interface is internal at startup (by reading the config file) and pass this bool flag into the EthernetInterface constructor, something like:\n```\nEthernetInterface::EthernetInterface(\n    std::plus::PinnedRef\u003csdbusplus::bus_t\u003e bus,\n    std::plus::PinnedRef\u003cManager\u003e manager,\n    const AllIntfInfo\u0026 info,\n    const sdbusplus::object_path\u0026 objRoot,\n    const config::Parser\u0026 config,\n    bool enabled,\n    bool internal) :\n    ...\n```",
+      "revId": "960d07894e72f6eb6f96941b40bff91537d3901e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae58a663_8df527a0",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-10-12T18:23:56Z",
+      "side": 1,
+      "message": "Rather than looking up the name in an array again in isProtectedInterface, just query the interface\u0027s own dbus\u0027 \"internal\" property",
+      "revId": "960d07894e72f6eb6f96941b40bff91537d3901e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
