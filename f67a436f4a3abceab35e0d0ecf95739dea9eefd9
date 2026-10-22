@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2789a02_74ab7067",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 12
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-10-22T07:23:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a7ebf27_8e53bbfa",
+      "revId": "f67a436f4a3abceab35e0d0ecf95739dea9eefd9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "408068d2_4df43255",
@@ -31,6 +49,24 @@
       "writtenOn": "2026-10-21T21:53:23Z",
       "side": 1,
       "message": "This needs to be set only when the prefix length is \u003c31 (1-30), because /31 has on ly 2 addresses and both are hosts (point-to-point connection) and need no broadcast address.",
+      "revId": "f67a436f4a3abceab35e0d0ecf95739dea9eefd9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad4d24dd_b28bf093",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-10-22T07:23:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "408068d2_4df43255",
       "revId": "f67a436f4a3abceab35e0d0ecf95739dea9eefd9",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -52,6 +88,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d7546f8_54ec403b",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-10-22T07:23:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e80969f_74d6ad13",
+      "revId": "f67a436f4a3abceab35e0d0ecf95739dea9eefd9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b5c96707_de1606f6",
@@ -65,6 +119,24 @@
       "writtenOn": "2026-10-21T21:53:23Z",
       "side": 1,
       "message": "Please document it here that it flushes all addresses including linklocal (fe80::) IP (similar to ip -6 flush). If required, in future, we can include a check whether or not to remove linklocal address.",
+      "revId": "f67a436f4a3abceab35e0d0ecf95739dea9eefd9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c4af2b8_aca9fdd2",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-10-22T07:23:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5c96707_de1606f6",
       "revId": "f67a436f4a3abceab35e0d0ecf95739dea9eefd9",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
