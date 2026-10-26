@@ -4,6 +4,7 @@
 
 #include <arpa/inet.h>
 #include <dlfcn.h>
+#include <linux/ethtool.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 #include <linux/sockios.h>
@@ -32,11 +33,13 @@ std::map<int, std::queue<std::string>> mock_rtnetlinks;
 using phosphor::network::InterfaceInfo;
 
 std::map<std::string, InterfaceInfo> mock_if;
+std::map<std::string, ethtool_cmd> mock_ethtool;
 
 void phosphor::network::system::mock_clear()
 {
     mock_rtnetlinks.clear();
     mock_if.clear();
+    mock_ethtool.clear();
 }
 
 void phosphor::network::system::mock_addIF(const InterfaceInfo& info)
@@ -53,6 +56,15 @@ void phosphor::network::system::mock_addIF(const InterfaceInfo& info)
         }
     }
     mock_if.emplace(info.name.value(), info);
+}
+
+void phosphor::network::system::mock_setEthtoolSpeed(std::string_view ifname,
+                                                   uint16_t speed,
+                                                   uint16_t speedHi)
+{
+    auto& edata = mock_ethtool[std::string(ifname)];
+    edata.speed = speed;
+    edata.speed_hi = speedHi;
 }
 
 void validateMsgHdr(const struct msghdr* msg)
@@ -268,8 +280,13 @@ int ioctl(int fd, unsigned long int request, ...)
             errno = ENXIO;
             return -1;
         }
-        // Return default/zeroed ethtool data for mock interfaces
-        // This ensures tests get predictable values
+        if (auto speed = mock_ethtool.find(req->ifr_name);
+            speed != mock_ethtool.end())
+        {
+            auto& edata = *reinterpret_cast<ethtool_cmd*>(req->ifr_data);
+            edata.speed = speed->second.speed;
+            edata.speed_hi = speed->second.speed_hi;
+        }
         return 0;
     }
 
