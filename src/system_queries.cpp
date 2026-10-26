@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <array>
 #include <cerrno>
+#include <climits>
 #include <cstring>
 #include <format>
 #include <optional>
@@ -93,8 +94,9 @@ EthInfo getEthInfo(stdplus::zstring_view ifname)
     return optionalIFReq(
                ifname, SIOCETHTOOL, "ETHTOOL"sv,
                [&](const ifreq&) {
+                   const auto speed = ethtool_cmd_speed(&edata);
                    return EthInfo{.autoneg = edata.autoneg != 0,
-                                  .speed = edata.speed,
+                                  .speed = speed > INT_MAX ? 0U : speed,
                                   .fullDuplex = (edata.duplex == DUPLEX_FULL)};
                },
                &edata)
