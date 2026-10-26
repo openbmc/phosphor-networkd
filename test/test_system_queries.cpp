@@ -43,6 +43,33 @@ TEST_F(TestSystemQueries, GetEthInfoSuccess)
     EXPECT_FALSE(info.fullDuplex);
 }
 
+TEST_F(TestSystemQueries, GetEthInfoUnknownSpeed)
+{
+    mock_addIF(
+        InterfaceInfo{.type = 1, .idx = 1, .flags = IFF_UP, .name = "eth0"});
+    mock_setEthtoolSpeed("eth0", 0xFFFF, 0xFFFF);
+
+    EXPECT_EQ(0U, getEthInfo("eth0").speed);
+}
+
+TEST_F(TestSystemQueries, GetEthInfoGigabitSpeed)
+{
+    mock_addIF(
+        InterfaceInfo{.type = 1, .idx = 1, .flags = IFF_UP, .name = "eth0"});
+    mock_setEthtoolSpeed("eth0", 1000, 0);
+
+    EXPECT_EQ(1000U, getEthInfo("eth0").speed);
+}
+
+TEST_F(TestSystemQueries, GetEthInfoHighSpeed)
+{
+    mock_addIF(
+        InterfaceInfo{.type = 1, .idx = 1, .flags = IFF_UP, .name = "eth0"});
+    mock_setEthtoolSpeed("eth0", 1000, 1);
+
+    EXPECT_EQ(66536U, getEthInfo("eth0").speed);
+}
+
 TEST_F(TestSystemQueries, GetEthInfoMultipleInterfaces)
 {
     mock_addIF(
