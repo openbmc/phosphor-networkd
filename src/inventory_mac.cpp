@@ -6,6 +6,7 @@
 #include "types.hpp"
 
 #include <nlohmann/json.hpp>
+#include <org/freedesktop/DBus/ObjectManager/common.hpp>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <sdbusplus/bus.hpp>
@@ -31,6 +32,7 @@ using PropertyValue = std::string;
 using DbusService = std::string;
 using ObjectTree =
     stdplus::string_umap<stdplus::string_umap<std::vector<std::string>>>;
+using ObjectManager = sdbusplus::common::org::freedesktop::d_bus::ObjectManager;
 
 constexpr auto firstBootPath = "/var/lib/network/firstBoot_";
 constexpr auto configFile = "/usr/share/network/config.json";
@@ -223,8 +225,7 @@ void registerSignals(sdbusplus::bus_t& bus)
     lg2::info("Registering the Inventory Signals Matcher");
 
     auto callback = [&](sdbusplus::message_t& m) {
-        std::map<DbusObjectPath,
-                 std::map<DbusInterface, std::variant<PropertyValue>>>
+        ObjectManager::get_managed_objects_t::return_type::mapped_type
             interfacesProperties;
 
         sdbusplus::object_path objPath;
@@ -266,9 +267,11 @@ void registerSignals(sdbusplus::bus_t& bus)
 
     MacAddressMatch = std::make_unique<sdbusplus::match>(
         bus,
-        "interface='org.freedesktop.DBus.ObjectManager',type='signal',"
-        "member='InterfacesAdded',path='/xyz/openbmc_project/"
-        "inventory'",
+        sdbusplus::match_rules::interface(ObjectManager::interface) +
+            sdbusplus::match_rules::type::signal() +
+            sdbusplus::match_rules::member(
+                ObjectManager::signal_names::interfaces_added) +
+            sdbusplus::match_rules::path(invRoot),
         callback);
 }
 
@@ -297,8 +300,7 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
     };
 
     auto mycallback = [&, handle_interface](sdbusplus::message_t& m) {
-        std::map<DbusObjectPath,
-                 std::map<DbusInterface, std::variant<PropertyValue>>>
+        ObjectManager::get_managed_objects_t::return_type::mapped_type
             interfacesProperties;
 
         sdbusplus::object_path objPath;
@@ -342,8 +344,12 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
                           : "First boot file is not present");
             EthInterfaceMatch = std::make_unique<sdbusplus::match>(
                 bus,
-                "interface='org.freedesktop.DBus.ObjectManager',type='signal',"
-                "member='InterfacesAdded',path='/xyz/openbmc_project/network'",
+                sdbusplus::match_rules::interface(ObjectManager::interface) +
+                    sdbusplus::match_rules::type::signal() +
+                    sdbusplus::match_rules::member(
+                        ObjectManager::signal_names::interfaces_added) +
+                    sdbusplus::match_rules::path(
+                        "/xyz/openbmc_project/network"),
                 mycallback);
 
             for (const auto& intf : manager->interfaces)
