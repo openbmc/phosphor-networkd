@@ -51,6 +51,24 @@
       "message": "Other errors also might have caused failures like, if running out of fds.\n\nYou can use `errno` for the error code",
       "revId": "fb4f0769fe0f50470dabf552a9eefedc630377bd",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ceb6368f_a840561d",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1002622
+      },
+      "writtenOn": "2026-10-27T20:14:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e45e31c4_e9ab2be8",
+      "revId": "fb4f0769fe0f50470dabf552a9eefedc630377bd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
