@@ -82,6 +82,17 @@ static bool validIntfIP(Addr a) noexcept
     return a.isUnicast() && !a.isLoopback();
 }
 
+static bool getNicEnabled(const config::Parser& config, bool enabled)
+{
+    auto actPolicy = config.map.getLastValueString("Link", "ActivationPolicy");
+    if (actPolicy && *actPolicy == "down")
+    {
+        return false;
+    }
+
+    return enabled;
+}
+
 EthernetInterface::EthernetInterface(
     stdplus::PinnedRef<sdbusplus::bus_t> bus,
     stdplus::PinnedRef<Manager> manager, const AllIntfInfo& info,
@@ -104,7 +115,7 @@ EthernetInterface::EthernetInterface(
     EthernetInterfaceIntf::dhcp4(dhcpVal.v4, true);
     EthernetInterfaceIntf::dhcp6(dhcpVal.v6, true);
     EthernetInterfaceIntf::ipv6AcceptRA(getIPv6AcceptRA(config), true);
-    EthernetInterfaceIntf::nicEnabled(enabled, true);
+    EthernetInterfaceIntf::nicEnabled(getNicEnabled(config, enabled), true);
     auto lldpVal = parseLLDPConf();
     if (!lldpVal.empty())
     {
