@@ -1,0 +1,9 @@
+Code-Review+2: Ravi Teja <raviteja28031990@gmail.com>
+Code-Review+1: rashidmp <rashidmp@ami.com>
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Submitted-by: Alexander <alexander.hansen@9elements.com>
+Submitted-at: Tue, 03 Nov 2026 17:03:17 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/96355
+Comments-Total: 1
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
