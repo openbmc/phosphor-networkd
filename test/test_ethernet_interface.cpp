@@ -12,6 +12,7 @@
 #include <stdplus/gtest/tmp.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
+#include <fstream>
 #include <string_view>
 
 #include <gtest/gtest.h>
@@ -571,6 +572,75 @@ TEST_F(TestEthernetInterface, VLANCreationWithoutParentShouldThrow)
         MockEthernetInterface(bus, manager, info, "/xyz/openbmc_test/network"s,
                               config::Parser()),
         std::runtime_error);
+}
+
+TEST_F(TestEthernetInterface, NicEnabledActivationPolicy)
+{
+    AllIntfInfo info1{InterfaceInfo{
+        .type = ARPHRD_ETHER, .idx = 2, .flags = 0, .name = "test1"}};
+
+    // verify enabled by default, disable it and check written
+    // config
+    {
+        MockEthernetInterface intf(
+            bus, manager, info1,
+            sdbusplus::object_path("/xyz/openbmc_test/network"),
+            config::Parser());
+        EXPECT_TRUE(intf.nicEnabled());
+
+        EXPECT_CALL(manager.mockReload, schedule()).Times(1);
+        EXPECT_FALSE(intf.nicEnabled(false));
+        EXPECT_FALSE(intf.nicEnabled());
+    }
+
+    // Verify ActivationPolicy=down was written to configuration file
+    config::Parser parser((confDir / "00-bmc-test1.network").native());
+    auto actPolicy = parser.map.getLastValueString("Link", "ActivationPolicy");
+    ASSERT_NE(actPolicy, nullptr);
+    EXPECT_EQ(*actPolicy, "down");
+
+    // Simulating daemon restart: reconstruct interface using the written config
+    {
+        MockEthernetInterface restartedIntf(
+            bus, manager, info1,
+            sdbusplus::object_path("/xyz/openbmc_test/network"), parser);
+        // It should read ActivationPolicy=down and initialize nicEnabled as
+        // false
+        EXPECT_FALSE(restartedIntf.nicEnabled());
+
+        // Re-enable the interface: should update file and emit reload schedule
+        EXPECT_CALL(manager.mockReload, schedule()).Times(1);
+        EXPECT_TRUE(restartedIntf.nicEnabled(true));
+        EXPECT_TRUE(restartedIntf.nicEnabled());
+    }
+
+    // Verify ActivationPolicy was cleared from configuration file
+    config::Parser updatedParser((confDir / "00-bmc-test1.network").native());
+    EXPECT_EQ(updatedParser.map.getLastValueString("Link", "ActivationPolicy"),
+              nullptr);
+
+    // Test ActivationPolicy=up
+    {
+        std::filesystem::path confPath = confDir / "up.network";
+        std::ofstream out(confPath);
+        out << "[Link]\nActivationPolicy=up\n";
+        out.close();
+
+        config::Parser upParser(confPath.native());
+        MockEthernetInterface upIntf(
+            bus, manager, info1,
+            sdbusplus::object_path("/xyz/openbmc_test/network"), upParser);
+        EXPECT_TRUE(upIntf.nicEnabled());
+    }
+
+    // Test unmanaged link (enabled = false)
+    {
+        EthernetInterface unmanagedIntf(
+            bus, manager, info1,
+            sdbusplus::object_path("/xyz/openbmc_test/network"),
+            config::Parser(), /*enabled=*/false);
+        EXPECT_FALSE(unmanagedIntf.nicEnabled());
+    }
 }
 
 } // namespace network
