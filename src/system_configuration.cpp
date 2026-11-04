@@ -1,5 +1,6 @@
 #include "system_configuration.hpp"
 
+#include <org/freedesktop/DBus/Error/event.hpp>
 #include <phosphor-logging/elog-errors.hpp>
 #include <phosphor-logging/lg2.hpp>
 #include <stdplus/pinned.hpp>
@@ -84,15 +85,18 @@ std::string SystemConfiguration::hostName(std::string name)
         method.call();
         return SystemConfigIntf::hostName(std::move(name));
     }
+    catch (
+        const sdbusplus::error::org::freedesktop::d_bus::Error::InvalidArgs& e)
+    {
+        lg2::error("Failed to set hostname {HOSTNAME}: {ERROR}", "HOSTNAME",
+                   name, "ERROR", e);
+        elog<InvalidArgument>(Argument::ARGUMENT_NAME("Hostname"),
+                              Argument::ARGUMENT_VALUE(name.c_str()));
+    }
     catch (const sdbusplus::exception_t& e)
     {
         lg2::error("Failed to set hostname {HOSTNAME}: {ERROR}", "HOSTNAME",
                    name, "ERROR", e);
-        if (strcmp(e.name(), "org.freedesktop.DBus.Error.InvalidArgs") == 0)
-        {
-            elog<InvalidArgument>(Argument::ARGUMENT_NAME("Hostname"),
-                                  Argument::ARGUMENT_VALUE(name.c_str()));
-        }
     }
     return SystemConfigIntf::hostName();
 }
