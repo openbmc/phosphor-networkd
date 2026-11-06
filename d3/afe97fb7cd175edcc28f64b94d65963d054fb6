@@ -1,0 +1,10 @@
+Code-Review+2: Ravi Teja <raviteja28031990@gmail.com>
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Code-Review+1: Asmitha Karunanithi <asmitk01@in.ibm.com>
+Code-Review+1: rashidmp <rashidmp@ami.com>
+Submitted-by: Patrick Williams <patrick@stwcx.xyz>
+Submitted-at: Fri, 06 Nov 2026 02:34:25 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/phosphor-networkd/+/96753
+Comments-Total: 1
+Project: openbmc/phosphor-networkd
+Branch: refs/heads/master
