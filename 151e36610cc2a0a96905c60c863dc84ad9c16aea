@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f428156_dcc2a5cc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-11-06T17:23:29Z",
+      "side": 1,
+      "message": "Please resolve the conflicts.",
+      "revId": "151e36610cc2a0a96905c60c863dc84ad9c16aea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f9571bc_7052d2d3",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1000401
+      },
+      "writtenOn": "2026-11-06T17:23:29Z",
+      "side": 1,
+      "message": "nit (non-blocking): could we add a unit test for this?\n\nThe mock in mock_syscall.cpp returns zeroed ethtool data, so the existing speed \u003d\u003d 0 assertions pass with or without this fix.\nIf the mock could return a configurable speed/speed_hi, we could cover 0xFFFF/0xFFFF → 0 (unknown), 1000 → 1000, and speed_hi\u003d1 → 65536+.",
+      "revId": "151e36610cc2a0a96905c60c863dc84ad9c16aea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
