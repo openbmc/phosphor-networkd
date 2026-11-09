@@ -86,6 +86,25 @@ foreach t : tests
     )
 endforeach
 
+if get_option('sync-mac')
+    test(
+        'inventory_mac',
+        executable(
+            'inventory_mac',
+            'test_inventory_mac.cpp',
+            '../src/inventory_mac.cpp',
+            implicit_include_directories: false,
+            dependencies: [
+                networkd_dep,
+                gtest,
+                dependency('threads'),
+                dependency('nlohmann_json', include_type: 'system'),
+                meson.get_compiler('cpp').find_library('dl'),
+            ],
+        ),
+    )
+endif
+
 if (get_option('hyp-nw-config') == true)
     subdir('ibm/hypervisor-network-mgr-test')
 endif

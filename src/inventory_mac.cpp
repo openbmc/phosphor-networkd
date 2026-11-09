@@ -14,9 +14,11 @@
 #include <stdplus/str/maps.hpp>
 #include <xyz/openbmc_project/Common/error.hpp>
 
+#include <exception>
 #include <filesystem>
 #include <fstream>
 #include <memory>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -49,32 +51,51 @@ constexpr auto methodGet = "Get";
 Manager* manager = nullptr;
 std::unique_ptr<sdbusplus::match> EthInterfaceMatch = nullptr;
 std::unique_ptr<sdbusplus::match> MacAddressMatch = nullptr;
-std::vector<std::string> first_boot_status;
+std::set<std::string> pendingInterfaces;
 nlohmann::json configJson;
+
+void stopWatchingIfComplete()
+{
+    if (pendingInterfaces.empty())
+    {
+        lg2::info("Removing the match for ethernet interfaces");
+        EthInterfaceMatch = nullptr;
+        MacAddressMatch = nullptr;
+    }
+}
 
 void setFirstBootMACOnInterface(const std::string& intf, const std::string& mac)
 {
-    for (const auto& interface : manager->interfaces)
+    try
     {
-        if (interface.first == intf)
+        for (const auto& interface : manager->interfaces)
         {
-            auto returnMAC = interface.second->macAddress(mac);
-            if (returnMAC == mac)
+            if (interface.first == intf)
             {
-                lg2::info("Setting MAC {NET_MAC} on interface {NET_INTF}",
-                          "NET_MAC", mac, "NET_INTF", intf);
-                std::error_code ec;
-                if (std::filesystem::is_directory("/var/lib/network", ec))
+                auto returnMAC = interface.second->macAddress(mac);
+                if (returnMAC == mac)
                 {
-                    std::ofstream persistentFile(firstBootPath + intf);
+                    lg2::info("Setting MAC {NET_MAC} on interface {NET_INTF}",
+                              "NET_MAC", mac, "NET_INTF", intf);
+                    std::error_code ec;
+                    if (std::filesystem::is_directory("/var/lib/network", ec))
+                    {
+                        std::ofstream persistentFile(firstBootPath + intf);
+                    }
+                    pendingInterfaces.erase(intf);
+                    break;
                 }
-                break;
-            }
-            else
-            {
-                lg2::info("MAC is Not Set on ethernet Interface");
+                else
+                {
+                    lg2::info("MAC is Not Set on ethernet Interface");
+                }
             }
         }
+    }
+    catch (const std::exception& e)
+    {
+        lg2::warning("Unable to set inventory MAC on {NET_INTF}: {ERROR}",
+                     "NET_INTF", intf, "ERROR", e.what());
     }
 }
 
@@ -124,15 +145,16 @@ auto getFromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
     DbusObjectPath objPath;
     DbusService service;
 
-    if (1 == objectTree.size())
+    // Preserve legacy configs with an empty inventory name when there is only
+    // one inventory object.
+    if (interfaceName.empty() && 1 == objectTree.size())
     {
         objPath = objectTree.begin()->first;
         service = objectTree.begin()->second.begin()->first;
     }
     else
     {
-        // If there are more than 2 objects, object path must contain the
-        // interface name
+        // Match the configured inventory object name.
         for (const auto& object : objectTree)
         {
             lg2::info("Get info on interface {NET_INTF}, object {OBJ}",
@@ -147,9 +169,9 @@ auto getFromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
 
         if (objPath.empty())
         {
-            lg2::error("Can't find the object for the interface {NET_INTF}",
-                       "NET_INTF", interfaceName);
-            elog<InternalFailure>();
+            lg2::info("Inventory object for {NET_INTF} is not available yet",
+                      "NET_INTF", interfaceName);
+            return std::nullopt;
         }
     }
 
@@ -192,23 +214,6 @@ bool setInventoryMACOnSystem(sdbusplus::bus_t& bus, const std::string& intfname)
         lg2::info("Mac Address {NET_MAC} in Inventory on Interface {NET_INTF}",
                   "NET_MAC", macStr, "NET_INTF", intfname);
         setFirstBootMACOnInterface(intfname, macStr);
-        first_boot_status.push_back(intfname);
-        bool status = true;
-        for (const auto& keys : configJson.items())
-        {
-            if (!(std::find(first_boot_status.begin(), first_boot_status.end(),
-                            keys.key()) != first_boot_status.end()))
-            {
-                lg2::info("Interface {NET_INTF} MAC is NOT set from VPD",
-                          "NET_INTF", keys.key());
-                status = false;
-            }
-        }
-        if (status)
-        {
-            lg2::info("Removing the match for ethernet interfaces");
-            EthInterfaceMatch = nullptr;
-        }
     }
     catch (const std::exception& e)
     {
@@ -233,7 +238,8 @@ void registerSignals(sdbusplus::bus_t& bus)
 
         for (const auto& pattern : configJson.items())
         {
-            if (objPath.string().ends_with(
+            if (pendingInterfaces.contains(pattern.key()) &&
+                objPath.string().ends_with(
                     "/" + pattern.value().get<std::string>()))
             {
                 for (auto& interface : interfacesProperties)
@@ -255,6 +261,14 @@ void registerSignals(sdbusplus::bus_t& bus)
                                         pattern.key(),
                                         std::get<std::string>(property.second));
                                 }
+                                else
+                                {
+                                    lg2::info(
+                                        "First-boot marker exists for {NET_INTF}, skipping inventory MAC sync",
+                                        "NET_INTF", pattern.key());
+                                    // No synchronization is needed anymore.
+                                    pendingInterfaces.erase(pattern.key());
+                                }
                                 break;
                             }
                         }
@@ -263,6 +277,7 @@ void registerSignals(sdbusplus::bus_t& bus)
                 }
             }
         }
+        stopWatchingIfComplete();
     };
 
     MacAddressMatch = std::make_unique<sdbusplus::match>(
@@ -288,14 +303,10 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
                 lg2::error("Wrong Interface Name in Config Json");
             }
         }
-        else
+        else if (pendingInterfaces.contains(infname))
         {
-            registerSignals(bus);
-
-            if (setInventoryMACOnSystem(bus, infname))
-            {
-                MacAddressMatch = nullptr;
-            }
+            setInventoryMACOnSystem(bus, infname);
+            stopWatchingIfComplete();
         }
     };
 
@@ -329,10 +340,7 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
         }
     };
 
-    // The VPD may already have been assigned because phosphor-inventory-manager
-    // started ahead of the network service. Read the VPD directly and assign
-    // the MAC address despite this possibility.
-
+    // Determine all pending interfaces before attempting any synchronization.
     for (const auto& interfaceString : configJson.items())
     {
         if (FORCE_SYNC_MAC_FROM_INVENTORY ||
@@ -342,22 +350,42 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
                       (FORCE_SYNC_MAC_FROM_INVENTORY)
                           ? "Force sync enabled"
                           : "First boot file is not present");
-            EthInterfaceMatch = std::make_unique<sdbusplus::match>(
-                bus,
-                sdbusplus::match_rules::interface(ObjectManager::interface) +
-                    sdbusplus::match_rules::type::signal() +
-                    sdbusplus::match_rules::member(
-                        ObjectManager::signal_names::interfaces_added) +
-                    sdbusplus::match_rules::path(
-                        "/xyz/openbmc_project/network"),
-                mycallback);
+            pendingInterfaces.insert(interfaceString.key());
+        }
+        else
+        {
+            lg2::info(
+                "First-boot marker exists for {NET_INTF}, skipping inventory MAC sync",
+                "NET_INTF", interfaceString.key());
+        }
+    }
 
-            for (const auto& intf : manager->interfaces)
+    if (pendingInterfaces.empty())
+    {
+        return;
+    }
+
+    registerSignals(bus);
+    EthInterfaceMatch = std::make_unique<sdbusplus::match>(
+        bus,
+        sdbusplus::match_rules::interface(ObjectManager::interface) +
+            sdbusplus::match_rules::type::signal() +
+            sdbusplus::match_rules::member(
+                ObjectManager::signal_names::interfaces_added) +
+            sdbusplus::match_rules::path("/xyz/openbmc_project/network"),
+        mycallback);
+
+    // The VPD may already have been assigned because phosphor-inventory-manager
+    // started ahead of the network service. Read the VPD directly and assign
+    // the MAC address despite this possibility.
+
+    for (const auto& interfaceString : configJson.items())
+    {
+        for (const auto& intf : manager->interfaces)
+        {
+            if (intf.first == interfaceString.key())
             {
-                if (intf.first == interfaceString.key())
-                {
-                    handle_interface(intf.first);
-                }
+                handle_interface(intf.first);
             }
         }
     }
