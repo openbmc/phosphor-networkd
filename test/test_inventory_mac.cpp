@@ -126,7 +126,7 @@ namespace inventory
 extern std::unique_ptr<sdbusplus::match> EthInterfaceMatch;
 extern std::unique_ptr<sdbusplus::match> MacAddressMatch;
 extern std::set<std::string> pendingInterfaces;
-extern nlohmann::json configJson;
+extern std::map<std::string, MACConfig> interfaceConfigs;
 extern Manager* manager;
 std::optional<stdplus::EtherAddr> getFromInventory(sdbusplus::bus_t& bus,
                                                    const std::string& intfName);
@@ -144,22 +144,26 @@ constexpr auto board2Path =
 constexpr auto networkRoot = "/xyz/openbmc_project/network";
 constexpr auto board1MAC = "02:11:22:33:44:50";
 constexpr auto board2MAC = "02:11:22:33:44:51";
+constexpr auto board1SecondMAC = "02:11:22:33:44:60";
+constexpr auto board2SecondMAC = "02:11:22:33:44:61";
 
 using InventoryObject = sdbusplus::server::object_t<
     sdbusplus::xyz::openbmc_project::Inventory::Item::server::NetworkInterface>;
 
 struct TestInventoryBoard
 {
-    TestInventoryBoard(sdbusplus::bus_t& bus, const char* path,
-                       const char* mac) :
-        path(path), mac(mac),
+    TestInventoryBoard(sdbusplus::bus_t& bus, const char* path, const char* mac,
+                       const char* secondMAC) :
+        path(path), mac(mac), secondMAC(secondMAC),
         object(bus, path, InventoryObject::action::defer_emit)
     {
         object.macAddress(mac, true);
+        object.macAddress2(secondMAC, true);
     }
 
     const char* path;
     const char* mac;
+    const char* secondMAC;
     bool available = false;
     InventoryObject object;
 };
@@ -212,8 +216,8 @@ class InventoryMAC : public testing::Test
     stdplus::Pinned<sdbusplus::bus_t> service{sdbusplus::bus::new_bus()};
     sdbusplus::server::manager_t networkObjects{bus, networkRoot};
     sdbusplus::server::manager_t inventoryObjects{service, inventoryRoot};
-    TestInventoryBoard board1{service, board1Path, board1MAC};
-    TestInventoryBoard board2{service, board2Path, board2MAC};
+    TestInventoryBoard board1{service, board1Path, board1MAC, board1SecondMAC};
+    TestInventoryBoard board2{service, board2Path, board2MAC, board2SecondMAC};
     stdplus::Pinned<TestExecutor> executor;
     std::unique_ptr<Manager> networkManager;
     std::filesystem::path tempDir;
@@ -252,7 +256,7 @@ class InventoryMAC : public testing::Test
 
     void SetUp() override
     {
-        configJson = nlohmann::json::object();
+        interfaceConfigs.clear();
         pendingInterfaces.clear();
         tempDir =
             std::filesystem::temp_directory_path() /
@@ -281,7 +285,7 @@ class InventoryMAC : public testing::Test
         EthInterfaceMatch = nullptr;
         MacAddressMatch = nullptr;
         pendingInterfaces.clear();
-        configJson = nlohmann::json::object();
+        interfaceConfigs.clear();
         manager = nullptr;
         networkManager.reset();
         if (serviceThread.joinable())
@@ -305,7 +309,14 @@ class InventoryMAC : public testing::Test
 
     void configure(const char* content)
     {
-        configJson = nlohmann::json::parse(content);
+        interfaceConfigs.clear();
+        const auto configJson = nlohmann::json::parse(content);
+        for (const auto& entry : configJson.items())
+        {
+            auto config = parseMACConfig(entry.value());
+            ASSERT_TRUE(config.has_value()) << entry.key();
+            interfaceConfigs.emplace(entry.key(), std::move(*config));
+        }
     }
 
     void startWatch()
@@ -314,7 +325,7 @@ class InventoryMAC : public testing::Test
         watchEthernetInterface(bus);
     }
 
-    void publishInventory()
+    void publishInventory(bool includeSecondMAC = true)
     {
         std::lock_guard lock(serviceMutex);
         // Allow repeated inventory announcements to test a failed MAC retry.
@@ -329,6 +340,12 @@ class InventoryMAC : public testing::Test
                 interfaces{
                     {"xyz.openbmc_project.Inventory.Item.NetworkInterface",
                      {{"MACAddress", board->mac}}}};
+            if (includeSecondMAC)
+            {
+                interfaces
+                    .at("xyz.openbmc_project.Inventory.Item.NetworkInterface")
+                    .emplace("MACAddress2", board->secondMAC);
+            }
             signal.append(sdbusplus::object_path(board->path), interfaces);
             signal.signal_send();
         }
@@ -348,6 +365,158 @@ class InventoryMAC : public testing::Test
         return done();
     }
 };
+
+/** @brief Default legacy and object configurations to MACAddress. */
+TEST(InventoryMACConfig, LegacyAndObjectFormatsDefaultToFirstMAC)
+{
+    for (const auto& value : {nlohmann::json("Test_Board_1"),
+                              nlohmann::json{{"Inventory", "Test_Board_1"}}})
+    {
+        const auto config = parseMACConfig(value);
+        ASSERT_TRUE(config);
+        EXPECT_EQ(config->inventory, "Test_Board_1");
+        EXPECT_EQ(config->property, "MACAddress");
+    }
+}
+
+/** @brief Parse the inventory name and an explicit MACAddress2 property. */
+TEST(InventoryMACConfig, SelectsSecondMAC)
+{
+    const auto config = parseMACConfig(
+        {{"Inventory", "Test_Board_1"}, {"Property", "MACAddress2"}});
+    ASSERT_TRUE(config);
+    EXPECT_EQ(config->inventory, "Test_Board_1");
+    EXPECT_EQ(config->property, "MACAddress2");
+}
+
+/** @brief Accept an empty legacy inventory name with the default property. */
+TEST(InventoryMACConfig, PreservesEmptyInventoryName)
+{
+    const auto config = parseMACConfig("");
+    ASSERT_TRUE(config);
+    EXPECT_TRUE(config->inventory.empty());
+    EXPECT_EQ(config->property, "MACAddress");
+}
+
+/** @brief Reject unsupported entry types and missing or invalid fields. */
+TEST(InventoryMACConfig, RejectsInvalidEntries)
+{
+    for (const auto& value :
+         {nlohmann::json(), nlohmann::json(42), nlohmann::json(false),
+          nlohmann::json::array(), nlohmann::json::object(),
+          nlohmann::json{{"Property", "MACAddress2"}},
+          nlohmann::json{{"Inventory", 42}},
+          nlohmann::json{{"Inventory", "Test_Board_1"}, {"Property", 42}},
+          nlohmann::json{{"Inventory", "Test_Board_1"}, {"Property", ""}}})
+    {
+        EXPECT_FALSE(parseMACConfig(value)) << value.dump();
+    }
+}
+
+/** @brief Select distinct MAC properties on the same board at startup. */
+TEST_F(InventoryMAC, DirectReadsSelectTwoMACsFromSameBoard)
+{
+    auto& eth0 = addInterface("eth0", 1);
+    auto& eth1 = addInterface("eth1", 2);
+    {
+        std::lock_guard lock(serviceMutex);
+        board1.available = true;
+    }
+    configure(R"({
+        "eth0": "Test_Board_1",
+        "eth1": {"Inventory": "Test_Board_1", "Property": "MACAddress2"}
+    })");
+    startWatch();
+    EXPECT_EQ(eth0.applied, std::vector<std::string>{board1MAC});
+    EXPECT_EQ(eth1.applied, std::vector<std::string>{board1SecondMAC});
+    EXPECT_TRUE(std::filesystem::exists(stateDir / "firstBoot_eth0"));
+    EXPECT_TRUE(std::filesystem::exists(stateDir / "firstBoot_eth1"));
+    EXPECT_TRUE(pendingInterfaces.empty());
+    EXPECT_FALSE(EthInterfaceMatch);
+    EXPECT_FALSE(MacAddressMatch);
+}
+
+/** @brief One inventory signal can synchronize both MACs of the same board. */
+TEST_F(InventoryMAC, InventorySignalsSelectTwoMACsFromSameBoard)
+{
+    auto& eth0 = addInterface("eth0", 1);
+    auto& eth1 = addInterface("eth1", 2);
+    configure(R"({
+        "eth0": {"Inventory": "Test_Board_1"},
+        "eth1": {"Inventory": "Test_Board_1", "Property": "MACAddress2"}
+    })");
+    startWatch();
+    ASSERT_EQ(pendingInterfaces.size(), 2u);
+    publishInventory();
+    ASSERT_TRUE(processUntil([] { return pendingInterfaces.empty(); }));
+    EXPECT_EQ(eth0.applied, std::vector<std::string>{board1MAC});
+    EXPECT_EQ(eth1.applied, std::vector<std::string>{board1SecondMAC});
+    EXPECT_FALSE(EthInterfaceMatch);
+    EXPECT_FALSE(MacAddressMatch);
+}
+
+/** @brief Wait for MACAddress2 without substituting the first MAC. */
+TEST_F(InventoryMAC, MissingSecondMACSignalRemainsPendingUntilRetry)
+{
+    auto& eth0 = addInterface("eth0", 1);
+    auto& eth1 = addInterface("eth1", 2);
+    configure(R"({
+        "eth0": "Test_Board_1",
+        "eth1": {"Inventory": "Test_Board_1", "Property": "MACAddress2"}
+    })");
+    startWatch();
+    publishInventory(false);
+    ASSERT_TRUE(processUntil([&] { return !eth0.applied.empty(); }));
+    EXPECT_EQ(eth0.applied, std::vector<std::string>{board1MAC});
+    EXPECT_EQ(eth1.attempts, 0u);
+    EXPECT_TRUE(pendingInterfaces.contains("eth1"));
+    EXPECT_TRUE(EthInterfaceMatch);
+    EXPECT_TRUE(MacAddressMatch);
+    EXPECT_FALSE(std::filesystem::exists(stateDir / "firstBoot_eth1"));
+    publishInventory();
+    ASSERT_TRUE(processUntil([] { return pendingInterfaces.empty(); }));
+    EXPECT_EQ(eth0.applied.size(), 1u);
+    EXPECT_EQ(eth1.applied, std::vector<std::string>{board1SecondMAC});
+    EXPECT_FALSE(EthInterfaceMatch);
+    EXPECT_FALSE(MacAddressMatch);
+}
+
+/** @brief A failed property read must not silently use MACAddress. */
+TEST_F(InventoryMAC, MissingSelectedPropertyDoesNotFallBackToFirstMAC)
+{
+    auto& eth1 = addInterface("eth1", 2);
+    {
+        std::lock_guard lock(serviceMutex);
+        board1.available = true;
+    }
+    configure(R"({
+        "eth1": {"Inventory": "Test_Board_1", "Property": "MissingMAC"}
+    })");
+    EXPECT_NO_THROW(startWatch());
+    EXPECT_EQ(eth1.attempts, 0u);
+    EXPECT_TRUE(pendingInterfaces.contains("eth1"));
+    EXPECT_TRUE(EthInterfaceMatch);
+    EXPECT_TRUE(MacAddressMatch);
+}
+
+/** @brief Apply MACAddress2 after inventory precedes the Ethernet interface. */
+TEST_F(InventoryMAC, SecondMACWaitsForEthernetInterface)
+{
+    {
+        std::lock_guard lock(serviceMutex);
+        board1.available = true;
+    }
+    configure(R"({
+        "eth1": {"Inventory": "Test_Board_1", "Property": "MACAddress2"}
+    })");
+    startWatch();
+    ASSERT_TRUE(pendingInterfaces.contains("eth1"));
+    auto& eth1 = addInterface("eth1", 2);
+    ASSERT_TRUE(processUntil([] { return pendingInterfaces.empty(); }));
+    EXPECT_EQ(eth1.applied, std::vector<std::string>{board1SecondMAC});
+    EXPECT_FALSE(EthInterfaceMatch);
+    EXPECT_FALSE(MacAddressMatch);
+}
 
 /** @brief Synchronize all interfaces from inventory available at startup. */
 TEST_F(InventoryMAC, DirectReadsSynchronizeAllInterfaces)
