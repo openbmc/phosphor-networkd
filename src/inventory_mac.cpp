@@ -17,6 +17,7 @@
 #include <exception>
 #include <filesystem>
 #include <fstream>
+#include <map>
 #include <memory>
 #include <set>
 #include <string>
@@ -52,7 +53,45 @@ Manager* manager = nullptr;
 std::unique_ptr<sdbusplus::match> EthInterfaceMatch = nullptr;
 std::unique_ptr<sdbusplus::match> MacAddressMatch = nullptr;
 std::set<std::string> pendingInterfaces;
-nlohmann::json configJson;
+std::map<std::string, MACConfig> interfaceConfigs;
+
+std::optional<MACConfig> parseMACConfig(const nlohmann::json& value)
+{
+    MACConfig config;
+    if (value.is_string())
+    {
+        config.inventory = value.get<std::string>();
+    }
+    else if (value.is_object())
+    {
+        const auto inventory = value.find("Inventory");
+        if (inventory == value.end() || !inventory->is_string())
+        {
+            return std::nullopt;
+        }
+        config.inventory = inventory->get<std::string>();
+
+        const auto property = value.find("Property");
+        if (property != value.end())
+        {
+            if (!property->is_string())
+            {
+                return std::nullopt;
+            }
+            config.property = property->get<std::string>();
+        }
+    }
+    else
+    {
+        return std::nullopt;
+    }
+
+    if (config.property.empty())
+    {
+        return std::nullopt;
+    }
+    return config;
+}
 
 void stopWatchingIfComplete()
 {
@@ -102,7 +141,8 @@ void setFirstBootMACOnInterface(const std::string& intf, const std::string& mac)
 auto getFromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
     -> std::optional<stdplus::EtherAddr>
 {
-    std::string interfaceName = configJson[intfName];
+    const auto& config = interfaceConfigs.at(intfName);
+    const auto& interfaceName = config.inventory;
 
     std::vector<DbusInterface> interfaces;
     interfaces.emplace_back(invNetworkIntf);
@@ -188,7 +228,7 @@ auto getFromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
     auto method = bus.new_method_call(service.c_str(), objPath.c_str(),
                                       propIntf, methodGet);
 
-    method.append(invNetworkIntf, "MACAddress");
+    method.append(invNetworkIntf, config.property);
 
     auto reply = [&]() {
         try
@@ -198,8 +238,9 @@ auto getFromInventory(sdbusplus::bus_t& bus, const std::string& intfName)
         catch (const sdbusplus::exception_t& e)
         {
             lg2::error(
-                "Failed to get MACAddress for path {DBUS_PATH} interface {DBUS_INTF}",
-                "DBUS_PATH", objPath, "DBUS_INTF", invNetworkIntf);
+                "Failed to get {MAC_PROPERTY} for path {DBUS_PATH} interface {DBUS_INTF}",
+                "MAC_PROPERTY", config.property, "DBUS_PATH", objPath,
+                "DBUS_INTF", invNetworkIntf);
             elog<InternalFailure>();
         }
     }();
@@ -246,11 +287,10 @@ void registerSignals(sdbusplus::bus_t& bus)
         sdbusplus::object_path objPath;
         m.read(objPath, interfacesProperties);
 
-        for (const auto& pattern : configJson.items())
+        for (const auto& [name, config] : interfaceConfigs)
         {
-            if (pendingInterfaces.contains(pattern.key()) &&
-                objPath.string().ends_with(
-                    "/" + pattern.value().get<std::string>()))
+            if (pendingInterfaces.contains(name) &&
+                objPath.string().ends_with("/" + config.inventory))
             {
                 for (auto& interface : interfacesProperties)
                 {
@@ -258,26 +298,26 @@ void registerSignals(sdbusplus::bus_t& bus)
                     {
                         for (const auto& property : interface.second)
                         {
-                            if (property.first == "MACAddress")
+                            if (property.first == config.property)
                             {
                                 // Only set mac address on interface once the
                                 // firstboot file does not exist or it is being
                                 // FORCE_SYNC_MAC_FROM_INVENTORY
                                 if (FORCE_SYNC_MAC_FROM_INVENTORY ||
                                     !std::filesystem::exists(
-                                        firstBootPath + pattern.key()))
+                                        firstBootPath + name))
                                 {
                                     setFirstBootMACOnInterface(
-                                        pattern.key(),
+                                        name,
                                         std::get<std::string>(property.second));
                                 }
                                 else
                                 {
                                     lg2::info(
                                         "First-boot marker exists for {NET_INTF}, skipping inventory MAC sync",
-                                        "NET_INTF", pattern.key());
+                                        "NET_INTF", name);
                                     // No synchronization is needed anymore.
-                                    pendingInterfaces.erase(pattern.key());
+                                    pendingInterfaces.erase(name);
                                 }
                                 break;
                             }
@@ -303,7 +343,7 @@ void registerSignals(sdbusplus::bus_t& bus)
 void watchEthernetInterface(sdbusplus::bus_t& bus)
 {
     auto handle_interface = [&](auto infname) {
-        if (configJson.find(infname) == configJson.end())
+        if (interfaceConfigs.find(infname) == interfaceConfigs.end())
         {
             // ethernet interface not found in configJSON
             // check if it is not sit0 interface, as it is
@@ -351,22 +391,22 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
     };
 
     // Determine all pending interfaces before attempting any synchronization.
-    for (const auto& interfaceString : configJson.items())
+    for (const auto& [name, config] : interfaceConfigs)
     {
         if (FORCE_SYNC_MAC_FROM_INVENTORY ||
-            !std::filesystem::exists(firstBootPath + interfaceString.key()))
+            !std::filesystem::exists(firstBootPath + name))
         {
             lg2::info("Check VPD for MAC: {REASON}", "REASON",
                       (FORCE_SYNC_MAC_FROM_INVENTORY)
                           ? "Force sync enabled"
                           : "First boot file is not present");
-            pendingInterfaces.insert(interfaceString.key());
+            pendingInterfaces.insert(name);
         }
         else
         {
             lg2::info(
                 "First-boot marker exists for {NET_INTF}, skipping inventory MAC sync",
-                "NET_INTF", interfaceString.key());
+                "NET_INTF", name);
         }
     }
 
@@ -389,11 +429,11 @@ void watchEthernetInterface(sdbusplus::bus_t& bus)
     // started ahead of the network service. Read the VPD directly and assign
     // the MAC address despite this possibility.
 
-    for (const auto& interfaceString : configJson.items())
+    for (const auto& [name, config] : interfaceConfigs)
     {
         for (const auto& intf : manager->interfaces)
         {
-            if (intf.first == interfaceString.key())
+            if (intf.first == name)
             {
                 handle_interface(intf.first);
             }
@@ -406,7 +446,35 @@ std::unique_ptr<Runtime> watch(stdplus::PinnedRef<sdbusplus::bus_t> bus,
 {
     manager = &m.get();
     std::ifstream in(configFile);
-    in >> configJson;
+    nlohmann::json configJson;
+    try
+    {
+        in >> configJson;
+    }
+    catch (const std::exception& e)
+    {
+        lg2::warning("Unable to read inventory MAC configuration: {ERROR}",
+                     "ERROR", e.what());
+        return nullptr;
+    }
+    if (!configJson.is_object())
+    {
+        lg2::warning("Inventory MAC configuration must be an object");
+        return nullptr;
+    }
+    interfaceConfigs.clear();
+    for (const auto& entry : configJson.items())
+    {
+        auto config = parseMACConfig(entry.value());
+        if (!config)
+        {
+            lg2::warning(
+                "Invalid inventory MAC configuration for {NET_INTF}; skipping interface",
+                "NET_INTF", entry.key());
+            continue;
+        }
+        interfaceConfigs.emplace(entry.key(), std::move(*config));
+    }
     watchEthernetInterface(bus);
     return nullptr;
 }
