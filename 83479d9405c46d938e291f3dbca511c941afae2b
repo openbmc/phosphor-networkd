@@ -34,6 +34,40 @@
       "parentUuid": "6e7390ad_e77445fe",
       "revId": "83479d9405c46d938e291f3dbca511c941afae2b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c433b096_48177ab0",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1363,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-11-13T09:25:29Z",
+      "side": 1,
+      "message": "Doesn’t this retry loop block the shared event loop for about one second if the gateway MAC remains unresolved, delaying other D-Bus requests and network events?",
+      "revId": "83479d9405c46d938e291f3dbca511c941afae2b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27418862_eca73b40",
+        "filename": "src/neighbor.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1002754
+      },
+      "writtenOn": "2026-11-13T09:25:29Z",
+      "side": 1,
+      "message": "Doesn’t erasing this entry destroy the current Neighbor object? The next two lines access its parent member after destruction, causing a use-after-free.",
+      "revId": "83479d9405c46d938e291f3dbca511c941afae2b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
