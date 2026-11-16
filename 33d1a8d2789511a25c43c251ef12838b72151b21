@@ -33,6 +33,24 @@
       "message": "have you verified first boot use-cases with this patch?",
       "revId": "33d1a8d2789511a25c43c251ef12838b72151b21",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec5fc957_13d090c6",
+        "filename": "src/hostname_manager.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1002630
+      },
+      "writtenOn": "2026-11-16T05:48:24Z",
+      "side": 1,
+      "message": "Reverted the stdplus::fd::open() change, kept the original std::ofstream implementation, so no new first-boot behavior.",
+      "parentUuid": "3a3c8adf_cdb6e897",
+      "revId": "33d1a8d2789511a25c43c251ef12838b72151b21",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
