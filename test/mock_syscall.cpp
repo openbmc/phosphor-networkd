@@ -32,11 +32,19 @@ std::map<int, std::queue<std::string>> mock_rtnetlinks;
 using phosphor::network::InterfaceInfo;
 
 std::map<std::string, InterfaceInfo> mock_if;
+std::vector<phosphor::network::system::MockRouteInfo> mock_routes;
 
 void phosphor::network::system::mock_clear()
 {
     mock_rtnetlinks.clear();
     mock_if.clear();
+    mock_routes.clear();
+}
+
+void phosphor::network::system::mock_addRoute(
+    const phosphor::network::system::MockRouteInfo& route)
+{
+    mock_routes.push_back(route);
 }
 
 void phosphor::network::system::mock_addIF(const InterfaceInfo& info)
@@ -141,7 +149,7 @@ ssize_t sendmsg_link_dump(std::queue<std::string>& msgs, std::string_view in)
     return in.size();
 }
 
-// RTM_GETADDR dump: mock interfaces have no addresses — return NLMSG_DONE.
+// RTM_GETADDR dump: mock interfaces have no addresses  -- return NLMSG_DONE.
 ssize_t sendmsg_addr_dump(std::queue<std::string>& msgs, std::string_view in)
 {
     const auto& hdrin = *reinterpret_cast<const nlmsghdr*>(in.data());
@@ -149,13 +157,79 @@ ssize_t sendmsg_addr_dump(std::queue<std::string>& msgs, std::string_view in)
     {
         return 0;
     }
-    // No addresses on mock interfaces — reply with NLMSG_DONE only.
+    // No addresses on mock interfaces  -- reply with NLMSG_DONE only.
     std::string msgBuf(NLMSG_SPACE(0), '\0');
     auto& hdr = *reinterpret_cast<nlmsghdr*>(msgBuf.data());
     hdr.nlmsg_len = NLMSG_LENGTH(0);
     hdr.nlmsg_type = NLMSG_DONE;
     hdr.nlmsg_flags = NLM_F_MULTI;
     msgs.emplace(std::move(msgBuf));
+    return in.size();
+}
+
+// RTM_GETROUTE dump: return any pre-queued mock routes, then NLMSG_DONE.
+ssize_t sendmsg_route_dump(std::queue<std::string>& msgs, std::string_view in)
+{
+    const auto& hdrin = *reinterpret_cast<const nlmsghdr*>(in.data());
+    if (hdrin.nlmsg_type != RTM_GETROUTE)
+    {
+        return 0;
+    }
+    const auto& rtmin =
+        *reinterpret_cast<const rtmsg*>(in.data() + NLMSG_HDRLEN);
+
+    for (const auto& route : mock_routes)
+    {
+        if (route.family != rtmin.rtm_family)
+            continue;
+
+        // Build RTM_NEWROUTE message with RTA_OIF and optional RTA_DST
+        // Reserve upfront so appendRTAttr never reallocates  -- dangling
+        // references into msgBuf would corrupt hdr/rtm otherwise.
+        std::string msgBuf;
+        msgBuf.reserve(NLMSG_SPACE(sizeof(rtmsg)) + RTA_SPACE(16) +
+                       RTA_SPACE(sizeof(unsigned)));
+        msgBuf.assign(NLMSG_SPACE(sizeof(rtmsg)), '\0');
+        {
+            auto& hdr = *reinterpret_cast<nlmsghdr*>(msgBuf.data());
+            hdr.nlmsg_type = RTM_NEWROUTE;
+            hdr.nlmsg_flags = NLM_F_MULTI;
+        }
+        {
+            auto& rtm = *reinterpret_cast<rtmsg*>(msgBuf.data() + NLMSG_HDRLEN);
+            rtm.rtm_family = route.family;
+            rtm.rtm_dst_len = route.dstLen;
+            rtm.rtm_type = RTN_UNICAST;
+            rtm.rtm_table = RT_TABLE_MAIN;
+        }
+
+        const size_t addrLen =
+            (route.family == AF_INET) ? sizeof(in_addr) : sizeof(in6_addr);
+
+        if (route.dstLen > 0)
+        {
+            appendRTAttr(
+                msgBuf, RTA_DST,
+                std::string_view(
+                    reinterpret_cast<const char*>(route.dst.data()), addrLen));
+        }
+        appendRTAttr(
+            msgBuf, RTA_OIF,
+            std::string_view(reinterpret_cast<const char*>(&route.ifidx),
+                             sizeof(route.ifidx)));
+
+        reinterpret_cast<nlmsghdr*>(msgBuf.data())->nlmsg_len = msgBuf.size();
+        msgBuf.resize(NLMSG_ALIGN(msgBuf.size()), 0);
+        msgs.emplace(std::move(msgBuf));
+    }
+
+    // Terminate the dump with NLMSG_DONE
+    std::string doneBuf(NLMSG_SPACE(0), '\0');
+    auto& doneHdr = *reinterpret_cast<nlmsghdr*>(doneBuf.data());
+    doneHdr.nlmsg_len = NLMSG_LENGTH(0);
+    doneHdr.nlmsg_type = NLMSG_DONE;
+    doneHdr.nlmsg_flags = NLM_F_MULTI;
+    msgs.emplace(std::move(doneBuf));
     return in.size();
 }
 
@@ -337,6 +411,12 @@ ssize_t sendmsg(int sockfd, const struct msghdr* msg, int flags)
     }
 
     ret = sendmsg_addr_dump(msgs, iov);
+    if (ret != 0)
+    {
+        return ret;
+    }
+
+    ret = sendmsg_route_dump(msgs, iov);
     if (ret != 0)
     {
         return ret;
