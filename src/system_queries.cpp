@@ -385,6 +385,193 @@ bool deleteIPv6(unsigned ifidx)
     }
     return flushAddresses(AF_INET6, ifidx, IFA_ADDRESS, sizeof(in6_addr));
 }
+/**
+ * @brief Flush all unicast routes of @p family on @p ifidx via RTM_DELROUTE.
+ *        Equivalent to "ip [-6] route flush dev <ifname>".
+ *        Default routes (dstLen == 0) omit RTA_DST as the kernel expects.
+ *        Kernel-managed types (RTN_LOCAL, RTN_BROADCAST, RTN_MULTICAST)
+ *        are skipped.
+ *
+ * @param family  AF_INET or AF_INET6
+ * @param ifidx   Interface index
+ * @return true if all deletions succeeded (no routes = success)
+ */
+static bool flushRoutes(uint8_t family, unsigned ifidx)
+{
+    struct
+    {
+        nlmsghdr nlh;
+        rtmsg rtm;
+    } req{};
+    req.nlh.nlmsg_len = NLMSG_LENGTH(sizeof(rtmsg));
+    req.nlh.nlmsg_type = RTM_GETROUTE;
+    req.nlh.nlmsg_flags = NLM_F_REQUEST | NLM_F_DUMP;
+    req.rtm.rtm_family = family;
+
+    const size_t addrLen =
+        (family == AF_INET) ? sizeof(in_addr) : sizeof(in6_addr);
+
+    struct RouteEntry
+    {
+        // dst is zero for default routes (dstLen == 0); RTA_DST is omitted
+        // in the delete request when dstLen == 0.
+        std::array<uint8_t, sizeof(in6_addr)> dst{};
+        uint8_t dstLen = 0;
+        uint8_t table = 0;
+    };
+    std::vector<RouteEntry> toDelete;
+
+    try
+    {
+        netlink::detail::performRequest(
+            NETLINK_ROUTE, &req, req.nlh.nlmsg_len,
+            [&](const nlmsghdr& hdr, std::string_view data) {
+                if (hdr.nlmsg_type != RTM_NEWROUTE)
+                    return;
+                auto view = data;
+                const auto& rtm = netlink::extractRtData<rtmsg>(view);
+                if (rtm.rtm_family != family)
+                    return;
+                // Only remove unicast routes. Kernel-managed types
+                // (RTN_LOCAL, RTN_BROADCAST, RTN_MULTICAST) must not
+                // be touched.
+                if (rtm.rtm_type != RTN_UNICAST)
+                    return;
+
+                RouteEntry e{};
+                e.dstLen = rtm.rtm_dst_len;
+                e.table = rtm.rtm_table;
+                bool matchesIf = false;
+
+                while (!view.empty())
+                {
+                    auto [rta, rdata] = netlink::extractRtAttr(view);
+                    if (rta.rta_type == RTA_OIF &&
+                        rdata.size() >= sizeof(uint32_t))
+                    {
+                        uint32_t oif = 0;
+                        memcpy(&oif, rdata.data(), sizeof(uint32_t));
+                        if (oif == ifidx)
+                            matchesIf = true;
+                    }
+                    if (rta.rta_type == RTA_DST && e.dstLen > 0 &&
+                        rdata.size() >= addrLen)
+                    {
+                        memcpy(e.dst.data(), rdata.data(), addrLen);
+                    }
+                }
+                if (matchesIf)
+                    toDelete.push_back(e);
+            });
+    }
+    catch (const std::exception& e)
+    {
+        lg2::error("flushRoutes: RTM_GETROUTE failed: {ERROR}", "ERROR",
+                   e.what());
+        return false;
+    }
+
+    bool ok = true;
+
+    // delReq declared outside the loop; re-zeroed each iteration.
+    // buf[256] is sufficient: RTA_DST(IPv6)=20 + RTA_OIF=8 = 28 bytes max.
+    struct
+    {
+        nlmsghdr nlh;
+        rtmsg rtm;
+        char buf[256];
+    } delReq;
+
+    for (const auto& e : toDelete)
+    {
+        delReq = {};
+        delReq.nlh.nlmsg_len = NLMSG_LENGTH(sizeof(rtmsg));
+        delReq.nlh.nlmsg_type = RTM_DELROUTE;
+        delReq.nlh.nlmsg_flags = NLM_F_REQUEST | NLM_F_ACK;
+        delReq.rtm.rtm_family = family;
+        delReq.rtm.rtm_dst_len = e.dstLen;
+        delReq.rtm.rtm_table = e.table;
+
+        rtattr* rta = reinterpret_cast<rtattr*>(delReq.buf);
+
+        // Only set RTA_DST for non-default routes; default route (dstLen == 0)
+        // has no destination prefix attribute.
+        if (e.dstLen > 0)
+        {
+            rta->rta_type = RTA_DST;
+            rta->rta_len = RTA_LENGTH(addrLen);
+            memcpy(RTA_DATA(rta), e.dst.data(), addrLen);
+            delReq.nlh.nlmsg_len += rta->rta_len;
+            rta =
+                reinterpret_cast<rtattr*>(delReq.buf + RTA_ALIGN(rta->rta_len));
+        }
+
+        rta->rta_type = RTA_OIF;
+        rta->rta_len = RTA_LENGTH(sizeof(uint32_t));
+        memcpy(RTA_DATA(rta), &ifidx, sizeof(uint32_t));
+        delReq.nlh.nlmsg_len += rta->rta_len;
+
+        try
+        {
+            netlink::detail::performRequest(
+                NETLINK_ROUTE, &delReq, delReq.nlh.nlmsg_len,
+                [](const nlmsghdr& hdr, std::string_view data) {
+                    if (hdr.nlmsg_type != NLMSG_ERROR)
+                        return;
+                    const auto& err =
+                        stdplus::raw::refFrom<nlmsgerr, stdplus::raw::Aligned>(
+                            data);
+                    // ESRCH = route already gone; treat as success
+                    if (err.error != 0 && err.error != -ESRCH)
+                    {
+                        throw std::system_error(-err.error,
+                                                std::generic_category(),
+                                                "flushRoutes: RTM_DELROUTE");
+                    }
+                });
+            lg2::info("Flushed route (family={FAM}) /{PREFIXLEN} on "
+                      "ifidx {NET_IFIDX}",
+                      "FAM", family, "PREFIXLEN", e.dstLen, "NET_IFIDX", ifidx);
+        }
+        catch (const std::exception& ex)
+        {
+            lg2::error("flushRoutes: RTM_DELROUTE failed: {ERROR}", "ERROR",
+                       ex.what());
+            ok = false;
+        }
+    }
+    return ok;
+}
+
+/** @brief Flush all IPv4 unicast routes (including gateway) on an interface.
+ *         RTM_DELADDR does not remove routes; call this before deleteIPv4()
+ *         to ensure a clean slate.
+ *  @param ifidx  Interface index (from if_nametoindex)
+ */
+bool deleteIPv4Routes(unsigned ifidx)
+{
+    if (ifidx == 0)
+    {
+        lg2::warning("deleteIPv4Routes: invalid ifidx 0 -- skipping");
+        return false;
+    }
+    return flushRoutes(AF_INET, ifidx);
+}
+
+/** @brief Flush all IPv6 unicast routes (including gateway) on an interface.
+ *         RTM_DELADDR does not remove routes; call this before deleteIPv6()
+ *         to ensure a clean slate.
+ *  @param ifidx  Interface index (from if_nametoindex)
+ */
+bool deleteIPv6Routes(unsigned ifidx)
+{
+    if (ifidx == 0)
+    {
+        lg2::warning("deleteIPv6Routes: invalid ifidx 0 -- skipping");
+        return false;
+    }
+    return flushRoutes(AF_INET6, ifidx);
+}
 
 /**
  * @brief Set an IPv4 address on an ignored interface via RTM_NEWADDR.
