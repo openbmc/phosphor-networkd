@@ -476,6 +476,94 @@ TEST_F(TestSystemQueries, DeleteIPv6OnEmptyInterfaceSucceeds)
     EXPECT_TRUE(deleteIPv6(1));
 }
 
+TEST_F(TestSystemQueries, DeleteIPv4RoutesInvalidIfidxFails)
+{
+    EXPECT_FALSE(deleteIPv4Routes(0));
+}
+
+TEST_F(TestSystemQueries, DeleteIPv4RoutesOnEmptyInterfaceSucceeds)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    EXPECT_TRUE(deleteIPv4Routes(1));
+}
+
+TEST_F(TestSystemQueries, DeleteIPv4RoutesConnectedSubnetSucceeds)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    MockRouteInfo r{};
+    r.ifidx = 1;
+    r.family = AF_INET;
+    r.dstLen = 24;
+    auto dst4 = stdplus::fromStr<stdplus::In4Addr>("192.168.10.0");
+    auto addr4 = static_cast<in_addr>(dst4);
+    memcpy(r.dst.data(), &addr4, sizeof(addr4));
+    mock_addRoute(r);
+
+    EXPECT_TRUE(deleteIPv4Routes(1));
+}
+
+TEST_F(TestSystemQueries, DeleteIPv4RoutesDefaultGatewaySucceeds)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    MockRouteInfo r{};
+    r.ifidx = 1;
+    r.family = AF_INET;
+    r.dstLen = 0;
+    mock_addRoute(r);
+
+    EXPECT_TRUE(deleteIPv4Routes(1));
+}
+
+TEST_F(TestSystemQueries, DeleteIPv6RoutesInvalidIfidxFails)
+{
+    EXPECT_FALSE(deleteIPv6Routes(0));
+}
+
+TEST_F(TestSystemQueries, DeleteIPv6RoutesOnEmptyInterfaceSucceeds)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    EXPECT_TRUE(deleteIPv6Routes(1));
+}
+
+TEST_F(TestSystemQueries, DeleteIPv6RoutesConnectedSubnetSucceeds)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    MockRouteInfo r{};
+    r.ifidx = 1;
+    r.family = AF_INET6;
+    r.dstLen = 32;
+    auto dst6 = stdplus::fromStr<stdplus::In6Addr>("2001:db8::");
+    auto addr6 = static_cast<in6_addr>(dst6);
+    memcpy(r.dst.data(), &addr6, sizeof(addr6));
+    mock_addRoute(r);
+
+    EXPECT_TRUE(deleteIPv6Routes(1));
+}
+
+TEST_F(TestSystemQueries, DeleteIPv6RoutesDefaultGatewaySucceeds)
+{
+    mock_addIF(InterfaceInfo{
+        .type = 1, .idx = 1, .flags = 0, .name = "eth0", .mtu = 1500});
+
+    MockRouteInfo r{};
+    r.ifidx = 1;
+    r.family = AF_INET6;
+    r.dstLen = 0;
+    mock_addRoute(r);
+
+    EXPECT_TRUE(deleteIPv6Routes(1));
+}
+
 } // namespace system
 } // namespace network
 } // namespace phosphor
