@@ -20,6 +20,24 @@ void setMTU(std::string_view ifname, unsigned mtu);
 
 void setNICUp(std::string_view ifname, bool up);
 
+/** @brief Flush all IPv4 unicast routes (including gateway) on an interface.
+ *         RTM_DELADDR does not remove routes; call before deleteIPv4()
+ *         to ensure a clean slate.
+ *
+ *  @param[in] ifidx - Interface index (from if_nametoindex)
+ *  @return true if all deletions succeeded (no routes = success)
+ */
+bool deleteIPv4Routes(unsigned ifidx);
+
+/** @brief Flush all IPv6 unicast routes (including gateway) on an interface.
+ *         RTM_DELADDR does not remove routes; call before deleteIPv6()
+ *         to ensure a clean slate.
+ *
+ *  @param[in] ifidx - Interface index (from if_nametoindex)
+ *  @return true if all deletions succeeded (no routes = success)
+ */
+bool deleteIPv6Routes(unsigned ifidx);
+
 /** @brief Flush ALL existing IPv4 addresses from an interface.
  *         Equivalent to "ip -4 addr flush dev <ifname>".
  *         Call before setIPV4Address() to ensure a clean slate.
