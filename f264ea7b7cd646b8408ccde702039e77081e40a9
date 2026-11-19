@@ -16,6 +16,23 @@
       "message": "Confirmed that std::ofstream is retained as requested, and no first-boot file-handling changes remain in the patch. Looks good to me.",
       "revId": "f264ea7b7cd646b8408ccde702039e77081e40a9",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a5550d7_b48223b5",
+        "filename": "src/system_queries.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-11-19T17:01:28Z",
+      "side": 1,
+      "message": "i think we can just keep this check as it is, instead of spliting \nlog errno which will be useful for debug",
+      "revId": "f264ea7b7cd646b8408ccde702039e77081e40a9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
