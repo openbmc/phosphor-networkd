@@ -53,6 +53,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e8e4a88_c34122b9",
+        "filename": "src/ethernet_interface.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1363,
+      "author": {
+        "id": 1002762
+      },
+      "writtenOn": "2026-11-19T07:02:31Z",
+      "side": 1,
+      "message": "Removed the blocking retry loop. Gateway MAC resolution now proceeds asynchronously through netlink neighbor notifications.",
+      "parentUuid": "c433b096_48177ab0",
+      "revId": "83479d9405c46d938e291f3dbca511c941afae2b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "27418862_eca73b40",
@@ -66,6 +84,24 @@
       "writtenOn": "2026-11-13T09:25:29Z",
       "side": 1,
       "message": "Doesn’t erasing this entry destroy the current Neighbor object? The next two lines access its parent member after destruction, causing a use-after-free.",
+      "revId": "83479d9405c46d938e291f3dbca511c941afae2b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b365fee_c892ef98",
+        "filename": "src/neighbor.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1002762
+      },
+      "writtenOn": "2026-11-19T07:02:31Z",
+      "side": 1,
+      "message": "Moved ownership to a local unique_ptr before erasing the map entry, keeping the neighbor alive until the parent operations complete.",
+      "parentUuid": "27418862_eca73b40",
       "revId": "83479d9405c46d938e291f3dbca511c941afae2b",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
