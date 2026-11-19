@@ -162,6 +162,9 @@ class Manager : public ManagerIface
     std::unordered_map<unsigned, bool> systemdNetworkdEnabled;
     sdbusplus::match systemdNetworkdEnabledMatch;
 
+    /** @brief Refreshes DomainName when systemd-resolved link data changes */
+    sdbusplus::match resolvedChangedMatch;
+
     /** @brief List of hooks to execute during the next reload */
     std::vector<fu2::unique_function<void()>> reloadPreHooks;
     std::vector<fu2::unique_function<void()>> reloadPostHooks;

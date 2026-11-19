@@ -46,6 +46,11 @@ static constexpr const char enabledMatch[] =
     "link',interface='org.freedesktop.DBus.Properties',member='"
     "PropertiesChanged',arg0='org.freedesktop.network1.Link',";
 
+static constexpr const char resolvedChangedRule[] =
+    "type='signal',sender='org.freedesktop.resolve1',path_namespace='/org/"
+    "freedesktop/resolve1',interface='org.freedesktop.DBus.Properties',member='"
+    "PropertiesChanged',";
+
 Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
                  stdplus::PinnedRef<DelayedExecutor> reload,
                  stdplus::zstring_view objPath,
@@ -80,6 +85,14 @@ Manager::Manager(stdplus::PinnedRef<sdbusplus::bus_t> bus,
             {
                 lg2::error("AdministrativeState match parsing failed: {ERROR}",
                            "ERROR", e);
+            }
+        }),
+    resolvedChangedMatch(
+        bus, resolvedChangedRule,
+        [man = stdplus::PinnedRef(*this)](sdbusplus::message_t&) {
+            for (const auto& [_, intf] : man.get().interfaces)
+            {
+                intf->refreshDomainName();
             }
         })
 {

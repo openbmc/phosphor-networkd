@@ -235,6 +235,41 @@ TEST_F(TestEthernetInterface, loadDomainName)
     EXPECT_EQ(domains, interface.domainName());
 }
 
+TEST_F(TestEthernetInterface, loadDomainNameMergesResolved)
+{
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.domainName(ServerList{"static.example"});
+    config::Parser parser((confDir / "00-bmc-test0.network").native());
+    EXPECT_CALL(interface, getDomainNamesFromResolvd())
+        .WillRepeatedly(
+            testing::Return(ServerList{"static.example", "dhcp.example"}));
+    interface.loadDomainName(parser);
+    EXPECT_EQ((ServerList{"static.example", "dhcp.example"}),
+              interface.domainName());
+}
+
+TEST_F(TestEthernetInterface, resolvedDomainNotPersisted)
+{
+    EXPECT_CALL(interface, getDomainNamesFromResolvd())
+        .WillRepeatedly(testing::Return(ServerList{"dhcp.example"}));
+    EXPECT_CALL(manager.mockReload, schedule());
+    interface.domainName(ServerList{"static.example"});
+    EXPECT_EQ((ServerList{"static.example", "dhcp.example"}),
+              interface.domainName());
+    config::Parser parser((confDir / "00-bmc-test0.network").native());
+    EXPECT_EQ(ServerList{"static.example"},
+              parser.map.getValueStrings("Network", "Domains"));
+}
+
+TEST_F(TestEthernetInterface, loadDomainNameResolvedFailure)
+{
+    config::Parser parser((confDir / "00-bmc-test0.network").native());
+    EXPECT_CALL(interface, getDomainNamesFromResolvd())
+        .WillRepeatedly(testing::Return(ServerList{}));
+    interface.loadDomainName(parser);
+    EXPECT_TRUE(interface.domainName().empty());
+}
+
 TEST_F(TestEthernetInterface, addStaticNTPServers)
 {
     ServerList servers = {"10.1.1.1", "10.2.2.2", "10.3.3.3"};

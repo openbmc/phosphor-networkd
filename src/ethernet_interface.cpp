@@ -680,23 +680,37 @@ void EthernetInterface::loadNameServers(const config::Parser& config)
 
 void EthernetInterface::loadDomainName(const config::Parser& config)
 {
-    EthernetInterfaceIntf::domainName(
-        config.map.getValueStrings("Network", "Domains"));
+    staticDomainNames = config.map.getValueStrings("Network", "Domains");
+    refreshDomainName();
+}
+
+void EthernetInterface::refreshDomainName()
+{
+    ServerList domains = staticDomainNames;
+    for (auto& domain : getDomainNamesFromResolvd())
+    {
+        if (std::find(domains.begin(), domains.end(), domain) == domains.end())
+        {
+            domains.push_back(std::move(domain));
+        }
+    }
+    EthernetInterfaceIntf::domainName(std::move(domains));
 }
 
 ServerList EthernetInterface::domainName(ServerList value)
 {
-    if (value == EthernetInterfaceIntf::domainName())
+    if (value == staticDomainNames)
     {
-        return value;
+        return EthernetInterfaceIntf::domainName();
     }
 
-    value = EthernetInterfaceIntf::domainName(std::move(value));
+    staticDomainNames = std::move(value);
+    refreshDomainName();
 
     writeConfigurationFile();
     manager.get().reloadConfigs();
 
-    return value;
+    return EthernetInterfaceIntf::domainName();
 }
 
 ServerList EthernetInterface::getNTPServerFromTimeSyncd()
@@ -791,6 +805,40 @@ ServerList EthernetInterface::getNameServerFromResolvd() const
             addrFromBuf(addressFamily, stdplus::raw::asView<char>(ipaddress))));
     }
     return servers;
+}
+
+ServerList EthernetInterface::getDomainNamesFromResolvd() const
+{
+    ServerList domains;
+    if (ifIdx == 0)
+    {
+        return domains;
+    }
+
+    auto objPath = std::format("{}{}", RESOLVED_SERVICE_PATH, ifIdx);
+    auto method = bus.get().new_method_call(RESOLVED_SERVICE, objPath.c_str(),
+                                            PROPERTY_INTERFACE, METHOD_GET);
+    method.append(RESOLVED_INTERFACE, "Domains");
+
+    using DomainList = std::vector<std::tuple<std::string, bool>>;
+    try
+    {
+        auto reply = bus.get().call(method);
+        auto response = reply.unpack<std::variant<DomainList>>();
+        for (const auto& [domain, routeOnly] : std::get<DomainList>(response))
+        {
+            if (!routeOnly)
+            {
+                domains.push_back(domain);
+            }
+        }
+    }
+    catch (const std::exception& e)
+    {
+        lg2::error("Failed to get domains from systemd-resolved: {ERROR}",
+                   "ERROR", e);
+    }
+    return domains;
 }
 
 ObjectPath EthernetInterface::createVLAN(uint16_t id)
@@ -965,7 +1013,7 @@ void EthernetInterface::writeConfigurationFile()
         }
         {
             auto& domains = network["Domains"];
-            for (const auto& domain : EthernetInterfaceIntf::domainName())
+            for (const auto& domain : staticDomainNames)
             {
                 domains.emplace_back(domain);
             }

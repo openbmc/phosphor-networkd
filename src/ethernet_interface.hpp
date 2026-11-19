@@ -124,6 +124,10 @@ class EthernetInterface : public Ifaces
      */
     void loadDomainName(const config::Parser& config);
 
+    /** @brief Re-read the resolved domains and update the DomainName property.
+     */
+    void refreshDomainName();
+
     /** @brief Function to create ipAddress dbus object.
      *  @param[in] addressType - Type of ip address.
      *  @param[in] ipAddress- IP address.
@@ -263,6 +267,14 @@ class EthernetInterface : public Ifaces
      *
      */
     virtual ServerList getNameServerFromResolvd() const;
+
+    /** @brief get the search domains of the link from systemd-resolved
+     *
+     */
+    virtual ServerList getDomainNamesFromResolvd() const;
+
+    /** @brief Domains configured statically. */
+    ServerList staticDomainNames;
 
     /** @brief Persistent sdbusplus DBus bus connection. */
     stdplus::PinnedRef<sdbusplus::bus_t> bus;
