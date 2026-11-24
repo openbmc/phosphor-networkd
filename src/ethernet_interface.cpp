@@ -481,19 +481,6 @@ ObjectPath EthernetInterface::neighbor(std::string ipAddress,
 ObjectPath EthernetInterface::staticGateway(std::string gateway,
                                             IP::Protocol protocolType)
 {
-    for (const auto& ip : addrs)
-    {
-        if (ip.second->type() != protocolType)
-        {
-            continue;
-        }
-        if (gateway == ip.second->address())
-        {
-            lg2::error("Static gateway must not match local interface IP");
-            elog<InvalidArgument>(Argument::ARGUMENT_NAME("gateway"),
-                                  Argument::ARGUMENT_VALUE(gateway.c_str()));
-        }
-    }
     std::optional<stdplus::InAnyAddr> addr;
     std::string route;
     try
@@ -517,6 +504,16 @@ ObjectPath EthernetInterface::staticGateway(std::string gateway,
                    gateway, "ERROR", e);
         elog<InvalidArgument>(Argument::ARGUMENT_NAME("gateway"),
                               Argument::ARGUMENT_VALUE(gateway.c_str()));
+    }
+
+    for (const auto& ip : addrs)
+    {
+        if (ip.first.getAddr() == *addr)
+        {
+            lg2::error("Static gateway must not match local interface IP");
+            elog<InvalidArgument>(Argument::ARGUMENT_NAME("gateway"),
+                                  Argument::ARGUMENT_VALUE(gateway.c_str()));
+        }
     }
 
     auto it = staticGateways.find(route);

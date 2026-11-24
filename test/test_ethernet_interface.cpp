@@ -288,6 +288,34 @@ TEST_F(TestEthernetInterface, addGateway6)
     EXPECT_EQ(interface.defaultGateway6(), "");
 }
 
+TEST_F(TestEthernetInterface, StaticGatewayRejectsLocalIPv6Address)
+{
+    EXPECT_CALL(manager.mockReload, schedule()).Times(2);
+    createIPObject(IP::Protocol::IPv6, "2001:db8::1", 64);
+
+    EXPECT_THROW(createStaticGatewayObject("2001:db8::1", IP::Protocol::IPv6),
+                 InvalidArgument);
+    EXPECT_THROW(createStaticGatewayObject(
+                     "2001:0db8:0000:0000:0000:0000:0000:0001",
+                     IP::Protocol::IPv6),
+                 InvalidArgument);
+    EXPECT_TRUE(interface.staticGateways.empty());
+    EXPECT_NO_THROW(
+        createStaticGatewayObject("2001:db8::2", IP::Protocol::IPv6));
+}
+
+TEST_F(TestEthernetInterface, StaticGatewayRejectsLocalIPv4Address)
+{
+    EXPECT_CALL(manager.mockReload, schedule()).Times(2);
+    createIPObject(IP::Protocol::IPv4, "192.0.2.1", 24);
+
+    EXPECT_THROW(createStaticGatewayObject("192.0.2.1", IP::Protocol::IPv4),
+                 InvalidArgument);
+    EXPECT_TRUE(interface.staticGateways.empty());
+    EXPECT_NO_THROW(
+        createStaticGatewayObject("192.0.2.2", IP::Protocol::IPv4));
+}
+
 TEST_F(TestEthernetInterface, DHCPEnabled)
 {
     EXPECT_CALL(manager.mockReload, schedule())
