@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5abbbac_f309d63b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000350
+      },
+      "writtenOn": "2026-11-24T07:22:12Z",
+      "side": 1,
+      "message": "can you please share testcases verified?\nhave you verified all possible configuration testcase?",
+      "revId": "5925f39b53abcc61ebd0620ecf71d965b1eeb563",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
